@@ -1,0 +1,12 @@
+{
+  FacesContext facesContext=FacesContext.getCurrentInstance();
+  ExternalContext externalContext=facesContext.getExternalContext();
+  if (externalContext.getRequest() instanceof PortletRequest) {
+    UIViewRoot uiViewRoot=facesContext.getApplication().getViewHandler().createView(facesContext,viewId);
+    facesContext.setViewRoot(uiViewRoot);
+    facesContext.renderResponse();
+  }
+ else {
+    super.redirect(viewId,parameters,includeConversationId);
+  }
+}

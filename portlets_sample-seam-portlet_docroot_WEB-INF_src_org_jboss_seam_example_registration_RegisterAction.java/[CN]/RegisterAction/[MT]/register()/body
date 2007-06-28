@@ -1,0 +1,12 @@
+{
+  List existing=em.createQuery("select u.username from User u where u.username=#{user.username}").getResultList();
+  if (existing.size() == 0) {
+    em.persist(user);
+    log.info("Registered new user #{user.username}");
+    return "/registered.jspx";
+  }
+ else {
+    FacesMessages.instance().add("User #{user.username} already exists");
+    return null;
+  }
+}
