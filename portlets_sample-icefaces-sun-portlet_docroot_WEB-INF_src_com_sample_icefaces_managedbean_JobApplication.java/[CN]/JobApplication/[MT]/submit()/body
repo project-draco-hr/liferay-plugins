@@ -1,5 +1,5 @@
 {
-  String returnValue=ActionOutcomes.SUCCESS;
+  String actionOutcome=ActionOutcomes.SUCCESS;
   FacesContext facesContext=FacesContext.getCurrentInstance();
   String toEmailAddress=_portletPreferences.getValue("recipientEmailAddress",null);
   try {
@@ -19,14 +19,15 @@
       _log.debug("Sending email to: " + toEmailAddress);
     }
     MailEngine.send(fromInternetAddress,toInternetAddresses,null,null,subject,body.toString(),false,null,null,null,new File[]{_file});
-    FacesMessageUtil.addGlobalMessageFromLiferay(facesContext,FacesMessage.SEVERITY_INFO,"thank-you-for-applying-for-a-job",_firstName);
+    FacesMessageUtil.addGlobalMessage(facesContext,FacesMessage.SEVERITY_INFO,"thank-you-for-applying-for-a-job-with-our-organization",_firstName);
     _clearModel();
   }
  catch (  Exception exception) {
-    FacesMessageUtil.addGlobalMessageFromLiferay(facesContext,FacesMessage.SEVERITY_ERROR,"an-unexpected-error-occurred-while-sending-your-message");
+    FacesMessageUtil.addGlobalMessage(facesContext,FacesMessage.SEVERITY_ERROR,"an-unexpected-error-occurred-while-sending-your-message");
     if (_log.isErrorEnabled()) {
       _log.error(exception.getMessage(),exception);
     }
+    actionOutcome=ActionOutcomes.FAILURE;
   }
-  return (returnValue);
+  return actionOutcome;
 }
