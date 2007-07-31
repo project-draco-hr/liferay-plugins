@@ -19,11 +19,11 @@
       _log.debug("Sending email to: " + toEmailAddress);
     }
     MailEngine.send(fromInternetAddress,toInternetAddresses,null,null,subject,body.toString(),false,null,null,null,new File[]{_file});
-    FacesMessageUtil.addGlobalMessage(facesContext,FacesMessage.SEVERITY_INFO,"thank-you-for-applying-for-a-job-with-our-organization",_firstName);
+    FacesMessageUtil.info(facesContext,"thank-you-for-applying-for-a-job-with-our-organization",_firstName);
     _clearModel();
   }
  catch (  Exception exception) {
-    FacesMessageUtil.addGlobalMessage(facesContext,FacesMessage.SEVERITY_ERROR,"an-unexpected-error-occurred-while-sending-your-message");
+    FacesMessageUtil.error(facesContext,"an-unexpected-error-occurred-while-sending-your-message");
     if (_log.isErrorEnabled()) {
       _log.error(exception.getMessage(),exception);
     }
