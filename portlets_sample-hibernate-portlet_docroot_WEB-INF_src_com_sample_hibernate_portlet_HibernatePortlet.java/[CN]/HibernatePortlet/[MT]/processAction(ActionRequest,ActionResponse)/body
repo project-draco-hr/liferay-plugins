@@ -1,32 +1,22 @@
 {
-  String command=req.getParameter("command");
-  long foodItemId=0;
-  try {
-    foodItemId=Long.parseLong(req.getParameter("foodItemId"));
-  }
- catch (  Exception e) {
-  }
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  long foodItemId=ParamUtil.getLong(req,"foodItemId");
   String name=req.getParameter("name");
-  int points=0;
+  int points=ParamUtil.getInteger(req,"points");
   try {
-    points=Integer.parseInt(req.getParameter("points"));
-  }
- catch (  Exception e) {
-  }
-  try {
-    if (command.equals("add")) {
+    if (cmd.equals("add")) {
       FoodItem foodItem=new FoodItem();
       foodItem.setName(name);
       foodItem.setPoints(points);
       FoodItemUtil.addFoodItem(foodItem);
     }
- else     if (command.equals("edit")) {
+ else     if (cmd.equals("edit")) {
       FoodItem foodItem=FoodItemUtil.getFoodItem(foodItemId);
       foodItem.setName(name);
       foodItem.setPoints(points);
       FoodItemUtil.updateFoodItem(foodItem);
     }
- else     if (command.equals("delete")) {
+ else     if (cmd.equals("delete")) {
       FoodItemUtil.deleteFoodItem(foodItemId);
     }
   }
