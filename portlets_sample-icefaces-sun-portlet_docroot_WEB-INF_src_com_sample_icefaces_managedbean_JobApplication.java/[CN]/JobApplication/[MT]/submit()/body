@@ -7,25 +7,25 @@
     InternetAddress[] toInternetAddresses=new InternetAddress[]{new InternetAddress(toEmailAddress)};
     String subject=_firstName + " " + _lastName+ " has applied for a job";
     StringBuffer body=new StringBuffer();
-    body.append("First Name:    " + _firstName + "\n");
-    body.append("Last Name:     " + _lastName + "\n");
+    body.append("First Name: " + _firstName + "\n");
+    body.append("Last Name: " + _lastName + "\n");
     body.append("Date Of Birth: " + _dateOfBirth + "\n");
-    body.append("Phone Number:  " + _phoneNumber + "\n");
-    body.append("Phone Type:    " + _phoneNumberType + "\n");
-    body.append("Fax Number:    " + _faxNumber + "\n");
+    body.append("Phone Number: " + _phoneNumber + "\n");
+    body.append("Phone Type: " + _phoneNumberType + "\n");
+    body.append("Fax Number: " + _faxNumber + "\n");
     body.append("Comments:\n");
     body.append(_comments);
     if (_log.isDebugEnabled()) {
-      _log.debug("Sending email to: " + toEmailAddress);
+      _log.debug("Sending email to " + toEmailAddress);
     }
     MailEngine.send(fromInternetAddress,toInternetAddresses,null,null,subject,body.toString(),false,null,null,null,new File[]{_file});
     FacesMessageUtil.info(facesContext,"thank-you-for-applying-for-a-job-with-our-organization",_firstName);
-    _clearModel();
+    clearModel();
   }
- catch (  Exception exception) {
+ catch (  Exception e) {
     FacesMessageUtil.error(facesContext,"an-unexpected-error-occurred-while-sending-your-message");
     if (_log.isErrorEnabled()) {
-      _log.error(exception.getMessage(),exception);
+      _log.error(e.getMessage(),e);
     }
     actionOutcome=ActionOutcomes.FAILURE;
   }
