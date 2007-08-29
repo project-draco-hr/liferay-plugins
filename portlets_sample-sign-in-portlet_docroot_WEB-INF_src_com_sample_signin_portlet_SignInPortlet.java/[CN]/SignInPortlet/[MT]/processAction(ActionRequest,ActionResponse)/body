@@ -1,0 +1,23 @@
+{
+  String className="com.liferay.portlet.login.action.ViewAction";
+  PortletConfig config=getPortletConfig();
+  NoRedirectActionResponse noRedirectRes=new NoRedirectActionResponse(res);
+  try {
+    PortletActionInvoker.processAction(className,config,req,noRedirectRes);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  String login=ParamUtil.getString(req,"login");
+  String password=ParamUtil.getString(req,"password");
+  String rememberMe=ParamUtil.getString(req,"rememberMe");
+  if (Validator.isNull(noRedirectRes.getRedirectLocation())) {
+    res.setRenderParameter("login",login);
+    res.setRenderParameter("rememberMe",rememberMe);
+  }
+ else {
+    ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+    String redirect=themeDisplay.getPathMain() + "/portal/login?cmd=already-registered&login=" + login+ "&password="+ password;
+    res.sendRedirect(redirect);
+  }
+}
