@@ -1,0 +1,22 @@
+{
+  ModelListener listener=_getListener();
+  boolean isNew=foo.isNew();
+  if (listener != null) {
+    if (isNew) {
+      listener.onBeforeCreate(foo);
+    }
+ else {
+      listener.onBeforeUpdate(foo);
+    }
+  }
+  foo=getPersistence().update(foo);
+  if (listener != null) {
+    if (isNew) {
+      listener.onAfterCreate(foo);
+    }
+ else {
+      listener.onAfterUpdate(foo);
+    }
+  }
+  return foo;
+}

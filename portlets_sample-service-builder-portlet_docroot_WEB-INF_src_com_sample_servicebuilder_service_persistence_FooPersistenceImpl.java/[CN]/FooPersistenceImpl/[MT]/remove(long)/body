@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Foo foo=(Foo)session.get(FooImpl.class,new Long(fooId));
+    if (foo == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Foo exists with the primary key " + fooId);
+      }
+      throw new NoSuchFooException("No Foo exists with the primary key " + fooId);
+    }
+    return remove(foo);
+  }
+ catch (  NoSuchFooException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

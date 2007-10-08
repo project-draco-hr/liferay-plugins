@@ -1,0 +1,13 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    return (Foo)session.get(FooImpl.class,new Long(fooId));
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

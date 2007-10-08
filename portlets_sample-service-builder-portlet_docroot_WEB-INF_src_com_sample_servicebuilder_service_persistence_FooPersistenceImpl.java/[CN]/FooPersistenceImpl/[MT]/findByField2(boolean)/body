@@ -1,0 +1,34 @@
+{
+  String finderClassName=Foo.class.getName();
+  String finderMethodName="findByField2";
+  String[] finderParams=new String[]{Boolean.class.getName()};
+  Object[] finderArgs=new Object[]{new Boolean(field2)};
+  Object result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.sample.servicebuilder.model.Foo WHERE ");
+      query.append("field2 = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("field1 ASC");
+      Query q=session.createQuery(query.toString());
+      int queryPos=0;
+      q.setBoolean(queryPos++,field2);
+      List list=q.list();
+      FinderCache.putResult(finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List)result;
+  }
+}
