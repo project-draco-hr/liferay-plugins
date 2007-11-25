@@ -1,0 +1,13 @@
+{
+  if (log.isErrorEnabled()) {
+    log.error("Entering simulator mode.");
+  }
+  JiraProxy proxy=_simulator.newInstance();
+  session.setAttribute(JiraPortletConstants.PROXY_KEY,proxy);
+  session.setAttribute(JiraPortletConstants.MODE_KEY,Boolean.TRUE);
+  try {
+    session.setAttribute(JiraPortletConstants.SECURITY_TOKEN_KEY,proxy.login("",""));
+  }
+ catch (  Exception e) {
+  }
+}

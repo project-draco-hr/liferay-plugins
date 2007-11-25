@@ -1,0 +1,14 @@
+{
+  final RemoteComponent[] remotes=_service.getComponents(securityToken,projectKey);
+  final Map<String,RemoteComponent> remoteMap=new HashMap<String,RemoteComponent>();
+  final int len=remotes.length;
+  for (int i=0; i < len; i++) {
+    RemoteComponent remoteComp=remotes[i];
+    remoteMap.put(remoteComp.getId(),remoteComp);
+  }
+  final List<RemoteComponent> remoteCompToSet=new ArrayList<RemoteComponent>(components.size());
+  for (  Component component : components) {
+    remoteCompToSet.add(remoteMap.get(component.getId()));
+  }
+  return remoteCompToSet;
+}

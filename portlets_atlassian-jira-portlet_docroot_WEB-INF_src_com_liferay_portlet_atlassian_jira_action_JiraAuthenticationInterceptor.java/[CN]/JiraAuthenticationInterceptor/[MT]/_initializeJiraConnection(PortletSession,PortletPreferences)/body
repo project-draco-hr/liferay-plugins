@@ -1,0 +1,35 @@
+{
+  JiraProxy proxy=(JiraProxy)session.getAttribute(JiraPortletConstants.PROXY_KEY);
+  if (proxy == null) {
+    final String url=prefs.getValue(JiraPortletConstants.USER_NAME_PREFERENCE,StringUtil.EMPTY_STRING);
+    if (StringUtil.isEmpty(url)) {
+      _createSimulator(session);
+    }
+    proxy=_prototype.newInstance();
+    try {
+      proxy.setServiceURL(url);
+      session.setAttribute(JiraPortletConstants.PROXY_KEY,proxy);
+    }
+ catch (    SystemException e) {
+      if (log.isErrorEnabled()) {
+        log.error("Unable to connect to server: " + url,e);
+      }
+      _createSimulator(session);
+    }
+  }
+  String securityToken=(String)session.getAttribute(JiraPortletConstants.SECURITY_TOKEN_KEY);
+  if (StringUtil.isEmpty(securityToken)) {
+    final String userName=prefs.getValue(JiraPortletConstants.USER_NAME_PREFERENCE,StringUtil.EMPTY_STRING);
+    final String password=prefs.getValue(JiraPortletConstants.PASSWORD_PREFERENCE,StringUtil.EMPTY_STRING);
+    try {
+      securityToken=proxy.login(userName,password);
+      session.setAttribute(JiraPortletConstants.SECURITY_TOKEN_KEY,securityToken);
+    }
+ catch (    Exception e) {
+      if (log.isErrorEnabled()) {
+        log.error("Unable log into with user: " + userName,e);
+      }
+      _createSimulator(session);
+    }
+  }
+}

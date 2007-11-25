@@ -1,0 +1,29 @@
+{
+  final PortletSession session=request.getPortletSession();
+  JiraProxy proxy=(JiraProxy)session.getAttribute(JiraPortletConstants.PROXY_KEY);
+  String securityToken=(String)session.getAttribute(JiraPortletConstants.SECURITY_TOKEN_KEY);
+  if (proxy == null || StringUtil.isEmpty(securityToken)) {
+    throw new IllegalStateException("Portlet not connected to Jira");
+  }
+  final Issue issue=(Issue)command;
+  final Map<String,Object> values=new HashMap<String,Object>();
+switch (page) {
+case 0:
+    values.put(JiraPortletConstants.PROJECTS_KEY,proxy.getProjects(securityToken));
+  values.put(JiraPortletConstants.ISSUE_TYPES_KEY,proxy.getIssueTypes(securityToken));
+return values;
+case 1:
+values.put(JiraPortletConstants.PROJECT_KEY,issue.getProject());
+values.put(JiraPortletConstants.ISSUE_TYPE_KEY,issue.getIssueType());
+values.put(JiraPortletConstants.PRIORITIES_KEY,proxy.getPriorities(securityToken));
+final String reporterName=request.getPreferences().getValue(JiraPortletConstants.USER_NAME_PREFERENCE,StringUtil.EMPTY_STRING);
+values.put(JiraPortletConstants.REPORTER_KEY,reporterName);
+issue.setReporterName(reporterName);
+values.put(JiraPortletConstants.COMPONENTS_KEY,proxy.getComponents(securityToken,issue.getProject().getKey()));
+final Collection<Version> versions=proxy.getVersions(securityToken,issue.getProject().getKey());
+values.put(JiraPortletConstants.VERSIONS_KEY,versions);
+return values;
+default :
+return null;
+}
+}

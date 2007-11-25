@@ -1,0 +1,14 @@
+{
+  final PortletSession session=request.getPortletSession();
+  JiraProxy proxy=(JiraProxy)session.getAttribute(JiraPortletConstants.PROXY_KEY);
+  if (proxy == null) {
+    return;
+  }
+  String securityToken=(String)session.getAttribute(JiraPortletConstants.SECURITY_TOKEN_KEY);
+  if (StringUtil.isEmpty(securityToken)) {
+    return;
+  }
+  final Issue issue=(Issue)command;
+  final String issueKey=proxy.createIssue(securityToken,issue);
+  response.setRenderParameter(JiraPortletConstants.TICKET_ID_KEY,issueKey);
+}

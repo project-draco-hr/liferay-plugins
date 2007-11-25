@@ -1,0 +1,45 @@
+{
+  try {
+    RemoteIssue remoteIssue=new RemoteIssue();
+    final String projectKey=issue.getProject().getKey();
+    remoteIssue.setProject(projectKey);
+    remoteIssue.setType(issue.getIssueType().getIssueTypeID());
+    remoteIssue.setSummary(issue.getSummary());
+    remoteIssue.setPriority(issue.getPriority().getPriorityId());
+    remoteIssue.setDuedate(issue.getDueDate());
+    remoteIssue.setAssignee(issue.getAssigneeName());
+    remoteIssue.setDescription(issue.getDescription());
+    remoteIssue.setEnvironment(issue.getEnvironment());
+    remoteIssue.setReporter(issue.getReporterName());
+    if (null != issue.getComponents()) {
+      final Collection<RemoteComponent> remoteComponents=_convertComponents(securityToken,projectKey,issue.getComponents());
+      remoteIssue.setComponents(remoteComponents.toArray(new RemoteComponent[remoteComponents.size()]));
+    }
+    if (null != issue.getFixedVersions()) {
+      final Collection<RemoteVersion> converVersion=_convertVersion(securityToken,projectKey,issue.getFixedVersions());
+      RemoteVersion[] remoteVersions=converVersion.toArray(new RemoteVersion[converVersion.size()]);
+      remoteIssue.setFixVersions(remoteVersions);
+    }
+    if (null != issue.getVersions()) {
+      final Collection<RemoteVersion> converAffectsVersion=_convertVersion(securityToken,projectKey,issue.getVersions());
+      RemoteVersion[] remoteVersions=converAffectsVersion.toArray(new RemoteVersion[converAffectsVersion.size()]);
+      remoteIssue.setAffectsVersions(remoteVersions);
+    }
+    RemoteIssue returnedIssue=_service.createIssue(securityToken,remoteIssue);
+    String issueKey=returnedIssue.getKey();
+    if (log.isDebugEnabled()) {
+      log.debug("Successfully created issue " + issueKey);
+      log.debug(returnedIssue.getAssignee());
+    }
+    return issueKey;
+  }
+ catch (  RemotePermissionException e) {
+    throw new SecurityException("Invalid permissions for: ");
+  }
+catch (  RemoteAuthenticationException e) {
+    throw new SecurityException("Invalid credentials for: ");
+  }
+catch (  Exception e) {
+    throw new SystemException("System Errors",e);
+  }
+}

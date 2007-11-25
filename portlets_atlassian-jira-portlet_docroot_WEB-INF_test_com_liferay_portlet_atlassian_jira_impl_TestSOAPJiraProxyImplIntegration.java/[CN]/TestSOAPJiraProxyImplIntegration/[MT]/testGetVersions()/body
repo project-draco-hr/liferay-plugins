@@ -1,0 +1,27 @@
+{
+  try {
+    String token=_service.login(USER_NAME,PASSWORD);
+    Collection<Version> versions=_proxy.getVersions(token,"QA");
+    System.out.println("===================================");
+    System.out.println("this is testGetVersions" + "getVersions token+QA");
+    Iterator<Version> listProject=versions.iterator();
+    while (listProject.hasNext()) {
+      Version version=listProject.next();
+      System.out.println("getVersionName :" + version.getVersionName());
+      System.out.println("getVersionId :" + version.getVersionId());
+    }
+    System.out.println("===================================");
+  }
+ catch (  RemoteException e) {
+    fail("Caught remote error");
+    e.printStackTrace();
+  }
+catch (  SystemException e) {
+    fail("Caught system error");
+    e.printStackTrace();
+  }
+catch (  Exception e) {
+    fail("Caught security error");
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,27 @@
+{
+  try {
+    String token=_service.login(USER_NAME,PASSWORD);
+    Collection<IssueType> projects=_proxy.getIssueTypes(token);
+    System.out.println("===================================");
+    System.out.println("this is testGetIssueTypes" + "P:testGetIssueTypes token");
+    Iterator<IssueType> listIssueTypes=projects.iterator();
+    while (listIssueTypes.hasNext()) {
+      IssueType issueType=listIssueTypes.next();
+      System.out.println("getIssueTyepName:  " + issueType.getIssueTypeName());
+      System.out.println("getIssueTypeId:  " + issueType.getIssueTypeID());
+    }
+    System.out.println("===================================");
+  }
+ catch (  RemoteException e) {
+    fail("Caught remote error");
+    e.printStackTrace();
+  }
+catch (  SystemException e) {
+    fail("Caught system error");
+    e.printStackTrace();
+  }
+catch (  Exception e) {
+    fail("Caught security error");
+    e.printStackTrace();
+  }
+}

@@ -1,0 +1,21 @@
+{
+  try {
+    RemoteIssueType[] projectn=_service.getIssueTypes(securityToken);
+    final int length=projectn.length;
+    final List<IssueType> issueTypes=new ArrayList<IssueType>(length);
+    for (int i=0; i < length; i++) {
+      IssueType pr=new IssueType(projectn[i].getName(),projectn[i].getId());
+      issueTypes.add(pr);
+    }
+    return issueTypes;
+  }
+ catch (  RemotePermissionException e) {
+    throw new IssueTrackerSecurityException("Invalid permissions for: " + securityToken);
+  }
+catch (  RemoteAuthenticationException e) {
+    throw new IssueTrackerSecurityException("Invalid credentials for: " + securityToken);
+  }
+catch (  Exception e) {
+    throw new SystemException("System Errors",e);
+  }
+}

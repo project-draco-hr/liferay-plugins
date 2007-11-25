@@ -1,0 +1,28 @@
+{
+  try {
+    final Set<Assignee> assignees=new HashSet<Assignee>();
+    final RemoteProject project=_service.getProjectByKey(securityToken,projectKey);
+    RemoteProjectRole[] allAvailableRoles=_service.getProjectRoles(securityToken);
+    final int numRoles=allAvailableRoles.length;
+    for (int i=0; i < numRoles; i++) {
+      RemoteProjectRoleActors actors=_service.getProjectRoleActors(securityToken,allAvailableRoles[i],project);
+      RemoteUser[] users=actors.getUsers();
+      final int numUsers=users.length;
+      for (int j=0; j < numUsers; j++) {
+        final RemoteUser user=users[i];
+        final Assignee assignee=new Assignee(user.getName(),user.getEmail(),user.getFullname());
+        assignees.add(assignee);
+      }
+    }
+    return assignees;
+  }
+ catch (  RemotePermissionException e) {
+    throw new IssueTrackerSecurityException("Invalid permissions for: " + securityToken);
+  }
+catch (  RemoteAuthenticationException e) {
+    throw new IssueTrackerSecurityException("Invalid credentials for: " + securityToken);
+  }
+catch (  Exception e) {
+    throw new SystemException("System Errors",e);
+  }
+}

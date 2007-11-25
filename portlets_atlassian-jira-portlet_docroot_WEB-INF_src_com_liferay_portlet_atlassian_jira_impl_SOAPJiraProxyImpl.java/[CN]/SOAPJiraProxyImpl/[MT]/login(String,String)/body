@@ -1,0 +1,14 @@
+{
+  try {
+    return _service.login(userName,passwd);
+  }
+ catch (  RemotePermissionException e) {
+    throw new IssueTrackerSecurityException("Invalid permissions for: " + userName);
+  }
+catch (  RemoteAuthenticationException e) {
+    throw new IssueTrackerSecurityException("Invalid credentials for: " + userName);
+  }
+catch (  Exception e) {
+    throw new SystemException("System Errors",e);
+  }
+}
