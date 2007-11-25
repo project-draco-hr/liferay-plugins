@@ -9,6 +9,16 @@
     return;
   }
   final Issue issue=(Issue)command;
-  final String issueKey=proxy.createIssue(securityToken,issue);
+  final String issueKey;
+  try {
+    issueKey=proxy.createIssue(securityToken,issue);
+  }
+ catch (  Exception e) {
+    if (log.isErrorEnabled()) {
+      log.error("Unabl to create issue: ",e);
+    }
+    throw e;
+  }
   response.setRenderParameter(JiraPortletConstants.TICKET_ID_KEY,issueKey);
+  response.setRenderParameter(JiraPortletConstants.URL_PREFERENCE,request.getPreferences().getValue(JiraPortletConstants.URL_PREFERENCE,StringUtil.EMPTY_STRING));
 }
