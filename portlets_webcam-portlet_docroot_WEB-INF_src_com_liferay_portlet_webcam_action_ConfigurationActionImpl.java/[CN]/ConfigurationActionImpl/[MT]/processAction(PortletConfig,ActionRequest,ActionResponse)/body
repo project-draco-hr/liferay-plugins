@@ -1,0 +1,17 @@
+{
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String url=ParamUtil.getString(req,"url");
+  String height=ParamUtil.getString(req,"height");
+  String width=ParamUtil.getString(req,"width");
+  String message=ParamUtil.getString(req,"message");
+  String portletResource=ParamUtil.getString(req,"portletResource");
+  PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(req,portletResource,true,true);
+  prefs.setValue("url",url);
+  prefs.setValue("height",height);
+  prefs.setValue("width",width);
+  prefs.setValue("message",message);
+  prefs.store();
+}
