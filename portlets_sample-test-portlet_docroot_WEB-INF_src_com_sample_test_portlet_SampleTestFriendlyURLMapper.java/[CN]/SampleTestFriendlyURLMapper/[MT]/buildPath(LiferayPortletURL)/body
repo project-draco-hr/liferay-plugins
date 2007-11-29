@@ -1,0 +1,14 @@
+{
+  WindowState windowState=portletURL.getWindowState();
+  String jspPage=GetterUtil.getString(portletURL.getParameter("jspPage"));
+  if ((Validator.isNotNull(jspPage)) || (windowState == null) || (windowState.equals(WindowState.NORMAL))) {
+    portletURL.addParameterIncludedInPath("p_p_id");
+    portletURL.addParameterIncludedInPath("jspPage");
+    StringMaker sm=new StringMaker();
+    sm.append(StringPool.SLASH);
+    sm.append(_MAPPING);
+    sm.append(jspPage);
+    return sm.toString();
+  }
+  return null;
+}
