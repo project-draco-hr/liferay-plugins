@@ -1,13 +1,16 @@
 {
   RemoteVersion[] version=_service.getVersions(securityToken,projectKey);
-  final Map<String,RemoteVersion> remoteMap=new HashMap<String,RemoteVersion>();
+  final Map remoteMap=new HashMap();
   final int len=version.length;
   for (int i=0; i < len; i++) {
     RemoteVersion remoteComp=version[i];
     remoteMap.put(remoteComp.getId(),remoteComp);
   }
-  final List<RemoteVersion> remoteCompToSet=new ArrayList<RemoteVersion>(versions.size());
-  for (  Version versionc : versions) {
+  final List remoteCompToSet=new ArrayList(versions.size());
+  Version versionc;
+  Iterator versioncIterator=versions.iterator();
+  while (versioncIterator.hasNext()) {
+    versionc=(Version)versioncIterator.next();
     remoteCompToSet.add(remoteMap.get(versionc.getVersionId()));
   }
   return remoteCompToSet;

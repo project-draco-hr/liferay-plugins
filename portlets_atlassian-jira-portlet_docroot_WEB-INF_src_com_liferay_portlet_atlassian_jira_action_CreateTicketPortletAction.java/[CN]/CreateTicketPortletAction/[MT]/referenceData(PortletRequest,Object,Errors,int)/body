@@ -6,7 +6,7 @@
     throw new IllegalStateException("Portlet not connected to Jira");
   }
   final Issue issue=(Issue)command;
-  final Map<String,Object> values=new HashMap<String,Object>();
+  final Map values=new HashMap();
 switch (page) {
 case 0:
     values.put(JiraPortletConstants.PROJECTS_KEY,proxy.getProjects(securityToken));
@@ -20,7 +20,7 @@ final String reporterName=request.getPreferences().getValue(JiraPortletConstants
 values.put(JiraPortletConstants.REPORTER_KEY,reporterName);
 issue.setReporterName(reporterName);
 values.put(JiraPortletConstants.COMPONENTS_KEY,proxy.getComponents(securityToken,issue.getProject().getKey()));
-final Collection<Version> versions=proxy.getVersions(securityToken,issue.getProject().getKey());
+final Collection versions=proxy.getVersions(securityToken,issue.getProject().getKey());
 values.put(JiraPortletConstants.VERSIONS_KEY,versions);
 return values;
 default :

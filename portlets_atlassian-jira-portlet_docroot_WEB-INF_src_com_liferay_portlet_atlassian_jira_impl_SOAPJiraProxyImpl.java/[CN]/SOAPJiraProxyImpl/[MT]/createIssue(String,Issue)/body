@@ -12,17 +12,21 @@
     remoteIssue.setEnvironment(issue.getEnvironment());
     remoteIssue.setReporter(issue.getReporterName());
     if (null != issue.getComponents()) {
-      final Collection<RemoteComponent> remoteComponents=_convertComponents(securityToken,projectKey,issue.getComponents());
-      remoteIssue.setComponents(remoteComponents.toArray(new RemoteComponent[remoteComponents.size()]));
+      final Collection remoteComponents=_convertComponents(securityToken,projectKey,issue.getComponents());
+      RemoteComponent[] remoteComponentsArray=new RemoteComponent[remoteComponents.size()];
+      remoteComponents.toArray(remoteComponentsArray);
+      remoteIssue.setComponents(remoteComponentsArray);
     }
     if (null != issue.getFixedVersions()) {
-      final Collection<RemoteVersion> converVersion=_convertVersion(securityToken,projectKey,issue.getFixedVersions());
-      RemoteVersion[] remoteVersions=converVersion.toArray(new RemoteVersion[converVersion.size()]);
+      final Collection converVersion=_convertVersion(securityToken,projectKey,issue.getFixedVersions());
+      RemoteVersion[] remoteVersions=new RemoteVersion[converVersion.size()];
+      converVersion.toArray(remoteVersions);
       remoteIssue.setFixVersions(remoteVersions);
     }
     if (null != issue.getVersions()) {
-      final Collection<RemoteVersion> converAffectsVersion=_convertVersion(securityToken,projectKey,issue.getVersions());
-      RemoteVersion[] remoteVersions=converAffectsVersion.toArray(new RemoteVersion[converAffectsVersion.size()]);
+      final Collection converAffectsVersion=_convertVersion(securityToken,projectKey,issue.getVersions());
+      RemoteVersion[] remoteVersions=new RemoteVersion[converAffectsVersion.size()];
+      converAffectsVersion.toArray(remoteVersions);
       remoteIssue.setAffectsVersions(remoteVersions);
     }
     RemoteIssue returnedIssue=_service.createIssue(securityToken,remoteIssue);

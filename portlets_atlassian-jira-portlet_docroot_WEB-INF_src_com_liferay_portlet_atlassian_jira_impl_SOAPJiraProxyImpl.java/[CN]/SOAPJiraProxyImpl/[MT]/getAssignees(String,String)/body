@@ -1,6 +1,6 @@
 {
   try {
-    final Set<Assignee> assignees=new HashSet<Assignee>();
+    final Set assignees=new HashSet();
     final RemoteProject project=_service.getProjectByKey(securityToken,projectKey);
     RemoteProjectRole[] allAvailableRoles=_service.getProjectRoles(securityToken);
     final int numRoles=allAvailableRoles.length;
@@ -23,6 +23,8 @@ catch (  RemoteAuthenticationException e) {
     throw new IssueTrackerSecurityException("Invalid credentials for: " + securityToken);
   }
 catch (  Exception e) {
-    throw new SystemException("System Errors",e);
+    java.io.ByteArrayOutputStream stream=new java.io.ByteArrayOutputStream();
+    e.printStackTrace(new java.io.PrintStream(stream));
+    throw new SystemException(stream.toString(),e);
   }
 }
