@@ -9,27 +9,6 @@
     return;
   }
   final Issue issue=(Issue)command;
-  Collection components=issue.getComponents();
-  if ((components != null) && (components.size() == 1)) {
-    Component component=(Component)components.iterator().next();
-    if (component.getId().equals(_NEGATIVE_ONE)) {
-      issue.setComponents(null);
-    }
-  }
-  Collection versions=issue.getVersions();
-  if ((versions != null) && (versions.size() == 1)) {
-    Version version=(Version)versions.iterator().next();
-    if (version.getVersionId().equals(_NEGATIVE_ONE)) {
-      issue.setVersions(null);
-    }
-  }
-  Collection fixVersions=issue.getFixedVersions();
-  if ((fixVersions != null) && (fixVersions.size() == 1)) {
-    Version version=(Version)fixVersions.iterator().next();
-    if (version != null && version.getVersionId().equals(_NEGATIVE_ONE)) {
-      issue.setFixedVersions(null);
-    }
-  }
   final String issueKey;
   try {
     issueKey=proxy.createIssue(securityToken,issue);
