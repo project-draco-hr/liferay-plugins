@@ -1,0 +1,21 @@
+{
+  final String token="token";
+  final String projectKey="projectKey";
+  final RemoteComponent remoteComponent=new RemoteComponent();
+  remoteComponent.setId("componentId");
+  remoteComponent.setName("componentName");
+  _testContext.checking(new Expectations(){
+{
+      one(_mockService).getComponents(token,projectKey);
+      RemoteComponent[] components=new RemoteComponent[]{remoteComponent};
+      will(returnValue(components));
+    }
+  }
+);
+  Collection components=_proxy.getComponents(token,projectKey);
+  _testContext.assertIsSatisfied();
+  Assert.assertEquals(components.size(),1);
+  Component component=(Component)components.iterator().next();
+  Assert.assertEquals(component.getId(),remoteComponent.getId());
+  Assert.assertEquals(component.getName(),remoteComponent.getName());
+}

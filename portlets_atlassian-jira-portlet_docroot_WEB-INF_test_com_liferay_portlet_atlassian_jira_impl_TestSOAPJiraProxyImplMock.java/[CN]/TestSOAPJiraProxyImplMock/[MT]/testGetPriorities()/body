@@ -1,0 +1,20 @@
+{
+  final String token="token";
+  final RemotePriority remotePriority=new RemotePriority();
+  remotePriority.setId("priorityId");
+  remotePriority.setName("priorityName");
+  _testContext.checking(new Expectations(){
+{
+      one(_mockService).getPriorities(token);
+      RemotePriority[] priorties=new RemotePriority[]{remotePriority};
+      will(returnValue(priorties));
+    }
+  }
+);
+  Collection priorities=_proxy.getPriorities(token);
+  _testContext.assertIsSatisfied();
+  Assert.assertEquals(priorities.size(),1);
+  Priority priority=(Priority)priorities.iterator().next();
+  Assert.assertEquals(priority.getPriorityId(),remotePriority.getId());
+  Assert.assertEquals(priority.getPriorityName(),remotePriority.getName());
+}
