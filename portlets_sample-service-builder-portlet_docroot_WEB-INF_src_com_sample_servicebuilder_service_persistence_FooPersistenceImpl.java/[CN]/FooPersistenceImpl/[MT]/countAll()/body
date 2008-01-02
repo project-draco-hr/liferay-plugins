@@ -1,17 +1,18 @@
 {
+  boolean finderClassNameCacheEnabled=FooModelImpl.CACHE_ENABLED;
   String finderClassName=Foo.class.getName();
   String finderMethodName="countAll";
   String[] finderParams=new String[]{};
   Object[] finderArgs=new Object[]{};
-  Object result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
   if (result == null) {
     Session session=null;
     try {
       session=openSession();
-      StringMaker query=new StringMaker();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.sample.servicebuilder.model.Foo");
-      Query q=session.createQuery(query.toString());
+      Query q=session.createQuery("SELECT COUNT(*) FROM com.sample.servicebuilder.model.Foo");
       Long count=null;
       Iterator itr=q.list().iterator();
       if (itr.hasNext()) {
@@ -20,7 +21,7 @@
       if (count == null) {
         count=new Long(0);
       }
-      FinderCache.putResult(finderClassName,finderMethodName,finderParams,finderArgs,count);
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,count);
       return count.intValue();
     }
  catch (    Exception e) {

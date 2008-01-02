@@ -1,16 +1,11 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    session.delete(foo);
-    session.flush();
-    return foo;
+  ModelListener listener=_getListener();
+  if (listener != null) {
+    listener.onBeforeRemove(foo);
   }
- catch (  Exception e) {
-    throw HibernateUtil.processException(e);
+  foo=removeImpl(foo);
+  if (listener != null) {
+    listener.onAfterRemove(foo);
   }
- finally {
-    closeSession(session);
-    FinderCache.clearCache(Foo.class.getName());
-  }
+  return foo;
 }

@@ -1,9 +1,13 @@
 {
+  boolean finderClassNameCacheEnabled=FooModelImpl.CACHE_ENABLED;
   String finderClassName=Foo.class.getName();
   String finderMethodName="findByField2";
   String[] finderParams=new String[]{Boolean.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
-  Object[] finderArgs=new Object[]{new Boolean(field2),String.valueOf(begin),String.valueOf(end),String.valueOf(obc)};
-  Object result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  Object[] finderArgs=new Object[]{Boolean.valueOf(field2),String.valueOf(begin),String.valueOf(end),String.valueOf(obc)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
   if (result == null) {
     Session session=null;
     try {
@@ -24,7 +28,7 @@
       int queryPos=0;
       q.setBoolean(queryPos++,field2);
       List list=QueryUtil.list(q,getDialect(),begin,end);
-      FinderCache.putResult(finderClassName,finderMethodName,finderParams,finderArgs,list);
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
       return list;
     }
  catch (    Exception e) {

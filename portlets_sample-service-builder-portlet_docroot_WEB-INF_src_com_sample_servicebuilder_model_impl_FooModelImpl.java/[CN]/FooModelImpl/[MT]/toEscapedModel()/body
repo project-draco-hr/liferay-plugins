@@ -1,0 +1,17 @@
+{
+  if (isEscapedModel()) {
+    return (Foo)this;
+  }
+ else {
+    Foo model=new FooImpl();
+    model.setEscapedModel(true);
+    model.setFooId(getFooId());
+    model.setField1(Html.escape(getField1()));
+    model.setField2(getField2());
+    model.setField3(getField3());
+    model.setField4(getField4());
+    model.setField5(Html.escape(getField5()));
+    model=(Foo)Proxy.newProxyInstance(Foo.class.getClassLoader(),new Class[]{Foo.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
