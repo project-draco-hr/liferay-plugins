@@ -1,0 +1,36 @@
+{
+  try {
+    String html=Http.URLtoString(_url);
+    List categories=new ArrayList();
+    Matcher matcher=_categoriesPattern.matcher(html);
+    while (matcher.find()) {
+      String categoryId=matcher.group(1);
+      String name=matcher.group(2);
+      GGCategory category=new GGCategory(categoryId,name);
+      categories.add(category);
+    }
+    List entries=new ArrayList();
+    matcher=_entriesPattern.matcher(html);
+    while (matcher.find()) {
+      String gadgetId=matcher.group(2);
+      String name=matcher.group(1);
+      String image=matcher.group(3);
+      GGEntry entry=new GGEntry(gadgetId,name,image);
+      entries.add(entry);
+    }
+    matcher=_paginationPattern.matcher(html);
+    int start=0;
+    int end=0;
+    int total=0;
+    if (matcher.find()) {
+      start=GetterUtil.getInteger(matcher.group(1));
+      end=GetterUtil.getInteger(matcher.group(2));
+      total=GetterUtil.getInteger(matcher.group(3));
+    }
+    GGPagination pagination=new GGPagination(GGPagination.DEFAULT_DELTA,start,end,total);
+    return new GGData(categories,entries,pagination);
+  }
+ catch (  Exception e) {
+    throw new WebCacheException(_url + " " + e.toString());
+  }
+}

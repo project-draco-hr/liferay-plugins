@@ -1,0 +1,11 @@
+{
+  WebCacheItem wci=new GGDataWebCacheItem(url);
+  String key=GGUtil.class.getName() + StringPool.PERIOD + url;
+  try {
+    return (GGData)WebCachePoolUtil.get(key,wci);
+  }
+ catch (  ClassCastException cce) {
+    WebCachePoolUtil.remove(key);
+    return (GGData)WebCachePoolUtil.get(key,wci);
+  }
+}
