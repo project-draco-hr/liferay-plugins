@@ -10,15 +10,29 @@
       categories.add(category);
     }
     List entries=new ArrayList();
-    matcher=_entriesPattern.matcher(html);
-    while (matcher.find()) {
-      String gadgetId=matcher.group(2);
-      String name=matcher.group(1);
-      String image=matcher.group(3);
-      GGEntry entry=new GGEntry(gadgetId,name,image);
-      entries.add(entry);
+    matcher=_queryPattern.matcher(_url);
+    if (matcher.find()) {
+      matcher=_queryEntriesPattern.matcher(html);
+      while (matcher.find()) {
+        String gadgetId=matcher.group(1);
+        String name=matcher.group(3);
+        String image=matcher.group(2);
+        GGEntry entry=new GGEntry(gadgetId,name,image);
+        entries.add(entry);
+      }
+      matcher=_queryPaginationPattern.matcher(html);
     }
-    matcher=_paginationPattern.matcher(html);
+ else {
+      matcher=_categoriesEntriesPattern.matcher(html);
+      while (matcher.find()) {
+        String gadgetId=matcher.group(2);
+        String name=matcher.group(1);
+        String image=matcher.group(3);
+        GGEntry entry=new GGEntry(gadgetId,name,image);
+        entries.add(entry);
+      }
+      matcher=_categoriesPaginationPattern.matcher(html);
+    }
     int start=0;
     int end=0;
     int total=0;
