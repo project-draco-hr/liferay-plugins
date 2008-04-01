@@ -1,0 +1,17 @@
+{
+  String cmd=(String)req.getParameter("cmd");
+  if (cmd != null && cmd.equals(Constants.UPDATE)) {
+    String gadgetUrl=(String)req.getParameter("gadgetUrl");
+    String gadgetTitle=(String)req.getParameter("gadgetTitle");
+    String gadgetHeight=(String)req.getParameter("gadgetHeight");
+    if (gadgetUrl != null && !gadgetUrl.equals("")) {
+      String portletResource=ParamUtil.getString(req,"portletResource");
+      PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(req,portletResource);
+      prefs.setValue("gadget-url",gadgetUrl);
+      prefs.setValue("gadget-title",gadgetTitle);
+      prefs.setValue("gadget-height",gadgetHeight);
+      prefs.store();
+    }
+  }
+  res.sendRedirect(ParamUtil.getString(req,"redirect"));
+}

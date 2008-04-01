@@ -1,0 +1,29 @@
+{
+  Map<String,Map<String,String>> data=new LinkedHashMap<String,Map<String,String>>();
+  for (  String userId : userIds) {
+    Map<String,String> personData=new HashMap<String,String>();
+    for (    String key : keys) {
+      try {
+        ExpandoColumn expandoColumn=null;
+        try {
+          expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(9,key);
+        }
+ catch (        Exception e) {
+          continue;
+        }
+        ExpandoValue expandoValue=null;
+        try {
+          expandoValue=ExpandoValueLocalServiceUtil.getValue(expandoColumn.getColumnId(),Long.parseLong(userId));
+        }
+ catch (        Exception e) {
+          continue;
+        }
+        personData.put(expandoColumn.getName(),expandoValue.getData());
+      }
+ catch (      Exception e) {
+      }
+    }
+    data.put(userId,personData);
+  }
+  return new ResponseItem<Map<String,Map<String,String>>>(data);
+}

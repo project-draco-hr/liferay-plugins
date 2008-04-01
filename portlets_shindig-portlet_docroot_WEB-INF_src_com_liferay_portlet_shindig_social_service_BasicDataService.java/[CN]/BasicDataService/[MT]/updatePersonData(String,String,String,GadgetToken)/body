@@ -1,0 +1,18 @@
+{
+  if (!OpenSocialUtil.isValidKey(key)) {
+    return new ResponseItem<Object>(ResponseError.BAD_REQUEST,"The person data key had invalid characters",new JSONObject());
+  }
+  try {
+    ExpandoColumn expandoColumn=null;
+    try {
+      expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(9,key);
+    }
+ catch (    Exception e) {
+      expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(9,key,13);
+    }
+    ExpandoValueLocalServiceUtil.addValue(expandoColumn.getColumnId(),Long.parseLong(userId),value);
+  }
+ catch (  Exception e) {
+  }
+  return new ResponseItem<JSONObject>(new JSONObject());
+}

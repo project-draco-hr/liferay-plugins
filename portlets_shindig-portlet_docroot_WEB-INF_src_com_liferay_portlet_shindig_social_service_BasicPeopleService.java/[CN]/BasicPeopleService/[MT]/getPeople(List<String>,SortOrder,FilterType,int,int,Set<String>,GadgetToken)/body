@@ -1,0 +1,99 @@
+{
+  List<Person> people=new ArrayList<Person>();
+  String ownerToken=token.getOwnerId();
+  Person owner=null;
+  Person viewer=null;
+  long ownerUserId=0;
+  long viewerUserId=0;
+  try {
+    User viewerUser=UserLocalServiceUtil.getUserById(Long.parseLong(token.getViewerId()));
+    viewerUserId=viewerUser.getUserId();
+    viewer=new Person(String.valueOf(viewerUser.getUserId()),new Name(viewerUser.getFullName()));
+    List<com.liferay.portal.model.Phone> liferayPhones=PhoneServiceUtil.getPhones(Contact.class.getName(),viewerUser.getContactId());
+    List<Phone> phoneNumbers=new ArrayList<Phone>();
+    for (    com.liferay.portal.model.Phone liferayPhone : liferayPhones) {
+      phoneNumbers.add(new Phone(liferayPhone.getNumber(),liferayPhone.getType().getName()));
+    }
+    viewer.setPhoneNumbers(phoneNumbers);
+    if (viewerUser.isFemale()) {
+      viewer.setGender(new Enum<Enum.Gender>(Enum.Gender.FEMALE));
+    }
+ else {
+      viewer.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
+    }
+    viewer.setIsViewer(true);
+    people.add(viewer);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  if (ownerToken.contains(StringPool.UNDERLINE)) {
+    String[] parts=ownerToken.split(StringPool.UNDERLINE);
+    long classNameId=Long.parseLong(parts[0]);
+    long classPK=Long.parseLong(parts[1]);
+    if (classNameId == _GROUP_CLASSNAME_ID) {
+      try {
+        Group ownerGroup=GroupLocalServiceUtil.getGroup(classPK);
+        owner=new Person(String.valueOf(classNameId + StringPool.UNDERLINE + ownerGroup.getGroupId()),new Name(ownerGroup.getName() + " (Community)"));
+        List<Phone> phoneNumbers=new ArrayList<Phone>();
+        owner.setPhoneNumbers(phoneNumbers);
+        owner.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
+        owner.setIsOwner(true);
+      }
+ catch (      Exception e) {
+        _log.error(e,e);
+      }
+    }
+ else     if (classNameId == _ORG_CLASSNAME_ID) {
+      try {
+        Organization ownerOrg=OrganizationLocalServiceUtil.getOrganization(classPK);
+        owner=new Person(String.valueOf(classNameId + StringPool.UNDERLINE + ownerOrg.getOrganizationId()),new Name(ownerOrg.getName() + " (Organization)"));
+        List<com.liferay.portal.model.Phone> liferayPhones=PhoneServiceUtil.getPhones(Organization.class.getName(),ownerOrg.getOrganizationId());
+        List<Phone> phoneNumbers=new ArrayList<Phone>();
+        for (        com.liferay.portal.model.Phone liferayPhone : liferayPhones) {
+          phoneNumbers.add(new Phone(liferayPhone.getNumber(),liferayPhone.getType().getName()));
+        }
+        owner.setPhoneNumbers(phoneNumbers);
+        owner.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
+        owner.setIsOwner(true);
+      }
+ catch (      Exception e) {
+        _log.error(e,e);
+      }
+    }
+ else     if (classNameId == _USER_CLASSNAME_ID) {
+      try {
+        User ownerUser=UserLocalServiceUtil.getUserById(classPK);
+        ownerUserId=ownerUser.getUserId();
+        owner=new Person(String.valueOf(classNameId + StringPool.UNDERLINE + ownerUser.getUserId()),new Name(ownerUser.getFullName()));
+        List<com.liferay.portal.model.Phone> liferayPhones=PhoneServiceUtil.getPhones(Contact.class.getName(),ownerUser.getContactId());
+        List<Phone> phoneNumbers=new ArrayList<Phone>();
+        for (        com.liferay.portal.model.Phone liferayPhone : liferayPhones) {
+          phoneNumbers.add(new Phone(liferayPhone.getNumber(),liferayPhone.getType().getName()));
+        }
+        owner.setPhoneNumbers(phoneNumbers);
+        if (ownerUser.isFemale()) {
+          owner.setGender(new Enum<Enum.Gender>(Enum.Gender.FEMALE));
+        }
+ else {
+          owner.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
+        }
+        owner.setIsOwner(true);
+      }
+ catch (      Exception e) {
+        _log.error(e,e);
+      }
+    }
+  }
+  if (owner != null && ownerUserId != viewerUserId) {
+    people.add(owner);
+  }
+  if (sortOrder.equals(SortOrder.name)) {
+    Collections.sort(people,NAME_COMPARATOR);
+  }
+  int totalSize=people.size();
+  int last=first + max;
+  people=people.subList(first,Math.min(last,totalSize));
+  ApiCollection<Person> collection=new ApiCollection<Person>(people,first,totalSize);
+  return new ResponseItem<ApiCollection<Person>>(collection);
+}

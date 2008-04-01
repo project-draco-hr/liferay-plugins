@@ -1,0 +1,55 @@
+{
+  OpenSocialDataType type=OpenSocialDataType.valueOf(request.getType());
+  ResponseItem response=new ResponseItem<Object>(ResponseError.NOT_IMPLEMENTED,request.getType() + " has not been implemented yet.",new JSONObject());
+  try {
+    JSONObject params=request.getParams();
+    String jsonSpec=params.getString("idSpec");
+    List<String> peopleIds=peopleHandler.getIds(IdSpec.fromJson(jsonSpec),request.getToken());
+switch (type) {
+case FETCH_PEOPLE:
+      JSONArray profileDetail=params.getJSONArray("profileDetail");
+    Set<String> profileDetailFields=new HashSet<String>(profileDetail.length() + 1,1);
+  for (int i=0; i < profileDetail.length(); i++) {
+    profileDetailFields.add(profileDetail.getString(i));
+  }
+PeopleService.SortOrder sortOrder=PeopleService.SortOrder.valueOf(params.getString("sortOrder"));
+PeopleService.FilterType filter=PeopleService.FilterType.valueOf(params.getString("filter"));
+int first=params.getInt("first");
+int max=params.getInt("max");
+response=peopleHandler.getPeople(peopleIds,sortOrder,filter,first,max,profileDetailFields,request.getToken());
+break;
+case FETCH_PERSON_APP_DATA:
+JSONArray jsonKeys=params.getJSONArray("keys");
+List<String> keys=new ArrayList<String>(jsonKeys.length());
+for (int i=0; i < jsonKeys.length(); i++) {
+keys.add(jsonKeys.getString(i));
+}
+response=dataHandler.getPersonData(peopleIds,keys,request.getToken());
+break;
+case UPDATE_PERSON_APP_DATA:
+String id=peopleIds.get(0);
+String key=params.getString("key");
+String value=params.getString("value");
+response=dataHandler.updatePersonData(id,key,value,request.getToken());
+break;
+case FETCH_ACTIVITIES:
+response=activitiesHandler.getActivities(peopleIds,request.getToken());
+break;
+case CREATE_ACTIVITY:
+String personId=peopleIds.get(0);
+Activity activity=new Activity("5",personId);
+activity.setTitle("Temporary title - we don't read json right now");
+response=activitiesHandler.createActivity(personId,activity,request.getToken());
+break;
+}
+}
+ catch (JSONException e) {
+logger.log(Level.INFO,e.getMessage());
+response=new ResponseItem<Object>(ResponseError.BAD_REQUEST,"The json request had a bad format",new JSONObject());
+}
+catch (IllegalArgumentException e) {
+logger.log(Level.INFO,e.getMessage());
+response=new ResponseItem<Object>(ResponseError.BAD_REQUEST,"The json request had a bad idSpec",new JSONObject());
+}
+return response;
+}
