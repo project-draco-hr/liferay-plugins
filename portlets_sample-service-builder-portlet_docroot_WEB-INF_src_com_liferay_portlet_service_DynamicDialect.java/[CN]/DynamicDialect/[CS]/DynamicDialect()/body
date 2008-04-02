@@ -16,6 +16,9 @@
     if (dbName.equals("ASE") && (dbMajorVersion == 15)) {
       _dialect=new SybaseDialect();
     }
+ else     if (dbName.startsWith("DB2") && (dbMajorVersion == 9)) {
+      _dialect=new DB2Dialect();
+    }
  else {
       _dialect=DialectFactory.determineDialect(dbName,dbMajorVersion);
     }
@@ -44,9 +47,9 @@
   Properties dynamicDefaultProps=getDefaultProperties();
   Properties dialectDefaultProps=_dialect.getDefaultProperties();
   dynamicDefaultProps.clear();
-  Enumeration enu=dialectDefaultProps.propertyNames();
+  Enumeration<String> enu=(Enumeration<String>)dialectDefaultProps.propertyNames();
   while (enu.hasMoreElements()) {
-    String key=(String)enu.nextElement();
+    String key=enu.nextElement();
     String value=dialectDefaultProps.getProperty(key);
     dynamicDefaultProps.setProperty(key,value);
   }
