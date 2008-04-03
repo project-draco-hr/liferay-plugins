@@ -1,0 +1,17 @@
+{
+  Person person=null;
+  try {
+    person=new Person("G-" + group.getGroupId(),new Name(group.getName() + " (Community)"));
+    person.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
+    if (token.getViewerId() == person.getId()) {
+      person.setIsViewer(true);
+    }
+ else     if (token.getOwnerId() == person.getId()) {
+      person.setIsOwner(true);
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return person;
+}

@@ -1,0 +1,14 @@
+{
+  List<Email> emails=new ArrayList<Email>();
+  emails.add(new Email(user.getEmailAddress(),"Primary"));
+  try {
+    List<EmailAddress> emailAddresses=EmailAddressLocalServiceUtil.getEmailAddresses(user.getCompanyId(),User.class.getName(),user.getUserId());
+    for (    EmailAddress emailAddress : emailAddresses) {
+      emails.add(new Email(emailAddress.getAddress(),emailAddress.getType().getName()));
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return emails;
+}
