@@ -9,11 +9,11 @@
     for (    String userId : userIds) {
       try {
         List<Activity> personActivities=new ArrayList<Activity>();
-        List<ActivityTracker> activityTrackers=ActivityTrackerLocalServiceUtil.getUserActivityTrackers(Long.parseLong(userId),0,20);
-        for (        ActivityTracker activityTracker : activityTrackers) {
-          Activity activity=new Activity(String.valueOf(activityTracker.getClassPK()),String.valueOf(activityTracker.getUserId()));
-          if (activityTracker.getClassName().equals(Activity.class.getName())) {
-            JSONObject extraData=new JSONObject(activityTracker.getExtraData());
+        List<SocialActivity> socialActivities=SocialActivityLocalServiceUtil.getUserActivities(Long.parseLong(userId),0,20);
+        for (        SocialActivity socialActivity : socialActivities) {
+          Activity activity=new Activity(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
+          if (socialActivity.getClassName().equals(Activity.class.getName())) {
+            JSONObject extraData=new JSONObject(socialActivity.getExtraData());
             if (extraData.has("appId")) {
               activity.setAppId(extraData.getString("appId"));
             }
@@ -61,9 +61,9 @@
             }
           }
  else {
-            ActivityFeedEntry activityFeedEntry=ActivityTrackerInterpreterUtil.interpret(activityTracker,themeDisplay);
-            activity.setBody(activityFeedEntry.getBody());
-            activity.setTitle(activityFeedEntry.getTitle());
+            SocialActivityFeedEntry socialActivityFeedEntry=SocialActivityInterpreterLocalServiceUtil.interpret(socialActivity,themeDisplay);
+            activity.setBody(socialActivityFeedEntry.getBody());
+            activity.setTitle(socialActivityFeedEntry.getTitle());
           }
           personActivities.add(activity);
         }
