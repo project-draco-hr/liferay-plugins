@@ -11,7 +11,7 @@ case OWNER_FRIENDS:
 if (!token.getOwnerId().startsWith("G-")) {
 try {
 User owner=UserLocalServiceUtil.getUserById(Long.parseLong(token.getOwnerId()));
-List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getCompanyId(),owner.getUserId(),1,-1,-1);
+List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getUserId(),1,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
 for (User friend : friends) {
   ids.add(String.valueOf(friend.getUserId()));
 }
@@ -24,7 +24,7 @@ case VIEWER_FRIENDS:
 if (!token.getViewerId().startsWith("G-")) {
 try {
 User viewer=UserLocalServiceUtil.getUserById(Long.parseLong(token.getViewerId()));
-List<User> friends=UserLocalServiceUtil.getSocialUsers(viewer.getCompanyId(),viewer.getUserId(),1,-1,-1);
+List<User> friends=UserLocalServiceUtil.getSocialUsers(viewer.getUserId(),1,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
 for (User friend : friends) {
 ids.add(String.valueOf(friend.getUserId()));
 }
