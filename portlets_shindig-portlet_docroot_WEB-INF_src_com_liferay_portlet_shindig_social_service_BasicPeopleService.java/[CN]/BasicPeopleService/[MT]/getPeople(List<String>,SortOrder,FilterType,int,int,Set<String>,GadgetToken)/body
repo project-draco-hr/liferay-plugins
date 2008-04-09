@@ -6,16 +6,16 @@
       if (userId.startsWith("G-")) {
         Group group=GroupLocalServiceUtil.getGroup(Long.parseLong(userId.substring("G-".length())));
         if (group.isCommunity()) {
-          person=getPerson(group,profileDetails,token);
+          person=ShindigUtil.getPerson(group,profileDetails,token);
         }
  else         if (group.isOrganization()) {
           Organization org=OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
-          person=getPerson(org,profileDetails,token);
+          person=ShindigUtil.getPerson(org,profileDetails,token);
         }
       }
  else {
         User user=UserLocalServiceUtil.getUserById(Long.parseLong(userId));
-        person=getPerson(user,profileDetails,token);
+        person=ShindigUtil.getPerson(user,profileDetails,token);
       }
       people.add(person);
     }

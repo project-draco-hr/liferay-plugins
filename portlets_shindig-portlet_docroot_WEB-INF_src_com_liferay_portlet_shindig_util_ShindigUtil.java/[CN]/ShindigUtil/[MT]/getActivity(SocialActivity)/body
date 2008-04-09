@@ -1,0 +1,55 @@
+{
+  Activity activity=new Activity(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
+  try {
+    JSONObject extraData=new JSONObject(socialActivity.getExtraData());
+    if (extraData.has("appId")) {
+      activity.setAppId(extraData.getString("appId"));
+    }
+    if (extraData.has("body")) {
+      activity.setBody(extraData.getString("body"));
+    }
+    if (extraData.has("bodyId")) {
+      activity.setBodyId(extraData.getString("bodyId"));
+    }
+    if (extraData.has("externalId")) {
+      activity.setExternalId(extraData.getString("externalId"));
+    }
+    if (extraData.has("mediaItems")) {
+      activity.setMediaItems(ShindigUtil.getMediaItems(extraData.getJSONArray("mediaItems")));
+    }
+    if (extraData.has("postedTime")) {
+      activity.setPostedTime(extraData.getLong("postedTime"));
+    }
+    if (extraData.has("priority")) {
+      activity.setPriority(Float.parseFloat(extraData.getString("priority")));
+    }
+    if (extraData.has("streamFaviconUrl")) {
+      activity.setStreamFaviconUrl(extraData.getString("streamFaviconUrl"));
+    }
+    if (extraData.has("streamSourceUrl")) {
+      activity.setStreamSourceUrl(extraData.getString("streamSourceUrl"));
+    }
+    if (extraData.has("streamTitle")) {
+      activity.setStreamTitle(extraData.getString("streamTitle"));
+    }
+    if (extraData.has("streamUrl")) {
+      activity.setStreamUrl(extraData.getString("streamUrl"));
+    }
+    if (extraData.has("templateParams")) {
+      activity.setTemplateParams(ShindigUtil.getTemplateParams(extraData.getJSONArray("templateParams")));
+    }
+    if (extraData.has("title")) {
+      activity.setTitle(extraData.getString("title"));
+    }
+    if (extraData.has("titleId")) {
+      activity.setTitleId(extraData.getString("titleId"));
+    }
+    if (extraData.has("url")) {
+      activity.setUrl(extraData.getString("url"));
+    }
+  }
+ catch (  JSONException je) {
+    _log.error(je,je);
+  }
+  return activity;
+}

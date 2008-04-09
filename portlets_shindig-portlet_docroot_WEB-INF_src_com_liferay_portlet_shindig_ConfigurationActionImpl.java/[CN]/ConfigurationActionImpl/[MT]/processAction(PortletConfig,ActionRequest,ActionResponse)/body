@@ -1,10 +1,10 @@
 {
-  String cmd=(String)req.getParameter("cmd");
-  if (cmd != null && cmd.equals(Constants.UPDATE)) {
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  if (cmd.equals(Constants.UPDATE)) {
     String gadgetUrl=(String)req.getParameter("gadgetUrl");
     String gadgetTitle=(String)req.getParameter("gadgetTitle");
     String gadgetHeight=(String)req.getParameter("gadgetHeight");
-    if (gadgetUrl != null && !gadgetUrl.equals("")) {
+    if (Validator.isNotNull(gadgetUrl)) {
       String portletResource=ParamUtil.getString(req,"portletResource");
       PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(req,portletResource);
       prefs.setValue("gadget-url",gadgetUrl);

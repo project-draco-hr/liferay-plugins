@@ -1,0 +1,19 @@
+{
+  ExpandoColumn expandoColumn=null;
+  ExpandoTable defaultTable=ShindigUtil.getTable();
+  try {
+    expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(User.class.getName(),ShindigUtil.OPEN_SOCIAL_DATA,columnName);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  if (expandoColumn == null) {
+    try {
+      expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(defaultTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+    }
+ catch (    Exception e) {
+      _log.error(e,e);
+    }
+  }
+  return expandoColumn;
+}
