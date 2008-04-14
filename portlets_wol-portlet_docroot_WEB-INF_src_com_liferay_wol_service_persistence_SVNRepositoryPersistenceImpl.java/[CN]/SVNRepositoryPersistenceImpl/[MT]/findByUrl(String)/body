@@ -1,0 +1,14 @@
+{
+  SVNRepository svnRepository=fetchByUrl(url);
+  if (svnRepository == null) {
+    StringMaker msg=new StringMaker();
+    msg.append("No SVNRepository exists with the key {");
+    msg.append("url=" + url);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchSVNRepositoryException(msg.toString());
+  }
+  return svnRepository;
+}

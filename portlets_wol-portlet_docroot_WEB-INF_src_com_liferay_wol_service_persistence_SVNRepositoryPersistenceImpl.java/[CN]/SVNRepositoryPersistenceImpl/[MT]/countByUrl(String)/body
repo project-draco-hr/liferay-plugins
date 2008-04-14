@@ -1,0 +1,51 @@
+{
+  boolean finderClassNameCacheEnabled=SVNRepositoryModelImpl.CACHE_ENABLED;
+  String finderClassName=SVNRepository.class.getName();
+  String finderMethodName="countByUrl";
+  String[] finderParams=new String[]{String.class.getName()};
+  Object[] finderArgs=new Object[]{url};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("SELECT COUNT(*) ");
+      query.append("FROM com.liferay.wol.model.SVNRepository WHERE ");
+      if (url == null) {
+        query.append("url IS NULL");
+      }
+ else {
+        query.append("url = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      int queryPos=0;
+      if (url != null) {
+        q.setString(queryPos++,url);
+      }
+      Long count=null;
+      Iterator<Long> itr=q.list().iterator();
+      if (itr.hasNext()) {
+        count=itr.next();
+      }
+      if (count == null) {
+        count=new Long(0);
+      }
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,count);
+      return count.intValue();
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return ((Long)result).intValue();
+  }
+}

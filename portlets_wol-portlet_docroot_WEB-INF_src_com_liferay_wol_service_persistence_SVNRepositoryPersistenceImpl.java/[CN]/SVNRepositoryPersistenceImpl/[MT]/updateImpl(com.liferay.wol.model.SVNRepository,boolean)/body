@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(svnRepository);
+    }
+ else {
+      if (svnRepository.isNew()) {
+        session.save(svnRepository);
+      }
+    }
+    session.flush();
+    svnRepository.setNew(false);
+    return svnRepository;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(SVNRepository.class.getName());
+  }
+}

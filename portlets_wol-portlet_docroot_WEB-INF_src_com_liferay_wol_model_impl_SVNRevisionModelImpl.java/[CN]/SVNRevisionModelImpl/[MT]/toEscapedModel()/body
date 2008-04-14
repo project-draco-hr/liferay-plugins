@@ -1,0 +1,17 @@
+{
+  if (isEscapedModel()) {
+    return (SVNRevision)this;
+  }
+ else {
+    SVNRevision model=new SVNRevisionImpl();
+    model.setEscapedModel(true);
+    model.setSvnRevisionId(getSvnRevisionId());
+    model.setSvnRepositoryId(getSvnRepositoryId());
+    model.setRevisionNumber(getRevisionNumber());
+    model.setDate(getDate());
+    model.setAuthor(HtmlUtil.escape(getAuthor()));
+    model.setComments(HtmlUtil.escape(getComments()));
+    model=(SVNRevision)Proxy.newProxyInstance(SVNRevision.class.getClassLoader(),new Class[]{SVNRevision.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
