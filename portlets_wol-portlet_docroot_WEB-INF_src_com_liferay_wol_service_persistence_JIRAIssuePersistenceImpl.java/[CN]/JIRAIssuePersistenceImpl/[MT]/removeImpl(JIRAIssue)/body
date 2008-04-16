@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(jiraIssue);
+    session.flush();
+    return jiraIssue;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(JIRAIssue.class.getName());
+  }
+}

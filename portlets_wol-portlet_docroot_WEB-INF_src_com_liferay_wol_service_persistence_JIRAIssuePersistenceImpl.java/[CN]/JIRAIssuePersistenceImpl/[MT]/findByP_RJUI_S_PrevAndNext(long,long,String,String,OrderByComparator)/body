@@ -1,0 +1,51 @@
+{
+  JIRAIssue jiraIssue=findByPrimaryKey(jiraIssueId);
+  int count=countByP_RJUI_S(projectId,reporterJiraUserId,status);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+    query.append("project = ?");
+    query.append(" AND ");
+    if (reporterJiraUserId == null) {
+      query.append("reporter IS NULL");
+    }
+ else {
+      query.append("reporter = ?");
+    }
+    query.append(" AND ");
+    if (status == null) {
+      query.append("issuestatus IS NULL");
+    }
+ else {
+      query.append("issuestatus = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    int queryPos=0;
+    q.setLong(queryPos++,projectId);
+    if (reporterJiraUserId != null) {
+      q.setString(queryPos++,reporterJiraUserId);
+    }
+    if (status != null) {
+      q.setString(queryPos++,status);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraIssue);
+    JIRAIssue[] array=new JIRAIssueImpl[3];
+    array[0]=(JIRAIssue)objArray[0];
+    array[1]=(JIRAIssue)objArray[1];
+    array[2]=(JIRAIssue)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

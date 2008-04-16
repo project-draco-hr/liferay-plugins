@@ -1,0 +1,31 @@
+{
+  JIRAIssue jiraIssue=findByPrimaryKey(jiraIssueId);
+  int count=countByProjectId(projectId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+    query.append("project = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    int queryPos=0;
+    q.setLong(queryPos++,projectId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraIssue);
+    JIRAIssue[] array=new JIRAIssueImpl[3];
+    array[0]=(JIRAIssue)objArray[0];
+    array[1]=(JIRAIssue)objArray[1];
+    array[2]=(JIRAIssue)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

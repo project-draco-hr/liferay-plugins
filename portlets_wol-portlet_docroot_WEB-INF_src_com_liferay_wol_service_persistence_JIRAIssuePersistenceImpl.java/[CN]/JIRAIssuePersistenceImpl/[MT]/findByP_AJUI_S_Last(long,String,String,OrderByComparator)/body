@@ -1,0 +1,18 @@
+{
+  int count=countByP_AJUI_S(projectId,assigneeJiraUserId,status);
+  List<JIRAIssue> list=findByP_AJUI_S(projectId,assigneeJiraUserId,status,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No JIRAIssue exists with the key {");
+    msg.append("projectId=" + projectId);
+    msg.append(", ");
+    msg.append("assigneeJiraUserId=" + assigneeJiraUserId);
+    msg.append(", ");
+    msg.append("status=" + status);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAIssueException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

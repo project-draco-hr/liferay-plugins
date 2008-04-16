@@ -1,0 +1,13 @@
+{
+  List<JIRAIssue> list=findByProjectId(projectId,0,1,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No JIRAIssue exists with the key {");
+    msg.append("projectId=" + projectId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAIssueException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

@@ -1,0 +1,56 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAIssue.class.getName();
+  String finderMethodName="findByP_RJUI_S";
+  String[] finderParams=new String[]{Long.class.getName(),String.class.getName(),String.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(projectId),reporterJiraUserId,status};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+      query.append("project = ?");
+      query.append(" AND ");
+      if (reporterJiraUserId == null) {
+        query.append("reporter IS NULL");
+      }
+ else {
+        query.append("reporter = ?");
+      }
+      query.append(" AND ");
+      if (status == null) {
+        query.append("issuestatus IS NULL");
+      }
+ else {
+        query.append("issuestatus = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      int queryPos=0;
+      q.setLong(queryPos++,projectId);
+      if (reporterJiraUserId != null) {
+        q.setString(queryPos++,reporterJiraUserId);
+      }
+      if (status != null) {
+        q.setString(queryPos++,status);
+      }
+      List<JIRAIssue> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<JIRAIssue>)result;
+  }
+}
