@@ -1,0 +1,43 @@
+{
+  SVNRevision svnRevision=findByPrimaryKey(svnRevisionId);
+  int count=countBySVNUserId(svnUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.wol.model.SVNRevision WHERE ");
+    if (svnUserId == null) {
+      query.append("svnUserId IS NULL");
+    }
+ else {
+      query.append("svnUserId = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("svnRepositoryId ASC, ");
+      query.append("revisionNumber ASC");
+    }
+    Query q=session.createQuery(query.toString());
+    int queryPos=0;
+    if (svnUserId != null) {
+      q.setString(queryPos++,svnUserId);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,svnRevision);
+    SVNRevision[] array=new SVNRevisionImpl[3];
+    array[0]=(SVNRevision)objArray[0];
+    array[1]=(SVNRevision)objArray[1];
+    array[2]=(SVNRevision)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,14 @@
+{
+  int count=countBySVNUserId(svnUserId);
+  List<SVNRevision> list=findBySVNUserId(svnUserId,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No SVNRevision exists with the key {");
+    msg.append("svnUserId=" + svnUserId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchSVNRevisionException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
