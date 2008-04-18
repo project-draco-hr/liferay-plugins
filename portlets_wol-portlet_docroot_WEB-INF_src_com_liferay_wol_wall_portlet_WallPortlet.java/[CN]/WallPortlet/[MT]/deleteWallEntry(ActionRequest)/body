@@ -1,0 +1,25 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  long wallEntryId=ParamUtil.getLong(req,"wallEntryId");
+  WallEntry wallEntry=null;
+  try {
+    wallEntry=WallEntryLocalServiceUtil.getWallEntry(wallEntryId);
+  }
+ catch (  Exception e) {
+    return;
+  }
+  if (wallEntry.getGroupId() != themeDisplay.getPortletGroupId()) {
+    return;
+  }
+  if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),themeDisplay.getUserId(),ActionKeys.UPDATE)) {
+    return;
+  }
+  try {
+    WallEntryLocalServiceUtil.deleteWallEntry(wallEntryId);
+  }
+ catch (  Exception e) {
+  }
+}

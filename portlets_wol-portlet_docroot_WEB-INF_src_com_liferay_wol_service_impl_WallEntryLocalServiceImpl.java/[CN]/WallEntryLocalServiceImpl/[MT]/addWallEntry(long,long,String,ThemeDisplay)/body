@@ -11,5 +11,11 @@
   wallEntry.setModifiedDate(now);
   wallEntry.setComments(comments);
   wallEntryPersistence.update(wallEntry,false);
+  try {
+    sendEmail(wallEntry,themeDisplay);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
   return wallEntry;
 }
