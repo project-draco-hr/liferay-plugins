@@ -2,10 +2,25 @@
   Person person=null;
   try {
     person=new Person(String.valueOf(user.getUserId()),new Name(user.getFullName()));
-    if (profileDetails.contains("about_me")) {
+    StringMaker sm=new StringMaker();
+    sm.append(token.getDomain());
+    sm.append(PortalUtil.getPathFriendlyURLPublic());
+    sm.append(user.getScreenName());
+    person.setProfileUrl(sm.toString());
+    sm=new StringMaker();
+    sm.append(token.getDomain());
+    sm.append(PortalUtil.getPathImage());
+    sm.append("/user_");
+    sm.append(user.isFemale() ? "female" : "male");
+    sm.append("_portrait?img_id=");
+    sm.append(user.getPortraitId());
+    sm.append("&t=");
+    sm.append(ImageServletTokenUtil.getToken(user.getPortraitId()));
+    person.setThumbnailUrl(sm.toString());
+    if (profileDetails.contains(Person.Field.ABOUT_ME.toString())) {
       person.setAboutMe(user.getComments());
     }
-    if (profileDetails.contains("age")) {
+    if (profileDetails.contains(Person.Field.AGE.toString())) {
       Calendar dateOfBirth=new GregorianCalendar();
       dateOfBirth.setTime(user.getBirthday());
       Calendar today=Calendar.getInstance();
@@ -16,13 +31,13 @@
       }
       person.setAge(age);
     }
-    if (profileDetails.contains("date_of_birth")) {
+    if (profileDetails.contains(Person.Field.DATE_OF_BIRTH.toString())) {
       person.setDateOfBirth(user.getBirthday());
     }
-    if (profileDetails.contains("emails")) {
+    if (profileDetails.contains(Person.Field.EMAILS)) {
       person.setEmails(getEmails(user));
     }
-    if (profileDetails.contains("gender")) {
+    if (profileDetails.contains(Person.Field.GENDER.toString())) {
       if (user.isFemale()) {
         person.setGender(new Enum<Enum.Gender>(Enum.Gender.FEMALE));
       }
@@ -30,32 +45,19 @@
         person.setGender(new Enum<Enum.Gender>(Enum.Gender.MALE));
       }
     }
-    if (profileDetails.contains("nickname")) {
+    if (profileDetails.contains(Person.Field.NICKNAME.toString())) {
       person.setNickname(user.getScreenName());
     }
-    if (profileDetails.contains("phone_numbers")) {
+    if (profileDetails.contains(Person.Field.PHONE_NUMBERS.toString())) {
       person.setPhoneNumbers(getPhoneNumbers(Contact.class.getName(),user.getContactId()));
     }
-    if (profileDetails.contains("thumbnailUrl")) {
-      long portraitId=user.getPortraitId();
-      String tokenId=ImageServletTokenUtil.getToken(user.getPortraitId());
-      StringMaker sm=new StringMaker();
-      sm.append(PortalUtil.getPathImage());
-      sm.append("/user_");
-      sm.append(user.isFemale() ? "female" : "male");
-      sm.append("_portrait?img_id=");
-      sm.append(portraitId);
-      sm.append("&t=");
-      sm.append(tokenId);
-      person.setThumbnailUrl(sm.toString());
-    }
-    if (profileDetails.contains("time_zone")) {
+    if (profileDetails.contains(Person.Field.TIME_ZONE.toString())) {
       person.setTimeZone(new Long(user.getTimeZone().getRawOffset()));
     }
-    if (token.getViewerId() == person.getId()) {
+    if (token.getViewerId().equals(person.getId())) {
       person.setIsViewer(true);
     }
- else     if (token.getOwnerId() == person.getId()) {
+    if (token.getOwnerId().equals(person.getId())) {
       person.setIsOwner(true);
     }
   }

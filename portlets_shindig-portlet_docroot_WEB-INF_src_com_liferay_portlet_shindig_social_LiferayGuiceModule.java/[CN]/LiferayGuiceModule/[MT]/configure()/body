@@ -1,0 +1,24 @@
+{
+  Names.bindProperties(this.binder(),properties);
+  bind(RemoteContentFetcher.class).to(BasicRemoteContentFetcher.class);
+  bind(RemoteContentFetcher.class).annotatedWith(GadgetSpecFetcher.class).to(CachedContentFetcher.class);
+  bind(RemoteContentFetcher.class).annotatedWith(MessageBundleFetcher.class).to(CachedContentFetcher.class);
+  bind(GadgetBlacklist.class).to(BasicGadgetBlacklist.class);
+  bind(GadgetTokenDecoder.class).to(BasicGadgetTokenDecoder.class);
+  bind(SigningFetcherFactory.class);
+  bind(OAuthFetcherFactory.class);
+  bind(Executor.class).toInstance(Executors.newCachedThreadPool());
+  bind(SyndicatorConfig.class).in(Scopes.SINGLETON);
+  bind(GadgetFeatureRegistry.class).in(Scopes.SINGLETON);
+  bind(GadgetServer.class).in(Scopes.SINGLETON);
+  bind(PeopleService.class).to(LiferayPeopleService.class);
+  bind(DataService.class).to(LiferayDataService.class);
+  bind(ActivitiesService.class).to(LiferayActivitiesService.class);
+  bind(new TypeLiteral<List<GadgetDataHandler>>(){
+  }
+).toProvider(GadgetDataHandlersProvider.class);
+  bind(ProxyHandler.class).in(Scopes.SINGLETON);
+  bind(GadgetRenderer.class).in(Scopes.SINGLETON);
+  bind(JsonRpcHandler.class).in(Scopes.SINGLETON);
+  bind(UrlGenerator.class).in(Scopes.SINGLETON);
+}

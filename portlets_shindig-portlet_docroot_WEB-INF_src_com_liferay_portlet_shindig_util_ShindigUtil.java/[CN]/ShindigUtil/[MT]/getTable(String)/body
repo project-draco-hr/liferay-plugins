@@ -1,0 +1,22 @@
+{
+  ExpandoTable expandoTable=null;
+  try {
+    expandoTable=ExpandoTableLocalServiceUtil.getTable(User.class.getName(),tableName);
+  }
+ catch (  Exception e) {
+    if (_log.isDebugEnabled()) {
+      _log.debug(e,e);
+    }
+  }
+  if (expandoTable == null) {
+    try {
+      expandoTable=ExpandoTableLocalServiceUtil.addTable(User.class.getName(),tableName);
+    }
+ catch (    Exception e) {
+      if (_log.isDebugEnabled()) {
+        _log.debug(e,e);
+      }
+    }
+  }
+  return expandoTable;
+}

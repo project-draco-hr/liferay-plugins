@@ -1,18 +1,22 @@
 {
   ExpandoColumn expandoColumn=null;
-  ExpandoTable defaultTable=ShindigUtil.getTable();
+  ExpandoTable defaultTable=ShindigUtil.getTable(OPEN_SOCIAL_DATA);
   try {
-    expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(User.class.getName(),ShindigUtil.OPEN_SOCIAL_DATA,columnName);
+    expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(User.class.getName(),OPEN_SOCIAL_DATA,columnName);
   }
  catch (  Exception e) {
-    _log.error(e,e);
+    if (_log.isDebugEnabled()) {
+      _log.debug(e,e);
+    }
   }
   if (expandoColumn == null) {
     try {
       expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(defaultTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
     }
  catch (    Exception e) {
-      _log.error(e,e);
+      if (_log.isDebugEnabled()) {
+        _log.debug(e,e);
+      }
     }
   }
   return expandoColumn;
