@@ -1,0 +1,25 @@
+{
+  boolean isNew=wallEntry.isNew();
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(wallEntry);
+      }
+ else {
+        listener.onBeforeUpdate(wallEntry);
+      }
+    }
+  }
+  wallEntry=updateImpl(wallEntry,merge);
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(wallEntry);
+      }
+ else {
+        listener.onAfterUpdate(wallEntry);
+      }
+    }
+  }
+  return wallEntry;
+}
