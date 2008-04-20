@@ -14,7 +14,15 @@
   if (wallEntry.getGroupId() != themeDisplay.getPortletGroupId()) {
     return;
   }
-  if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),themeDisplay.getUserId(),ActionKeys.UPDATE)) {
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getPortletGroupId());
+  User user=null;
+  if (group.isUser()) {
+    user=UserLocalServiceUtil.getUserById(group.getClassPK());
+  }
+ else {
+    return;
+  }
+  if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),user.getUserId(),ActionKeys.UPDATE)) {
     return;
   }
   try {

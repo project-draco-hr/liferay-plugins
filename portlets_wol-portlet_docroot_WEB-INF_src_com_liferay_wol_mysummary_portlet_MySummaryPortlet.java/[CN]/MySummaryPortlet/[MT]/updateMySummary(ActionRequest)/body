@@ -1,0 +1,32 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getPortletGroupId());
+  User user=null;
+  if (group.isUser()) {
+    user=UserLocalServiceUtil.getUserById(group.getClassPK());
+  }
+ else {
+    return;
+  }
+  if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),user.getUserId(),ActionKeys.UPDATE)) {
+    return;
+  }
+  String jiraUserId=ParamUtil.getString(req,"jiraUserId");
+  String sfUserId=ParamUtil.getString(req,"sfUserId");
+  String jobTitle=ParamUtil.getString(req,"jobTitle");
+  String aboutMe=ParamUtil.getString(req,"aboutMe");
+  try {
+    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"WOL","jiraUserId",user.getUserId(),jiraUserId);
+    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"WOL","sfUserId",user.getUserId(),sfUserId);
+    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"WOL","aboutMe",user.getUserId(),aboutMe);
+    Contact contact=user.getContact();
+    contact.setJobTitle(jobTitle);
+    ContactLocalServiceUtil.updateContact(contact);
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
