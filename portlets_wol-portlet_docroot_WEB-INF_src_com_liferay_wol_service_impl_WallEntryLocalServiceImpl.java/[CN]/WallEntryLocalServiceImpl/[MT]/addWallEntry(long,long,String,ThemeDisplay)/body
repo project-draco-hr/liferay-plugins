@@ -1,4 +1,5 @@
 {
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
   User user=UserLocalServiceUtil.getUserById(userId);
   Date now=new Date();
   long wallEntryId=CounterLocalServiceUtil.increment();
@@ -17,5 +18,8 @@
  catch (  Exception e) {
     throw new SystemException(e);
   }
+  String activityType=WallActivityKeys.ADD_ENTRY;
+  long receiverUserId=group.getClassPK();
+  SocialActivityLocalServiceUtil.addActivity(userId,groupId,WallEntry.class.getName(),wallEntryId,activityType,StringPool.BLANK,receiverUserId);
   return wallEntry;
 }
