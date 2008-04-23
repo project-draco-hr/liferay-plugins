@@ -7,5 +7,11 @@
   svnRevision.setRevisionNumber(revisionNumber);
   svnRevision.setComments(comments);
   svnRevisionPersistence.update(svnRevision,false);
+  List<ExpandoValue> expandoValues=ExpandoValueLocalServiceUtil.getColumnValues(User.class.getName(),"WOL","sfUserId",svnUserId,0,1);
+  if (expandoValues.size() > 0) {
+    ExpandoValue expandoValue=expandoValues.get(0);
+    long userId=expandoValue.getClassPK();
+    SocialActivityLocalServiceUtil.addActivity(userId,0,SVNRevision.class.getName(),svnRevisionId,SVNActivityKeys.ADD_REVISION,StringPool.BLANK,0);
+  }
   return svnRevision;
 }
