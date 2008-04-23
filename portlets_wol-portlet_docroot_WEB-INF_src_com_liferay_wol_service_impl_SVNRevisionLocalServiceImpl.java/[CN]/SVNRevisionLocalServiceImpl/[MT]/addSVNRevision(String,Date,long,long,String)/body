@@ -11,6 +11,13 @@
   if (expandoValues.size() > 0) {
     ExpandoValue expandoValue=expandoValues.get(0);
     long userId=expandoValue.getClassPK();
+    List<SocialActivity> socialActivities=SocialActivityLocalServiceUtil.getActivities(SVNRevision.class.getName(),0,1);
+    if (socialActivities.size() > 0) {
+      SocialActivity socialActivity=socialActivities.get(0);
+      if (userId == socialActivity.getUserId()) {
+        SocialActivityLocalServiceUtil.deleteActivity(socialActivity.getActivityId());
+      }
+    }
     SocialActivityLocalServiceUtil.addActivity(userId,0,SVNRevision.class.getName(),svnRevisionId,SVNActivityKeys.ADD_REVISION,StringPool.BLANK,0);
   }
   return svnRevision;
