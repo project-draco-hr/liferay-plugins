@@ -1,0 +1,19 @@
+{
+  Session session=null;
+  try {
+    session=HibernateUtil.openSession();
+    String sql=CustomSQLUtil.get(FIND_BY_G1_G2);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addEntity("WOL_WallEntry",WallEntryImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(groupId1);
+    qPos.add(groupId2);
+    return (List<WallEntry>)QueryUtil.list(q,HibernateUtil.getDialect(),begin,end);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    HibernateUtil.closeSession(session);
+  }
+}

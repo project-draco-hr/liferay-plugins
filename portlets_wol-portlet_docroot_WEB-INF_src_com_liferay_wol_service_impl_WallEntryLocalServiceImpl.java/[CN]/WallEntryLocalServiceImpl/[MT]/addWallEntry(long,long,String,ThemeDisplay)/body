@@ -18,6 +18,8 @@
  catch (  Exception e) {
     throw new SystemException(e);
   }
-  SocialActivityLocalServiceUtil.addActivity(userId,groupId,WallEntry.class.getName(),wallEntryId,WallActivityKeys.ADD_ENTRY,StringPool.BLANK,group.getClassPK());
+  if (userId != group.getClassPK()) {
+    SocialActivityLocalServiceUtil.addActivity(userId,groupId,WallEntry.class.getName(),wallEntryId,WallActivityKeys.ADD_ENTRY,StringPool.BLANK,group.getClassPK());
+  }
   return wallEntry;
 }
