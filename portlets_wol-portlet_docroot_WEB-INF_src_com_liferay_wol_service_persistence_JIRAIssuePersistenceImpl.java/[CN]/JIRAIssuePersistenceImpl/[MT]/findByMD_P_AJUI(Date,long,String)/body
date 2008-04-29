@@ -1,0 +1,58 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAIssue.class.getName();
+  String finderMethodName="findByMD_P_AJUI";
+  String[] finderParams=new String[]{Date.class.getName(),Long.class.getName(),String.class.getName()};
+  Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+      if (modifiedDate == null) {
+        query.append("updated > null");
+      }
+ else {
+        query.append("updated > ?");
+      }
+      query.append(" AND ");
+      query.append("project = ?");
+      query.append(" AND ");
+      if (assigneeJiraUserId == null) {
+        query.append("assignee IS NULL");
+      }
+ else {
+        query.append("assignee = ?");
+      }
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("updated DESC");
+      Query q=session.createQuery(query.toString());
+      int queryPos=0;
+      if (modifiedDate != null) {
+        q.setDate(queryPos++,modifiedDate);
+      }
+      q.setLong(queryPos++,projectId);
+      if (assigneeJiraUserId != null) {
+        q.setString(queryPos++,assigneeJiraUserId);
+      }
+      List<JIRAIssue> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<JIRAIssue>)result;
+  }
+}
