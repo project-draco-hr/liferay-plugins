@@ -19,8 +19,8 @@
       query.append("ORDER BY ");
       query.append("revisionNumber DESC");
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
-      q.setLong(queryPos++,svnRepositoryId);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(svnRepositoryId);
       List<SVNRevision> list=q.list();
       FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
       return list;

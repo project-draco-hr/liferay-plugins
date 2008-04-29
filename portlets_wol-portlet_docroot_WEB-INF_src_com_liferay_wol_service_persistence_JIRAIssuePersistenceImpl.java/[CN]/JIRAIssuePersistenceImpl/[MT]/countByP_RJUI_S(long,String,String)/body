@@ -32,13 +32,13 @@
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
-      q.setLong(queryPos++,projectId);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(projectId);
       if (reporterJiraUserId != null) {
-        q.setString(queryPos++,reporterJiraUserId);
+        qPos.add(reporterJiraUserId);
       }
       if (status != null) {
-        q.setString(queryPos++,status);
+        qPos.add(status);
       }
       Long count=null;
       Iterator<Long> itr=q.list().iterator();

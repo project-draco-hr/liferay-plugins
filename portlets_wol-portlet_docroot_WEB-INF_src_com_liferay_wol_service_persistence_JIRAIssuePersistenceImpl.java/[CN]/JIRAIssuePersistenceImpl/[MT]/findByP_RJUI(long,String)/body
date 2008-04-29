@@ -26,10 +26,10 @@
       query.append("ORDER BY ");
       query.append("updated DESC");
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
-      q.setLong(queryPos++,projectId);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(projectId);
       if (reporterJiraUserId != null) {
-        q.setString(queryPos++,reporterJiraUserId);
+        qPos.add(reporterJiraUserId);
       }
       List<JIRAIssue> list=q.list();
       FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);

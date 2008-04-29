@@ -22,9 +22,9 @@
       query.append("updated DESC");
     }
     Query q=session.createQuery(query.toString());
-    int queryPos=0;
+    QueryPos qPos=QueryPos.getInstance(q);
     if (reporterJiraUserId != null) {
-      q.setString(queryPos++,reporterJiraUserId);
+      qPos.add(reporterJiraUserId);
     }
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraIssue);
     JIRAIssue[] array=new JIRAIssueImpl[3];

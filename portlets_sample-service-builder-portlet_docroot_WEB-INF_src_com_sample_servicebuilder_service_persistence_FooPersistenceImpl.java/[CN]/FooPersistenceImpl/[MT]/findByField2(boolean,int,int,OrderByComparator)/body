@@ -25,8 +25,8 @@
         query.append("field1 ASC");
       }
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
-      q.setBoolean(queryPos++,field2);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(field2);
       List<Foo> list=(List<Foo>)QueryUtil.list(q,getDialect(),begin,end);
       FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
       return list;

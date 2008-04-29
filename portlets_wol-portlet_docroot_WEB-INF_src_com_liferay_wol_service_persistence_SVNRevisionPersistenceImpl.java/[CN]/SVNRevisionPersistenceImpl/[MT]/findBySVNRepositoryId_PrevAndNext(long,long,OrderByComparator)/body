@@ -17,8 +17,8 @@
       query.append("revisionNumber DESC");
     }
     Query q=session.createQuery(query.toString());
-    int queryPos=0;
-    q.setLong(queryPos++,svnRepositoryId);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(svnRepositoryId);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,svnRevision);
     SVNRevision[] array=new SVNRevisionImpl[3];
     array[0]=(SVNRevision)objArray[0];

@@ -17,8 +17,8 @@
       query.append("field1 ASC");
     }
     Query q=session.createQuery(query.toString());
-    int queryPos=0;
-    q.setBoolean(queryPos++,field2);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(field2);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,foo);
     Foo[] array=new FooImpl[3];
     array[0]=(Foo)objArray[0];

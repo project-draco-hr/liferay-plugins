@@ -25,11 +25,11 @@
       query.append("svnRepositoryId = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
+      QueryPos qPos=QueryPos.getInstance(q);
       if (svnUserId != null) {
-        q.setString(queryPos++,svnUserId);
+        qPos.add(svnUserId);
       }
-      q.setLong(queryPos++,svnRepositoryId);
+      qPos.add(svnRepositoryId);
       Long count=null;
       Iterator<Long> itr=q.list().iterator();
       if (itr.hasNext()) {

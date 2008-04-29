@@ -22,9 +22,9 @@
       query.append("revisionNumber DESC");
     }
     Query q=session.createQuery(query.toString());
-    int queryPos=0;
+    QueryPos qPos=QueryPos.getInstance(q);
     if (svnUserId != null) {
-      q.setString(queryPos++,svnUserId);
+      qPos.add(svnUserId);
     }
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,svnRevision);
     SVNRevision[] array=new SVNRevisionImpl[3];

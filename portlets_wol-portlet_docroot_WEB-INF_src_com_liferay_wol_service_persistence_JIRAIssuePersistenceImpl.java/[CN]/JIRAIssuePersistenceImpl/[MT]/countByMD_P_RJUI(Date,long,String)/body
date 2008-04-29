@@ -32,13 +32,13 @@
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
+      QueryPos qPos=QueryPos.getInstance(q);
       if (modifiedDate != null) {
-        q.setDate(queryPos++,modifiedDate);
+        qPos.add(CalendarUtil.getTimestamp(modifiedDate));
       }
-      q.setLong(queryPos++,projectId);
+      qPos.add(projectId);
       if (reporterJiraUserId != null) {
-        q.setString(queryPos++,reporterJiraUserId);
+        qPos.add(reporterJiraUserId);
       }
       Long count=null;
       Iterator<Long> itr=q.list().iterator();

@@ -39,13 +39,13 @@
         query.append("updated DESC");
       }
       Query q=session.createQuery(query.toString());
-      int queryPos=0;
+      QueryPos qPos=QueryPos.getInstance(q);
       if (modifiedDate != null) {
-        q.setDate(queryPos++,modifiedDate);
+        qPos.add(CalendarUtil.getTimestamp(modifiedDate));
       }
-      q.setLong(queryPos++,projectId);
+      qPos.add(projectId);
       if (assigneeJiraUserId != null) {
-        q.setString(queryPos++,assigneeJiraUserId);
+        qPos.add(assigneeJiraUserId);
       }
       List<JIRAIssue> list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),begin,end);
       FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
