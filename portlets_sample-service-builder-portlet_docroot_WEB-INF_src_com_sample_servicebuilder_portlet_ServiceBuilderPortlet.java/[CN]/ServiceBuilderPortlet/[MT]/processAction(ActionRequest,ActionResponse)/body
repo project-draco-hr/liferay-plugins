@@ -1,0 +1,21 @@
+{
+  try {
+    String cmd=ParamUtil.getString(req,Constants.CMD);
+    if (cmd.equals(Constants.ADD)) {
+      addFoo(req);
+    }
+ else     if (cmd.equals(Constants.DELETE)) {
+      deleteFoo(req);
+    }
+    if (Validator.isNotNull(cmd)) {
+      if (SessionErrors.isEmpty(req)) {
+        SessionMessages.add(req,"request_processed");
+      }
+      String redirect=ParamUtil.getString(req,"redirect");
+      res.sendRedirect(redirect);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
