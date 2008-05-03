@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    JIRAChangeItem jiraChangeItem=(JIRAChangeItem)session.get(JIRAChangeItemImpl.class,new Long(jiraChangeItemId));
+    if (jiraChangeItem == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No JIRAChangeItem exists with the primary key " + jiraChangeItemId);
+      }
+      throw new NoSuchJIRAChangeItemException("No JIRAChangeItem exists with the primary key " + jiraChangeItemId);
+    }
+    return remove(jiraChangeItem);
+  }
+ catch (  NoSuchJIRAChangeItemException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

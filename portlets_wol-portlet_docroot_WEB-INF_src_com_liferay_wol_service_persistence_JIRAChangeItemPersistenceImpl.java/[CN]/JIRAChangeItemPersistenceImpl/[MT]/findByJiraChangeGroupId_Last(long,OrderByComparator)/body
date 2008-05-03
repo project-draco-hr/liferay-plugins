@@ -1,0 +1,14 @@
+{
+  int count=countByJiraChangeGroupId(jiraChangeGroupId);
+  List<JIRAChangeItem> list=findByJiraChangeGroupId(jiraChangeGroupId,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No JIRAChangeItem exists with the key {");
+    msg.append("jiraChangeGroupId=" + jiraChangeGroupId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAChangeItemException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

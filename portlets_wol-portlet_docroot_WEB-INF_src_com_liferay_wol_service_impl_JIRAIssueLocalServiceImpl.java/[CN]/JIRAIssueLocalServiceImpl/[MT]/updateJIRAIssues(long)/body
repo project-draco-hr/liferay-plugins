@@ -1,0 +1,43 @@
+{
+  Date modifiedDate=getLastModifiedDate(projectId);
+  List<JIRAAction> jiraActions=jiraActionFinder.findByCD_P(modifiedDate,projectId);
+  for (  JIRAAction jiraAction : jiraActions) {
+    long userId=getUserId(jiraAction.getJiraUserId());
+    if (userId <= 0) {
+      continue;
+    }
+    JSONObject extraData=new JSONObject();
+    extraData.put("jiraActionId",jiraAction.getJiraActionId());
+    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraAction.getCreateDate()),JIRAIssue.class.getName(),jiraAction.getJiraIssueId(),JIRAActivityKeys.ADD_COMMENT,extraData.toString(),0);
+  }
+  List<JIRAChangeGroup> jiraChangeGroups=jiraChangeGroupFinder.findByCD_P(modifiedDate,projectId);
+  for (  JIRAChangeGroup jiraChangeGroup : jiraChangeGroups) {
+    long userId=getUserId(jiraChangeGroup.getJiraUserId());
+    if (userId <= 0) {
+      continue;
+    }
+    JSONObject extraData=new JSONObject();
+    extraData.put("jiraChangeGroupId",jiraChangeGroup.getJiraChangeGroupId());
+    JSONArray jiraChangeItemsJSONArray=new JSONArray();
+    extraData.put("jiraChangeItems",jiraChangeItemsJSONArray);
+    List<JIRAChangeItem> jiraChangeItems=jiraChangeItemPersistence.findByJiraChangeGroupId(jiraChangeGroup.getJiraChangeGroupId());
+    for (    JIRAChangeItem jiraChangeItem : jiraChangeItems) {
+      JSONObject jiraChangeItemJSON=new JSONObject();
+      jiraChangeItemJSON.put("field",jiraChangeItem.getField());
+      jiraChangeItemJSON.put("oldValue",jiraChangeItem.getOldValue());
+      jiraChangeItemJSON.put("oldString",jiraChangeItem.getOldString());
+      jiraChangeItemJSON.put("newValue",jiraChangeItem.getNewValue());
+      jiraChangeItemJSON.put("newString",jiraChangeItem.getNewString());
+      jiraChangeItemsJSONArray.put(jiraChangeItemJSON);
+    }
+    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraChangeGroup.getCreateDate()),JIRAIssue.class.getName(),jiraChangeGroup.getJiraIssueId(),JIRAActivityKeys.ADD_CHANGE,extraData.toString(),0);
+  }
+  List<JIRAIssue> jiraIssues=jiraIssueFinder.findByCD_P(modifiedDate,projectId);
+  for (  JIRAIssue jiraIssue : jiraIssues) {
+    long userId=getUserId(jiraIssue.getReporterJiraUserId());
+    if (userId <= 0) {
+      continue;
+    }
+    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraIssue.getCreateDate()),JIRAIssue.class.getName(),jiraIssue.getJiraIssueId(),JIRAActivityKeys.ADD_ISSUE,StringPool.BLANK,0);
+  }
+}

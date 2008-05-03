@@ -1,0 +1,27 @@
+{
+  Timestamp createDate_TS=CalendarUtil.getTimestamp(createDate);
+  Session session=null;
+  try {
+    session=HibernateUtil.openSession(StringPool.AMPERSAND + JIRAActionModelImpl.SESSION_FACTORY);
+    String sql=CustomSQLUtil.get(COUNT_BY_CD_P);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar(HibernateUtil.getCountColumnName(),Hibernate.LONG);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(projectId);
+    qPos.add(createDate_TS);
+    Iterator<Long> itr=q.list().iterator();
+    if (itr.hasNext()) {
+      Long count=itr.next();
+      if (count != null) {
+        return count.intValue();
+      }
+    }
+    return 0;
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    HibernateUtil.closeSession(session);
+  }
+}

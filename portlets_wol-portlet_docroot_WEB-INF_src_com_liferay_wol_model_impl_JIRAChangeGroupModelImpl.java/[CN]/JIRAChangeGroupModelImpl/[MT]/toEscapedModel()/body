@@ -1,0 +1,15 @@
+{
+  if (isEscapedModel()) {
+    return (JIRAChangeGroup)this;
+  }
+ else {
+    JIRAChangeGroup model=new JIRAChangeGroupImpl();
+    model.setEscapedModel(true);
+    model.setJiraChangeGroupId(getJiraChangeGroupId());
+    model.setJiraUserId(HtmlUtil.escape(getJiraUserId()));
+    model.setCreateDate(getCreateDate());
+    model.setJiraIssueId(getJiraIssueId());
+    model=(JIRAChangeGroup)Proxy.newProxyInstance(JIRAChangeGroup.class.getClassLoader(),new Class[]{JIRAChangeGroup.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

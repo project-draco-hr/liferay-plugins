@@ -1,0 +1,13 @@
+{
+  List<JIRAAction> list=findByJiraUserId(jiraUserId,0,1,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No JIRAAction exists with the key {");
+    msg.append("jiraUserId=" + jiraUserId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAActionException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

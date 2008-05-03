@@ -1,0 +1,26 @@
+{
+  JIRAIssue jiraIssue=null;
+  String comments=getComments();
+  if (comments.startsWith("LEP-")) {
+    comments=StringUtil.replace(comments,StringPool.NEW_LINE,StringPool.SPACE);
+    int pos=comments.indexOf(StringPool.SPACE);
+    if (pos == -1) {
+      pos=comments.length();
+    }
+ else {
+      comments=comments.substring(0,pos);
+    }
+    String key=comments.substring(4,pos);
+    if (Validator.isNumber(key)) {
+      try {
+        jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue("LEP-" + key);
+      }
+ catch (      Exception e) {
+      }
+    }
+    if (jiraIssue != null) {
+      return new Object[]{jiraIssue,comments};
+    }
+  }
+  return null;
+}

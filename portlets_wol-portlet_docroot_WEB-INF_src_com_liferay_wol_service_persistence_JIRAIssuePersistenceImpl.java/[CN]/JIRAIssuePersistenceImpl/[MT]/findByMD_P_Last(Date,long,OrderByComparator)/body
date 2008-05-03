@@ -1,0 +1,16 @@
+{
+  int count=countByMD_P(modifiedDate,projectId);
+  List<JIRAIssue> list=findByMD_P(modifiedDate,projectId,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringMaker msg=new StringMaker();
+    msg.append("No JIRAIssue exists with the key {");
+    msg.append("modifiedDate=" + modifiedDate);
+    msg.append(", ");
+    msg.append("projectId=" + projectId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAIssueException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

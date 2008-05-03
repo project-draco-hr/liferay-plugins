@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(jiraChangeGroup);
+    }
+ else {
+      if (jiraChangeGroup.isNew()) {
+        session.save(jiraChangeGroup);
+      }
+    }
+    session.flush();
+    jiraChangeGroup.setNew(false);
+    return jiraChangeGroup;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(JIRAChangeGroup.class.getName());
+  }
+}

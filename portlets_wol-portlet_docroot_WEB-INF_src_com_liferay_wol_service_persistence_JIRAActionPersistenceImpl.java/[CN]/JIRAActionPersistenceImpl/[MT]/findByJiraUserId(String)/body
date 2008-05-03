@@ -1,0 +1,45 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAActionModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAAction.class.getName();
+  String finderMethodName="findByJiraUserId";
+  String[] finderParams=new String[]{String.class.getName()};
+  Object[] finderArgs=new Object[]{jiraUserId};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.JIRAAction WHERE ");
+      if (jiraUserId == null) {
+        query.append("author IS NULL");
+      }
+ else {
+        query.append("author = ?");
+      }
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("updated DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (jiraUserId != null) {
+        qPos.add(jiraUserId);
+      }
+      List<JIRAAction> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<JIRAAction>)result;
+  }
+}

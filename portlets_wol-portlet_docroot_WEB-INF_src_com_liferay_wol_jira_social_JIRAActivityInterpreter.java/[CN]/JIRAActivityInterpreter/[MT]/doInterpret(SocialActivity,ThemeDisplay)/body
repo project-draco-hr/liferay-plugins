@@ -1,0 +1,43 @@
+{
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  String activityType=activity.getType();
+  JSONObject extraData=null;
+  if (Validator.isNotNull(activity.getExtraData())) {
+    extraData=new JSONObject(activity.getExtraData());
+  }
+  JIRAAction jiraAction=null;
+  if (activityType.equals(JIRAActivityKeys.ADD_COMMENT)) {
+    long jiraActionId=extraData.getLong("jiraActionId");
+    jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
+  }
+  JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
+  String title=StringPool.BLANK;
+  if (activityType.equals(JIRAActivityKeys.ADD_CHANGE)) {
+    title=themeDisplay.translate("activity-wol-jira-add-change",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+ else   if (activityType.equals(JIRAActivityKeys.ADD_COMMENT)) {
+    title=themeDisplay.translate("activity-wol-jira-add-comment",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+ else   if (activityType.equals(JIRAActivityKeys.ADD_ISSUE)) {
+    title=themeDisplay.translate("activity-wol-jira-add-issue",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+  StringMaker sm=new StringMaker();
+  sm.append("<a href=\"http://support.liferay.com/browse/");
+  sm.append(jiraIssue.getKey());
+  if (activityType.equals(JIRAActivityKeys.ADD_COMMENT)) {
+    sm.append("#action_");
+    sm.append(jiraAction.getJiraActionId());
+  }
+  sm.append("\" target=\"_blank\">");
+  if (activityType.equals(JIRAActivityKeys.ADD_CHANGE)) {
+  }
+ else   if (activityType.equals(JIRAActivityKeys.ADD_COMMENT)) {
+    sm.append(cleanContent(jiraAction.getBody()));
+  }
+ else   if (activityType.equals(JIRAActivityKeys.ADD_ISSUE)) {
+    sm.append(cleanContent(jiraIssue.getSummary()));
+  }
+  sm.append("</a>");
+  String body=sm.toString();
+  return new SocialActivityFeedEntry(title,body);
+}

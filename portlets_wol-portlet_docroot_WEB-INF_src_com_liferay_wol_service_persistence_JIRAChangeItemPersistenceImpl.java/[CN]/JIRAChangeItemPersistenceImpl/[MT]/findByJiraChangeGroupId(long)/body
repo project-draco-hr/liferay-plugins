@@ -1,0 +1,36 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAChangeItemModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAChangeItem.class.getName();
+  String finderMethodName="findByJiraChangeGroupId";
+  String[] finderParams=new String[]{Long.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(jiraChangeGroupId)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.JIRAChangeItem WHERE ");
+      query.append("groupid = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(jiraChangeGroupId);
+      List<JIRAChangeItem> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<JIRAChangeItem>)result;
+  }
+}

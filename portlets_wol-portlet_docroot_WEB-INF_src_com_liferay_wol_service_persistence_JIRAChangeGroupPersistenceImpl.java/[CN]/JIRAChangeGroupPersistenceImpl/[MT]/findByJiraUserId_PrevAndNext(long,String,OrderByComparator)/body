@@ -1,0 +1,42 @@
+{
+  JIRAChangeGroup jiraChangeGroup=findByPrimaryKey(jiraChangeGroupId);
+  int count=countByJiraUserId(jiraUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.wol.model.JIRAChangeGroup WHERE ");
+    if (jiraUserId == null) {
+      query.append("author IS NULL");
+    }
+ else {
+      query.append("author = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("created DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    if (jiraUserId != null) {
+      qPos.add(jiraUserId);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraChangeGroup);
+    JIRAChangeGroup[] array=new JIRAChangeGroupImpl[3];
+    array[0]=(JIRAChangeGroup)objArray[0];
+    array[1]=(JIRAChangeGroup)objArray[1];
+    array[2]=(JIRAChangeGroup)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
