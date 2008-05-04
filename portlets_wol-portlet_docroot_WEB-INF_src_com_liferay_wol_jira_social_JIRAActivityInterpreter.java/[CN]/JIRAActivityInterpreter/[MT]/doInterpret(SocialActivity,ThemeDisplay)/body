@@ -30,12 +30,12 @@
   }
   sm.append("\" target=\"_blank\">");
   if (activityType.equals(JIRAActivityKeys.ADD_CHANGE)) {
-    JSONArray changeItems=extraData.getJSONArray("jiraChangeItems");
-    for (int i=0; i < changeItems.length(); i++) {
-      JSONObject change=changeItems.getJSONObject(i);
-      String newString=change.getString("newString");
-      String field=change.getString("field").toLowerCase();
-      if (newString == StringPool.BLANK) {
+    JSONArray jiraChangeItems=extraData.getJSONArray("jiraChangeItems");
+    for (int i=0; i < jiraChangeItems.length(); i++) {
+      JSONObject jiraChangeItem=jiraChangeItems.getJSONObject(i);
+      String newString=jiraChangeItem.getString("newString");
+      String field=jiraChangeItem.getString("field").toLowerCase();
+      if (Validator.isNull(newString)) {
         continue;
       }
       if (field.equals("assignee") || field.equals("attachment") || field.equals("resolution")|| field.equals("status")) {
