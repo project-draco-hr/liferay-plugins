@@ -1,0 +1,33 @@
+{
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  String receiverUserName=getUserName(activity.getReceiverUserId(),themeDisplay);
+  User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
+  User receiverUser=UserLocalServiceUtil.getUserById(activity.getReceiverUserId());
+  String activityType=activity.getType();
+  String title=StringPool.BLANK;
+  if (activityType.equals(FriendsActivityKeys.ADD_FRIEND)) {
+    StringMaker sm=new StringMaker();
+    sm.append("<a href=\"");
+    sm.append(themeDisplay.getURLPortal());
+    sm.append(themeDisplay.getPathFriendlyURLPublic());
+    sm.append(StringPool.SLASH);
+    sm.append(creatorUser.getScreenName());
+    sm.append("/profile\" target=\"_blank\">");
+    sm.append(creatorUserName);
+    sm.append("</a>");
+    String creatorUserNameURL=sm.toString();
+    sm=new StringMaker();
+    sm.append("<a href=\"");
+    sm.append(themeDisplay.getURLPortal());
+    sm.append(themeDisplay.getPathFriendlyURLPublic());
+    sm.append(StringPool.SLASH);
+    sm.append(receiverUser.getScreenName());
+    sm.append("/profile\" target=\"_blank\">");
+    sm.append(receiverUserName);
+    sm.append("</a>");
+    String receiverUserNameURL=sm.toString();
+    title=themeDisplay.translate("activity-wol-summary-add-friend",new Object[]{creatorUserNameURL,receiverUserNameURL});
+  }
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(title,body);
+}

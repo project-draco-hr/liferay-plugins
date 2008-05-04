@@ -1,0 +1,21 @@
+{
+  String creatorUserName=getUserName(request.getUserId(),themeDisplay);
+  User creatorUser=UserLocalServiceUtil.getUserById(request.getUserId());
+  int requestType=request.getType();
+  String title=StringPool.BLANK;
+  if (requestType == FriendsRequestKeys.ADD_FRIEND) {
+    StringMaker sm=new StringMaker();
+    sm.append("<a href=\"");
+    sm.append(themeDisplay.getURLPortal());
+    sm.append(themeDisplay.getPathFriendlyURLPublic());
+    sm.append(StringPool.SLASH);
+    sm.append(creatorUser.getScreenName());
+    sm.append("/profile\" target=\"_blank\">");
+    sm.append(creatorUserName);
+    sm.append("</a>");
+    String creatorUserNameURL=sm.toString();
+    title=themeDisplay.translate("request-wol-summary-add-friend",new Object[]{creatorUserNameURL});
+  }
+  String body=StringPool.BLANK;
+  return new SocialRequestFeedEntry(title,body);
+}
