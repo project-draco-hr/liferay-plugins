@@ -3,7 +3,7 @@
   String finderClassName=JIRAIssue.class.getName();
   String finderMethodName="findByMD_P_AJUI";
   String[] finderParams=new String[]{Date.class.getName(),Long.class.getName(),String.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
-  Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId,String.valueOf(begin),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId,String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
   Object result=null;
   if (finderClassNameCacheEnabled) {
     result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
@@ -47,7 +47,7 @@
       if (assigneeJiraUserId != null) {
         qPos.add(assigneeJiraUserId);
       }
-      List<JIRAIssue> list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),begin,end);
+      List<JIRAIssue> list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
       FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
       return list;
     }
