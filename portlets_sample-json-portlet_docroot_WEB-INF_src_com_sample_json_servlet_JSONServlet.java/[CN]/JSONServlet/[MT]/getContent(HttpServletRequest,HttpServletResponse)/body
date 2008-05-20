@@ -5,7 +5,7 @@
   jsonObj.put("id",id);
   ServletContext ctx=getServletContext();
   String script=StringUtil.read(ctx.getResourceAsStream("/click_image.js"));
-  JSONRaw jsonRaw=new JSONRaw(script);
-  jsonObj.put("click_image",jsonRaw);
-  return callback + "(" + jsonObj.toString()+ ");";
+  String jsonObjString=jsonObj.toString();
+  jsonObjString=jsonObjString.substring(0,jsonObjString.length() - 1) + "," + script+ "}";
+  return callback + "(" + jsonObjString+ ");";
 }
