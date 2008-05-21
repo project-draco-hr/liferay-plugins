@@ -1,0 +1,25 @@
+{
+  boolean isNew=ipInfo.isNew();
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(ipInfo);
+      }
+ else {
+        listener.onBeforeUpdate(ipInfo);
+      }
+    }
+  }
+  ipInfo=updateImpl(ipInfo,merge);
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(ipInfo);
+      }
+ else {
+        listener.onAfterUpdate(ipInfo);
+      }
+    }
+  }
+  return ipInfo;
+}

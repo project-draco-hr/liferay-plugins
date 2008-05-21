@@ -1,0 +1,34 @@
+{
+  IPInfo ipInfo=new IPInfoImpl();
+  String url=_URL_PREFIX + ipAddress + _URL_SUFFIX;
+  String content=HttpUtil.URLtoString(url);
+  BufferedReader br=new BufferedReader(new StringReader(content));
+  String line=br.readLine();
+  if (line != null) {
+    int pos=line.indexOf(StringPool.COLON);
+    ipInfo.setCountry(line.substring(pos + 2));
+  }
+  if (line != null) {
+    line=br.readLine();
+  }
+  if (line != null) {
+    int pos=line.indexOf(StringPool.COLON);
+    ipInfo.setCity(line.substring(pos + 2));
+  }
+  if (line != null) {
+    line=br.readLine();
+  }
+  if (line != null) {
+    int pos=line.indexOf(StringPool.COLON);
+    ipInfo.setLatitude(GetterUtil.getDouble(line.substring(pos + 2)));
+  }
+  if (line != null) {
+    line=br.readLine();
+  }
+  if (line != null) {
+    int pos=line.indexOf(StringPool.COLON);
+    ipInfo.setLongitude(GetterUtil.getDouble(line.substring(pos + 2)));
+  }
+  br.close();
+  return ipInfo;
+}

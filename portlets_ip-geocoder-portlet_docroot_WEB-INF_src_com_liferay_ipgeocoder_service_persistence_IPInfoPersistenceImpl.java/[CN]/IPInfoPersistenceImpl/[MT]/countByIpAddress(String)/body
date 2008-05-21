@@ -1,0 +1,51 @@
+{
+  boolean finderClassNameCacheEnabled=IPInfoModelImpl.CACHE_ENABLED;
+  String finderClassName=IPInfo.class.getName();
+  String finderMethodName="countByIpAddress";
+  String[] finderParams=new String[]{String.class.getName()};
+  Object[] finderArgs=new Object[]{ipAddress};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("SELECT COUNT(*) ");
+      query.append("FROM com.liferay.ipgeocoder.model.IPInfo WHERE ");
+      if (ipAddress == null) {
+        query.append("ipAddress IS NULL");
+      }
+ else {
+        query.append("ipAddress = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (ipAddress != null) {
+        qPos.add(ipAddress);
+      }
+      Long count=null;
+      Iterator<Long> itr=q.list().iterator();
+      if (itr.hasNext()) {
+        count=itr.next();
+      }
+      if (count == null) {
+        count=new Long(0);
+      }
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,count);
+      return count.intValue();
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return ((Long)result).intValue();
+  }
+}

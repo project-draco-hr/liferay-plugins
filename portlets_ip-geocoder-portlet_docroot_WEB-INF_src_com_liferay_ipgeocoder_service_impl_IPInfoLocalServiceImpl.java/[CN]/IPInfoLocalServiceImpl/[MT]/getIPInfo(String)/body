@@ -1,0 +1,24 @@
+{
+  try {
+    IPInfo ipInfo=ipInfoPersistence.fetchByIpAddress(ipAddress);
+    if (ipInfo == null) {
+      IPInfo tempIPInfo=downloadIPInfo(ipAddress);
+      long ipInfoId=CounterLocalServiceUtil.increment();
+      ipInfo=ipInfoPersistence.create(ipInfoId);
+      ipInfo.setCreateDate(new Date());
+      ipInfo.setIpAddress(ipAddress);
+      ipInfo.setLatitude(tempIPInfo.getLatitude());
+      ipInfo.setLongitude(tempIPInfo.getLongitude());
+      ipInfo.setCity(tempIPInfo.getCity());
+      ipInfo.setCountry(tempIPInfo.getCountry());
+      ipInfoPersistence.update(ipInfo,false);
+    }
+    return ipInfo;
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(e,e);
+    }
+    return null;
+  }
+}

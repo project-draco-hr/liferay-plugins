@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(ipInfo);
+    }
+ else {
+      if (ipInfo.isNew()) {
+        session.save(ipInfo);
+      }
+    }
+    session.flush();
+    ipInfo.setNew(false);
+    return ipInfo;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(IPInfo.class.getName());
+  }
+}

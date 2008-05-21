@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    IPInfo ipInfo=(IPInfo)session.get(IPInfoImpl.class,new Long(ipInfoId));
+    if (ipInfo == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No IPInfo exists with the primary key " + ipInfoId);
+      }
+      throw new NoSuchIPInfoException("No IPInfo exists with the primary key " + ipInfoId);
+    }
+    return remove(ipInfo);
+  }
+ catch (  NoSuchIPInfoException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

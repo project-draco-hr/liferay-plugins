@@ -1,0 +1,14 @@
+{
+  IPInfo ipInfo=fetchByIpAddress(ipAddress);
+  if (ipInfo == null) {
+    StringMaker msg=new StringMaker();
+    msg.append("No IPInfo exists with the key {");
+    msg.append("ipAddress=" + ipAddress);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchIPInfoException(msg.toString());
+  }
+  return ipInfo;
+}
