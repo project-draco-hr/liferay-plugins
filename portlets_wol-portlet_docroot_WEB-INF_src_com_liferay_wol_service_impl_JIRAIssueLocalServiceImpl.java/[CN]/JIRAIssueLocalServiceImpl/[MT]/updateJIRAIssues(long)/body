@@ -8,7 +8,7 @@
     }
     JSONObject extraData=new JSONObject();
     JSONUtil.put(extraData,"jiraActionId",jiraAction.getJiraActionId());
-    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraAction.getCreateDate()),JIRAIssue.class.getName(),jiraAction.getJiraIssueId(),JIRAActivityKeys.ADD_COMMENT,extraData.toString(),0);
+    SocialActivityLocalServiceUtil.addUniqueActivity(userId,0,JIRAUtil.getLiferayDate(jiraAction.getCreateDate()),JIRAIssue.class.getName(),jiraAction.getJiraIssueId(),JIRAActivityKeys.ADD_COMMENT,extraData.toString(),0);
   }
   List<JIRAChangeGroup> jiraChangeGroups=jiraChangeGroupFinder.findByCD_P(modifiedDate,projectId);
   for (  JIRAChangeGroup jiraChangeGroup : jiraChangeGroups) {
@@ -30,7 +30,7 @@
       JSONUtil.put(jiraChangeItemJSON,"newString",jiraChangeItem.getNewString());
       jiraChangeItemsJSONArray.put(jiraChangeItemJSON);
     }
-    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraChangeGroup.getCreateDate()),JIRAIssue.class.getName(),jiraChangeGroup.getJiraIssueId(),JIRAActivityKeys.ADD_CHANGE,extraData.toString(),0);
+    SocialActivityLocalServiceUtil.addUniqueActivity(userId,0,JIRAUtil.getLiferayDate(jiraChangeGroup.getCreateDate()),JIRAIssue.class.getName(),jiraChangeGroup.getJiraIssueId(),JIRAActivityKeys.ADD_CHANGE,extraData.toString(),0);
   }
   List<JIRAIssue> jiraIssues=jiraIssueFinder.findByCD_P(modifiedDate,projectId);
   for (  JIRAIssue jiraIssue : jiraIssues) {
@@ -38,6 +38,6 @@
     if (userId <= 0) {
       continue;
     }
-    SocialActivityLocalServiceUtil.addActivity(userId,0,JIRAUtil.getLiferayDate(jiraIssue.getCreateDate()),JIRAIssue.class.getName(),jiraIssue.getJiraIssueId(),JIRAActivityKeys.ADD_ISSUE,StringPool.BLANK,0);
+    SocialActivityLocalServiceUtil.addUniqueActivity(userId,0,JIRAUtil.getLiferayDate(jiraIssue.getCreateDate()),JIRAIssue.class.getName(),jiraIssue.getJiraIssueId(),JIRAActivityKeys.ADD_ISSUE,StringPool.BLANK,0);
   }
 }
