@@ -9,12 +9,12 @@
           String partContentType=curPart.getContentType().toLowerCase();
           if (isPreview && partContentType.startsWith(ContentTypes.TEXT_PLAIN)) {
             if (messageContent.equals(StringPool.BLANK)) {
-              messageContent=_getContent(messageContent,"",curPart,isPreview);
+              messageContent=getContent(messageContent,"",curPart,isPreview);
             }
             break;
           }
           if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
-            messageContent=_getContent(messageContent,"",curPart,isPreview);
+            messageContent=getContent(messageContent,"",curPart,isPreview);
             break;
           }
         }
@@ -22,7 +22,7 @@
  else {
         for (int i=0; i < multipart.getCount(); i++) {
           Part curPart=multipart.getBodyPart(i);
-          messageContent=_getContent(messageContent,contentPath + StringPool.PERIOD + i,curPart,isPreview);
+          messageContent=getContent(messageContent,contentPath + StringPool.PERIOD + i,curPart,isPreview);
         }
       }
     }
@@ -32,14 +32,14 @@
       }
  else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
         if (isPreview) {
-          messageContent+=_stripHtml((String)messagePart.getContent()) + "<HR/>";
+          messageContent+=stripHtml((String)messagePart.getContent()) + "<HR/>";
         }
  else {
           messageContent+=((String)messagePart.getContent()) + "<HR/>";
         }
       }
  else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
-        messageContent+=_getContent(messageContent,"",messagePart,isPreview);
+        messageContent+=getContent(messageContent,"",messagePart,isPreview);
       }
  else {
       }
