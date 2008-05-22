@@ -1,0 +1,26 @@
+{
+  int messageCount=folder.getMessageCount();
+  int end=messageCount - ((pageNum - 1) * messagesPerPage);
+  int begin=end - messagesPerPage + 1;
+  if (begin < 1) {
+    begin=1;
+  }
+  double pageCount=Math.ceil((double)messageCount / messagesPerPage);
+  int[] messageUids=GetterUtil.getIntegerValues(messageUidsToExclude.split("\\s*,\\s*"));
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  JSONUtil.put(jsonObj,"pageCount",(int)pageCount);
+  JSONUtil.put(jsonObj,"messageCount",messageCount);
+  JSONUtil.put(jsonObj,"begin",begin);
+  JSONUtil.put(jsonObj,"end",end);
+  JSONUtil.put(jsonObj,"pageNum",pageNum);
+  JSONUtil.put(jsonObj,"messagesPerPage",messagesPerPage);
+  Message[] messages=folder.getMessages(begin,end);
+  for (int i=messages.length - 1; i >= 0; i--) {
+    Message message=messages[i];
+    long messageUid=folder.getUID(message);
+    jsonArray.put(getJSONMessage(folder,message,true));
+  }
+  JSONUtil.put(jsonObj,"messages",jsonArray);
+  return jsonObj.toString();
+}

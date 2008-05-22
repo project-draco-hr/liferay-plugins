@@ -1,0 +1,21 @@
+{
+  try {
+    int[] messageUidsArray=GetterUtil.getIntegerValues(messageUids.split("\\s*,\\s*"));
+    if (!folder.isOpen()) {
+      folder.open(Folder.READ_WRITE);
+    }
+    for (int i=0; i < messageUidsArray.length; i++) {
+      try {
+        Message message=getMessageByUid(folder,messageUidsArray[i]);
+        message.setFlag(Flags.Flag.SEEN,read);
+      }
+ catch (      MessagingException me) {
+        _log.error(me,me);
+      }
+    }
+    folder.close(true);
+  }
+ catch (  MessagingException me) {
+    _log.error(me,me);
+  }
+}
