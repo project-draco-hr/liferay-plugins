@@ -1,0 +1,27 @@
+{
+  try {
+    Properties props=new Properties();
+    if (mailAccount.isMailSecure()) {
+      props.setProperty("mail.imap.socketFactory.class",SSL_FACTORY);
+    }
+    props.setProperty("mail.imap.socketFactory.fallback","false");
+    props.setProperty("mail.imap.port",mailAccount.getMailInPort());
+    props.setProperty("mail.imap.socketFactory.port",mailAccount.getMailInPort());
+    URLName url=new URLName("imap",mailAccount.getMailInHostName(),Integer.parseInt(mailAccount.getMailInPort()),"",mailAccount.getUsername(),mailAccount.getPassword());
+    Session session=Session.getInstance(props,null);
+    Store store;
+    if (mailAccount.isMailSecure()) {
+      store=new IMAPSSLStore(session,url);
+    }
+ else {
+      store=new IMAPStore(session,url);
+    }
+    store.connect();
+    _setStore(store);
+  }
+ catch (  MessagingException ex) {
+    if (_log.isErrorEnabled()) {
+      _log.error(ex.getMessage());
+    }
+  }
+}

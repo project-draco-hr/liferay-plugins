@@ -1,0 +1,17 @@
+{
+  for (int i=0; i < folders.length; i++) {
+    Folder folder=folders[i];
+    try {
+      int folderType=folder.getType();
+      if ((folderType & IMAPFolder.HOLDS_MESSAGES) != 0) {
+        list.add(folder);
+      }
+      if ((folderType & IMAPFolder.HOLDS_FOLDERS) != 0) {
+        _getFolders(list,folder.list());
+      }
+    }
+ catch (    MessagingException me) {
+      _log.error("Skipping IMAP folder because " + me.getMessage());
+    }
+  }
+}

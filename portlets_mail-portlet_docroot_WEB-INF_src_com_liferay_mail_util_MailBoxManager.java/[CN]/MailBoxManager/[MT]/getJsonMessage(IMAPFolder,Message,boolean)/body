@@ -1,0 +1,36 @@
+{
+  Date startTimer=new Date();
+  String read="read";
+  if (!message.isSet(Flags.Flag.SEEN)) {
+    read="unread";
+  }
+  SimpleDateFormat format=new SimpleDateFormat("MMM dd yyyy HH:mm");
+  String date=format.format(message.getSentDate());
+  JSONObject jsonObj=new JSONObject();
+  JSONUtil.put(jsonObj,"date",date);
+  JSONUtil.put(jsonObj,"from",getAddressesAsString(message.getFrom()));
+  JSONUtil.put(jsonObj,"hasAttachment",false);
+  JSONUtil.put(jsonObj,"isHtml","undetermined");
+  JSONUtil.put(jsonObj,"msgNum",String.valueOf(message.getMessageNumber()));
+  JSONUtil.put(jsonObj,"read",read);
+  JSONUtil.put(jsonObj,"subject",message.getSubject());
+  JSONUtil.put(jsonObj,"uid",folder.getUID(message));
+  if (isSummary) {
+    JSONUtil.put(jsonObj,"bodyPreview",StringPool.BLANK);
+  }
+ else {
+    JSONUtil.put(jsonObj,"bcc",getAddressesAsString(message.getRecipients(RecipientType.BCC)));
+    JSONUtil.put(jsonObj,"body",_getContent("","",message,false));
+    JSONUtil.put(jsonObj,"cc",getAddressesAsString(message.getRecipients(RecipientType.CC)));
+    JSONUtil.put(jsonObj,"to",getAddressesAsString(message.getRecipients(RecipientType.TO)));
+  }
+  Date endTimer=new Date();
+  int elapsedSeconds=((endTimer.getMinutes() * 60) + endTimer.getSeconds()) - ((startTimer.getMinutes() * 60) + startTimer.getSeconds());
+  if (isSummary) {
+    System.out.println("get jsonmessage[" + folder.getUID(message) + "] SUMMARY took "+ elapsedSeconds+ " seconds");
+  }
+ else {
+    System.out.println("get jsonmessage[" + folder.getUID(message) + "] took "+ elapsedSeconds+ " seconds");
+  }
+  return jsonObj;
+}

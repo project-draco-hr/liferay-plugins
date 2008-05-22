@@ -1,0 +1,30 @@
+{
+  MailAccount fromMailAccount=new MailAccount(_user,fromAccountId);
+  msg.setFrom(new InternetAddress(fromMailAccount.getEmailAddress()));
+  if (!recipientsTo.trim().equalsIgnoreCase(StringPool.BLANK)) {
+    msg.setRecipients(Message.RecipientType.TO,InternetAddress.parse(recipientsTo,false));
+  }
+  if (!recipientsCc.trim().equalsIgnoreCase(StringPool.BLANK)) {
+    msg.setRecipients(Message.RecipientType.CC,InternetAddress.parse(recipientsCc,false));
+  }
+  if (!recipientsBcc.trim().equalsIgnoreCase(StringPool.BLANK)) {
+    msg.setRecipients(Message.RecipientType.BCC,InternetAddress.parse(recipientsBcc,false));
+  }
+  msg.setSubject(subject);
+  msg.setSentDate(new Date());
+  if (mp != null) {
+    msg.setContent(mp);
+  }
+ else {
+    msg.setText(content);
+  }
+  msg.saveChanges();
+  Transport t=_getOutgoingSession(fromMailAccount).getTransport("smtp");
+  try {
+    t.connect(fromMailAccount.getUsername(),fromMailAccount.getPassword());
+    t.sendMessage(msg,msg.getAllRecipients());
+  }
+  finally {
+    t.close();
+  }
+}

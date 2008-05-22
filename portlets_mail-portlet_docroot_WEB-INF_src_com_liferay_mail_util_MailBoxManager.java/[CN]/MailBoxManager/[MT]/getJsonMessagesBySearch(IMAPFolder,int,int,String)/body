@@ -1,0 +1,25 @@
+{
+  SearchTerm st=_getSearchTerm(searchString);
+  Message[] messages=folder.search(st);
+  int totalMessages=messages.length;
+  int firstIndexInclusive=(pageNum - 1) * messagesPerPage;
+  int lastIndexInclusive=firstIndexInclusive + messagesPerPage - 1;
+  if (lastIndexInclusive >= totalMessages) {
+    lastIndexInclusive=totalMessages - 1;
+  }
+  double totalPages=Math.ceil((double)totalMessages / messagesPerPage);
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  JSONUtil.put(jsonObj,"totalPages",totalPages);
+  JSONUtil.put(jsonObj,"totalMessages",totalMessages);
+  JSONUtil.put(jsonObj,"begin",firstIndexInclusive);
+  JSONUtil.put(jsonObj,"end",lastIndexInclusive);
+  JSONUtil.put(jsonObj,"pageNum",pageNum);
+  JSONUtil.put(jsonObj,"messagesPerPage",messagesPerPage);
+  for (int i=firstIndexInclusive; i <= lastIndexInclusive; i++) {
+    Message message=messages[i];
+    jsonArray.put(getJsonMessage(folder,message,true));
+  }
+  JSONUtil.put(jsonObj,"messages",jsonArray);
+  return jsonObj.toString();
+}

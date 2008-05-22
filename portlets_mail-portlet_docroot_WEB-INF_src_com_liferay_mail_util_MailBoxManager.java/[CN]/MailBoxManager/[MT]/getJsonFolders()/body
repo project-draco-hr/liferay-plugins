@@ -1,0 +1,14 @@
+{
+  List folders=getFolders();
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  for (int i=0; i < folders.size(); i++) {
+    IMAPFolder folder=(IMAPFolder)folders.get(i);
+    if (folder.getType() != Folder.HOLDS_FOLDERS) {
+      jsonArray.put(getJsonFolder(folder));
+    }
+  }
+  JSONUtil.put(jsonObj,"folderCount",folders.size());
+  JSONUtil.put(jsonObj,"folders",jsonArray);
+  return jsonObj.toString();
+}

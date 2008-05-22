@@ -1,0 +1,56 @@
+{
+  try {
+    String contentType=messagePart.getContentType().toLowerCase();
+    if (messagePart.getContent() instanceof Multipart) {
+      Multipart multipart=(Multipart)messagePart.getContent();
+      if (contentType.startsWith(ContentTypes.MULTIPART_ALTERNATIVE)) {
+        for (int i=0; i < multipart.getCount(); i++) {
+          Part curPart=multipart.getBodyPart(i);
+          String partContentType=curPart.getContentType().toLowerCase();
+          if (isPreview && partContentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+            if (messageContent.equals(StringPool.BLANK)) {
+              messageContent=_getContent(messageContent,"",curPart,isPreview);
+            }
+            break;
+          }
+          if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
+            messageContent=_getContent(messageContent,"",curPart,isPreview);
+            break;
+          }
+        }
+      }
+ else {
+        for (int i=0; i < multipart.getCount(); i++) {
+          Part curPart=multipart.getBodyPart(i);
+          messageContent=_getContent(messageContent,contentPath + StringPool.PERIOD + i,curPart,isPreview);
+        }
+      }
+    }
+ else     if (Validator.isNull(messagePart.getFileName())) {
+      if (contentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+        messageContent+=((String)messagePart.getContent()).trim() + "\n\n";
+      }
+ else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
+        if (isPreview) {
+          messageContent+=_stripHtml((String)messagePart.getContent()) + "<HR/>";
+        }
+ else {
+          messageContent+=((String)messagePart.getContent()) + "<HR/>";
+        }
+      }
+ else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
+        messageContent+=_getContent(messageContent,"",messagePart,isPreview);
+      }
+ else {
+      }
+    }
+ else {
+      contentPath=contentPath + ".attachment";
+      messageContent+="<HR><a href=\"" + contentPath + "\">"+ messagePart.getFileName()+ "</a>";
+    }
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe.getMessage());
+  }
+  return messageContent;
+}

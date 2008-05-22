@@ -1,0 +1,37 @@
+{
+  int[] msgNums=GetterUtil.getIntegerValues(messageNumsToGet.split("\\s*,\\s*"));
+  int[] msgUids=GetterUtil.getIntegerValues(messageUidsToExclude.split("\\s*,\\s*"));
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  if (msgNums.length != 0) {
+    for (int i=0; i < msgNums.length; i++) {
+      Message message=folder.getMessage(msgNums[i]);
+      long msgUid=folder.getUID(message);
+      if (msgUids.length != 0) {
+        for (int j=0; j < msgUids.length; j++) {
+          if (msgUid == msgUids[j]) {
+            try {
+              jsonArray.put((int)msgUid,"");
+            }
+ catch (            JSONException jsone) {
+              if (_log.isWarnEnabled()) {
+                _log.warn(jsone,jsone);
+              }
+            }
+            continue;
+          }
+        }
+      }
+      try {
+        jsonArray.put((int)msgUid,getJsonMessage(folder,message,true));
+      }
+ catch (      JSONException jsone) {
+        if (_log.isWarnEnabled()) {
+          _log.warn(jsone,jsone);
+        }
+      }
+    }
+  }
+  JSONUtil.put(jsonObj,"messages",jsonArray);
+  return jsonObj.toString();
+}

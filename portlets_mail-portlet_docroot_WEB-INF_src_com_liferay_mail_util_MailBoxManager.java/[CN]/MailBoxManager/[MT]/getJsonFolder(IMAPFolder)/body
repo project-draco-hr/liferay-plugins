@@ -1,0 +1,17 @@
+{
+  JSONObject jsonFolderObj=new JSONObject();
+  Date startTimer=new Date();
+  if (folder.getType() != Folder.HOLDS_FOLDERS) {
+    folder.open(Folder.READ_ONLY);
+    JSONUtil.put(jsonFolderObj,"newMessages",folder.getUnreadMessageCount());
+    JSONUtil.put(jsonFolderObj,"name",folder.getFullName());
+    Message[] messages=folder.getMessages();
+    JSONUtil.put(jsonFolderObj,"messageCount",messages.length);
+    folder.close(false);
+    Date endTimer=new Date();
+    int elapsedSeconds=((endTimer.getMinutes() * 60) + endTimer.getSeconds()) - ((startTimer.getMinutes() * 60) + startTimer.getSeconds());
+    System.out.println("get jsonfolder[" + folder.getFullName() + "] with messages["+ messages.length+ "] took "+ elapsedSeconds+ " seconds");
+    return jsonFolderObj;
+  }
+  return null;
+}
