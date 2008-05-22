@@ -1,28 +1,28 @@
 {
   MailAccount fromMailAccount=new MailAccount(_user,fromAccountId);
-  msg.setFrom(new InternetAddress(fromMailAccount.getEmailAddress()));
+  message.setFrom(new InternetAddress(fromMailAccount.getEmailAddress()));
   if (!to.trim().equals(StringPool.BLANK)) {
-    msg.setRecipients(Message.RecipientType.TO,InternetAddress.parse(to,false));
+    message.setRecipients(Message.RecipientType.TO,InternetAddress.parse(to,false));
   }
   if (!cc.trim().equals(StringPool.BLANK)) {
-    msg.setRecipients(Message.RecipientType.CC,InternetAddress.parse(cc,false));
+    message.setRecipients(Message.RecipientType.CC,InternetAddress.parse(cc,false));
   }
   if (!bcc.trim().equals(StringPool.BLANK)) {
-    msg.setRecipients(Message.RecipientType.BCC,InternetAddress.parse(bcc,false));
+    message.setRecipients(Message.RecipientType.BCC,InternetAddress.parse(bcc,false));
   }
-  msg.setSubject(subject);
-  msg.setSentDate(new Date());
+  message.setSubject(subject);
+  message.setSentDate(new Date());
   if (mp != null) {
-    msg.setContent(mp);
+    message.setContent(mp);
   }
  else {
-    msg.setText(content);
+    message.setText(content);
   }
-  msg.saveChanges();
+  message.saveChanges();
   Transport t=getOutgoingSession(fromMailAccount).getTransport("smtp");
   try {
     t.connect(fromMailAccount.getUsername(),fromMailAccount.getPassword());
-    t.sendMessage(msg,msg.getAllRecipients());
+    t.sendMessage(message,message.getAllRecipients());
   }
   finally {
     t.close();

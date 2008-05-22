@@ -5,14 +5,14 @@
   }
   SimpleDateFormat sdf=new SimpleDateFormat("MMM dd yyyy HH:mm");
   JSONObject jsonObj=new JSONObject();
+  JSONUtil.put(jsonObj,"uid",folder.getUID(message));
+  JSONUtil.put(jsonObj,"messageNumber",message.getMessageNumber());
   JSONUtil.put(jsonObj,"date",sdf.format(message.getSentDate()));
   JSONUtil.put(jsonObj,"from",getAddresses(message.getFrom()));
+  JSONUtil.put(jsonObj,"subject",message.getSubject());
   JSONUtil.put(jsonObj,"attachment",false);
   JSONUtil.put(jsonObj,"html",false);
-  JSONUtil.put(jsonObj,"msgNum",String.valueOf(message.getMessageNumber()));
   JSONUtil.put(jsonObj,"read",read);
-  JSONUtil.put(jsonObj,"subject",message.getSubject());
-  JSONUtil.put(jsonObj,"uid",folder.getUID(message));
   if (preview) {
     JSONUtil.put(jsonObj,"bodyPreview",StringPool.BLANK);
   }
