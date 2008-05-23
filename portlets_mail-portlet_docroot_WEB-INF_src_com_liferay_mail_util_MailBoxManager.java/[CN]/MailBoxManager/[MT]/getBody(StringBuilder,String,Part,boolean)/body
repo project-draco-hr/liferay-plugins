@@ -5,19 +5,8 @@
       Multipart multipart=(Multipart)messagePart.getContent();
       for (int i=0; i < multipart.getCount(); i++) {
         Part curPart=multipart.getBodyPart(i);
-        if (contentType.startsWith(ContentTypes.MULTIPART_ALTERNATIVE)) {
-          String partContentType=curPart.getContentType().toLowerCase();
-          if (preview && partContentType.startsWith(ContentTypes.TEXT_PLAIN)) {
-            getBody(sb,StringPool.BLANK,curPart,preview);
-            break;
-          }
-          if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
-            getBody(sb,StringPool.BLANK,curPart,preview);
-            break;
-          }
-        }
- else {
-          getBody(sb,contentPath + StringPool.PERIOD + i,curPart,preview);
+        if (getBodyMulitipart(contentType,curPart,contentPath + StringPool.PERIOD + i,sb,preview)) {
+          break;
         }
       }
     }
