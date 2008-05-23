@@ -8,16 +8,16 @@
         if (contentType.startsWith(ContentTypes.MULTIPART_ALTERNATIVE)) {
           String partContentType=curPart.getContentType().toLowerCase();
           if (preview && partContentType.startsWith(ContentTypes.TEXT_PLAIN)) {
-            getContent(sb,StringPool.BLANK,curPart,preview);
+            getBody(sb,StringPool.BLANK,curPart,preview);
             break;
           }
           if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
-            getContent(sb,StringPool.BLANK,curPart,preview);
+            getBody(sb,StringPool.BLANK,curPart,preview);
             break;
           }
         }
  else {
-          getContent(sb,contentPath + StringPool.PERIOD + i,curPart,preview);
+          getBody(sb,contentPath + StringPool.PERIOD + i,curPart,preview);
         }
       }
     }
@@ -31,7 +31,7 @@
         sb.append("<HR/>");
       }
  else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
-        getContent(sb,StringPool.BLANK,messagePart,preview);
+        getBody(sb,StringPool.BLANK,messagePart,preview);
       }
     }
  else {
@@ -43,6 +43,6 @@
     }
   }
  catch (  IOException ioe) {
-    _log.error(ioe.getMessage());
+    _log.error(ioe,ioe);
   }
 }

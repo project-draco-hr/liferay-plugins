@@ -9,7 +9,7 @@
     props.setProperty("mail.imap.socketFactory.port",mailAccount.getMailInPort());
     URLName url=new URLName("imap",mailAccount.getMailInHostName(),Integer.parseInt(mailAccount.getMailInPort()),StringPool.BLANK,mailAccount.getUsername(),mailAccount.getPassword());
     Session session=Session.getInstance(props,null);
-    Store store;
+    Store store=null;
     if (mailAccount.isMailSecure()) {
       store=new IMAPSSLStore(session,url);
     }
@@ -21,7 +21,7 @@
   }
  catch (  MessagingException me) {
     if (_log.isErrorEnabled()) {
-      _log.error(me.getMessage());
+      _log.error(me,me);
     }
   }
 }
