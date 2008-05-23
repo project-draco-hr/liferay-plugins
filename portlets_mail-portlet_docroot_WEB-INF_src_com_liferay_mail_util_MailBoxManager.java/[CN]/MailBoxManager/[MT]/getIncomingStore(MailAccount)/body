@@ -7,7 +7,7 @@
     props.setProperty("mail.imap.socketFactory.fallback","false");
     props.setProperty("mail.imap.port",mailAccount.getMailInPort());
     props.setProperty("mail.imap.socketFactory.port",mailAccount.getMailInPort());
-    URLName url=new URLName("imap",mailAccount.getMailInHostName(),Integer.parseInt(mailAccount.getMailInPort()),"",mailAccount.getUsername(),mailAccount.getPassword());
+    URLName url=new URLName("imap",mailAccount.getMailInHostName(),Integer.parseInt(mailAccount.getMailInPort()),StringPool.BLANK,mailAccount.getUsername(),mailAccount.getPassword());
     Session session=Session.getInstance(props,null);
     Store store;
     if (mailAccount.isMailSecure()) {
@@ -19,9 +19,9 @@
     store.connect();
     setStore(store);
   }
- catch (  MessagingException ex) {
+ catch (  MessagingException me) {
     if (_log.isErrorEnabled()) {
-      _log.error(ex.getMessage());
+      _log.error(me.getMessage());
     }
   }
 }

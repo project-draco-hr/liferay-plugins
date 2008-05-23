@@ -1,0 +1,48 @@
+{
+  try {
+    String contentType=messagePart.getContentType().toLowerCase();
+    if (messagePart.getContent() instanceof Multipart) {
+      Multipart multipart=(Multipart)messagePart.getContent();
+      for (int i=0; i < multipart.getCount(); i++) {
+        Part curPart=multipart.getBodyPart(i);
+        if (contentType.startsWith(ContentTypes.MULTIPART_ALTERNATIVE)) {
+          String partContentType=curPart.getContentType().toLowerCase();
+          if (preview && partContentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+            getContent(sb,StringPool.BLANK,curPart,preview);
+            break;
+          }
+          if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
+            getContent(sb,StringPool.BLANK,curPart,preview);
+            break;
+          }
+        }
+ else {
+          getContent(sb,contentPath + StringPool.PERIOD + i,curPart,preview);
+        }
+      }
+    }
+ else     if (Validator.isNull(messagePart.getFileName())) {
+      if (contentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+        sb.append(messagePart.getContent());
+        sb.append("\n\n");
+      }
+ else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
+        sb.append(stripHtml((String)messagePart.getContent()));
+        sb.append("<HR/>");
+      }
+ else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
+        getContent(sb,StringPool.BLANK,messagePart,preview);
+      }
+    }
+ else {
+      sb.append("<HR><a href=\"");
+      sb.append(contentPath);
+      sb.append("\">");
+      sb.append(messagePart.getFileName());
+      sb.append("</a>");
+    }
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe.getMessage());
+  }
+}
