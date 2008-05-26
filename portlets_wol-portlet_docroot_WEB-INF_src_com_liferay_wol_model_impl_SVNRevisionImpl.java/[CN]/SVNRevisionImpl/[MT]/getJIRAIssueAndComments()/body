@@ -1,16 +1,20 @@
 {
   JIRAIssue jiraIssue=null;
   String comments=getComments();
-  if (comments.startsWith("LEP-")) {
+  if (comments.startsWith(_LEP_PREFIX_1) || comments.startsWith(_LEP_PREFIX_2)) {
     comments=StringUtil.replace(comments,StringPool.NEW_LINE,StringPool.SPACE);
     int pos=comments.indexOf(StringPool.SPACE);
     if (pos == -1) {
       pos=comments.length();
     }
- else {
-      comments=comments.substring(0,pos);
+    String key=null;
+    if (comments.startsWith("LEP-")) {
+      key=comments.substring(_LEP_PREFIX_1.length(),pos);
     }
-    String key=comments.substring(4,pos);
+ else {
+      key=comments.substring(_LEP_PREFIX_2.length(),pos);
+    }
+    comments=comments.substring(pos).trim();
     if (Validator.isNumber(key)) {
       try {
         jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue("LEP-" + key);
