@@ -12,16 +12,17 @@
     feed=feedPersistence.create(feedId);
     feed.setTwitterScreenName(twitterScreenName);
     feed.setCreateDate(now);
+    feed.setModifiedDate(now);
+    feedPersistence.update(feed,false);
+    if (jsonArray == null) {
+      return;
+    }
   }
-  feed.setModifiedDate(now);
   if (jsonArray == null) {
     jsonArray=getUserTimelineJSONArray(twitterScreenName,feed.getLastStatusId());
   }
-  if (jsonArray.length() == 0) {
-    if (feed.isNew()) {
-      feedPersistence.update(feed,false);
-    }
-    return feed;
+  if ((jsonArray == null) || (jsonArray.length() == 0)) {
+    return;
   }
   for (int i=0; i < jsonArray.length(); i++) {
     JSONObject statusJSON=jsonArray.optJSONObject(i);
@@ -46,6 +47,6 @@
     JSONUtil.put(extraData,"text",text);
     SocialActivityLocalServiceUtil.addActivity(user.getUserId(),0,createDate,Feed.class.getName(),statusId,TwitterActivityKeys.ADD_STATUS,extraData.toString(),0);
   }
+  feed.setModifiedDate(now);
   feedPersistence.update(feed,false);
-  return feed;
 }
