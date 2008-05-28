@@ -20,6 +20,13 @@
     long messageUid=folder.getUID(message);
     jsonArray.put(getJSONMessage(folder,message,true));
   }
-  JSONUtil.put(jsonObj,"messages",jsonArray);
+  try {
+    jsonObj.put("messages",jsonArray);
+  }
+ catch (  JSONException jsone) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(jsone,jsone);
+    }
+  }
   return jsonObj.toString();
 }

@@ -3,30 +3,23 @@
   int[] messageUidsArray=GetterUtil.getIntegerValues(messageUidsToExclude.split("\\s*,\\s*"));
   JSONObject jsonObj=new JSONObject();
   JSONArray jsonArray=new JSONArray();
-  JSONUtil.put(jsonObj,"messages",jsonArray);
-  for (  int messageNumber : messageNumbersArray) {
-    Message message=folder.getMessage(messageNumber);
-    long messageUid=folder.getUID(message);
-    for (    int curMessageUid : messageUidsArray) {
-      if (curMessageUid == messageUid) {
-        try {
+  try {
+    for (    int messageNumber : messageNumbersArray) {
+      Message message=folder.getMessage(messageNumber);
+      long messageUid=folder.getUID(message);
+      for (      int curMessageUid : messageUidsArray) {
+        if (curMessageUid == messageUid) {
           jsonArray.put((int)messageUid,StringPool.BLANK);
+          continue;
         }
- catch (        JSONException jsone) {
-          if (_log.isWarnEnabled()) {
-            _log.warn(jsone,jsone);
-          }
-        }
-        continue;
       }
-    }
-    try {
       jsonArray.put((int)messageUid,getJSONMessage(folder,message,true));
     }
- catch (    JSONException jsone) {
-      if (_log.isWarnEnabled()) {
-        _log.warn(jsone,jsone);
-      }
+    jsonObj.put("messages",jsonArray);
+  }
+ catch (  JSONException jsone) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(jsone,jsone);
     }
   }
   return jsonObj.toString();
