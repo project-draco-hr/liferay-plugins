@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Feed feed=(Feed)session.get(FeedImpl.class,new Long(feedId));
+    if (feed == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Feed exists with the primary key " + feedId);
+      }
+      throw new NoSuchFeedException("No Feed exists with the primary key " + feedId);
+    }
+    return remove(feed);
+  }
+ catch (  NoSuchFeedException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

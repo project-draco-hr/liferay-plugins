@@ -1,0 +1,25 @@
+{
+  boolean isNew=feed.isNew();
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(feed);
+      }
+ else {
+        listener.onBeforeUpdate(feed);
+      }
+    }
+  }
+  feed=updateImpl(feed,merge);
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(feed);
+      }
+ else {
+        listener.onAfterUpdate(feed);
+      }
+    }
+  }
+  return feed;
+}

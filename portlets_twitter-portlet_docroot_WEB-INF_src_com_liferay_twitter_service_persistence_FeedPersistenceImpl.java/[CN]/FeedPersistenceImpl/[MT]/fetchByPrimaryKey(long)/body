@@ -1,0 +1,13 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    return (Feed)session.get(FeedImpl.class,new Long(feedId));
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

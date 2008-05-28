@@ -1,0 +1,27 @@
+{
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
+  JSONObject extraData=new JSONObject(activity.getExtraData());
+  String title=StringPool.BLANK;
+  StringMaker sm=new StringMaker();
+  sm.append("<a href=\"");
+  sm.append(themeDisplay.getURLPortal());
+  sm.append(themeDisplay.getPathFriendlyURLPublic());
+  sm.append(StringPool.SLASH);
+  sm.append(creatorUser.getScreenName());
+  sm.append("/profile\">");
+  sm.append(creatorUserName);
+  sm.append("</a>");
+  String creatorUserNameURL=sm.toString();
+  title=themeDisplay.translate("activity-twitter-add-status",new Object[]{creatorUserNameURL});
+  sm=new StringMaker();
+  sm.append("<a href=\"http://twitter.com/");
+  sm.append(creatorUser.getContact().getTwitterSn());
+  sm.append("/statuses/");
+  sm.append(activity.getClassPK());
+  sm.append("\" target=\"_blank\">");
+  sm.append(extraData.optString("text"));
+  sm.append("</a>");
+  String body=sm.toString();
+  return new SocialActivityFeedEntry(title,body);
+}
