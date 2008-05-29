@@ -5,7 +5,7 @@
       Multipart multipart=(Multipart)messagePart.getContent();
       for (int i=0; i < multipart.getCount(); i++) {
         Part curPart=multipart.getBodyPart(i);
-        if (getBodyMulitipart(contentType,curPart,contentPath + StringPool.PERIOD + i,sb,preview)) {
+        if (getBodyMulitipart(contentType,curPart,contentPath + StringPool.PERIOD + i,sb,attachments,preview)) {
           break;
         }
       }
@@ -16,19 +16,25 @@
         sb.append("\n\n");
       }
  else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
-        sb.append(stripHtml((String)messagePart.getContent()));
-        sb.append("<HR/>");
+        if (preview) {
+          sb.append(stripHtml((String)messagePart.getContent()));
+        }
+ else {
+          sb.append((String)messagePart.getContent());
+          sb.append("<HR/>");
+        }
       }
  else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
-        getBody(sb,StringPool.BLANK,messagePart,preview);
+        getBody(sb,StringPool.BLANK,messagePart,attachments,preview);
       }
     }
  else {
-      sb.append("<HR><a href=\"");
-      sb.append(contentPath);
-      sb.append("\">");
-      sb.append(messagePart.getFileName());
-      sb.append("</a>");
+      if (!preview) {
+        System.out.println("Adding attachment");
+        System.out.println("- attachment [0]: " + contentPath);
+        System.out.println("- attachment [1]: " + messagePart.getFileName());
+        attachments.add(new Object[]{contentPath,messagePart.getFileName()});
+      }
     }
   }
  catch (  IOException ioe) {

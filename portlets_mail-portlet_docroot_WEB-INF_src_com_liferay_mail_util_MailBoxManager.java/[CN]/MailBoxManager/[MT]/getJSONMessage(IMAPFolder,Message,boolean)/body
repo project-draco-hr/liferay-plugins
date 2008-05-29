@@ -10,7 +10,6 @@
   JSONUtil.put(jsonObj,"date",sdf.format(message.getSentDate()));
   JSONUtil.put(jsonObj,"from",getAddresses(message.getFrom()));
   JSONUtil.put(jsonObj,"subject",message.getSubject());
-  JSONUtil.put(jsonObj,"attachment",false);
   JSONUtil.put(jsonObj,"html",false);
   JSONUtil.put(jsonObj,"read",read);
   if (preview) {
@@ -18,11 +17,20 @@
   }
  else {
     StringBuilder sb=new StringBuilder();
-    getBody(sb,StringPool.BLANK,message,false);
+    List attachments=new ArrayList();
+    getBody(sb,StringPool.BLANK,message,attachments,false);
     JSONUtil.put(jsonObj,"to",getAddresses(message.getRecipients(RecipientType.TO)));
     JSONUtil.put(jsonObj,"cc",getAddresses(message.getRecipients(RecipientType.CC)));
     JSONUtil.put(jsonObj,"bcc",getAddresses(message.getRecipients(RecipientType.BCC)));
     JSONUtil.put(jsonObj,"body",sb.toString());
+    try {
+      jsonObj.put("attachments",getJSONAttachments(attachments));
+    }
+ catch (    JSONException jsone) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(jsone,jsone);
+      }
+    }
   }
   return jsonObj;
 }
