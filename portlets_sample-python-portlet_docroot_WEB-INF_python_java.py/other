@@ -1,0 +1,17 @@
+from com.liferay.portal.service import OrganizationServiceUtil
+from java.util import TreeSet
+renderResponse.setContentType('text/html')
+out = renderResponse.getPortletOutputStream()
+custom = Custom(renderRequest, renderResponse)
+out.write('\n\t<b>Using the JDK</b>\n\n\t<br /><br />\n\n\tThe following set has been generated with java.util.TreeSet.\n\n\t<br /><br /> \n\n')
+set = TreeSet()
+set.add('foo')
+set.add('Bar')
+set.add('baz')
+for v in set:
+    out.write((v + '\n'))
+out.write('\n\t<br /><br />\n\n\t<b>Invoking Liferay Services</b>\n\n\t<br /><br /> \n\n')
+userId = int(userInfo['liferay.user.id'])
+organizations = OrganizationServiceUtil.getUserOrganizations(userId)
+out.write((('\n\tYou belong to ' + str(organizations.size())) + ' organizations.\n\n'))
+out.write((custom.navigation() + '\n'))
