@@ -23,14 +23,7 @@
     JSONUtil.put(jsonObj,"cc",getAddresses(message.getRecipients(RecipientType.CC)));
     JSONUtil.put(jsonObj,"bcc",getAddresses(message.getRecipients(RecipientType.BCC)));
     JSONUtil.put(jsonObj,"body",sb.toString());
-    try {
-      jsonObj.put("attachments",getJSONAttachments(attachments));
-    }
- catch (    JSONException jsone) {
-      if (_log.isWarnEnabled()) {
-        _log.warn(jsone,jsone);
-      }
-    }
+    JSONUtil.put(jsonObj,"attachments",getJSONAttachments(attachments));
   }
   return jsonObj;
 }

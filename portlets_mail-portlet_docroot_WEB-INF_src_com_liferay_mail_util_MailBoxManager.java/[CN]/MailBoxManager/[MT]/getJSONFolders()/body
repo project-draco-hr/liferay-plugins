@@ -1,6 +1,7 @@
 {
   JSONObject jsonObj=new JSONObject();
   JSONArray jsonArray=new JSONArray();
+  JSONUtil.put(jsonObj,"folders",jsonArray);
   List<IMAPFolder> folders=getFolders();
   for (  IMAPFolder folder : folders) {
     if (folder.getType() != Folder.HOLDS_FOLDERS) {
@@ -8,13 +9,5 @@
     }
   }
   JSONUtil.put(jsonObj,"folderCount",folders.size());
-  try {
-    jsonObj.put("folders",jsonArray);
-  }
- catch (  JSONException jsone) {
-    if (_log.isWarnEnabled()) {
-      _log.warn(jsone,jsone);
-    }
-  }
   return jsonObj.toString();
 }
