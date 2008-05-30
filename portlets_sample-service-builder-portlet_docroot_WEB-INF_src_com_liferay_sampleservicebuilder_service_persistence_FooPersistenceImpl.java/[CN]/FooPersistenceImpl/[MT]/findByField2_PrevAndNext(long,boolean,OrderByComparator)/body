@@ -1,0 +1,35 @@
+{
+  Foo foo=findByPrimaryKey(fooId);
+  int count=countByField2(field2);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.sampleservicebuilder.model.Foo WHERE ");
+    query.append("field2 = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("field1 ASC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(field2);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,foo);
+    Foo[] array=new FooImpl[3];
+    array[0]=(Foo)objArray[0];
+    array[1]=(Foo)objArray[1];
+    array[2]=(Foo)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
