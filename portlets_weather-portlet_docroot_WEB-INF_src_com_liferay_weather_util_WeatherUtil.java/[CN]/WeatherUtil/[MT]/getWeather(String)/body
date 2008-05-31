@@ -1,0 +1,11 @@
+{
+  WebCacheItem wci=new WeatherWebCacheItem(zip);
+  String key=WeatherUtil.class.getName() + StringPool.PERIOD + zip;
+  try {
+    return (Weather)WebCachePoolUtil.get(key,wci);
+  }
+ catch (  ClassCastException cce) {
+    WebCachePoolUtil.remove(key);
+    return (Weather)WebCachePoolUtil.get(key,wci);
+  }
+}
