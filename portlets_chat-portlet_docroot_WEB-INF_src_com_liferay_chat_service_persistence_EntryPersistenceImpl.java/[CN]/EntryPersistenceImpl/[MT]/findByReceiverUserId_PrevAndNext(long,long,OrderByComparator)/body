@@ -1,0 +1,35 @@
+{
+  Entry entry=findByPrimaryKey(entryId);
+  int count=countByReceiverUserId(receiverUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringMaker query=new StringMaker();
+    query.append("FROM com.liferay.chat.model.Entry WHERE ");
+    query.append("receiverUserId = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("createDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(receiverUserId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,entry);
+    Entry[] array=new EntryImpl[3];
+    array[0]=(Entry)objArray[0];
+    array[1]=(Entry)objArray[1];
+    array[2]=(Entry)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
