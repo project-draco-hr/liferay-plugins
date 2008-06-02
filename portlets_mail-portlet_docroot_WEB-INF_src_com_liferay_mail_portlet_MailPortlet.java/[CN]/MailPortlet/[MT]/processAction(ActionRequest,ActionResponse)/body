@@ -1,0 +1,20 @@
+{
+  try {
+    int accountId=ParamUtil.getInteger(req,"accountId");
+    String folderName=ParamUtil.getString(req,"folderName");
+    int messageUid=ParamUtil.getInteger(req,"messageUid");
+    String fileName=ParamUtil.getString(req,"fileName");
+    String contentPath=ParamUtil.getString(req,"contentPath");
+    ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+    MailBoxManager mailBoxManager=new MailBoxManager(themeDisplay.getUser(),accountId);
+    Part messagePart=mailBoxManager.getAttachment(folderName,messageUid,contentPath);
+    byte[] content=JavaMailUtil.getBytes(messagePart);
+    String contentType=messagePart.getContentType();
+    HttpServletResponse httpRes=PortalUtil.getHttpServletResponse(res);
+    req.setAttribute("com.liferay.portal.servlet.filters.strip.StripFilterSKIP_FILTER",Boolean.TRUE);
+    ServletResponseUtil.sendFile(httpRes,fileName,content,contentType);
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
