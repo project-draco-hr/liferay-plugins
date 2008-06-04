@@ -1,0 +1,32 @@
+{
+  try {
+    JSONObject jsonObj=new JSONObject(message);
+    String responseDestination=jsonObj.optString("lfrResponseDestination");
+    String responseId=jsonObj.optString("lfrResponseId");
+    jsonObj.remove("lfrResponseDestination");
+    jsonObj.remove("lfrResponseId");
+    SchedulingRequest request=(SchedulingRequest)_serializer.fromJSON(jsonObj.toString());
+    String type=request.getType();
+    if (type.equals(SchedulingRequest.PING)) {
+      JSONObject jsonObject=new JSONObject();
+      jsonObject.put("lfrResponseId",responseId);
+      MessageBusUtil.sendMessage(responseDestination,jsonObject.toString());
+    }
+ else     if (type.equals(SchedulingRequest.REGISTER_TYPE)) {
+      SchedulerUtil.getSchedulingEngine().schedule(String.valueOf(request.hashCode()),request.getGroupName(),request.getCronText(),request.getDestinationName(),request.getMessageBody(),request.getStartDate(),request.getEndDate());
+    }
+ else     if (type.equals(SchedulingRequest.RETRIEVE_TYPE)) {
+      Collection<SchedulingRequest> requests=SchedulerUtil.getSchedulingEngine().retrieveScheduledJobs(request.getGroupName());
+      JSONObject jsonObject=new JSONObject();
+      jsonObject.put("lfrResponseId",responseId);
+      jsonObject.put("requests",_serializer.toJSON(requests));
+      MessageBusUtil.sendMessage(responseDestination,jsonObject.toString());
+    }
+ else     if (type.equals(SchedulingRequest.UNREGISTER_TYPE)) {
+      SchedulerUtil.getSchedulingEngine().unschedule(request.getJobName(),request.getGroupName());
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+}

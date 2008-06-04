@@ -1,0 +1,17 @@
+{
+  try {
+    String names[]=_scheduler.getJobNames(groupName);
+    List<SchedulingRequest> requests=new ArrayList<SchedulingRequest>();
+    for (int i=0; i < names.length; i++) {
+      JobDetail detail=_scheduler.getJobDetail(names[i],groupName);
+      String messageBody=detail.getJobDataMap().getString(SchedulingEngine.MESSAGE_BODY);
+      CronTrigger trigger=(CronTrigger)_scheduler.getTrigger(names[i],groupName);
+      SchedulingRequest sr=new SchedulingRequest(trigger.getCronExpression(),groupName,names[i],messageBody,trigger.getStartTime(),trigger.getEndTime());
+      requests.add(sr);
+    }
+    return requests;
+  }
+ catch (  SchedulerException se) {
+    throw new SchedulingException("Unable to retrieve job",se);
+  }
+}
