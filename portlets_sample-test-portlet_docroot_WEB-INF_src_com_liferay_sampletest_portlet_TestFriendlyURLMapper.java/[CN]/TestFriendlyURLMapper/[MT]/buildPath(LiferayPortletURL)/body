@@ -1,7 +1,20 @@
 {
+  String resourceID=portletURL.getResourceID();
+  if (Validator.isNotNull(resourceID)) {
+    portletURL.addParameterIncludedInPath("p_p_id");
+    portletURL.addParameterIncludedInPath("p_p_lifecycle");
+    portletURL.addParameterIncludedInPath("p_p_resource_id");
+    portletURL.addParameterIncludedInPath("p_p_cacheability");
+    StringMaker sm=new StringMaker();
+    sm.append(StringPool.SLASH);
+    sm.append(_MAPPING);
+    sm.append(StringPool.SLASH);
+    sm.append(resourceID);
+    return sm.toString();
+  }
   WindowState windowState=portletURL.getWindowState();
   String jspPage=GetterUtil.getString(portletURL.getParameter("jspPage"));
-  if ((Validator.isNotNull(jspPage)) || (windowState == null) || (windowState.equals(WindowState.NORMAL))) {
+  if ((windowState == null) || (windowState.equals(WindowState.NORMAL)) || (Validator.isNotNull(jspPage))) {
     portletURL.addParameterIncludedInPath("p_p_id");
     portletURL.addParameterIncludedInPath("jspPage");
     StringMaker sm=new StringMaker();
