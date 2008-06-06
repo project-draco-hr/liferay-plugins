@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    MeetupEntry meetupEntry=(MeetupEntry)session.get(MeetupEntryImpl.class,new Long(meetupEntryId));
+    if (meetupEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No MeetupEntry exists with the primary key " + meetupEntryId);
+      }
+      throw new NoSuchMeetupEntryException("No MeetupEntry exists with the primary key " + meetupEntryId);
+    }
+    return remove(meetupEntry);
+  }
+ catch (  NoSuchMeetupEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

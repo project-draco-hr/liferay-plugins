@@ -1,0 +1,25 @@
+{
+  boolean isNew=meetupEntry.isNew();
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(meetupEntry);
+      }
+ else {
+        listener.onBeforeUpdate(meetupEntry);
+      }
+    }
+  }
+  meetupEntry=updateImpl(meetupEntry,merge);
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(meetupEntry);
+      }
+ else {
+        listener.onAfterUpdate(meetupEntry);
+      }
+    }
+  }
+  return meetupEntry;
+}

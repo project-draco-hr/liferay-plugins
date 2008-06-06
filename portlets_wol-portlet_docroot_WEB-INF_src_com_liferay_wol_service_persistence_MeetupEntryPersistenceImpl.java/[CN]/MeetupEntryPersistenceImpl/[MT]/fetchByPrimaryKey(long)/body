@@ -1,0 +1,13 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    return (MeetupEntry)session.get(MeetupEntryImpl.class,new Long(meetupEntryId));
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

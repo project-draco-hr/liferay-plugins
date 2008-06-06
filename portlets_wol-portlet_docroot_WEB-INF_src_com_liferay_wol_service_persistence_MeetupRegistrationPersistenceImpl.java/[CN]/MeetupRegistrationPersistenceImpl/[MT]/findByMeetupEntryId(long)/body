@@ -1,0 +1,38 @@
+{
+  boolean finderClassNameCacheEnabled=MeetupRegistrationModelImpl.CACHE_ENABLED;
+  String finderClassName=MeetupRegistration.class.getName();
+  String finderMethodName="findByMeetupEntryId";
+  String[] finderParams=new String[]{Long.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(meetupEntryId)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.MeetupRegistration WHERE ");
+      query.append("meetupEntryId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("modifiedDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(meetupEntryId);
+      List<MeetupRegistration> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<MeetupRegistration>)result;
+  }
+}

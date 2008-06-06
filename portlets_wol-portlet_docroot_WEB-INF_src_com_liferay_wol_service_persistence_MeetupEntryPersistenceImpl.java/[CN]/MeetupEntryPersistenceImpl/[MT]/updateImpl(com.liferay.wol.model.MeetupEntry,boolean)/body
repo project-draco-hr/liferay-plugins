@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(meetupEntry);
+    }
+ else {
+      if (meetupEntry.isNew()) {
+        session.save(meetupEntry);
+      }
+    }
+    session.flush();
+    meetupEntry.setNew(false);
+    return meetupEntry;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(MeetupEntry.class.getName());
+  }
+}

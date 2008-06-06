@@ -1,0 +1,44 @@
+{
+  boolean finderClassNameCacheEnabled=MeetupEntryModelImpl.CACHE_ENABLED;
+  String finderClassName=MeetupEntry.class.getName();
+  String finderMethodName="findByCompanyId";
+  String[] finderParams=new String[]{Long.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
+  Object[] finderArgs=new Object[]{new Long(companyId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.wol.model.MeetupEntry WHERE ");
+      query.append("companyId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("startDate DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(companyId);
+      List<MeetupEntry> list=(List<MeetupEntry>)QueryUtil.list(q,getDialect(),start,end);
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<MeetupEntry>)result;
+  }
+}
