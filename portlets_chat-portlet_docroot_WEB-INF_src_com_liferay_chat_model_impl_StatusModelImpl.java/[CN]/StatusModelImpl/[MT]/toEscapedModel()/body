@@ -1,0 +1,14 @@
+{
+  if (isEscapedModel()) {
+    return (Status)this;
+  }
+ else {
+    Status model=new StatusImpl();
+    model.setEscapedModel(true);
+    model.setStatusId(getStatusId());
+    model.setUserId(getUserId());
+    model.setModifiedDate(getModifiedDate());
+    model=(Status)Proxy.newProxyInstance(Status.class.getClassLoader(),new Class[]{Status.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

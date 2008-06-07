@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Status status=(Status)session.get(StatusImpl.class,new Long(statusId));
+    if (status == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Status exists with the primary key " + statusId);
+      }
+      throw new NoSuchStatusException("No Status exists with the primary key " + statusId);
+    }
+    return remove(status);
+  }
+ catch (  NoSuchStatusException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

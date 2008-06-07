@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(status);
+    }
+ else {
+      if (status.isNew()) {
+        session.save(status);
+      }
+    }
+    session.flush();
+    status.setNew(false);
+    return status;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(Status.class.getName());
+  }
+}

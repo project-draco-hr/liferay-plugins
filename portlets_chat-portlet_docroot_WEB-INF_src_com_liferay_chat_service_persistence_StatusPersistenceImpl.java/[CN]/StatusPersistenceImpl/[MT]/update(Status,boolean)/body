@@ -1,0 +1,25 @@
+{
+  boolean isNew=status.isNew();
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(status);
+      }
+ else {
+        listener.onBeforeUpdate(status);
+      }
+    }
+  }
+  status=updateImpl(status,merge);
+  if (_listeners != null) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(status);
+      }
+ else {
+        listener.onAfterUpdate(status);
+      }
+    }
+  }
+  return status;
+}

@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(status);
+    session.flush();
+    return status;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(Status.class.getName());
+  }
+}

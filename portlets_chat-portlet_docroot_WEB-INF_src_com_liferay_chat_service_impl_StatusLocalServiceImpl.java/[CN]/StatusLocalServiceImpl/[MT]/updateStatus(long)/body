@@ -1,0 +1,11 @@
+{
+  Status status=statusPersistence.fetchByUserId(userId);
+  if (status == null) {
+    long statusId=CounterLocalServiceUtil.increment();
+    status=statusPersistence.create(statusId);
+    status.setUserId(userId);
+  }
+  status.setModifiedDate(System.currentTimeMillis());
+  statusPersistence.update(status,false);
+  return status;
+}

@@ -1,0 +1,47 @@
+{
+  boolean finderClassNameCacheEnabled=StatusModelImpl.CACHE_ENABLED;
+  String finderClassName=Status.class.getName();
+  String finderMethodName="fetchByUserId";
+  String[] finderParams=new String[]{Long.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(userId)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringMaker query=new StringMaker();
+      query.append("FROM com.liferay.chat.model.Status WHERE ");
+      query.append("userId = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      List<Status> list=q.list();
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      if (list.size() == 0) {
+        return null;
+      }
+ else {
+        return list.get(0);
+      }
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    List<Status> list=(List<Status>)result;
+    if (list.size() == 0) {
+      return null;
+    }
+ else {
+      return list.get(0);
+    }
+  }
+}
