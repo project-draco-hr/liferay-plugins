@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(meetupsRegistration);
+    session.flush();
+    return meetupsRegistration;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(MeetupsRegistration.class.getName());
+  }
+}
