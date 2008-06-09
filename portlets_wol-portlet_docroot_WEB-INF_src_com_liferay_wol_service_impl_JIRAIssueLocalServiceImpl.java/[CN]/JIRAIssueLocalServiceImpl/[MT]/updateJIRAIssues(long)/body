@@ -18,8 +18,8 @@
     }
     JSONObject extraData=new JSONObject();
     JSONUtil.put(extraData,"jiraChangeGroupId",jiraChangeGroup.getJiraChangeGroupId());
-    JSONArray jiraChangeItemsJSONArray=new JSONArray();
-    JSONUtil.put(extraData,"jiraChangeItems",jiraChangeItemsJSONArray);
+    JSONArray jiraChangeItemsJSON=new JSONArray();
+    JSONUtil.put(extraData,"jiraChangeItems",jiraChangeItemsJSON);
     List<JIRAChangeItem> jiraChangeItems=jiraChangeItemPersistence.findByJiraChangeGroupId(jiraChangeGroup.getJiraChangeGroupId());
     for (    JIRAChangeItem jiraChangeItem : jiraChangeItems) {
       JSONObject jiraChangeItemJSON=new JSONObject();
@@ -28,7 +28,7 @@
       JSONUtil.put(jiraChangeItemJSON,"oldString",jiraChangeItem.getOldString());
       JSONUtil.put(jiraChangeItemJSON,"newValue",jiraChangeItem.getNewValue());
       JSONUtil.put(jiraChangeItemJSON,"newString",jiraChangeItem.getNewString());
-      jiraChangeItemsJSONArray.put(jiraChangeItemJSON);
+      jiraChangeItemsJSON.put(jiraChangeItemJSON);
     }
     SocialActivityLocalServiceUtil.addUniqueActivity(userId,0,JIRAUtil.getLiferayDate(jiraChangeGroup.getCreateDate()),JIRAIssue.class.getName(),jiraChangeGroup.getJiraIssueId(),JIRAActivityKeys.ADD_CHANGE,extraData.toString(),0);
   }
