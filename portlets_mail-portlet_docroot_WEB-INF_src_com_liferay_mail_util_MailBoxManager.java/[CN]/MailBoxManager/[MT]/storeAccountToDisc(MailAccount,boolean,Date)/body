@@ -1,0 +1,14 @@
+{
+  try {
+    JSONObject jsonObj=new JSONObject();
+    String filepath=MailDiscManager.getAccountFilepath(_user,_mailAccount);
+    JSONUtil.put(jsonObj,"initialized",initialized);
+    JSONUtil.put(jsonObj,"lastUpdated",date);
+    FileUtil.write(filepath,jsonObj.toString());
+    return jsonObj;
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+  return null;
+}

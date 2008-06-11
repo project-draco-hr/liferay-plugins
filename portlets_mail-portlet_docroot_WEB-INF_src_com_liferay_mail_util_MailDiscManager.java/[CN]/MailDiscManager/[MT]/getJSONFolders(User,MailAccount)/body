@@ -1,0 +1,19 @@
+{
+  String accountPath=getAccountPath(user,mailAccount);
+  String[] folderNames=FileUtil.listDirs(accountPath);
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  JSONUtil.put(jsonObj,"folders",jsonArray);
+  for (  String folderName : folderNames) {
+    try {
+      String decodedFolderName=URLDecoder.decode(folderName,"UTF-8");
+      JSONObject jsonFolder=getJSONFolder(user,mailAccount,decodedFolderName);
+      JSONUtil.put(jsonFolder,"name",decodedFolderName);
+      jsonArray.put(jsonFolder);
+    }
+ catch (    UnsupportedEncodingException uee) {
+      _log.error(uee,uee);
+    }
+  }
+  return jsonObj;
+}

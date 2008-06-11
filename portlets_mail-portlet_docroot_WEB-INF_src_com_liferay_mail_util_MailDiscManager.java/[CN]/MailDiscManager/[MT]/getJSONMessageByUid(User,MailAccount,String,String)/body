@@ -1,0 +1,17 @@
+{
+  String messageFilepath=getMessageFilepath(user,mailAccount,folderName,messageUid);
+  try {
+    if (FileUtil.exists(messageFilepath)) {
+      String jsonString=FileUtil.read(messageFilepath);
+      JSONObject jsonObj=new JSONObject(jsonString);
+      return jsonObj;
+    }
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+catch (  JSONException jsone) {
+    _log.error(jsone,jsone);
+  }
+  return null;
+}

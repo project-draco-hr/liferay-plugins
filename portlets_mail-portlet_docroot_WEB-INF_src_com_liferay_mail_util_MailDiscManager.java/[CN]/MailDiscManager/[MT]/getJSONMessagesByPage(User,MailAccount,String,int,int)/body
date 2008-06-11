@@ -1,0 +1,34 @@
+{
+  String folderPath=getFolderPath(user,mailAccount,folderName);
+  String folderFilepath=getFolderFilepath(user,mailAccount,folderName);
+  try {
+    JSONObject jsonFolderObj=new JSONObject(FileUtil.read(folderFilepath));
+    String[] messageUids=FileUtil.listDirs(folderPath);
+    int messageCount=jsonFolderObj.getInt("messageCount");
+    int messageUidCount=messageUids.length - 1;
+    int begin=(messageUidCount + 1) - (messagesPerPage * pageNumber);
+    int end=messageUidCount - (messagesPerPage * (pageNumber - 1));
+    if (begin < 0) {
+      begin=0;
+    }
+    double pageCount=Math.ceil((double)messageCount / messagesPerPage);
+    JSONObject jsonObj=new JSONObject();
+    JSONArray jsonArray=new JSONArray();
+    JSONUtil.put(jsonObj,"messages",jsonArray);
+    JSONUtil.put(jsonObj,"messageCount",messageCount);
+    JSONUtil.put(jsonObj,"messagesPerPage",messagesPerPage);
+    JSONUtil.put(jsonObj,"pageCount",(int)pageCount);
+    JSONUtil.put(jsonObj,"pageNumber",pageNumber);
+    for (int i=begin; i <= end; i++) {
+      jsonArray.put(getJSONMessageByUid(user,mailAccount,folderName,messageUids[i]));
+    }
+    return jsonObj;
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+catch (  JSONException jsone) {
+    _log.error(jsone,jsone);
+  }
+  return null;
+}

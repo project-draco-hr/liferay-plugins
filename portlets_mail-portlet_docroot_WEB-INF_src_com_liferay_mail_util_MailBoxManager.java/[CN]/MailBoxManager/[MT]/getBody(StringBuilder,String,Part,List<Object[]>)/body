@@ -1,0 +1,37 @@
+{
+  try {
+    String contentType=messagePart.getContentType().toLowerCase();
+    if (messagePart.getContent() instanceof Multipart) {
+      Multipart multipart=(Multipart)messagePart.getContent();
+      for (int i=0; i < multipart.getCount(); i++) {
+        Part curPart=multipart.getBodyPart(i);
+        if (getBodyMulitipart(contentType,curPart,contentPath + StringPool.PERIOD + i,sb,attachments)) {
+          break;
+        }
+      }
+    }
+ else     if (Validator.isNull(messagePart.getFileName())) {
+      if (contentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+        sb.append(messagePart.getContent());
+        sb.append("\n\n");
+      }
+ else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
+        sb.append((String)messagePart.getContent());
+        sb.append("<hr />");
+      }
+ else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
+        getBody(sb,contentPath + StringPool.PERIOD + 0,messagePart,attachments);
+      }
+    }
+ else {
+      attachments.add(new Object[]{contentPath + StringPool.PERIOD + -1,messagePart.getFileName()});
+    }
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+catch (  MessagingException me) {
+    sb.append("<hr />Error retrieving message content<hr />");
+    _log.error(me,me);
+  }
+}

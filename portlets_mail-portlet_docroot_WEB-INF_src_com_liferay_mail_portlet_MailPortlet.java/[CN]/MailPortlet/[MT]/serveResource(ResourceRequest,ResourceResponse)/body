@@ -1,0 +1,27 @@
+{
+  String jspPage=req.getParameter("jspPage");
+  if (!jspPage.equals("/attachment.jsp")) {
+    super.serveResource(req,res);
+  }
+ else {
+    HttpServletRequest httpReq=PortalUtil.getHttpServletRequest(req);
+    int accountId=ParamUtil.getInteger(req,"accountId");
+    String folderName=ParamUtil.getString(req,"folderName");
+    int messageUid=ParamUtil.getInteger(req,"messageUid");
+    String fileName=ParamUtil.getString(req,"fileName");
+    String contentPath=ParamUtil.getString(req,"contentPath");
+    try {
+      MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(httpReq),accountId);
+      Part messagePart=mailBoxManager.getAttachment(folderName,messageUid,contentPath);
+      InputStream is=messagePart.getInputStream();
+      String contentType=MimeTypesUtil.getContentType(fileName);
+      PortletResponseUtil.sendFile(res,fileName,is,contentType);
+    }
+ catch (    MessagingException me) {
+    }
+catch (    PortalException pe) {
+    }
+catch (    SystemException se) {
+    }
+  }
+}

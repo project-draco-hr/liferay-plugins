@@ -1,0 +1,15 @@
+{
+  try {
+    IMAPFolder imapFolder=(IMAPFolder)folder;
+    String jsonMessage=getJSONMessage(imapFolder,message).toString();
+    String messageUid=String.valueOf(imapFolder.getUID(message));
+    String filepath=MailDiscManager.getMessageFilepath(_user,_mailAccount,folder.getFullName(),messageUid);
+    FileUtil.write(filepath,jsonMessage);
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+catch (  MessagingException me) {
+    _log.error(me,me);
+  }
+}

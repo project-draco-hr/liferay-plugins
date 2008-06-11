@@ -1,0 +1,13 @@
+{
+  if (contentType.startsWith(ContentTypes.MULTIPART_ALTERNATIVE)) {
+    String partContentType=curPart.getContentType().toLowerCase();
+    if (partContentType.startsWith(ContentTypes.TEXT_HTML)) {
+      getBody(sb,StringPool.BLANK,curPart,attachments);
+      return true;
+    }
+  }
+ else {
+    getBody(sb,contentPath,curPart,attachments);
+  }
+  return false;
+}

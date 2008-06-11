@@ -1,0 +1,11 @@
+{
+  String folderPath=getFolderPath(user,mailAccount,folderName);
+  String[] messageUids=FileUtil.listDirs(folderPath);
+  for (int i=0; i < messageUids.length; i++) {
+    long tempMessageUid=GetterUtil.getLong(messageUids[i]);
+    if (messageUid == tempMessageUid) {
+      return getJSONMessageByUid(user,mailAccount,folderName,messageUids[i + offset]);
+    }
+  }
+  return null;
+}

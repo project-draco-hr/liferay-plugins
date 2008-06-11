@@ -1,0 +1,20 @@
+{
+  if (folder == null) {
+    return null;
+  }
+  if (folder.isOpen()) {
+    return folder;
+  }
+  try {
+    folder.open(Folder.READ_WRITE);
+  }
+ catch (  MessagingException me) {
+    try {
+      folder.open(Folder.READ_ONLY);
+    }
+ catch (    MessagingException me2) {
+      _log.error("Unable to open folder " + folder.getFullName(),me2);
+    }
+  }
+  return folder;
+}

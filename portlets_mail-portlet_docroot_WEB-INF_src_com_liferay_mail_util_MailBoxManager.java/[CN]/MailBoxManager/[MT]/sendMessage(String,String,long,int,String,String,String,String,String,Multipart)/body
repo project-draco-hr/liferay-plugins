@@ -1,0 +1,32 @@
+{
+  JSONObject jsonObj=new JSONObject();
+  Message message;
+  if (messageType.equalsIgnoreCase("new")) {
+    message=new MimeMessage(getSession());
+    send(message,fromAccountId,to,cc,bcc,subject,content,multipart);
+    JSONUtil.put(jsonObj,"success",true);
+  }
+ else {
+    Message oldMessage=getMessageByUid(folderName,messageUid);
+    if (messageType.equalsIgnoreCase("forward")) {
+      message=new MimeMessage(getSession());
+      if (multipart == null) {
+        multipart=new MimeMultipart();
+      }
+      BodyPart messageBodyPart=new MimeBodyPart();
+      messageBodyPart.setDataHandler(message.getDataHandler());
+      multipart.addBodyPart(messageBodyPart);
+      send(oldMessage,fromAccountId,to,cc,bcc,subject,content,multipart);
+      JSONUtil.put(jsonObj,"success",true);
+    }
+ else     if (messageType.equalsIgnoreCase("reply")) {
+      message=(MimeMessage)oldMessage.reply(false);
+      send(message,fromAccountId,to,cc,bcc,subject,content,multipart);
+      JSONUtil.put(jsonObj,"success",true);
+    }
+ else {
+      JSONUtil.put(jsonObj,"success",false);
+    }
+  }
+  return jsonObj;
+}
