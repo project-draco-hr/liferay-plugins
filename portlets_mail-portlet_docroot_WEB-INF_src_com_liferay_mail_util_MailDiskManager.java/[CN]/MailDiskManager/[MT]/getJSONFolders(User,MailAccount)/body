@@ -8,6 +8,9 @@
     try {
       String decodedFolderName=URLDecoder.decode(folderName,"UTF-8");
       JSONObject jsonFolder=getJSONFolder(user,mailAccount,decodedFolderName);
+      if (Validator.isNull(jsonFolder)) {
+        continue;
+      }
       JSONUtil.put(jsonFolder,"name",decodedFolderName);
       jsonArray.put(jsonFolder);
     }

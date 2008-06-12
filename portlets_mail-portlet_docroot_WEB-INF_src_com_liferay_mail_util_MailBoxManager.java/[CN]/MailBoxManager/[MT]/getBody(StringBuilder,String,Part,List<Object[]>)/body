@@ -12,15 +12,14 @@
     }
  else     if (Validator.isNull(messagePart.getFileName())) {
       if (contentType.startsWith(ContentTypes.TEXT_PLAIN)) {
+        sb.append(StringPool.NEW_LINE + StringPool.NEW_LINE);
         sb.append(messagePart.getContent());
-        sb.append("\n\n");
       }
  else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
-        sb.append((String)messagePart.getContent());
         sb.append("<hr />");
+        sb.append(stripUnsafeCss(messagePart.getContent().toString()));
       }
  else       if (contentType.startsWith(ContentTypes.MESSAGE_RFC822)) {
-        getBody(sb,contentPath + StringPool.PERIOD + 0,messagePart,attachments);
       }
     }
  else {
