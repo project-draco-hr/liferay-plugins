@@ -1,9 +1,6 @@
 {
   String jspPage=req.getParameter("jspPage");
-  if (!jspPage.equals("/attachment.jsp")) {
-    super.serveResource(req,res);
-  }
- else {
+  if (jspPage.equals("/attachment.jsp")) {
     HttpServletRequest httpReq=PortalUtil.getHttpServletRequest(req);
     int accountId=ParamUtil.getInteger(req,"accountId");
     String folderName=ParamUtil.getString(req,"folderName");
@@ -23,5 +20,8 @@ catch (    PortalException pe) {
     }
 catch (    SystemException se) {
     }
+  }
+ else {
+    super.serveResource(req,res);
   }
 }

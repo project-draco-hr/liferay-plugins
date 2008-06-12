@@ -1,13 +1,13 @@
 {
   String folderPath=getFolderPath(user,mailAccount,folderName);
-  String folderFilepath=getFolderFilepath(user,mailAccount,folderName);
+  String folderFilePath=getFolderFilePath(user,mailAccount,folderName);
   try {
-    JSONObject jsonFolderObj=new JSONObject(FileUtil.read(folderFilepath));
+    JSONObject jsonFolderObj=new JSONObject(FileUtil.read(folderFilePath));
     String[] messageUids=FileUtil.listDirs(folderPath);
     List matchingMessageUids=new ArrayList();
     for (    String messageUid : messageUids) {
-      String messageFilepath=getMessageFilepath(user,mailAccount,folderName,messageUid);
-      String jsonString=FileUtil.read(messageFilepath);
+      String messageFilePath=getMessageFilePath(user,mailAccount,folderName,messageUid);
+      String jsonString=FileUtil.read(messageFilePath);
       if (jsonString.indexOf(searchString) != -1) {
         matchingMessageUids.add(messageUid);
       }
