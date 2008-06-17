@@ -20,10 +20,10 @@
     if (multipart == null) {
       multipart=new MimeMultipart();
     }
-    String filename=file.getName();
-    DataSource source=new FileDataSource(file);
-    messageBodyPart.setDataHandler(new DataHandler(source));
-    messageBodyPart.setFileName(filename);
+    String fileName=file.getName();
+    DataSource dataSource=new FileDataSource(file);
+    messageBodyPart.setDataHandler(new DataHandler(dataSource));
+    messageBodyPart.setFileName(fileName);
     multipart.addBodyPart(messageBodyPart);
   }
   mailBoxManager.sendMessage(messageType,folderName,messageUid,fromEmailAddress,recipientTo,recipientCc,recipientBcc,subject,multipart);
