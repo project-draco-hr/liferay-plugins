@@ -1,0 +1,18 @@
+{
+  String folderPath=getFolderPath(user,emailAddress,folderName);
+  List<String> matchingMessageUids=new ArrayList<String>();
+  try {
+    String[] allMessageUidsInFolder=FileUtil.listDirs(folderPath);
+    for (    String messageUid : allMessageUidsInFolder) {
+      String messageFilePath=getMessageFilePath(user,emailAddress,folderName,messageUid);
+      String jsonString=FileUtil.read(messageFilePath);
+      if (jsonString.indexOf(searchString) != -1) {
+        matchingMessageUids.add(messageUid);
+      }
+    }
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+  return matchingMessageUids.toArray(new String[0]);
+}

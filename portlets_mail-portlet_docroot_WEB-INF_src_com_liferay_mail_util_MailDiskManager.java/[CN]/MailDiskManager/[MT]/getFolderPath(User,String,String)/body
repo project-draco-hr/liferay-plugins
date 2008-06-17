@@ -1,0 +1,12 @@
+{
+  try {
+    String escapedFolderName=StringUtil.replace(URLEncoder.encode(folderName,"UTF-8"),'*',"%2A");
+    String pathName=getAccountPath(user,emailAddress) + "/" + escapedFolderName;
+    FileUtil.mkdirs(pathName);
+    return pathName;
+  }
+ catch (  UnsupportedEncodingException uee) {
+    _log.error(uee,uee);
+  }
+  return StringPool.BLANK;
+}

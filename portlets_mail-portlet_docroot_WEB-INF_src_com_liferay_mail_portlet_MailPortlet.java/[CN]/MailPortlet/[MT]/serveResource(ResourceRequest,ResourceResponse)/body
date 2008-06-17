@@ -2,13 +2,13 @@
   String jspPage=req.getParameter("jspPage");
   if (jspPage.equals("/attachment.jsp")) {
     HttpServletRequest httpReq=PortalUtil.getHttpServletRequest(req);
-    int accountId=ParamUtil.getInteger(req,"accountId");
+    String emailAddress=ParamUtil.getString(req,"emailAddress");
     String folderName=ParamUtil.getString(req,"folderName");
     int messageUid=ParamUtil.getInteger(req,"messageUid");
     String fileName=ParamUtil.getString(req,"fileName");
     String contentPath=ParamUtil.getString(req,"contentPath");
     try {
-      MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(httpReq),accountId);
+      MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(httpReq),emailAddress);
       Part messagePart=mailBoxManager.getAttachment(folderName,messageUid,contentPath);
       InputStream is=messagePart.getInputStream();
       String contentType=MimeTypesUtil.getContentType(fileName);

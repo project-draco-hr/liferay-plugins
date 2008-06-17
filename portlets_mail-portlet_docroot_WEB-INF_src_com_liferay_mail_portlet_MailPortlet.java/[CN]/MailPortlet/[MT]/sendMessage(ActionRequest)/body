@@ -1,0 +1,30 @@
+{
+  UploadPortletRequest uploadReq=PortalUtil.getUploadPortletRequest(req);
+  String emailAddress=ParamUtil.getString(uploadReq,"sendEmailAddress");
+  String messageType=ParamUtil.getString(uploadReq,"sendMessageType");
+  String folderName=ParamUtil.getString(uploadReq,"sendFolderName");
+  long messageUid=ParamUtil.getLong(uploadReq,"sendMessageUid");
+  String fromEmailAddress=ParamUtil.getString(uploadReq,"sendFromEmailAddress");
+  String recipientTo=ParamUtil.getString(uploadReq,"sendTo");
+  String recipientCc=ParamUtil.getString(uploadReq,"sendCc");
+  String recipientBcc=ParamUtil.getString(uploadReq,"sendBcc");
+  String subject=ParamUtil.getString(uploadReq,"sendSubject");
+  String body=ParamUtil.getString(uploadReq,"sendBody");
+  MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(uploadReq),emailAddress);
+  Multipart multipart=new MimeMultipart();
+  BodyPart messageBodyPart=new MimeBodyPart();
+  messageBodyPart.setText(body);
+  multipart.addBodyPart(messageBodyPart);
+  File file=uploadReq.getFile("sendAttachments");
+  if (Validator.isNotNull(file)) {
+    if (multipart == null) {
+      multipart=new MimeMultipart();
+    }
+    String filename=file.getName();
+    DataSource source=new FileDataSource(file);
+    messageBodyPart.setDataHandler(new DataHandler(source));
+    messageBodyPart.setFileName(filename);
+    multipart.addBodyPart(messageBodyPart);
+  }
+  mailBoxManager.sendMessage(messageType,folderName,messageUid,fromEmailAddress,recipientTo,recipientCc,recipientBcc,subject,multipart);
+}

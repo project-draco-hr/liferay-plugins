@@ -1,0 +1,15 @@
+{
+  String userPath=getUserPath(user);
+  String[] emailAddresses=FileUtil.listDirs(userPath);
+  JSONObject jsonObj=new JSONObject();
+  JSONArray jsonArray=new JSONArray();
+  JSONUtil.put(jsonObj,"accounts",jsonArray);
+  for (  String emailAddress : emailAddresses) {
+    JSONObject jsonAccount=getJSONAccount(user,emailAddress);
+    if (Validator.isNull(jsonAccount)) {
+      continue;
+    }
+    jsonArray.put(jsonAccount);
+  }
+  return jsonObj;
+}
