@@ -1,0 +1,23 @@
+{
+  try {
+    JSONObject jsonObj=new JSONObject();
+    String filePath=MailDiskManager.getAccountFilePath(_user,_mailAccount.getEmailAddress());
+    JSONUtil.put(jsonObj,"emailAddress",_mailAccount.getEmailAddress());
+    JSONUtil.put(jsonObj,"initialized",_mailAccount.isInitialized());
+    JSONUtil.put(jsonObj,"mailInHostName",_mailAccount.getMailInHostName());
+    JSONUtil.put(jsonObj,"mailInPort",_mailAccount.getMailInPort());
+    JSONUtil.put(jsonObj,"mailOutHostName",_mailAccount.getMailOutHostName());
+    JSONUtil.put(jsonObj,"mailOutPort",_mailAccount.getMailOutPort());
+    JSONUtil.put(jsonObj,"mailSecure",_mailAccount.isMailSecure());
+    JSONUtil.put(jsonObj,"password",_mailAccount.getPassword());
+    JSONUtil.put(jsonObj,"username",_mailAccount.getUsername());
+    FileUtil.write(filePath,jsonObj.toString());
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+    return null;
+  }
+  JSONObject jsonObj=new JSONObject();
+  JSONUtil.put(jsonObj,"success",true);
+  return jsonObj;
+}
