@@ -22,9 +22,10 @@
     }
     String fileName=file.getName();
     DataSource dataSource=new FileDataSource(file);
-    messageBodyPart.setDataHandler(new DataHandler(dataSource));
-    messageBodyPart.setFileName(fileName);
-    multipart.addBodyPart(messageBodyPart);
+    BodyPart messageAttachmentPart=new MimeBodyPart();
+    messageAttachmentPart.setDataHandler(new DataHandler(dataSource));
+    messageAttachmentPart.setFileName(fileName);
+    multipart.addBodyPart(messageAttachmentPart);
   }
   mailBoxManager.sendMessage(messageType,folderName,messageUid,fromEmailAddress,recipientTo,recipientCc,recipientBcc,subject,multipart);
 }
