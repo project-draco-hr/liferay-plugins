@@ -1,0 +1,13 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  Layout layout=themeDisplay.getLayout();
+  String name=ParamUtil.getString(req,"name");
+  String wsdlURL=ParamUtil.getString(req,"wsdlURL");
+  long producerId=ParamUtil.getLong(req,"producerId");
+  if (producerId <= 0) {
+    ProducerServiceUtil.addProducer(layout.getPlid(),name,wsdlURL);
+  }
+ else {
+    ProducerServiceUtil.updateProducer(producerId,name,wsdlURL);
+  }
+}

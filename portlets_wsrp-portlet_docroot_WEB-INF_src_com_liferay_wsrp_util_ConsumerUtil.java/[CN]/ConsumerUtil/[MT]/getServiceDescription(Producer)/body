@@ -1,0 +1,44 @@
+{
+  WSRPV2ServiceDescriptionPortType sdService=ServiceFactory.createServiceDescriptionService(producer);
+  GetServiceDescription getServiceDescription=new GetServiceDescription();
+  ServiceDescription sd=null;
+  try {
+    sd=sdService.getServiceDescription(getServiceDescription);
+  }
+ catch (  InvalidRegistration e) {
+    _log.error(e.getMessage(),e);
+  }
+catch (  ModifyRegistrationRequired e) {
+    _log.error(e.getMessage(),e);
+  }
+catch (  OperationFailed e) {
+    _log.error(e.getMessage(),e);
+  }
+catch (  ResourceSuspended e) {
+    _log.error(e.getMessage(),e);
+  }
+  if (sd.isRequiresRegistration()) {
+    ModelDescription regPropDescription=sd.getRegistrationPropertyDescription();
+    List<PropertyDescription> propDescriptions=regPropDescription.getPropertyDescriptions();
+    if (propDescriptions.size() <= 0) {
+      RegistrationContext registrationContext=register(producer);
+      getServiceDescription.setRegistrationContext(registrationContext);
+      try {
+        sd=sdService.getServiceDescription(getServiceDescription);
+      }
+ catch (      ResourceSuspended e) {
+        _log.error(e.getMessage(),e);
+      }
+catch (      InvalidRegistration e) {
+        _log.error(e.getMessage(),e);
+      }
+catch (      ModifyRegistrationRequired e) {
+        _log.error(e.getMessage(),e);
+      }
+catch (      OperationFailed e) {
+        _log.error(e.getMessage(),e);
+      }
+    }
+  }
+  return sd;
+}

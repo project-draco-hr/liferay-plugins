@@ -1,0 +1,18 @@
+{
+  validate(name,wsdlURL);
+  User user=UserLocalServiceUtil.getUserById(userId);
+  long groupId=PortalUtil.getPortletGroupId(plid);
+  Date now=new Date();
+  long entryId=CounterLocalServiceUtil.increment();
+  Producer producer=producerPersistence.create(entryId);
+  producer.setCompanyId(user.getCompanyId());
+  producer.setGroupId(groupId);
+  producer.setUserId(user.getUserId());
+  producer.setCreateDate(now);
+  producer.setModifiedDate(now);
+  producer.setName(name);
+  producer.setWsdlURL(wsdlURL);
+  initProducer(producer);
+  producerPersistence.update(producer,false);
+  return producer;
+}

@@ -1,0 +1,48 @@
+{
+  Map<String,String> params=new HashMap<String,String>();
+  if (url.indexOf(WSRPSpecKeys.URL_TYPE_BLOCKING_ACTION) != -1) {
+    params.put(WSRPSpecKeys.URL_TYPE,WSRPSpecKeys.URL_TYPE_BLOCKING_ACTION);
+  }
+ else   if (url.indexOf(WSRPSpecKeys.URL_TYPE_RENDER) != -1) {
+    params.put(WSRPSpecKeys.URL_TYPE,WSRPSpecKeys.URL_TYPE_RENDER);
+  }
+ else   if (url.indexOf(WSRPSpecKeys.URL_TYPE_RESOURCE) != -1) {
+    params.put(WSRPSpecKeys.URL_TYPE,WSRPSpecKeys.URL_TYPE_RESOURCE);
+  }
+  int equals=0;
+  int next=0;
+  int end=url.indexOf(WSRPSpecKeys.URL_REWRITE_END);
+  int index=url.indexOf(StringPool.AMPERSAND);
+  int lengthNext=0;
+  String subNext=null;
+  while (index != -1) {
+    subNext=url.substring(index,index + StringPool.AMPERSAND_ENCODED.length());
+    if (subNext.equals(StringPool.AMPERSAND_ENCODED)) {
+      lengthNext=StringPool.AMPERSAND_ENCODED.length();
+    }
+ else {
+      lengthNext=StringPool.AMPERSAND.length();
+    }
+    equals=url.indexOf(StringPool.EQUAL,index + lengthNext);
+    next=url.indexOf(StringPool.AMPERSAND,equals);
+    if (equals != -1) {
+      if (next != -1) {
+        params.put(url.substring(index + lengthNext,equals),url.substring(equals + 1,next));
+      }
+ else {
+        params.put(url.substring(index + lengthNext,equals),url.substring(equals + 1,end));
+      }
+    }
+    index=next;
+  }
+  Set<String> keys=params.keySet();
+  for (  String key : keys) {
+    String value=params.get(key);
+    try {
+      params.put(key,URLDecoder.decode(value,StringPool.UTF8));
+    }
+ catch (    Exception e) {
+    }
+  }
+  return params;
+}

@@ -1,0 +1,28 @@
+{
+  if (Validator.isNull(producer.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    producer.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(producer);
+    }
+ else {
+      if (producer.isNew()) {
+        session.save(producer);
+      }
+    }
+    session.flush();
+    producer.setNew(false);
+    return producer;
+  }
+ catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCache.clearCache(Producer.class.getName());
+  }
+}

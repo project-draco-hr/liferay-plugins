@@ -1,0 +1,26 @@
+{
+  String value=StringPool.BLANK;
+  for (  String key : params.keySet()) {
+    value=params.get(key);
+    if (key.equalsIgnoreCase(WSRPSpecKeys.WINDOW_STATE)) {
+      try {
+        url.setWindowState(WSRPState.fromWSRP(value).getPortlet());
+      }
+ catch (      WindowStateException e) {
+        _log.error(e.getMessage(),e);
+      }
+    }
+ else     if (key.equalsIgnoreCase(WSRPSpecKeys.MODE)) {
+      try {
+        url.setPortletMode(WSRPMode.fromWSRP(value).getPortlet());
+      }
+ catch (      PortletModeException e) {
+        _log.error(e.getMessage(),e);
+      }
+    }
+ else {
+      url.setParameter(key,value);
+    }
+  }
+  return url.toString();
+}

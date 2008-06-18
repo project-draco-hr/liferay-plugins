@@ -1,0 +1,20 @@
+{
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  try {
+    if (cmd.equals(Constants.ADD)) {
+      include("/admin/edit_producer.jsp",req,res);
+    }
+ else     if (cmd.equals(Constants.UPDATE)) {
+      long producerId=ParamUtil.getLong(req,"producerId");
+      Producer producer=ProducerServiceUtil.getProducer(producerId);
+      req.setAttribute("producer",producer);
+      include("/admin/edit_producer.jsp",req,res);
+    }
+ else {
+      include("/admin/view.jsp",req,res);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}

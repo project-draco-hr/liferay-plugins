@@ -1,0 +1,27 @@
+{
+  Register register=new Register();
+  RegistrationData registrationData=new RegistrationData();
+  registrationData.setConsumerAgent("Liferay Portal");
+  registrationData.setConsumerName("Liferay");
+  registrationData.setMethodGetSupported(false);
+  List<Property> registrationProperties=registrationData.getRegistrationProperties();
+  Property property=null;
+  QName propertyName=null;
+  property=new Property();
+  propertyName=new QName("urn:oasis:names:tc:wsrp:v2:types","ConsumerRegistrationState");
+  property.setName(propertyName);
+  property.setStringValue("LiferayConsumerRegistrationState");
+  property=new Property();
+  propertyName=new QName("urn:oasis:names:tc:wsrp:v2:types","ProducerRegistrationState");
+  property.setName(propertyName);
+  property.setStringValue("LiferayProducerRegistrationState");
+  property=new Property();
+  propertyName=new QName("urn:oasis:names:tc:wsrp:v2:types","ThrowOperationFailed");
+  property.setName(propertyName);
+  property.setStringValue("No");
+  registrationProperties.add(property);
+  register.setRegistrationData(registrationData);
+  WSRPV2RegistrationPortType registrationService=ServiceFactory.createRegistrationService(producer);
+  RegistrationContext registrationContext=registrationService.register(register);
+  return registrationContext;
+}

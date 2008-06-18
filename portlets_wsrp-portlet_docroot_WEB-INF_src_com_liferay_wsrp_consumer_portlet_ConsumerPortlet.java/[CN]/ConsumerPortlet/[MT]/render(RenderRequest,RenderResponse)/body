@@ -1,0 +1,53 @@
+{
+  PortletSession ses=req.getPortletSession();
+  WSRPV2MarkupPortType markupService=(WSRPV2MarkupPortType)ses.getAttribute("markupService");
+  if (markupService == null) {
+    try {
+      markupService=getMarkupService(req);
+    }
+ catch (    Exception e) {
+      _log.error(e.getMessage(),e);
+      return;
+    }
+    ses.setAttribute("markupService",markupService);
+  }
+  GetMarkup getMarkup=new GetMarkup();
+  PortletContext portletContext=new PortletContext();
+  PortletPreferences prefs=req.getPreferences();
+  String portletHandle=prefs.getValue("portletHandle",StringPool.BLANK);
+  if (Validator.isNull(portletHandle)) {
+    return;
+  }
+  portletContext.setPortletHandle(portletHandle);
+  getMarkup.setPortletContext(portletContext);
+  RuntimeContext runtimeContext=new RuntimeContext();
+  runtimeContext.setUserAuthentication(WSRPSpecKeys.AUTH_PASSWORD);
+  getMarkup.setRuntimeContext(runtimeContext);
+  MarkupParams markupParams=new MarkupParams();
+  markupParams.setSecureClientCommunication(false);
+  PortletMode portletMode=req.getPortletMode();
+  markupParams.setMode(WSRPMode.fromPortlet(portletMode).getWSRP());
+  WindowState windowState=req.getWindowState();
+  markupParams.setWindowState(WSRPState.fromPortlet(windowState).getWSRP());
+  markupParams.getLocales().add(req.getLocale().toString());
+  markupParams.getMimeTypes().add(ContentTypes.TEXT_HTML_UTF8);
+  getMarkup.setMarkupParams(markupParams);
+  MarkupResponse markupResponse=null;
+  try {
+    markupResponse=markupService.getMarkup(getMarkup);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage(),e);
+    return;
+  }
+  String markup=markupResponse.getMarkupContext().getItemString();
+  markup=URLRewriter.rewrite(markup,res);
+  res.setContentType(ContentTypes.TEXT_HTML_UTF8);
+  try {
+    res.getWriter().write(markup);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage(),e);
+    return;
+  }
+}

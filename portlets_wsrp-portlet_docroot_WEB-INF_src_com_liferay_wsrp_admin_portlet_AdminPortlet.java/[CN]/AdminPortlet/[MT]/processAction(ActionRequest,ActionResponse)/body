@@ -1,0 +1,26 @@
+{
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  try {
+    if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
+      updateProducer(req);
+    }
+ else     if (cmd.equals(Constants.DELETE)) {
+      deleteProducer(req);
+    }
+  }
+ catch (  Exception e) {
+    if (e instanceof NoSuchProducerException || e instanceof PrincipalException) {
+      SessionErrors.add(req,e.getClass().getName());
+    }
+ else {
+      throw new PortletException(e);
+    }
+  }
+  String redirect=ParamUtil.getString(req,"redirect");
+  try {
+    res.sendRedirect(redirect);
+  }
+ catch (  IOException e) {
+    throw new PortletException(e);
+  }
+}
