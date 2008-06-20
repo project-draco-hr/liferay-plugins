@@ -1,0 +1,43 @@
+{
+  long startTime=System.currentTimeMillis();
+  Hits subset=new HitsImpl();
+  try {
+    SAXReader reader=new SAXReader();
+    org.dom4j.Document xmlDoc=reader.read(new StringReader(xml));
+    Element root=xmlDoc.getRootElement();
+    Element resultEl=root.element("result");
+    int length=Integer.parseInt(resultEl.attributeValue("numFound"));
+    float maxScore=Float.parseFloat(resultEl.attributeValue("maxScore"));
+    if ((start > -1) && (start <= end)) {
+      if (end > length) {
+        end=length;
+      }
+      int subsetTotal=end - start;
+      Document[] subsetDocs=new DocumentImpl[subsetTotal];
+      float[] subsetScores=new float[subsetTotal];
+      List<Element> docsEl=resultEl.elements();
+      int j=0;
+      for (int i=start; i < end; i++, j++) {
+        Element docEl=docsEl.get(i);
+        DocumentImpl doc=new DocumentImpl();
+        List<Element> fields=docEl.elements();
+        for (int k=0; k < fields.size(); k++) {
+          Element arrEl=fields.get(k);
+          doc.add(new Field(arrEl.attributeValue("name"),arrEl.getText(),false));
+        }
+        subsetDocs[j]=doc;
+        subsetScores[j]=GetterUtil.getFloat(doc.get("score")) / maxScore;
+      }
+      subset.setLength(length);
+      subset.setDocs(subsetDocs);
+      subset.setScores(subsetScores);
+      subset.setStart(startTime);
+      float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
+      subset.setSearchTime(searchTime);
+    }
+  }
+ catch (  Exception e) {
+    throw new SearchException(e);
+  }
+  return subset;
+}

@@ -1,0 +1,19 @@
+{
+  HttpClient client=new HttpClient();
+  PostMethod method=new PostMethod(url);
+  try {
+    RequestEntity entity=new StringRequestEntity(xml,"text/xml","UTF-8");
+    method.setRequestEntity(entity);
+    client.executeMethod(method);
+  }
+  finally {
+    try {
+      if (method != null) {
+        method.releaseConnection();
+      }
+    }
+ catch (    Exception e) {
+      _log.error(e,e);
+    }
+  }
+}

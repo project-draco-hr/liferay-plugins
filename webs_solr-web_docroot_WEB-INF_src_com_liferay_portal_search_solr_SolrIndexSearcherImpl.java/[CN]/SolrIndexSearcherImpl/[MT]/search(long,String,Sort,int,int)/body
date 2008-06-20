@@ -1,0 +1,11 @@
+{
+  try {
+    String url=HttpUtil.addParameter(_serverURL,"q",query);
+    url=HttpUtil.addParameter(url,"fl","score");
+    return subset(HttpUtil.URLtoString(url),start,end);
+  }
+ catch (  IOException ioe) {
+    _log.error("Error while sending request to Solr",ioe);
+    throw new SearchException(ioe);
+  }
+}

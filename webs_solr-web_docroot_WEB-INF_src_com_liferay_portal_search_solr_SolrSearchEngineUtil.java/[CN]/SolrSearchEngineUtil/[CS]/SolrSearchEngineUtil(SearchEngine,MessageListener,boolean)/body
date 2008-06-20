@@ -1,0 +1,17 @@
+{
+  try {
+    _engine=engine;
+    _serializer=new JSONSerializer();
+    _serializer.registerDefaultSerializers();
+    if (removeExistingDestination) {
+      MessageBusUtil.removeDestination(DestinationNames.SEARCH);
+    }
+    Destination destination=new SerialDestination(DestinationNames.SEARCH);
+    MessageBusUtil.addDestination(destination);
+    destination.register(messageListener);
+  }
+ catch (  Exception e) {
+    _log.error("Unable to initialize search engine.",e);
+    throw e;
+  }
+}

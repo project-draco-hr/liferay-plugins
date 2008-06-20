@@ -1,0 +1,30 @@
+{
+  JSONObject jsonObj=new JSONObject(message);
+  String responseDestination=jsonObj.optString("lfrResponseDestination");
+  String responseId=jsonObj.optString("lfrResponseId");
+  jsonObj.remove("lfrResponseDestination");
+  jsonObj.remove("lfrResponseId");
+  SearchRequest searchRequest=(SearchRequest)SolrSearchEngineUtil.deserialize(message);
+  String command=searchRequest.getCommand();
+  long companyId=searchRequest.getCompanyId();
+  String id=searchRequest.getId();
+  Document doc=searchRequest.getDocument();
+  if (command.equals(SearchRequest.COMMAND_ADD)) {
+    SolrSearchEngineUtil.addDocument(companyId,doc);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_DELETE)) {
+    SolrSearchEngineUtil.deleteDocument(companyId,id);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_DELETE_PORTLET_DOCS)) {
+    SolrSearchEngineUtil.deletePortletDocuments(companyId,id);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_INDEX_ONLY) && Validator.isNotNull(responseDestination) && Validator.isNotNull(responseId)) {
+    doCommandIndexOnly(responseDestination,responseId);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_SEARCH) && Validator.isNotNull(responseDestination) && Validator.isNotNull(responseId)) {
+    doCommandSearch(responseDestination,responseId,searchRequest);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_UPDATE)) {
+    SolrSearchEngineUtil.updateDocument(companyId,id,doc);
+  }
+}
