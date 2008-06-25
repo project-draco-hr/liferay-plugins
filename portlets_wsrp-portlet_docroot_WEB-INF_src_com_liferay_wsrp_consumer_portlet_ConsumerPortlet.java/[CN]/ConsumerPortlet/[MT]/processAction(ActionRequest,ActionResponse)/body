@@ -1,0 +1,31 @@
+{
+  WSRPV2MarkupPortType markupService=null;
+  try {
+    markupService=getMarkupService(req);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage(),e);
+    return;
+  }
+  PortletContext portletContext=new PortletContext();
+  RuntimeContext runtimeContext=new RuntimeContext();
+  MarkupParams markupParams=new MarkupParams();
+  UserContext userContext=new UserContext();
+  InteractionParams interactionParams=new InteractionParams();
+  initPerformBlockingInteraction(req,portletContext,runtimeContext,markupParams,userContext,interactionParams);
+  PerformBlockingInteraction pbi=new PerformBlockingInteraction();
+  pbi.setPortletContext(portletContext);
+  pbi.setRuntimeContext(runtimeContext);
+  pbi.setMarkupParams(markupParams);
+  pbi.setUserContext(userContext);
+  pbi.setInteractionParams(interactionParams);
+  BlockingInteractionResponse bir=null;
+  try {
+    bir=markupService.performBlockingInteraction(pbi);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage(),e);
+    return;
+  }
+  processBlockingInteractionResponse(req,res,bir);
+}

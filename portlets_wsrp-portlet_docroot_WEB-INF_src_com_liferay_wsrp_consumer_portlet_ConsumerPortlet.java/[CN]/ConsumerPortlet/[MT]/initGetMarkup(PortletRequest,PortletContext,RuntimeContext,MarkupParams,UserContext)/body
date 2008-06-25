@@ -1,0 +1,59 @@
+{
+  PortletPreferences prefs=req.getPreferences();
+  String portletHandle=prefs.getValue("portletHandle",StringPool.BLANK);
+  if (Validator.isNull(portletHandle)) {
+    return;
+  }
+  pc.setPortletHandle(portletHandle);
+  PortletSession ses=req.getPortletSession();
+  byte[] portletState=(byte[])ses.getAttribute("portletState");
+  pc.setPortletState(portletState);
+  rc.setUserAuthentication(WSRPSpecKeys.AUTH_PASSWORD);
+  SessionContext sessionContext=getSessionContext(req);
+  if (sessionContext != null) {
+    SessionParams sessionParams=new SessionParams();
+    sessionParams.setSessionID(sessionContext.getSessionID());
+    rc.setSessionParams(sessionParams);
+  }
+  mp.setSecureClientCommunication(false);
+  PortletMode portletMode=req.getPortletMode();
+  mp.setMode(WSRPMode.fromPortlet(portletMode).getWSRP());
+  WindowState windowState=req.getWindowState();
+  mp.setWindowState(WSRPState.fromPortlet(windowState).getWSRP());
+  mp.getLocales().add(req.getLocale().toString());
+  mp.getMimeTypes().add(ContentTypes.TEXT_HTML_UTF8);
+  String navState=req.getParameter(WSRPSpecKeys.NAVIGATIONAL_STATE);
+  NavigationalContext navigationalContext=new NavigationalContext();
+  navigationalContext.setOpaqueValue(navState);
+  mp.setNavigationalContext(navigationalContext);
+  LiferayRenderRequest lrReq=(LiferayRenderRequest)req;
+  HttpServletRequest httpReq=lrReq.getHttpServletRequest();
+  ClientData clientData=new ClientData();
+  clientData.setUserAgent(httpReq.getHeader("User-Agent"));
+  String userId=req.getRemoteUser();
+  try {
+    User user=UserLocalServiceUtil.getUser(GetterUtil.getLong(userId,-1));
+    if (user != null) {
+      uc.setUserContextKey(userId);
+      UserProfile userProfile=new UserProfile();
+      PersonName personName=new PersonName();
+      personName.setFamily(user.getLastName());
+      personName.setMiddle(user.getMiddleName());
+      personName.setGiven(user.getFirstName());
+      personName.setNickname(user.getScreenName());
+      userProfile.setName(personName);
+      if (user.isMale()) {
+        userProfile.setGender("M");
+      }
+ else {
+        userProfile.setGender("F");
+      }
+      uc.setProfile(userProfile);
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("UserContext not set");
+    }
+  }
+}
