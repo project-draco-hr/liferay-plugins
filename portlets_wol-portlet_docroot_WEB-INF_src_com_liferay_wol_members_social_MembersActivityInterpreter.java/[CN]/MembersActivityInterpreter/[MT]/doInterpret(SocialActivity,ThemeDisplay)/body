@@ -2,17 +2,26 @@
   String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
   int activityType=activity.getType();
-  Organization organization=OrganizationLocalServiceUtil.getOrganization(activity.getClassPK());
-  Group group=organization.getGroup();
-  String title=StringPool.BLANK;
+  StringMaker sm=null;
+  String link=StringPool.BLANK;
   if (activityType == MembersActivityKeys.ADD_MEMBER) {
-    StringMaker sm=new StringMaker();
-    sm.append("<a href=\"");
+    sm=new StringMaker();
     sm.append(themeDisplay.getURLPortal());
     sm.append(themeDisplay.getPathFriendlyURLPublic());
     sm.append(StringPool.SLASH);
     sm.append(creatorUser.getScreenName());
-    sm.append("/profile\">");
+    sm.append("/profile");
+    link=sm.toString();
+  }
+  Organization organization=OrganizationLocalServiceUtil.getOrganization(activity.getClassPK());
+  Group group=organization.getGroup();
+  String title=StringPool.BLANK;
+  if (activityType == MembersActivityKeys.ADD_MEMBER) {
+    sm=new StringMaker();
+    sm=new StringMaker();
+    sm.append("<a href=\"");
+    sm.append(link);
+    sm.append("\">");
     sm.append(creatorUserName);
     sm.append("</a>");
     String creatorUserNameURL=sm.toString();
@@ -28,5 +37,5 @@
     title=themeDisplay.translate("activity-wol-summary-join-organization",new Object[]{creatorUserNameURL,organizationNameURL});
   }
   String body=StringPool.BLANK;
-  return new SocialActivityFeedEntry(title,body);
+  return new SocialActivityFeedEntry(title,body,link);
 }

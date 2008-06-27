@@ -2,6 +2,7 @@
   String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   int activityType=activity.getType();
   SVNRevision svnRevision=SVNRevisionLocalServiceUtil.getSVNRevision(activity.getClassPK());
+  String link=svnRevision.getWebRevisionNumberURL();
   SVNRepository svnRepository=svnRevision.getSVNRepository();
   String title=StringPool.BLANK;
   if (activityType == SVNActivityKeys.ADD_REVISION) {
@@ -14,5 +15,5 @@
   sm.append(svnRevision.getComments());
   sm.append("</a>");
   String body=sm.toString();
-  return new SocialActivityFeedEntry(title,body);
+  return new SocialActivityFeedEntry(title,body,link);
 }

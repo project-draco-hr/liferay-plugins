@@ -11,6 +11,14 @@
     jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
   }
   JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
+  StringMaker sm=new StringMaker();
+  sm.append("http://support.liferay.com/browse/");
+  sm.append(jiraIssue.getKey());
+  if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    sm.append("#action_");
+    sm.append(jiraAction.getJiraActionId());
+  }
+  String link=sm.toString();
   String title=StringPool.BLANK;
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
     title=themeDisplay.translate("activity-wol-jira-add-change",new Object[]{creatorUserName,jiraIssue.getKey()});
@@ -21,13 +29,9 @@
  else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
     title=themeDisplay.translate("activity-wol-jira-add-issue",new Object[]{creatorUserName,jiraIssue.getKey()});
   }
-  StringMaker sm=new StringMaker();
-  sm.append("<a href=\"http://support.liferay.com/browse/");
-  sm.append(jiraIssue.getKey());
-  if (activityType == JIRAActivityKeys.ADD_COMMENT) {
-    sm.append("#action_");
-    sm.append(jiraAction.getJiraActionId());
-  }
+  sm=new StringMaker();
+  sm.append("<a href=\"");
+  sm.append(link);
   sm.append("\" target=\"_blank\">");
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
     sm.append(interpretJIRAChangeItems(extraData.optJSONArray("jiraChangeItems"),themeDisplay));
@@ -40,5 +44,5 @@
   }
   sm.append("</a>");
   String body=sm.toString();
-  return new SocialActivityFeedEntry(title,body);
+  return new SocialActivityFeedEntry(title,body,link);
 }

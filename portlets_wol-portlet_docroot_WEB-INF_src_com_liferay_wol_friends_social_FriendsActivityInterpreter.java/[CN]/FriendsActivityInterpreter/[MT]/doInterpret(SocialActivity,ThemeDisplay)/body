@@ -4,9 +4,17 @@
   User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
   User receiverUser=UserLocalServiceUtil.getUserById(activity.getReceiverUserId());
   int activityType=activity.getType();
+  StringMaker sm=null;
+  sm=new StringMaker();
+  sm.append(themeDisplay.getURLPortal());
+  sm.append(themeDisplay.getPathFriendlyURLPublic());
+  sm.append(StringPool.SLASH);
+  sm.append(creatorUser.getScreenName());
+  sm.append("/friends");
+  String link=sm.toString();
   String title=StringPool.BLANK;
   if (activityType == FriendsActivityKeys.ADD_FRIEND) {
-    StringMaker sm=new StringMaker();
+    sm=new StringMaker();
     sm.append("<a href=\"");
     sm.append(themeDisplay.getURLPortal());
     sm.append(themeDisplay.getPathFriendlyURLPublic());
@@ -29,5 +37,5 @@
     title=themeDisplay.translate("activity-wol-summary-add-friend",new Object[]{creatorUserNameURL,receiverUserNameURL});
   }
   String body=StringPool.BLANK;
-  return new SocialActivityFeedEntry(title,body);
+  return new SocialActivityFeedEntry(title,body,link);
 }
