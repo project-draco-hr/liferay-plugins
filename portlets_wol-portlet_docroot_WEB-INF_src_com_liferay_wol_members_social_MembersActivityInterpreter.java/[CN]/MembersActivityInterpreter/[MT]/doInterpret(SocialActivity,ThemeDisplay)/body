@@ -4,34 +4,34 @@
   int activityType=activity.getType();
   String link=StringPool.BLANK;
   if (activityType == MembersActivityKeys.ADD_MEMBER) {
-    StringMaker sm=new StringMaker();
-    sm.append(themeDisplay.getURLPortal());
-    sm.append(themeDisplay.getPathFriendlyURLPublic());
-    sm.append(StringPool.SLASH);
-    sm.append(creatorUser.getScreenName());
-    sm.append("/profile");
-    link=sm.toString();
+    StringBuilder sb=new StringBuilder();
+    sb.append(themeDisplay.getURLPortal());
+    sb.append(themeDisplay.getPathFriendlyURLPublic());
+    sb.append(StringPool.SLASH);
+    sb.append(creatorUser.getScreenName());
+    sb.append("/profile");
+    link=sb.toString();
   }
   Organization organization=OrganizationLocalServiceUtil.getOrganization(activity.getClassPK());
   Group group=organization.getGroup();
   String title=StringPool.BLANK;
   if (activityType == MembersActivityKeys.ADD_MEMBER) {
-    StringMaker sm=new StringMaker();
-    sm.append("<a href=\"");
-    sm.append(link);
-    sm.append("\">");
-    sm.append(creatorUserName);
-    sm.append("</a>");
-    String creatorUserNameURL=sm.toString();
-    sm=new StringMaker();
-    sm.append("<a href=\"");
-    sm.append(themeDisplay.getURLPortal());
-    sm.append(themeDisplay.getPathFriendlyURLPublic());
-    sm.append(group.getFriendlyURL());
-    sm.append("/profile\">");
-    sm.append(organization.getName());
-    sm.append("</a>");
-    String organizationNameURL=sm.toString();
+    StringBuilder sb=new StringBuilder();
+    sb.append("<a href=\"");
+    sb.append(link);
+    sb.append("\">");
+    sb.append(creatorUserName);
+    sb.append("</a>");
+    String creatorUserNameURL=sb.toString();
+    sb=new StringBuilder();
+    sb.append("<a href=\"");
+    sb.append(themeDisplay.getURLPortal());
+    sb.append(themeDisplay.getPathFriendlyURLPublic());
+    sb.append(group.getFriendlyURL());
+    sb.append("/profile\">");
+    sb.append(organization.getName());
+    sb.append("</a>");
+    String organizationNameURL=sb.toString();
     title=themeDisplay.translate("activity-wol-summary-join-organization",new Object[]{creatorUserNameURL,organizationNameURL});
   }
   String body=StringPool.BLANK;

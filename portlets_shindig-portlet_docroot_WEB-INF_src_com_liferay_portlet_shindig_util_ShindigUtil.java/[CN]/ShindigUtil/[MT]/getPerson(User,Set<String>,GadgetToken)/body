@@ -2,21 +2,21 @@
   Person person=null;
   try {
     person=new Person(String.valueOf(user.getUserId()),new Name(user.getFullName()));
-    StringMaker sm=new StringMaker();
-    sm.append(token.getDomain());
-    sm.append(PortalUtil.getPathFriendlyURLPublic());
-    sm.append(user.getScreenName());
-    person.setProfileUrl(sm.toString());
-    sm=new StringMaker();
-    sm.append(token.getDomain());
-    sm.append(PortalUtil.getPathImage());
-    sm.append("/user_");
-    sm.append(user.isFemale() ? "female" : "male");
-    sm.append("_portrait?img_id=");
-    sm.append(user.getPortraitId());
-    sm.append("&t=");
-    sm.append(ImageServletTokenUtil.getToken(user.getPortraitId()));
-    person.setThumbnailUrl(sm.toString());
+    StringBuilder sb=new StringBuilder();
+    sb.append(token.getDomain());
+    sb.append(PortalUtil.getPathFriendlyURLPublic());
+    sb.append(user.getScreenName());
+    person.setProfileUrl(sb.toString());
+    sb=new StringBuilder();
+    sb.append(token.getDomain());
+    sb.append(PortalUtil.getPathImage());
+    sb.append("/user_");
+    sb.append(user.isFemale() ? "female" : "male");
+    sb.append("_portrait?img_id=");
+    sb.append(user.getPortraitId());
+    sb.append("&t=");
+    sb.append(ImageServletTokenUtil.getToken(user.getPortraitId()));
+    person.setThumbnailUrl(sb.toString());
     if (profileDetails.contains(Person.Field.ABOUT_ME.toString())) {
       person.setAboutMe(user.getComments());
     }

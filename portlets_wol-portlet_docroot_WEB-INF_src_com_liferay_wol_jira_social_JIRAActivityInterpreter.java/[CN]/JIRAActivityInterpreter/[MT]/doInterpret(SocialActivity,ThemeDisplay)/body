@@ -11,14 +11,14 @@
     jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
   }
   JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
-  StringMaker sm=new StringMaker();
-  sm.append("http://support.liferay.com/browse/");
-  sm.append(jiraIssue.getKey());
+  StringBuilder sb=new StringBuilder();
+  sb.append("http://support.liferay.com/browse/");
+  sb.append(jiraIssue.getKey());
   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
-    sm.append("#action_");
-    sm.append(jiraAction.getJiraActionId());
+    sb.append("#action_");
+    sb.append(jiraAction.getJiraActionId());
   }
-  String link=sm.toString();
+  String link=sb.toString();
   String title=StringPool.BLANK;
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
     title=themeDisplay.translate("activity-wol-jira-add-change",new Object[]{creatorUserName,jiraIssue.getKey()});
@@ -29,20 +29,20 @@
  else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
     title=themeDisplay.translate("activity-wol-jira-add-issue",new Object[]{creatorUserName,jiraIssue.getKey()});
   }
-  sm=new StringMaker();
-  sm.append("<a href=\"");
-  sm.append(link);
-  sm.append("\" target=\"_blank\">");
+  sb=new StringBuilder();
+  sb.append("<a href=\"");
+  sb.append(link);
+  sb.append("\" target=\"_blank\">");
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
-    sm.append(interpretJIRAChangeItems(extraData.optJSONArray("jiraChangeItems"),themeDisplay));
+    sb.append(interpretJIRAChangeItems(extraData.optJSONArray("jiraChangeItems"),themeDisplay));
   }
  else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
-    sm.append(cleanContent(jiraAction.getBody()));
+    sb.append(cleanContent(jiraAction.getBody()));
   }
  else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
-    sm.append(cleanContent(jiraIssue.getSummary()));
+    sb.append(cleanContent(jiraIssue.getSummary()));
   }
-  sm.append("</a>");
-  String body=sm.toString();
+  sb.append("</a>");
+  String body=sb.toString();
   return new SocialActivityFeedEntry(link,title,body);
 }
