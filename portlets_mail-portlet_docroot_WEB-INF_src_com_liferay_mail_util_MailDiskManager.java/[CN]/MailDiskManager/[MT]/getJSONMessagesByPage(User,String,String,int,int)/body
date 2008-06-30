@@ -3,8 +3,8 @@
     String folderFilePath=getFolderFilePath(user,emailAddress,folderName);
     JSONObject jsonFolderObj=new JSONObject(FileUtil.read(folderFilePath));
     int messageCount=jsonFolderObj.getInt("messageCount");
-    String[] messageUids=_getMessageUidsByFolder(user,emailAddress,folderName);
-    int messagesOnDiskCount=messageUids.length - 1;
+    long[] messageUids=_getMessageUidsByFolder(user,emailAddress,folderName);
+    int messagesOnDiskCount=messageUids.length;
     return _getJSONPaginatedMessages(user,emailAddress,folderName,messageUids,pageNumber,messagesPerPage,messageCount,messagesOnDiskCount);
   }
  catch (  IOException ioe) {

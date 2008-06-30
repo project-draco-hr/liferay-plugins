@@ -1,9 +1,14 @@
 {
   List<Folder> folders=getFolders();
-  for (  Folder folder : folders) {
-    syncronizeFolder(folder);
-  }
   JSONObject jsonObj=new JSONObject();
-  JSONUtil.put(jsonObj,"success",true);
+  if (Validator.isNotNull(folders)) {
+    for (    Folder folder : folders) {
+      syncronizeFolder(folder);
+    }
+    JSONUtil.put(jsonObj,"success",true);
+  }
+ else {
+    JSONUtil.put(jsonObj,"success",false);
+  }
   return jsonObj;
 }

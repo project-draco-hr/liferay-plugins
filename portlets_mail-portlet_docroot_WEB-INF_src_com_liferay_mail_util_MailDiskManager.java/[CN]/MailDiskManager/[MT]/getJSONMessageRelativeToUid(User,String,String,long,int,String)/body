@@ -1,6 +1,6 @@
 {
   searchString=searchString.trim();
-  String[] messageUids=null;
+  long[] messageUids=null;
   if (searchString.equals(StringPool.BLANK)) {
     messageUids=_getMessageUidsByFolder(user,emailAddress,folderName);
   }
@@ -8,8 +8,7 @@
     messageUids=_getMessageUidsBySearch(user,emailAddress,folderName,searchString);
   }
   for (int i=0; i < messageUids.length; i++) {
-    long tempMessageUid=GetterUtil.getLong(messageUids[i]);
-    if (messageUid == tempMessageUid) {
+    if (messageUid == messageUids[i]) {
       return getJSONMessageByUid(user,emailAddress,folderName,messageUids[i + offset]);
     }
   }
