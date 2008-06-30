@@ -1,0 +1,15 @@
+{
+  if (isEscapedModel()) {
+    return (NotepadEntry)this;
+  }
+ else {
+    NotepadEntry model=new NotepadEntryImpl();
+    model.setEscapedModel(true);
+    model.setNotepadEntryId(getNotepadEntryId());
+    model.setCategoryId(getCategoryId());
+    model.setCreateDate(getCreateDate());
+    model.setNotes(HtmlUtil.escape(getNotes()));
+    model=(NotepadEntry)Proxy.newProxyInstance(NotepadEntry.class.getClassLoader(),new Class[]{NotepadEntry.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

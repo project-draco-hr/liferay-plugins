@@ -1,0 +1,25 @@
+{
+  boolean isNew=notepadEntry.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(notepadEntry);
+      }
+ else {
+        listener.onBeforeUpdate(notepadEntry);
+      }
+    }
+  }
+  notepadEntry=updateImpl(notepadEntry,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(notepadEntry);
+      }
+ else {
+        listener.onAfterUpdate(notepadEntry);
+      }
+    }
+  }
+  return notepadEntry;
+}

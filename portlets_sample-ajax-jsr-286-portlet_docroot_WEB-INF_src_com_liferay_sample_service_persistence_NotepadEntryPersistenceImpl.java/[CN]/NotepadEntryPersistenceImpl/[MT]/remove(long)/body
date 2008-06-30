@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    NotepadEntry notepadEntry=(NotepadEntry)session.get(NotepadEntryImpl.class,new Long(notepadEntryId));
+    if (notepadEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No NotepadEntry exists with the primary key " + notepadEntryId);
+      }
+      throw new NoSuchNotepadEntryException("No NotepadEntry exists with the primary key " + notepadEntryId);
+    }
+    return remove(notepadEntry);
+  }
+ catch (  NoSuchNotepadEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw HibernateUtil.processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

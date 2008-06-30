@@ -1,0 +1,40 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  long categoryId=ParamUtil.getLong(req,"categoryid");
+  String notes=ParamUtil.getString(req,"notes");
+  String createDate=StringPool.BLANK;
+  String categoryImage=StringPool.BLANK;
+  DateFormat dateDisplayDate=new SimpleDateFormat("MMM d",themeDisplay.getLocale());
+  DateFormat dateDisplayTime=new SimpleDateFormat("h:mm a",themeDisplay.getLocale());
+  DateFormat dateFormatDate=DateFormat.getDateInstance(DateFormat.MEDIUM,themeDisplay.getLocale());
+  Date now=new Date();
+  Date today=dateFormatDate.parse(dateFormatDate.format(now));
+  NotepadEntry notepadEntry=NotepadEntryLocalServiceUtil.addNotepadEntry(categoryId,notes);
+  if (categoryId == 1) {
+    categoryImage="important.png";
+  }
+ else   if (categoryId == 2) {
+    categoryImage="work.png";
+  }
+ else   if (categoryId == 3) {
+    categoryImage="social.png";
+  }
+ else   if (categoryId == 4) {
+    categoryImage="other.png";
+  }
+ else {
+    categoryImage="spacer.png";
+  }
+  if (notepadEntry.getCreateDate().before(today)) {
+    createDate=dateDisplayDate.format(notepadEntry.getCreateDate());
+  }
+ else {
+    createDate=dateDisplayTime.format(notepadEntry.getCreateDate());
+  }
+  JSONObject jsonObj=new JSONObject();
+  jsonObj.put("createDate",createDate);
+  jsonObj.put("notes",notepadEntry.getNotes());
+  jsonObj.put("notepadEntryId",notepadEntry.getNotepadEntryId());
+  jsonObj.put("categoryImage",categoryImage);
+  return jsonObj.toString();
+}

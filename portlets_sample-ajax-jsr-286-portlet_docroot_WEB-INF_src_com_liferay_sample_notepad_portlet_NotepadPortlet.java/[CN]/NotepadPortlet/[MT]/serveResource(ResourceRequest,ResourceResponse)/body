@@ -1,0 +1,20 @@
+{
+  try {
+    String cmd=ParamUtil.getString(req,Constants.CMD);
+    String jsonObjString=StringPool.BLANK;
+    if (cmd.equals(Constants.ADD)) {
+      jsonObjString=addNotepadEntry(req);
+    }
+ else     if (cmd.equals(Constants.DELETE)) {
+      jsonObjString=deleteNotepadEntry(req);
+    }
+    if (Validator.isNotNull(cmd)) {
+      String contentType="application/json";
+      res.setContentType(contentType);
+      res.getWriter().write(jsonObjString);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}

@@ -1,0 +1,43 @@
+{
+  boolean finderClassNameCacheEnabled=NotepadEntryModelImpl.CACHE_ENABLED;
+  String finderClassName=NotepadEntry.class.getName();
+  String finderMethodName="findAll";
+  String[] finderParams=new String[]{"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
+  Object[] finderArgs=new Object[]{String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCache.getResult(finderClassName,finderMethodName,finderParams,finderArgs,getSessionFactory());
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.sample.model.NotepadEntry ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("createDate DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      List<NotepadEntry> list=(List<NotepadEntry>)QueryUtil.list(q,getDialect(),start,end);
+      if (obc == null) {
+        Collections.sort(list);
+      }
+      FinderCache.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw HibernateUtil.processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<NotepadEntry>)result;
+  }
+}
