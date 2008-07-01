@@ -10,7 +10,12 @@
   try {
     markupService=getMarkupService(req);
   }
- catch (  Exception e) {
+ catch (  NoSuchProducerException e) {
+    include(null,"configure",req,res);
+    return;
+  }
+catch (  Exception e) {
+    include(e,null,req,res);
     _log.error(e.getMessage(),e);
     return;
   }
