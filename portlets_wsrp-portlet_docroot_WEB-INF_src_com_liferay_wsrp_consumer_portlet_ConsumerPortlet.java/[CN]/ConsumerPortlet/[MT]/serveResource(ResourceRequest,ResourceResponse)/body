@@ -1,0 +1,14 @@
+{
+  URL url=new URL(req.getResourceID());
+  URLConnection con=url.openConnection();
+  con.connect();
+  res.setContentType(con.getContentType());
+  res.setContentLength(con.getContentLength());
+  InputStream in=con.getInputStream();
+  OutputStream out=res.getPortletOutputStream();
+  int next;
+  while ((next=in.read()) != -1) {
+    out.write(next);
+  }
+  out.close();
+}
