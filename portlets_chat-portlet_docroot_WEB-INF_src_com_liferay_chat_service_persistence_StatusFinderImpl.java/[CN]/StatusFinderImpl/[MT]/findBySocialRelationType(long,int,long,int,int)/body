@@ -1,24 +1,24 @@
 {
   Session session=null;
   try {
-    session=HibernateUtil.openSession();
+    session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_SOCIAL_RELATION_TYPE);
     SQLQuery q=session.createSQLQuery(sql);
-    q.addScalar("User_.userId",Hibernate.LONG);
-    q.addScalar("Contact_.firstName",Hibernate.STRING);
-    q.addScalar("Contact_.middleName",Hibernate.STRING);
-    q.addScalar("Contact_.lastName",Hibernate.STRING);
-    q.addScalar("User_.portraitId",Hibernate.LONG);
+    q.addScalar("User_.userId",Type.LONG);
+    q.addScalar("Contact_.firstName",Type.STRING);
+    q.addScalar("Contact_.middleName",Type.STRING);
+    q.addScalar("Contact_.lastName",Type.STRING);
+    q.addScalar("User_.portraitId",Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
     qPos.add(type);
     qPos.add(modifiedDate);
-    return (List<Object[]>)QueryUtil.list(q,HibernateUtil.getDialect(),start,end);
+    return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
     throw new SystemException(e);
   }
  finally {
-    HibernateUtil.closeSession(session);
+    closeSession(session);
   }
 }
