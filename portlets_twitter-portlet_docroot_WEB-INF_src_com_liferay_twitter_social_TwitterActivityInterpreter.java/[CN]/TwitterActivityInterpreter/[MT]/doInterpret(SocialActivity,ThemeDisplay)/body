@@ -1,7 +1,7 @@
 {
   String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
-  JSONObject extraData=new JSONObject(activity.getExtraData());
+  JSONObject extraData=JSONFactoryUtil.createJSONObject(activity.getExtraData());
   String title=StringPool.BLANK;
   StringBuilder sb=new StringBuilder();
   sb.append("<a href=\"");
@@ -20,7 +20,7 @@
   sb.append("/statuses/");
   sb.append(activity.getClassPK());
   sb.append("\" target=\"_blank\">");
-  sb.append(extraData.optString("text"));
+  sb.append(extraData.getString("text"));
   sb.append("</a>");
   String body=sb.toString();
   return new SocialActivityFeedEntry(title,body);

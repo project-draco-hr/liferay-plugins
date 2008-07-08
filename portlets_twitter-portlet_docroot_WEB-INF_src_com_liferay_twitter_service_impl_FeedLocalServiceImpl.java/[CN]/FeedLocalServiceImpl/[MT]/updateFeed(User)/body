@@ -25,26 +25,26 @@
     return;
   }
   for (int i=0; i < jsonArray.length(); i++) {
-    JSONObject statusJSON=jsonArray.optJSONObject(i);
+    JSONObject statusJSON=jsonArray.getJSONObject(i);
     SimpleDateFormat sdf=new SimpleDateFormat("EEE MMM d hh:mm:ss Z yyyy");
     Date createDate=null;
     try {
-      createDate=sdf.parse(statusJSON.optString("created_at"));
+      createDate=sdf.parse(statusJSON.getString("created_at"));
     }
  catch (    ParseException pe) {
       throw new SystemException(pe);
     }
-    long statusId=statusJSON.optLong("id");
-    String text=statusJSON.optString("text");
+    long statusId=statusJSON.getLong("id");
+    String text=statusJSON.getString("text");
     if (feed.getTwitterUserId() <= 0) {
-      JSONObject userJSON=statusJSON.optJSONObject("user");
-      feed.setTwitterUserId(userJSON.optLong("id"));
+      JSONObject userJSON=statusJSON.getJSONObject("user");
+      feed.setTwitterUserId(userJSON.getLong("id"));
     }
     if (feed.getLastStatusId() < statusId) {
       feed.setLastStatusId(statusId);
     }
-    JSONObject extraData=new JSONObject();
-    JSONUtil.put(extraData,"text",text);
+    JSONObject extraData=JSONFactoryUtil.createJSONObject();
+    extraData.put("text",text);
     SocialActivityLocalServiceUtil.addActivity(user.getUserId(),0,createDate,Feed.class.getName(),statusId,TwitterActivityKeys.ADD_STATUS,extraData.toString(),0);
   }
   feed.setModifiedDate(now);

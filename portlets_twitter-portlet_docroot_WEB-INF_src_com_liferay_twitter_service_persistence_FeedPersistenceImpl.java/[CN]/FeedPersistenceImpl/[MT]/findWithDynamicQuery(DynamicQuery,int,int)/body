@@ -2,15 +2,13 @@
   Session session=null;
   try {
     session=openSession();
-    session.delete(feed);
-    session.flush();
-    return feed;
+    dynamicQuery.setLimit(start,end);
+    return dynamicQuery.list();
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Feed.class.getName());
   }
 }
