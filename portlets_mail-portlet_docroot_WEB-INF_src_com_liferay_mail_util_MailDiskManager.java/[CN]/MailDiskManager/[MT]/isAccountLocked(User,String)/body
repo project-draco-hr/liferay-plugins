@@ -6,9 +6,9 @@
       return false;
     }
     JSONObject jsonObj=JSONFactoryUtil.createJSONObject(FileUtil.read(filePath));
-    if (GetterUtil.getBoolean(jsonObj.get("locked").toString())) {
+    if (GetterUtil.getBoolean(jsonObj.getString("locked"))) {
       DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
-      Date dateLocked=GetterUtil.getDate(jsonObj.get("dateLocked").toString(),df);
+      Date dateLocked=GetterUtil.getDate(jsonObj.getString("dateLocked"),df);
       Date now=new Date();
       long nowTime=now.getTime();
       long expireTime=dateLocked.getTime() + 360000;

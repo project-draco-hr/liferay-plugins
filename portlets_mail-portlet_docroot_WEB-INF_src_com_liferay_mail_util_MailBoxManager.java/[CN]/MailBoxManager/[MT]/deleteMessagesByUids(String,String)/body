@@ -1,25 +1,11 @@
 {
-  Folder folder=getFolder(folderName);
-  try {
-    long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
-    if (!folder.isOpen()) {
-      folder.open(Folder.READ_WRITE);
-    }
+  long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
+  if (Validator.isNotNull(messageUidsArray)) {
+    Folder folder=openFolder(folderName);
     for (    long messageUid : messageUidsArray) {
-      try {
-        Message message=getMessageByUid(folder,messageUid);
-        message.setFlag(Flags.Flag.DELETED,true);
-        String messagePath=MailDiskManager.getMessagePath(_user,_mailAccount.getEmailAddress(),folderName,messageUid);
-        FileUtil.deltree(messagePath);
-      }
- catch (      MessagingException me) {
-        _log.error(me,me);
-      }
+      deleteMessage(folder,messageUid,false);
     }
     folder.close(true);
-  }
- catch (  MessagingException me) {
-    _log.error(me,me);
   }
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   jsonObj.put("success",true);

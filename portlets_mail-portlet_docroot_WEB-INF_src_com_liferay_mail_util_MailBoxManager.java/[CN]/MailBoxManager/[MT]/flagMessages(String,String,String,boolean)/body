@@ -7,8 +7,16 @@
   for (  long messageUid : messageUidsArray) {
     try {
       Message message=getMessageByUid(folder,messageUid);
-      message.setFlag(Flags.Flag.SEEN,read);
-      updateJSONMessageField(_user,_mailAccount,folderName,messageUid,"read",String.valueOf(read));
+      if (flag.equals("answered")) {
+        message.setFlag(Flags.Flag.ANSWERED,value);
+      }
+ else       if (flag.equals("flagged")) {
+        message.setFlag(Flags.Flag.FLAGGED,value);
+      }
+ else       if (flag.equals("seen")) {
+        message.setFlag(Flags.Flag.SEEN,value);
+      }
+      updateJSONMessageFlag(_user,_mailAccount,folderName,messageUid,flag,value);
     }
  catch (    IOException ioe) {
       _log.error(ioe,ioe);

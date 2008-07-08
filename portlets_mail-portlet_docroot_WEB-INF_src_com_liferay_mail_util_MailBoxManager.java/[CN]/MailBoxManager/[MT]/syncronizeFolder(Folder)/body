@@ -1,8 +1,8 @@
 {
   JSONObject jsonObj=MailDiskManager.getJSONFolder(_user,_mailAccount.getEmailAddress(),folder.getFullName());
-  long latestMessageUid=MailDiskManager.getNewestStoredMessageUID(_user,_mailAccount.getEmailAddress(),folder.getFullName());
+  Message latestMessage=MailDiskManager.getNewestStoredMessage(_user,_mailAccount.getEmailAddress(),folder.getFullName());
   boolean initialized=false;
-  if ((jsonObj != null) && jsonObj.optBoolean("initialized")) {
+  if ((jsonObj != null) && jsonObj.getBoolean("initialized")) {
     initialized=true;
   }
   folder=openFolder(folder);
@@ -11,21 +11,20 @@
   }
   int messageCount=folder.getMessageCount();
   Message[] messages=null;
-  if (!initialized || (latestMessageUid == -1)) {
+  if (!initialized || (Validator.isNull(latestMessage))) {
     if (messageCount < _messagesToPrefetch) {
       messages=folder.getMessages(1,messageCount);
     }
  else {
       messages=folder.getMessages((messageCount - _messagesToPrefetch + 1),messageCount);
     }
-    storeMessagesToDisk(folder,messages);
+    storeMessagesToDisk(messages);
     storeFolderToDisk(folder,true,new Date());
   }
  else {
-    Message message=((IMAPFolder)folder).getMessageByUID(latestMessageUid);
-    int messageNumber=message.getMessageNumber();
+    int messageNumber=latestMessage.getMessageNumber();
     messages=folder.getMessages(messageNumber,messageCount);
-    storeMessagesToDisk(folder,messages);
+    storeMessagesToDisk(messages);
     storeFolderToDisk(folder,true,new Date());
   }
 }

@@ -6,18 +6,33 @@
   }
   StringBuilder sb=new StringBuilder();
   List<Object[]> attachments=new ArrayList<Object[]>();
+  boolean seen=false;
+  if (message.isSet(Flags.Flag.SEEN)) {
+    seen=true;
+  }
   getBody(sb,StringPool.BLANK,message,attachments);
+  if (!seen) {
+    message.setFlag(Flags.Flag.SEEN,false);
+  }
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  JSONObject jsonFlags=JSONFactoryUtil.createJSONObject();
   jsonObj.put("attachments",getJSONAttachments(attachments));
   jsonObj.put("body",sb.toString());
   jsonObj.put("bodyPreview",getBodyPreview(sb.toString()));
   jsonObj.put("date",date);
+  jsonObj.put("flags",jsonFlags);
   jsonObj.put("from",getAddresses(message.getFrom()));
   jsonObj.put("html",false);
   jsonObj.put("messageNumber",message.getMessageNumber());
-  jsonObj.put("read",message.isSet(Flags.Flag.SEEN));
   jsonObj.put("subject",message.getSubject());
-  jsonObj.put("uid",((IMAPFolder)folder).getUID(message));
+  jsonObj.put("uid",((IMAPFolder)message.getFolder()).getUID(message));
+  jsonFlags.put("answered",message.isSet(Flags.Flag.ANSWERED));
+  jsonFlags.put("deleted",message.isSet(Flags.Flag.DELETED));
+  jsonFlags.put("draft",message.isSet(Flags.Flag.DRAFT));
+  jsonFlags.put("flagged",message.isSet(Flags.Flag.FLAGGED));
+  jsonFlags.put("recent",message.isSet(Flags.Flag.RECENT));
+  jsonFlags.put("seen",seen);
+  jsonFlags.put("user",message.isSet(Flags.Flag.USER));
   jsonObj.put("to",getAddresses(message.getRecipients(RecipientType.TO)));
   jsonObj.put("cc",getAddresses(message.getRecipients(RecipientType.CC)));
   jsonObj.put("bcc",getAddresses(message.getRecipients(RecipientType.BCC)));

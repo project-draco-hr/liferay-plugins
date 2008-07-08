@@ -1,0 +1,20 @@
+{
+  String folderPath=getFolderPath(user,emailAddress,folderName);
+  String[] messageUids=FileUtil.listDirs(folderPath);
+  if (messageUids.length == 0) {
+    return null;
+  }
+  MailBoxManager mailBoxManager=new MailBoxManager(user,emailAddress);
+  IMAPFolder folder=(IMAPFolder)mailBoxManager.openFolder(folderName);
+  for (int i=messageUids.length - 1; i >= 0; i--) {
+    long messageUid=GetterUtil.getLong(messageUids[i]);
+    Message message=folder.getMessageByUID(messageUid);
+    if (Validator.isNull(message)) {
+      mailBoxManager.deleteMessage(folder,messageUid,false);
+    }
+ else {
+      return message;
+    }
+  }
+  return null;
+}
