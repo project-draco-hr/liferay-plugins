@@ -2,7 +2,8 @@
   Session session=null;
   try {
     session=openSession();
-    return (Producer)session.get(ProducerImpl.class,new Long(producerId));
+    dynamicQuery.setLimit(start,end);
+    return dynamicQuery.list();
   }
  catch (  Exception e) {
     throw processException(e);
