@@ -1,34 +1,34 @@
 {
-  UploadPortletRequest uploadReq=PortalUtil.getUploadPortletRequest(req);
-  ThemeDisplay themeDisplay=(ThemeDisplay)uploadReq.getAttribute(WebKeys.THEME_DISPLAY);
+  UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
   if (!UserLocalServiceUtil.hasOrganizationUser(WOLConstants.ORGANIZATION_LIFERAY_INC_ID,themeDisplay.getUserId())) {
     return;
   }
-  long meetupsEntryId=ParamUtil.getLong(uploadReq,"meetupsEntryId");
-  String title=ParamUtil.getString(uploadReq,"title");
-  String description=ParamUtil.getString(uploadReq,"description");
-  int startDateMonth=ParamUtil.getInteger(uploadReq,"startDateMonth");
-  int startDateDay=ParamUtil.getInteger(uploadReq,"startDateDay");
-  int startDateYear=ParamUtil.getInteger(uploadReq,"startDateYear");
-  int startDateHour=ParamUtil.getInteger(uploadReq,"startDateHour");
-  int startDateMinute=ParamUtil.getInteger(uploadReq,"startDateMinute");
-  int startDateAmPm=ParamUtil.getInteger(uploadReq,"startDateAmPm");
+  long meetupsEntryId=ParamUtil.getLong(uploadRequest,"meetupsEntryId");
+  String title=ParamUtil.getString(uploadRequest,"title");
+  String description=ParamUtil.getString(uploadRequest,"description");
+  int startDateMonth=ParamUtil.getInteger(uploadRequest,"startDateMonth");
+  int startDateDay=ParamUtil.getInteger(uploadRequest,"startDateDay");
+  int startDateYear=ParamUtil.getInteger(uploadRequest,"startDateYear");
+  int startDateHour=ParamUtil.getInteger(uploadRequest,"startDateHour");
+  int startDateMinute=ParamUtil.getInteger(uploadRequest,"startDateMinute");
+  int startDateAmPm=ParamUtil.getInteger(uploadRequest,"startDateAmPm");
   if (startDateAmPm == Calendar.PM) {
     startDateHour+=12;
   }
-  int endDateMonth=ParamUtil.getInteger(uploadReq,"endDateMonth");
-  int endDateDay=ParamUtil.getInteger(uploadReq,"endDateDay");
-  int endDateYear=ParamUtil.getInteger(uploadReq,"endDateYear");
-  int endDateHour=ParamUtil.getInteger(uploadReq,"endDateHour");
-  int endDateMinute=ParamUtil.getInteger(uploadReq,"endDateMinute");
-  int endDateAmPm=ParamUtil.getInteger(uploadReq,"endDateAmPm");
+  int endDateMonth=ParamUtil.getInteger(uploadRequest,"endDateMonth");
+  int endDateDay=ParamUtil.getInteger(uploadRequest,"endDateDay");
+  int endDateYear=ParamUtil.getInteger(uploadRequest,"endDateYear");
+  int endDateHour=ParamUtil.getInteger(uploadRequest,"endDateHour");
+  int endDateMinute=ParamUtil.getInteger(uploadRequest,"endDateMinute");
+  int endDateAmPm=ParamUtil.getInteger(uploadRequest,"endDateAmPm");
   if (endDateAmPm == Calendar.PM) {
     endDateHour+=12;
   }
-  int totalAttendees=ParamUtil.getInteger(uploadReq,"totalAttendees");
-  int maxAttendees=ParamUtil.getInteger(uploadReq,"maxAttendees");
-  double price=ParamUtil.getDouble(uploadReq,"price");
-  File file=uploadReq.getFile("fileName");
+  int totalAttendees=ParamUtil.getInteger(uploadRequest,"totalAttendees");
+  int maxAttendees=ParamUtil.getInteger(uploadRequest,"maxAttendees");
+  double price=ParamUtil.getDouble(uploadRequest,"price");
+  File file=uploadRequest.getFile("fileName");
   byte[] bytes=FileUtil.getBytes(file);
   if (meetupsEntryId <= 0) {
     MeetupsEntryLocalServiceUtil.addMeetupsEntry(themeDisplay.getUserId(),title,description,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,totalAttendees,maxAttendees,price,bytes);

@@ -2,19 +2,19 @@
   Timestamp createDate_TS=CalendarUtil.getTimestamp(createDate);
   Session session=null;
   try {
-    session=HibernateUtil.openSession(StringPool.AMPERSAND + JIRAIssueModelImpl.SESSION_FACTORY);
+    session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_CD_P);
     SQLQuery q=session.createSQLQuery(sql);
     q.addEntity("jiraissue",JIRAIssueImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(projectId);
     qPos.add(createDate_TS);
-    return (List<JIRAIssue>)QueryUtil.list(q,HibernateUtil.getDialect(),start,end);
+    return (List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
     throw new SystemException(e);
   }
  finally {
-    HibernateUtil.closeSession(session);
+    closeSession(session);
   }
 }

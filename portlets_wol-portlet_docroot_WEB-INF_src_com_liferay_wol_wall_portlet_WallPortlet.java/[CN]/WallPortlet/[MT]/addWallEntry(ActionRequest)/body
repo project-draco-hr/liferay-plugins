@@ -1,5 +1,5 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   if (!themeDisplay.isSignedIn()) {
     return;
   }
@@ -14,6 +14,6 @@
   if ((themeDisplay.getUserId() != user.getUserId()) && (!SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(),user.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND))) {
     return;
   }
-  String comments=ParamUtil.getString(req,"comments");
+  String comments=ParamUtil.getString(actionRequest,"comments");
   WallEntryLocalServiceUtil.addWallEntry(themeDisplay.getPortletGroupId(),themeDisplay.getUserId(),comments,themeDisplay);
 }
