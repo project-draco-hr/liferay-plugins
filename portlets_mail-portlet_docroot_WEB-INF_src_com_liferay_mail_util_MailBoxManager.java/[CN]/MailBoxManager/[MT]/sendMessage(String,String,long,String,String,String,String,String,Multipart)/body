@@ -1,10 +1,10 @@
 {
-  JSONObject jsonObj=new JSONObject();
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   Message message=null;
   if (messageType.equalsIgnoreCase("new")) {
     message=new MimeMessage(getSession());
     send(message,fromEmailAddress,to,cc,bcc,subject,multipart);
-    JSONUtil.put(jsonObj,"success",true);
+    jsonObj.put("success",true);
   }
  else {
     Message oldMessage=getMessageByUid(folderName,messageUid);
@@ -17,15 +17,15 @@
       messageBodyPart.setDataHandler(message.getDataHandler());
       multipart.addBodyPart(messageBodyPart);
       send(oldMessage,fromEmailAddress,to,cc,bcc,subject,multipart);
-      JSONUtil.put(jsonObj,"success",true);
+      jsonObj.put("success",true);
     }
  else     if (messageType.equalsIgnoreCase("reply")) {
       message=(MimeMessage)oldMessage.reply(false);
       send(message,fromEmailAddress,to,cc,bcc,subject,multipart);
-      JSONUtil.put(jsonObj,"success",true);
+      jsonObj.put("success",true);
     }
  else {
-      JSONUtil.put(jsonObj,"success",false);
+      jsonObj.put("success",false);
     }
   }
   return jsonObj;

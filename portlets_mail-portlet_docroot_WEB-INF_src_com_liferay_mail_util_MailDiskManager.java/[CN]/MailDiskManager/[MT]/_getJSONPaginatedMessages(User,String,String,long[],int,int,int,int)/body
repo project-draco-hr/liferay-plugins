@@ -5,13 +5,13 @@
     begin=0;
   }
   double pageCount=Math.ceil((double)messageCount / messagesPerPage);
-  JSONObject jsonObj=new JSONObject();
-  JSONArray jsonArray=new JSONArray();
-  JSONUtil.put(jsonObj,"messages",jsonArray);
-  JSONUtil.put(jsonObj,"messageCount",messageCount);
-  JSONUtil.put(jsonObj,"messagesPerPage",messagesPerPage);
-  JSONUtil.put(jsonObj,"pageCount",(int)pageCount);
-  JSONUtil.put(jsonObj,"pageNumber",pageNumber);
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  jsonObj.put("messages",jsonArray);
+  jsonObj.put("messageCount",messageCount);
+  jsonObj.put("messagesPerPage",messagesPerPage);
+  jsonObj.put("pageCount",(int)pageCount);
+  jsonObj.put("pageNumber",pageNumber);
   for (int i=begin; i <= end; i++) {
     jsonArray.put(getJSONMessageByUid(user,emailAddress,folderName,messageUidsOnDisk[i]));
   }

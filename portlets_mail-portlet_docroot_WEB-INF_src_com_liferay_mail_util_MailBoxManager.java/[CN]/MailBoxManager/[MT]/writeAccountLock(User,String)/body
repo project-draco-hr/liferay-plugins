@@ -1,10 +1,10 @@
 {
   try {
-    JSONObject jsonObj=new JSONObject();
+    JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
     String filePath=MailDiskManager.getAccountLockPath(user,emailAddress);
     DateFormat df=new SimpleDateFormat("yyyyMMddHHmmss");
-    JSONUtil.put(jsonObj,"locked",true);
-    JSONUtil.put(jsonObj,"dateLocked",df.format(new Date()));
+    jsonObj.put("locked",true);
+    jsonObj.put("dateLocked",df.format(new Date()));
     FileUtil.write(filePath,jsonObj.toString());
   }
  catch (  IOException ioe) {
