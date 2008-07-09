@@ -1,0 +1,19 @@
+{
+  try {
+    String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+    if (cmd.equals(Constants.UPDATE)) {
+      updatePage(actionRequest);
+    }
+    if (Validator.isNull(cmd)) {
+      return;
+    }
+    if (SessionErrors.isEmpty(actionRequest)) {
+      SessionMessages.add(actionRequest,"request_processed");
+    }
+    String redirect=ParamUtil.getString(actionRequest,"redirect");
+    actionResponse.sendRedirect(redirect);
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
