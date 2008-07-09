@@ -11,7 +11,10 @@ set.add('baz')
 for v in set:
     out.write((v + '\n'))
 out.write('\n\t<br /><br />\n\n\t<b>Invoking Liferay Services</b>\n\n\t<br /><br /> \n\n')
-userId = int(userInfo['liferay.user.id'])
-organizations = OrganizationServiceUtil.getUserOrganizations(userId)
-out.write((('\n\tYou belong to ' + str(organizations.size())) + ' organizations.\n\n'))
+if (userInfo != None):
+    userId = int(userInfo['liferay.user.id'])
+    organizations = OrganizationServiceUtil.getUserOrganizations(userId)
+    out.write((('\n        You belong to ' + str(organizations.size())) + ' organizations.\n\n    '))
+else:
+    out.write('\n        You do not belong to any organizations.\n\n    ')
 out.write((custom.navigation() + '\n'))
