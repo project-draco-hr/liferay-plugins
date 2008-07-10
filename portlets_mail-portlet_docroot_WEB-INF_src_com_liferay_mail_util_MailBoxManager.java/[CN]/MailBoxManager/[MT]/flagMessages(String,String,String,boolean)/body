@@ -1,30 +1,36 @@
 {
-  Folder folder=getFolder(folderName);
-  long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
-  for (  long messageUid : messageUidsArray) {
-    try {
-      folder=openFolder(folder);
-      Message message=getMessageByUid(folder,messageUid);
-      if (flag.equals("answered")) {
-        message.setFlag(Flags.Flag.ANSWERED,value);
-      }
- else       if (flag.equals("flagged")) {
-        message.setFlag(Flags.Flag.FLAGGED,value);
-      }
- else       if (flag.equals("seen")) {
-        message.setFlag(Flags.Flag.SEEN,value);
-      }
-      updateJSONMessageFlag(_user,_mailAccount,folderName,messageUid,flag,value);
-    }
- catch (    IOException ioe) {
-      _log.error(ioe,ioe);
-    }
-catch (    MessagingException me) {
-      _log.error(me,me);
-    }
-  }
-  folder.close(true);
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
-  jsonObj.put("success",true);
+  long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
+  if (Validator.isNull(messageUidsArray)) {
+    jsonObj.put("success",false);
+    return jsonObj;
+  }
+  try {
+    Folder folder=getFolder(folderName);
+    for (    long messageUid : messageUidsArray) {
+      try {
+        Message message=getMessageByUid(folder,messageUid);
+        if (flag.equals("answered")) {
+          message.setFlag(Flags.Flag.ANSWERED,value);
+        }
+ else         if (flag.equals("flagged")) {
+          message.setFlag(Flags.Flag.FLAGGED,value);
+        }
+ else         if (flag.equals("seen")) {
+          message.setFlag(Flags.Flag.SEEN,value);
+        }
+        updateJSONMessageFlag(_user,_mailAccount,folderName,messageUid,flag,value);
+      }
+ catch (      MessagingException me) {
+        _log.error(me,me);
+      }
+    }
+    folder.close(true);
+    jsonObj.put("success",true);
+  }
+ catch (  MessagingException me) {
+    _log.error(me,me);
+    jsonObj.put("success",false);
+  }
   return jsonObj;
 }

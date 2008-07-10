@@ -1,7 +1,4 @@
 {
-  if (folder == null) {
-    return null;
-  }
   if (folder.isOpen()) {
     return folder;
   }
@@ -14,13 +11,7 @@
       store=getStore();
     }
     folder=store.getFolder(folder.getFullName());
-    try {
-      folder.open(Folder.READ_WRITE);
-    }
- catch (    MessagingException me2) {
-      _log.error("Skipping folder " + folder.getFullName() + " for email address "+ _mailAccount.getEmailAddress(),me2);
-      return null;
-    }
+    folder.open(Folder.READ_WRITE);
   }
   return folder;
 }

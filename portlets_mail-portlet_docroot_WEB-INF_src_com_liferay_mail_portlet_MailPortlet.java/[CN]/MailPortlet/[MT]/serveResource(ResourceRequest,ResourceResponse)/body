@@ -10,9 +10,11 @@
     try {
       MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(httpReq),emailAddress);
       Part messagePart=mailBoxManager.getAttachment(folderName,messageUid,contentPath);
-      InputStream is=messagePart.getInputStream();
-      String contentType=MimeTypesUtil.getContentType(fileName);
-      PortletResponseUtil.sendFile(res,fileName,is,contentType);
+      if (Validator.isNotNull(messagePart)) {
+        InputStream is=messagePart.getInputStream();
+        String contentType=MimeTypesUtil.getContentType(fileName);
+        PortletResponseUtil.sendFile(res,fileName,is,contentType);
+      }
     }
  catch (    MessagingException me) {
     }

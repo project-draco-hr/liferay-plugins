@@ -1,13 +1,21 @@
 {
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
-  if (Validator.isNotNull(messageUidsArray)) {
+  if (Validator.isNull(messageUidsArray)) {
+    jsonObj.put("success",false);
+    return jsonObj;
+  }
+  try {
     Folder folder=openFolder(folderName);
     for (    long messageUid : messageUidsArray) {
       deleteMessage(folder,messageUid,false);
     }
     folder.close(true);
+    jsonObj.put("success",true);
   }
-  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
-  jsonObj.put("success",true);
+ catch (  MessagingException me) {
+    _log.error(me,me);
+    jsonObj.put("success",false);
+  }
   return jsonObj;
 }

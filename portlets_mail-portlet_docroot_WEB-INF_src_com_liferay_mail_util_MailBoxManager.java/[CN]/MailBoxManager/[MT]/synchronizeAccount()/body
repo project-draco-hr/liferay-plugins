@@ -3,7 +3,12 @@
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   if (Validator.isNotNull(folders)) {
     for (    Folder folder : folders) {
-      synchronizeFolder(folder);
+      try {
+        synchronizeFolder(folder);
+      }
+ catch (      MessagingException me) {
+        _log.error(me,me);
+      }
     }
     jsonObj.put("success",true);
   }

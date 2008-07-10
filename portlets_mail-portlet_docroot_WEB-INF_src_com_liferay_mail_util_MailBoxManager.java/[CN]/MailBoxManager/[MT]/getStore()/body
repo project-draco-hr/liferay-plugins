@@ -1,14 +1,14 @@
 {
-  if (_allStores == null) {
+  if (Validator.isNull(_allStores)) {
     _allStores=new ConcurrentHashMap<String,Store>();
   }
   String key=_user.getUserId() + "." + _mailAccount.getEmailAddress();
   Store store=(Store)_allStores.get(key);
-  if (store != null && !store.isConnected()) {
+  if (Validator.isNotNull(store) && !store.isConnected()) {
     store.close();
     store=null;
   }
-  if (store == null) {
+  if (Validator.isNull(store)) {
     Properties props=new Properties();
     URLName url=new URLName("imap",_mailAccount.getMailInHostName(),_mailAccount.getMailInPort(),StringPool.BLANK,_mailAccount.getUsername(),_mailAccount.getPassword());
     props.setProperty("mail.imap.port",String.valueOf(_mailAccount.getMailInPort()));

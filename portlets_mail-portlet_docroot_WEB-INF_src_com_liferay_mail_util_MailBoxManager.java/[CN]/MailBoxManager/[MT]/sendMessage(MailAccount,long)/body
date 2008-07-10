@@ -1,9 +1,10 @@
 {
-  Folder draftsFolder=getDraftsFolder();
-  Message message=getMessageByUid(draftsFolder,draftMessageUid);
-  Session session=getOutgoingSession(fromMailAccount);
-  Transport transport=session.getTransport("smtp");
+  Transport transport=null;
   try {
+    Folder draftsFolder=getDraftsFolder();
+    Message message=getMessageByUid(draftsFolder,draftMessageUid);
+    Session session=getOutgoingSession(fromMailAccount);
+    transport=session.getTransport("smtp");
     transport.connect(fromMailAccount.getUsername(),fromMailAccount.getPassword());
     transport.sendMessage(message,message.getAllRecipients());
     deleteMessage(draftsFolder,draftMessageUid,true);
@@ -12,6 +13,11 @@
     _log.error(me,me);
   }
  finally {
-    transport.close();
+    try {
+      transport.close();
+    }
+ catch (    MessagingException me) {
+      _log.error(me,me);
+    }
   }
 }
