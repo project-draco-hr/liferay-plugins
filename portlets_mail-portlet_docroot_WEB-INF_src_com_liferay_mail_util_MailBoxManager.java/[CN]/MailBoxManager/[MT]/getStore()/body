@@ -1,6 +1,31 @@
 {
-  if (_store == null) {
-    getIncomingStore(_mailAccount);
+  if (_allStores == null) {
+    _allStores=new ConcurrentHashMap<String,Store>();
   }
-  return _store;
+  String key=_user.getUserId() + "." + _mailAccount.getEmailAddress();
+  Store store=(Store)_allStores.get(key);
+  if (store != null && !store.isConnected()) {
+    store.close();
+    store=null;
+  }
+  if (store == null) {
+    Properties props=new Properties();
+    URLName url=new URLName("imap",_mailAccount.getMailInHostName(),_mailAccount.getMailInPort(),StringPool.BLANK,_mailAccount.getUsername(),_mailAccount.getPassword());
+    props.setProperty("mail.imap.port",String.valueOf(_mailAccount.getMailInPort()));
+    if (_mailAccount.isMailSecure()) {
+      props.setProperty("mail.imap.socketFactory.port",String.valueOf(_mailAccount.getMailInPort()));
+      props.setProperty("mail.imap.socketFactory.class",_SSL_FACTORY);
+      props.setProperty("mail.imap.socketFactory.fallback","false");
+    }
+    Session session=Session.getInstance(props,null);
+    if (_mailAccount.isMailSecure()) {
+      store=new IMAPSSLStore(session,url);
+    }
+ else {
+      store=new IMAPStore(session,url);
+    }
+    store.connect();
+    _allStores.put(key,store);
+  }
+  return store;
 }

@@ -8,6 +8,9 @@
   IMAPFolder folder=(IMAPFolder)mailBoxManager.openFolder(folderName);
   for (int i=messageUids.length - 1; i >= 0; i--) {
     long messageUid=GetterUtil.getLong(messageUids[i]);
+    if (messageUid == -1) {
+      break;
+    }
     Message message=folder.getMessageByUID(messageUid);
     if (Validator.isNull(message)) {
       mailBoxManager.deleteMessage(folder,messageUid,false);

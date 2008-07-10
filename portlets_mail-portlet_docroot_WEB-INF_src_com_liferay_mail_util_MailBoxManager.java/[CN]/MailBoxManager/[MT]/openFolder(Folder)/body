@@ -9,8 +9,13 @@
     folder.open(Folder.READ_WRITE);
   }
  catch (  MessagingException me1) {
+    Store store=folder.getStore();
+    if (!store.isConnected()) {
+      store=getStore();
+    }
+    folder=store.getFolder(folder.getFullName());
     try {
-      folder.open(Folder.READ_ONLY);
+      folder.open(Folder.READ_WRITE);
     }
  catch (    MessagingException me2) {
       _log.error("Skipping folder " + folder.getFullName() + " for email address "+ _mailAccount.getEmailAddress(),me2);
