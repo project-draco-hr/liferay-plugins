@@ -1,0 +1,33 @@
+{
+  if (connection == null) {
+    if (isMySQL == null) {
+      String db=getProperty("DB");
+      if (db != null && db.equals("MySQL")) {
+        setIsMySQL(true);
+        System.out.println("IsMYSQ:" + isMySQL);
+      }
+    }
+    try {
+      Context initialContext=new InitialContext();
+      if (initialContext == null) {
+        System.out.println("JNDI problem. Cannot get InitialContext.");
+      }
+      DataSource datasource=(DataSource)initialContext.lookup("jdbc/LiferayPool");
+      if (datasource != null) {
+        connection=datasource.getConnection();
+      }
+ else {
+        System.out.println("Failed to lookup datasource.");
+      }
+    }
+ catch (    NamingException ex) {
+      System.out.println("Cannot get connection: " + ex);
+    }
+catch (    SQLException ex) {
+      System.out.println("Cannot get connection: " + ex);
+    }
+    createTables();
+  }
+  System.out.println("Conenction........" + connection);
+  return connection;
+}

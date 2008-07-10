@@ -1,0 +1,31 @@
+{
+  try {
+    if (connection == null) {
+      connection=getConnection();
+    }
+    PreparedStatement preparedStn=connection.prepareStatement(MYSQL_INSERT_REPORT_QUERY);
+    preparedStn.setString(1,report.getEmployeeId());
+    preparedStn.setString(2,report.getAmount());
+    preparedStn.setString(3,report.getStatus());
+    preparedStn.setString(4,report.getSubmissionDate());
+    preparedStn.setString(5,report.getReportDesc());
+    String reportId=null;
+    if (preparedStn.executeUpdate() == 1) {
+      Statement stn=connection.createStatement();
+      ResultSet result=stn.executeQuery(MYSQL_GET_REPORT_ID_QUERY);
+      if (result != null && result.next()) {
+        reportId=result.getString("report_id");
+      }
+    }
+    return reportId;
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+}

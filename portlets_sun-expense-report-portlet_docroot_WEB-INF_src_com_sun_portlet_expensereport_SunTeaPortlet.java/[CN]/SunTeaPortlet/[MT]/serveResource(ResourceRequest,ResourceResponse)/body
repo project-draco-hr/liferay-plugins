@@ -1,0 +1,17 @@
+{
+  System.out.println("serveresource called - changed");
+  String reportNumber=request.getParameter("reportNumber");
+  String action=request.getParameter("action");
+  System.out.println("Action in serveResource " + action);
+  if ("viewReport".equals(action)) {
+    String responseStr;
+    try {
+      responseStr=handler.getReportDetailsForReportId(reportNumber,request);
+    }
+ catch (    DBException ex) {
+      throw new PortletException(ex.getMessage());
+    }
+    response.setContentType("application/xml");
+    response.getWriter().write(responseStr);
+  }
+}

@@ -1,0 +1,38 @@
+{
+  String reportId=null;
+  Employee empBean=(Employee)request.getPortletSession().getAttribute(EMP_DETAILS_BEAN);
+  String userId=empBean.getId();
+  String[] itemAmounts=request.getParameterValues("itemAmount");
+  String[] itemPurposes=request.getParameterValues("itemPurpose");
+  int noOfItems=0;
+  if (itemPurposes != null) {
+    noOfItems=itemPurposes.length;
+  }
+  String reportDesc=request.getParameter("reportDesc");
+  String[] fromDate=request.getParameterValues("startDate");
+  Calendar currentTime=Calendar.getInstance();
+  String submissionDate=currentTime.get(Calendar.MONTH) + "-" + currentTime.get(Calendar.DATE)+ "-"+ currentTime.get(Calendar.YEAR);
+  String status=request.getParameter("status");
+  Report reportBean=new Report();
+  Double reportAmount=0.0d;
+  List<Item> itemList=new ArrayList<Item>();
+  for (int i=0; i < noOfItems; i++) {
+    Item item=new Item();
+    item.setStartDate(fromDate[i]);
+    item.setItemPurpose(itemPurposes[i]);
+    item.setItemAmount(itemAmounts[i]);
+    if (itemAmounts[i] != null && !itemAmounts[i].equals("")) {
+      double fItemAmount=Double.parseDouble(itemAmounts[i]);
+      reportAmount+=fItemAmount;
+    }
+    itemList.add(item);
+  }
+  reportBean.setEmployeeId(userId);
+  reportBean.setAmount(String.valueOf(reportAmount));
+  reportBean.setReportDesc(reportDesc);
+  reportBean.setSubmissionDate(submissionDate);
+  reportBean.setStatus(status);
+  reportId=dbHelper.createReportRecord(reportBean);
+  dbHelper.createItemsForReport(itemList,reportId);
+  return reportId;
+}

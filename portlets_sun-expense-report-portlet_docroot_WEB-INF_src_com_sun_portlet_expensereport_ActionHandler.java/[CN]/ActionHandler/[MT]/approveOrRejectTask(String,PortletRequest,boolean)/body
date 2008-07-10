@@ -1,0 +1,28 @@
+{
+  PortletSession session=request.getPortletSession();
+  List<TaskVO> pendingTasks=(List<TaskVO>)session.getAttribute(PENDING_TASKS);
+  if (pendingTasks == null) {
+    pendingTasks=wfHelper.getPendingTasks(USER_ROLE_MANAGER);
+  }
+  Iterator taskIterator=pendingTasks.iterator();
+  for (; taskIterator.hasNext(); ) {
+    TaskVO task=(TaskVO)taskIterator.next();
+    if (reportNumber.equals(task.getFlexString6())) {
+      wfHelper.checkOutTask(USER_ROLE_MANAGER,task);
+      Map customAttrMap=new HashMap();
+      String output=null;
+      if (approve) {
+        customAttrMap.put("FLEX_STRING8","Approved");
+        output="Approved";
+      }
+ else {
+        customAttrMap.put("FLEX_STRING8","Rejected");
+        output="Rejected";
+      }
+      wfHelper.saveTask(USER_ROLE_MANAGER,task,output,customAttrMap);
+      wfHelper.completeTasks(USER_ROLE_MANAGER,task);
+      taskIterator.remove();
+    }
+  }
+  session.setAttribute(PENDING_TASKS,pendingTasks);
+}
