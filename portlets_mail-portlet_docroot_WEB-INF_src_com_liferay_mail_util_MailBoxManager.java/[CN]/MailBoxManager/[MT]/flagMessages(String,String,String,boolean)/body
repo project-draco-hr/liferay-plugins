@@ -1,11 +1,9 @@
 {
-  IMAPFolder folder=(IMAPFolder)openFolder(folderName);
+  Folder folder=getFolder(folderName);
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
-  if (!folder.isOpen()) {
-    folder.open(Folder.READ_WRITE);
-  }
   for (  long messageUid : messageUidsArray) {
     try {
+      folder=openFolder(folder);
       Message message=getMessageByUid(folder,messageUid);
       if (flag.equals("answered")) {
         message.setFlag(Flags.Flag.ANSWERED,value);

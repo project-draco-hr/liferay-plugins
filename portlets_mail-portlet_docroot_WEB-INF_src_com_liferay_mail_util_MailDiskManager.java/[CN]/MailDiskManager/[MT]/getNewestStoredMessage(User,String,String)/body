@@ -5,13 +5,14 @@
     return null;
   }
   MailBoxManager mailBoxManager=new MailBoxManager(user,emailAddress);
-  IMAPFolder folder=(IMAPFolder)mailBoxManager.openFolder(folderName);
+  Folder folder=mailBoxManager.getFolder(folderName);
   for (int i=messageUids.length - 1; i >= 0; i--) {
     long messageUid=GetterUtil.getLong(messageUids[i]);
     if (messageUid == -1) {
       break;
     }
-    Message message=folder.getMessageByUID(messageUid);
+    folder=mailBoxManager.openFolder(folder);
+    Message message=((IMAPFolder)folder).getMessageByUID(messageUid);
     if (Validator.isNull(message)) {
       mailBoxManager.deleteMessage(folder,messageUid,false);
     }
