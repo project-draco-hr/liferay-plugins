@@ -1,15 +1,19 @@
 {
   Properties props=new Properties();
-  props.put("mail.smtp.host",mailAccount.getMailOutHostName());
-  props.put("mail.smtp.port",mailAccount.getMailOutPort());
   if (mailAccount.isMailSecure()) {
-    props.put("mail.smtp.socketFactory.port",mailAccount.getMailOutPort());
-    props.put("mail.smtp.socketFactory.class",_SSL_FACTORY);
-    props.put("mail.smtp.socketFactory.fallback","false");
-    props.put("mail.smtp.auth","true");
+    props.put("mail.smtps.auth","true");
+    props.put("mail.smtp.host",mailAccount.getMailOutHostName());
+    props.put("mail.smtps.port",mailAccount.getMailOutPort());
+    props.put("mail.smtps.socketFactory.port",mailAccount.getMailOutPort());
+    props.put("mail.smtps.socketFactory.class",_SSL_FACTORY);
+    props.put("mail.smtps.socketFactory.fallback","false");
   }
-  props.put("mail.debug","true");
-  Session session=Session.getDefaultInstance(props,null);
-  session.setDebug(true);
+ else {
+    props.put("mail.smtp.host",mailAccount.getMailOutHostName());
+    props.put("mail.smtp.port",mailAccount.getMailOutPort());
+  }
+  props.put("mail.debug","false");
+  Session session=Session.getInstance(props,null);
+  session.setDebug(false);
   return session;
 }

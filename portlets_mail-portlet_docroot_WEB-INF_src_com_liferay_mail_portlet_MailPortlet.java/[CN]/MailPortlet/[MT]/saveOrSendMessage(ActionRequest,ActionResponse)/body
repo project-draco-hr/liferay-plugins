@@ -12,11 +12,16 @@
   String body=ParamUtil.getString(uploadReq,"sendBody");
   boolean sendMessage=ParamUtil.getBoolean(uploadReq,"sendMessage");
   Message message=mailBoxManager.createMessage(from,to,cc,bcc,subject,body,null);
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   if (sendMessage) {
     MailAccount fromMailAccount=new MailAccount(PortalUtil.getUser(uploadReq),from);
-    mailBoxManager.sendMessage(fromMailAccount,message);
+    jsonObj=mailBoxManager.sendMessage(fromMailAccount,message);
   }
  else {
-    mailBoxManager.saveMessage(message,oldDraftMessageUid);
+    jsonObj=mailBoxManager.saveMessage(message,oldDraftMessageUid);
   }
+  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  String url=PortalUtil.getLayoutURL(themeDisplay) + "/-/mail/message_result?" + jsonObj.toString();
+  String redirect=ParamUtil.getString(uploadReq,"redirect");
+  res.sendRedirect(redirect);
 }

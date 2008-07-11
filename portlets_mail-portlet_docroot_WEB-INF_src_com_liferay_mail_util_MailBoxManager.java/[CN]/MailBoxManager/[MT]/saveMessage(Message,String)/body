@@ -1,4 +1,5 @@
 {
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   Folder draftsFolder=getDraftsFolder();
   long newDraftMessageUid=((IMAPFolder)draftsFolder).getUIDNext();
   draftsFolder.appendMessages(new Message[]{message});
@@ -6,5 +7,7 @@
   if (Validator.isNotNull(oldDraftMessageUid)) {
     deleteMessage(draftsFolder,GetterUtil.getLong(oldDraftMessageUid),true);
   }
-  return newDraftMessageUid;
+  jsonObj.put("success",true);
+  jsonObj.put("draftMessageUid",newDraftMessageUid);
+  return jsonObj;
 }

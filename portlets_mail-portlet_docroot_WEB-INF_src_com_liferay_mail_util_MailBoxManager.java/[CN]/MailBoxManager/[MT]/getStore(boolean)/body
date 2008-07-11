@@ -1,9 +1,12 @@
 {
-  if (Validator.isNull(_allStores)) {
-    _allStores=new ConcurrentHashMap<String,Store>();
-  }
+  Store store=null;
   String key=_user.getUserId() + "." + _mailAccount.getEmailAddress();
-  Store store=(Store)_allStores.get(key);
+  if (useOldStores) {
+    if (Validator.isNull(_allStores)) {
+      _allStores=new ConcurrentHashMap<String,Store>();
+    }
+    store=(Store)_allStores.get(key);
+  }
   if (Validator.isNotNull(store) && !store.isConnected()) {
     store.close();
     store=null;
@@ -25,7 +28,9 @@
       store=new IMAPStore(session,url);
     }
     store.connect();
-    _allStores.put(key,store);
+    if (useOldStores) {
+      _allStores.put(key,store);
+    }
   }
   return store;
 }

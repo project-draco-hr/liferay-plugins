@@ -1,4 +1,5 @@
 {
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   Transport transport=null;
   try {
     Session session=getOutgoingSession(fromMailAccount);
@@ -10,8 +11,11 @@
     }
     transport.connect(fromMailAccount.getMailOutHostName(),fromMailAccount.getUsername(),fromMailAccount.getPassword());
     transport.sendMessage(message,message.getAllRecipients());
+    jsonObj.put("success",true);
   }
  catch (  MessagingException me) {
     _log.error(me,me);
+    jsonObj.put("success",false);
   }
+  return jsonObj;
 }

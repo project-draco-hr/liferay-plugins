@@ -1,0 +1,24 @@
+{
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  Folder folder=null;
+  try {
+    folder=getStore(false).getDefaultFolder();
+    if (Validator.isNotNull(folder) && Validator.isNotNull(folder.list())) {
+      jsonObj.put("incoming",true);
+    }
+ else {
+      jsonObj.put("incoming",false);
+    }
+  }
+ catch (  MessagingException me) {
+    jsonObj.put("incoming",false);
+  }
+  try {
+    JSONObject outgoing=sendMessage(_mailAccount,createTestMessage());
+    jsonObj.put("outgoing",outgoing.getBoolean("success"));
+  }
+ catch (  MessagingException me) {
+    jsonObj.put("outgoing",false);
+  }
+  return jsonObj;
+}
