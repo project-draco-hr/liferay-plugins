@@ -1,13 +1,15 @@
 {
-  if (!folder.isOpen()) {
-    folder.open(Folder.READ_WRITE);
-  }
-  Message message=getMessageByUid(folder,messageUid);
-  if (Validator.isNotNull(message)) {
-    message.setFlag(Flags.Flag.DELETED,true);
-    if (expunge) {
-      folder.close(true);
+  try {
+    Message message=getMessageByUid(folder,messageUid);
+    if (Validator.isNotNull(message)) {
+      message.setFlag(Flags.Flag.DELETED,true);
+      if (expunge) {
+        folder.close(true);
+      }
     }
+  }
+ catch (  MessagingException me) {
+    _log.error(me,me);
   }
   String messagePath=MailDiskManager.getMessagePath(_user,_mailAccount.getEmailAddress(),folder.getFullName(),messageUid);
   FileUtil.deltree(messagePath);

@@ -1,9 +1,10 @@
 {
   StringBuilder sb=new StringBuilder();
-  if (Validator.isNotNull(addresses)) {
-    for (    InternetAddress address : (InternetAddress[])addresses) {
-      sb.append(address.getAddress() + StringPool.COMMA);
-    }
+  if (Validator.isNull(addresses)) {
+    return StringPool.BLANK;
   }
-  return sb.toString();
+  for (  InternetAddress address : (InternetAddress[])addresses) {
+    sb.append(address.getAddress() + StringPool.COMMA + StringPool.SPACE);
+  }
+  return sb.substring(0,sb.length() - 2);
 }

@@ -1,0 +1,10 @@
+{
+  Folder draftsFolder=getDraftsFolder();
+  long newDraftMessageUid=((IMAPFolder)draftsFolder).getUIDNext();
+  draftsFolder.appendMessages(new Message[]{message});
+  storeMessageToDisk(getMessageByUid(draftsFolder,newDraftMessageUid));
+  if (Validator.isNotNull(oldDraftMessageUid)) {
+    deleteMessage(draftsFolder,GetterUtil.getLong(oldDraftMessageUid),true);
+  }
+  return newDraftMessageUid;
+}

@@ -1,5 +1,8 @@
 {
   String accountFilePath=getAccountFilePath(user,emailAddress);
+  if (Validator.isNull(user) || Validator.isNull(emailAddress)) {
+    return null;
+  }
   try {
     if (FileUtil.exists(accountFilePath)) {
       return JSONFactoryUtil.createJSONObject(FileUtil.read(accountFilePath));
