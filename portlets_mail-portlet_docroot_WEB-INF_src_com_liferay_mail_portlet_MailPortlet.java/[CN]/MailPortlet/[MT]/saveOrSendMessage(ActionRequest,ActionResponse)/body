@@ -11,7 +11,7 @@
   File attachments=uploadReq.getFile("sendAttachments");
   String body=ParamUtil.getString(uploadReq,"sendBody");
   boolean sendMessage=ParamUtil.getBoolean(uploadReq,"sendMessage");
-  Message message=mailBoxManager.createMessage(from,to,cc,bcc,subject,body,null);
+  Message message=mailBoxManager.createMessage(from,to,cc,bcc,subject,body,new File[]{attachments});
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   if (sendMessage) {
     MailAccount fromMailAccount=new MailAccount(PortalUtil.getUser(uploadReq),from);
