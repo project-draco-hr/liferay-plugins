@@ -1,5 +1,5 @@
 {
-  UploadPortletRequest uploadReq=PortalUtil.getUploadPortletRequest(req);
+  UploadPortletRequest uploadReq=PortalUtil.getUploadPortletRequest(actionRequest);
   String emailAddress=ParamUtil.getString(uploadReq,"sendEmailAddress");
   MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(uploadReq),emailAddress);
   String oldDraftMessageUid=ParamUtil.getString(uploadReq,"sendDraftMessageUid");
@@ -20,8 +20,8 @@
  else {
     jsonObj=mailBoxManager.saveMessage(message,oldDraftMessageUid);
   }
-  ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+  ThemeDisplay themeDisplay=(ThemeDisplay)uploadReq.getAttribute(WebKeys.THEME_DISPLAY);
   String url=PortalUtil.getLayoutURL(themeDisplay) + "/-/mail/message_result?" + jsonObj.toString();
   String redirect=ParamUtil.getString(uploadReq,"redirect");
-  res.sendRedirect(redirect);
+  actionResponse.sendRedirect(redirect);
 }

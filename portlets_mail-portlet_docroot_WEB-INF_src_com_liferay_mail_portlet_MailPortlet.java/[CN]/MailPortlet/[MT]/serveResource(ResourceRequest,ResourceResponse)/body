@@ -1,19 +1,19 @@
 {
-  String jspPage=req.getParameter("jspPage");
+  String jspPage=resourceRequest.getParameter("jspPage");
   if (jspPage.equals("/attachment.jsp")) {
-    HttpServletRequest httpReq=PortalUtil.getHttpServletRequest(req);
-    String emailAddress=ParamUtil.getString(req,"emailAddress");
-    String folderName=ParamUtil.getString(req,"folderName");
-    int messageUid=ParamUtil.getInteger(req,"messageUid");
-    String fileName=ParamUtil.getString(req,"fileName");
-    String contentPath=ParamUtil.getString(req,"contentPath");
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+    String emailAddress=ParamUtil.getString(resourceRequest,"emailAddress");
+    String folderName=ParamUtil.getString(resourceRequest,"folderName");
+    int messageUid=ParamUtil.getInteger(resourceRequest,"messageUid");
+    String fileName=ParamUtil.getString(resourceRequest,"fileName");
+    String contentPath=ParamUtil.getString(resourceRequest,"contentPath");
     try {
-      MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(httpReq),emailAddress);
+      MailBoxManager mailBoxManager=new MailBoxManager(PortalUtil.getUser(request),emailAddress);
       Part messagePart=mailBoxManager.getAttachment(folderName,messageUid,contentPath);
       if (Validator.isNotNull(messagePart)) {
         InputStream is=messagePart.getInputStream();
         String contentType=MimeTypesUtil.getContentType(fileName);
-        PortletResponseUtil.sendFile(res,fileName,is,contentType);
+        PortletResponseUtil.sendFile(resourceResponse,fileName,is,contentType);
       }
     }
  catch (    MessagingException me) {
@@ -24,6 +24,6 @@ catch (    SystemException se) {
     }
   }
  else {
-    super.serveResource(req,res);
+    super.serveResource(resourceRequest,resourceResponse);
   }
 }
