@@ -1,0 +1,17 @@
+{
+  StringBuffer responseStr=new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?><Report>");
+  responseStr.append("<ReportId>" + reportId + "</ReportId>");
+  Report reportDetails=dbHelper.getReportDetailsforReport(reportId);
+  Employee empDetails=getEmployeeDetails(reportDetails.getEmployeeId());
+  responseStr.append("<EmployeeName>" + empDetails.getName() + "</EmployeeName>");
+  responseStr.append("<EmployeeId>" + empDetails.getSunId() + "</EmployeeId>");
+  responseStr.append("<Description>" + reportDetails.getReportDesc() + "</Description>");
+  responseStr.append("<ManagerName>" + empDetails.getManagerId() + "</ManagerName>");
+  responseStr.append("<SubmissionDate>" + reportDetails.getSubmissionDate() + "</SubmissionDate>");
+  responseStr.append("<Status>" + reportDetails.getStatus() + "</Status>");
+  responseStr.append("<Amount>" + reportDetails.getAmount() + "</Amount>");
+  responseStr.append(getItemsForReportXML(reportDetails));
+  responseStr.append("</Report>");
+  System.out.println("responseStr:::::::::::::::::;" + responseStr);
+  return responseStr.toString();
+}

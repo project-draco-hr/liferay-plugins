@@ -1,0 +1,20 @@
+{
+  try {
+    if (connection == null) {
+      connection=getConnection();
+    }
+    PreparedStatement preparedStn=connection.prepareStatement(MYSQL_SET_REPORT_STATUS);
+    preparedStn.setString(1,status);
+    preparedStn.setInt(2,reportNumber);
+    preparedStn.executeUpdate();
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+}

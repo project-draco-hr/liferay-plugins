@@ -1,0 +1,31 @@
+{
+  try {
+    if (connection == null) {
+      connection=getConnection();
+    }
+    for (    Item item : itemList) {
+      PreparedStatement preparedStn=null;
+      if (_isMySQL) {
+        preparedStn=connection.prepareStatement(MYSQL_INSERT_ITEM_QUERY);
+      }
+ else {
+        preparedStn=connection.prepareStatement(HSQL_INSERT_ITEM_QUERY);
+      }
+      preparedStn.setString(1,item.getItemPurpose());
+      preparedStn.setString(2,item.getStartDate());
+      preparedStn.setString(3,"");
+      preparedStn.setString(4,reportId);
+      preparedStn.setString(5,item.getItemAmount());
+      preparedStn.executeUpdate();
+    }
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+}

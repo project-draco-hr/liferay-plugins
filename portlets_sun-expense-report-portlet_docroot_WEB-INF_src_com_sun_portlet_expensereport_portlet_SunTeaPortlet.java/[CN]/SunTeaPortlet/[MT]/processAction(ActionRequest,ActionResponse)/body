@@ -1,0 +1,83 @@
+{
+  try {
+    getPortletContext().log("processAction called");
+    String action=request.getParameter("action");
+    String reportNumber=request.getParameter("reportNumber");
+    String isWFEnabled=request.getPreferences().getValue(IS_WF_ENABLED,"false");
+    boolean bnIsWFEnabled="true".equals(isWFEnabled);
+    if ("createReport".equals(action)) {
+      try {
+        response.setRenderParameter(VIEW_PAGE,"/WEB-INF/jsp/expense-report/ReportResult.jsp");
+        String reportId=handler.createReport(request);
+        if (bnIsWFEnabled && "Pending".equals(request.getParameter("status"))) {
+          handler.submitReportToJCAPS(request,reportId);
+        }
+        if (reportId != null) {
+          response.setRenderParameter("ReportID",reportId);
+          response.setRenderParameter("result","success");
+        }
+ else {
+          response.setRenderParameter("result","failure");
+        }
+        getPortletContext().log("Report ID " + reportId);
+      }
+ catch (      DBException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+    }
+ else     if ("submitReport".equals(action)) {
+      System.out.println("submitReport");
+      try {
+        handler.changeReportStatus("Pending",reportNumber);
+        if (bnIsWFEnabled) {
+          handler.submitReportToJCAPS(request,reportNumber);
+        }
+        response.setRenderParameter(VIEW_PAGE,"/WEB-INF/jsp/expense-report/ViewSummary.jsp");
+      }
+ catch (      DBException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+    }
+ else     if ("approveReport".equals(action)) {
+      try {
+        handler.changeReportStatus("Approved",reportNumber);
+        if (bnIsWFEnabled) {
+          handler.approveOrRejectTask(reportNumber,request,true);
+        }
+        response.setRenderParameter(VIEW_PAGE,"/WEB-INF/jsp/expense-report/ViewSummary.jsp");
+      }
+ catch (      DBException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+catch (      WorkflowException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+    }
+ else     if ("rejectReport".equals(action)) {
+      try {
+        handler.changeReportStatus("Rejected",reportNumber);
+        response.setRenderParameter(VIEW_PAGE,"/WEB-INF/jsp/expense-report/ViewSummary.jsp");
+        if (bnIsWFEnabled) {
+          handler.approveOrRejectTask(reportNumber,request,true);
+        }
+      }
+ catch (      DBException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+catch (      WorkflowException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+    }
+ else     if ("setWFPreference".equals(action)) {
+      String WFEnabled=request.getParameter("WFEnabled");
+      System.out.print("WFEnabled from request......." + WFEnabled);
+      request.getPreferences().setValue(IS_WF_ENABLED,WFEnabled);
+      request.getPreferences().store();
+      response.setPortletMode(PortletMode.VIEW);
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    response.setRenderParameter(VIEW_PAGE,"/WEB-INF/jsp/expense-report/ErrorPage.jsp");
+  }
+}

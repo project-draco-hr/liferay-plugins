@@ -1,0 +1,52 @@
+{
+  try {
+    if (connection == null) {
+      connection=getConnection();
+    }
+    PreparedStatement preparedStn=connection.prepareStatement(MYSQL_GET_REPORT_DETAILS_FOR_REPORT);
+    preparedStn.setInt(1,Integer.parseInt(reportId));
+    ResultSet result=preparedStn.executeQuery();
+    Report report=null;
+    if (result != null && result.next()) {
+      report=new Report();
+      String amount=result.getString("AMOUNT");
+      String reportDesc=result.getString("REP_DESC");
+      String submissionDate=result.getString("SUBMISSION_DATE");
+      String status=result.getString("REP_STATUS");
+      String empId=result.getString("EMP_ID");
+      PreparedStatement preparedStnItem=connection.prepareStatement(MYSQL_GET_ITEM_DETAILS_FOR_REPORT);
+      preparedStnItem.setInt(1,Integer.parseInt(reportId));
+      ResultSet itemResults=preparedStnItem.executeQuery();
+      List<Item> itemsList=null;
+      if (itemResults != null) {
+        itemsList=new ArrayList<Item>();
+        while (itemResults.next()) {
+          Item item=new Item();
+          item.setItemId(itemResults.getString("ITEM_ID"));
+          item.setEndDate(itemResults.getString("END_DATE"));
+          item.setStartDate(itemResults.getString("START_DATE"));
+          item.setItemAmount(itemResults.getString("ITEM_AMOUNT"));
+          item.setItemPurpose(itemResults.getString("ITEM_PURPOSE"));
+          itemsList.add(item);
+        }
+      }
+      report.setReportId(reportId);
+      report.setAmount(amount);
+      report.setEmployeeId(empId);
+      report.setReportDesc(reportDesc);
+      report.setStatus(status);
+      report.setSubmissionDate(submissionDate);
+      report.setItems(itemsList);
+    }
+    return report;
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+}
