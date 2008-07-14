@@ -18,6 +18,9 @@
   multipart.addBodyPart(messageBodyPart);
   if (Validator.isNotNull(files)) {
     for (    File file : files) {
+      if (!file.exists()) {
+        continue;
+      }
       String fileName=file.getName();
       DataSource dataSource=new FileDataSource(file);
       BodyPart messageAttachmentPart=new MimeBodyPart();
