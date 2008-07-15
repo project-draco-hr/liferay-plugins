@@ -1,0 +1,28 @@
+{
+  String managerId="";
+  try {
+    connection=getConnection();
+    PreparedStatement preparedStn=null;
+    if (_isMySQL) {
+      preparedStn=connection.prepareStatement(MYSQL_GET_MANAGER_FOR_EMP);
+    }
+ else {
+      preparedStn=connection.prepareStatement(HSQL_GET_MANAGER_FOR_EMP);
+    }
+    preparedStn.setString(1,empId);
+    ResultSet result=preparedStn.executeQuery();
+    if (result != null && result.next()) {
+      managerId=result.getString(1);
+    }
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+  return managerId;
+}

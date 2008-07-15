@@ -1,0 +1,92 @@
+{
+  try {
+    getPortletContext().log("doView called");
+    PortletRequestDispatcher dispatcher=null;
+    response.setContentType("text/html");
+    String user=(String)request.getPortletSession().getAttribute(ActionHandler.USER_ID);
+    if (user == null) {
+      String userId=request.getRemoteUser();
+      System.out.println("user id:::::::::::::" + userId);
+      String jobTitle="";
+      if (userId != null) {
+        try {
+          User userObj=UserServiceUtil.getUserById(Long.parseLong(userId));
+          System.out.println("job title....." + userObj.getContact().getJobTitle());
+          jobTitle=userObj.getContact().getJobTitle();
+          if (userObj != null) {
+            user=userObj.getScreenName();
+            System.out.println("user . screenName = " + user);
+          }
+        }
+ catch (        RemoteException ex) {
+          Logger.getLogger(SunTeaPortlet.class.getName()).log(Level.SEVERE,null,ex);
+          throw new PortletException(ex.getMessage());
+        }
+        request.getPortletSession().setAttribute(ActionHandler.USER_ID,user);
+        request.getPortletSession().setAttribute(ActionHandler.JOB_TITLE,jobTitle);
+      }
+    }
+    Employee empBean=(Employee)request.getPortletSession().getAttribute(ActionHandler.EMP_DETAILS_BEAN);
+    boolean anonymousUser=false;
+    if (empBean == null && user != null) {
+      try {
+        empBean=handler.getEmployeeDetails(user);
+      }
+ catch (      DBException ex) {
+        throw new PortletException(ex.getMessage());
+      }
+      if (empBean == null) {
+        anonymousUser=true;
+      }
+      request.getPortletSession().setAttribute(ActionHandler.EMP_DETAILS_BEAN,empBean);
+    }
+ else     if (user == null) {
+      anonymousUser=true;
+    }
+    String userName=(String)request.getPortletSession().getAttribute(ActionHandler.USER_NAME);
+    if (userName == null) {
+      userName=(empBean != null) ? empBean.getName() : null;
+      request.getPortletSession().setAttribute(ActionHandler.USER_NAME,userName);
+    }
+    String viewPage=request.getParameter(VIEW_PAGE);
+    if (viewPage == null) {
+      if (anonymousUser) {
+        viewPage="/WEB-INF/jsp/expense-report/AnonymousUser.jsp";
+      }
+ else {
+        if ("createReport".equals(request.getParameter("action"))) {
+          getPortletContext().log("create report");
+          viewPage="/WEB-INF/jsp/expense-report/" + "CreateReport.jsp";
+        }
+ else {
+          String isWFEnabled=request.getPreferences().getValue(IS_WF_ENABLED,null);
+          if (isWFEnabled != null) {
+            getPortletContext().log("view summary");
+            viewPage="/WEB-INF/jsp/expense-report/" + "ViewSummary.jsp";
+            String jobTitle=(String)request.getPortletSession().getAttribute(ActionHandler.JOB_TITLE);
+            if (jobTitle.equalsIgnoreCase("Manager")) {
+              request.getPortletSession().setAttribute("Role","Manager");
+            }
+ else {
+              request.getPortletSession().setAttribute("Role","Employee");
+            }
+          }
+ else {
+            viewPage="/WEB-INF/jsp/expense-report/" + "Welcome.jsp";
+          }
+        }
+      }
+    }
+ else     if ("/WEB-INF/jsp/expense-report/ReportResult.jsp".equals(viewPage)) {
+      request.setAttribute("ReportID",request.getParameter("ReportID"));
+      request.setAttribute("result",request.getParameter("result"));
+    }
+    dispatcher=getPortletContext().getRequestDispatcher(viewPage);
+    dispatcher.include(request,response);
+  }
+ catch (  Exception e) {
+    PortletRequestDispatcher dispatcher=getPortletContext().getRequestDispatcher("/WEB-INF/jsp/expense-report/" + "ErrorPage.jsp");
+    e.printStackTrace();
+    dispatcher.include(request,response);
+  }
+}

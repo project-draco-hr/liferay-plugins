@@ -1,0 +1,41 @@
+{
+  try {
+    if (connection == null) {
+      connection=getConnection();
+    }
+    PreparedStatement preparedStn=connection.prepareStatement(MYSQL_GET_REPORTS_FOR_APPOVAL_BY_MGR);
+    preparedStn.setString(1,managerId);
+    List<Report> reportList=null;
+    ResultSet result=preparedStn.executeQuery();
+    if (result != null) {
+      reportList=new ArrayList<Report>();
+      while (result.next()) {
+        Integer reportId=result.getInt("REPORT_ID");
+        String amount=result.getString("AMOUNT");
+        String reportDesc=result.getString("REP_DESC");
+        String submissionDate=result.getString("SUBMISSION_DATE");
+        String status=result.getString("REP_STATUS");
+        String empName=result.getString("EMP_NAME");
+        Report report=new Report();
+        report.setReportId(reportId != null ? reportId.toString() : null);
+        report.setId(reportId != null ? reportId.toString() : null);
+        report.setAmount(amount);
+        report.setReportDesc(reportDesc);
+        report.setStatus(status);
+        report.setSubmissionDate(submissionDate);
+        report.setEmployeeName(empName);
+        reportList.add(report);
+      }
+    }
+    return reportList;
+  }
+ catch (  SQLException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  ClassNotFoundException e) {
+    throw new DBException(e.getMessage());
+  }
+catch (  IOException e) {
+    throw new DBException(e.getMessage());
+  }
+}

@@ -1,0 +1,31 @@
+{
+  try {
+    if (webserviceProperties == null) {
+      loadProperties();
+    }
+    String url=webserviceProperties.getProperty("WSDL_URL");
+    String qName=webserviceProperties.getProperty("QNAME");
+    String serviceName=webserviceProperties.getProperty("SERVICE_NAME");
+    URL wsdlLocation=new URL(url);
+    WsSunTeaService service=new WsSunTeaService(wsdlLocation,new QName(qName,serviceName));
+    PortType port=service.getPortTypeBndPort();
+    Employee empBean=(Employee)request.getPortletSession().getAttribute(EMP_DETAILS_BEAN);
+    String empID=empBean.getId();
+    double amount=0.0d;
+    String purpose="";
+    String notes="";
+    String fromDate="";
+    String toDate="";
+    String submissionDate="";
+    String status="Pending";
+    String empName=empBean.getName();
+    String reportID=reportId;
+    String role=USER_ROLE_MANAGER;
+    System.out.println("Before calling WS");
+    port.submitReport(empName,amount,empID,purpose,fromDate,toDate,reportID,role,submissionDate,status);
+    System.out.println("After calling WS");
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
