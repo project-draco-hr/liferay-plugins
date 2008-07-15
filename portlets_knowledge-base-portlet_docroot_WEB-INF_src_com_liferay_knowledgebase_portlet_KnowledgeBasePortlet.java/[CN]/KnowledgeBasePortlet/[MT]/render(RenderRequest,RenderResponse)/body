@@ -2,13 +2,7 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String title=ParamUtil.getString(renderRequest,"title");
   try {
-    WikiNode node=null;
-    try {
-      node=WikiNodeServiceUtil.getNode(themeDisplay.getPortletGroupId(),_KB_NODE);
-    }
- catch (    NoSuchNodeException e) {
-      node=WikiNodeServiceUtil.addNode(themeDisplay.getPlid(),_KB_NODE,_KB_NODE,true,true);
-    }
+    WikiNode node=getNode(themeDisplay);
     renderRequest.setAttribute(KnowledgeBaseKeys.WIKI_NODE,node);
     WikiPage page=null;
     if (Validator.isNotNull(title)) {

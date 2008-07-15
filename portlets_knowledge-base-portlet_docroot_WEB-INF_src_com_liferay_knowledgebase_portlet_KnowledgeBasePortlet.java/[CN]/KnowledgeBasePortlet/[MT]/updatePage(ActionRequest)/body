@@ -1,7 +1,7 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   PortletPreferences prefs=actionRequest.getPreferences();
-  long nodeId=ParamUtil.getLong(actionRequest,"nodeId");
+  WikiNode node=getNode(themeDisplay);
   String title=ParamUtil.getString(actionRequest,"title");
   double version=ParamUtil.getDouble(actionRequest,"version");
   String content=ParamUtil.getString(actionRequest,"content");
@@ -11,5 +11,5 @@
   String parentTitle=ParamUtil.getString(actionRequest,"parentTitle");
   String redirectTitle=null;
   String[] tagsEntries=StringUtil.split(ParamUtil.getString(actionRequest,"tagsEntries"));
-  return WikiPageServiceUtil.updatePage(nodeId,title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,tagsEntries,prefs,themeDisplay);
+  return WikiPageServiceUtil.updatePage(node.getNodeId(),title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,tagsEntries,prefs,themeDisplay);
 }
