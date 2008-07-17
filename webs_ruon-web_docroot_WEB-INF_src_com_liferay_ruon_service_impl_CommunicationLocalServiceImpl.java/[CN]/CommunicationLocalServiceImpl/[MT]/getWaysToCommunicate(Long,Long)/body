@@ -1,0 +1,15 @@
+{
+  if (loggedInUserId.equals(new Long(0)) || !presenceLocalService.isUserOnline(userId) || userId.equals(loggedInUserId)) {
+    return "";
+  }
+  try {
+    PresenceUser pUser=presenceUserLocalService.getPresenceUser(userId);
+    if (pUser != null && _isChatPortletDeployed()) {
+      return ("<a onclick=\"Liferay.Chat.openChatWindow('" + userId + "');\" href=\"javascript: ;\">"+ "Chat"+ "</a>");
+    }
+    return "";
+  }
+ catch (  Exception e) {
+    throw new RUONException(e);
+  }
+}

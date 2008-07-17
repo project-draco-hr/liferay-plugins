@@ -1,0 +1,21 @@
+{
+  try {
+    PresenceUser pUser=presenceUserLocalService.getPresenceUser(userId);
+    pUser.setPresenceStatus(status);
+    presenceUserLocalService.updatePresenceUser(pUser);
+  }
+ catch (  NoSuchPresenceUserException e) {
+    PresenceUser pUserNew=new PresenceUserImpl();
+    pUserNew.setPresenceUserId(userId);
+    pUserNew.setPresenceStatus(status);
+    try {
+      presenceUserLocalService.addPresenceUser(pUserNew);
+    }
+ catch (    Exception se) {
+      throw new RUONException(se);
+    }
+  }
+catch (  Exception e) {
+    throw new RUONException(e);
+  }
+}
