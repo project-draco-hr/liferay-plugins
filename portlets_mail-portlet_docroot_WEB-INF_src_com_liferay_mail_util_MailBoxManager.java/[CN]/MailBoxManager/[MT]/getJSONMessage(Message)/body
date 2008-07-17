@@ -7,6 +7,7 @@
   StringBuilder sb=new StringBuilder();
   List<Object[]> attachments=new ArrayList<Object[]>();
   boolean seen=false;
+  openFolder(message.getFolder());
   if (message.isSet(Flags.Flag.SEEN)) {
     seen=true;
   }
@@ -22,7 +23,6 @@
   jsonObj.put("date",date);
   jsonObj.put("flags",jsonFlags);
   jsonObj.put("from",getAddresses(message.getFrom()));
-  jsonObj.put("html",false);
   jsonObj.put("messageNumber",message.getMessageNumber());
   jsonObj.put("subject",message.getSubject());
   jsonObj.put("uid",getMessageUid(message));

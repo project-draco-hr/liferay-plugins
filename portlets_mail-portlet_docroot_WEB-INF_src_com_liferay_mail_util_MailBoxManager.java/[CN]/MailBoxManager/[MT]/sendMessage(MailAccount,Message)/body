@@ -1,15 +1,7 @@
 {
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
-  Transport transport=null;
   try {
-    Session session=getOutgoingSession(fromMailAccount);
-    if (fromMailAccount.isMailSecure()) {
-      transport=session.getTransport("smtps");
-    }
- else {
-      transport=session.getTransport("smtp");
-    }
-    transport.connect(fromMailAccount.getMailOutHostName(),fromMailAccount.getUsername(),fromMailAccount.getPassword());
+    Transport transport=getConnectedTransport(fromMailAccount);
     transport.sendMessage(message,message.getAllRecipients());
     jsonObj.put("success",true);
   }

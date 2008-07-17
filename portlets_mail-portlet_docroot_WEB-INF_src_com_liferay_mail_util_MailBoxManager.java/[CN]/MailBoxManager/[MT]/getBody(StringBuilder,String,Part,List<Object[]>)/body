@@ -15,7 +15,8 @@
         if (sb.length() > 0) {
           sb.append(StringPool.NEW_LINE + StringPool.NEW_LINE);
         }
-        sb.append(messagePart.getContent());
+        String messageText=messagePart.getContent().toString();
+        sb.append(messageText.replaceAll("\r\n","<br />"));
       }
  else       if (contentType.startsWith(ContentTypes.TEXT_HTML)) {
         if (sb.length() > 0) {
@@ -37,6 +38,5 @@
   }
  catch (  Exception e) {
     sb.append("Error retrieving message content");
-    _log.error(e,e);
   }
 }

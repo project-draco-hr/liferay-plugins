@@ -14,8 +14,13 @@
     jsonObj.put("incoming",false);
   }
   try {
-    JSONObject outgoing=sendMessage(_mailAccount,createTestMessage());
-    jsonObj.put("outgoing",outgoing.getBoolean("success"));
+    Transport transport=getConnectedTransport(_mailAccount);
+    if (transport.isConnected()) {
+      jsonObj.put("outgoing",true);
+    }
+ else {
+      jsonObj.put("outgoing",false);
+    }
   }
  catch (  MessagingException me) {
     jsonObj.put("outgoing",false);
