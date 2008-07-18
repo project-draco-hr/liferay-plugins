@@ -1,0 +1,21 @@
+{
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  if (cmd.equals("exec")) {
+    ThemeDisplay themeDisplay=(ThemeDisplay)req.getAttribute(WebKeys.THEME_DISPLAY);
+    try {
+      PortletPermissionUtil.check(themeDisplay.getPermissionChecker(),getPortletName(),ActionKeys.CONFIGURATION);
+      res.setContentType(ContentTypes.TEXT_HTML);
+      String script=ParamUtil.getString(req,"script");
+      includeScript(script,req,res);
+    }
+ catch (    SystemException se) {
+      _log.warn("Error checking permissions",se);
+    }
+catch (    PortalException pe) {
+      _log.warn("Error checking permissions",pe);
+    }
+  }
+ else {
+    super.serveResource(req,res);
+  }
+}

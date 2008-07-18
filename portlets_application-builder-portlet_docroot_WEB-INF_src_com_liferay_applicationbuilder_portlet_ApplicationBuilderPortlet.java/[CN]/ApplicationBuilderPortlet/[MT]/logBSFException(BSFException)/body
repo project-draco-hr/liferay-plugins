@@ -1,0 +1,13 @@
+{
+  String message="The script has errors.";
+  Throwable t=bsfe.getTargetException();
+  if (t instanceof RaiseException) {
+    RubyException re=((RaiseException)t).getException();
+    message+=re.message + " (" + re.getMetaClass().toString()+ ")";
+    System.err.println(message);
+    System.err.println(t);
+  }
+ else {
+    System.err.println(message + "\n" + t);
+  }
+}

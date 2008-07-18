@@ -1,0 +1,19 @@
+{
+  try {
+    declareBeans(consoleInput,req,res);
+  }
+ catch (  BSFException bsfe) {
+    if (res instanceof MimeResponse) {
+      MimeResponse mimeRes=(MimeResponse)res;
+      mimeRes.setContentType(ContentTypes.TEXT_HTML_UTF8);
+      OutputStream out=mimeRes.getPortletOutputStream();
+      Throwable te=bsfe.getTargetException();
+      out.write("\n@ERROR@\n".getBytes());
+      te.printStackTrace(new PrintStream(out,true,StringPool.UTF8));
+      out.close();
+    }
+ else {
+      logBSFException(bsfe);
+    }
+  }
+}
