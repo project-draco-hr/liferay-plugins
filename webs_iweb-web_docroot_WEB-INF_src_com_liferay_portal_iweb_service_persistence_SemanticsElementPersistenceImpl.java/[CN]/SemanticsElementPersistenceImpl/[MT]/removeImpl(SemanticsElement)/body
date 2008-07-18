@@ -1,0 +1,25 @@
+{
+  try {
+    clearPosts.clear(semanticsElement.getPrimaryKey());
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    FinderCacheUtil.clearCache("Posts_SemanticsElements");
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(semanticsElement);
+    session.flush();
+    return semanticsElement;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(SemanticsElement.class.getName());
+  }
+}

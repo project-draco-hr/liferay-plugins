@@ -1,0 +1,42 @@
+{
+  try {
+    Set<Post> poststoremove=new TreeSet();
+    Set<Post> posts=new TreeSet();
+    Post post=postPersistence.fetchById_Type(postId,postType);
+    long uuid=post.getPrimaryKey();
+    Set<SemanticsElement> semanticsElements=new TreeSet(postPersistence.getSemanticsElements(uuid));
+    semanticsElements.addAll(semanticsLocalService.getRelatedSemanticsElements(semanticsElements,reason));
+    for (    SemanticsElement element : semanticsElements) {
+      posts.addAll(semanticsElementPersistence.getPosts(element.getElementURI()));
+    }
+    for (    Post postentry : posts) {
+      if (postentry.getPid() == postId) {
+        poststoremove.add(postentry);
+        break;
+      }
+    }
+    if (requiredTypes != null && !requiredTypes.isEmpty()) {
+      for (      Post postentry : posts) {
+        String type=postentry.getType();
+        if (!requiredTypes.contains(type)) {
+          poststoremove.add(postentry);
+        }
+      }
+    }
+    if (communityIds != null && !communityIds.isEmpty()) {
+      for (      Post postentry : posts) {
+        long communityId=postentry.getCommunityid();
+        if (!communityIds.contains(communityId)) {
+          poststoremove.add(postentry);
+        }
+      }
+    }
+    if (!poststoremove.isEmpty()) {
+      posts.removeAll(poststoremove);
+    }
+    return posts;
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

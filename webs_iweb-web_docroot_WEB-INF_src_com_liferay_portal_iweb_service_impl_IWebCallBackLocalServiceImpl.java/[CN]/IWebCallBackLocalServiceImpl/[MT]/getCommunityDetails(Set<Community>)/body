@@ -1,0 +1,18 @@
+{
+  for (  Community com : communities) {
+    try {
+      long id=com.getCid();
+      Group group=groupLocalService.getGroup(id);
+      com.setName(group.getName());
+      com.setOpen(group.getType() == 1);
+      com.setUri(group.getFriendlyURL());
+    }
+ catch (    SystemException ex) {
+      throw new IWebException(ex);
+    }
+catch (    PortalException ex) {
+      throw new IWebException(ex);
+    }
+  }
+  return communities;
+}

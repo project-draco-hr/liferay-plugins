@@ -1,0 +1,57 @@
+{
+  boolean finderClassNameCacheEnabled=PostModelImpl.CACHE_ENABLED;
+  String finderClassName=Post.class.getName();
+  String finderMethodName="fetchById_Type";
+  String[] finderParams=new String[]{Long.class.getName(),String.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(pid),type};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.portal.iweb.model.Post WHERE ");
+      query.append("pid = ?");
+      query.append(" AND ");
+      if (type == null) {
+        query.append("type_ IS NULL");
+      }
+ else {
+        query.append("type_ = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(pid);
+      if (type != null) {
+        qPos.add(type);
+      }
+      List<Post> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      if (list.size() == 0) {
+        return null;
+      }
+ else {
+        return list.get(0);
+      }
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    List<Post> list=(List<Post>)result;
+    if (list.size() == 0) {
+      return null;
+    }
+ else {
+      return list.get(0);
+    }
+  }
+}

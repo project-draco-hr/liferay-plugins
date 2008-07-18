@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Post post=(Post)session.get(PostImpl.class,new Long(uid));
+    if (post == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Post exists with the primary key " + uid);
+      }
+      throw new NoSuchPostException("No Post exists with the primary key " + uid);
+    }
+    return remove(post);
+  }
+ catch (  NoSuchPostException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  Set<String> semanticsset=new TreeSet();
+  semanticsset.add(ontologyURI1);
+  updateCommunityWithSemantics(group1.getPrimaryKey(),semanticsset);
+  Map<Long,Set<Semantics>> commSemantics=CommunityLocalServiceUtil.getAppliedSemantics(group1.getPrimaryKey());
+  Set<Map.Entry<Long,Set<Semantics>>> entries=commSemantics.entrySet();
+  for (  Map.Entry<Long,Set<Semantics>> entry : entries) {
+    long id=entry.getKey();
+    Set<Semantics> appliedSemantics=entry.getValue();
+    assertEquals(false,appliedSemantics.isEmpty());
+  }
+  updateCommunityWithSemantics(group1.getGroupId(),null);
+}

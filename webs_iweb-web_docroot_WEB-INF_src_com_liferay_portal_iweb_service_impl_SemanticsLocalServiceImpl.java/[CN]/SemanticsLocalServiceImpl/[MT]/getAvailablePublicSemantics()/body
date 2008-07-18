@@ -1,0 +1,25 @@
+{
+  try {
+    Set<Semantics> semanticsSet=new TreeSet(semanticsPersistence.findAll());
+    Set<Semantics> privateSemantics=new TreeSet();
+    for (    Semantics semantics : semanticsSet) {
+      long communityId=semantics.getCreatedInCommunity();
+      int createdInCommunityType=0;
+      Community comm=communityPersistence.fetchByPrimaryKey(communityId);
+      if (comm != null) {
+        createdInCommunityType=comm.getType();
+      }
+      if (createdInCommunityType == 0) {
+        createdInCommunityType=IWebCallBackLocalServiceUtil.getCommunityType(communityId);
+      }
+      if (createdInCommunityType == 3) {
+        privateSemantics.add(semantics);
+      }
+    }
+    semanticsSet.removeAll(privateSemantics);
+    return semanticsSet;
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}
