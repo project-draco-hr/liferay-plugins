@@ -2,12 +2,15 @@
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject(message);
   String emailAddress=jsonObj.getString("emailAddress");
   long userId=jsonObj.getLong("userId");
-  User user=UserLocalServiceUtil.getUser(userId);
-  if (MailDiskManager.isAccountLocked(user,emailAddress)) {
-    return;
+  String key=AccountLock.getKey(userId,emailAddress);
+  if (AccountLock.acquireLock(key)) {
+    try {
+      User user=UserLocalServiceUtil.getUser(userId);
+      MailBoxManager mailBoxManager=new MailBoxManager(user,emailAddress);
+      mailBoxManager.synchronizeAccount();
+    }
+  finally {
+      AccountLock.releaseLock(key);
+    }
   }
-  MailBoxManager mailBoxManager=new MailBoxManager(user,emailAddress);
-  MailBoxManager.writeAccountLock(user,emailAddress);
-  mailBoxManager.synchronizeAccount();
-  MailBoxManager.removeAccountLock(user,emailAddress);
 }
