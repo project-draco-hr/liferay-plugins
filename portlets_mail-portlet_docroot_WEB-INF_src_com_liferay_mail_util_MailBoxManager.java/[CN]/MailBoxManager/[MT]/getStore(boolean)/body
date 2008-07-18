@@ -2,14 +2,11 @@
   Store store=null;
   String key=_user.getUserId() + "." + _mailAccount.getEmailAddress();
   if (useOldStores) {
-    if (Validator.isNull(_allStores)) {
-      _allStores=new ConcurrentHashMap<String,Store>();
-    }
     store=(Store)_allStores.get(key);
-  }
-  if (Validator.isNotNull(store) && !store.isConnected()) {
-    store.close();
-    store=null;
+    if (Validator.isNotNull(store) && !store.isConnected()) {
+      store.close();
+      store=null;
+    }
   }
   if (Validator.isNull(store)) {
     Properties props=new Properties();
@@ -27,7 +24,15 @@
  else {
       store=new IMAPStore(session,url);
     }
-    store.connect();
+    String serviceName=_mailAccount.getEmailAddress() + " (" + ++_connections+ ") "+ _mailAccount.getUser().getUserId();
+    store.addConnectionListener(new ConnectionListener(serviceName));
+    try {
+      store.connect();
+    }
+ catch (    MessagingException me) {
+      _log.error("Failed on connecting to " + serviceName);
+      throw me;
+    }
     if (useOldStores) {
       _allStores.put(key,store);
     }
