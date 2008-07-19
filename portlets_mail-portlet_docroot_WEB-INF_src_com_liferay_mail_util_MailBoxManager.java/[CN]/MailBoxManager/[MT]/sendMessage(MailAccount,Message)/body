@@ -1,8 +1,9 @@
 {
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   try {
-    Transport transport=getConnectedTransport(fromMailAccount);
+    Transport transport=getTransport(fromMailAccount);
     transport.sendMessage(message,message.getAllRecipients());
+    transport.close();
     jsonObj.put("success",true);
   }
  catch (  MessagingException me) {

@@ -9,23 +9,16 @@
     }
   }
   if (Validator.isNull(store)) {
-    Properties props=new Properties();
-    URLName url=new URLName("imap",_mailAccount.getMailInHostName(),_mailAccount.getMailInPort(),StringPool.BLANK,_mailAccount.getUsername(),_mailAccount.getPassword());
-    props.setProperty("mail.imap.port",String.valueOf(_mailAccount.getMailInPort()));
-    if (_mailAccount.isMailSecure()) {
-      props.setProperty("mail.imap.socketFactory.port",String.valueOf(_mailAccount.getMailInPort()));
-      props.setProperty("mail.imap.socketFactory.class",_SSL_FACTORY);
-      props.setProperty("mail.imap.socketFactory.fallback","false");
-      Session session=Session.getInstance(props);
-      store=new IMAPSSLStore(session,url);
+    Session session=getSession();
+    if (_mailAccount.isMailInSecure()) {
+      store=session.getStore("imaps");
     }
  else {
-      Session session=Session.getInstance(props);
-      store=new IMAPStore(session,url);
+      store=session.getStore("imap");
     }
     store.addConnectionListener(new ConnectionListener(storeKey));
     try {
-      store.connect();
+      store.connect(_mailAccount.getMailInHostName(),_mailAccount.getMailInPort(),_mailAccount.getUsername(),_mailAccount.getPassword());
     }
  catch (    MessagingException me) {
       _log.error("Failed on connecting to " + storeKey);
