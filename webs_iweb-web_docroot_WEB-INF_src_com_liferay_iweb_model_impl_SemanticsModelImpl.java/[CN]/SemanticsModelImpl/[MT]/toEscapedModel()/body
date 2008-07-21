@@ -1,0 +1,14 @@
+{
+  if (isEscapedModel()) {
+    return (Semantics)this;
+  }
+ else {
+    Semantics model=new SemanticsImpl();
+    model.setEscapedModel(true);
+    model.setSemanticsName(HtmlUtil.escape(getSemanticsName()));
+    model.setSemanticsURI(HtmlUtil.escape(getSemanticsURI()));
+    model.setCreatedInCommunity(getCreatedInCommunity());
+    model=(Semantics)Proxy.newProxyInstance(Semantics.class.getClassLoader(),new Class[]{Semantics.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

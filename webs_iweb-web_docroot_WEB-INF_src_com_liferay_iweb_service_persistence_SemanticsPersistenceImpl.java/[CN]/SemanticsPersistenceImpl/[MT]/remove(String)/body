@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Semantics semantics=(Semantics)session.get(SemanticsImpl.class,semanticsURI);
+    if (semantics == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Semantics exists with the primary key " + semanticsURI);
+      }
+      throw new NoSuchSemanticsException("No Semantics exists with the primary key " + semanticsURI);
+    }
+    return remove(semantics);
+  }
+ catch (  NoSuchSemanticsException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

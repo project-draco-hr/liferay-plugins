@@ -1,0 +1,56 @@
+{
+  try {
+    Set<SemanticsElement> relatedSemanticsElements=new TreeSet();
+    for (    SemanticsElement element : elements) {
+      String semanticsuri=element.getSemanticsURI();
+      String elementuri=element.getElementURI();
+      if (semanticsuri == null || semanticsuri.equals("")) {
+        if (elementuri.indexOf("#") != -1) {
+          semanticsuri=elementuri.substring(0,elementuri.indexOf("#"));
+        }
+      }
+      OWLOntology ontology=_loadOntology(semanticsuri);
+      Set<OWLClass> ontologyClasses=ontology.getReferencedClasses();
+      for (      OWLClass owl : ontologyClasses) {
+        if (reason) {
+          Reasoner reasoner=new Reasoner(_manager);
+          reasoner.loadOntology(ontology);
+          if (owl.getURI().toString().equals(elementuri)) {
+            Set<Set<OWLClass>> subclassSet=reasoner.getSubClasses(owl);
+            for (            Set<OWLClass> owlClasses : subclassSet) {
+              for (              OWLClass owlClass : owlClasses) {
+                SemanticsElement semanticsElement=new SemanticsElementImpl();
+                String uri=owlClass.getURI().toString();
+                semanticsElement.setElementURI(uri);
+                if (uri.indexOf("#") != -1) {
+                  semanticsElement.setSemanticsURI(uri.substring(0,uri.indexOf("#")));
+                }
+                relatedSemanticsElements.add(element);
+                relatedSemanticsElements.add(semanticsElement);
+              }
+            }
+          }
+        }
+ else {
+          if (owl.getURI().toString().equals(elementuri)) {
+            Set<OWLDescription> owlSubClasses=owl.getSubClasses(ontology);
+            for (            OWLDescription desc : owlSubClasses) {
+              SemanticsElement semanticsElement=new SemanticsElementImpl();
+              String uri=desc.asOWLClass().getURI().toString();
+              semanticsElement.setElementURI(uri);
+              if (uri.indexOf("#") != -1) {
+                semanticsElement.setSemanticsURI(uri.substring(0,uri.indexOf("#")));
+              }
+              relatedSemanticsElements.add(element);
+              relatedSemanticsElements.add(semanticsElement);
+            }
+          }
+        }
+      }
+    }
+    return relatedSemanticsElements;
+  }
+ catch (  OWLOntologyCreationException ex) {
+    throw new IWebException(ex);
+  }
+}

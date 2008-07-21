@@ -1,0 +1,25 @@
+{
+  boolean isNew=community.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(community);
+      }
+ else {
+        listener.onBeforeUpdate(community);
+      }
+    }
+  }
+  community=updateImpl(community,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(community);
+      }
+ else {
+        listener.onAfterUpdate(community);
+      }
+    }
+  }
+  return community;
+}

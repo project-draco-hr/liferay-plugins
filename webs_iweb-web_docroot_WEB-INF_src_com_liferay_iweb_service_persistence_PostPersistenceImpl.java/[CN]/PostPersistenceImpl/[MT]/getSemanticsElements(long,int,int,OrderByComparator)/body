@@ -1,0 +1,40 @@
+{
+  boolean finderClassNameCacheEnabled=PostModelImpl.CACHE_ENABLED_POSTS_SEMANTICSELEMENTS;
+  String finderClassName="Posts_SemanticsElements";
+  String finderMethodName="getSemanticsElements";
+  String[] finderParams=new String[]{Long.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
+  Object[] finderArgs=new Object[]{new Long(pk),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder sb=new StringBuilder();
+      sb.append(_SQL_GETSEMANTICSELEMENTS);
+      if (obc != null) {
+        sb.append("ORDER BY ");
+        sb.append(obc.getOrderBy());
+      }
+      String sql=sb.toString();
+      SQLQuery q=session.createSQLQuery(sql);
+      q.addEntity("IWEB_SemanticsElement",com.liferay.iweb.model.impl.SemanticsElementImpl.class);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(pk);
+      List<com.liferay.iweb.model.SemanticsElement> list=(List<com.liferay.iweb.model.SemanticsElement>)QueryUtil.list(q,getDialect(),start,end);
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<com.liferay.iweb.model.SemanticsElement>)result;
+  }
+}

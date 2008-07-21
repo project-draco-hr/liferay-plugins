@@ -1,0 +1,15 @@
+{
+  if (isEscapedModel()) {
+    return (Post)this;
+  }
+ else {
+    Post model=new PostImpl();
+    model.setEscapedModel(true);
+    model.setUid(getUid());
+    model.setPid(getPid());
+    model.setType(HtmlUtil.escape(getType()));
+    model.setCommunityid(getCommunityid());
+    model=(Post)Proxy.newProxyInstance(Post.class.getClassLoader(),new Class[]{Post.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

@@ -1,0 +1,25 @@
+{
+  try {
+    clearSemanticss.clear(community.getPrimaryKey());
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    FinderCacheUtil.clearCache("Communities_Semantics");
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(community);
+    session.flush();
+    return community;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(Community.class.getName());
+  }
+}

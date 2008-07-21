@@ -1,0 +1,19 @@
+{
+  try {
+    Set<Semantics> semanticsSet=new TreeSet(communityPersistence.getSemanticss(communityId));
+    Set<Community> communities=new TreeSet();
+    for (    Semantics sem : semanticsSet) {
+      communities.addAll(semanticsPersistence.getCommunities(sem.getSemanticsURI()));
+    }
+    for (    Community com : communities) {
+      if (com.getCid() == communityId) {
+        communities.remove(com);
+        break;
+      }
+    }
+    return IWebCallBackLocalServiceUtil.getCommunityDetails(communities);
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

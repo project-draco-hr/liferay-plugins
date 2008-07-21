@@ -1,0 +1,25 @@
+{
+  FinderCacheUtil.clearCache("Posts_SemanticsElements");
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(post);
+    }
+ else {
+      if (post.isNew()) {
+        session.save(post);
+      }
+    }
+    session.flush();
+    post.setNew(false);
+    return post;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(Post.class.getName());
+  }
+}

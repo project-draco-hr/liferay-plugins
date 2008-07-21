@@ -1,0 +1,31 @@
+{
+  try {
+    if (communityPersistence.fetchByPrimaryKey(communityId) == null) {
+      if (semanticsSet != null && !semanticsSet.isEmpty()) {
+        Community c=communityPersistence.create(communityId);
+        c.setType(IWebCallBackLocalServiceUtil.getCommunityType(communityId));
+        communityPersistence.update(c,false);
+      }
+    }
+    if (semanticsSet != null && !semanticsSet.isEmpty()) {
+      communityPersistence.setSemanticss(communityId,semanticsSet.toArray(new String[0]));
+    }
+ else {
+      List<Semantics> semanticslist=communityPersistence.getSemanticss(communityId);
+      communityPersistence.clearSemanticss(communityId);
+      communityPersistence.remove(communityId);
+      for (      Semantics sem : semanticslist) {
+        List<Community> communitylist=semanticsPersistence.getCommunities(sem.getPrimaryKey());
+        if (communitylist.isEmpty()) {
+          semanticsLocalService.removeCachedSemantics(sem.getPrimaryKey());
+        }
+      }
+    }
+  }
+ catch (  NoSuchCommunityException ex) {
+    throw new IWebException(ex);
+  }
+catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

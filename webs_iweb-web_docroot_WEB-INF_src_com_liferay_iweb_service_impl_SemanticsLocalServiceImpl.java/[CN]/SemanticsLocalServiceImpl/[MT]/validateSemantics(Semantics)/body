@@ -1,0 +1,12 @@
+{
+  try {
+    String semuri=semantics.getPrimaryKey();
+    OWLOntology ontology=_loadOntology(semuri);
+    Reasoner reasoner=new Reasoner(_manager);
+    reasoner.loadOntology(ontology);
+    return reasoner.isConsistent();
+  }
+ catch (  OWLOntologyCreationException ex) {
+    throw new IWebException(ex);
+  }
+}

@@ -1,0 +1,27 @@
+{
+  Set<Semantics> updatedSemantics=new TreeSet();
+  Set<OWLClass> owlclasses;
+  for (  Semantics sem : semantics) {
+    String semuri=sem.getSemanticsURI();
+    Set<SemanticsElement> semelements=new TreeSet();
+    try {
+      OWLOntology ont=_loadOntology(semuri);
+      owlclasses=ont.getReferencedClasses();
+      for (      OWLClass owlclass : owlclasses) {
+        SemanticsElement element=new SemanticsElementImpl();
+        String elementuri=owlclass.getURI().toString();
+        element.setElementURI(elementuri);
+        if (elementuri.indexOf("#") != -1) {
+          element.setSemanticsURI(elementuri.substring(0,elementuri.indexOf("#")));
+        }
+        semelements.add(element);
+      }
+      sem.setSemanticselements(semelements);
+      updatedSemantics.add(sem);
+    }
+ catch (    OWLOntologyCreationException e) {
+      throw new IWebException(e);
+    }
+  }
+  return updatedSemantics;
+}
