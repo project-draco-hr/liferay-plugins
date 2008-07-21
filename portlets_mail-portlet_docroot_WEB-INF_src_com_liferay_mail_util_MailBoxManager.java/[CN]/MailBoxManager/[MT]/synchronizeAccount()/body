@@ -1,8 +1,14 @@
 {
+  if (!isJSONAccountExist()) {
+    return null;
+  }
   List<Folder> folders=getFolders();
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   if (Validator.isNotNull(folders)) {
     for (    Folder folder : folders) {
+      if (!isJSONAccountExist()) {
+        return null;
+      }
       try {
         synchronizeFolder(folder);
       }

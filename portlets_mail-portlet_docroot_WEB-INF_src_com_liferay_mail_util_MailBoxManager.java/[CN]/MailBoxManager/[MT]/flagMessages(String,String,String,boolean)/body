@@ -1,4 +1,7 @@
 {
+  if (!isJSONAccountExist()) {
+    return null;
+  }
   JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
   if (Validator.isNull(messageUidsArray)) {
@@ -9,6 +12,9 @@
     Folder folder=getFolder(folderName);
     for (    long messageUid : messageUidsArray) {
       try {
+        if (!isJSONAccountExist()) {
+          return null;
+        }
         Message message=getMessageByUid(folder,messageUid);
         if (flag.equals("answered")) {
           message.setFlag(Flags.Flag.ANSWERED,value);
