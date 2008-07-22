@@ -1,0 +1,15 @@
+{
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject(message);
+  String responseDestination=jsonObj.getString("lfrResponseDestination");
+  String responseId=jsonObj.getString("lfrResponseId");
+  if (Validator.isNull(responseDestination) || Validator.isNull(responseId)) {
+    return;
+  }
+  String isRUONDeployedString=jsonObj.getString("isRUONDeployedRequest");
+  if (isRUONDeployedString != null) {
+    jsonObj=JSONFactoryUtil.createJSONObject();
+    jsonObj.put("lfrResponseId",responseId);
+    jsonObj.put("isRUONDeployedResponse",JSONFactoryUtil.createJSONObject(JSONFactoryUtil.serialize("{isDeployed:true}")));
+    MessageBusUtil.sendMessage(responseDestination,jsonObj.toString());
+  }
+}
