@@ -1,12 +1,24 @@
 {
   try {
     String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
-    WikiPage page=null;
-    if (cmd.equals(Constants.UPDATE)) {
-      page=updatePage(actionRequest);
+    KBArticle article=null;
+    if (cmd.equals(Constants.DELETE)) {
+      deleteArticle(actionRequest);
     }
- else     if (cmd.equals(Constants.DELETE)) {
-      deletePage(actionRequest);
+ else     if (cmd.equals(Constants.UPDATE)) {
+      article=updateArticle(actionRequest);
+    }
+ else     if (cmd.equals(Constants.SUBSCRIBE)) {
+      subscribe(actionRequest);
+    }
+ else     if (cmd.equals(Constants.UNSUBSCRIBE)) {
+      unsubscribe(actionRequest);
+    }
+ else     if (cmd.equals(Constants.SUBSCRIBE + KnowledgeBaseKeys.ARTICLE)) {
+      subscribeArticle(actionRequest);
+    }
+ else     if (cmd.equals(Constants.UNSUBSCRIBE + KnowledgeBaseKeys.ARTICLE)) {
+      unsubscribeArticle(actionRequest);
     }
     boolean preview=ParamUtil.getBoolean(actionRequest,"preview");
     if (preview) {
@@ -14,13 +26,13 @@
     }
  else     if (Validator.isNotNull(cmd)) {
       String redirect=ParamUtil.getString(actionRequest,"redirect");
-      if (page != null) {
+      if (article != null) {
         String saveAndContinueRedirect=ParamUtil.getString(actionRequest,"saveAndContinueRedirect");
         if (Validator.isNotNull(saveAndContinueRedirect)) {
           redirect=saveAndContinueRedirect;
         }
  else         if (redirect.endsWith("title=")) {
-          redirect+=page.getTitle();
+          redirect+=article.getTitle();
         }
       }
       if (SessionErrors.isEmpty(actionRequest)) {

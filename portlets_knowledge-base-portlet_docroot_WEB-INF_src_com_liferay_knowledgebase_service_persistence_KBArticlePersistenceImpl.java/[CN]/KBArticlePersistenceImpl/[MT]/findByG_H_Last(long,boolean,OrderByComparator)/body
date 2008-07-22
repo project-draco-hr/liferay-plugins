@@ -1,0 +1,16 @@
+{
+  int count=countByG_H(groupId,head);
+  List<KBArticle> list=findByG_H(groupId,head,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No KBArticle exists with the key {");
+    msg.append("groupId=" + groupId);
+    msg.append(", ");
+    msg.append("head=" + head);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchArticleException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

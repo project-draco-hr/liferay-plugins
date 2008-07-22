@@ -1,0 +1,30 @@
+{
+  if (SearchEngineUtil.isIndexReadOnly()) {
+    return;
+  }
+  long companyId=GetterUtil.getLong(ids[0]);
+  try {
+    Iterator<KBArticle> articlesItr=kbArticlePersistence.findByCompanyId(companyId).iterator();
+    while (articlesItr.hasNext()) {
+      KBArticle article=articlesItr.next();
+      long groupId=article.getGroupId();
+      String title=article.getTitle();
+      String content=article.getContent();
+      String description=article.getDescription();
+      String[] tagsEntries=tagsEntryLocalService.getEntryNames(KBArticle.class.getName(),article.getResourcePrimKey());
+      try {
+        Document doc=Indexer.getArticleDocument(companyId,groupId,title,content,description,tagsEntries);
+        SearchEngineUtil.addDocument(companyId,doc);
+      }
+ catch (      Exception e1) {
+        _log.error("Reindexing " + article.getPrimaryKey(),e1);
+      }
+    }
+  }
+ catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e2) {
+    throw new SystemException(e2);
+  }
+}

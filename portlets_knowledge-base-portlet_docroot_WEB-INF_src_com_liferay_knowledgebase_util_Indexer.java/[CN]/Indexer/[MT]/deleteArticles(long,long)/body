@@ -1,0 +1,10 @@
+{
+  BooleanQuery booleanQuery=new BooleanQuery();
+  LuceneUtil.addRequiredTerm(booleanQuery,Field.PORTLET_ID,PORTLET_ID);
+  LuceneUtil.addRequiredTerm(booleanQuery,"groupId",groupId);
+  Hits hits=SearchEngineUtil.search(companyId,booleanQuery.toString(),SearchEngineUtil.ALL_POS,SearchEngineUtil.ALL_POS);
+  for (int i=0; i < hits.getLength(); i++) {
+    Document doc=hits.doc(i);
+    SearchEngineUtil.deleteDocument(companyId,doc.get(Field.UID));
+  }
+}

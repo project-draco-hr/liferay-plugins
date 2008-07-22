@@ -1,0 +1,51 @@
+{
+  if (prefs == null) {
+    long ownerId=groupId;
+    int ownerType=PortletKeys.PREFS_OWNER_TYPE_GROUP;
+    long plid=PortletKeys.PREFS_PLID_SHARED;
+    String portletId=KnowledgeBaseKeys.PORTLET_ID;
+    String defaultPreferences=null;
+    prefs=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
+  }
+  Company company=companyPersistence.findByPrimaryKey(article.getCompanyId());
+  Group group=groupPersistence.findByPrimaryKey(groupId);
+  User user=userPersistence.findByPrimaryKey(article.getUserId());
+  String articleURL=StringPool.BLANK;
+  if (themeDisplay != null) {
+    String portalURL=PortalUtil.getPortalURL(themeDisplay);
+    String layoutURL=PortalUtil.getLayoutURL(themeDisplay);
+    articleURL=portalURL + layoutURL + "/kb/"+ article.getTitle();
+  }
+  String portletName=PortalUtil.getPortletTitle(PortletKeys.WIKI,user);
+  String fromName=PrefsPropsUtil.getString(company.getCompanyId(),"admin.email.from.name");
+  String fromAddress=PrefsPropsUtil.getString(company.getCompanyId(),"admin.email.from.address");
+  String toName=user.getFullName();
+  String toAddress=user.getEmailAddress();
+  String subjectPrefix=null;
+  String body=null;
+  String signature=null;
+  ClassLoader classLoader=getClass().getClassLoader();
+  if (update) {
+    subjectPrefix=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_updated_subject_prefix.tmpl");
+    body=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_updated_body.tmpl");
+    signature=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_updated_signature.tmpl");
+  }
+ else {
+    subjectPrefix=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_added_subject_prefix.tmpl");
+    body=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_added_body.tmpl");
+    signature=StringUtil.read(classLoader,"com/liferay/knowledgebase/dependencies/" + "article_added_signature.tmpl");
+  }
+  if (Validator.isNotNull(signature)) {
+    body+="\n--\n" + signature;
+  }
+  subjectPrefix=StringUtil.replace(subjectPrefix,new String[]{"[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_SUMMARY$]","[$ARTICLE_ID$]","[$ARTICLE_TITLE$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,article.getContent(),article.getDescription(),article.getSummary(),String.valueOf(article.getArticleId()),article.getTitle(),user.getEmailAddress(),user.getFullName(),company.getVirtualHost(),portletName});
+  body=StringUtil.replace(body,new String[]{"[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_SUMMARY$]","[$ARTICLE_ID$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,article.getContent(),article.getDescription(),article.getSummary(),String.valueOf(article.getArticleId()),article.getTitle(),articleURL,user.getEmailAddress(),user.getFullName(),company.getVirtualHost(),portletName});
+  String subject=article.getTitle();
+  if (subject.indexOf(subjectPrefix) == -1) {
+    subject=subjectPrefix + subject;
+  }
+  InternetAddress from=new InternetAddress(fromAddress,fromName);
+  InternetAddress to=new InternetAddress(toAddress,toName);
+  MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
+  MailServiceUtil.sendEmail(mailMessage);
+}

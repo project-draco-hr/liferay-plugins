@@ -1,0 +1,16 @@
+{
+  KBArticle kbArticle=fetchByUUID_G(uuid,groupId);
+  if (kbArticle == null) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No KBArticle exists with the key {");
+    msg.append("uuid=" + uuid);
+    msg.append(", ");
+    msg.append("groupId=" + groupId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchArticleException(msg.toString());
+  }
+  return kbArticle;
+}

@@ -1,0 +1,25 @@
+{
+  boolean isNew=kbArticle.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(kbArticle);
+      }
+ else {
+        listener.onBeforeUpdate(kbArticle);
+      }
+    }
+  }
+  kbArticle=updateImpl(kbArticle,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(kbArticle);
+      }
+ else {
+        listener.onAfterUpdate(kbArticle);
+      }
+    }
+  }
+  return kbArticle;
+}

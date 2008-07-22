@@ -1,0 +1,26 @@
+{
+  if (isEscapedModel()) {
+    return (KBArticle)this;
+  }
+ else {
+    KBArticle model=new KBArticleImpl();
+    model.setEscapedModel(true);
+    model.setUuid(HtmlUtil.escape(getUuid()));
+    model.setArticleId(getArticleId());
+    model.setGroupId(getGroupId());
+    model.setResourcePrimKey(getResourcePrimKey());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setModifiedDate(getModifiedDate());
+    model.setTitle(HtmlUtil.escape(getTitle()));
+    model.setVersion(getVersion());
+    model.setContent(HtmlUtil.escape(getContent()));
+    model.setDescription(HtmlUtil.escape(getDescription()));
+    model.setSummary(HtmlUtil.escape(getSummary()));
+    model.setHead(getHead());
+    model.setParentTitle(HtmlUtil.escape(getParentTitle()));
+    model=(KBArticle)Proxy.newProxyInstance(KBArticle.class.getClassLoader(),new Class[]{KBArticle.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

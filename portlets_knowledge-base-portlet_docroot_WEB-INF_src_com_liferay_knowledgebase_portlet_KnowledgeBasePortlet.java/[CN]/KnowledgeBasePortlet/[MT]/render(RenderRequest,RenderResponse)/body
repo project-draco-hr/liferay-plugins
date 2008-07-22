@@ -2,13 +2,11 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String title=ParamUtil.getString(renderRequest,"title");
   try {
-    WikiNode node=getNode(themeDisplay);
-    renderRequest.setAttribute(KnowledgeBaseKeys.WIKI_NODE,node);
-    WikiPage page=null;
+    KBArticle article=null;
     if (Validator.isNotNull(title)) {
-      page=WikiPageServiceUtil.getPage(node.getNodeId(),title);
+      article=KBArticleServiceUtil.getArticle(themeDisplay.getPortletGroupId(),title);
     }
-    renderRequest.setAttribute(KnowledgeBaseKeys.WIKI_PAGE,page);
+    renderRequest.setAttribute(KnowledgeBaseKeys.ARTICLE,article);
   }
  catch (  Exception e) {
     throw new PortletException(e);

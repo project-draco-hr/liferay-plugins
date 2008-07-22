@@ -1,0 +1,30 @@
+{
+  List<KBArticle> children=kbArticlePersistence.findByG_P(article.getGroupId(),article.getTitle());
+  for (  KBArticle curArticle : children) {
+    deleteArticle(curArticle);
+  }
+  try {
+    Indexer.deleteArticle(article.getCompanyId(),article.getGroupId(),article.getTitle());
+  }
+ catch (  SearchException se) {
+    _log.error("Deleting index " + article.getPrimaryKey(),se);
+  }
+  long companyId=article.getCompanyId();
+  String portletId=CompanyConstants.SYSTEM_STRING;
+  long repositoryId=CompanyConstants.SYSTEM;
+  String dirName=article.getAttachmentsDir();
+  try {
+    dlService.deleteDirectory(companyId,portletId,repositoryId,dirName);
+  }
+ catch (  NoSuchDirectoryException nsde) {
+  }
+catch (  RemoteException re) {
+    throw new SystemException(re);
+  }
+  tagsAssetLocalService.deleteAsset(KBArticle.class.getName(),article.getResourcePrimKey());
+  subscriptionLocalService.deleteSubscriptions(article.getCompanyId(),KBArticle.class.getName(),article.getArticleId());
+  mbMessageLocalService.deleteDiscussionMessages(KBArticle.class.getName(),article.getResourcePrimKey());
+  resourceLocalService.deleteResource(article.getCompanyId(),KBArticle.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,article.getResourcePrimKey());
+  kbArticleResourceLocalService.deleteArticleResource(article.getGroupId(),article.getTitle());
+  kbArticlePersistence.removeByG_T(article.getGroupId(),article.getTitle());
+}

@@ -1,0 +1,25 @@
+{
+  try {
+    BooleanQuery contextQuery=new BooleanQuery();
+    LuceneUtil.addRequiredTerm(contextQuery,Field.PORTLET_ID,Indexer.PORTLET_ID);
+    if (groupId > 0) {
+      LuceneUtil.addRequiredTerm(contextQuery,Field.GROUP_ID,groupId);
+    }
+    BooleanQuery searchQuery=new BooleanQuery();
+    if (Validator.isNotNull(keywords)) {
+      LuceneUtil.addTerm(searchQuery,Field.TITLE,keywords);
+      LuceneUtil.addTerm(searchQuery,Field.CONTENT,keywords);
+      LuceneUtil.addTerm(searchQuery,Field.DESCRIPTION,keywords);
+      LuceneUtil.addTerm(searchQuery,Field.TAGS_ENTRIES,keywords);
+    }
+    BooleanQuery fullQuery=new BooleanQuery();
+    fullQuery.add(contextQuery,BooleanClause.Occur.MUST);
+    if (searchQuery.clauses().size() > 0) {
+      fullQuery.add(searchQuery,BooleanClause.Occur.MUST);
+    }
+    return SearchEngineUtil.search(companyId,fullQuery.toString(),start,end);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+}
