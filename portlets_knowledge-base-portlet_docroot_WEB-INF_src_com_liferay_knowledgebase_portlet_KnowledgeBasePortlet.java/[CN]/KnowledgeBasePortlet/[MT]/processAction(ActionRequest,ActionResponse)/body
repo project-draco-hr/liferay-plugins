@@ -43,6 +43,13 @@
     }
   }
  catch (  Exception e) {
-    throw new PortletException(e);
+    if (e instanceof ArticleTitleException || e instanceof ArticleVersionException || e instanceof EntryNameException) {
+      SessionErrors.add(actionRequest,e.getClass().getName());
+      actionResponse.setRenderParameters(actionRequest.getParameterMap());
+      actionResponse.setRenderParameter(Constants.CMD,"edit_article");
+    }
+ else {
+      throw new PortletException(e);
+    }
   }
 }
