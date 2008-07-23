@@ -1,0 +1,36 @@
+{
+  boolean finderClassNameCacheEnabled=SemanticsFileModelImpl.CACHE_ENABLED;
+  String finderClassName=SemanticsFile.class.getName();
+  String finderMethodName="findByCreatedInInterestGroup";
+  String[] finderParams=new String[]{Long.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(createdInInterestGroup)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.iweb.model.SemanticsFile WHERE ");
+      query.append("createdInInterestGroup = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(createdInInterestGroup);
+      List<SemanticsFile> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<SemanticsFile>)result;
+  }
+}

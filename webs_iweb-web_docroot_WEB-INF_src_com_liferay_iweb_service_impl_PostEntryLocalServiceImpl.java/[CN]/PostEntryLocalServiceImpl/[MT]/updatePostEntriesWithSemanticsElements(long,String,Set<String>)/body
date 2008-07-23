@@ -1,0 +1,42 @@
+{
+  try {
+    long uid=0;
+    if (postEntryPersistence.fetchById_Type(postEntryId,type) == null) {
+      PostEntry postEntry=new PostEntryImpl();
+      uid=counterLocalService.increment();
+      postEntry.setUid(uid);
+      postEntry.setNew(true);
+      postEntry.setPid(postEntryId);
+      postEntry.setType(type);
+      postEntryPersistence.update(postEntry,false);
+    }
+    if (semanticsElementSet != null) {
+      for (      String semElementURI : semanticsElementSet) {
+        if (semanticsElementPersistence.fetchByPrimaryKey(semElementURI) == null) {
+          SemanticsElement element=semanticsElementPersistence.create(semElementURI);
+          semanticsElementPersistence.update(element,false);
+          if (semElementURI.indexOf("#") != -1) {
+            element.setSemanticsURI(semElementURI.substring(0,semElementURI.indexOf("#")));
+          }
+        }
+      }
+    }
+    if (semanticsElementSet != null && !semanticsElementSet.isEmpty()) {
+      postEntryPersistence.setSemanticsElements(uid,semanticsElementSet.toArray(new String[0]));
+    }
+ else {
+      Set<SemanticsElement> semElements=new TreeSet(postEntryPersistence.getSemanticsElements(postEntryId));
+      postEntryPersistence.clearSemanticsElements(uid);
+      postEntryPersistence.removeById_Type(postEntryId,type);
+      for (      SemanticsElement semElement : semElements) {
+        List postsbysem=semanticsElementPersistence.getPostEntries(semElement.getElementURI());
+        if (postsbysem.isEmpty() || postsbysem == null) {
+          semanticsElementPersistence.remove(semElement.getElementURI());
+        }
+      }
+    }
+  }
+ catch (  Exception ex) {
+    throw new IWebException(ex);
+  }
+}

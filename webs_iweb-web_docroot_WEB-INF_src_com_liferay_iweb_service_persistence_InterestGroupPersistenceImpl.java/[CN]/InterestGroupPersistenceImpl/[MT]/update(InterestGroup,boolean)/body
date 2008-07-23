@@ -1,0 +1,25 @@
+{
+  boolean isNew=interestGroup.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(interestGroup);
+      }
+ else {
+        listener.onBeforeUpdate(interestGroup);
+      }
+    }
+  }
+  interestGroup=updateImpl(interestGroup,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(interestGroup);
+      }
+ else {
+        listener.onAfterUpdate(interestGroup);
+      }
+    }
+  }
+  return interestGroup;
+}

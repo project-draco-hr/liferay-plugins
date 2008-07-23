@@ -1,0 +1,25 @@
+{
+  FinderCacheUtil.clearCache("PostEntries_SemanticsElements");
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(semanticsElement);
+    }
+ else {
+      if (semanticsElement.isNew()) {
+        session.save(semanticsElement);
+      }
+    }
+    session.flush();
+    semanticsElement.setNew(false);
+    return semanticsElement;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(SemanticsElement.class.getName());
+  }
+}

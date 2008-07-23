@@ -1,0 +1,25 @@
+{
+  FinderCacheUtil.clearCache("InterestGroups_SemanticsFiles");
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(semanticsFile);
+    }
+ else {
+      if (semanticsFile.isNew()) {
+        session.save(semanticsFile);
+      }
+    }
+    session.flush();
+    semanticsFile.setNew(false);
+    return semanticsFile;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(SemanticsFile.class.getName());
+  }
+}

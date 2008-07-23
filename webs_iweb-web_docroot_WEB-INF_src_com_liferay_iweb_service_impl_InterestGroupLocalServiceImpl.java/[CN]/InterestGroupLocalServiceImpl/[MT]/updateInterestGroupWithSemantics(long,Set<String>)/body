@@ -1,0 +1,31 @@
+{
+  try {
+    if (interestGroupPersistence.fetchByPrimaryKey(interestGroupId) == null) {
+      if (semanticsSet != null && !semanticsSet.isEmpty()) {
+        InterestGroup ig=interestGroupPersistence.create(interestGroupId);
+        ig.setType(CallBackLocalServiceUtil.getInterestGroupType(interestGroupId));
+        interestGroupPersistence.update(ig,false);
+      }
+    }
+    if (semanticsSet != null && !semanticsSet.isEmpty()) {
+      interestGroupPersistence.setSemanticsFiles(interestGroupId,semanticsSet.toArray(new String[0]));
+    }
+ else {
+      List<SemanticsFile> semanticslist=interestGroupPersistence.getSemanticsFiles(interestGroupId);
+      interestGroupPersistence.clearSemanticsFiles(interestGroupId);
+      interestGroupPersistence.remove(interestGroupId);
+      for (      SemanticsFile sem : semanticslist) {
+        List<InterestGroup> interestGrouplist=semanticsFilePersistence.getInterestGroups(sem.getPrimaryKey());
+        if (interestGrouplist.isEmpty()) {
+          SemanticsFileLocalServiceUtil.removeCachedSemanticsFile(sem.getPrimaryKey());
+        }
+      }
+    }
+  }
+ catch (  NoSuchInterestGroupException ex) {
+    throw new IWebException(ex);
+  }
+catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

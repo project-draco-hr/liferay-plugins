@@ -1,0 +1,11 @@
+{
+  String pk=randomString();
+  SemanticsFile newSemantics=_persistence.create(pk);
+  newSemantics.setSemanticsName(randomString());
+  newSemantics.setCreatedInInterestGroup(nextLong());
+  _persistence.update(newSemantics,false);
+  SemanticsFile existingSemantics=_persistence.findByPrimaryKey(newSemantics.getPrimaryKey());
+  assertEquals(existingSemantics.getSemanticsName(),newSemantics.getSemanticsName());
+  assertEquals(existingSemantics.getSemanticsURI(),newSemantics.getSemanticsURI());
+  assertEquals(existingSemantics.getCreatedInInterestGroup(),newSemantics.getCreatedInInterestGroup());
+}

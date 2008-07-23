@@ -1,0 +1,19 @@
+{
+  try {
+    Set<SemanticsFile> semanticsSet=new TreeSet(interestGroupPersistence.getSemanticsFiles(interestGroupId));
+    Set<InterestGroup> interestGroups=new TreeSet();
+    for (    SemanticsFile sem : semanticsSet) {
+      interestGroups.addAll(semanticsFilePersistence.getInterestGroups(sem.getSemanticsURI()));
+    }
+    for (    InterestGroup ig : interestGroups) {
+      if (ig.getCid() == interestGroupId) {
+        interestGroups.remove(ig);
+        break;
+      }
+    }
+    return CallBackLocalServiceUtil.getInterestGroupDetails(interestGroups);
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

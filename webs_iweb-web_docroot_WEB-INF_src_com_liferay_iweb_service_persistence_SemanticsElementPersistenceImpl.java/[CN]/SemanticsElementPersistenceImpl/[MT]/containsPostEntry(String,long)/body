@@ -1,0 +1,24 @@
+{
+  boolean finderClassNameCacheEnabled=SemanticsElementModelImpl.CACHE_ENABLED_POSTENTRIES_SEMANTICSELEMENTS;
+  String finderClassName="PostEntries_SemanticsElements";
+  String finderMethodName="containsPostEntries";
+  String[] finderParams=new String[]{String.class.getName(),Long.class.getName()};
+  Object[] finderArgs=new Object[]{pk,new Long(postEntryPK)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    try {
+      Boolean value=Boolean.valueOf(containsPostEntry.contains(pk,postEntryPK));
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,value);
+      return value.booleanValue();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+  }
+ else {
+    return ((Boolean)result).booleanValue();
+  }
+}

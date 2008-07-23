@@ -1,0 +1,31 @@
+{
+  SemanticsFile semanticsFile=findByPrimaryKey(semanticsURI);
+  int count=countByCreatedInInterestGroup(createdInInterestGroup);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.iweb.model.SemanticsFile WHERE ");
+    query.append("createdInInterestGroup = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(createdInInterestGroup);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,semanticsFile);
+    SemanticsFile[] array=new SemanticsFileImpl[3];
+    array[0]=(SemanticsFile)objArray[0];
+    array[1]=(SemanticsFile)objArray[1];
+    array[2]=(SemanticsFile)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

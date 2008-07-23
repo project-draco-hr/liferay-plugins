@@ -1,0 +1,24 @@
+{
+  boolean finderClassNameCacheEnabled=SemanticsFileModelImpl.CACHE_ENABLED_INTERESTGROUPS_SEMANTICSFILES;
+  String finderClassName="InterestGroups_SemanticsFiles";
+  String finderMethodName="containsInterestGroups";
+  String[] finderParams=new String[]{String.class.getName(),Long.class.getName()};
+  Object[] finderArgs=new Object[]{pk,new Long(interestGroupPK)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    try {
+      Boolean value=Boolean.valueOf(containsInterestGroup.contains(pk,interestGroupPK));
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,value);
+      return value.booleanValue();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+  }
+ else {
+    return ((Boolean)result).booleanValue();
+  }
+}

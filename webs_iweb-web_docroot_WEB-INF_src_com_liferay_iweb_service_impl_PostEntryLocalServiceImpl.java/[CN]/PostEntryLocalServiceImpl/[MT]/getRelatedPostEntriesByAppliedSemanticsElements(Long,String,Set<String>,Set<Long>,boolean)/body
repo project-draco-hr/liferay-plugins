@@ -1,0 +1,42 @@
+{
+  try {
+    Set<PostEntry> poststoremove=new TreeSet();
+    Set<PostEntry> postEntries=new TreeSet();
+    PostEntry postEntry=postEntryPersistence.fetchById_Type(postEntryId,postEntryType);
+    long uuid=postEntry.getPrimaryKey();
+    Set<SemanticsElement> semanticsElements=new TreeSet(postEntryPersistence.getSemanticsElements(uuid));
+    semanticsElements.addAll(SemanticsFileLocalServiceUtil.getRelatedSemanticsElements(semanticsElements,reason));
+    for (    SemanticsElement element : semanticsElements) {
+      postEntries.addAll(semanticsElementPersistence.getPostEntries(element.getElementURI()));
+    }
+    for (    PostEntry postentry : postEntries) {
+      if (postentry.getPid() == postEntryId) {
+        poststoremove.add(postentry);
+        break;
+      }
+    }
+    if (requiredTypes != null && !requiredTypes.isEmpty()) {
+      for (      PostEntry postentry : postEntries) {
+        String type=postentry.getType();
+        if (!requiredTypes.contains(type)) {
+          poststoremove.add(postentry);
+        }
+      }
+    }
+    if (interestGroupIds != null && !interestGroupIds.isEmpty()) {
+      for (      PostEntry postentry : postEntries) {
+        long interestGroupId=postentry.getInterestGroupId();
+        if (!interestGroupIds.contains(interestGroupId)) {
+          poststoremove.add(postentry);
+        }
+      }
+    }
+    if (!poststoremove.isEmpty()) {
+      postEntries.removeAll(poststoremove);
+    }
+    return postEntries;
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}

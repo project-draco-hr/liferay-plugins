@@ -1,0 +1,13 @@
+{
+  long pk=nextLong();
+  PostEntry newPost=_persistence.create(pk);
+  newPost.setPid(nextLong());
+  newPost.setType(randomString());
+  newPost.setInterestGroupId(nextLong());
+  _persistence.update(newPost,false);
+  PostEntry existingPost=_persistence.findByPrimaryKey(newPost.getPrimaryKey());
+  assertEquals(existingPost.getUid(),newPost.getUid());
+  assertEquals(existingPost.getPid(),newPost.getPid());
+  assertEquals(existingPost.getType(),newPost.getType());
+  assertEquals(existingPost.getInterestGroupId(),newPost.getInterestGroupId());
+}

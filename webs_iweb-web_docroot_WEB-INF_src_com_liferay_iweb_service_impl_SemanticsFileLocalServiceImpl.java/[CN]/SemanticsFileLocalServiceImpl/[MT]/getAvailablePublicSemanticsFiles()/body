@@ -1,0 +1,25 @@
+{
+  try {
+    Set<SemanticsFile> semanticsSet=new TreeSet(semanticsFilePersistence.findAll());
+    Set<SemanticsFile> privateSemantics=new TreeSet();
+    for (    SemanticsFile semanticsFile : semanticsSet) {
+      long interestGroupId=semanticsFile.getCreatedInInterestGroup();
+      int createdInInterestGroupType=0;
+      InterestGroup interestGroup=interestGroupPersistence.fetchByPrimaryKey(interestGroupId);
+      if (interestGroup != null) {
+        createdInInterestGroupType=interestGroup.getType();
+      }
+      if (createdInInterestGroupType == 0) {
+        createdInInterestGroupType=CallBackLocalServiceUtil.getInterestGroupType(interestGroupId);
+      }
+      if (createdInInterestGroupType == 3) {
+        privateSemantics.add(semanticsFile);
+      }
+    }
+    semanticsSet.removeAll(privateSemantics);
+    return semanticsSet;
+  }
+ catch (  SystemException ex) {
+    throw new IWebException(ex);
+  }
+}
