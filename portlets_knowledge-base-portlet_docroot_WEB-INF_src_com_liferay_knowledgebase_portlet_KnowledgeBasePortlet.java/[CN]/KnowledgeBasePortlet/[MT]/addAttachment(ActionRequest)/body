@@ -1,0 +1,32 @@
+{
+  UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String title=ParamUtil.getString(uploadRequest,"title");
+  int numOfFiles=ParamUtil.getInteger(uploadRequest,"numOfFiles");
+  List<ObjectValuePair<String,byte[]>> files=new ArrayList<ObjectValuePair<String,byte[]>>();
+  if (numOfFiles == 0) {
+    File file=uploadRequest.getFile("file");
+    String fileName=uploadRequest.getFileName("file");
+    if (file != null) {
+      byte[] bytes=FileUtil.getBytes(file);
+      if ((bytes != null) && (bytes.length > 0)) {
+        ObjectValuePair<String,byte[]> ovp=new ObjectValuePair<String,byte[]>(fileName,bytes);
+        files.add(ovp);
+      }
+    }
+  }
+ else {
+    for (int i=1; i <= numOfFiles; i++) {
+      File file=uploadRequest.getFile("file" + i);
+      String fileName=uploadRequest.getFileName("file" + i);
+      if (file != null) {
+        byte[] bytes=FileUtil.getBytes(file);
+        if ((bytes != null) && (bytes.length > 0)) {
+          ObjectValuePair<String,byte[]> ovp=new ObjectValuePair<String,byte[]>(fileName,bytes);
+          files.add(ovp);
+        }
+      }
+    }
+  }
+  KBArticleServiceUtil.addArticleAttachments(themeDisplay.getPortletGroupId(),title,files);
+}
