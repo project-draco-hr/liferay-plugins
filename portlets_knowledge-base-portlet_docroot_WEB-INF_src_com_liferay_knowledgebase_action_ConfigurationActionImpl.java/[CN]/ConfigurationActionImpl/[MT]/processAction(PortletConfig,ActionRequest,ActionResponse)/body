@@ -1,0 +1,16 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  String tabs2=ParamUtil.getString(actionRequest,"tabs2");
+  if (tabs2.equals("export-settings")) {
+    updateExportSettings(actionRequest,prefs);
+  }
+  if (SessionErrors.isEmpty(actionRequest)) {
+    prefs.store();
+    SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+  }
+}

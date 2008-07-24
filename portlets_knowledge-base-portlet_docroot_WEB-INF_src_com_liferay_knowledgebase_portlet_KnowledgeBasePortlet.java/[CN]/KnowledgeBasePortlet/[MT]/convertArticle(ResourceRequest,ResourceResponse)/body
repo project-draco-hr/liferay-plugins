@@ -1,0 +1,55 @@
+{
+  InputStream is=null;
+  try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    PortletPreferences prefs=resourceRequest.getPreferences();
+    long groupId=themeDisplay.getPortletGroupId();
+    String title=ParamUtil.getString(resourceRequest,"title");
+    double version=ParamUtil.getDouble(resourceRequest,"version");
+    String targetExtension=ParamUtil.getString(resourceRequest,"targetExtension");
+    String[] extensions=prefs.getValues("extensions",new String[]{});
+    boolean convert=false;
+    for (    String extension : extensions) {
+      if (extension.equals(targetExtension)) {
+        convert=true;
+        break;
+      }
+    }
+    if (!convert) {
+      return;
+    }
+    KBArticle article=KBArticleServiceUtil.getArticle(groupId,title,version);
+    String content=article.getContent();
+    StringBuilder sb=new StringBuilder();
+    sb.append("<h1>");
+    sb.append(title);
+    sb.append("</h1>");
+    sb.append(content);
+    is=new ByteArrayInputStream(sb.toString().getBytes(StringPool.UTF8));
+    String sourceExtension="html";
+    sb=new StringBuilder();
+    sb.append(title);
+    sb.append(StringPool.PERIOD);
+    sb.append(sourceExtension);
+    String fileName=sb.toString();
+    String id=article.getUuid();
+    InputStream convertedIS=DocumentConversionUtil.convert(id,is,sourceExtension,targetExtension);
+    if (convertedIS != null) {
+      sb=new StringBuilder();
+      sb.append(title);
+      sb.append(StringPool.PERIOD);
+      sb.append(targetExtension);
+      fileName=sb.toString();
+      is=convertedIS;
+    }
+    String contentType=MimeTypesUtil.getContentType(fileName);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+    ServletResponseUtil.sendFile(response,fileName,is,contentType);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+ finally {
+    ServletResponseUtil.cleanUp(is);
+  }
+}
