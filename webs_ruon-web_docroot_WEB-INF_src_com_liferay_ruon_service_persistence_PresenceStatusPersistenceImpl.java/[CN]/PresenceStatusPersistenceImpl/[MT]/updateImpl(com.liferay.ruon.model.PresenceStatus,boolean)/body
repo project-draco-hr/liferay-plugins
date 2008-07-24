@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(presenceStatus);
+    }
+ else {
+      if (presenceStatus.isNew()) {
+        session.save(presenceStatus);
+      }
+    }
+    session.flush();
+    presenceStatus.setNew(false);
+    return presenceStatus;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(PresenceStatus.class.getName());
+  }
+}

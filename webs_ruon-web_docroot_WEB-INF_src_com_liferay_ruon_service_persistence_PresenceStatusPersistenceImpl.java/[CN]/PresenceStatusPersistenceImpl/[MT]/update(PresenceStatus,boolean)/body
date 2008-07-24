@@ -1,0 +1,25 @@
+{
+  boolean isNew=presenceStatus.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(presenceStatus);
+      }
+ else {
+        listener.onBeforeUpdate(presenceStatus);
+      }
+    }
+  }
+  presenceStatus=updateImpl(presenceStatus,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(presenceStatus);
+      }
+ else {
+        listener.onAfterUpdate(presenceStatus);
+      }
+    }
+  }
+  return presenceStatus;
+}

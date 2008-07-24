@@ -1,0 +1,28 @@
+{
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject(message);
+  String responseDestination=jsonObj.getString("lfrResponseDestination");
+  String responseId=jsonObj.getString("lfrResponseId");
+  if (Validator.isNull(responseDestination) || Validator.isNull(responseId)) {
+    return;
+  }
+  JSONObject getPresenceStatusRequestJSON=jsonObj.getJSONObject("getPresenceStatusRequest");
+  if (getPresenceStatusRequestJSON != null) {
+    JSONObject getPresenceStatusResponseJSON=getPresenceStatusResponseJSON(getPresenceStatusRequestJSON,responseId);
+    MessageBusUtil.sendMessage(responseDestination,getPresenceStatusResponseJSON.toString());
+    return;
+  }
+  JSONObject communicationWaysRequestJSON=jsonObj.getJSONObject("communicationWaysRequest");
+  if (communicationWaysRequestJSON != null) {
+    JSONObject communicationWaysResponseJSON=getCommunicationWaysResponseJSON(communicationWaysRequestJSON,responseId);
+    MessageBusUtil.sendMessage(responseDestination,communicationWaysResponseJSON.toString());
+    return;
+  }
+  JSONObject setPresenceStatusRequestJSON=jsonObj.getJSONObject("setPresenceStatusRequest");
+  if (setPresenceStatusRequestJSON != null) {
+    String result=handleSetPresenceStatus(setPresenceStatusRequestJSON);
+    JSONObject jsonObj1=JSONFactoryUtil.createJSONObject();
+    jsonObj1.put("lfrResponseId",responseId);
+    jsonObj1.put("result",result);
+    MessageBusUtil.sendMessage(responseDestination,jsonObj1.toString());
+  }
+}
