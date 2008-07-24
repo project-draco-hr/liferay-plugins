@@ -1,7 +1,7 @@
 {
   String friendlyURLPath=null;
-  String cmd=GetterUtil.getString(portletURL.getParameter(Constants.CMD));
-  if (cmd.equals("view_article")) {
+  String view=GetterUtil.getString(portletURL.getParameter("view"));
+  if (view.equals("view_article")) {
     String title=portletURL.getParameter("title");
     StringBuilder sb=new StringBuilder();
     if (Validator.isNotNull(title)) {
@@ -18,7 +18,7 @@
     }
     friendlyURLPath=sb.toString();
   }
- else   if (cmd.equals("view_tagged_articles")) {
+ else   if (view.equals("view_tagged_articles")) {
     String tag=portletURL.getParameter("tag");
     StringBuilder sb=new StringBuilder();
     if (Validator.isNotNull(tag)) {
@@ -34,7 +34,7 @@
   }
   if (Validator.isNotNull(friendlyURLPath)) {
     portletURL.addParameterIncludedInPath("p_p_id");
-    portletURL.addParameterIncludedInPath(Constants.CMD);
+    portletURL.addParameterIncludedInPath("view");
   }
   return friendlyURLPath;
 }

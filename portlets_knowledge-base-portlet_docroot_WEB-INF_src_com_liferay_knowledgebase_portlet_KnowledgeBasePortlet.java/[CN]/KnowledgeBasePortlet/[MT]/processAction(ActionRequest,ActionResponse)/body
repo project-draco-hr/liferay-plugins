@@ -1,41 +1,44 @@
 {
   try {
-    String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+    String actionName=ParamUtil.getString(actionRequest,"actionName");
     KBArticle article=null;
-    if (cmd.equals(Constants.DELETE)) {
+    if (actionName.equals(Constants.DELETE)) {
       deleteArticle(actionRequest);
     }
- else     if (cmd.equals(Constants.UPDATE)) {
+ else     if (actionName.equals(Constants.UPDATE)) {
       article=updateArticle(actionRequest);
     }
- else     if (cmd.equals(Constants.SUBSCRIBE)) {
+ else     if (actionName.equals(Constants.SUBSCRIBE)) {
       subscribe(actionRequest);
     }
- else     if (cmd.equals(Constants.UNSUBSCRIBE)) {
+ else     if (actionName.equals(Constants.UNSUBSCRIBE)) {
       unsubscribe(actionRequest);
     }
- else     if (cmd.equals("subscribe_article")) {
+ else     if (actionName.equals("subscribeArticle")) {
       subscribeArticle(actionRequest);
     }
- else     if (cmd.equals("unsubscribe_article")) {
+ else     if (actionName.equals("unsubscribeArticle")) {
       unsubscribeArticle(actionRequest);
     }
- else     if (cmd.equals("add_attachment")) {
+ else     if (actionName.equals("addAttachment")) {
       addAttachment(actionRequest);
     }
- else     if (cmd.equals("delete_attachment")) {
+ else     if (actionName.equals("deleteAttachment")) {
       deleteAttachment(actionRequest);
     }
     boolean preview=ParamUtil.getBoolean(actionRequest,"preview");
     if (preview) {
       actionResponse.setRenderParameters(actionRequest.getParameterMap());
+      actionResponse.setRenderParameter("view","edit_article");
     }
- else     if (Validator.isNotNull(cmd)) {
+ else     if (Validator.isNotNull(actionName)) {
       String redirect=ParamUtil.getString(actionRequest,"redirect");
       if (article != null) {
         String saveAndContinueRedirect=ParamUtil.getString(actionRequest,"saveAndContinueRedirect");
         if (Validator.isNotNull(saveAndContinueRedirect)) {
           redirect=saveAndContinueRedirect;
+          String title=ParamUtil.getString(actionRequest,"title");
+          redirect=HttpUtil.addParameter(redirect,"title",title);
         }
  else         if (redirect.endsWith("title=")) {
           redirect+=article.getTitle();
@@ -52,12 +55,12 @@
     if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
       SessionErrors.add(actionRequest,e.getClass().getName());
       actionResponse.setRenderParameters(actionRequest.getParameterMap());
-      actionResponse.setRenderParameter(Constants.CMD,"error");
+      actionResponse.setRenderParameter("view","error");
     }
  else     if (e instanceof ArticleTitleException || e instanceof ArticleVersionException || e instanceof EntryNameException|| e instanceof PrincipalException) {
       SessionErrors.add(actionRequest,e.getClass().getName());
       actionResponse.setRenderParameters(actionRequest.getParameterMap());
-      actionResponse.setRenderParameter(Constants.CMD,"edit_article");
+      actionResponse.setRenderParameter("view","edit_article");
     }
  else {
       throw new PortletException(e);
