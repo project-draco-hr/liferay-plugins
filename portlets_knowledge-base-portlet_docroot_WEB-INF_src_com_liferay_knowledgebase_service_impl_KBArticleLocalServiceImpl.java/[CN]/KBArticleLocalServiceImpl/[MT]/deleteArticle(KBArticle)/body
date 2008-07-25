@@ -1,10 +1,10 @@
 {
-  List<KBArticle> children=kbArticlePersistence.findByG_P(article.getGroupId(),article.getTitle());
+  List<KBArticle> children=kbArticlePersistence.findByParentResourcePrimKey(article.getResourcePrimKey());
   for (  KBArticle curArticle : children) {
     deleteArticle(curArticle);
   }
   try {
-    Indexer.deleteArticle(article.getCompanyId(),article.getGroupId(),article.getTitle());
+    Indexer.deleteArticle(article.getCompanyId(),article.getResourcePrimKey());
   }
  catch (  SearchException se) {
     _log.error("Deleting index " + article.getPrimaryKey(),se);

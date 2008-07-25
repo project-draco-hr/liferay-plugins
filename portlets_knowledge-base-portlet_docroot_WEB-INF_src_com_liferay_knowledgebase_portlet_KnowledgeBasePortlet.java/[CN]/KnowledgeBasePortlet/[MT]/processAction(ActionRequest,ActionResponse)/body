@@ -37,11 +37,10 @@
         String saveAndContinueRedirect=ParamUtil.getString(actionRequest,"saveAndContinueRedirect");
         if (Validator.isNotNull(saveAndContinueRedirect)) {
           redirect=saveAndContinueRedirect;
-          String title=ParamUtil.getString(actionRequest,"title");
-          redirect=HttpUtil.addParameter(redirect,"title",title);
         }
- else         if (redirect.endsWith("title=")) {
-          redirect+=article.getTitle();
+        if (Validator.isNotNull(redirect)) {
+          redirect=HttpUtil.addParameter(redirect,"resourcePrimKey",article.getResourcePrimKey());
+          redirect=HttpUtil.addParameter(redirect,"title",article.getTitle());
         }
       }
       if (SessionErrors.isEmpty(actionRequest)) {

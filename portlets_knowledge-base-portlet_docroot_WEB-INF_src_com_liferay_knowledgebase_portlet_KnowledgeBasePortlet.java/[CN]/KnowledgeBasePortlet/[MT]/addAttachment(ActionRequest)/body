@@ -1,7 +1,6 @@
 {
   UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String title=ParamUtil.getString(uploadRequest,"title");
+  long resourcePrimKey=ParamUtil.getLong(uploadRequest,"resourcePrimKey");
   int numOfFiles=ParamUtil.getInteger(uploadRequest,"numOfFiles");
   List<ObjectValuePair<String,byte[]>> files=new ArrayList<ObjectValuePair<String,byte[]>>();
   if (numOfFiles == 0) {
@@ -28,5 +27,5 @@
       }
     }
   }
-  KBArticleServiceUtil.addArticleAttachments(themeDisplay.getPortletGroupId(),title,files);
+  KBArticleServiceUtil.addArticleAttachments(resourcePrimKey,files);
 }

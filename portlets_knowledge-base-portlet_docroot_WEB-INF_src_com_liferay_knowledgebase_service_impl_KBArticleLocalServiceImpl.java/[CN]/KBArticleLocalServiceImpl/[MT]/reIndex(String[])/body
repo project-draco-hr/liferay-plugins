@@ -8,12 +8,14 @@
     while (articlesItr.hasNext()) {
       KBArticle article=articlesItr.next();
       long groupId=article.getGroupId();
+      long userId=article.getUserId();
+      long resourcePrimKey=article.getResourcePrimKey();
       String title=article.getTitle();
       String content=article.getContent();
       String description=article.getDescription();
       String[] tagsEntries=tagsEntryLocalService.getEntryNames(KBArticle.class.getName(),article.getResourcePrimKey());
       try {
-        Document doc=Indexer.getArticleDocument(companyId,groupId,title,content,description,tagsEntries);
+        Document doc=Indexer.getArticleDocument(companyId,groupId,userId,resourcePrimKey,title,content,description,tagsEntries);
         SearchEngineUtil.addDocument(companyId,doc);
       }
  catch (      Exception e1) {

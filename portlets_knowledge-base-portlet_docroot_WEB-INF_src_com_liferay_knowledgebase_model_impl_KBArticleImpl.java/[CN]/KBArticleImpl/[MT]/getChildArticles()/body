@@ -1,7 +1,10 @@
 {
   List<KBArticle> articles=null;
+  if (getParentResourcePrimKey() <= 0) {
+    return Collections.EMPTY_LIST;
+  }
   try {
-    articles=KBArticleLocalServiceUtil.getChildren(getGroupId(),true,getTitle());
+    articles=KBArticleLocalServiceUtil.getChildren(getParentResourcePrimKey(),true);
   }
  catch (  Exception e) {
     articles=new ArrayList<KBArticle>();

@@ -1,12 +1,18 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   PortletPreferences prefs=actionRequest.getPreferences();
+  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   String title=ParamUtil.getString(actionRequest,"title");
   double version=ParamUtil.getDouble(actionRequest,"version");
   String content=ParamUtil.getString(actionRequest,"content");
   String description=ParamUtil.getString(actionRequest,"description");
   boolean minorEdit=ParamUtil.getBoolean(actionRequest,"minorEdit");
-  String parentTitle=ParamUtil.getString(actionRequest,"parentTitle");
+  long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
   String[] tagsEntries=StringUtil.split(ParamUtil.getString(actionRequest,"tagsEntries"));
-  return KBArticleServiceUtil.updateArticle(themeDisplay.getPortletGroupId(),title,version,content,description,minorEdit,parentTitle,tagsEntries,prefs,themeDisplay);
+  if (resourcePrimKey <= 0) {
+    return KBArticleServiceUtil.addArticle(themeDisplay.getPortletGroupId(),title,content,description,minorEdit,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+  }
+ else {
+    return KBArticleServiceUtil.updateArticle(resourcePrimKey,version,title,content,description,minorEdit,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+  }
 }

@@ -1,0 +1,17 @@
+{
+  if (Validator.isNull(fileName)) {
+    return;
+  }
+  KBArticle article=getArticle(resourcePrimKey);
+  long companyId=article.getCompanyId();
+  String portletId=CompanyConstants.SYSTEM_STRING;
+  long repositoryId=CompanyConstants.SYSTEM;
+  try {
+    dlService.deleteFile(companyId,portletId,repositoryId,fileName);
+  }
+ catch (  NoSuchFileException nsfe) {
+  }
+catch (  RemoteException re) {
+    throw new SystemException(re);
+  }
+}

@@ -1,9 +1,13 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
   String title=ParamUtil.getString(renderRequest,"title");
   try {
     KBArticle article=null;
-    if (Validator.isNotNull(title)) {
+    if (resourcePrimKey > 0) {
+      article=KBArticleServiceUtil.getArticle(resourcePrimKey);
+    }
+ else     if (Validator.isNotNull(title)) {
       article=KBArticleServiceUtil.getArticle(themeDisplay.getPortletGroupId(),title);
     }
     renderRequest.setAttribute(KnowledgeBaseKeys.ARTICLE,article);
