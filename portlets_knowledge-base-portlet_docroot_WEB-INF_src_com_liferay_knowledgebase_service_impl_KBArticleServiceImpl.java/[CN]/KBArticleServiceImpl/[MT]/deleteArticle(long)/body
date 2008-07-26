@@ -1,4 +1,10 @@
 {
-  KBArticlePermission.check(getPermissionChecker(),resourcePrimKey,ActionKeys.DELETE);
+  KBArticle article=kbArticleLocalService.getArticle(resourcePrimKey);
+  if (article.isTemplate()) {
+    KBPermission.check(getPermissionChecker(),article.getGroupId(),KBConstants.MANAGE_TEMPLATES);
+  }
+ else {
+    KBArticlePermission.check(getPermissionChecker(),resourcePrimKey,ActionKeys.DELETE);
+  }
   kbArticleLocalService.deleteArticle(resourcePrimKey);
 }

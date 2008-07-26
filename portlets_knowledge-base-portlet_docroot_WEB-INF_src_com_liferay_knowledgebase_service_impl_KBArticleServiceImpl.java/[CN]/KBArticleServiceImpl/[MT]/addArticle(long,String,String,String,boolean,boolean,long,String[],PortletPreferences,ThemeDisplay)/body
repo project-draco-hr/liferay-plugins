@@ -1,4 +1,9 @@
 {
-  KBPermission.check(getPermissionChecker(),groupId,ActionKeys.ADD_ARTICLE);
+  if (template) {
+    KBPermission.check(getPermissionChecker(),groupId,KBConstants.MANAGE_TEMPLATES);
+  }
+ else {
+    KBPermission.check(getPermissionChecker(),groupId,ActionKeys.ADD_ARTICLE);
+  }
   return kbArticleLocalService.addArticle(getUserId(),groupId,title,content,description,minorEdit,template,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
 }
