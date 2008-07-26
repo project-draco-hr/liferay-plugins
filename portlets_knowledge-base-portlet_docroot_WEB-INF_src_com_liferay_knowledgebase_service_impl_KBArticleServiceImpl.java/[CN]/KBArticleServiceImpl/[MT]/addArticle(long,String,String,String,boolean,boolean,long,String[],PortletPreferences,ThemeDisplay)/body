@@ -1,9 +1,10 @@
 {
   if (template) {
-    KBPermission.check(getPermissionChecker(),groupId,KnowledgeBaseKeys.MANAGE_TEMPLATES);
+    KBPermission.check(getPermissionChecker(),plid,KnowledgeBaseKeys.MANAGE_TEMPLATES);
   }
  else {
-    KBPermission.check(getPermissionChecker(),groupId,ActionKeys.ADD_ARTICLE);
+    KBPermission.check(getPermissionChecker(),plid,ActionKeys.ADD_ARTICLE);
   }
-  return kbArticleLocalService.addArticle(getUserId(),groupId,title,content,description,minorEdit,template,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  return kbArticleLocalService.addArticle(getUserId(),layout.getGroupId(),title,content,description,minorEdit,template,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
 }
