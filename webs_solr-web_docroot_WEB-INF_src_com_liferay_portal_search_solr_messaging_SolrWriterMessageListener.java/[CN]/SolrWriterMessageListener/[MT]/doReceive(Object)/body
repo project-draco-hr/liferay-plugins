@@ -1,0 +1,19 @@
+{
+  SearchRequest searchRequest=(SearchRequest)message;
+  String command=searchRequest.getCommand();
+  long companyId=searchRequest.getCompanyId();
+  String id=searchRequest.getId();
+  Document doc=searchRequest.getDocument();
+  if (command.equals(SearchRequest.COMMAND_ADD)) {
+    SolrSearchEngineUtil.addDocument(companyId,doc);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_DELETE)) {
+    SolrSearchEngineUtil.deleteDocument(companyId,id);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_DELETE_PORTLET_DOCS)) {
+    SolrSearchEngineUtil.deletePortletDocuments(companyId,id);
+  }
+ else   if (command.equals(SearchRequest.COMMAND_UPDATE)) {
+    SolrSearchEngineUtil.updateDocument(companyId,id,doc);
+  }
+}

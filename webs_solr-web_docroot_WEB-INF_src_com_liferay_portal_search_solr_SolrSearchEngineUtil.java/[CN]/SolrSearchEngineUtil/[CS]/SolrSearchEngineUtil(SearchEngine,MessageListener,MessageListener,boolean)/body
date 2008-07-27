@@ -1,0 +1,19 @@
+{
+  try {
+    _engine=engine;
+    if (removeExistingDestination) {
+      MessageBusUtil.removeDestination(DestinationNames.SEARCH_READER);
+      MessageBusUtil.removeDestination(DestinationNames.SEARCH_WRITER);
+    }
+    Destination searchReadDestination=new ParallelDestination(DestinationNames.SEARCH_READER);
+    MessageBusUtil.addDestination(searchReadDestination);
+    searchReadDestination.register(readerMessageListener);
+    Destination searchWriteDestination=new SerialDestination(DestinationNames.SEARCH_WRITER);
+    MessageBusUtil.addDestination(searchWriteDestination);
+    searchWriteDestination.register(writerMessageListener);
+  }
+ catch (  Exception e) {
+    _log.error("Unable to initialize search engine.",e);
+    throw e;
+  }
+}
