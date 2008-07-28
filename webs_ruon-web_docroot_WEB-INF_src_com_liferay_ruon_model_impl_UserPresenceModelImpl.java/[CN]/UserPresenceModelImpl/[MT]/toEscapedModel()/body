@@ -1,0 +1,13 @@
+{
+  if (isEscapedModel()) {
+    return (UserPresence)this;
+  }
+ else {
+    UserPresence model=new UserPresenceImpl();
+    model.setEscapedModel(true);
+    model.setPresenceUserId(getPresenceUserId());
+    model.setPresenceStatus(getPresenceStatus());
+    model=(UserPresence)Proxy.newProxyInstance(UserPresence.class.getClassLoader(),new Class[]{UserPresence.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

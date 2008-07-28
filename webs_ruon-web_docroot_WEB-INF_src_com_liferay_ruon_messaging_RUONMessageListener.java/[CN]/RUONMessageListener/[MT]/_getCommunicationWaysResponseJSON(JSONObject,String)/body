@@ -1,0 +1,9 @@
+{
+  Long requestUserId=communicationWaysRequestJSON.getLong("userId");
+  Long loggedInUserId=communicationWaysRequestJSON.getLong("loggedInUserId");
+  String communicationWays=UserCommunicationLocalServiceUtil.getWaysToCommunicate(requestUserId,loggedInUserId);
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  jsonObj.put("lfrResponseId",responseId);
+  jsonObj.put("communicationWaysResponse",JSONFactoryUtil.createJSONObject().put("communicationWays",communicationWays));
+  return jsonObj;
+}
