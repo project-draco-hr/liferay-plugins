@@ -1,0 +1,16 @@
+{
+  boolean template=false;
+  List<KBArticle> articles=getGroupArticles(groupId,template,max);
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  String title=group.getName();
+  if (group.isUser()) {
+    User user=UserLocalServiceUtil.getUserById(group.getClassPK());
+    title=user.getFullName();
+  }
+ else   if (group.isOrganization()) {
+    Organization organization=OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
+    title=organization.getName();
+  }
+  String description=group.getDescription();
+  return exportToRSS(title,description,type,version,displayStyle,abstractLength,feedURL,articles);
+}

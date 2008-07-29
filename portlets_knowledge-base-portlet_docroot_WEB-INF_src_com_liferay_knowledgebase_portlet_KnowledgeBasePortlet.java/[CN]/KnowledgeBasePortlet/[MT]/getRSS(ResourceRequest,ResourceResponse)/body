@@ -1,0 +1,20 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long groupId=ParamUtil.getLong(resourceRequest,"groupId");
+  long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
+  int max=ParamUtil.getInteger(resourceRequest,"max",SearchContainer.DEFAULT_DELTA);
+  String type=ParamUtil.getString(resourceRequest,"type",RSSUtil.DEFAULT_TYPE);
+  double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.DEFAULT_VERSION);
+  String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
+  int abstractLength=ParamUtil.getInteger(resourceRequest,"abstractLength",SearchContainer.DEFAULT_DELTA);
+  String feedURL=PortalUtil.getPortalURL(themeDisplay) + PortalUtil.getLayoutURL(themeDisplay);
+  String rss=StringPool.BLANK;
+  if (resourcePrimKey > 0) {
+    rss=KBArticleServiceUtil.getArticlesRSS(resourcePrimKey,max,type,version,displayStyle,abstractLength,feedURL);
+  }
+ else   if (groupId > 0) {
+    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,max,type,version,displayStyle,abstractLength,feedURL);
+  }
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+  ServletResponseUtil.sendFile(response,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
+}
