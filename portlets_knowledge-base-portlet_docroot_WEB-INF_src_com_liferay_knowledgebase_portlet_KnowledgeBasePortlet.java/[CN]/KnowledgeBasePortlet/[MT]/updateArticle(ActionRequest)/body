@@ -9,7 +9,17 @@
   boolean minorEdit=ParamUtil.getBoolean(actionRequest,"minorEdit");
   boolean template=ParamUtil.getBoolean(actionRequest,"template");
   long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
-  String[] tagsEntries=StringUtil.split(ParamUtil.getString(actionRequest,"tagsEntries"));
+  List<TagsVocabulary> vocabularies=TagsVocabularyServiceUtil.getVocabularies(themeDisplay.getCompanyId(),false);
+  String tagsEntriesString=ParamUtil.getString(actionRequest,"tagsEntries");
+  for (  TagsVocabulary vocabulary : vocabularies) {
+    String vocabularyParamName=TagsEntryConstants.VOCABULARY + Long.toString(vocabulary.getVocabularyId());
+    long entryId=ParamUtil.getLong(actionRequest,vocabularyParamName);
+    if (Validator.isNotNull(entryId)) {
+      TagsEntry entry=TagsEntryServiceUtil.getEntry(entryId);
+      tagsEntriesString+="," + entry.getName();
+    }
+  }
+  String[] tagsEntries=StringUtil.split(tagsEntriesString);
   if (resourcePrimKey <= 0) {
     return KBArticleServiceUtil.addArticle(themeDisplay.getPlid(),title,content,description,minorEdit,template,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
   }
