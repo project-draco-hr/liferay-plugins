@@ -2,13 +2,12 @@
   if (Validator.isNull(user) || Validator.isNull(emailAddress) || Validator.isNull(folderName)) {
     return null;
   }
-  searchString=searchString.trim();
   long[] messageUids=null;
-  if (searchString.equals(StringPool.BLANK)) {
+  if (keywords.equals(StringPool.BLANK)) {
     messageUids=getMessageUidsByFolder(user,emailAddress,folderName);
   }
  else {
-    messageUids=getMessageUidsBySearch(user,emailAddress,folderName,searchString);
+    messageUids=search(user,emailAddress,folderName,keywords);
   }
   for (int i=0; i < messageUids.length; i++) {
     if (messageUid == messageUids[i]) {

@@ -1,12 +1,11 @@
 {
-  if (!isJSONAccountExist()) {
+  if (!isAccountExist()) {
     return null;
   }
   List<Folder> folders=getFolders();
-  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   if (Validator.isNotNull(folders)) {
     for (    Folder folder : folders) {
-      if (!isJSONAccountExist()) {
+      if (!isAccountExist()) {
         return null;
       }
       try {
@@ -17,11 +16,8 @@
       }
     }
     _mailAccount.setInitialized(true);
-    storeAccountToDisk();
-    jsonObj.put("success",true);
+    MailDiskManager.createAccount(_user,_mailAccount);
+    return _SUCCESS;
   }
- else {
-    jsonObj.put("success",false);
-  }
-  return jsonObj;
+  return _FAILURE;
 }

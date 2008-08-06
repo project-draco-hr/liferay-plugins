@@ -1,0 +1,15 @@
+{
+  if (!isAccountExists(user,emailAddress)) {
+    return;
+  }
+  JSONObject jsonMessage=getJSONMessageByUid(user,emailAddress,folderName,messageUid);
+  JSONObject jsonFlags=jsonMessage.getJSONObject("flags");
+  jsonFlags.put(flag,value);
+  String filePath=getMessageFilePath(user,emailAddress,folderName,messageUid);
+  try {
+    FileUtil.write(filePath,jsonMessage.toString());
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+  }
+}

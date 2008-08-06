@@ -1,5 +1,5 @@
 {
-  if (!isJSONAccountExist()) {
+  if (!isAccountExist()) {
     return;
   }
   JSONObject jsonObj=MailDiskManager.getJSONFolder(_user,_mailAccount.getEmailAddress(),folder.getFullName());
@@ -21,9 +21,9 @@
       messages=folder.getMessages((messageCount - _messagesToPrefetch + 1),messageCount);
     }
     if (Validator.isNotNull(messages)) {
-      storeMessagesToDisk(messages);
+      storeMessages(messages);
     }
-    storeFolderToDisk(folder,true,new Date());
+    storeFolder(folder);
   }
  else {
     Message newestStoredMessage=getNewestOrOldestStoredMessage(folder,true);
@@ -31,8 +31,8 @@
       int messageNumber=newestStoredMessage.getMessageNumber();
       if (messageNumber != messageCount) {
         messages=folder.getMessages(messageNumber,messageCount);
-        storeMessagesToDisk(messages);
-        storeFolderToDisk(folder,true,new Date());
+        storeMessages(messages);
+        storeFolder(folder);
       }
     }
     Message oldestStoredMessage=getNewestOrOldestStoredMessage(folder,false);
@@ -45,8 +45,8 @@
  else {
           messages=folder.getMessages((messageNumber - _messagesToPrefetch),messageNumber);
         }
-        storeMessagesToDisk(messages);
-        storeFolderToDisk(folder,true,new Date());
+        storeMessages(messages);
+        storeFolder(folder);
       }
     }
   }

@@ -1,14 +1,12 @@
 {
-  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   try {
     Transport transport=getTransport(fromMailAccount);
     transport.sendMessage(message,message.getAllRecipients());
     transport.close();
-    jsonObj.put("success",true);
+    return _SUCCESS;
   }
  catch (  MessagingException me) {
     _log.error(me,me);
-    jsonObj.put("success",false);
+    return _FAILURE;
   }
-  return jsonObj;
 }

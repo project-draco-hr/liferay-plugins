@@ -1,0 +1,52 @@
+{
+  if (SearchEngineUtil.isIndexReadOnly()) {
+    return;
+  }
+  long companyId=GetterUtil.getLong(ids[0]);
+  String rootPath=PortletProps.get("disk.root.dir") + "/";
+  String[] userIds=FileUtil.listDirs(rootPath);
+  try {
+    for (    String userIdStr : userIds) {
+      long userId=GetterUtil.getLong(userIdStr);
+      String userPath=rootPath + userId + "/";
+      if (!FileUtil.exists(userPath)) {
+        continue;
+      }
+      String[] accounts=FileUtil.listDirs(userPath + "/");
+      for (      String emailAddress : accounts) {
+        String accountPath=userPath + emailAddress + "/";
+        if (!FileUtil.exists(accountPath)) {
+          continue;
+        }
+        Indexer.deleteMessages(companyId,userId,emailAddress);
+        String[] folders=FileUtil.listDirs(accountPath + "/");
+        for (        String folderName : folders) {
+          String folderPath=accountPath + folderName + "/";
+          if (!FileUtil.exists(folderPath)) {
+            continue;
+          }
+          String[] messageUids=FileUtil.listDirs(folderPath + "/");
+          for (          String messageUidStr : messageUids) {
+            long messageUid=GetterUtil.getLong(messageUidStr);
+            String messagePath=folderPath + messageUid + "/";
+            if (!FileUtil.exists(messagePath)) {
+              continue;
+            }
+            String filePath=messagePath + _MESSAGE_JSON;
+            if (FileUtil.exists(filePath)) {
+              String msg=FileUtil.read(filePath);
+              JSONObject jsonObj=JSONFactoryUtil.createJSONObject(msg);
+              String subject=jsonObj.getString("subject");
+              String content=jsonObj.getString("body");
+              Document doc=Indexer.getMessageDocument(companyId,userId,emailAddress,folderName,messageUid,subject,content);
+              SearchEngineUtil.addDocument(companyId,doc);
+            }
+          }
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+}

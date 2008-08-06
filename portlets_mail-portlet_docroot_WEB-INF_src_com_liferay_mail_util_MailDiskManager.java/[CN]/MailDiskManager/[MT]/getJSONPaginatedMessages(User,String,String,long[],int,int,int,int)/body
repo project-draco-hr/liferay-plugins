@@ -13,7 +13,10 @@
   jsonObj.put("pageCount",(int)pageCount);
   jsonObj.put("pageNumber",pageNumber);
   for (int i=begin; i <= end; i++) {
-    jsonArray.put(getJSONMessageByUid(user,emailAddress,folderName,messageUidsOnDisk[i]));
+    JSONObject message=getJSONMessageByUid(user,emailAddress,folderName,messageUidsOnDisk[i]);
+    if (message != null) {
+      jsonArray.put(message);
+    }
   }
   return jsonObj;
 }

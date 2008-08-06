@@ -1,9 +1,7 @@
 {
-  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
   if (Validator.isNull(messageUidsArray)) {
-    jsonObj.put("success",false);
-    return jsonObj;
+    return _FAILURE;
   }
   try {
     Folder folder=openFolder(folderName);
@@ -11,11 +9,10 @@
       deleteMessage(folder,messageUid,false);
     }
     folder.close(true);
-    jsonObj.put("success",true);
+    return _SUCCESS;
   }
  catch (  MessagingException me) {
     _log.error(me,me);
-    jsonObj.put("success",false);
+    return _FAILURE;
   }
-  return jsonObj;
 }
