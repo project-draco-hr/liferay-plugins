@@ -1,7 +1,7 @@
 {
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
   if (Validator.isNull(messageUidsArray)) {
-    return _FAILURE;
+    return _failureJSON;
   }
   try {
     Folder folder=openFolder(folderName);
@@ -9,10 +9,10 @@
       deleteMessage(folder,messageUid,false);
     }
     folder.close(true);
-    return _SUCCESS;
+    return _successJSON;
   }
  catch (  MessagingException me) {
     _log.error(me,me);
-    return _FAILURE;
+    return _failureJSON;
   }
 }

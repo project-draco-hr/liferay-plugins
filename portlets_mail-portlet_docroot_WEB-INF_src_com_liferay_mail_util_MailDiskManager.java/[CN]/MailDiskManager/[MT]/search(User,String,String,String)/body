@@ -18,9 +18,13 @@
       searchQuery.addTerm(Field.CONTENT,keywords);
       fullQuery.add(searchQuery,BooleanClauseOccur.SHOULD);
     }
-    _log.debug("Query string: " + fullQuery.toString());
+    if (_log.isDebugEnabled()) {
+      _log.debug("Query string: " + fullQuery.toString());
+    }
     Hits hits=SearchEngineUtil.search(companyId,fullQuery.toString(),SearchEngineUtil.ALL_POS,SearchEngineUtil.ALL_POS);
-    _log.debug("Hit count: " + hits.getLength());
+    if (_log.isDebugEnabled()) {
+      _log.debug("Hit count: " + hits.getLength());
+    }
     Set<Long> messageUidsSet=new HashSet();
     for (int i=0; i < hits.getLength(); i++) {
       Document doc=hits.getDocs()[i];

@@ -1,5 +1,5 @@
 {
-  if (!isAccountExist()) {
+  if (!isAccountExists()) {
     return;
   }
   JSONObject jsonObj=MailDiskManager.getJSONFolder(_user,_mailAccount.getEmailAddress(),folder.getFullName());
@@ -14,11 +14,11 @@
   int messageCount=folder.getMessageCount();
   Message[] messages=null;
   if (!initialized) {
-    if (messageCount < _messagesToPrefetch) {
+    if (messageCount < _MESSAGES_TO_PREFETCH) {
       messages=folder.getMessages(1,messageCount);
     }
  else {
-      messages=folder.getMessages((messageCount - _messagesToPrefetch + 1),messageCount);
+      messages=folder.getMessages((messageCount - _MESSAGES_TO_PREFETCH + 1),messageCount);
     }
     if (Validator.isNotNull(messages)) {
       storeMessages(messages);
@@ -39,11 +39,11 @@
     if (Validator.isNotNull(oldestStoredMessage)) {
       int messageNumber=oldestStoredMessage.getMessageNumber();
       if (messageCount != 1) {
-        if ((messageNumber - _messagesToPrefetch) < 0) {
+        if ((messageNumber - _MESSAGES_TO_PREFETCH) < 0) {
           messages=folder.getMessages(1,messageNumber);
         }
  else {
-          messages=folder.getMessages((messageNumber - _messagesToPrefetch),messageNumber);
+          messages=folder.getMessages((messageNumber - _MESSAGES_TO_PREFETCH),messageNumber);
         }
         storeMessages(messages);
         storeFolder(folder);

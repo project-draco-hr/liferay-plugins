@@ -1,16 +1,16 @@
 {
-  if (!isAccountExist()) {
+  if (!isAccountExists()) {
     return null;
   }
   long[] messageUidsArray=GetterUtil.getLongValues(messageUids.split("\\s*,\\s*"));
   if (Validator.isNull(messageUidsArray)) {
-    return _FAILURE;
+    return _failureJSON;
   }
   try {
     Folder folder=getFolder(folderName);
     for (    long messageUid : messageUidsArray) {
       try {
-        if (!isAccountExist()) {
+        if (!isAccountExists()) {
           return null;
         }
         Message message=getMessageByUid(folder,messageUid);
@@ -30,10 +30,10 @@
       }
     }
     folder.close(true);
-    return _SUCCESS;
+    return _successJSON;
   }
  catch (  MessagingException me) {
     _log.error(me,me);
-    return _FAILURE;
+    return _failureJSON;
   }
 }
