@@ -1,10 +1,12 @@
 {
   long companyId=user.getCompanyId();
+  long groupId=user.getGroup().getGroupId();
   long userId=user.getUserId();
   try {
     String escapedFolderName=_encodeFolderName(folderName);
     BooleanQuery contextQuery=BooleanQueryFactoryUtil.create();
     contextQuery.addRequiredTerm(Field.COMPANY_ID,companyId);
+    contextQuery.addRequiredTerm(Field.GROUP_ID,groupId);
     contextQuery.addRequiredTerm(Field.PORTLET_ID,Indexer.PORTLET_ID);
     contextQuery.addRequiredTerm(Field.USER_ID,userId);
     contextQuery.addRequiredTerm(Indexer.EMAIL_ADDRESS,emailAddress);
@@ -16,7 +18,7 @@
       BooleanQuery searchQuery=BooleanQueryFactoryUtil.create();
       searchQuery.addTerm(Field.TITLE,keywords);
       searchQuery.addTerm(Field.CONTENT,keywords);
-      fullQuery.add(searchQuery,BooleanClauseOccur.SHOULD);
+      fullQuery.add(searchQuery,BooleanClauseOccur.MUST);
     }
     if (_log.isDebugEnabled()) {
       _log.debug("Query string: " + fullQuery.toString());
