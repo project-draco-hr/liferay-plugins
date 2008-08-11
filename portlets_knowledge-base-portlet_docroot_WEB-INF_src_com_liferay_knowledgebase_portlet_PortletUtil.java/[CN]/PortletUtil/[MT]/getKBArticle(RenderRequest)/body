@@ -1,0 +1,14 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
+  double version=ParamUtil.getDouble(renderRequest,"version");
+  String title=ParamUtil.getString(renderRequest,"title");
+  KBArticle article=null;
+  if (resourcePrimKey > 0) {
+    article=KBArticleServiceUtil.getArticle(resourcePrimKey,version);
+  }
+ else   if (Validator.isNotNull(title)) {
+    article=KBArticleServiceUtil.getArticle(themeDisplay.getPortletGroupId(),title,version);
+  }
+  renderRequest.setAttribute(KnowledgeBaseKeys.ARTICLE,article);
+}

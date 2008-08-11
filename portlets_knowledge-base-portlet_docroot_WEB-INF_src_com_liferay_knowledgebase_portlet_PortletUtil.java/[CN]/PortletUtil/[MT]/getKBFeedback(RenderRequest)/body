@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  KBArticle article=(KBArticle)renderRequest.getAttribute(KnowledgeBaseKeys.ARTICLE);
+  long userId=themeDisplay.getUserId();
+  KBFeedbackEntry kbFeedbackEntry=null;
+  KBFeedbackStats kbFeedbackStats=null;
+  if (article != null) {
+    try {
+      kbFeedbackEntry=KBFeedbackEntryLocalServiceUtil.getKBFeedbackEntry(article.getArticleId(),userId);
+    }
+ catch (    NoSuchFeedbackEntryException nsfee) {
+      kbFeedbackEntry=null;
+    }
+    kbFeedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleKBFeedbackStats(article.getArticleId());
+  }
+  renderRequest.setAttribute(KnowledgeBaseKeys.KNOWLEDGE_BASE_FEEDBACK_ENTRY,kbFeedbackEntry);
+  renderRequest.setAttribute(KnowledgeBaseKeys.KNOWLEDGE_BASE_FEEDBACK_STATS,kbFeedbackStats);
+}

@@ -1,0 +1,17 @@
+{
+  if (isEscapedModel()) {
+    return (KBFeedbackStats)this;
+  }
+ else {
+    KBFeedbackStats model=new KBFeedbackStatsImpl();
+    model.setEscapedModel(true);
+    model.setKbFeedbackStatsId(getKbFeedbackStatsId());
+    model.setArticleId(getArticleId());
+    model.setAverageScore(getAverageScore());
+    model.setTotalScoreEntries(getTotalScoreEntries());
+    model.setTotalVotes(getTotalVotes());
+    model.setYesVotes(getYesVotes());
+    model=(KBFeedbackStats)Proxy.newProxyInstance(KBFeedbackStats.class.getClassLoader(),new Class[]{KBFeedbackStats.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

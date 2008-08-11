@@ -1,0 +1,29 @@
+{
+  KBFeedbackEntry kbFeedbackEntry=null;
+  try {
+    Date now=new Date();
+    kbFeedbackEntry=kbFeedbackEntryPersistence.findByA_U(articleId,userId);
+    double oldScore=kbFeedbackEntry.getScore();
+    kbFeedbackEntry.setModifiedDate(now);
+    kbFeedbackEntry.setScore(score);
+    kbFeedbackEntryPersistence.update(kbFeedbackEntry,false);
+    KBFeedbackStats kbFeedbackStats=kbFeedbackStatsLocalService.getArticleKBFeedbackStats(articleId);
+    int totalScoreEntries=kbFeedbackStats.getTotalScoreEntries();
+    double averageScore=kbFeedbackStats.getAverageScore();
+    double scoreDifference=score - oldScore;
+    double totalScore=averageScore * totalScoreEntries;
+    if ((oldScore == 0) && (score != 0)) {
+      totalScoreEntries=totalScoreEntries + 1;
+    }
+    if (oldScore != score) {
+      averageScore=(totalScore + scoreDifference) / totalScoreEntries;
+    }
+    kbFeedbackStats.setAverageScore(averageScore);
+    kbFeedbackStats.setTotalScoreEntries(totalScoreEntries);
+    kbFeedbackStatsPersistence.update(kbFeedbackStats,false);
+  }
+ catch (  NoSuchFeedbackEntryException nsfee) {
+    kbFeedbackEntry=addKBFeedbackEntry(articleId,userId,score,0,StringPool.BLANK);
+  }
+  return kbFeedbackEntry;
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    KBFeedbackEntry kbFeedbackEntry=(KBFeedbackEntry)session.get(KBFeedbackEntryImpl.class,new Long(kbFeedbackEntryId));
+    if (kbFeedbackEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No KBFeedbackEntry exists with the primary key " + kbFeedbackEntryId);
+      }
+      throw new NoSuchFeedbackEntryException("No KBFeedbackEntry exists with the primary key " + kbFeedbackEntryId);
+    }
+    return remove(kbFeedbackEntry);
+  }
+ catch (  NoSuchFeedbackEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

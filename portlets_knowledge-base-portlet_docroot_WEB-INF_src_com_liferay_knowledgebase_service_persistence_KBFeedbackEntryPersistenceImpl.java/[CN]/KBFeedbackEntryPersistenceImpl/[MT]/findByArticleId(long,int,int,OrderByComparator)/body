@@ -1,0 +1,44 @@
+{
+  boolean finderClassNameCacheEnabled=KBFeedbackEntryModelImpl.CACHE_ENABLED;
+  String finderClassName=KBFeedbackEntry.class.getName();
+  String finderMethodName="findByArticleId";
+  String[] finderParams=new String[]{Long.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
+  Object[] finderArgs=new Object[]{new Long(articleId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.knowledgebase.model.KBFeedbackEntry WHERE ");
+      query.append("articleId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("createDate DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(articleId);
+      List<KBFeedbackEntry> list=(List<KBFeedbackEntry>)QueryUtil.list(q,getDialect(),start,end);
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<KBFeedbackEntry>)result;
+  }
+}

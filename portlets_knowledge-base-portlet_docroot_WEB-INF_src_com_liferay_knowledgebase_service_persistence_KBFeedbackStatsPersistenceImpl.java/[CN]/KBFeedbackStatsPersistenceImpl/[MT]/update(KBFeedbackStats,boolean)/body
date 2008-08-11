@@ -1,0 +1,25 @@
+{
+  boolean isNew=kbFeedbackStats.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(kbFeedbackStats);
+      }
+ else {
+        listener.onBeforeUpdate(kbFeedbackStats);
+      }
+    }
+  }
+  kbFeedbackStats=updateImpl(kbFeedbackStats,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(kbFeedbackStats);
+      }
+ else {
+        listener.onAfterUpdate(kbFeedbackStats);
+      }
+    }
+  }
+  return kbFeedbackStats;
+}

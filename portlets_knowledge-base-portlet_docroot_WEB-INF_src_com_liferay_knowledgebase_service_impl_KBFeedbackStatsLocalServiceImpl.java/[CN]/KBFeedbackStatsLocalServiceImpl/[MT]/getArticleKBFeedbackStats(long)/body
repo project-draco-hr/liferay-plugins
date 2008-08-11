@@ -1,0 +1,17 @@
+{
+  KBFeedbackStats kbFeedbackStats=null;
+  try {
+    kbFeedbackStats=kbFeedbackStatsPersistence.findByArticleId(articleId);
+  }
+ catch (  Exception e) {
+    long kbFeedbackStatsId=CounterLocalServiceUtil.increment();
+    kbFeedbackStats=kbFeedbackStatsPersistence.create(kbFeedbackStatsId);
+    kbFeedbackStats.setArticleId(articleId);
+    kbFeedbackStats.setAverageScore(0.0);
+    kbFeedbackStats.setTotalScoreEntries(0);
+    kbFeedbackStats.setTotalVotes(0);
+    kbFeedbackStats.setYesVotes(0);
+    kbFeedbackStatsPersistence.update(kbFeedbackStats,false);
+  }
+  return kbFeedbackStats;
+}

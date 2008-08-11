@@ -1,0 +1,24 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (merge) {
+      session.merge(kbFeedbackEntry);
+    }
+ else {
+      if (kbFeedbackEntry.isNew()) {
+        session.save(kbFeedbackEntry);
+      }
+    }
+    session.flush();
+    kbFeedbackEntry.setNew(false);
+    return kbFeedbackEntry;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(KBFeedbackEntry.class.getName());
+  }
+}

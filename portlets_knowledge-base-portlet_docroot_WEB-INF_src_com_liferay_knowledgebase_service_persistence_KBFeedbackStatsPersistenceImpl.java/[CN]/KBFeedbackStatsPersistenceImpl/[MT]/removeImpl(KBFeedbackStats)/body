@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    session.delete(kbFeedbackStats);
+    session.flush();
+    return kbFeedbackStats;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(KBFeedbackStats.class.getName());
+  }
+}
