@@ -1,11 +1,12 @@
 {
   org.dom4j.Document xml=DocumentHelper.createDocument();
-  Element root=xml.addElement("delete");
-  root.addElement("query").setText(Field.PORTLET_ID + StringPool.COLON + portletId);
+  Element deleteEl=xml.addElement("delete");
+  Element queryEl=deleteEl.addElement("query");
+  queryEl.setText(Field.PORTLET_ID + StringPool.COLON + portletId);
   try {
-    _write(companyId,xml);
+    write(xml);
   }
- catch (  IOException ioe) {
-    throw new SearchException(ioe);
+ catch (  Exception e) {
+    throw new SearchException(e);
   }
 }

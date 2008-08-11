@@ -1,8 +1,9 @@
 {
-  HttpClient client=new HttpClient();
-  PostMethod method=new PostMethod(url);
+  PostMethod method=null;
   try {
-    RequestEntity entity=new StringRequestEntity(xml,"text/xml","UTF-8");
+    HttpClient client=new HttpClient();
+    method=new PostMethod(_serverURL);
+    RequestEntity entity=new StringRequestEntity(xml,ContentTypes.TEXT_XML,StringPool.UTF8);
     method.setRequestEntity(entity);
     client.executeMethod(method);
   }
