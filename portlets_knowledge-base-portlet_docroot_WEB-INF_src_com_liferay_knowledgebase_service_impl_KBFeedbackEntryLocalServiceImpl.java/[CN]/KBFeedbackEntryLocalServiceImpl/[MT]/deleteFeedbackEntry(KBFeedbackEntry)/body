@@ -1,0 +1,26 @@
+{
+  int vote=feedbackEntry.getVote();
+  int oldScore=feedbackEntry.getScore();
+  long articleResourcePrimKey=feedbackEntry.getArticleResourcePrimKey();
+  kbFeedbackEntryPersistence.remove(feedbackEntry);
+  KBFeedbackStats feedbackStats=kbFeedbackStatsLocalService.getArticleFeedbackStats(articleResourcePrimKey);
+  int totalScoreEntries=feedbackStats.getTotalScoreEntries();
+  int totalVotes=feedbackStats.getTotalVotes() - 1;
+  int yesVotes=feedbackStats.getYesVotes();
+  double averageScore=0;
+  double totalScore=feedbackStats.getAverageScore() * totalScoreEntries;
+  if (vote == 1) {
+    yesVotes--;
+  }
+  if (oldScore != 0) {
+    totalScoreEntries--;
+  }
+  if (totalScoreEntries > 0) {
+    averageScore=(totalScore - oldScore) / totalScoreEntries;
+  }
+  feedbackStats.setAverageScore(averageScore);
+  feedbackStats.setTotalScoreEntries(totalScoreEntries);
+  feedbackStats.setTotalVotes(totalVotes);
+  feedbackStats.setYesVotes(yesVotes);
+  kbFeedbackStatsPersistence.update(feedbackStats,false);
+}

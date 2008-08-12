@@ -1,15 +1,15 @@
 {
-  KBFeedbackEntry kbFeedbackEntry=null;
+  KBFeedbackEntry feedbackEntry=null;
   try {
     Date now=new Date();
-    kbFeedbackEntry=kbFeedbackEntryPersistence.findByA_U(articleId,userId);
-    double oldScore=kbFeedbackEntry.getScore();
-    kbFeedbackEntry.setModifiedDate(now);
-    kbFeedbackEntry.setScore(score);
-    kbFeedbackEntryPersistence.update(kbFeedbackEntry,false);
-    KBFeedbackStats kbFeedbackStats=kbFeedbackStatsLocalService.getArticleKBFeedbackStats(articleId);
-    int totalScoreEntries=kbFeedbackStats.getTotalScoreEntries();
-    double averageScore=kbFeedbackStats.getAverageScore();
+    feedbackEntry=kbFeedbackEntryPersistence.findByA_U(articleResourcePrimKey,userId);
+    double oldScore=feedbackEntry.getScore();
+    feedbackEntry.setModifiedDate(now);
+    feedbackEntry.setScore(score);
+    kbFeedbackEntryPersistence.update(feedbackEntry,false);
+    KBFeedbackStats feedbackStats=kbFeedbackStatsLocalService.getArticleFeedbackStats(articleResourcePrimKey);
+    int totalScoreEntries=feedbackStats.getTotalScoreEntries();
+    double averageScore=feedbackStats.getAverageScore();
     double scoreDifference=score - oldScore;
     double totalScore=averageScore * totalScoreEntries;
     if ((oldScore == 0) && (score != 0)) {
@@ -18,12 +18,12 @@
     if (oldScore != score) {
       averageScore=(totalScore + scoreDifference) / totalScoreEntries;
     }
-    kbFeedbackStats.setAverageScore(averageScore);
-    kbFeedbackStats.setTotalScoreEntries(totalScoreEntries);
-    kbFeedbackStatsPersistence.update(kbFeedbackStats,false);
+    feedbackStats.setAverageScore(averageScore);
+    feedbackStats.setTotalScoreEntries(totalScoreEntries);
+    kbFeedbackStatsPersistence.update(feedbackStats,false);
   }
  catch (  NoSuchFeedbackEntryException nsfee) {
-    kbFeedbackEntry=addKBFeedbackEntry(articleId,userId,score,0,StringPool.BLANK);
+    feedbackEntry=addFeedbackEntry(articleResourcePrimKey,userId,score,0,StringPool.BLANK);
   }
-  return kbFeedbackEntry;
+  return feedbackEntry;
 }

@@ -1,0 +1,45 @@
+{
+  KBFeedbackEntry feedbackEntry=null;
+  try {
+    int oldVote=0;
+    double oldScore=0;
+    Date now=new Date();
+    feedbackEntry=kbFeedbackEntryPersistence.findByA_U(articleResourcePrimKey,userId);
+    oldScore=feedbackEntry.getScore();
+    oldVote=feedbackEntry.getVote();
+    feedbackEntry.setComments(comments);
+    feedbackEntry.setModifiedDate(now);
+    feedbackEntry.setScore(score);
+    feedbackEntry.setVote(vote);
+    kbFeedbackEntryPersistence.update(feedbackEntry,false);
+    KBFeedbackStats feedbackStats=kbFeedbackStatsLocalService.getArticleFeedbackStats(articleResourcePrimKey);
+    int totalScoreEntries=feedbackStats.getTotalScoreEntries();
+    int totalVotes=feedbackStats.getTotalVotes();
+    int yesVotes=feedbackStats.getYesVotes();
+    double averageScore=feedbackStats.getAverageScore();
+    double scoreDifference=score - oldScore;
+    double totalScore=averageScore * totalScoreEntries;
+    if ((oldScore == 0) && (score != 0)) {
+      totalScoreEntries=totalScoreEntries + 1;
+    }
+    averageScore=(totalScore + scoreDifference) / totalScoreEntries;
+    if ((oldVote != 1) && (vote == 1)) {
+      yesVotes++;
+    }
+ else     if ((oldVote == 1) && (vote != 1)) {
+      yesVotes--;
+    }
+    if ((oldVote == 0) && (vote != 0)) {
+      totalVotes++;
+    }
+    feedbackStats.setAverageScore(averageScore);
+    feedbackStats.setTotalScoreEntries(totalScoreEntries);
+    feedbackStats.setTotalVotes(totalVotes);
+    feedbackStats.setYesVotes(yesVotes);
+    kbFeedbackStatsPersistence.update(feedbackStats,false);
+  }
+ catch (  NoSuchFeedbackEntryException nsfee) {
+    feedbackEntry=addFeedbackEntry(articleResourcePrimKey,userId,score,vote,comments);
+  }
+  return feedbackEntry;
+}

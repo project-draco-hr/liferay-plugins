@@ -1,11 +1,11 @@
 {
   int vote=ParamUtil.getInteger(resourceRequest,"vote");
-  long articleId=ParamUtil.getLong(resourceRequest,"articleId");
+  long articleResourcePrimKey=ParamUtil.getLong(resourceRequest,"articleResourcePrimKey");
   long userId=ParamUtil.getLong(resourceRequest,"userId");
-  KBFeedbackEntryLocalServiceUtil.updateVote(articleId,userId,vote);
-  KBFeedbackStats kbFeedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleKBFeedbackStats(articleId);
+  KBFeedbackEntryLocalServiceUtil.updateVote(articleResourcePrimKey,userId,vote);
+  KBFeedbackStats feedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleFeedbackStats(articleResourcePrimKey);
   Map<String,String> parameterMap=new HashMap<String,String>();
-  parameterMap.put("totalVotes",String.valueOf(kbFeedbackStats.getTotalVotes()));
-  parameterMap.put("yesVotes",String.valueOf(kbFeedbackStats.getYesVotes()));
+  parameterMap.put("totalVotes",String.valueOf(feedbackStats.getTotalVotes()));
+  parameterMap.put("yesVotes",String.valueOf(feedbackStats.getYesVotes()));
   sendJSON(resourceResponse,parameterMap);
 }

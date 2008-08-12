@@ -1,0 +1,14 @@
+{
+  KBFeedbackStats kbFeedbackStats=fetchByArticleResourcePrimKey(articleResourcePrimKey);
+  if (kbFeedbackStats == null) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No KBFeedbackStats exists with the key {");
+    msg.append("articleResourcePrimKey=" + articleResourcePrimKey);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchFeedbackStatsException(msg.toString());
+  }
+  return kbFeedbackStats;
+}

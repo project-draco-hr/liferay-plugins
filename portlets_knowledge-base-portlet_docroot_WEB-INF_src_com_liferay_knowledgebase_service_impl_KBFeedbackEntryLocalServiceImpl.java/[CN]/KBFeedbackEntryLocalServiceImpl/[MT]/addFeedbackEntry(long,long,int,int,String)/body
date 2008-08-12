@@ -1,0 +1,39 @@
+{
+  Date now=new Date();
+  User user=UserLocalServiceUtil.getUserById(userId);
+  long feedbackEntryId=CounterLocalServiceUtil.increment();
+  KBFeedbackEntry feedbackEntry=kbFeedbackEntryPersistence.create(feedbackEntryId);
+  feedbackEntry.setArticleResourcePrimKey(articleResourcePrimKey);
+  feedbackEntry.setCreateDate(now);
+  feedbackEntry.setComments(comments);
+  feedbackEntry.setModifiedDate(now);
+  feedbackEntry.setScore(score);
+  feedbackEntry.setUserId(userId);
+  feedbackEntry.setUserName(user.getFullName());
+  feedbackEntry.setVote(vote);
+  kbFeedbackEntryPersistence.update(feedbackEntry,false);
+  KBFeedbackStats feedbackStats=kbFeedbackStatsLocalService.getArticleFeedbackStats(articleResourcePrimKey);
+  int totalScoreEntries=feedbackStats.getTotalScoreEntries();
+  int totalVotes=feedbackStats.getTotalVotes();
+  int yesVotes=feedbackStats.getYesVotes();
+  double averageScore=feedbackStats.getAverageScore();
+  double totalScore=averageScore * totalScoreEntries;
+  if (score != 0) {
+    totalScoreEntries=totalScoreEntries + 1;
+  }
+  if (totalScoreEntries != 0) {
+    averageScore=(totalScore + score) / totalScoreEntries;
+  }
+  if (vote == 1) {
+    yesVotes++;
+  }
+  if (vote != 0) {
+    totalVotes++;
+  }
+  feedbackStats.setAverageScore(averageScore);
+  feedbackStats.setTotalScoreEntries(totalScoreEntries);
+  feedbackStats.setTotalVotes(totalVotes);
+  feedbackStats.setYesVotes(yesVotes);
+  kbFeedbackStatsPersistence.update(feedbackStats,false);
+  return feedbackEntry;
+}

@@ -1,0 +1,17 @@
+{
+  KBFeedbackStats feedbackStats=null;
+  try {
+    feedbackStats=kbFeedbackStatsPersistence.findByArticleResourcePrimKey(articleResourcePrimKey);
+  }
+ catch (  Exception e) {
+    long feedbackStatsId=CounterLocalServiceUtil.increment();
+    feedbackStats=kbFeedbackStatsPersistence.create(feedbackStatsId);
+    feedbackStats.setArticleResourcePrimKey(articleResourcePrimKey);
+    feedbackStats.setAverageScore(0.0);
+    feedbackStats.setTotalScoreEntries(0);
+    feedbackStats.setTotalVotes(0);
+    feedbackStats.setYesVotes(0);
+    kbFeedbackStatsPersistence.update(feedbackStats,false);
+  }
+  return feedbackStats;
+}

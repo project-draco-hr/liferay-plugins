@@ -1,12 +1,12 @@
 {
-  KBFeedbackEntry kbFeedbackEntry=findByPrimaryKey(kbFeedbackEntryId);
-  int count=countByA_S(articleId,score);
+  KBFeedbackEntry kbFeedbackEntry=findByPrimaryKey(feedbackEntryId);
+  int count=countByA_S(articleResourcePrimKey,score);
   Session session=null;
   try {
     session=openSession();
     StringBuilder query=new StringBuilder();
     query.append("FROM com.liferay.knowledgebase.model.KBFeedbackEntry WHERE ");
-    query.append("articleId = ?");
+    query.append("articleResourcePrimKey = ?");
     query.append(" AND ");
     query.append("score = ?");
     query.append(" ");
@@ -20,7 +20,7 @@
     }
     Query q=session.createQuery(query.toString());
     QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(articleId);
+    qPos.add(articleResourcePrimKey);
     qPos.add(score);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,kbFeedbackEntry);
     KBFeedbackEntry[] array=new KBFeedbackEntryImpl[3];

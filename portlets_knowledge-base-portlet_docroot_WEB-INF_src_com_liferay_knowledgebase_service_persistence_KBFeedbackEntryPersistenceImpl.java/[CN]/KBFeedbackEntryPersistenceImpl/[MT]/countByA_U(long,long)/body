@@ -3,7 +3,7 @@
   String finderClassName=KBFeedbackEntry.class.getName();
   String finderMethodName="countByA_U";
   String[] finderParams=new String[]{Long.class.getName(),Long.class.getName()};
-  Object[] finderArgs=new Object[]{new Long(articleId),new Long(userId)};
+  Object[] finderArgs=new Object[]{new Long(articleResourcePrimKey),new Long(userId)};
   Object result=null;
   if (finderClassNameCacheEnabled) {
     result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
@@ -15,13 +15,13 @@
       StringBuilder query=new StringBuilder();
       query.append("SELECT COUNT(*) ");
       query.append("FROM com.liferay.knowledgebase.model.KBFeedbackEntry WHERE ");
-      query.append("articleId = ?");
+      query.append("articleResourcePrimKey = ?");
       query.append(" AND ");
       query.append("userId = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(articleId);
+      qPos.add(articleResourcePrimKey);
       qPos.add(userId);
       Long count=null;
       Iterator<Long> itr=q.list().iterator();

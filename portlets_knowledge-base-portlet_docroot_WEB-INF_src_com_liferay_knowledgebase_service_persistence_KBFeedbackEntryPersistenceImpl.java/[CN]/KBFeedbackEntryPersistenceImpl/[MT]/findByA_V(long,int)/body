@@ -3,7 +3,7 @@
   String finderClassName=KBFeedbackEntry.class.getName();
   String finderMethodName="findByA_V";
   String[] finderParams=new String[]{Long.class.getName(),Integer.class.getName()};
-  Object[] finderArgs=new Object[]{new Long(articleId),new Integer(vote)};
+  Object[] finderArgs=new Object[]{new Long(articleResourcePrimKey),new Integer(vote)};
   Object result=null;
   if (finderClassNameCacheEnabled) {
     result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
@@ -14,7 +14,7 @@
       session=openSession();
       StringBuilder query=new StringBuilder();
       query.append("FROM com.liferay.knowledgebase.model.KBFeedbackEntry WHERE ");
-      query.append("articleId = ?");
+      query.append("articleResourcePrimKey = ?");
       query.append(" AND ");
       query.append("vote = ?");
       query.append(" ");
@@ -22,7 +22,7 @@
       query.append("createDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(articleId);
+      qPos.add(articleResourcePrimKey);
       qPos.add(vote);
       List<KBFeedbackEntry> list=q.list();
       FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);

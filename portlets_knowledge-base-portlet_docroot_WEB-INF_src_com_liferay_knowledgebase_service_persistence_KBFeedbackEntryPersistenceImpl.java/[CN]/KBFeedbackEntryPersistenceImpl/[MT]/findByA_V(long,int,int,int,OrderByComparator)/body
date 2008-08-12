@@ -3,7 +3,7 @@
   String finderClassName=KBFeedbackEntry.class.getName();
   String finderMethodName="findByA_V";
   String[] finderParams=new String[]{Long.class.getName(),Integer.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
-  Object[] finderArgs=new Object[]{new Long(articleId),new Integer(vote),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{new Long(articleResourcePrimKey),new Integer(vote),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
   Object result=null;
   if (finderClassNameCacheEnabled) {
     result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
@@ -14,7 +14,7 @@
       session=openSession();
       StringBuilder query=new StringBuilder();
       query.append("FROM com.liferay.knowledgebase.model.KBFeedbackEntry WHERE ");
-      query.append("articleId = ?");
+      query.append("articleResourcePrimKey = ?");
       query.append(" AND ");
       query.append("vote = ?");
       query.append(" ");
@@ -28,7 +28,7 @@
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(articleId);
+      qPos.add(articleResourcePrimKey);
       qPos.add(vote);
       List<KBFeedbackEntry> list=(List<KBFeedbackEntry>)QueryUtil.list(q,getDialect(),start,end);
       FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
