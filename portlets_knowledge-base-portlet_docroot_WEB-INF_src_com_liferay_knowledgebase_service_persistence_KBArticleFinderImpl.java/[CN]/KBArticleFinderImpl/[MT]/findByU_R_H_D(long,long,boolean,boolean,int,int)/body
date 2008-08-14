@@ -1,0 +1,21 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(FIND_BY_U_R_H_D);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addEntity("KB_KBArticle",KBArticleImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(resourcePrimKey);
+    qPos.add(head);
+    qPos.add(userId);
+    qPos.add(draft);
+    return (List<KBArticle>)QueryUtil.list(q,getDialect(),start,end);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
