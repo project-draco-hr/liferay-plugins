@@ -1,0 +1,56 @@
+{
+  boolean finderClassNameCacheEnabled=KBArticleModelImpl.CACHE_ENABLED;
+  String finderClassName=KBArticle.class.getName();
+  String finderMethodName="fetchByR_V_D";
+  String[] finderParams=new String[]{Long.class.getName(),Double.class.getName(),Boolean.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(resourcePrimKey),new Double(version),Boolean.valueOf(draft)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.knowledgebase.model.KBArticle WHERE ");
+      query.append("resourcePrimKey = ?");
+      query.append(" AND ");
+      query.append("version = ?");
+      query.append(" AND ");
+      query.append("draft = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("title ASC, ");
+      query.append("version ASC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(resourcePrimKey);
+      qPos.add(version);
+      qPos.add(draft);
+      List<KBArticle> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      if (list.size() == 0) {
+        return null;
+      }
+ else {
+        return list.get(0);
+      }
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    List<KBArticle> list=(List<KBArticle>)result;
+    if (list.size() == 0) {
+      return null;
+    }
+ else {
+      return list.get(0);
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  KBArticle kbArticle=findByPrimaryKey(articleId);
+  int count=countByP_D(parentResourcePrimKey,draft);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.knowledgebase.model.KBArticle WHERE ");
+    query.append("parentResourcePrimKey = ?");
+    query.append(" AND ");
+    query.append("draft = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("title ASC, ");
+      query.append("version ASC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(parentResourcePrimKey);
+    qPos.add(draft);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,kbArticle);
+    KBArticle[] array=new KBArticleImpl[3];
+    array[0]=(KBArticle)objArray[0];
+    array[1]=(KBArticle)objArray[1];
+    array[2]=(KBArticle)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
