@@ -1,0 +1,18 @@
+{
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  KBArticle article=(KBArticle)renderRequest.getAttribute(KnowledgeBaseKeys.ARTICLE);
+  boolean draft=BeanParamUtil.getBoolean(article,request,"draft",false);
+  long articleAuthorId=BeanParamUtil.getLong(article,request,"userId",0);
+  long userId=themeDisplay.getUserId();
+  if (permissionChecker.isOmniadmin()) {
+    renderRequest.setAttribute("isViewableArticle","true");
+  }
+ else   if (draft && (articleAuthorId != userId)) {
+    renderRequest.setAttribute("isViewableArticle","false");
+  }
+ else {
+    renderRequest.setAttribute("isViewableArticle","true");
+  }
+}

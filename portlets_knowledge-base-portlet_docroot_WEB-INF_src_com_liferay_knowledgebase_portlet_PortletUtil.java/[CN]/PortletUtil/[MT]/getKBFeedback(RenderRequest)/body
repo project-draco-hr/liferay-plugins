@@ -1,18 +1,4 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  KBArticle article=(KBArticle)renderRequest.getAttribute(KnowledgeBaseKeys.ARTICLE);
-  long userId=themeDisplay.getUserId();
-  KBFeedbackEntry feedbackEntry=null;
-  KBFeedbackStats feedbackStats=null;
-  if (article != null) {
-    try {
-      feedbackEntry=KBFeedbackEntryLocalServiceUtil.getFeedbackEntry(article.getResourcePrimKey(),userId);
-    }
- catch (    NoSuchFeedbackEntryException nsfee) {
-      feedbackEntry=null;
-    }
-    feedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleFeedbackStats(article.getResourcePrimKey());
-  }
-  renderRequest.setAttribute(KnowledgeBaseKeys.KNOWLEDGE_BASE_FEEDBACK_ENTRY,feedbackEntry);
-  renderRequest.setAttribute(KnowledgeBaseKeys.KNOWLEDGE_BASE_FEEDBACK_STATS,feedbackStats);
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
+  getKBFeedback(request);
 }
