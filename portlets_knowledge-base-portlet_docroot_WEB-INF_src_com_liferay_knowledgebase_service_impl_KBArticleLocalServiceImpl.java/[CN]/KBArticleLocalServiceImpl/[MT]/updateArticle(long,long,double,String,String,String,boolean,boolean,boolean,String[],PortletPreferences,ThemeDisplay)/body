@@ -1,0 +1,49 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  KBArticle article=getArticle(resourcePrimKey);
+  long groupId=article.getGroupId();
+  double oldVersion=article.getVersion();
+  if ((version > 0) && (version != oldVersion)) {
+    throw new ArticleVersionException();
+  }
+  article.setHead(false);
+  article.setModifiedDate(now);
+  kbArticlePersistence.update(article,false);
+  double newVersion=MathUtil.format(oldVersion + 0.1,1,1);
+  long articleId=counterLocalService.increment();
+  article=kbArticlePersistence.create(articleId);
+  article.setResourcePrimKey(resourcePrimKey);
+  article.setCompanyId(user.getCompanyId());
+  article.setUserId(user.getUserId());
+  article.setUserName(user.getFullName());
+  article.setModifiedDate(now);
+  article.setGroupId(groupId);
+  article.setTitle(title);
+  article.setVersion(newVersion);
+  article.setMinorEdit(minorEdit);
+  article.setContent(content);
+  article.setDescription(description);
+  article.setHead(true);
+  article.setTemplate(template);
+  article.setDraft(draft);
+  kbArticlePersistence.update(article,false);
+  if (!minorEdit && !draft && NotificationThreadLocal.isNotificationEnabled()) {
+    try {
+      notifySubscribers(article,prefs,themeDisplay,true);
+    }
+ catch (    Exception e) {
+      throw new SystemException(e);
+    }
+  }
+  updateTagsAsset(userId,article,tagsEntries);
+  if (!draft) {
+    try {
+      Indexer.updateArticle(article.getCompanyId(),article.getGroupId(),userId,resourcePrimKey,article.getTitle(),content,description,tagsEntries);
+    }
+ catch (    SearchException se) {
+      _log.error("Indexing " + article.getPrimaryKey(),se);
+    }
+  }
+  return article;
+}
