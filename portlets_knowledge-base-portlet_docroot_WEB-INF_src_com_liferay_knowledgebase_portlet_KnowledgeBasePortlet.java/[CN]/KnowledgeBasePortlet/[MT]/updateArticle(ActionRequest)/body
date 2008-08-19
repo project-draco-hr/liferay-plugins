@@ -17,8 +17,11 @@
     String vocabularyParamName=TagsEntryConstants.VOCABULARY + Long.toString(vocabulary.getVocabularyId());
     long entryId=ParamUtil.getLong(actionRequest,vocabularyParamName);
     if (Validator.isNotNull(entryId)) {
+      if (Validator.isNotNull(tagsEntriesString)) {
+        tagsEntriesString+=",";
+      }
       TagsEntry entry=TagsEntryServiceUtil.getEntry(entryId);
-      tagsEntriesString+="," + entry.getName();
+      tagsEntriesString+=entry.getName();
     }
   }
   String[] tagsEntries=StringUtil.split(tagsEntriesString);
