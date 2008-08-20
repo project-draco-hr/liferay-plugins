@@ -4,8 +4,10 @@
   long userId=ParamUtil.getLong(resourceRequest,"userId");
   KBFeedbackEntryLocalServiceUtil.updateScore(articleResourcePrimKey,userId,score);
   KBFeedbackStats feedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleFeedbackStats(articleResourcePrimKey);
+  int totalScoreEntries=feedbackStats.getTotalScoreEntries();
+  double averageScore=MathUtil.format(feedbackStats.getAverageScore(),1,1);
   Map<String,String> parameterMap=new HashMap<String,String>();
-  parameterMap.put("averageScore",String.valueOf(feedbackStats.getAverageScore()));
-  parameterMap.put("totalScoreEntries",String.valueOf(feedbackStats.getTotalScoreEntries()));
+  parameterMap.put("averageScore",String.valueOf(averageScore));
+  parameterMap.put("totalScoreEntries",String.valueOf(totalScoreEntries));
   sendJSON(resourceResponse,parameterMap);
 }
