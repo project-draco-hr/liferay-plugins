@@ -1,0 +1,20 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(FIND_BY_S_U_G);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addEntity("KB_KBArticle",KBArticleImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(PortalUtil.getClassNameId(KBArticle.class.getName()));
+    qPos.add(groupId);
+    qPos.add(userId);
+    return (List<KBArticle>)q.list();
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
