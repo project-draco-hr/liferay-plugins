@@ -1,0 +1,45 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PortletPreferences prefs=actionRequest.getPreferences();
+  boolean addTemplate=ParamUtil.getBoolean(actionRequest,"addTemplate",false);
+  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+  long templateResourcePrimKey=ParamUtil.getLong(actionRequest,"templateResourcePrimKey");
+  String title=ParamUtil.getString(actionRequest,"title");
+  double version=ParamUtil.getDouble(actionRequest,"version");
+  String content=ParamUtil.getString(actionRequest,"content");
+  String description=ParamUtil.getString(actionRequest,"description");
+  boolean minorEdit=ParamUtil.getBoolean(actionRequest,"minorEdit");
+  boolean template=ParamUtil.getBoolean(actionRequest,"template");
+  boolean draft=ParamUtil.getBoolean(actionRequest,"draft");
+  List<TagsVocabulary> vocabularies=TagsVocabularyServiceUtil.getCompanyVocabularies(themeDisplay.getCompanyId(),false);
+  String tagsEntriesString=ParamUtil.getString(actionRequest,"tagsEntries");
+  for (  TagsVocabulary vocabulary : vocabularies) {
+    String vocabularyParamName=TagsEntryConstants.VOCABULARY + Long.toString(vocabulary.getVocabularyId());
+    long entryId=ParamUtil.getLong(actionRequest,vocabularyParamName);
+    if (Validator.isNotNull(entryId)) {
+      if (Validator.isNotNull(tagsEntriesString)) {
+        tagsEntriesString+=",";
+      }
+      TagsEntry entry=TagsEntryServiceUtil.getEntry(entryId);
+      tagsEntriesString+=entry.getName();
+    }
+  }
+  String[] tagsEntries=StringUtil.split(tagsEntriesString);
+  if (addTemplate) {
+    minorEdit=true;
+    KBArticle selectedTemplate=KBArticleServiceUtil.getArticle(templateResourcePrimKey);
+    content=selectedTemplate.getContent() + content;
+  }
+  if (resourcePrimKey <= 0) {
+    return KBArticleServiceUtil.addArticle(themeDisplay.getPlid(),title,content,description,minorEdit,template,draft,tagsEntries,prefs,themeDisplay);
+  }
+ else {
+    KBArticle article=KBArticleServiceUtil.getArticle(resourcePrimKey);
+    if (article.isTemplate() && (template == false)) {
+      return KBArticleServiceUtil.addArticle(themeDisplay.getPortletGroupId(),title,content,description,minorEdit,template,draft,tagsEntries,prefs,themeDisplay);
+    }
+ else {
+      return KBArticleServiceUtil.updateArticle(themeDisplay.getPlid(),resourcePrimKey,version,title,content,description,minorEdit,template,draft,tagsEntries,prefs,themeDisplay);
+    }
+  }
+}
