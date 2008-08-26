@@ -1,0 +1,13 @@
+{
+  String tabs2=ParamUtil.getString(actionRequest,"tabs2");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  if (tabs2.equals("display-settings")) {
+    updateDisplaySettings(actionRequest,prefs);
+  }
+ else   if (tabs2.equals("rss")) {
+    updateRSS(actionRequest,prefs);
+  }
+  prefs.store();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}

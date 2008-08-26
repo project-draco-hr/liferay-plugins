@@ -1,0 +1,49 @@
+{
+  SyndFeed syndFeed=new SyndFeedImpl();
+  syndFeed.setFeedType(RSSUtil.getFeedType(type,version));
+  syndFeed.setTitle(name);
+  syndFeed.setLink(feedURL);
+  syndFeed.setDescription(description);
+  List<SyndEntry> entries=new ArrayList<SyndEntry>();
+  syndFeed.setEntries(entries);
+  for (int i=0; i < articles.size(); i++) {
+    KBArticle article=articles.get(i);
+    String author=PortalUtil.getUserName(article.getUserId(),article.getUserName());
+    String syndTitle=article.getTitle() + StringPool.SPACE + article.getVersion();
+    String entryURL=feedURL;
+    if (entryURLs != null) {
+      entryURL=entryURLs.get(i);
+    }
+    entryURL=entryURL + StringPool.SLASH + StringPool.DASH+ StringPool.SLASH+ KnowledgeBaseFriendlyURLMapper.MAPPING+ StringPool.SLASH+ article.getTitle();
+    String value=null;
+    if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
+      value=StringUtil.shorten(HtmlUtil.extractText(article.getContent()),abstractLength,StringPool.BLANK);
+    }
+ else     if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
+      value=article.getTitle();
+    }
+ else {
+      value=article.getContent();
+    }
+    SyndContent syndContent=new SyndContentImpl();
+    syndContent.setValue(value);
+    syndContent.setType(RSSUtil.DEFAULT_ENTRY_TYPE);
+    syndContent.setValue(value);
+    SyndEntry syndEntry=new SyndEntryImpl();
+    syndEntry.setAuthor(author);
+    syndEntry.setTitle(syndTitle);
+    syndEntry.setPublishedDate(article.getModifiedDate());
+    syndEntry.setDescription(syndContent);
+    syndEntry.setLink(entryURL);
+    entries.add(syndEntry);
+  }
+  try {
+    return RSSUtil.export(syndFeed);
+  }
+ catch (  FeedException fe) {
+    throw new SystemException(fe);
+  }
+catch (  IOException ioe) {
+    throw new SystemException(ioe);
+  }
+}

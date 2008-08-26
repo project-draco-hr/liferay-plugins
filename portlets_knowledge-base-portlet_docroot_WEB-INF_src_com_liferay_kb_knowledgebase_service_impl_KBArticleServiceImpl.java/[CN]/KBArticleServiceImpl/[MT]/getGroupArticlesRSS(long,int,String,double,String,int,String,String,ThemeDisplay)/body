@@ -1,0 +1,11 @@
+{
+  List<KBArticle> articles=getGroupArticles(groupId,max);
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  String title=group.getName();
+  List<String> entryURLs=new ArrayList<String>();
+  for (  KBArticle article : articles) {
+    String entryURL=getEntryURL(article,themeDisplay);
+    entryURLs.add(entryURL);
+  }
+  return exportToRSS(title,description,type,version,displayStyle,abstractLength,feedURL,entryURLs,articles);
+}

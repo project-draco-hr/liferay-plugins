@@ -1,0 +1,20 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long groupId=ParamUtil.getLong(resourceRequest,"groupId");
+  int rssMaxItems=ParamUtil.getInteger(resourceRequest,"rssMaxItems");
+  String rssDisplayStyle=ParamUtil.getString(resourceRequest,"rssDisplayStyle");
+  int rssAbstractLength=ParamUtil.getInteger(resourceRequest,"rssAbstractLength");
+  String rssType=ParamUtil.getString(resourceRequest,"rssType");
+  double rssVersion=ParamUtil.getDouble(resourceRequest,"rssVersion");
+  String feedURL=PortalUtil.getPortalURL(themeDisplay) + PortalUtil.getLayoutURL(themeDisplay);
+  String description=LanguageUtil.get(themeDisplay.getLocale(),"knowledge-base-articles");
+  String rss=StringPool.BLANK;
+  if (groupId > 0) {
+    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,description,feedURL,themeDisplay);
+  }
+ else {
+    rss=KBArticleServiceUtil.getCompanyArticlesRSS(themeDisplay.getCompanyId(),rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,description,feedURL,themeDisplay);
+  }
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+  ServletResponseUtil.sendFile(response,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
+}

@@ -1,0 +1,19 @@
+{
+  StringBuilder entryURL=new StringBuilder(PortalUtil.getPortalURL(themeDisplay));
+  long publicPlid=PortalUtil.getPlidFromPortletId(article.getGroupId(),false,KnowledgeBaseKeys.PORTLET_ID);
+  long privatePlid=PortalUtil.getPlidFromPortletId(article.getGroupId(),true,KnowledgeBaseKeys.PORTLET_ID);
+  Layout layout=null;
+  if (publicPlid != LayoutConstants.DEFAULT_PLID) {
+    layout=LayoutLocalServiceUtil.getLayout(publicPlid);
+  }
+ else   if (privatePlid != LayoutConstants.DEFAULT_PLID) {
+    layout=LayoutLocalServiceUtil.getLayout(privatePlid);
+  }
+  if (layout != null) {
+    entryURL.append(PortalUtil.getLayoutFriendlyURL(layout,themeDisplay));
+  }
+ else {
+    entryURL.append(PortalUtil.getLayoutURL(themeDisplay));
+  }
+  return entryURL.toString();
+}
