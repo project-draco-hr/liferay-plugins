@@ -2,18 +2,18 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long groupId=ParamUtil.getLong(resourceRequest,"groupId");
   long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
-  int max=ParamUtil.getInteger(resourceRequest,"max",SearchContainer.DEFAULT_DELTA);
-  String type=ParamUtil.getString(resourceRequest,"type",RSSUtil.DEFAULT_TYPE);
-  double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.DEFAULT_VERSION);
-  String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
-  int abstractLength=ParamUtil.getInteger(resourceRequest,"abstractLength",SearchContainer.DEFAULT_DELTA);
+  String rssType=ParamUtil.getString(resourceRequest,"rssType");
+  double rssVersion=ParamUtil.getDouble(resourceRequest,"rssVersion");
+  int rssMaxItems=ParamUtil.getInteger(resourceRequest,"rssMaxItems",RSSUtil.MAX_ITEMS_20);
+  String rssDisplayStyle=ParamUtil.getString(resourceRequest,"rssDisplayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
+  int rssAbstractLength=ParamUtil.getInteger(resourceRequest,"rssAbstractLength",RSSUtil.ABSTRACT_LENGTH_200);
   String feedURL=PortalUtil.getPortalURL(themeDisplay) + PortalUtil.getLayoutURL(themeDisplay);
   String rss=StringPool.BLANK;
   if (resourcePrimKey > 0) {
-    rss=KBArticleServiceUtil.getArticlesRSS(resourcePrimKey,max,type,version,displayStyle,abstractLength,feedURL);
+    rss=KBArticleServiceUtil.getArticlesRSS(resourcePrimKey,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,feedURL);
   }
  else   if (groupId > 0) {
-    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,max,type,version,displayStyle,abstractLength,feedURL);
+    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,feedURL);
   }
   HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
   ServletResponseUtil.sendFile(response,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
