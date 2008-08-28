@@ -8,12 +8,13 @@
   String rssDisplayStyle=ParamUtil.getString(resourceRequest,"rssDisplayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
   int rssAbstractLength=ParamUtil.getInteger(resourceRequest,"rssAbstractLength",RSSUtil.ABSTRACT_LENGTH_200);
   String feedURL=PortalUtil.getPortalURL(themeDisplay) + PortalUtil.getLayoutURL(themeDisplay);
+  String description=LanguageUtil.get(themeDisplay.getLocale(),"knowledge-base-articles");
   String rss=StringPool.BLANK;
   if (resourcePrimKey > 0) {
     rss=KBArticleServiceUtil.getArticlesRSS(resourcePrimKey,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,feedURL);
   }
  else   if (groupId > 0) {
-    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,feedURL);
+    rss=KBArticleServiceUtil.getGroupArticlesRSS(groupId,rssMaxItems,rssType,rssVersion,rssDisplayStyle,rssAbstractLength,description,feedURL,themeDisplay);
   }
   HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
   ServletResponseUtil.sendFile(response,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
