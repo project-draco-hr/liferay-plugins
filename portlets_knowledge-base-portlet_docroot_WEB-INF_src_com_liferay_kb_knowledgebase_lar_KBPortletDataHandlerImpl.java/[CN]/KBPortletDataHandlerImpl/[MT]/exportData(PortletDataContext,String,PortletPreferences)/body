@@ -1,10 +1,9 @@
 {
   try {
-    long defaultUserId=UserLocalServiceUtil.getDefaultUserId(context.getCompanyId());
     Document doc=SAXReaderUtil.createDocument();
     Element root=doc.addElement("kb-data");
     root.addAttribute("group-id",String.valueOf(context.getGroupId()));
-    List<KBArticle> articles=KBArticleFinderUtil.findByU_G_H_T_D(defaultUserId,context.getGroupId(),true,false,false);
+    List<KBArticle> articles=KBArticleUtil.findByG_H_T_D(context.getGroupId(),true,false,false);
     for (    KBArticle article : articles) {
       exportArticle(context,root,article);
     }
