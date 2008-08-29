@@ -8,17 +8,9 @@
     prefs=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
   }
   Company company=companyPersistence.findByPrimaryKey(article.getCompanyId());
-  User user=userPersistence.findByPrimaryKey(article.getUserId());
   Group group=groupPersistence.findByPrimaryKey(article.getGroupId());
-  String groupName=group.getName();
-  if (group.isUser()) {
-    User user2=UserLocalServiceUtil.getUserById(group.getClassPK());
-    groupName=user2.getFullName();
-  }
- else   if (group.isOrganization()) {
-    Organization organization=OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
-    groupName=organization.getName();
-  }
+  User user=userPersistence.findByPrimaryKey(article.getUserId());
+  String groupName=KnowledgeBaseUtil.getGroupName(group);
   String articleURL=StringPool.BLANK;
   if (themeDisplay != null) {
     String portalURL=PortalUtil.getPortalURL(themeDisplay);
@@ -30,19 +22,10 @@
   String fromAddress=PrefsPropsUtil.getString(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
   String toName=user.getFullName();
   String toAddress=user.getEmailAddress();
-  String subject=StringPool.BLANK;
-  String body=StringPool.BLANK;
-  String signature=StringPool.BLANK;
-  if (update) {
-    subject=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_UPDATED_SUBJECT,getClass().getClassLoader());
-    body=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_UPDATED_BODY,getClass().getClassLoader());
-    signature=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_UPDATED_SIGNATURE,getClass().getClassLoader());
-  }
- else {
-    subject=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_ADDED_SUBJECT,getClass().getClassLoader());
-    body=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_ADDED_BODY,getClass().getClassLoader());
-    signature=PortletPrefsPropsUtil.getContent(company.getCompanyId(),PortletPropsKeys.ADMIN_EMAIL_ARTICLE_ADDED_SIGNATURE,getClass().getClassLoader());
-  }
+  ClassLoader classLoader=getClass().getClassLoader();
+  String subject=KnowledgeBaseUtil.getEmailSubject(company.getCompanyId(),classLoader,update);
+  String body=KnowledgeBaseUtil.getEmailBody(company.getCompanyId(),classLoader,update);
+  String signature=KnowledgeBaseUtil.getEmailSignature(company.getCompanyId(),classLoader,update);
   subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$COMMUNITY_NAME$]","[$COMPANY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_NAME$]","[$TO_ADDRESS$]"},new String[]{article.getContent(),article.getDescription(),article.getTitle(),articleURL,groupName,company.getName(),fromAddress,fromName,company.getVirtualHost(),portletName,user.getFullName(),user.getEmailAddress()});
   body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$COMMUNITY_NAME$]","[$COMPANY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_NAME$]","[$TO_ADDRESS$]"},new String[]{article.getContent(),article.getDescription(),article.getTitle(),articleURL,groupName,company.getName(),fromAddress,fromName,company.getVirtualHost(),portletName,user.getFullName(),user.getEmailAddress()});
   signature=StringUtil.replace(signature,new String[]{"[$COMPANY_NAME$]"},new String[]{company.getName()});
@@ -50,5 +33,5 @@
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
-  MailServiceUtil.sendEmail(mailMessage);
+  mailService.sendEmail(mailMessage);
 }
