@@ -1,12 +1,11 @@
 {
-  String actionName=ParamUtil.getString(actionRequest,"actionName");
-  if (!actionName.equals(Constants.UPDATE)) {
-    return;
-  }
   String portletResource=ParamUtil.getString(actionRequest,"portletResource");
   PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
   String tabs2=ParamUtil.getString(actionRequest,"tabs2");
-  if (tabs2.equals("export-settings")) {
+  if (tabs2.equals("email-notifications")) {
+    updateEmailSettings(actionRequest,prefs);
+  }
+ else   if (tabs2.equals("export-settings")) {
     updateExportSettings(actionRequest,prefs);
   }
  else   if (tabs2.equals("rss")) {
