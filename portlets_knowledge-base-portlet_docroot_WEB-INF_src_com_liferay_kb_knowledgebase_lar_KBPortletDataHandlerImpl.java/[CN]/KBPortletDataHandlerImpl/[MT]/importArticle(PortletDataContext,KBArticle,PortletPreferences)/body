@@ -1,0 +1,28 @@
+{
+  long userId=context.getUserId(article.getUserUuid());
+  long groupId=context.getGroupId();
+  String[] tagsEntries=null;
+  if (context.getBooleanParameter(_NAMESPACE,"tags")) {
+    tagsEntries=context.getTagsEntries(KBArticle.class,article.getArticleId());
+  }
+  ThemeDisplay themeDisplay=null;
+  KBArticle existingArticle=null;
+  if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
+    existingArticle=KBArticleUtil.fetchByUUID_G(article.getUuid(),context.getGroupId());
+    if (existingArticle == null) {
+      existingArticle=KBArticleLocalServiceUtil.addArticle(article.getUuid(),userId,groupId,article.getTitle(),article.getVersion(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isHead(),article.isTemplate(),article.isDraft(),tagsEntries,null,themeDisplay);
+    }
+ else {
+      existingArticle=KBArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getVersion(),article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),tagsEntries,null,themeDisplay);
+    }
+  }
+ else {
+    existingArticle=KBArticleLocalServiceUtil.addArticle(userId,groupId,article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),tagsEntries,null,themeDisplay);
+  }
+  if (context.getBooleanParameter(_NAMESPACE,"comments")) {
+    context.importComments(KBArticle.class,article.getArticleId(),existingArticle.getArticleId(),context.getGroupId());
+  }
+  if (context.getBooleanParameter(_NAMESPACE,"ratings")) {
+    context.importRatingsEntries(KBArticle.class,existingArticle.getArticleId(),existingArticle.getArticleId());
+  }
+}

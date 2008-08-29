@@ -1,0 +1,18 @@
+{
+  try {
+    Document doc=SAXReaderUtil.read(data);
+    Element root=doc.getRootElement();
+    List<Element> entryEls=root.elements("article");
+    for (    Element entryEl : entryEls) {
+      String path=entryEl.attributeValue("path");
+      if (context.isPathNotProcessed(path)) {
+        KBArticle article=(KBArticle)context.getZipEntryAsObject(path);
+        importArticle(context,article,prefs);
+      }
+    }
+    return null;
+  }
+ catch (  Exception e) {
+    throw new PortletDataException(e);
+  }
+}

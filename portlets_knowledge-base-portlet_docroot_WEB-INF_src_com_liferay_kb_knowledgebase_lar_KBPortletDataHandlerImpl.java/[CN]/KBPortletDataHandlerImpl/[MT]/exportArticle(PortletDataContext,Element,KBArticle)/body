@@ -1,0 +1,21 @@
+{
+  if (!context.isWithinDateRange(article.getModifiedDate())) {
+    return;
+  }
+  String path=getArticlePath(context,article);
+  Element entryEl=root.addElement("article");
+  entryEl.addAttribute("path",path);
+  if (context.isPathNotProcessed(path)) {
+    if (context.getBooleanParameter(_NAMESPACE,"comments")) {
+      context.addComments(KBArticle.class,article.getArticleId());
+    }
+    if (context.getBooleanParameter(_NAMESPACE,"ratings")) {
+      context.addRatingsEntries(KBArticle.class,article.getArticleId());
+    }
+    if (context.getBooleanParameter(_NAMESPACE,"tags")) {
+      context.addTagsEntries(KBArticle.class,article.getArticleId());
+    }
+    article.setUserUuid(article.getUserUuid());
+    context.addZipEntry(path,article);
+  }
+}
