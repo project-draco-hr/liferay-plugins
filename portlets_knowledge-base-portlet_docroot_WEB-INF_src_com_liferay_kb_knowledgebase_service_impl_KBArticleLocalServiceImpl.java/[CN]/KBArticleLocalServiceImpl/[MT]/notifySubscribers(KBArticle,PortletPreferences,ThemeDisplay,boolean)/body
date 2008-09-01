@@ -12,7 +12,7 @@
   User user=userPersistence.findByPrimaryKey(article.getUserId());
   String groupName=KnowledgeBaseUtil.getGroupName(group);
   String articleURL=StringPool.BLANK;
-  String portletName="Knowledge Base Portlet";
+  String portletName="Knowledge Base";
   if (themeDisplay != null) {
     String portalURL=PortalUtil.getPortalURL(themeDisplay);
     String layoutURL=PortalUtil.getLayoutURL(themeDisplay);
@@ -26,11 +26,8 @@
   ClassLoader classLoader=getClass().getClassLoader();
   String subject=KnowledgeBaseUtil.getEmailSubject(company.getCompanyId(),classLoader,update);
   String body=KnowledgeBaseUtil.getEmailBody(company.getCompanyId(),classLoader,update);
-  String signature=KnowledgeBaseUtil.getEmailSignature(company.getCompanyId(),classLoader,update);
   subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$COMMUNITY_NAME$]","[$COMPANY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_NAME$]","[$TO_ADDRESS$]"},new String[]{article.getContent(),article.getDescription(),article.getTitle(),articleURL,groupName,company.getName(),fromAddress,fromName,company.getVirtualHost(),portletName,user.getFullName(),user.getEmailAddress()});
   body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_DESCRIPTION$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$COMMUNITY_NAME$]","[$COMPANY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_NAME$]","[$TO_ADDRESS$]"},new String[]{article.getContent(),article.getDescription(),article.getTitle(),articleURL,groupName,company.getName(),fromAddress,fromName,company.getVirtualHost(),portletName,user.getFullName(),user.getEmailAddress()});
-  signature=StringUtil.replace(signature,new String[]{"[$COMPANY_NAME$]"},new String[]{company.getName()});
-  body=body + signature;
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
