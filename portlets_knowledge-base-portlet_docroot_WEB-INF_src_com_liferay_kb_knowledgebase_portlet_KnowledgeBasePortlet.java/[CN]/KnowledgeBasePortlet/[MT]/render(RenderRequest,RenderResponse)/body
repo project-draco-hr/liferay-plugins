@@ -1,10 +1,15 @@
 {
   try {
-    PortletUtil.getKBBeans(renderRequest);
+    PortletUtil.getArticle(renderRequest);
   }
  catch (  Exception e) {
-    throw new PortletException(e);
+    if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
+      SessionErrors.add(renderRequest,e.getClass().getName());
+      renderRequest.setAttribute("hasError","true");
+    }
+ else {
+      throw new PortletException(e);
+    }
   }
-  checkViewable(renderRequest);
   super.render(renderRequest,renderResponse);
 }

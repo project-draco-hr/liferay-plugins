@@ -1,0 +1,29 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long plid=themeDisplay.getPlid();
+  long userId=themeDisplay.getUserId();
+  long resourcePrimKey=ParamUtil.getLong(request,"resourcePrimKey");
+  double version=ParamUtil.getDouble(request,"version");
+  String title=ParamUtil.getString(request,"title");
+  KBArticle article=null;
+  if (resourcePrimKey > 0) {
+    article=KBArticleServiceUtil.getArticle(resourcePrimKey,version,plid);
+  }
+ else   if (Validator.isNotNull(title)) {
+    article=KBArticleServiceUtil.getArticle(themeDisplay.getPortletGroupId(),title,version,plid);
+  }
+  KBFeedbackEntry feedbackEntry=null;
+  KBFeedbackStats feedbackStats=null;
+  if (article != null) {
+    try {
+      feedbackEntry=KBFeedbackEntryLocalServiceUtil.getFeedbackEntry(article.getResourcePrimKey(),userId);
+    }
+ catch (    NoSuchFeedbackEntryException nsfee) {
+      feedbackEntry=null;
+    }
+    feedbackStats=KBFeedbackStatsLocalServiceUtil.getArticleFeedbackStats(article.getResourcePrimKey());
+  }
+  request.setAttribute(KnowledgeBaseKeys.ARTICLE,article);
+  request.setAttribute(KnowledgeBaseKeys.FEEDBACK_ENTRY,feedbackEntry);
+  request.setAttribute(KnowledgeBaseKeys.FEEDBACK_STATS,feedbackStats);
+}

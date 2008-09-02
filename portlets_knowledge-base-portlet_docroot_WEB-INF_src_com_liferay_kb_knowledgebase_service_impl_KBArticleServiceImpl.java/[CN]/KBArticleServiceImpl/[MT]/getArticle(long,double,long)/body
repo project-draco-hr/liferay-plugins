@@ -1,0 +1,10 @@
+{
+  KBArticle article=kbArticleLocalService.getArticle(resourcePrimKey,version);
+  if (article.isDraft()) {
+    KBPermission.check(getPermissionChecker(),plid,ActionKeys.ADD_ARTICLE);
+  }
+ else {
+    KBArticlePermission.check(getPermissionChecker(),resourcePrimKey,ActionKeys.VIEW);
+  }
+  return article;
+}
