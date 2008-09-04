@@ -1,0 +1,6 @@
+{
+  String ipAddress=(String)message.getPayload();
+  IPInfo ipInfo=IPGeocoderUtil.getIPInfo(ipAddress);
+  message.setPayload(JSONFactoryUtil.createJSONObject(JSONFactoryUtil.serialize(ipInfo)));
+  MessageBusUtil.sendMessage(message.getResponseDestination(),message);
+}
