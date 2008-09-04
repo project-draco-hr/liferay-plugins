@@ -1,12 +1,10 @@
 {
-  String responseDestination=message.getResponseDestination();
-  String responseId=message.getResponseId();
-  SearchRequest searchRequest=(SearchRequest)message.getRequestValue();
+  SearchRequest searchRequest=(SearchRequest)message.getPayload();
   String command=searchRequest.getCommand();
-  if (command.equals(SearchRequest.COMMAND_INDEX_ONLY) && Validator.isNotNull(responseDestination) && Validator.isNotNull(responseId)) {
+  if (command.equals(SearchRequest.COMMAND_INDEX_ONLY)) {
     doCommandIndexOnly(message);
   }
- else   if (command.equals(SearchRequest.COMMAND_SEARCH) && Validator.isNotNull(responseDestination) && Validator.isNotNull(responseId)) {
+ else   if (command.equals(SearchRequest.COMMAND_SEARCH)) {
     doCommandSearch(message,searchRequest);
   }
 }
