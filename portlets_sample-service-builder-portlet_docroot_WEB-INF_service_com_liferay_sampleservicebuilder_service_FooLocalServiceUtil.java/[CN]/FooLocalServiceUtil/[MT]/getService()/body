@@ -1,3 +1,9 @@
 {
+  if (_service == null) {
+    Object obj=PortletBeanLocatorUtil.locate("sample-service-builder-portlet",FooLocalServiceUtil.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate("chat-portlet","portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,portletClassLoader);
+    _service=new FooLocalServiceClp(classLoaderProxy);
+  }
   return _service;
 }
