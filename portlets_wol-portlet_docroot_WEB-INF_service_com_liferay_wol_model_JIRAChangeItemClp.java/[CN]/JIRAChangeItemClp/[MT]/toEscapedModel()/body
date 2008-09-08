@@ -1,0 +1,18 @@
+{
+  if (isEscapedModel()) {
+    return (JIRAChangeItem)this;
+  }
+ else {
+    JIRAChangeItem model=new JIRAChangeItemClp();
+    model.setEscapedModel(true);
+    model.setJiraChangeItemId(getJiraChangeItemId());
+    model.setJiraChangeGroupId(getJiraChangeGroupId());
+    model.setField(HtmlUtil.escape(getField()));
+    model.setOldValue(HtmlUtil.escape(getOldValue()));
+    model.setOldString(HtmlUtil.escape(getOldString()));
+    model.setNewValue(HtmlUtil.escape(getNewValue()));
+    model.setNewString(HtmlUtil.escape(getNewString()));
+    model=(JIRAChangeItem)Proxy.newProxyInstance(JIRAChangeItem.class.getClassLoader(),new Class[]{JIRAChangeItem.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

@@ -1,0 +1,29 @@
+{
+  Object paramObj0=new LongWrapper(articleResourcePrimKey);
+  Object paramObj1=new LongWrapper(userId);
+  Object paramObj2=new IntegerWrapper(score);
+  Object paramObj3=new IntegerWrapper(vote);
+  Object paramObj4=translateInput(comments);
+  if (comments == null) {
+    paramObj4=new NullWrapper("java.lang.String");
+  }
+  Object returnObj=null;
+  try {
+    returnObj=_classLoaderProxy.invoke("addFeedbackEntry",new Object[]{paramObj0,paramObj1,paramObj2,paramObj3,paramObj4});
+  }
+ catch (  Throwable t) {
+    if (t instanceof com.liferay.portal.PortalException) {
+      throw (com.liferay.portal.PortalException)t;
+    }
+    if (t instanceof com.liferay.portal.SystemException) {
+      throw (com.liferay.portal.SystemException)t;
+    }
+    if (t instanceof RuntimeException) {
+      throw (RuntimeException)t;
+    }
+ else {
+      throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
+    }
+  }
+  return (com.liferay.kb.knowledgebase.model.KBFeedbackEntry)translateOutput(returnObj);
+}

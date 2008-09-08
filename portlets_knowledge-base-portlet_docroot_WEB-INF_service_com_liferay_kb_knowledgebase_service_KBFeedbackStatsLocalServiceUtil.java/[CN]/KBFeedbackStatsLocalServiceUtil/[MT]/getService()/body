@@ -1,3 +1,9 @@
 {
+  if (_service == null) {
+    Object obj=PortletBeanLocatorUtil.locate("knowledge-base-portlet",KBFeedbackStatsLocalServiceUtil.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate("chat-portlet","portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,portletClassLoader);
+    _service=new KBFeedbackStatsLocalServiceClp(classLoaderProxy);
+  }
   return _service;
 }

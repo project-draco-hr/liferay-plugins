@@ -1,0 +1,20 @@
+{
+  if (isEscapedModel()) {
+    return (KBFeedbackEntry)this;
+  }
+ else {
+    KBFeedbackEntry model=new KBFeedbackEntryClp();
+    model.setEscapedModel(true);
+    model.setFeedbackEntryId(getFeedbackEntryId());
+    model.setArticleResourcePrimKey(getArticleResourcePrimKey());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setComments(HtmlUtil.escape(getComments()));
+    model.setScore(getScore());
+    model.setVote(getVote());
+    model=(KBFeedbackEntry)Proxy.newProxyInstance(KBFeedbackEntry.class.getClassLoader(),new Class[]{KBFeedbackEntry.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

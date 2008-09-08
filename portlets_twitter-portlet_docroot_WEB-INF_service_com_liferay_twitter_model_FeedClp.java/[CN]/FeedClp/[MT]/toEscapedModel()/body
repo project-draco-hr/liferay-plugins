@@ -1,0 +1,17 @@
+{
+  if (isEscapedModel()) {
+    return (Feed)this;
+  }
+ else {
+    Feed model=new FeedClp();
+    model.setEscapedModel(true);
+    model.setFeedId(getFeedId());
+    model.setTwitterUserId(getTwitterUserId());
+    model.setTwitterScreenName(HtmlUtil.escape(getTwitterScreenName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setLastStatusId(getLastStatusId());
+    model=(Feed)Proxy.newProxyInstance(Feed.class.getClassLoader(),new Class[]{Feed.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
