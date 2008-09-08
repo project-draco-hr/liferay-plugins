@@ -3,19 +3,13 @@
     return;
   }
   String path=getArticlePath(context,article);
-  Element entryEl=root.addElement("article");
+  Element entryEl=root.addElement("articles");
   entryEl.addAttribute("path",path);
   if (context.isPathNotProcessed(path)) {
-    if (context.getBooleanParameter(_NAMESPACE,"comments")) {
-      context.addComments(KBArticle.class,article.getArticleId());
-    }
-    if (context.getBooleanParameter(_NAMESPACE,"ratings")) {
-      context.addRatingsEntries(KBArticle.class,article.getArticleId());
-    }
-    if (context.getBooleanParameter(_NAMESPACE,"tags")) {
-      context.addTagsEntries(KBArticle.class,article.getArticleId());
-    }
     article.setUserUuid(article.getUserUuid());
+    if (context.getBooleanParameter(_NAMESPACE,"tags")) {
+      context.addTagsEntries(KBArticle.class,article.getResourcePrimKey());
+    }
     context.addZipEntry(path,article);
   }
 }

@@ -1,6 +1,10 @@
 {
   try {
     if (!context.addPrimaryKey(KBPortletDataHandlerImpl.class,"deleteData")) {
+      List<KBArticle> articles=KBArticleLocalServiceUtil.getGroupArticles(context.getGroupId(),true,false,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+      for (      KBArticle article : articles) {
+        KBFeedbackEntryLocalServiceUtil.deleteFeedbackEntries(article.getResourcePrimKey());
+      }
       KBArticleLocalServiceUtil.deleteGroupArticles(context.getGroupId(),false);
     }
     return null;

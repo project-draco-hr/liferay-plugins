@@ -3,7 +3,7 @@
   long groupId=context.getGroupId();
   String[] tagsEntries=null;
   if (context.getBooleanParameter(_NAMESPACE,"tags")) {
-    tagsEntries=context.getTagsEntries(KBArticle.class,article.getArticleId());
+    tagsEntries=context.getTagsEntries(KBArticle.class,article.getResourcePrimKey());
   }
   ThemeDisplay themeDisplay=null;
   KBArticle existingArticle=null;
@@ -19,10 +19,5 @@
  else {
     existingArticle=KBArticleLocalServiceUtil.addArticle(userId,groupId,article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),tagsEntries,prefs,themeDisplay);
   }
-  if (context.getBooleanParameter(_NAMESPACE,"comments")) {
-    context.importComments(KBArticle.class,article.getArticleId(),existingArticle.getArticleId(),context.getGroupId());
-  }
-  if (context.getBooleanParameter(_NAMESPACE,"ratings")) {
-    context.importRatingsEntries(KBArticle.class,existingArticle.getArticleId(),existingArticle.getArticleId());
-  }
+  articlePKs.put(article.getResourcePrimKey(),existingArticle.getResourcePrimKey());
 }

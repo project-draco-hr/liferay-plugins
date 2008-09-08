@@ -1,0 +1,12 @@
+{
+  if (!context.isWithinDateRange(entry.getModifiedDate())) {
+    return;
+  }
+  String path=getEntryPath(context,entry);
+  Element entryEl=root.addElement("entries");
+  entryEl.addAttribute("path",path);
+  if (context.isPathNotProcessed(path)) {
+    entry.setUserUuid(entry.getUserUuid());
+    context.addZipEntry(path,entry);
+  }
+}
