@@ -2,9 +2,9 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   Role role=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),"Community Administrator");
   LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
-  userParams.put("userGroupRole",new Long[]{new Long(themeDisplay.getPortletGroupId()),new Long(role.getRoleId())});
+  userParams.put("userGroupRole",new Long[]{new Long(themeDisplay.getScopeGroupId()),new Long(role.getRoleId())});
   List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),null,Boolean.TRUE,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
   for (  User user : users) {
-    SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,Group.class.getName(),themeDisplay.getPortletGroupId(),MembersRequestKeys.ADD_MEMBER,StringPool.BLANK,user.getUserId());
+    SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,Group.class.getName(),themeDisplay.getScopeGroupId(),MembersRequestKeys.ADD_MEMBER,StringPool.BLANK,user.getUserId());
   }
 }

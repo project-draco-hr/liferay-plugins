@@ -3,7 +3,7 @@
   if (!themeDisplay.isSignedIn()) {
     return;
   }
-  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getPortletGroupId());
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
   User user=null;
   if (group.isUser()) {
     user=UserLocalServiceUtil.getUserById(group.getClassPK());
@@ -15,5 +15,5 @@
     return;
   }
   String comments=ParamUtil.getString(actionRequest,"comments");
-  WallEntryLocalServiceUtil.addWallEntry(themeDisplay.getPortletGroupId(),themeDisplay.getUserId(),comments,themeDisplay);
+  WallEntryLocalServiceUtil.addWallEntry(themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),comments,themeDisplay);
 }
