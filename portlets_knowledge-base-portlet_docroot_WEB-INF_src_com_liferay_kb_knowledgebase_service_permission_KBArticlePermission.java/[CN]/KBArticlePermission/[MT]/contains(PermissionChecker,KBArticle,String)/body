@@ -1,3 +1,11 @@
 {
+  if (actionId.equals(ActionKeys.VIEW)) {
+    List<TagsEntry> entries=TagsEntryLocalServiceUtil.getEntries(KBArticle.class.getName(),article.getResourcePrimKey());
+    for (    TagsEntry entry : entries) {
+      if (!permissionChecker.hasPermission(entry.getGroupId(),TagsEntry.class.getName(),entry.getEntryId(),actionId)) {
+        return false;
+      }
+    }
+  }
   return permissionChecker.hasPermission(article.getGroupId(),KBArticle.class.getName(),article.getResourcePrimKey(),actionId);
 }
