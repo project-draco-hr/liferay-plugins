@@ -1,11 +1,4 @@
 {
-  List<KBArticle> articles=new ArrayList<KBArticle>();
   Iterator<KBArticle> itr=kbArticleLocalService.getCompanyArticles(companyId,true,false,false,0,_MAX_END).iterator();
-  while (itr.hasNext() && (articles.size() < max)) {
-    KBArticle article=itr.next();
-    if (KBArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
-      articles.add(article);
-    }
-  }
-  return articles;
+  return checkViewPermission(itr,max);
 }
