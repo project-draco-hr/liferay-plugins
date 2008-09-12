@@ -1,0 +1,33 @@
+{
+  Object paramObj0=new LongWrapper(taskId);
+  Object paramObj1=ClpSerializer.translateInput(transition);
+  if (transition == null) {
+    paramObj1=new NullWrapper("java.lang.String");
+  }
+  Object paramObj2=ClpSerializer.translateInput(parameterMap);
+  if (parameterMap == null) {
+    paramObj2=new NullWrapper("java.util.Map");
+  }
+  Object returnObj=null;
+  try {
+    returnObj=_classLoaderProxy.invoke("updateTask",new Object[]{paramObj0,paramObj1,paramObj2});
+  }
+ catch (  Throwable t) {
+    if (t instanceof com.liferay.portal.PortalException) {
+      throw (com.liferay.portal.PortalException)t;
+    }
+    if (t instanceof com.liferay.portal.SystemException) {
+      throw (com.liferay.portal.SystemException)t;
+    }
+    if (t instanceof java.rmi.RemoteException) {
+      throw (java.rmi.RemoteException)t;
+    }
+    if (t instanceof RuntimeException) {
+      throw (RuntimeException)t;
+    }
+ else {
+      throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
+    }
+  }
+  return (java.util.Map)ClpSerializer.translateOutput(returnObj);
+}

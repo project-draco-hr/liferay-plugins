@@ -1,0 +1,8 @@
+{
+  long taskId=ParamUtil.getLong(actionRequest,"taskId");
+  String transition=ParamUtil.getString(actionRequest,"taskTransition");
+  Map errors=WorkflowTaskServiceUtil.updateTask(taskId,transition,actionRequest.getParameterMap());
+  if (errors.size() > 0) {
+    SessionErrors.add(actionRequest,WorkflowPortlet.class.getName(),errors);
+  }
+}
