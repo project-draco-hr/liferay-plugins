@@ -1,0 +1,15 @@
+{
+  BusinessProcessInstanceVO businessProcessInstanceVO=new BusinessProcessInstanceVO();
+  businessProcessInstanceVO.setId(String.valueOf(instanceId));
+  OutputVO outputVO=null;
+  Workflow workflow=null;
+  try {
+    workflow=_getWorkflowImpl();
+    outputVO=workflow.getBusinessProcessInstances(businessProcessInstanceVO);
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  List<BusinessProcessInstanceVO> bpInstVOList=outputVO.getBusinessProcessInstanceVOList();
+  return bpInstVOList;
+}

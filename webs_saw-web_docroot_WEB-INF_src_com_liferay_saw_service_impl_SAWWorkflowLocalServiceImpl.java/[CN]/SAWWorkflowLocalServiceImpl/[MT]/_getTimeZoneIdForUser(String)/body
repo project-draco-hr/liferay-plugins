@@ -1,0 +1,17 @@
+{
+  User user=null;
+  try {
+    user=UserLocalServiceUtil.getUserById((new Long(userId)).longValue());
+  }
+ catch (  NumberFormatException e) {
+    throw new WorkflowComponentException(e);
+  }
+catch (  PortalException e) {
+    throw new WorkflowComponentException(e);
+  }
+catch (  SystemException e) {
+    throw new WorkflowComponentException(e);
+  }
+  String timeZoneId=user.getTimeZoneId();
+  return timeZoneId;
+}

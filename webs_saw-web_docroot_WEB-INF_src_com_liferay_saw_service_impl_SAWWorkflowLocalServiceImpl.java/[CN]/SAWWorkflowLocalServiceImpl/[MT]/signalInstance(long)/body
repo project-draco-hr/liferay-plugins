@@ -1,0 +1,15 @@
+{
+  OutputVO outputVO=null;
+  BusinessProcessInstanceVO businessProcessInstance=new BusinessProcessInstanceVO();
+  businessProcessInstance.setId(String.valueOf(instanceId));
+  ClassLoader contextClassLoader=_getCurrentClassLoader();
+  _setAggregateClassLoader(contextClassLoader);
+  try {
+    Workflow workflow=_getWorkflowImpl();
+    outputVO=workflow.signalBusinessProcessInstance(businessProcessInstance);
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  _restoreClassLoader(contextClassLoader);
+}

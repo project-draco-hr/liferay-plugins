@@ -1,0 +1,31 @@
+{
+  Workflow workflow=null;
+  ClassLoader contextClassLoader=null;
+  contextClassLoader=_getCurrentClassLoader();
+  _setAggregateClassLoader(contextClassLoader);
+  try {
+    workflow=_getWorkflowImpl();
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  int count=0;
+  if (definitionId > 0) {
+    count=1;
+  }
+ else {
+    Class tmpClass=_loadSAWJbpmGraphSession();
+    String timeZoneId=_getTimeZoneIdForUser(userId);
+    Map resultsMap=_invokeMethod(tmpClass,"countProcessDefinitionsByName",userId,timeZoneId,new Class[]{String.class},new Object[]{name},workflow);
+    Integer tmpCount=(Integer)resultsMap.get("invokeMethodResult");
+    count=tmpCount.intValue();
+  }
+  _restoreClassLoader(contextClassLoader);
+  StringBuilder sm=new StringBuilder();
+  sm.append("<result>");
+  sm.append("<count>");
+  sm.append(count);
+  sm.append("</count>");
+  sm.append("</result>");
+  return sm.toString();
+}

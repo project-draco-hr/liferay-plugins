@@ -1,0 +1,22 @@
+{
+  Workflow workflow=null;
+  OutputVO outputVO=null;
+  BusinessProcessVO businessProcessVO=new BusinessProcessVO();
+  businessProcessVO.setId(String.valueOf(definitionId));
+  businessProcessVO.setUserId(userId);
+  ClassLoader contextClassLoader=_getCurrentClassLoader();
+  _setAggregateClassLoader(contextClassLoader);
+  try {
+    workflow=_getWorkflowImpl();
+    outputVO=workflow.startBusinessProcess(businessProcessVO);
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  _restoreClassLoader(contextClassLoader);
+  BusinessProcessInstanceVO bpiVO=outputVO.getBusinessProcessInstanceVOList().get(0);
+  Document doc=DocumentHelper.createDocument();
+  Element root=doc.addElement("result");
+  _createElement(bpiVO,root,false,userId);
+  return doc.asXML();
+}

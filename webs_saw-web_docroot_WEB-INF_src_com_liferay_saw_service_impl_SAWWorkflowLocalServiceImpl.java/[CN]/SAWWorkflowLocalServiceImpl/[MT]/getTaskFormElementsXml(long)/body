@@ -1,0 +1,30 @@
+{
+  Workflow workflow=null;
+  OutputVO outputVO=null;
+  ClassLoader contextClassLoader=_getCurrentClassLoader();
+  _setAggregateClassLoader(contextClassLoader);
+  try {
+    workflow=_getWorkflowImpl();
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  XFormVO xForm=new XFormVO();
+  xForm.setTaskId(String.valueOf(taskId));
+  try {
+    outputVO=workflow.getXForm(xForm);
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  _restoreClassLoader(contextClassLoader);
+  List<XFormVO> xFormVOList=null;
+  xFormVOList=outputVO.getXFormElements();
+  Document doc=DocumentHelper.createDocument();
+  Element root=doc.addElement("result");
+  for (int i=0; i < xFormVOList.size(); i++) {
+    XFormVO xFormVO=xFormVOList.get(i);
+    _createElement(xFormVO,root);
+  }
+  return doc.asXML();
+}

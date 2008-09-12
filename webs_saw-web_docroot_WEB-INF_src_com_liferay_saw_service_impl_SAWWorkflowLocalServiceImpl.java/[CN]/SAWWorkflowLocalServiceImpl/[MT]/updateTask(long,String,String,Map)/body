@@ -1,0 +1,19 @@
+{
+  Class[] paramTypeArray=new Class[]{long.class,String.class,String.class,Map.class};
+  Object[] paramValueArray=new Object[]{taskId,transition,userId,parameterMap};
+  ClassLoader contextClassLoader=_getCurrentClassLoader();
+  _setAggregateClassLoader(contextClassLoader);
+  Workflow workflow=null;
+  try {
+    workflow=_getWorkflowImpl();
+  }
+ catch (  WorkflowException e) {
+    throw new WorkflowComponentException(e);
+  }
+  Class tmpClass=_loadSAWJbpmGraphSession();
+  String timeZoneId=_getTimeZoneIdForUser(userId);
+  Map resultsMap=_invokeMethod(tmpClass,"updateTask",userId,timeZoneId,paramTypeArray,paramValueArray,workflow);
+  Map errors=(HashMap)resultsMap.get("invokeMethodResult");
+  _restoreClassLoader(contextClassLoader);
+  return errors;
+}
