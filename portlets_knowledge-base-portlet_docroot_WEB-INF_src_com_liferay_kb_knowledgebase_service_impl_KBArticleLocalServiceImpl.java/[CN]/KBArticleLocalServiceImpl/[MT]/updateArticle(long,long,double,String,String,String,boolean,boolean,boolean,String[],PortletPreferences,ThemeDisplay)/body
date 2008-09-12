@@ -1,5 +1,5 @@
 {
-  User user=userPersistence.findByPrimaryKey(userId);
+  User user=UserLocalServiceUtil.getUser(userId);
   Date now=new Date();
   KBArticle article=getArticle(resourcePrimKey);
   long groupId=article.getGroupId();
@@ -11,7 +11,7 @@
   article.setModifiedDate(now);
   kbArticlePersistence.update(article,false);
   double newVersion=MathUtil.format(oldVersion + 0.1,1,1);
-  long articleId=counterLocalService.increment();
+  long articleId=CounterLocalServiceUtil.increment();
   article=kbArticlePersistence.create(articleId);
   article.setResourcePrimKey(resourcePrimKey);
   article.setCompanyId(user.getCompanyId());

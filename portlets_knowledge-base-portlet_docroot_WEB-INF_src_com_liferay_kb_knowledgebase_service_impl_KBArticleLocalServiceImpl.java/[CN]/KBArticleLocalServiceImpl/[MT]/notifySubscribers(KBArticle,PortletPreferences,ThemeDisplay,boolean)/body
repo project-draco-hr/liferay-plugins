@@ -5,11 +5,11 @@
     long plid=PortletKeys.PREFS_PLID_SHARED;
     String portletId=KnowledgeBaseKeys.PORTLET_ID;
     String defaultPreferences=null;
-    prefs=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
+    prefs=PortletPreferencesLocalServiceUtil.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
   }
-  Company company=companyPersistence.findByPrimaryKey(article.getCompanyId());
-  Group group=groupPersistence.findByPrimaryKey(article.getGroupId());
-  User user=userPersistence.findByPrimaryKey(article.getUserId());
+  Company company=CompanyLocalServiceUtil.getCompany(article.getCompanyId());
+  Group group=GroupLocalServiceUtil.getGroup(article.getGroupId());
+  User user=UserLocalServiceUtil.getUser(article.getUserId());
   String groupName=KnowledgeBaseUtil.getGroupName(group);
   String articleURL=StringPool.BLANK;
   String portletName="Knowledge Base";
@@ -31,5 +31,5 @@
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
-  mailService.sendEmail(mailMessage);
+  MailServiceUtil.sendEmail(mailMessage);
 }

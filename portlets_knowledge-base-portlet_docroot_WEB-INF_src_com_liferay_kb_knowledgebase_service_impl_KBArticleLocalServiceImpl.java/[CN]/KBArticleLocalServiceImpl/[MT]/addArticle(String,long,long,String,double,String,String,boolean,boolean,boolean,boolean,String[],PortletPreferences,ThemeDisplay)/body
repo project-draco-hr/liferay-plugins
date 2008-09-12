@@ -1,12 +1,12 @@
 {
-  User user=userPersistence.findByPrimaryKey(userId);
+  User user=UserLocalServiceUtil.getUser(userId);
   Date now=new Date();
   validate(title);
   int count=kbArticlePersistence.countByG_T(groupId,title);
   if (count > 0) {
     throw new ArticleTitleException("The title " + title + " is already being used");
   }
-  long articleId=counterLocalService.increment();
+  long articleId=CounterLocalServiceUtil.increment();
   long resourcePrimKey=kbArticleResourceLocalService.getArticleResourcePrimKey(groupId,title);
   KBArticle article=kbArticlePersistence.create(articleId);
   article.setUuid(uuid);
