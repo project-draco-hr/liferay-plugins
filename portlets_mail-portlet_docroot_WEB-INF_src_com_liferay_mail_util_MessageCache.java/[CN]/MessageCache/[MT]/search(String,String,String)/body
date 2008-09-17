@@ -1,0 +1,43 @@
+{
+  User user=getUser();
+  long companyId=user.getCompanyId();
+  long groupId=user.getGroup().getGroupId();
+  long userId=user.getUserId();
+  try {
+    String escapedFolderName=_encodeFolderName(folderName);
+    BooleanQuery contextQuery=BooleanQueryFactoryUtil.create();
+    contextQuery.addRequiredTerm(Field.COMPANY_ID,companyId);
+    contextQuery.addRequiredTerm(Field.GROUP_ID,groupId);
+    contextQuery.addRequiredTerm(Field.PORTLET_ID,Indexer.PORTLET_ID);
+    contextQuery.addRequiredTerm(Field.USER_ID,userId);
+    contextQuery.addRequiredTerm(Indexer.EMAIL_ADDRESS,emailAddress);
+    contextQuery.addRequiredTerm(Indexer.FOLDER_NAME,escapedFolderName);
+    BooleanQuery fullQuery=BooleanQueryFactoryUtil.create();
+    fullQuery.add(contextQuery,BooleanClauseOccur.MUST);
+    if (Validator.isNotNull(keywords)) {
+      keywords=keywords.trim();
+      BooleanQuery searchQuery=BooleanQueryFactoryUtil.create();
+      searchQuery.addTerm(Field.TITLE,keywords);
+      searchQuery.addTerm(Field.CONTENT,keywords);
+      fullQuery.add(searchQuery,BooleanClauseOccur.MUST);
+    }
+    Hits hits=SearchEngineUtil.search(companyId,fullQuery,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    Set<Long> messageUidsSet=new HashSet<Long>();
+    for (int i=0; i < hits.getLength(); i++) {
+      Document doc=hits.getDocs()[i];
+      String messageUid=doc.get(Field.ENTRY_CLASS_PK);
+      messageUidsSet.add(GetterUtil.getLong(messageUid));
+    }
+    long[] messageUids=new long[messageUidsSet.size()];
+    Long[] messageUidsArray=messageUidsSet.toArray(new Long[0]);
+    for (int i=0; i < messageUids.length; i++) {
+      messageUids[i]=messageUidsArray[i].longValue();
+    }
+    Arrays.sort(messageUids);
+    return messageUids;
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return new long[0];
+}

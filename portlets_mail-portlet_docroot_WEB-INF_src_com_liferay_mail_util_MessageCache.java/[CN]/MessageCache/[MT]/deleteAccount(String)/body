@@ -1,0 +1,11 @@
+{
+  String accountPath=_getAccountPath(emailAddress);
+  FileUtil.deltree(accountPath);
+  User user=getUser();
+  try {
+    Indexer.deleteMessages(user.getCompanyId(),user.getUserId(),emailAddress);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+}

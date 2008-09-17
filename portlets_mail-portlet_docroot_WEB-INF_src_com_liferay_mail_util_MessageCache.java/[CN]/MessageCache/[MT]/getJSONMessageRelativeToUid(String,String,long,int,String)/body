@@ -1,0 +1,18 @@
+{
+  if (Validator.isNull(emailAddress) || Validator.isNull(folderName)) {
+    return null;
+  }
+  long[] messageUids=null;
+  if (keywords.equals(StringPool.BLANK)) {
+    messageUids=getMessageUidsByFolder(emailAddress,folderName);
+  }
+ else {
+    messageUids=search(emailAddress,folderName,keywords);
+  }
+  for (int i=0; i < messageUids.length; i++) {
+    if (messageUid == messageUids[i]) {
+      return getJSONMessageByUid(emailAddress,folderName,messageUids[i + offset]);
+    }
+  }
+  return null;
+}

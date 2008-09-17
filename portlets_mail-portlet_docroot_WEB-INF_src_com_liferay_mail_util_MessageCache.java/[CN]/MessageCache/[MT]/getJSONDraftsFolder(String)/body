@@ -1,0 +1,15 @@
+{
+  if (Validator.isNull(emailAddress)) {
+    return null;
+  }
+  JSONObject jsonObj=getJSONFolders(emailAddress);
+  JSONArray jsonArray=jsonObj.getJSONArray("folders");
+  for (int i=0; i < jsonArray.length(); i++) {
+    JSONObject jsonFolder=jsonArray.getJSONObject(i);
+    String folderName=jsonFolder.getString("name").toLowerCase();
+    if (folderName.indexOf("drafts") != -1) {
+      return jsonFolder;
+    }
+  }
+  return null;
+}
