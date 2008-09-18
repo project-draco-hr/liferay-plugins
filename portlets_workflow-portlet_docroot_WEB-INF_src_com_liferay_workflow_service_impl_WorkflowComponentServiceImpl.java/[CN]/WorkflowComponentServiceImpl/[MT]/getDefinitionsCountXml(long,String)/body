@@ -1,18 +1,12 @@
 {
-  if (!_useSAW) {
-    try {
-      WorkflowURL url=getWorkflowURL();
-      url.setParameter(Constants.CMD,"getDefinitionsCountXml");
-      url.setParameter("definitionId",definitionId);
-      url.setParameter("name",name);
-      return url.getContent();
-    }
- catch (    Exception e) {
-      throw new WorkflowComponentException(e);
-    }
+  try {
+    WorkflowURL url=getWorkflowURL();
+    url.setParameter(Constants.CMD,"getDefinitionsCountXml");
+    url.setParameter("definitionId",definitionId);
+    url.setParameter("name",name);
+    return url.getContent();
   }
- else {
-    String userId=_getLoggedInUserId();
-    return SAWWorkflowLocalServiceUtil.getDefinitionsCountXml(definitionId,name,userId);
+ catch (  Exception e) {
+    throw new WorkflowComponentException(e);
   }
 }

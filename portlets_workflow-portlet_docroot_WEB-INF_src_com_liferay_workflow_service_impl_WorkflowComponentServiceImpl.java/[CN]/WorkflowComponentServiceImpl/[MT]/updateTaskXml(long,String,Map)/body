@@ -1,25 +1,13 @@
 {
-  if (!_useSAW) {
-    try {
-      WorkflowURL url=getWorkflowURL();
-      url.setParameter(Constants.CMD,"updateTaskXml");
-      url.setParameter("taskId",taskId);
-      url.setParameter("transition",transition);
-      url.addParameterMap(parameterMap);
-      return url.getContent();
-    }
- catch (    Exception e) {
-      throw new WorkflowComponentException(e);
-    }
+  try {
+    WorkflowURL url=getWorkflowURL();
+    url.setParameter(Constants.CMD,"updateTaskXml");
+    url.setParameter("taskId",taskId);
+    url.setParameter("transition",transition);
+    url.addParameterMap(parameterMap);
+    return url.getContent();
   }
- else {
-    String userId=_getLoggedInUserId();
-    if (transition == null) {
-      transition="";
-    }
-    if (parameterMap == null) {
-      parameterMap=new HashMap();
-    }
-    return SAWWorkflowLocalServiceUtil.updateTaskXml(taskId,transition,userId,parameterMap);
+ catch (  Exception e) {
+    throw new WorkflowComponentException(e);
   }
 }
