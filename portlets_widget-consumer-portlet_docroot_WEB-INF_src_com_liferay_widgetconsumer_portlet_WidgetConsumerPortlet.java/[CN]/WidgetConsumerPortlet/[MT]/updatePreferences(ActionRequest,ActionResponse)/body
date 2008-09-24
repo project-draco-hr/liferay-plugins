@@ -1,0 +1,12 @@
+{
+  String cmd=ParamUtil.getString(req,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  PortletPreferences prefs=req.getPreferences();
+  String jsBlock=ParamUtil.getString(req,"javascriptBlock");
+  prefs.setValue("javascriptBlock",jsBlock);
+  prefs.store();
+  PortletConfig config=getPortletConfig();
+  SessionMessages.add(req,config.getPortletName() + ".doEdit");
+}
