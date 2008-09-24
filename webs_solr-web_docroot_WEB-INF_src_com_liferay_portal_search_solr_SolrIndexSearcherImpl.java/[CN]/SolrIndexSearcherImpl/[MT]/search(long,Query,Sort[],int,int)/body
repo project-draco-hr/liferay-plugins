@@ -2,23 +2,22 @@
   try {
     String url=HttpUtil.addParameter(_serverURL,"q",query.toString());
     url=HttpUtil.addParameter(url,"fl","score");
-    StringBuilder sb=new StringBuilder();
-    for (int i=0; i < sort.length; i++) {
-      Sort sortField=sort[i];
-      if (i > 0) {
-        sb.append(StringPool.COMMA);
+    if (sort != null && sort.length > 0) {
+      StringBuilder sb=new StringBuilder();
+      for (int i=0; i < sort.length; i++) {
+        Sort sortField=sort[i];
+        if (i > 0) {
+          sb.append(StringPool.COMMA);
+        }
+        sb.append(sortField.getFieldName());
+        sb.append(StringPool.SPACE);
+        String order="asc";
+        if (sortField.isReverse()) {
+          order="desc";
+        }
+        sb.append(order);
       }
-      sb.append(sortField.getFieldName());
-      sb.append(StringPool.SPACE);
-      String order="asc";
-      if (sortField.isReverse()) {
-        order="desc";
-      }
-      sb.append(order);
-    }
-    String sortString=sb.toString();
-    if (Validator.isNotNull(sortString)) {
-      url=HttpUtil.addParameter(url,"sort",sortString);
+      url=HttpUtil.addParameter(url,"sort",sb.toString());
     }
     return subset(HttpUtil.URLtoString(url),start,end);
   }
