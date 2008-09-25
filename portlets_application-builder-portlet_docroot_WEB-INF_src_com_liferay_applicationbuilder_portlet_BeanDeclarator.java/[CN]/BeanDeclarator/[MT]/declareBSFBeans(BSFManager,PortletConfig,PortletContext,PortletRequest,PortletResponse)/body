@@ -4,7 +4,25 @@
   bsfManager.declareBean("portletConfig",portletConfig,PortletConfig.class);
   bsfManager.declareBean("portletContext",portletContext,PortletContext.class);
   bsfManager.declareBean("portletRequest",portletRequest,PortletRequest.class);
+  if (portletRequest instanceof ActionRequest) {
+    bsfManager.declareBean("actionRequest",(ActionRequest)portletRequest,ActionRequest.class);
+  }
+ else   if (portletRequest instanceof ResourceRequest) {
+    bsfManager.declareBean("resourceRequest",(ResourceRequest)portletRequest,ResourceRequest.class);
+  }
+ else {
+    bsfManager.declareBean("renderRequest",(RenderRequest)portletRequest,RenderRequest.class);
+  }
   bsfManager.declareBean("portletResponse",portletResponse,PortletResponse.class);
+  if (portletResponse instanceof ActionResponse) {
+    bsfManager.declareBean("actionResponse",(ActionResponse)portletResponse,ActionResponse.class);
+  }
+ else   if (portletResponse instanceof ResourceResponse) {
+    bsfManager.declareBean("resourceResponse",(ResourceResponse)portletResponse,ResourceResponse.class);
+  }
+ else {
+    bsfManager.declareBean("renderResponse",(RenderResponse)portletResponse,RenderResponse.class);
+  }
   bsfManager.declareBean("preferences",preferences,PortletPreferences.class);
   bsfManager.declareBean("userInfo",userInfo,Map.class);
 }
