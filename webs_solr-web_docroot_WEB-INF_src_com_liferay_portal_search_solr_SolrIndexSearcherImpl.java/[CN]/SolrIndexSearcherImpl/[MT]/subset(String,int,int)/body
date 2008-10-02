@@ -5,6 +5,10 @@
   Element root=xmlDoc.getRootElement();
   Element resultEl=root.element("result");
   int length=GetterUtil.getInteger(resultEl.attributeValue("numFound"));
+  if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+    start=0;
+    end=length;
+  }
   float maxScore=GetterUtil.getFloat(resultEl.attributeValue("maxScore"));
   if ((start > -1) && (start <= end)) {
     if (end > length) {
