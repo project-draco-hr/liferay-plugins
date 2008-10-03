@@ -1,12 +1,12 @@
 {
-  String cmd=ParamUtil.getString(req,Constants.CMD);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   if (!cmd.equals(Constants.UPDATE)) {
     return;
   }
-  String license=ParamUtil.getString(req,"license");
-  String portletResource=ParamUtil.getString(req,"portletResource");
-  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(req,portletResource);
+  String license=ParamUtil.getString(actionRequest,"license");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
   preferences.setValue("license",license);
   preferences.store();
-  SessionMessages.add(req,portletConfig.getPortletName() + ".doConfigure");
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
 }
