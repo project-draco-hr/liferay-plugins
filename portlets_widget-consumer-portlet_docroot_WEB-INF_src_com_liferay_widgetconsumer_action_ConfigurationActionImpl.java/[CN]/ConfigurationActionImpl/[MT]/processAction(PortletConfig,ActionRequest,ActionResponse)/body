@@ -1,0 +1,13 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String widgetCode=ParamUtil.getString(actionRequest,"widgetCode");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences prefs=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  prefs.setValue("widget-code",widgetCode);
+  prefs.store();
+  PortletSession ses=actionRequest.getPortletSession();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}
