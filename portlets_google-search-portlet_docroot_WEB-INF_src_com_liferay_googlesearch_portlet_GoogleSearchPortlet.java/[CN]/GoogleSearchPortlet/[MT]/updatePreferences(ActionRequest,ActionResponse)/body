@@ -1,12 +1,12 @@
 {
-  String cmd=ParamUtil.getString(req,Constants.CMD);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   if (!cmd.equals(Constants.UPDATE)) {
     return;
   }
-  PortletPreferences prefs=req.getPreferences();
-  boolean safeSearch=ParamUtil.getBoolean(req,"safeSearch");
-  prefs.setValue("safe-search",String.valueOf(safeSearch));
-  prefs.store();
-  PortletConfig config=getPortletConfig();
-  SessionMessages.add(req,config.getPortletName() + ".doEdit");
+  PortletPreferences preferences=actionRequest.getPreferences();
+  boolean safeSearch=ParamUtil.getBoolean(actionRequest,"safeSearch");
+  preferences.setValue("safe-search",String.valueOf(safeSearch));
+  preferences.store();
+  PortletConfig portletConfig=getPortletConfig();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doEdit");
 }

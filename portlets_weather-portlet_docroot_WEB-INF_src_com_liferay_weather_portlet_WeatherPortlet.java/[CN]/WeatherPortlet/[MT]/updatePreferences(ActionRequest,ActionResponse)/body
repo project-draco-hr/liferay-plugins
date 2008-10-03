@@ -1,20 +1,20 @@
 {
-  String cmd=ParamUtil.getString(req,Constants.CMD);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   if (!cmd.equals(Constants.UPDATE)) {
     return;
   }
-  PortletPreferences prefs=req.getPreferences();
-  String[] zips=StringUtil.split(ParamUtil.getString(req,"zips"),"\n");
-  boolean fahrenheit=ParamUtil.get(req,"fahrenheit",true);
-  prefs.setValues("zips",zips);
-  prefs.setValue("fahrenheit",String.valueOf(fahrenheit));
+  PortletPreferences preferences=actionRequest.getPreferences();
+  String[] zips=StringUtil.split(ParamUtil.getString(actionRequest,"zips"),"\n");
+  boolean fahrenheit=ParamUtil.get(actionRequest,"fahrenheit",true);
+  preferences.setValues("zips",zips);
+  preferences.setValue("fahrenheit",String.valueOf(fahrenheit));
   try {
-    prefs.store();
+    preferences.store();
   }
  catch (  ValidatorException ve) {
-    SessionErrors.add(req,ValidatorException.class.getName(),ve);
+    SessionErrors.add(actionRequest,ValidatorException.class.getName(),ve);
     return;
   }
-  PortletConfig config=getPortletConfig();
-  SessionMessages.add(req,config.getPortletName() + ".doEdit");
+  PortletConfig portletConfig=getPortletConfig();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doEdit");
 }
