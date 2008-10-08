@@ -5,9 +5,9 @@
     }
     String portletName="sample_struts_portlet";
     String attrName="chart_name";
-    HttpSession ses=req.getSession();
-    String chartName=(String)ses.getAttribute(attrName);
-    String chartType=req.getParameter("chart_type");
+    HttpSession session=request.getSession();
+    String chartName=(String)session.getAttribute(attrName);
+    String chartType=request.getParameter("chart_type");
     CategoryDataset dataset=_getDataset();
     String xName="Soda";
     String yName="Votes";
@@ -28,13 +28,13 @@
       PieDataset pieData=DatasetUtilities.createPieDatasetForRow(dataset,0);
       chart=ChartFactory.createPieChart(chartName,pieData,true,false,false);
     }
-    res.setContentType("image/jpeg");
-    OutputStream out=res.getOutputStream();
+    response.setContentType("image/jpeg");
+    OutputStream out=response.getOutputStream();
     ChartUtilities.writeChartAsJPEG(out,chart,400,400);
     return mapping.findForward("/common/null.jsp");
   }
  catch (  Exception e) {
-    req.setAttribute(PageContext.EXCEPTION,e);
+    request.setAttribute(PageContext.EXCEPTION,e);
     return mapping.findForward("/common/error.jsp");
   }
 }
