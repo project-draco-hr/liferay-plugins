@@ -1,10 +1,10 @@
 {
-  String id=ParamUtil.getString(req,"id");
-  String callback=ParamUtil.getString(req,"callback");
+  String id=ParamUtil.getString(request,"id");
+  String callback=ParamUtil.getString(request,"callback");
   JSONObject jsonObj=new JSONObject();
   jsonObj.put("id",id);
-  ServletContext ctx=getServletContext();
-  String script=StringUtil.read(ctx.getResourceAsStream("/click_image.js"));
+  ServletContext servletContext=getServletContext();
+  String script=StringUtil.read(servletContext.getResourceAsStream("/click_image.js"));
   String jsonObjString=jsonObj.toString();
   jsonObjString=jsonObjString.substring(0,jsonObjString.length() - 1) + "," + script+ "}";
   return callback + "(" + jsonObjString+ ");";

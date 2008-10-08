@@ -1,15 +1,15 @@
 {
-  PortletSession ses=req.getPortletSession();
-  PortletMode mode=(PortletMode)ses.getAttribute("CurrentPortletMode");
+  PortletSession portletSession=renderRequest.getPortletSession();
+  PortletMode mode=(PortletMode)portletSession.getAttribute("CurrentPortletMode");
   if (mode == null) {
-    mode=req.getPortletMode();
+    mode=renderRequest.getPortletMode();
   }
-  if (mode != req.getPortletMode()) {
-    req.setAttribute("isPortletModeChanged",Boolean.TRUE);
+  if (mode != renderRequest.getPortletMode()) {
+    renderRequest.setAttribute("isPortletModeChanged",Boolean.TRUE);
   }
  else {
-    req.setAttribute("isPortletModeChanged",Boolean.FALSE);
+    renderRequest.setAttribute("isPortletModeChanged",Boolean.FALSE);
   }
-  ses.setAttribute("CurrentPortletMode",mode);
-  super.render(req,res);
+  portletSession.setAttribute("CurrentPortletMode",mode);
+  super.render(renderRequest,renderResponse);
 }
