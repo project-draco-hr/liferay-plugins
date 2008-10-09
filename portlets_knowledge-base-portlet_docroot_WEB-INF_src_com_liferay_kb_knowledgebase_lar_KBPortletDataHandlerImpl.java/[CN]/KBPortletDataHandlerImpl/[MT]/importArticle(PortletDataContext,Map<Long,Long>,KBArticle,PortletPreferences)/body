@@ -10,14 +10,14 @@
   if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
     existingArticle=KBArticleUtil.fetchByUUID_G(article.getUuid(),context.getGroupId());
     if (existingArticle == null) {
-      existingArticle=KBArticleLocalServiceUtil.addArticle(article.getUuid(),userId,groupId,article.getTitle(),article.getVersion(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isHead(),article.isTemplate(),article.isDraft(),tagsEntries,prefs,themeDisplay);
+      existingArticle=KBArticleLocalServiceUtil.addArticle(article.getUuid(),userId,groupId,article.getTitle(),article.getVersion(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isHead(),article.isTemplate(),article.isDraft(),article.getParentResourcePrimKey(),tagsEntries,prefs,themeDisplay);
     }
  else {
-      existingArticle=KBArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getVersion(),article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),tagsEntries,prefs,themeDisplay);
+      existingArticle=KBArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getVersion(),article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),article.getParentResourcePrimKey(),tagsEntries,prefs,themeDisplay);
     }
   }
  else {
-    existingArticle=KBArticleLocalServiceUtil.addArticle(userId,groupId,article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),tagsEntries,prefs,themeDisplay);
+    existingArticle=KBArticleLocalServiceUtil.addArticle(userId,groupId,article.getTitle(),article.getContent(),article.getDescription(),article.isMinorEdit(),article.isTemplate(),article.isDraft(),article.getParentResourcePrimKey(),tagsEntries,prefs,themeDisplay);
   }
   articlePKs.put(article.getResourcePrimKey(),existingArticle.getResourcePrimKey());
 }

@@ -1,0 +1,38 @@
+{
+  ZipReader zipReader=new ZipReader(file);
+  Map folderEntries=zipReader.getFolderEntries();
+  Set<Entry<String,byte[]>> entries=zipReader.getEntries().entrySet();
+  String indexPath=getIndexPath(folderEntries,entries);
+  if (indexPath == null) {
+    _log.debug("No index file found.");
+    return;
+  }
+  SAXReader reader=new SAXReader(false);
+  String rootPath=new File(indexPath).getParent();
+  reader.setEntityResolver(new DocBookEntityResolver(rootPath,zipReader));
+  String indexContents=zipReader.getEntryAsString(indexPath);
+  org.dom4j.Document doc=reader.read(new StringReader(indexContents));
+  Element bookEl=doc.getRootElement();
+  String title=bookEl.element("bookinfo").elementText("title");
+  KBArticle bookArticle=addArticle(userId,groupId,title,StringPool.BLANK,StringPool.BLANK,false,false,false,KBArticleImpl.DEFAULT_PARENT,null,prefs,themeDisplay);
+  List<Element> glossaries=bookEl.elements("glossary");
+  for (  Element glossaryEl : glossaries) {
+    Section section=getSection(glossaryEl,true);
+    addArticle(userId,groupId,section.getTitle(),section.getContent(),section.getSubTitle(),false,false,false,bookArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+  }
+  List<Element> chaptersEl=bookEl.elements("chapter");
+  for (  Element chapterEl : chaptersEl) {
+    Section section=getSection(chapterEl,false);
+    KBArticle chapterArticle=addArticle(userId,groupId,section.getTitle(),section.getContent(),section.getDescription(),false,false,false,bookArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+    List<Element> sections=chapterEl.elements("section");
+    for (    Element sectionEl : sections) {
+      section=getSection(sectionEl,false);
+      KBArticle sectionArticle=addArticle(userId,groupId,section.getTitle(),section.getContent(),StringPool.BLANK,false,false,false,chapterArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+      List<Element> subSections=sectionEl.elements("section");
+      for (      Element subSectionEl : subSections) {
+        section=getSection(subSectionEl,true);
+        addArticle(userId,groupId,section.getTitle(),section.getContent(),section.getDescription(),false,false,false,sectionArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+      }
+    }
+  }
+}

@@ -17,17 +17,20 @@
  else     if (actionName.equals(Constants.REVERT)) {
       revertPage(actionRequest);
     }
- else     if (actionName.equals("subscribeArticle")) {
-      subscribeArticle(actionRequest);
-    }
- else     if (actionName.equals("unsubscribeArticle")) {
-      unsubscribeArticle(actionRequest);
-    }
  else     if (actionName.equals("addFile")) {
       addAttachment(actionRequest);
     }
  else     if (actionName.equals("deleteAttachment")) {
       deleteAttachment(actionRequest);
+    }
+ else     if (actionName.equals("importArticle")) {
+      importArticle(actionRequest);
+    }
+ else     if (actionName.equals("subscribeArticle")) {
+      subscribeArticle(actionRequest);
+    }
+ else     if (actionName.equals("unsubscribeArticle")) {
+      unsubscribeArticle(actionRequest);
     }
     boolean preview=ParamUtil.getBoolean(actionRequest,"preview");
     if (preview) {
@@ -54,7 +57,7 @@
     }
   }
  catch (  Exception e) {
-    if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
+    if (e instanceof NoSuchArticleException || e instanceof PrincipalException || e instanceof UploadException) {
       SessionErrors.add(actionRequest,e.getClass().getName());
       actionResponse.setRenderParameters(actionRequest.getParameterMap());
       actionResponse.setRenderParameter("view","error");

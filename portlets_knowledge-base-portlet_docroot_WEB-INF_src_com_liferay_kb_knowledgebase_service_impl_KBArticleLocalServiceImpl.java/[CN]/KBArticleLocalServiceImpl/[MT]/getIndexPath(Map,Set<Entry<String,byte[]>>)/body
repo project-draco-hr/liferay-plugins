@@ -1,0 +1,18 @@
+{
+  for (  Entry<String,byte[]> entry : entries) {
+    String indexPath=entry.getKey();
+    if (!folderEntries.containsKey(indexPath)) {
+      if (!indexPath.endsWith(".xml")) {
+        if (_log.isDebugEnabled()) {
+          _log.debug("Not a docbook: " + indexPath);
+        }
+        continue;
+      }
+      File parent=new File(indexPath).getParentFile();
+      if ((parent != null) && (parent.getParent() == null)) {
+        return indexPath;
+      }
+    }
+  }
+  return null;
+}
