@@ -12,20 +12,9 @@
   boolean template=ParamUtil.getBoolean(actionRequest,"template");
   boolean draft=ParamUtil.getBoolean(actionRequest,"draft");
   long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
-  List<TagsVocabulary> vocabularies=TagsVocabularyServiceUtil.getCompanyVocabularies(themeDisplay.getCompanyId(),false);
-  String tagsEntriesString=ParamUtil.getString(actionRequest,"tagsEntries");
-  for (  TagsVocabulary vocabulary : vocabularies) {
-    String vocabularyParamName=TagsEntryConstants.VOCABULARY + Long.toString(vocabulary.getVocabularyId());
-    long entryId=ParamUtil.getLong(actionRequest,vocabularyParamName);
-    if (Validator.isNotNull(entryId)) {
-      if (Validator.isNotNull(tagsEntriesString)) {
-        tagsEntriesString+=",";
-      }
-      TagsEntry entry=TagsEntryServiceUtil.getEntry(entryId);
-      tagsEntriesString+=entry.getName();
-    }
-  }
-  String[] tagsEntries=StringUtil.split(tagsEntriesString);
+  String[] categoriesEntries=StringUtil.split(ParamUtil.getString(actionRequest,"categoriesEntries"));
+  String[] tagsEntries=StringUtil.split(ParamUtil.getString(actionRequest,"tagsEntries"));
+  tagsEntries=ArrayUtil.append(tagsEntries,categoriesEntries);
   if (addTemplate) {
     minorEdit=true;
     KBArticle selectedTemplate=KBArticleServiceUtil.getArticle(templateResourcePrimKey);
