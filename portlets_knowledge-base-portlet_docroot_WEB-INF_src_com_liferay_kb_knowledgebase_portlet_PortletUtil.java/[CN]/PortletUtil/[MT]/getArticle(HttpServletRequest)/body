@@ -10,7 +10,17 @@
     article=KBArticleServiceUtil.getArticle(resourcePrimKey,version,plid);
   }
  else   if (Validator.isNotNull(title)) {
-    article=KBArticleServiceUtil.getArticle(themeDisplay.getScopeGroupId(),title,version,plid);
+    try {
+      article=KBArticleServiceUtil.getArticle(themeDisplay.getScopeGroupId(),title,version,plid);
+    }
+ catch (    NoSuchArticleException nsae) {
+      int pos=title.lastIndexOf(StringPool.PERIOD);
+      if (pos == -1) {
+        throw nsae;
+      }
+      title=title.substring(0,pos);
+      article=KBArticleServiceUtil.getArticle(themeDisplay.getScopeGroupId(),title,version,plid);
+    }
   }
   KBFeedbackEntry feedbackEntry=null;
   KBFeedbackStats feedbackStats=null;

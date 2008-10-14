@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(kbArticleResource);
-    }
- else {
-      if (kbArticleResource.isNew()) {
-        session.save(kbArticleResource);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,kbArticleResource,merge);
     kbArticleResource.setNew(false);
     return kbArticleResource;
   }

@@ -1,10 +1,11 @@
 {
   if (_transformer == null) {
     TransformerFactory factory=TransformerFactory.newInstance();
-    String xsl="/home/bruno/projects/bundles/tomcat-5.5.26/webapps/knowledge-base-portlet/WEB-INF/classes/com/liferay/kb/knowledgebase/dependencies/xsl/html" + "/docbook.xsl";
-    String xslContent=FileUtil.read(xsl);
+    String xslPath="../../dependencies/xsl/html/docbook.xsl";
+    URL url=getClass().getResource(xslPath);
+    String xslContent=StringUtil.read(getClass().getResourceAsStream(xslPath));
     Source source=new StreamSource(xslContent);
-    source.setSystemId(xsl);
+    source.setSystemId(url.getFile());
     _transformer=factory.newTransformer(source);
   }
   return _transformer;

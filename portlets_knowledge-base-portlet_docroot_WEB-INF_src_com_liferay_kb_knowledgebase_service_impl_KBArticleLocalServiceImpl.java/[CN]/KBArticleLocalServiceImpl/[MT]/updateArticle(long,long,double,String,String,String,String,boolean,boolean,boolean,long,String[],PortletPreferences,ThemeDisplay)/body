@@ -1,15 +1,21 @@
 {
   User user=UserLocalServiceUtil.getUser(userId);
   Date now=new Date();
-  validate(title);
-  int count=kbArticlePersistence.countByG_T(groupId,title);
-  if (count > 0) {
-    throw new ArticleTitleException("The title " + title + " is already being used");
+  KBArticle article=getArticle(resourcePrimKey);
+  long groupId=article.getGroupId();
+  double oldVersion=article.getVersion();
+  if ((version > 0) && (version != oldVersion)) {
+    throw new ArticleVersionException();
   }
+  if (htmlTitle == null) {
+    htmlTitle=title;
+  }
+  article.setHead(false);
+  article.setModifiedDate(now);
+  kbArticlePersistence.update(article,false);
+  double newVersion=MathUtil.format(oldVersion + 0.1,1,1);
   long articleId=CounterLocalServiceUtil.increment();
-  long resourcePrimKey=kbArticleResourceLocalService.getArticleResourcePrimKey(groupId,title);
-  KBArticle article=kbArticlePersistence.create(articleId);
-  article.setUuid(uuid);
+  article=kbArticlePersistence.create(articleId);
   article.setResourcePrimKey(resourcePrimKey);
   article.setCompanyId(user.getCompanyId());
   article.setUserId(user.getUserId());
@@ -17,19 +23,19 @@
   article.setModifiedDate(now);
   article.setGroupId(groupId);
   article.setTitle(title);
-  article.setVersion(version);
+  article.setHtmlTitle(htmlTitle);
+  article.setVersion(newVersion);
   article.setMinorEdit(minorEdit);
   article.setContent(content);
   article.setDescription(description);
-  article.setHead(head);
+  article.setHead(true);
   article.setTemplate(template);
   article.setDraft(draft);
   article.setParentResourcePrimKey(parentResourcePrimKey);
   kbArticlePersistence.update(article,false);
-  addArticleResources(article.getGroupId(),article,true,true);
   if (!minorEdit && !draft && NotificationThreadLocal.isNotificationEnabled()) {
     try {
-      notifySubscribers(article,prefs,themeDisplay,false);
+      notifySubscribers(article,prefs,themeDisplay,true);
     }
  catch (    Exception e) {
       throw new SystemException(e);
@@ -38,10 +44,10 @@
   updateTagsAsset(userId,article,tagsEntries);
   if (!draft) {
     try {
-      Indexer.addArticle(article.getCompanyId(),groupId,userId,resourcePrimKey,title,content,description,tagsEntries);
+      Indexer.updateArticle(article.getCompanyId(),article.getGroupId(),userId,resourcePrimKey,article.getTitle(),content,description,tagsEntries);
     }
  catch (    SearchException se) {
-      _log.error("Indexing " + articleId,se);
+      _log.error("Indexing " + article.getPrimaryKey(),se);
     }
   }
   return article;

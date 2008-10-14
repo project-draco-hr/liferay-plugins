@@ -6,15 +6,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(kbArticle);
-    }
- else {
-      if (kbArticle.isNew()) {
-        session.save(kbArticle);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,kbArticle,merge);
     kbArticle.setNew(false);
     return kbArticle;
   }

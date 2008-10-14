@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(kbFeedbackEntry);
-    }
- else {
-      if (kbFeedbackEntry.isNew()) {
-        session.save(kbFeedbackEntry);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,kbFeedbackEntry,merge);
     kbFeedbackEntry.setNew(false);
     return kbFeedbackEntry;
   }
