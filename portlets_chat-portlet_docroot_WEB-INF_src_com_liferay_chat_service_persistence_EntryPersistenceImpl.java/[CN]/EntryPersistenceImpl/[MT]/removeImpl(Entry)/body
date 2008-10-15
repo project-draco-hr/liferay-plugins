@@ -2,6 +2,12 @@
   Session session=null;
   try {
     session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(EntryImpl.class,entry.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
     session.delete(entry);
     session.flush();
     return entry;
