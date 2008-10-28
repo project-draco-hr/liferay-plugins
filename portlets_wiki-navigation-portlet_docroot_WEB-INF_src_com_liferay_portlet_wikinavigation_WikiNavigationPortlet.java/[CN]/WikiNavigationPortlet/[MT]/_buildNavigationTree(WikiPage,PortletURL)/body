@@ -1,0 +1,31 @@
+{
+  String regex="((==\\s(((\\w)+\\s?)*)\\s==)*" + "(\\Q[\\E\\Q[\\E((.)*)\\Q|\\E(((\\w)+\\s?)*)\\Q]\\E\\Q]\\E)*)*";
+  Pattern pattern=Pattern.compile(regex);
+  List<EntryDisplay> entries=new LinkedList<EntryDisplay>();
+  Matcher matcher=pattern.matcher(page.getContent());
+  EntryDisplay parent=null;
+  while (matcher.find()) {
+    String title=matcher.group(3);
+    if (title != null) {
+      parent=new EntryDisplay();
+      parent.setLabel(title);
+      entries.add(parent);
+    }
+    String url=matcher.group(7);
+    if (url != null) {
+      EntryDisplay child=new EntryDisplay();
+      if (!url.startsWith("http")) {
+        portletURL.setParameter("title",url);
+        url=portletURL.toString();
+      }
+ else {
+        child.setExternalURL(true);
+      }
+      String label=matcher.group(9);
+      child.setLabel(label);
+      child.setUrl(url);
+      parent.addChild(child);
+    }
+  }
+  return entries;
+}
