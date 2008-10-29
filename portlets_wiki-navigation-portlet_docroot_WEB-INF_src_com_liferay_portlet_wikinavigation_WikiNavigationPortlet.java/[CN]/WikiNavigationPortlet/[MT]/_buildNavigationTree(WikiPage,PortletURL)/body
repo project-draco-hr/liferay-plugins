@@ -1,5 +1,5 @@
 {
-  String regex="((==\\s(((\\w)+\\s?)*)\\s==)*" + "(\\Q[\\E\\Q[\\E((.)*)\\Q|\\E(((\\w)+\\s?)*)\\Q]\\E\\Q]\\E)*)*";
+  String regex="((==\\s((.)*)\\s==)*(\\Q[[\\E((.)*)\\Q]]\\E)*)*";
   Pattern pattern=Pattern.compile(regex);
   List<EntryDisplay> entries=new LinkedList<EntryDisplay>();
   Matcher matcher=pattern.matcher(page.getContent());
@@ -11,19 +11,34 @@
       parent.setLabel(title);
       entries.add(parent);
     }
-    String url=matcher.group(7);
-    if (url != null) {
+    String temp=matcher.group(6);
+    if (temp != null) {
       EntryDisplay child=new EntryDisplay();
-      if (!url.startsWith("http")) {
-        portletURL.setParameter("title",url);
-        url=portletURL.toString();
+      int index=temp.indexOf("|");
+      if (index != -1) {
+        String url=temp.substring(0,index);
+        String label=temp.substring(index + 1,temp.length());
+        if (!url.startsWith("http")) {
+          portletURL.setParameter("title",url);
+          portletURL.setParameter("nodeId",String.valueOf(page.getNodeId()));
+          url=portletURL.toString();
+        }
+ else {
+          child.setExternalURL(true);
+        }
+        child.setLabel(label);
+        child.setUrl(url);
       }
  else {
-        child.setExternalURL(true);
+        child.setLabel(temp);
+        String url=temp;
+        if (!url.startsWith("http")) {
+          portletURL.setParameter("title",url);
+          portletURL.setParameter("nodeId",String.valueOf(page.getNodeId()));
+          url=portletURL.toString();
+        }
+        child.setUrl(url);
       }
-      String label=matcher.group(9);
-      child.setLabel(label);
-      child.setUrl(url);
       parent.addChild(child);
     }
   }
