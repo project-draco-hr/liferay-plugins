@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Presence presence=(Presence)session.get(PresenceImpl.class,new Long(presenceId));
+    if (presence == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No Presence exists with the primary key " + presenceId);
+      }
+      throw new NoSuchPresenceException("No Presence exists with the primary key " + presenceId);
+    }
+    return remove(presence);
+  }
+ catch (  NoSuchPresenceException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
