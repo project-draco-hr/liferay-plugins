@@ -1,0 +1,50 @@
+{
+  boolean finderClassNameCacheEnabled=PresenceModelImpl.CACHE_ENABLED;
+  String finderClassName=Presence.class.getName();
+  String finderMethodName="fetchByU_N";
+  String[] finderParams=new String[]{Long.class.getName(),Long.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(userId),new Long(networkId)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.ruon.model.Presence WHERE ");
+      query.append("userId = ?");
+      query.append(" AND ");
+      query.append("networkId = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      qPos.add(networkId);
+      List<Presence> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      if (list.size() == 0) {
+        return null;
+      }
+ else {
+        return list.get(0);
+      }
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    List<Presence> list=(List<Presence>)result;
+    if (list.size() == 0) {
+      return null;
+    }
+ else {
+      return list.get(0);
+    }
+  }
+}

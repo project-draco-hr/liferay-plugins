@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,network,merge);
+    network.setNew(false);
+    return network;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(Network.class.getName());
+  }
+}

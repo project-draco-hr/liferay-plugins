@@ -1,0 +1,11 @@
+{
+  Network network=networkPersistence.fetchByName(name);
+  if (network == null) {
+    long networkId=CounterLocalServiceUtil.increment();
+    network=networkPersistence.create(networkId);
+    network.setName(name);
+    network.setTtl(ttl);
+    networkPersistence.update(network,false);
+  }
+  return network;
+}

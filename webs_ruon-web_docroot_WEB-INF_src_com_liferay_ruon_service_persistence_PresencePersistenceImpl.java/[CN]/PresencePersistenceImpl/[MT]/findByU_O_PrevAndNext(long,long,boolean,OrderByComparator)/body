@@ -1,0 +1,34 @@
+{
+  Presence presence=findByPrimaryKey(presenceId);
+  int count=countByU_O(userId,online);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.ruon.model.Presence WHERE ");
+    query.append("userId = ?");
+    query.append(" AND ");
+    query.append("online = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(userId);
+    qPos.add(online);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,presence);
+    Presence[] array=new PresenceImpl[3];
+    array[0]=(Presence)objArray[0];
+    array[1]=(Presence)objArray[1];
+    array[2]=(Presence)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

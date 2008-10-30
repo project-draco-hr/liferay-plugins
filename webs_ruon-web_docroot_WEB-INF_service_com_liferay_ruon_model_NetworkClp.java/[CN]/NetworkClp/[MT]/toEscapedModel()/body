@@ -1,0 +1,14 @@
+{
+  if (isEscapedModel()) {
+    return this;
+  }
+ else {
+    Network model=new NetworkClp();
+    model.setEscapedModel(true);
+    model.setNetworkId(getNetworkId());
+    model.setName(HtmlUtil.escape(getName()));
+    model.setTtl(getTtl());
+    model=(Network)Proxy.newProxyInstance(Network.class.getClassLoader(),new Class[]{Network.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
