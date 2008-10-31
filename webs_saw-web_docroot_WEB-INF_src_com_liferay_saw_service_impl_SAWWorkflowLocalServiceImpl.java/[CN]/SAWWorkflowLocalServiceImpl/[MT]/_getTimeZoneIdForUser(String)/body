@@ -1,5 +1,12 @@
 {
   User user=null;
+  String timeZoneId=null;
+  if (Validator.isNull(userId)) {
+    return null;
+  }
+ else   if ("%".equals(userId)) {
+    return null;
+  }
   try {
     user=UserLocalServiceUtil.getUserById((new Long(userId)).longValue());
   }
@@ -12,6 +19,6 @@ catch (  PortalException e) {
 catch (  SystemException e) {
     throw new WorkflowComponentException(e);
   }
-  String timeZoneId=user.getTimeZoneId();
+  timeZoneId=user.getTimeZoneId();
   return timeZoneId;
 }
