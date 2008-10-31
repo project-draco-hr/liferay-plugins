@@ -1,10 +1,7 @@
 {
-  com.liferay.portal.kernel.xml.Document xmlDoc=SAXReaderUtil.createDocument();
-  Element deleteEl=xmlDoc.addElement("delete");
-  Element queryEl=deleteEl.addElement("query");
-  queryEl.setText(Field.PORTLET_ID + StringPool.COLON + portletId);
   try {
-    write(xmlDoc);
+    _solrServer.deleteByQuery(Field.PORTLET_ID + StringPool.COLON + portletId);
+    _solrServer.commit();
   }
  catch (  Exception e) {
     throw new SearchException(e);

@@ -1,34 +1,29 @@
 {
   try {
-    String url=HttpUtil.addParameter(_serverURL,"q",query.toString());
-    url=HttpUtil.addParameter(url,"fl","score");
+    SolrQuery solrQuery=new SolrQuery();
+    solrQuery.setQuery(query.toString());
+    solrQuery.setIncludeScore(true);
     boolean allResults=false;
     if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
-      url=HttpUtil.addParameter(url,"rows",0);
+      solrQuery.setRows(0);
       allResults=true;
     }
  else {
-      url=HttpUtil.addParameter(url,"start",start);
-      url=HttpUtil.addParameter(url,"rows",end - start);
+      solrQuery.setStart(start);
+      solrQuery.setRows(end - start);
     }
     if ((sorts != null) && (sorts.length > 0)) {
-      StringBuilder sb=new StringBuilder();
       for (int i=0; i < sorts.length; i++) {
         Sort sortField=sorts[i];
-        if (i > 0) {
-          sb.append(StringPool.COMMA);
-        }
-        sb.append(sortField.getFieldName());
-        sb.append(StringPool.SPACE);
-        String order="asc";
+        ORDER order=ORDER.asc;
         if (sortField.isReverse()) {
-          order="desc";
+          order=ORDER.desc;
         }
-        sb.append(order);
+        solrQuery.addSortField(sortField.getFieldName(),order);
       }
-      url=HttpUtil.addParameter(url,"sort",sb.toString());
     }
-    return subset(url,HttpUtil.URLtoString(url),allResults);
+    QueryResponse response=_solrServer.query(solrQuery);
+    return subset(solrQuery,response.getResults(),allResults);
   }
  catch (  Exception e) {
     _log.error("Error while sending request to Solr",e);

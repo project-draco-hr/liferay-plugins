@@ -1,10 +1,7 @@
 {
-  com.liferay.portal.kernel.xml.Document xmlDoc=SAXReaderUtil.createDocument();
-  Element deleteEl=xmlDoc.addElement("delete");
-  Element idEl=deleteEl.addElement("id");
-  idEl.setText(uid);
   try {
-    write(xmlDoc);
+    _solrServer.deleteById(uid);
+    _solrServer.commit();
   }
  catch (  Exception e) {
     throw new SearchException(e);

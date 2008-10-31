@@ -1,13 +1,12 @@
 {
-  Element docEl=el.addElement("doc");
+  SolrInputDocument solrDoc=new SolrInputDocument();
   Collection<Field> fields=doc.getFields().values();
   for (  Field field : fields) {
     String name=field.getName();
     String value=field.getValue();
     if (value != null) {
-      Element fieldEl=docEl.addElement("field");
-      fieldEl.addAttribute("name",name);
-      fieldEl.addText(value);
+      solrDoc.addField(name,value);
     }
   }
+  return solrDoc;
 }

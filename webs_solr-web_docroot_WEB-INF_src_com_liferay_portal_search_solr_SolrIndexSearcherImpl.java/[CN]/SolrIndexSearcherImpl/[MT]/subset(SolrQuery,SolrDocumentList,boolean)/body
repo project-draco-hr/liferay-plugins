@@ -1,0 +1,34 @@
+{
+  long startTime=System.currentTimeMillis();
+  Hits subset=new HitsImpl();
+  long length=results.getNumFound();
+  if (allResults && (length > 0)) {
+    solrQuery.setRows((int)length);
+    results=_solrServer.query(solrQuery).getResults();
+    return subset(solrQuery,results,false);
+  }
+  float maxScore=results.getMaxScore();
+  int subsetTotal=results.size();
+  Document[] subsetDocs=new DocumentImpl[subsetTotal];
+  float[] subsetScores=new float[subsetTotal];
+  int j=0;
+  for (  SolrDocument solrDocument : results) {
+    Document doc=new DocumentImpl();
+    Collection<String> names=solrDocument.getFieldNames();
+    for (    String name : names) {
+      Field field=new Field(name,solrDocument.getFieldValue(name).toString(),false);
+      doc.add(field);
+    }
+    float score=Float.valueOf(solrDocument.getFieldValue("score").toString());
+    subsetDocs[j]=doc;
+    subsetScores[j]=score / maxScore;
+    j++;
+  }
+  subset.setLength((int)length);
+  subset.setDocs(subsetDocs);
+  subset.setScores(subsetScores);
+  subset.setStart(startTime);
+  float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
+  subset.setSearchTime(searchTime);
+  return subset;
+}
