@@ -5,7 +5,7 @@
   Role role=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),"Organization Administrator");
   LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
   userParams.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(role.getRoleId())});
-  List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),null,Boolean.TRUE,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),null,Boolean.TRUE,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
   for (  User user : users) {
     SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,Organization.class.getName(),organization.getOrganizationId(),MembersRequestKeys.ADD_MEMBER,StringPool.BLANK,user.getUserId());
   }
