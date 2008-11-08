@@ -1,4 +1,10 @@
 {
+  if (Validator.isNull(content)) {
+    List<Entry> entries=entryFinder.findByEmptyContent(fromUserId,toUserId,0,5);
+    for (    Entry entry : entries) {
+      entryPersistence.remove(entry);
+    }
+  }
   long entryId=CounterLocalServiceUtil.increment();
   Entry entry=entryPersistence.create(entryId);
   entry.setCreateDate(createDate);
