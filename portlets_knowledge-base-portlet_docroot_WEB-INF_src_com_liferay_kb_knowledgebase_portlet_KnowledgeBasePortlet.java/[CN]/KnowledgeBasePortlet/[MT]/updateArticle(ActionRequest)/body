@@ -14,22 +14,21 @@
   long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
   String[] tagsCategories=StringUtil.split(ParamUtil.getString(actionRequest,"tagsCategories"));
   String[] tagsEntries=StringUtil.split(ParamUtil.getString(actionRequest,"tagsEntries"));
-  tagsEntries=ArrayUtil.append(tagsEntries,tagsCategories);
   if (addTemplate) {
     minorEdit=true;
     KBArticle selectedTemplate=KBArticleServiceUtil.getArticle(templateResourcePrimKey);
     content=selectedTemplate.getContent() + content;
   }
   if (resourcePrimKey <= 0) {
-    return KBArticleServiceUtil.addArticle(themeDisplay.getPlid(),title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+    return KBArticleServiceUtil.addArticle(themeDisplay.getPlid(),title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,tagsCategories,prefs,themeDisplay);
   }
  else {
     KBArticle article=KBArticleServiceUtil.getArticle(resourcePrimKey);
     if (article.isTemplate() && (template == false)) {
-      return KBArticleServiceUtil.addArticle(themeDisplay.getScopeGroupId(),title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+      return KBArticleServiceUtil.addArticle(themeDisplay.getScopeGroupId(),title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,tagsCategories,prefs,themeDisplay);
     }
  else {
-      return KBArticleServiceUtil.updateArticle(themeDisplay.getPlid(),resourcePrimKey,version,title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,prefs,themeDisplay);
+      return KBArticleServiceUtil.updateArticle(themeDisplay.getPlid(),resourcePrimKey,version,title,content,description,minorEdit,template,draft,parentResourcePrimKey,tagsEntries,tagsCategories,prefs,themeDisplay);
     }
   }
 }

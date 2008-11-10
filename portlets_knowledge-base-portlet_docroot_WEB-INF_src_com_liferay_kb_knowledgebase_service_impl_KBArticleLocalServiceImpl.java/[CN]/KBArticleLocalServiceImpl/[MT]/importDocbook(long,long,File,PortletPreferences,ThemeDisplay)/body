@@ -15,32 +15,32 @@
   Element bookEl=doc.getRootElement();
   String htmlTitle=bookEl.element("bookinfo").elementText("title");
   String title=bookEl.attributeValue("id");
-  KBArticle bookArticle=addArticle(userId,groupId,title,htmlTitle,StringPool.BLANK,StringPool.BLANK,true,false,false,KBArticleImpl.DEFAULT_PARENT,null,prefs,themeDisplay);
+  KBArticle bookArticle=addArticle(userId,groupId,title,htmlTitle,StringPool.BLANK,StringPool.BLANK,true,false,false,KBArticleImpl.DEFAULT_PARENT,null,null,prefs,themeDisplay);
   List<Element> glossaries=bookEl.elements("glossary");
   for (  Element glossaryEl : glossaries) {
     Section section=getSection(glossaryEl,true);
     title=validateTitle(groupId,section.getId());
     htmlTitle=section.getTitle();
-    addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getSubTitle(),true,false,false,bookArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+    addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getSubTitle(),true,false,false,bookArticle.getResourcePrimKey(),null,null,prefs,themeDisplay);
   }
   List<Element> chaptersEl=bookEl.elements("chapter");
   for (  Element chapterEl : chaptersEl) {
     Section section=getSection(chapterEl,false);
     title=validateTitle(groupId,section.getId());
     htmlTitle=section.getTitle();
-    KBArticle chapterArticle=addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getDescription(),true,false,false,bookArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+    KBArticle chapterArticle=addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getDescription(),true,false,false,bookArticle.getResourcePrimKey(),null,null,prefs,themeDisplay);
     List<Element> sections=chapterEl.elements("section");
     for (    Element sectionEl : sections) {
       section=getSection(sectionEl,false);
       title=validateTitle(groupId,section.getId());
       htmlTitle=section.getTitle();
-      KBArticle sectionArticle=addArticle(userId,groupId,title,htmlTitle,section.getContent(),StringPool.BLANK,true,false,false,chapterArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+      KBArticle sectionArticle=addArticle(userId,groupId,title,htmlTitle,section.getContent(),StringPool.BLANK,true,false,false,chapterArticle.getResourcePrimKey(),null,null,prefs,themeDisplay);
       List<Element> subSections=sectionEl.elements("section");
       for (      Element subSectionEl : subSections) {
         section=getSection(subSectionEl,true);
         title=validateTitle(groupId,section.getId());
         htmlTitle=section.getTitle();
-        addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getDescription(),true,false,false,sectionArticle.getResourcePrimKey(),null,prefs,themeDisplay);
+        addArticle(userId,groupId,title,htmlTitle,section.getContent(),section.getDescription(),true,false,false,sectionArticle.getResourcePrimKey(),null,null,prefs,themeDisplay);
       }
     }
   }
