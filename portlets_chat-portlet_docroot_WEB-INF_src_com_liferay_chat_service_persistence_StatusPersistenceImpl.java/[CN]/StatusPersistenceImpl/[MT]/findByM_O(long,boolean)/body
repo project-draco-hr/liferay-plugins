@@ -1,0 +1,39 @@
+{
+  boolean finderClassNameCacheEnabled=StatusModelImpl.CACHE_ENABLED;
+  String finderClassName=Status.class.getName();
+  String finderMethodName="findByM_O";
+  String[] finderParams=new String[]{Long.class.getName(),Boolean.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(modifiedDate),Boolean.valueOf(online)};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.chat.model.Status WHERE ");
+      query.append("modifiedDate = ?");
+      query.append(" AND ");
+      query.append("online_ = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(modifiedDate);
+      qPos.add(online);
+      List<Status> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<Status>)result;
+  }
+}

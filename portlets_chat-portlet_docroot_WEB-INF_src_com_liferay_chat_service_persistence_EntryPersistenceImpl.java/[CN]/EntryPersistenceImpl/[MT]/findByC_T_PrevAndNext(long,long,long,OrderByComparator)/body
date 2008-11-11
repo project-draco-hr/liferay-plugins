@@ -1,0 +1,38 @@
+{
+  Entry entry=findByPrimaryKey(entryId);
+  int count=countByC_T(createDate,toUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.chat.model.Entry WHERE ");
+    query.append("createDate = ?");
+    query.append(" AND ");
+    query.append("toUserId = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("createDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(createDate);
+    qPos.add(toUserId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,entry);
+    Entry[] array=new EntryImpl[3];
+    array[0]=(Entry)objArray[0];
+    array[1]=(Entry)objArray[1];
+    array[2]=(Entry)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

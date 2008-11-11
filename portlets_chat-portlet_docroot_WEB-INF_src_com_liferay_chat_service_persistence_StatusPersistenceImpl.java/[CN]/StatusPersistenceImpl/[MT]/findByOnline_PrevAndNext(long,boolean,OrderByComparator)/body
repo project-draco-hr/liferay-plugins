@@ -1,0 +1,31 @@
+{
+  Status status=findByPrimaryKey(statusId);
+  int count=countByOnline(online);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.chat.model.Status WHERE ");
+    query.append("online_ = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(online);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,status);
+    Status[] array=new StatusImpl[3];
+    array[0]=(Status)objArray[0];
+    array[1]=(Status)objArray[1];
+    array[2]=(Status)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  int count=countByF_T_C(fromUserId,toUserId,content);
+  List<Entry> list=findByF_T_C(fromUserId,toUserId,content,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No Entry exists with the key {");
+    msg.append("fromUserId=" + fromUserId);
+    msg.append(", ");
+    msg.append("toUserId=" + toUserId);
+    msg.append(", ");
+    msg.append("content=" + content);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchEntryException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
