@@ -1,0 +1,11 @@
+{
+  List<NetvibesCategory> categories=new ArrayList<NetvibesCategory>();
+  String jsontext=getJSONNetvibesCategories();
+  JSONObject received=new JSONObject(jsontext);
+  JSONArray jsonCategories=received.getJSONArray("categories");
+  for (int i=0; i < jsonCategories.length(); i++) {
+    JSONObject category=jsonCategories.getJSONObject(i);
+    categories.add(new NetvibesCategory(category.getInt("id"),category.getString("label")));
+  }
+  return categories;
+}

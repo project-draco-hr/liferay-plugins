@@ -1,0 +1,11 @@
+{
+  WebCacheItem wci=new NetvibesCategoryWebCacheItem();
+  String key=NetvibesUtil.class.getName() + StringPool.PERIOD + "category";
+  try {
+    return (String)WebCachePoolUtil.get(key,wci);
+  }
+ catch (  ClassCastException cce) {
+    WebCachePoolUtil.remove(key);
+    return (String)WebCachePoolUtil.get(key,wci);
+  }
+}
