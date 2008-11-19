@@ -1,0 +1,20 @@
+{
+  try {
+    Message message=new Message();
+    message.put("command","delegateToNetwork");
+    message.put("name",network);
+    message.put("jsonRequest",jsonRequest);
+    JSONObject response=(JSONObject)MessageBusUtil.sendSynchronousMessage(DestinationNames.RUON,message);
+    String responseOutput=response.getString("output");
+    if (responseOutput.equalsIgnoreCase("success")) {
+      return "success";
+    }
+ else {
+      return "failure";
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    return "failure";
+  }
+}
