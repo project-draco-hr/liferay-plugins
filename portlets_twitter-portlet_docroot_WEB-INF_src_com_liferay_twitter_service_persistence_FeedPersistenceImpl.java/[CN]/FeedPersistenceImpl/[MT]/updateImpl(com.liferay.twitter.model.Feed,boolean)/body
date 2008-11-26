@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(feed);
-    }
- else {
-      if (feed.isNew()) {
-        session.save(feed);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,feed,merge);
     feed.setNew(false);
     return feed;
   }
