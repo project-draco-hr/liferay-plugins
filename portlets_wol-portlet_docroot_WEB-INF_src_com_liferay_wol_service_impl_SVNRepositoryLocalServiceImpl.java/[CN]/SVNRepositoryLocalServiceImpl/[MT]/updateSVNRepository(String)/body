@@ -8,9 +8,9 @@
   }
   org.tmatesoft.svn.core.io.SVNRepository repository=null;
   try {
-    DAVRepositoryFactory.setup();
+    SVNRepositoryFactoryImpl.setup();
     repository=SVNRepositoryFactory.create(SVNURL.parseURIEncoded(url));
-    ISVNAuthenticationManager authenticationManager=SVNWCUtil.createDefaultAuthenticationManager();
+    ISVNAuthenticationManager authenticationManager=SVNWCUtil.createDefaultAuthenticationManager(SVNConstants.SVN_AUTH_USERNAME,SVNConstants.SVN_AUTH_PASSWORD);
     repository.setAuthenticationManager(authenticationManager);
     if (svnRepository.getRevisionNumber() == repository.getLatestRevision()) {
       return;

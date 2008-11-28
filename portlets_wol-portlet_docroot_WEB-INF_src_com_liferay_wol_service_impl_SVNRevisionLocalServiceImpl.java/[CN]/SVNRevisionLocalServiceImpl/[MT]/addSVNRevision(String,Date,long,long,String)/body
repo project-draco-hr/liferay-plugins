@@ -7,18 +7,12 @@
   svnRevision.setRevisionNumber(revisionNumber);
   svnRevision.setComments(comments);
   svnRevisionPersistence.update(svnRevision,false);
-  List<ExpandoValue> expandoValues=ExpandoValueLocalServiceUtil.getColumnValues(User.class.getName(),"WOL","sfUserId",svnUserId,0,1);
-  if (expandoValues.size() > 0) {
-    ExpandoValue expandoValue=expandoValues.get(0);
-    long userId=expandoValue.getClassPK();
-    List<SocialActivity> socialActivities=SocialActivityLocalServiceUtil.getActivities(SVNRevision.class.getName(),0,1);
-    if (socialActivities.size() > 0) {
-      SocialActivity socialActivity=socialActivities.get(0);
-      if (userId == socialActivity.getUserId()) {
-        SocialActivityLocalServiceUtil.deleteActivity(socialActivity.getActivityId());
-      }
-    }
+  try {
+    User user=UserLocalServiceUtil.getUserByScreenName(PortalUtil.getDefaultCompanyId(),svnUserId);
+    long userId=user.getUserId();
     SocialActivityLocalServiceUtil.addActivity(userId,0,createDate,SVNRevision.class.getName(),svnRevisionId,SVNActivityKeys.ADD_REVISION,StringPool.BLANK,0);
+  }
+ catch (  NoSuchUserException nsue) {
   }
   return svnRevision;
 }

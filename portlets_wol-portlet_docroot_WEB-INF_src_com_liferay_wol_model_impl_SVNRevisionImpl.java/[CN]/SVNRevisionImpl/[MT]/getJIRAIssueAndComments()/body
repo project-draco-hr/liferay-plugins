@@ -1,23 +1,54 @@
 {
   JIRAIssue jiraIssue=null;
   String comments=getComments();
-  if (comments.startsWith(_LEP_PREFIX_1) || comments.startsWith(_LEP_PREFIX_2)) {
+  if (comments.startsWith(_LEP_PREFIX_1) || comments.startsWith(_LEP_PREFIX_2) || comments.startsWith(_LEP_PREFIX_3)|| comments.startsWith(_LPE_PREFIX_1)|| comments.startsWith(_LPE_PREFIX_2)|| comments.startsWith(_LPE_PREFIX_3)|| comments.startsWith(_LPS_PREFIX_1)|| comments.startsWith(_LPS_PREFIX_2)|| comments.startsWith(_LPS_PREFIX_3)) {
     comments=StringUtil.replace(comments,StringPool.NEW_LINE,StringPool.SPACE);
     int pos=comments.indexOf(StringPool.SPACE);
     if (pos == -1) {
       pos=comments.length();
     }
-    String key=null;
-    if (comments.startsWith("LEP-")) {
-      key=comments.substring(_LEP_PREFIX_1.length(),pos);
+    String keyPrefix=null;
+    String keyId=null;
+    if (comments.startsWith(_LEP_PREFIX_1)) {
+      keyPrefix="LEP";
+      keyId=comments.substring(_LEP_PREFIX_1.length(),pos);
     }
- else {
-      key=comments.substring(_LEP_PREFIX_2.length(),pos);
+ else     if (comments.startsWith(_LEP_PREFIX_2)) {
+      keyPrefix="LEP";
+      keyId=comments.substring(_LEP_PREFIX_2.length(),pos);
+    }
+ else     if (comments.startsWith(_LEP_PREFIX_3)) {
+      keyPrefix="LEP";
+      keyId=comments.substring(_LEP_PREFIX_3.length(),pos);
+    }
+    if (comments.startsWith(_LPE_PREFIX_1)) {
+      keyPrefix="LPE";
+      keyId=comments.substring(_LPE_PREFIX_1.length(),pos);
+    }
+ else     if (comments.startsWith(_LPE_PREFIX_2)) {
+      keyPrefix="LPE";
+      keyId=comments.substring(_LPE_PREFIX_2.length(),pos);
+    }
+ else     if (comments.startsWith(_LPE_PREFIX_3)) {
+      keyPrefix="LPE";
+      keyId=comments.substring(_LPE_PREFIX_3.length(),pos);
+    }
+    if (comments.startsWith(_LPS_PREFIX_1)) {
+      keyPrefix="LPS";
+      keyId=comments.substring(_LPS_PREFIX_1.length(),pos);
+    }
+ else     if (comments.startsWith(_LPS_PREFIX_2)) {
+      keyPrefix="LPS";
+      keyId=comments.substring(_LPS_PREFIX_2.length(),pos);
+    }
+ else     if (comments.startsWith(_LPS_PREFIX_3)) {
+      keyPrefix="LPS";
+      keyId=comments.substring(_LPS_PREFIX_3.length(),pos);
     }
     comments=comments.substring(pos).trim();
-    if (Validator.isNumber(key)) {
+    if (Validator.isNumber(keyId)) {
       try {
-        jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue("LEP-" + key);
+        jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(keyPrefix + "-" + keyId);
       }
  catch (      Exception e) {
       }
