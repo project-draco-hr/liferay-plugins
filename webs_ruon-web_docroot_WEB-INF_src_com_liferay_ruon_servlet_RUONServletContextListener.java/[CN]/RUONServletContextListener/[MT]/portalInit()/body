@@ -2,12 +2,15 @@
   _ruonDestination=new ParallelDestination(DestinationNames.RUON);
   MessageBusUtil.addDestination(_ruonDestination);
   _ruonMessageListener=new RUONMessageListener();
-  ClassLoader currentClassLoader=Thread.currentThread().getContextClassLoader();
-  if (!(currentClassLoader.equals(_contextClassLoader))) {
-    Thread.currentThread().setContextClassLoader(_contextClassLoader);
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
+  try {
+    currentThread.setContextClassLoader(_classLoader);
+    _ruonDestination.register(_ruonMessageListener);
   }
-  _ruonDestination.register(_ruonMessageListener);
+  finally {
+    currentThread.setContextClassLoader(contextClassLoader);
+  }
   Destination ruonResponseDestination=new ParallelDestination(DestinationNames.RUON_RESPONSE);
-  _restoreCurrentClassLoader(currentClassLoader);
   MessageBusUtil.addDestination(ruonResponseDestination);
 }
