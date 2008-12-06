@@ -10,8 +10,9 @@
       _log.info("JBPM Tables does not exist. So have to create them.");
     }
     String dialect=_getDialect();
-    ClassLoader contextClassLoader=_getCurrentClassLoader();
-    _setAggregateClassLoader(contextClassLoader);
+    ClassLoader currentClassLoader=_getCurrentClassLoader();
+    ClassLoader portletClassLoader=_getPortletClassLoader();
+    _setAggregateClassLoader(portletClassLoader);
     try {
       _runSQLQuery(dialect);
     }
@@ -24,6 +25,6 @@ catch (    NamingException e) {
 catch (    SQLException e) {
       _log.error(e,e);
     }
-    _restoreClassLoader(contextClassLoader);
+    _restoreClassLoader(currentClassLoader);
   }
 }
