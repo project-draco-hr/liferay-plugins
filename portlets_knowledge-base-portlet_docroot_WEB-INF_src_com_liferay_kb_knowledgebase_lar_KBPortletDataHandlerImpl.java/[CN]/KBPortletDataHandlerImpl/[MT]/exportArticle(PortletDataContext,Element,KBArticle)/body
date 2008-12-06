@@ -7,6 +7,9 @@
   entryEl.addAttribute("path",path);
   if (context.isPathNotProcessed(path)) {
     article.setUserUuid(article.getUserUuid());
+    if (context.getBooleanParameter(_NAMESPACE,"categories")) {
+      context.addTagsCategories(KBArticle.class,article.getResourcePrimKey());
+    }
     if (context.getBooleanParameter(_NAMESPACE,"tags")) {
       context.addTagsEntries(KBArticle.class,article.getResourcePrimKey());
     }
