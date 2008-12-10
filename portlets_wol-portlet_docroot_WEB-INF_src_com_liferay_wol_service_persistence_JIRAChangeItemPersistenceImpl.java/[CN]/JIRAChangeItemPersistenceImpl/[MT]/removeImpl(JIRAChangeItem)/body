@@ -2,6 +2,12 @@
   Session session=null;
   try {
     session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
     session.delete(jiraChangeItem);
     session.flush();
     return jiraChangeItem;

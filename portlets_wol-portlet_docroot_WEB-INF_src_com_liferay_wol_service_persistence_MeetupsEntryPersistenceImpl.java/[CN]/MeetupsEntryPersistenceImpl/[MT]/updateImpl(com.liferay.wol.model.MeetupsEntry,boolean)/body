@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(meetupsEntry);
-    }
- else {
-      if (meetupsEntry.isNew()) {
-        session.save(meetupsEntry);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,meetupsEntry,merge);
     meetupsEntry.setNew(false);
     return meetupsEntry;
   }

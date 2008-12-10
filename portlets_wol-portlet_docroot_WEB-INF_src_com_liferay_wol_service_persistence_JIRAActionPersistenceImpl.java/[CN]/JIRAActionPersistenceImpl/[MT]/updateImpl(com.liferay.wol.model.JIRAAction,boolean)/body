@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(jiraAction);
-    }
- else {
-      if (jiraAction.isNew()) {
-        session.save(jiraAction);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,jiraAction,merge);
     jiraAction.setNew(false);
     return jiraAction;
   }

@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(wallEntry);
-    }
- else {
-      if (wallEntry.isNew()) {
-        session.save(wallEntry);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,wallEntry,merge);
     wallEntry.setNew(false);
     return wallEntry;
   }

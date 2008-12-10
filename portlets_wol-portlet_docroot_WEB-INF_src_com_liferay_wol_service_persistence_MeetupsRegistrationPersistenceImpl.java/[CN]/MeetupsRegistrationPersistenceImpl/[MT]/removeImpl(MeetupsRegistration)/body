@@ -2,6 +2,12 @@
   Session session=null;
   try {
     session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(MeetupsRegistrationImpl.class,meetupsRegistration.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
     session.delete(meetupsRegistration);
     session.flush();
     return meetupsRegistration;

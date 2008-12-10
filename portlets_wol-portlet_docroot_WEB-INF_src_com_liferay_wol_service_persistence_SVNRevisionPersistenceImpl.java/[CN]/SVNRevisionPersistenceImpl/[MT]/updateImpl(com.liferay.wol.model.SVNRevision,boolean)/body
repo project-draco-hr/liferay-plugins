@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(svnRevision);
-    }
- else {
-      if (svnRevision.isNew()) {
-        session.save(svnRevision);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,svnRevision,merge);
     svnRevision.setNew(false);
     return svnRevision;
   }
