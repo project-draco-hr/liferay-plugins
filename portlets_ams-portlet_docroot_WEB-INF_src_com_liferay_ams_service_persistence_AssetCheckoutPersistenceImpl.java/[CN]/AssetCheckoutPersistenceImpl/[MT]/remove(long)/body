@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    AssetCheckout assetCheckout=(AssetCheckout)session.get(AssetCheckoutImpl.class,new Long(assetCheckoutId));
+    if (assetCheckout == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No AssetCheckout exists with the primary key " + assetCheckoutId);
+      }
+      throw new NoSuchAssetCheckoutException("No AssetCheckout exists with the primary key " + assetCheckoutId);
+    }
+    return remove(assetCheckout);
+  }
+ catch (  NoSuchAssetCheckoutException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

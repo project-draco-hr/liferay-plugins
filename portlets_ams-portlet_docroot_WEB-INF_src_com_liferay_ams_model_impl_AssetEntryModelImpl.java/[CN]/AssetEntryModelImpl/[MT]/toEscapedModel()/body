@@ -1,0 +1,22 @@
+{
+  if (isEscapedModel()) {
+    return (AssetEntry)this;
+  }
+ else {
+    AssetEntry model=new AssetEntryImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setAssetEntryId(getAssetEntryId());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setAssetDefinitionId(getAssetDefinitionId());
+    model.setSerialNumber(HtmlUtil.escape(getSerialNumber()));
+    model.setInactiveDate(getInactiveDate());
+    model.setActive(getActive());
+    model=(AssetEntry)Proxy.newProxyInstance(AssetEntry.class.getClassLoader(),new Class[]{AssetEntry.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

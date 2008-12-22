@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,assetCheckout,merge);
+    assetCheckout.setNew(false);
+    return assetCheckout;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(AssetCheckout.class.getName());
+  }
+}

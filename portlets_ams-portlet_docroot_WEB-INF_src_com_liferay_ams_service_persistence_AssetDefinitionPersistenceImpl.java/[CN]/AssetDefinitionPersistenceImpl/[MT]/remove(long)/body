@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    AssetDefinition assetDefinition=(AssetDefinition)session.get(AssetDefinitionImpl.class,new Long(assetDefinitionId));
+    if (assetDefinition == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No AssetDefinition exists with the primary key " + assetDefinitionId);
+      }
+      throw new NoSuchAssetDefinitionException("No AssetDefinition exists with the primary key " + assetDefinitionId);
+    }
+    return remove(assetDefinition);
+  }
+ catch (  NoSuchAssetDefinitionException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

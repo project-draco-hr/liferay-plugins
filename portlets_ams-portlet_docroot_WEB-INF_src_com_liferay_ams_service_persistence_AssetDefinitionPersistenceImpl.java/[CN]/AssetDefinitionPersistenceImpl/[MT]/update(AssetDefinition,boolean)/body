@@ -1,0 +1,25 @@
+{
+  boolean isNew=assetDefinition.isNew();
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onBeforeCreate(assetDefinition);
+      }
+ else {
+        listener.onBeforeUpdate(assetDefinition);
+      }
+    }
+  }
+  assetDefinition=updateImpl(assetDefinition,merge);
+  if (_listeners.length > 0) {
+    for (    ModelListener listener : _listeners) {
+      if (isNew) {
+        listener.onAfterCreate(assetDefinition);
+      }
+ else {
+        listener.onAfterUpdate(assetDefinition);
+      }
+    }
+  }
+  return assetDefinition;
+}

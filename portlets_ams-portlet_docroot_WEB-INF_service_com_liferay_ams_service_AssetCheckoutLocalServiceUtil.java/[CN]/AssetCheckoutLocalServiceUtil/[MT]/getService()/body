@@ -1,0 +1,10 @@
+{
+  if (_service == null) {
+    Object obj=PortletBeanLocatorUtil.locate("ams-portlet",AssetCheckoutLocalServiceUtil.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate("ams-portlet","portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,portletClassLoader);
+    _service=new AssetCheckoutLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+  }
+  return _service;
+}

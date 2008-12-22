@@ -1,0 +1,25 @@
+{
+  if (isEscapedModel()) {
+    return (AssetDefinition)this;
+  }
+ else {
+    AssetDefinition model=new AssetDefinitionImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setAssetDefinitionId(getAssetDefinitionId());
+    model.setGroupId(getGroupId());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setAssetTypeId(getAssetTypeId());
+    model.setManufacturer(HtmlUtil.escape(getManufacturer()));
+    model.setModel(HtmlUtil.escape(getModel()));
+    model.setOrderDate(getOrderDate());
+    model.setQuantity(getQuantity());
+    model.setPrice(getPrice());
+    model=(AssetDefinition)Proxy.newProxyInstance(AssetDefinition.class.getClassLoader(),new Class[]{AssetDefinition.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

@@ -1,0 +1,22 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(AssetCheckoutImpl.class,assetCheckout.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(assetCheckout);
+    session.flush();
+    return assetCheckout;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(AssetCheckout.class.getName());
+  }
+}
