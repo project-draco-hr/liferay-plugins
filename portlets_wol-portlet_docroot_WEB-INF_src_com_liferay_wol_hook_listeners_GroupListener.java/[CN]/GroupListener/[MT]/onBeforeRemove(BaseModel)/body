@@ -1,18 +1,11 @@
 {
-  ClassLoader currentCL=null;
   try {
     Group group=(Group)model;
-    currentCL=_getCurrentClassLoader();
-    ClassLoader wolCL=_getWOLPortletClassLoader();
-    _setClassLoader(wolCL);
     if (group.isUser()) {
       WallEntryLocalServiceUtil.deleteWallEntries(group.getGroupId());
     }
   }
  catch (  Exception e) {
     throw new ModelListenerException(e);
-  }
- finally {
-    _setClassLoader(currentCL);
   }
 }
