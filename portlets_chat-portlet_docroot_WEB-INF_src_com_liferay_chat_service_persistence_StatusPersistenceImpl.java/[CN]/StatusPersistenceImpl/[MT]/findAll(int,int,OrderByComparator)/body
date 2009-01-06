@@ -19,9 +19,13 @@
         query.append(obc.getOrderBy());
       }
       Query q=session.createQuery(query.toString());
-      List<Status> list=(List<Status>)QueryUtil.list(q,getDialect(),start,end);
+      List<Status> list=null;
       if (obc == null) {
+        list=(List<Status>)QueryUtil.list(q,getDialect(),start,end,false);
         Collections.sort(list);
+      }
+ else {
+        list=(List<Status>)QueryUtil.list(q,getDialect(),start,end);
       }
       FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
       return list;

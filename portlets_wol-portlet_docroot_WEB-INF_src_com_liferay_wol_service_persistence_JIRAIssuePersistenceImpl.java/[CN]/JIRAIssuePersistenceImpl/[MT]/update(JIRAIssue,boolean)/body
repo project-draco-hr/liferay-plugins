@@ -1,24 +1,20 @@
 {
   boolean isNew=jiraIssue.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(jiraIssue);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraIssue);
+    }
  else {
-        listener.onBeforeUpdate(jiraIssue);
-      }
+      listener.onBeforeUpdate(jiraIssue);
     }
   }
   jiraIssue=updateImpl(jiraIssue,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(jiraIssue);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraIssue);
+    }
  else {
-        listener.onAfterUpdate(jiraIssue);
-      }
+      listener.onAfterUpdate(jiraIssue);
     }
   }
   return jiraIssue;

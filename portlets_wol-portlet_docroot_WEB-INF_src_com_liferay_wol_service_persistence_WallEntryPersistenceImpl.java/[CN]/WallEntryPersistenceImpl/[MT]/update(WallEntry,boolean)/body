@@ -1,24 +1,20 @@
 {
   boolean isNew=wallEntry.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(wallEntry);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(wallEntry);
+    }
  else {
-        listener.onBeforeUpdate(wallEntry);
-      }
+      listener.onBeforeUpdate(wallEntry);
     }
   }
   wallEntry=updateImpl(wallEntry,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(wallEntry);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(wallEntry);
+    }
  else {
-        listener.onAfterUpdate(wallEntry);
-      }
+      listener.onAfterUpdate(wallEntry);
     }
   }
   return wallEntry;

@@ -1,24 +1,20 @@
 {
   boolean isNew=feed.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(feed);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(feed);
+    }
  else {
-        listener.onBeforeUpdate(feed);
-      }
+      listener.onBeforeUpdate(feed);
     }
   }
   feed=updateImpl(feed,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(feed);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(feed);
+    }
  else {
-        listener.onAfterUpdate(feed);
-      }
+      listener.onAfterUpdate(feed);
     }
   }
   return feed;

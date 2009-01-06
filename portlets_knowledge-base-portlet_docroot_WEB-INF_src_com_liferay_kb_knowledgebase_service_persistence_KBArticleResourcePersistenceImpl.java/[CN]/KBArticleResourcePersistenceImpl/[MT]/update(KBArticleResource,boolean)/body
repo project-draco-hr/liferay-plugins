@@ -1,24 +1,20 @@
 {
   boolean isNew=kbArticleResource.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(kbArticleResource);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(kbArticleResource);
+    }
  else {
-        listener.onBeforeUpdate(kbArticleResource);
-      }
+      listener.onBeforeUpdate(kbArticleResource);
     }
   }
   kbArticleResource=updateImpl(kbArticleResource,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(kbArticleResource);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(kbArticleResource);
+    }
  else {
-        listener.onAfterUpdate(kbArticleResource);
-      }
+      listener.onAfterUpdate(kbArticleResource);
     }
   }
   return kbArticleResource;

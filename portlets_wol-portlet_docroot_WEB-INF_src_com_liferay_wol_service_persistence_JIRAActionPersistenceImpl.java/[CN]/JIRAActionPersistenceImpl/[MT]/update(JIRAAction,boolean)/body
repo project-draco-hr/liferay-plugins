@@ -1,24 +1,20 @@
 {
   boolean isNew=jiraAction.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(jiraAction);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraAction);
+    }
  else {
-        listener.onBeforeUpdate(jiraAction);
-      }
+      listener.onBeforeUpdate(jiraAction);
     }
   }
   jiraAction=updateImpl(jiraAction,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(jiraAction);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraAction);
+    }
  else {
-        listener.onAfterUpdate(jiraAction);
-      }
+      listener.onAfterUpdate(jiraAction);
     }
   }
   return jiraAction;

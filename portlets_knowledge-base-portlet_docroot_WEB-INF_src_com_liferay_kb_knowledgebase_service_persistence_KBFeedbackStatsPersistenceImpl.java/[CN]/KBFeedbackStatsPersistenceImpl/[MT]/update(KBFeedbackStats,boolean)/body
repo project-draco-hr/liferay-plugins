@@ -1,24 +1,20 @@
 {
   boolean isNew=kbFeedbackStats.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(kbFeedbackStats);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(kbFeedbackStats);
+    }
  else {
-        listener.onBeforeUpdate(kbFeedbackStats);
-      }
+      listener.onBeforeUpdate(kbFeedbackStats);
     }
   }
   kbFeedbackStats=updateImpl(kbFeedbackStats,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(kbFeedbackStats);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(kbFeedbackStats);
+    }
  else {
-        listener.onAfterUpdate(kbFeedbackStats);
-      }
+      listener.onAfterUpdate(kbFeedbackStats);
     }
   }
   return kbFeedbackStats;

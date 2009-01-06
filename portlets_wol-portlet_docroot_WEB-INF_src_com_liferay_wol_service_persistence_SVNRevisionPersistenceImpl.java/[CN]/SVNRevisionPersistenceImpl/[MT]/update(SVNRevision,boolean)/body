@@ -1,24 +1,20 @@
 {
   boolean isNew=svnRevision.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(svnRevision);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(svnRevision);
+    }
  else {
-        listener.onBeforeUpdate(svnRevision);
-      }
+      listener.onBeforeUpdate(svnRevision);
     }
   }
   svnRevision=updateImpl(svnRevision,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(svnRevision);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(svnRevision);
+    }
  else {
-        listener.onAfterUpdate(svnRevision);
-      }
+      listener.onAfterUpdate(svnRevision);
     }
   }
   return svnRevision;

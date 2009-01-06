@@ -1,24 +1,20 @@
 {
   boolean isNew=assetEntry.isNew();
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onBeforeCreate(assetEntry);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(assetEntry);
+    }
  else {
-        listener.onBeforeUpdate(assetEntry);
-      }
+      listener.onBeforeUpdate(assetEntry);
     }
   }
   assetEntry=updateImpl(assetEntry,merge);
-  if (_listeners.length > 0) {
-    for (    ModelListener listener : _listeners) {
-      if (isNew) {
-        listener.onAfterCreate(assetEntry);
-      }
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(assetEntry);
+    }
  else {
-        listener.onAfterUpdate(assetEntry);
-      }
+      listener.onAfterUpdate(assetEntry);
     }
   }
   return assetEntry;

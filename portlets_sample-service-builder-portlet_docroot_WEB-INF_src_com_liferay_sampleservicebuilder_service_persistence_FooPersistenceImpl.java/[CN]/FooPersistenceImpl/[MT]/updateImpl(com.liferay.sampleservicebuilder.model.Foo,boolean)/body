@@ -2,15 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (merge) {
-      session.merge(foo);
-    }
- else {
-      if (foo.isNew()) {
-        session.save(foo);
-      }
-    }
-    session.flush();
+    BatchSessionUtil.update(session,foo,merge);
     foo.setNew(false);
     return foo;
   }
