@@ -1,0 +1,16 @@
+{
+  String jspPage=GetterUtil.getString(portletURL.getParameter("jspPage"));
+  long meetupsEntryId=GetterUtil.getLong(portletURL.getParameter("meetupsEntryId"));
+  if ((jspPage.equals("/meetups/view_entry.jsp")) && (meetupsEntryId > 0)) {
+    portletURL.addParameterIncludedInPath("p_p_id");
+    portletURL.addParameterIncludedInPath("jspPage");
+    portletURL.addParameterIncludedInPath("meetupsEntryId");
+    StringBuilder sb=new StringBuilder();
+    sb.append(StringPool.SLASH);
+    sb.append(_MAPPING);
+    sb.append("/entry/");
+    sb.append(meetupsEntryId);
+    return sb.toString();
+  }
+  return null;
+}

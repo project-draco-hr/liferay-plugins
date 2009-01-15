@@ -1,0 +1,48 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAIssue.class.getName();
+  String finderMethodName="findByP_RJUI";
+  String[] finderParams=new String[]{Long.class.getName(),String.class.getName()};
+  Object[] finderArgs=new Object[]{new Long(projectId),reporterJiraUserId};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+      query.append("project = ?");
+      query.append(" AND ");
+      if (reporterJiraUserId == null) {
+        query.append("reporter IS NULL");
+      }
+ else {
+        query.append("reporter = ?");
+      }
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("updated DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(projectId);
+      if (reporterJiraUserId != null) {
+        qPos.add(reporterJiraUserId);
+      }
+      List<JIRAIssue> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      return list;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    return (List<JIRAIssue>)result;
+  }
+}

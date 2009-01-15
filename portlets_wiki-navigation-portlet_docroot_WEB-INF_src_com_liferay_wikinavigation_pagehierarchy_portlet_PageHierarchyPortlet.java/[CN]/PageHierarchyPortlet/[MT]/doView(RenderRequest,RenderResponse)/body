@@ -1,0 +1,26 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(com.liferay.portal.kernel.util.WebKeys.THEME_DISPLAY);
+  try {
+    PortletPreferences prefs=renderRequest.getPreferences();
+    long nodeId=GetterUtil.getLong(prefs.getValue("node-id",StringPool.BLANK));
+    int depth=GetterUtil.getInteger(prefs.getValue("depth",StringPool.BLANK),WikiNavigationConstants.DEPTH_ALL);
+    if (nodeId <= 0) {
+      String wikiName=PropsUtil.get("wiki.initial.node.name");
+      try {
+        WikiNode node=WikiNodeServiceUtil.getNode(themeDisplay.getScopeGroupId(),wikiName);
+        nodeId=node.getNodeId();
+      }
+ catch (      Exception e) {
+      }
+    }
+    if (nodeId > 0) {
+      List<WikiPage> wikiPages=WikiPageServiceUtil.getNodePages(nodeId,WikiNavigationConstants.MAX_PAGES);
+      List<EntryDisplay> entries=_buildNavigationTree(wikiPages,renderResponse.createRenderURL(),depth,1);
+      renderRequest.setAttribute(WebKeys.HIERARCHY_ENTRIES,entries);
+    }
+  }
+ catch (  Exception e) {
+    SessionErrors.add(renderRequest,e.getClass().getName(),e);
+  }
+  super.doView(renderRequest,renderResponse);
+}
