@@ -1,0 +1,14 @@
+{
+  WSRPFactoryUtil wsrpFactoryUtil=(WSRPFactoryUtil)PortalBeanLocatorUtil.locate(com.liferay.portal.wsrp.WSRPFactoryUtil.class.getName());
+  wsrpFactoryUtil.setWSRPFactory(new WSRPFactoryImpl());
+  Properties properties=PortletProps.getProperties();
+  WSRPConfig.init(properties,"portal1");
+  WSRPPersistenceHelper wsrpPersistence=WSRPPersistenceHelper.getInstance();
+  if (isInitialDepoy()) {
+    return;
+  }
+  List<Portlet> portlets=wsrpPersistence.getWSRPPortlets();
+  for (  Portlet portlet : portlets) {
+    PortletLocalServiceUtil.deployRemotePortlet(portlet);
+  }
+}
