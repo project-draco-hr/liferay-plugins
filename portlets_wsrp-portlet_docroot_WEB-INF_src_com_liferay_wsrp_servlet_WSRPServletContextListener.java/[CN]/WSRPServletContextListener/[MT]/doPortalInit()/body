@@ -2,7 +2,8 @@
   WSRPFactoryUtil wsrpFactoryUtil=(WSRPFactoryUtil)PortalBeanLocatorUtil.locate(com.liferay.portal.wsrp.WSRPFactoryUtil.class.getName());
   wsrpFactoryUtil.setWSRPFactory(new WSRPFactoryImpl());
   Properties properties=PortletProps.getProperties();
-  ServiceManager.getServiceManager().addService(Service.DEPLOYMENT_SERVICE_REMOTE,new DeploymentServiceRemoteImpl());
+  ServiceManager serviceManager=ServiceManager.getServiceManager();
+  serviceManager.addService(Service.DEPLOYMENT_SERVICE_REMOTE,new DeploymentServiceRemoteImpl());
   WSRPConfig.init(properties,"portal1");
   WSRPPersistenceHelper wsrpPersistence=WSRPPersistenceHelper.getInstance();
   if (isInitialDepoy()) {
