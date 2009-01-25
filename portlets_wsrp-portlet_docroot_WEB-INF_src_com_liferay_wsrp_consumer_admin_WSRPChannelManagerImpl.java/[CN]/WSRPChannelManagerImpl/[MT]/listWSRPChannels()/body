@@ -1,10 +1,13 @@
 {
   List<String> remotePortlets=new ArrayList<String>();
-  List<Portlet> portlets=PortletLocalServiceUtil.getPortlets();
-  for (  Portlet portlet : portlets) {
-    if (portlet.isRemote()) {
-      remotePortlets.add(portlet.getPortletId());
+  try {
+    List<WSRPPortlet> wsrpPortlets=WSRPPortletLocalServiceUtil.getPortlets();
+    for (    WSRPPortlet wsrpPortlet : wsrpPortlets) {
+      remotePortlets.add(wsrpPortlet.getChannelName());
     }
+  }
+ catch (  Exception e) {
+    _log.error(e);
   }
   return remotePortlets;
 }
