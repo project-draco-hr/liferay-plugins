@@ -1,0 +1,27 @@
+{
+  List<User> users=UserLocalServiceUtil.search(companyId,null,null,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+  for (  User user : users) {
+    UserLocalServiceUtil.deleteUser(user.getUserId());
+  }
+  List<Group> groups=GroupLocalServiceUtil.search(companyId,null,null,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    IGFolderLocalServiceUtil.deleteFolders(group.getGroupId());
+    JournalArticleLocalServiceUtil.deleteArticles(group.getGroupId());
+    JournalTemplateLocalServiceUtil.deleteTemplates(group.getGroupId());
+    JournalStructureLocalServiceUtil.deleteStructures(group.getGroupId());
+    if (!PortalUtil.isSystemGroup(group.getName())) {
+      GroupLocalServiceUtil.deleteGroup(group.getGroupId());
+    }
+ else {
+      LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),false);
+      LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true);
+    }
+  }
+  deleteOrganizations(companyId,OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
+  List<Role> roles=RoleLocalServiceUtil.getRoles(companyId);
+  for (  Role role : roles) {
+    if (!PortalUtil.isSystemRole(role.getName())) {
+      RoleLocalServiceUtil.deleteRole(role.getRoleId());
+    }
+  }
+}

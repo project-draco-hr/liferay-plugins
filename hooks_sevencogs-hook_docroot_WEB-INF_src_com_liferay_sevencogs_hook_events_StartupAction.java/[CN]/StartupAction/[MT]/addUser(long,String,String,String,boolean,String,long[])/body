@@ -1,0 +1,80 @@
+{
+  long creatorUserId=0;
+  boolean autoPassword=false;
+  String password1=screenName;
+  String password2=password1;
+  boolean autoScreenName=false;
+  String emailAddress=screenName + "@7cogs.com";
+  String openId=StringPool.BLANK;
+  Locale locale=Locale.US;
+  String middleName=StringPool.BLANK;
+  int prefixId=0;
+  int suffixId=0;
+  int birthdayMonth=Calendar.JANUARY;
+  int birthdayDay=1;
+  int birthdayYear=1970;
+  Group guestGroup=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
+  long[] groupIds=new long[]{guestGroup.getGroupId()};
+  Organization sevenCogsOrganization=OrganizationLocalServiceUtil.getOrganization(companyId,"7Cogs, Inc.");
+  long[] organizationIds=new long[]{sevenCogsOrganization.getOrganizationId()};
+  long[] userGroupIds=null;
+  boolean sendEmail=false;
+  ServiceContext serviceContext=null;
+  User user=UserLocalServiceUtil.addUser(creatorUserId,companyId,autoPassword,password1,password2,autoScreenName,screenName,emailAddress,openId,locale,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,jobTitle,groupIds,organizationIds,roleIds,userGroupIds,sendEmail,serviceContext);
+  byte[] portrait=getBytes("/users/" + screenName + "/portrait.jpg");
+  UserLocalServiceUtil.updatePortrait(user.getUserId(),portrait);
+  String[] questions=StringUtil.split(PropsUtil.get("users.reminder.queries.questions"));
+  String question=questions[0];
+  String answer="1234";
+  UserLocalServiceUtil.updateReminderQuery(user.getUserId(),question,answer);
+  Group group=user.getGroup();
+  Layout layout=addLayout(group,"Profile",false,"/profile","2_columns_ii");
+  String portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
+  highlightPortlet(layout,portletId);
+  JournalArticle journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"my_community_" + user.getScreenName() + ".xml");
+  configureJournalContent(layout,portletId,journalArticle.getArticleId());
+  addPortletId(layout,"1_WAR_wolportlet","column-1");
+  addPortletId(layout,PortletKeys.REQUESTS,"column-1");
+  addPortletId(layout,"4_WAR_wolportlet","column-1");
+  addPortletId(layout,PortletKeys.ACTIVITIES,"column-2");
+  addPortletId(layout,"5_WAR_wolportlet","column-2");
+  layout=addLayout(group,"Blog",false,"/blog","2_columns_ii");
+  addPortletId(layout,PortletKeys.RECENT_BLOGGERS,"column-1");
+  addPortletId(layout,PortletKeys.BLOGS,"column-2");
+  layout=addLayout(group,"Social",true,"/social","2_columns_ii");
+  addPortletId(layout,"1_WAR_wolportlet","column-1");
+  addPortletId(layout,PortletKeys.REQUESTS,"column-1");
+  portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
+  highlightPortlet(layout,portletId);
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"private_pages_" + user.getScreenName() + ".xml");
+  configureJournalContent(layout,portletId,journalArticle.getArticleId());
+  addPortletId(layout,"6_WAR_wolportlet","column-2");
+  portletId=addPortletId(layout,PortletKeys.IFRAME,"column-1");
+  Map iframePreferences=new HashMap();
+  iframePreferences.put("portlet-setup-show-borders",String.valueOf(Boolean.FALSE));
+  if (screenName.equals("bruno") || screenName.equals("john")) {
+    iframePreferences.put("src","http://iphone.facebook.com");
+    iframePreferences.put("height-normal","460");
+  }
+ else   if (screenName.equals("michelle")) {
+    iframePreferences.put("src","https://twitterforiphone.com/login");
+    iframePreferences.put("height-normal","400");
+  }
+ else   if (screenName.equals("richard")) {
+    iframePreferences.put("src","http://m.linkedin.com");
+    iframePreferences.put("height-normal","350");
+  }
+  updatePortletSetup(layout,portletId,iframePreferences);
+  layout=addLayout(group,"Workspace",true,"/workspace","2_columns_i");
+  addPortletId(layout,PortletKeys.RECENT_DOCUMENTS,"column-1");
+  addPortletId(layout,PortletKeys.DOCUMENT_LIBRARY,"column-1");
+  addPortletId(layout,PortletKeys.IMAGE_GALLERY,"column-1");
+  portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
+  highlightPortlet(layout,portletId);
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"My documents","workspace_docs.xml");
+  configureJournalContent(layout,portletId,journalArticle.getArticleId());
+  addPortletId(layout,PortletKeys.CALENDAR,"column-2");
+  layout=addLayout(group,"Email",true,"/email","1_column");
+  addPortletId(layout,"1_WAR_mailportlet","column-1");
+  return user;
+}
