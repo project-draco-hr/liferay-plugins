@@ -1,0 +1,26 @@
+{
+  if (isEscapedModel()) {
+    return (TaskView)this;
+  }
+ else {
+    TaskView model=new TaskViewImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setTaskViewId(getTaskViewId());
+    model.setGroupId(getGroupId());
+    model.setCompanyId(HtmlUtil.escape(getCompanyId()));
+    model.setUserId(HtmlUtil.escape(getUserId()));
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setTitle(HtmlUtil.escape(getTitle()));
+    model.setTags(HtmlUtil.escape(getTags()));
+    model.setNotTags(HtmlUtil.escape(getNotTags()));
+    model.setAssigneeUserId(getAssigneeUserId());
+    model.setReporterUserId(getReporterUserId());
+    model.setIncludeProjectTasks(getIncludeProjectTasks());
+    model.setIsPrivate(getIsPrivate());
+    model=(TaskView)Proxy.newProxyInstance(TaskView.class.getClassLoader(),new Class[]{TaskView.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    ProjectMilestone projectMilestone=(ProjectMilestone)session.get(ProjectMilestoneImpl.class,new Long(projectMilestoneId));
+    if (projectMilestone == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No ProjectMilestone exists with the primary key " + projectMilestoneId);
+      }
+      throw new NoSuchProjectMilestoneException("No ProjectMilestone exists with the primary key " + projectMilestoneId);
+    }
+    return remove(projectMilestone);
+  }
+ catch (  NoSuchProjectMilestoneException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  boolean isNew=projectMilestone.isNew();
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(projectMilestone);
+    }
+ else {
+      listener.onBeforeUpdate(projectMilestone);
+    }
+  }
+  projectMilestone=updateImpl(projectMilestone,merge);
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(projectMilestone);
+    }
+ else {
+      listener.onAfterUpdate(projectMilestone);
+    }
+  }
+  return projectMilestone;
+}

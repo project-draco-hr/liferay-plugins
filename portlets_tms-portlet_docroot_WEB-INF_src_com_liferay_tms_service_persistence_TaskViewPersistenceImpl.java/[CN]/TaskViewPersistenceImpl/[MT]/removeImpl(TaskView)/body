@@ -1,0 +1,22 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(TaskViewImpl.class,taskView.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(taskView);
+    session.flush();
+    return taskView;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(TaskView.class.getName());
+  }
+}

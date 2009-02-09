@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    TaskEntry taskEntry=(TaskEntry)session.get(TaskEntryImpl.class,new Long(taskEntryId));
+    if (taskEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No TaskEntry exists with the primary key " + taskEntryId);
+      }
+      throw new NoSuchTaskEntryException("No TaskEntry exists with the primary key " + taskEntryId);
+    }
+    return remove(taskEntry);
+  }
+ catch (  NoSuchTaskEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

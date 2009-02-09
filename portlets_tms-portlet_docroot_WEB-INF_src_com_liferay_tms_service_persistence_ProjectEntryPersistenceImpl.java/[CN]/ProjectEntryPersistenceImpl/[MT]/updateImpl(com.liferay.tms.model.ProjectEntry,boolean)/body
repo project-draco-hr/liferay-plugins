@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,projectEntry,merge);
+    projectEntry.setNew(false);
+    return projectEntry;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(ProjectEntry.class.getName());
+  }
+}

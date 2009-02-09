@@ -1,0 +1,28 @@
+{
+  if (isEscapedModel()) {
+    return (TaskEntry)this;
+  }
+ else {
+    TaskEntry model=new TaskEntryImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setTaskEntryId(getTaskEntryId());
+    model.setGroupId(getGroupId());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setProjectEntryId(getProjectEntryId());
+    model.setProjectMilestoneId(getProjectMilestoneId());
+    model.setTitle(HtmlUtil.escape(getTitle()));
+    model.setDescription(HtmlUtil.escape(getDescription()));
+    model.setAssigneeUserId(getAssigneeUserId());
+    model.setResolverUserId(getResolverUserId());
+    model.setDueDate(getDueDate());
+    model.setFinishDate(getFinishDate());
+    model.setStatus(getStatus());
+    model=(TaskEntry)Proxy.newProxyInstance(TaskEntry.class.getClassLoader(),new Class[]{TaskEntry.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

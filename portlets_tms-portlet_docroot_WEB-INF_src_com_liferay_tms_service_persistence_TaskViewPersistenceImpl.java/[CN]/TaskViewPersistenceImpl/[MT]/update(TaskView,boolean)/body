@@ -1,0 +1,21 @@
+{
+  boolean isNew=taskView.isNew();
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(taskView);
+    }
+ else {
+      listener.onBeforeUpdate(taskView);
+    }
+  }
+  taskView=updateImpl(taskView,merge);
+  for (  ModelListener listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(taskView);
+    }
+ else {
+      listener.onAfterUpdate(taskView);
+    }
+  }
+  return taskView;
+}
