@@ -1,11 +1,11 @@
 {
   FileItemFactory factory=new DiskFileItemFactory();
   ServletFileUpload upload=new ServletFileUpload(factory);
-  List items=upload.parseRequest(request);
-  Iterator iter=items.iterator();
-  String itemName="";
-  while (iter.hasNext()) {
-    FileItem item=(FileItem)iter.next();
+  List<FileItem> items=upload.parseRequest(request);
+  Iterator<FileItem> itr=items.iterator();
+  String itemName=StringPool.BLANK;
+  while (itr.hasNext()) {
+    FileItem item=itr.next();
     if (!item.isFormField()) {
       if (_log.isInfoEnabled()) {
         _log.info("Field name " + item.getFieldName());
