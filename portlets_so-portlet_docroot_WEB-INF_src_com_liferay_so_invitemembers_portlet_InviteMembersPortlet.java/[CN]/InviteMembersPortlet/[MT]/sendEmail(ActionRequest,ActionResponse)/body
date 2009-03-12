@@ -1,0 +1,27 @@
+{
+  PortletPreferences preferences=actionRequest.getPreferences();
+  String[] emailAddresses=actionRequest.getParameterValues("emailAddresses");
+  if (Validator.isNull(emailAddresses)) {
+    return;
+  }
+  User user=PortalUtil.getUser(actionRequest);
+  InternetAddress from=new InternetAddress(user.getEmailAddress(),user.getFullName());
+  String subject=getSubject(preferences);
+  String body=getBody(preferences);
+  body=StringUtil.replace(body,new String[]{"[$PORTAL_URL$]","[$SENDER_EMAIL_ADDRESS$]","[$SENDER_FULL_NAME$]"},new String[]{PortalUtil.getPortalURL(actionRequest),user.getEmailAddress(),user.getFullName()});
+  MailMessage mailMessage=new MailMessage(from,subject,body,true);
+  for (  String emailAddress : emailAddresses) {
+    try {
+      InternetAddress to=new InternetAddress(emailAddress);
+      mailMessage.setTo(to);
+      MailServiceUtil.sendEmail(mailMessage);
+    }
+ catch (    AddressException ae) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Invalid email address " + emailAddress);
+      }
+    }
+  }
+  int invitedMembersCount=ParamUtil.getInteger(actionRequest,"invitedMembersCount");
+  actionResponse.setRenderParameter("invitedMembersCount",String.valueOf(invitedMembersCount));
+}

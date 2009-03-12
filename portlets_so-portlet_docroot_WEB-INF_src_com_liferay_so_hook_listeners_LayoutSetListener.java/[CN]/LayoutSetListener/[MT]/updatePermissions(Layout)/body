@@ -1,0 +1,12 @@
+{
+  long companyId=layout.getCompanyId();
+  String name=Layout.class.getName();
+  int scope=ResourceConstants.SCOPE_INDIVIDUAL;
+  String primKey=String.valueOf(layout.getPrimaryKey());
+  Resource resource=ResourceLocalServiceUtil.getResource(companyId,name,scope,primKey);
+  User defaultUser=UserLocalServiceUtil.getDefaultUser(companyId);
+  long userId=defaultUser.getUserId();
+  String[] actionIds=new String[]{ActionKeys.VIEW};
+  long resourceId=resource.getResourceId();
+  PermissionLocalServiceUtil.unsetUserPermissions(userId,actionIds,resourceId);
+}
