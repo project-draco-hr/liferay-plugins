@@ -1,0 +1,12 @@
+{
+  String dlDisplayPath=ParamUtil.getString(actionRequest,"dlDisplayPath");
+  if (Validator.isNull(dlDisplayPath)) {
+    SessionErrors.add(actionRequest,"urlInvalid");
+    return;
+  }
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  preferences.setValue("dlDisplayPath",dlDisplayPath);
+  preferences.store();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}
