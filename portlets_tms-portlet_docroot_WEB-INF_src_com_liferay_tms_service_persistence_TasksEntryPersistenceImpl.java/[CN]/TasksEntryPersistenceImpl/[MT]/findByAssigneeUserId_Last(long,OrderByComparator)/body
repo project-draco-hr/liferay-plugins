@@ -1,0 +1,14 @@
+{
+  int count=countByAssigneeUserId(assigneeUserId);
+  List<TasksEntry> list=findByAssigneeUserId(assigneeUserId,count - 1,count,obc);
+  if (list.size() == 0) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No TasksEntry exists with the key {");
+    msg.append("assigneeUserId=" + assigneeUserId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchTasksEntryException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
