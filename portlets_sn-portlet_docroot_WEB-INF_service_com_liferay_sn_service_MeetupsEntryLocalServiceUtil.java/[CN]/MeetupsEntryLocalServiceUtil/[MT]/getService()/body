@@ -1,0 +1,10 @@
+{
+  if (_service == null) {
+    Object obj=PortletBeanLocatorUtil.locate("sn-portlet",MeetupsEntryLocalServiceUtil.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate("sn-portlet","portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,portletClassLoader);
+    _service=new MeetupsEntryLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+  }
+  return _service;
+}
