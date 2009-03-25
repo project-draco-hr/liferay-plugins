@@ -1,0 +1,14 @@
+{
+  if (isEscapedModel()) {
+    return this;
+  }
+ else {
+    SVNRepository model=new SVNRepositoryClp();
+    model.setEscapedModel(true);
+    model.setSvnRepositoryId(getSvnRepositoryId());
+    model.setUrl(HtmlUtil.escape(getUrl()));
+    model.setRevisionNumber(getRevisionNumber());
+    model=(SVNRepository)Proxy.newProxyInstance(SVNRepository.class.getClassLoader(),new Class[]{SVNRepository.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

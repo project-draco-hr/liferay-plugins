@@ -1,0 +1,22 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(jiraChangeItem);
+    session.flush();
+    return jiraChangeItem;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(JIRAChangeItem.class.getName());
+  }
+}

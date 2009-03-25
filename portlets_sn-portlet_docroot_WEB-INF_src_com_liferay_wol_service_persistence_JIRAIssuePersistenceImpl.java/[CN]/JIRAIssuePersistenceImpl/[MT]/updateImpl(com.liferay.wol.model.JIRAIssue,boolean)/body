@@ -1,0 +1,16 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,jiraIssue,merge);
+    jiraIssue.setNew(false);
+    return jiraIssue;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(JIRAIssue.class.getName());
+  }
+}

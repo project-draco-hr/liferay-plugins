@@ -1,0 +1,13 @@
+{
+  List<JIRAChangeGroup> list=findByJiraIssueId(jiraIssueId,0,1,obc);
+  if (list.isEmpty()) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No JIRAChangeGroup exists with the key {");
+    msg.append("jiraIssueId=" + jiraIssueId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchJIRAChangeGroupException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
