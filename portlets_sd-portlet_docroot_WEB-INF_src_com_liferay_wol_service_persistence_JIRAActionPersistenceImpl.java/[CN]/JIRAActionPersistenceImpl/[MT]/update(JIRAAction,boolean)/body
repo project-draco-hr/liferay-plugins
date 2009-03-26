@@ -1,0 +1,21 @@
+{
+  boolean isNew=jiraAction.isNew();
+  for (  ModelListener<JIRAAction> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraAction);
+    }
+ else {
+      listener.onBeforeUpdate(jiraAction);
+    }
+  }
+  jiraAction=updateImpl(jiraAction,merge);
+  for (  ModelListener<JIRAAction> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraAction);
+    }
+ else {
+      listener.onAfterUpdate(jiraAction);
+    }
+  }
+  return jiraAction;
+}

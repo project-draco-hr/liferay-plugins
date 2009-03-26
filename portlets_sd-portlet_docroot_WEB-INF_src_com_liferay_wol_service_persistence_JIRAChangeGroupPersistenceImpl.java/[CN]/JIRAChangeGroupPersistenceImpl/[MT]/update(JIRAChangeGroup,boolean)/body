@@ -1,0 +1,21 @@
+{
+  boolean isNew=jiraChangeGroup.isNew();
+  for (  ModelListener<JIRAChangeGroup> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraChangeGroup);
+    }
+ else {
+      listener.onBeforeUpdate(jiraChangeGroup);
+    }
+  }
+  jiraChangeGroup=updateImpl(jiraChangeGroup,merge);
+  for (  ModelListener<JIRAChangeGroup> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraChangeGroup);
+    }
+ else {
+      listener.onAfterUpdate(jiraChangeGroup);
+    }
+  }
+  return jiraChangeGroup;
+}

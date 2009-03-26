@@ -1,0 +1,48 @@
+{
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  int activityType=activity.getType();
+  JSONObject extraData=null;
+  if (Validator.isNotNull(activity.getExtraData())) {
+    extraData=JSONFactoryUtil.createJSONObject(activity.getExtraData());
+  }
+  JIRAAction jiraAction=null;
+  if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    long jiraActionId=extraData.getLong("jiraActionId");
+    jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
+  }
+  JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
+  StringBuilder sb=new StringBuilder();
+  sb.append("http://support.liferay.com/browse/");
+  sb.append(jiraIssue.getKey());
+  if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    sb.append("#action_");
+    sb.append(jiraAction.getJiraActionId());
+  }
+  String link=sb.toString();
+  String title=StringPool.BLANK;
+  if (activityType == JIRAActivityKeys.ADD_CHANGE) {
+    title=themeDisplay.translate("activity-wol-jira-add-change",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    title=themeDisplay.translate("activity-wol-jira-add-comment",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
+    title=themeDisplay.translate("activity-wol-jira-add-issue",new Object[]{creatorUserName,jiraIssue.getKey()});
+  }
+  sb=new StringBuilder();
+  sb.append("<a href=\"");
+  sb.append(link);
+  sb.append("\" target=\"_blank\">");
+  if (activityType == JIRAActivityKeys.ADD_CHANGE) {
+    sb.append(interpretJIRAChangeItems(extraData.getJSONArray("jiraChangeItems"),themeDisplay));
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    sb.append(cleanContent(jiraAction.getBody()));
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
+    sb.append(cleanContent(jiraIssue.getSummary()));
+  }
+  sb.append("</a>");
+  String body=sb.toString();
+  return new SocialActivityFeedEntry(link,title,body);
+}

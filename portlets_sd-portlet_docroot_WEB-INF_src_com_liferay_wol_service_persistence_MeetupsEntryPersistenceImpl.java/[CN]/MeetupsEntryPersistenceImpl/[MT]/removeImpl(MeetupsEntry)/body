@@ -1,0 +1,22 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(MeetupsEntryImpl.class,meetupsEntry.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(meetupsEntry);
+    session.flush();
+    return meetupsEntry;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+    FinderCacheUtil.clearCache(MeetupsEntry.class.getName());
+  }
+}
