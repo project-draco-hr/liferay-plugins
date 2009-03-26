@@ -14,12 +14,10 @@
   if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),user.getUserId(),ActionKeys.UPDATE)) {
     return;
   }
-  String jiraUserId=ParamUtil.getString(actionRequest,"jiraUserId");
   String jobTitle=ParamUtil.getString(actionRequest,"jobTitle");
   String aboutMe=ParamUtil.getString(actionRequest,"aboutMe");
   try {
-    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"WOL","jiraUserId",user.getUserId(),jiraUserId);
-    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"WOL","aboutMe",user.getUserId(),aboutMe);
+    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"sn","aboutMe",user.getUserId(),aboutMe);
     Contact contact=user.getContact();
     contact.setJobTitle(jobTitle);
     ContactLocalServiceUtil.updateContact(contact);
