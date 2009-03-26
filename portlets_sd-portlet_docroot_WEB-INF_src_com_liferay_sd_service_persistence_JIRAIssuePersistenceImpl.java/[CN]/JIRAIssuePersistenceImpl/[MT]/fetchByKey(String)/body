@@ -1,0 +1,56 @@
+{
+  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
+  String finderClassName=JIRAIssue.class.getName();
+  String finderMethodName="fetchByKey";
+  String[] finderParams=new String[]{String.class.getName()};
+  Object[] finderArgs=new Object[]{key};
+  Object result=null;
+  if (finderClassNameCacheEnabled) {
+    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.sd.model.JIRAIssue WHERE ");
+      if (key == null) {
+        query.append("pkey IS NULL");
+      }
+ else {
+        query.append("pkey = ?");
+      }
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("updated DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (key != null) {
+        qPos.add(key);
+      }
+      List<JIRAIssue> list=q.list();
+      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
+      if (list.size() == 0) {
+        return null;
+      }
+ else {
+        return list.get(0);
+      }
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+ else {
+    List<JIRAIssue> list=(List<JIRAIssue>)result;
+    if (list.size() == 0) {
+      return null;
+    }
+ else {
+      return list.get(0);
+    }
+  }
+}

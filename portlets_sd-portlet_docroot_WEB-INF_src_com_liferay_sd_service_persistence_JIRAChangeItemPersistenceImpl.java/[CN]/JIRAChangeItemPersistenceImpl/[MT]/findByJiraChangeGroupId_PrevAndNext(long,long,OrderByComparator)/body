@@ -1,0 +1,31 @@
+{
+  JIRAChangeItem jiraChangeItem=findByPrimaryKey(jiraChangeItemId);
+  int count=countByJiraChangeGroupId(jiraChangeGroupId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.sd.model.JIRAChangeItem WHERE ");
+    query.append("groupid = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(jiraChangeGroupId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraChangeItem);
+    JIRAChangeItem[] array=new JIRAChangeItemImpl[3];
+    array[0]=(JIRAChangeItem)objArray[0];
+    array[1]=(JIRAChangeItem)objArray[1];
+    array[2]=(JIRAChangeItem)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
