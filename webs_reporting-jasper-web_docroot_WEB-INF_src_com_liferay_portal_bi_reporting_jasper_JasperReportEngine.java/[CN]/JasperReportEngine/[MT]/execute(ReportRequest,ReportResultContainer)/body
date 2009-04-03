@@ -1,0 +1,35 @@
+{
+  Connection conn=null;
+  try {
+    JasperReport report=_reportCompiler.compile(request.getRetriever());
+    String datasourceName=request.getAlternateDatasource();
+    if (Validator.isNull(datasourceName)) {
+      conn=_defaultDataSource.getConnection();
+    }
+ else {
+      DataSource src=_customDataSources.get(datasourceName);
+      if (src == null) {
+        throw new ReportGenerationException("No datasource configured for; " + src);
+      }
+      conn=src.getConnection();
+    }
+    JasperPrint print=JasperFillManager.fillReport(report,request.getReportParameters(),conn);
+    ReportFormatExporter exporter=_exporters.getExporter(request.getFormat());
+    exporter.format(print,request,resultContainer);
+  }
+ catch (  Exception e) {
+    throw new ReportGenerationException("Unable to generate report",e);
+  }
+ finally {
+    if (conn != null) {
+      try {
+        conn.close();
+      }
+ catch (      SQLException e) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to close connection",e);
+        }
+      }
+    }
+  }
+}

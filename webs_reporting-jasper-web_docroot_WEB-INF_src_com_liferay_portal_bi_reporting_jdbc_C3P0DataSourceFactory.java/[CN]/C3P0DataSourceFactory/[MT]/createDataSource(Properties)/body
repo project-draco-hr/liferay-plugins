@@ -1,0 +1,17 @@
+{
+  DataSource dataSource=null;
+  if (connectionProps != null) {
+    Enumeration<String> enu=(Enumeration<String>)connectionProps.propertyNames();
+    try {
+      while (enu.hasMoreElements()) {
+        String key=enu.nextElement();
+        String value=connectionProps.getProperty(key);
+        BeanUtils.setProperty(dataSource,key,value);
+      }
+    }
+ catch (    Exception e) {
+      throw new SystemException("Unable to initialize datasource: " + connectionProps,e);
+    }
+  }
+  return dataSource;
+}
