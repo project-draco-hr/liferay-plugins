@@ -1,0 +1,14 @@
+{
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long companyId=themeDisplay.getCompanyId();
+  long groupId=themeDisplay.getScopeGroupId();
+  try {
+    List<ReportDefinition> definitions=ReportDefinitionLocalServiceUtil.getReportDefintions(companyId,groupId);
+    actionRequest.setAttribute("searchResults",definitions);
+  }
+ catch (  SystemException e) {
+    throw new PortletException("Unable to retrieve report definitions",e);
+  }
+  return false;
+}

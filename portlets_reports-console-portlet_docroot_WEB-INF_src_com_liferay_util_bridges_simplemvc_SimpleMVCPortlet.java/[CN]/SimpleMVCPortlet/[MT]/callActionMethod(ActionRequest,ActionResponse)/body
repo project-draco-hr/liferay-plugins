@@ -1,0 +1,13 @@
+{
+  String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
+  if (Validator.isNull(actionName)) {
+    return false;
+  }
+  if (_checkActionClass) {
+    Action action=getAction(actionName);
+    if (action != _EMPTY_ACTION) {
+      return action.processAction(actionRequest,actionResponse);
+    }
+  }
+  return super.callActionMethod(actionRequest,actionResponse);
+}

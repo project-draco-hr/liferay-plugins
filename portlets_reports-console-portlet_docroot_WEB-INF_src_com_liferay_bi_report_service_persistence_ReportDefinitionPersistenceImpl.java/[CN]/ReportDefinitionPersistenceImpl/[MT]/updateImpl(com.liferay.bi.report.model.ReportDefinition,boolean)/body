@@ -1,0 +1,29 @@
+{
+  boolean isNew=reportDefinition.isNew();
+  if (Validator.isNull(reportDefinition.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    reportDefinition.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,reportDefinition,merge);
+    reportDefinition.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(ReportDefinitionModelImpl.ENTITY_CACHE_ENABLED,ReportDefinitionImpl.class,reportDefinition.getPrimaryKey(),reportDefinition);
+  ReportDefinitionModelImpl reportDefinitionModelImpl=(ReportDefinitionModelImpl)reportDefinition;
+  if (!isNew && (!reportDefinition.getUuid().equals(reportDefinitionModelImpl.getOriginalUuid()) || (reportDefinition.getGroupId() != reportDefinitionModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{reportDefinitionModelImpl.getOriginalUuid(),new Long(reportDefinitionModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!reportDefinition.getUuid().equals(reportDefinitionModelImpl.getOriginalUuid()) || (reportDefinition.getGroupId() != reportDefinitionModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{reportDefinition.getUuid(),new Long(reportDefinition.getGroupId())},reportDefinition);
+  }
+  return reportDefinition;
+}

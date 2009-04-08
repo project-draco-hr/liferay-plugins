@@ -1,0 +1,20 @@
+{
+  ReportDefinition reportDefinition=(ReportDefinition)EntityCacheUtil.getResult(ReportDefinitionModelImpl.ENTITY_CACHE_ENABLED,ReportDefinitionImpl.class,definitionId,this);
+  if (reportDefinition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      reportDefinition=(ReportDefinition)session.get(ReportDefinitionImpl.class,new Long(definitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (reportDefinition != null) {
+        cacheResult(reportDefinition);
+      }
+      closeSession(session);
+    }
+  }
+  return reportDefinition;
+}

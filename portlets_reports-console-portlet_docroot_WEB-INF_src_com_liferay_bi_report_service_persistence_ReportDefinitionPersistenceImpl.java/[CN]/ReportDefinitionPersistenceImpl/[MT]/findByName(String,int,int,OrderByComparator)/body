@@ -1,0 +1,45 @@
+{
+  Object[] finderArgs=new Object[]{name,String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<ReportDefinition> list=(List<ReportDefinition>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_NAME,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.bi.report.model.ReportDefinition WHERE ");
+      if (name == null) {
+        query.append("name IS NULL");
+      }
+ else {
+        query.append("name = ?");
+      }
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("modifiedDate ASC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (name != null) {
+        qPos.add(name);
+      }
+      list=(List<ReportDefinition>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<ReportDefinition>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_NAME,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

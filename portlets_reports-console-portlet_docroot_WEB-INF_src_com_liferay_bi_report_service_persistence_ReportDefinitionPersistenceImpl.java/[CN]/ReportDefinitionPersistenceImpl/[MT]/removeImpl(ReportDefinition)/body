@@ -1,0 +1,25 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (reportDefinition.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(ReportDefinitionImpl.class,reportDefinition.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(reportDefinition);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  ReportDefinitionModelImpl reportDefinitionModelImpl=(ReportDefinitionModelImpl)reportDefinition;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{reportDefinitionModelImpl.getOriginalUuid(),new Long(reportDefinitionModelImpl.getOriginalGroupId())});
+  EntityCacheUtil.removeResult(ReportDefinitionModelImpl.ENTITY_CACHE_ENABLED,ReportDefinitionImpl.class,reportDefinition.getPrimaryKey());
+  return reportDefinition;
+}
