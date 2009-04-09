@@ -1,16 +1,17 @@
 {
-  String name=ParamUtil.getString(actionRequest,"definitionName");
-  String format=ParamUtil.getString(actionRequest,"format");
-  String description=ParamUtil.getString(actionRequest,"description");
-  String datasourceName=ParamUtil.getString(actionRequest,"dataSourceName");
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  String name=ParamUtil.getString(uploadRequest,"definitionName");
+  String format=ParamUtil.getString(uploadRequest,"format");
+  String description=ParamUtil.getString(uploadRequest,"description");
+  String datasourceName=ParamUtil.getString(uploadRequest,"dataSourceName");
+  ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
     ReportDefinition definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),name,description,datasourceName,ReportFormat.parse(format));
-    actionRequest.setAttribute("currentDefinition",definition);
+    uploadRequest.setAttribute("currentDefinition",definition);
     return true;
   }
  catch (  PortalException e) {
-    SessionErrors.add(actionRequest,e.getClass().getName());
+    SessionErrors.add(uploadRequest,e.getClass().getName());
     return false;
   }
 catch (  SystemException e) {
