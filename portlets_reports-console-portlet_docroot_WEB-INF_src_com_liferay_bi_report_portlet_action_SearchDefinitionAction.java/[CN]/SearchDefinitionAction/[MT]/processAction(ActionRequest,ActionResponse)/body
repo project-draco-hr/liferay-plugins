@@ -3,8 +3,19 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   long companyId=themeDisplay.getCompanyId();
   long groupId=themeDisplay.getScopeGroupId();
+  int start=ParamUtil.getInteger(actionRequest,"start");
+  int end=ParamUtil.getInteger(actionRequest,"end");
+  int count=0;
+  List<ReportDefinition> definitions=null;
   try {
-    List<ReportDefinition> definitions=ReportDefinitionLocalServiceUtil.getReportDefintions(companyId,groupId);
+    if (ParamUtil.getBoolean(actionRequest,"advancedSearch")) {
+      definitions=ReportDefinitionLocalServiceUtil.getReportDefintions(companyId,groupId);
+    }
+ else {
+      String keywords=ParamUtil.getString(request,"keywords");
+      count=ReportDefinitionLocalServiceUtil.searchCount(companyId,groupId,keywords,true,null);
+      definitions=ReportDefinitionLocalServiceUtil.search(companyId,groupId,keywords,null,start,end,null);
+    }
     actionRequest.setAttribute("searchResults",definitions);
   }
  catch (  SystemException e) {
