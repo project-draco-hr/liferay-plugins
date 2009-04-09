@@ -1,0 +1,42 @@
+{
+  ReportDefinition reportDefinition=findByPrimaryKey(definitionId);
+  int count=countByDefinitionName(definitionName);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.bi.report.model.ReportDefinition WHERE ");
+    if (definitionName == null) {
+      query.append("definitionName IS NULL");
+    }
+ else {
+      query.append("definitionName = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("modifiedDate ASC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    if (definitionName != null) {
+      qPos.add(definitionName);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,reportDefinition);
+    ReportDefinition[] array=new ReportDefinitionImpl[3];
+    array[0]=(ReportDefinition)objArray[0];
+    array[1]=(ReportDefinition)objArray[1];
+    array[2]=(ReportDefinition)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

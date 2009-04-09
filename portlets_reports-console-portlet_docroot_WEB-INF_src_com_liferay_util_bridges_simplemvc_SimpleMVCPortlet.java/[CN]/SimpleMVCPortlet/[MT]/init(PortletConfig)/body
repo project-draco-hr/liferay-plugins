@@ -1,10 +1,8 @@
 {
   super.init(portletConfig);
-  _packagePrefix=portletConfig.getInitParameter(_ACTION_PACKAGE_NAME);
-  if (Validator.isNotNull(_packagePrefix)) {
+  String packagePrefix=portletConfig.getInitParameter(ActionCache.ACTION_PACKAGE_NAME);
+  if (Validator.isNotNull(packagePrefix)) {
     _checkActionClass=true;
-    if (!_packagePrefix.endsWith(StringPool.PERIOD)) {
-      _packagePrefix=_packagePrefix + StringPool.PERIOD;
-    }
+    _cache=new ActionCache(packagePrefix);
   }
 }
