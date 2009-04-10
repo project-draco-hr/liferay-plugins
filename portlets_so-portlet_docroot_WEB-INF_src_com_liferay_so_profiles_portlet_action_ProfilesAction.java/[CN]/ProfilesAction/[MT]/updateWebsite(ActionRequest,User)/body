@@ -1,0 +1,29 @@
+{
+  int type=ParamUtil.getInteger(actionRequest,"type");
+  String id=ParamUtil.getString(actionRequest,"id");
+  String url=ParamUtil.getString(actionRequest,"url");
+  if (id.equals("addWebsite")) {
+    try {
+      WebsiteLocalServiceUtil.addWebsite(user.getUserId(),Contact.class.getName(),user.getContactId(),url,type,false);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(e);
+      }
+    }
+  }
+ else {
+    try {
+      long websiteId=ParamUtil.getLong(actionRequest,"websiteId");
+      Website website=WebsiteLocalServiceUtil.getWebsite(websiteId);
+      website.setUrl(url);
+      website.setTypeId(type);
+      WebsiteLocalServiceUtil.updateWebsite(website,false);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(e);
+      }
+    }
+  }
+}

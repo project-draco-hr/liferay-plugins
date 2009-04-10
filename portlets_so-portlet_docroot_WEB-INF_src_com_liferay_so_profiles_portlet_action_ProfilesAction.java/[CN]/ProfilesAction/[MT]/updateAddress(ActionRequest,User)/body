@@ -1,0 +1,42 @@
+{
+  int addressTypeId=ParamUtil.getInteger(actionRequest,"addressTypeId");
+  long addressCountryId=ParamUtil.getLong(actionRequest,"addressCountryId");
+  long addressRegionId=ParamUtil.getLong(actionRequest,"addressRegionId");
+  long classPk=user.getContactId();
+  long userId=user.getUserId();
+  String city=ParamUtil.getString(actionRequest,"city");
+  String className=Contact.class.getName();
+  String id=ParamUtil.getString(actionRequest,"id");
+  String street1=ParamUtil.getString(actionRequest,"street1");
+  String street2=ParamUtil.getString(actionRequest,"street2");
+  String zip=ParamUtil.getString(actionRequest,"zip");
+  if (id.equals("addAddress")) {
+    try {
+      AddressLocalServiceUtil.addAddress(userId,className,classPk,street1,street2,StringPool.BLANK,city,zip,addressRegionId,addressCountryId,addressTypeId,false,false);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(e);
+      }
+    }
+  }
+ else {
+    try {
+      long addressId=ParamUtil.getLong(actionRequest,"addressId");
+      Address address=AddressLocalServiceUtil.getAddress(addressId);
+      address.setStreet1(street1);
+      address.setStreet2(street2);
+      address.setCity(city);
+      address.setZip(zip);
+      address.setRegionId(addressRegionId);
+      address.setCountryId(addressCountryId);
+      address.setTypeId(addressTypeId);
+      AddressLocalServiceUtil.updateAddress(address,false);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(e);
+      }
+    }
+  }
+}
