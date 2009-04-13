@@ -1,0 +1,18 @@
+{
+  if (!isProcessActionRequest(actionRequest)) {
+    return;
+  }
+  if (!callActionMethod(actionRequest,actionResponse)) {
+    return;
+  }
+  if (SessionErrors.isEmpty(actionRequest)) {
+    SessionMessages.add(actionRequest,"request_processed");
+  }
+  String redirect=ParamUtil.getString(actionRequest,"redirect");
+  if (Validator.isNull(redirect)) {
+    redirect=(String)actionRequest.getAttribute("redirect");
+  }
+  if (Validator.isNotNull(redirect)) {
+    actionResponse.sendRedirect(redirect);
+  }
+}

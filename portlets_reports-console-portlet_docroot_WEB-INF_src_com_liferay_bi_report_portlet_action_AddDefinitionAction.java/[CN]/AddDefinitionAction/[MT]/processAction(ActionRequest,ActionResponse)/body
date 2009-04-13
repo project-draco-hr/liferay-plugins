@@ -1,17 +1,26 @@
 {
   UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  String redirect=ParamUtil.getString(uploadRequest,"redirect");
   String name=ParamUtil.getString(uploadRequest,"definitionName");
   String format=ParamUtil.getString(uploadRequest,"format");
   String description=ParamUtil.getString(uploadRequest,"description");
   String datasourceName=ParamUtil.getString(uploadRequest,"dataSourceName");
+  if (Validator.isNull(name)) {
+    SessionErrors.add(actionRequest,new PortalException().getClass().getName());
+  }
+  if (!SessionErrors.isEmpty(actionRequest)) {
+    actionRequest.setAttribute("redirect",redirect);
+    return true;
+  }
   ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
     ReportDefinition definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),name,description,datasourceName,ReportFormat.parse(format));
-    uploadRequest.setAttribute("currentDefinition",definition);
+    redirect=HttpUtil.addParameter(redirect,"definitionId",String.valueOf(definition.getDefinitionId()));
+    actionRequest.setAttribute("redirect",redirect);
     return true;
   }
  catch (  PortalException e) {
-    SessionErrors.add(uploadRequest,e.getClass().getName());
+    SessionErrors.add(actionRequest,e.getClass().getName());
     return false;
   }
 catch (  SystemException e) {
