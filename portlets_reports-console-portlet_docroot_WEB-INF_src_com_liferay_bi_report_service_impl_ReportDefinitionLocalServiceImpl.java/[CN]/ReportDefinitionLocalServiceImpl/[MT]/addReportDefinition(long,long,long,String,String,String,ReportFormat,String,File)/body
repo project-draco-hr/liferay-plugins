@@ -1,4 +1,10 @@
 {
+  if (Validator.isNull(definitionName)) {
+    throw new DefinitionNameException();
+  }
+  if (Validator.isNull(fileName)) {
+    throw new DefinitionFileException();
+  }
   long definitionId=CounterLocalServiceUtil.increment();
   ReportDefinition definition=reportDefinitionPersistence.create(definitionId);
   definition.setDefinitionName(definitionName);
@@ -8,10 +14,6 @@
   definition.setCompanyId(companyId);
   definition.setGroupId(groupId);
   definition.setUserId(userId);
-  validate(definition);
-  if (Validator.isNull(fileName)) {
-    throw new DefinitionFileException();
-  }
   String portletId=CompanyConstants.SYSTEM_STRING;
   long repositoryId=0;
   long fileEntryId=0;

@@ -7,34 +7,14 @@
   int delta=ParamUtil.getInteger(actionRequest,ReportDefinitionSearch.DEFAULT_DELTA_PARAM,ReportDefinitionSearch.DEFAULT_DELTA);
   int start=(cur - 1) * delta;
   int end=start + delta;
-  int total=0;
-  List<ReportDefinition> definitions=null;
   boolean isAdvancedSearch=ParamUtil.getBoolean(actionRequest,ReportDefinitionDisplayTerms.ADVANCED_SEARCH);
   try {
     if (isAdvancedSearch) {
-      String name=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.NAME);
-      String description=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.DESCRIPTION);
-      boolean isAndOperator=ParamUtil.getBoolean(actionRequest,ReportDefinitionDisplayTerms.AND_OPERATOR);
-      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.NAME,name);
-      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.DESCRIPTION,description);
-      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.AND_OPERATOR,String.valueOf(isAndOperator));
-      if (Validator.isNull(name)) {
-        name=null;
-      }
-      if (Validator.isNull(description)) {
-        description=null;
-      }
-      total=ReportDefinitionLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,true,null,isAndOperator);
-      definitions=ReportDefinitionLocalServiceUtil.search(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,null,isAndOperator,start,end,null);
+      performAdvancedSearch(actionRequest,actionResponse,themeDisplay,start,end);
     }
  else {
-      String keywords=ParamUtil.getString(request,ReportDefinitionDisplayTerms.KEYWORDS);
-      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.KEYWORDS,keywords);
-      total=ReportDefinitionLocalServiceUtil.searchCount(companyId,groupId,keywords,true,null);
-      definitions=ReportDefinitionLocalServiceUtil.search(companyId,groupId,keywords,null,start,end,null);
+      performBasicSearch(actionRequest,actionResponse,request,companyId,groupId,start,end);
     }
-    actionRequest.setAttribute("searchResults",definitions);
-    actionRequest.setAttribute("total",total);
     actionResponse.setRenderParameter(ReportDefinitionSearch.DEFAULT_CUR_PARAM,String.valueOf(cur));
     actionResponse.setRenderParameter(ReportDefinitionSearch.DEFAULT_DELTA_PARAM,String.valueOf(delta));
     actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.ADVANCED_SEARCH,String.valueOf(isAdvancedSearch));

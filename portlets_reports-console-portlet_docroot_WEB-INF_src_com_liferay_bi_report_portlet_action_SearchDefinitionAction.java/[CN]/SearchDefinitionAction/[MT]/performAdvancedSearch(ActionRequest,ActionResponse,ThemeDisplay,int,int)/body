@@ -1,0 +1,21 @@
+{
+  String name=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.NAME);
+  String description=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.DESCRIPTION);
+  boolean isAndOperator=ParamUtil.getBoolean(actionRequest,ReportDefinitionDisplayTerms.AND_OPERATOR);
+  actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.NAME,name);
+  actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.DESCRIPTION,description);
+  actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.AND_OPERATOR,String.valueOf(isAndOperator));
+  if (Validator.isNull(name)) {
+    name=null;
+  }
+  if (Validator.isNull(description)) {
+    description=null;
+  }
+  List<ReportDefinition> definitions=ReportDefinitionLocalServiceUtil.search(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,null,isAndOperator,start,end,null);
+  int total=0;
+  if (!definitions.isEmpty()) {
+    total=ReportDefinitionLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,true,null,isAndOperator);
+  }
+  actionRequest.setAttribute(SEARCH_RESULTS_ATTRIBUTE,definitions);
+  actionRequest.setAttribute(SEARCH_TOTAL_ATTRIBUTE,total);
+}
