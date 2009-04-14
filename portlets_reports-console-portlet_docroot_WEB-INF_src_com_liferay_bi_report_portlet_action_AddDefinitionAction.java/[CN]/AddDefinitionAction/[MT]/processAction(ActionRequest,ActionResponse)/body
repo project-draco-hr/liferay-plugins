@@ -1,29 +1,22 @@
 {
   UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
-  String redirect=ParamUtil.getString(uploadRequest,"redirect");
+  ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String name=ParamUtil.getString(uploadRequest,"definitionName");
   String format=ParamUtil.getString(uploadRequest,"format");
   String description=ParamUtil.getString(uploadRequest,"description");
   String datasourceName=ParamUtil.getString(uploadRequest,"dataSourceName");
-  if (Validator.isNull(name)) {
-    SessionErrors.add(actionRequest,new PortalException().getClass().getName());
-  }
-  if (!SessionErrors.isEmpty(actionRequest)) {
-    actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
-    return false;
-  }
-  ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String fileName=uploadRequest.getFileName("msgFile");
+  File file=uploadRequest.getFile("msgFile");
   try {
-    ReportDefinition definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),name,description,datasourceName,ReportFormat.parse(format));
-    redirect=HttpUtil.addParameter(redirect,"definitionId",String.valueOf(definition.getDefinitionId()));
-    actionRequest.setAttribute("redirect",redirect);
-    return true;
+    ReportDefinition definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),name,description,datasourceName,ReportFormat.parse(format),fileName,file);
+    uploadRequest.setAttribute("definition",definition);
   }
  catch (  PortalException e) {
     SessionErrors.add(actionRequest,e.getClass().getName());
-    return false;
   }
 catch (  SystemException e) {
     throw new PortletException("Unable to create new definition: " + name,e);
   }
+  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
+  return false;
 }
