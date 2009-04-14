@@ -15,6 +15,9 @@
       String name=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.NAME);
       String description=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.DESCRIPTION);
       boolean isAndOperator=ParamUtil.getBoolean(actionRequest,ReportDefinitionDisplayTerms.AND_OPERATOR);
+      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.NAME,name);
+      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.DESCRIPTION,description);
+      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.AND_OPERATOR,String.valueOf(isAndOperator));
       if (Validator.isNull(name)) {
         name=null;
       }
@@ -26,11 +29,15 @@
     }
  else {
       String keywords=ParamUtil.getString(request,ReportDefinitionDisplayTerms.KEYWORDS);
+      actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.KEYWORDS,keywords);
       total=ReportDefinitionLocalServiceUtil.searchCount(companyId,groupId,keywords,true,null);
       definitions=ReportDefinitionLocalServiceUtil.search(companyId,groupId,keywords,null,start,end,null);
     }
     actionRequest.setAttribute("searchResults",definitions);
     actionRequest.setAttribute("total",total);
+    actionResponse.setRenderParameter(ReportDefinitionSearch.DEFAULT_CUR_PARAM,String.valueOf(cur));
+    actionResponse.setRenderParameter(ReportDefinitionSearch.DEFAULT_DELTA_PARAM,String.valueOf(delta));
+    actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.ADVANCED_SEARCH,String.valueOf(isAdvancedSearch));
   }
  catch (  SystemException e) {
     throw new PortletException("Unable to retrieve report definitions",e);
