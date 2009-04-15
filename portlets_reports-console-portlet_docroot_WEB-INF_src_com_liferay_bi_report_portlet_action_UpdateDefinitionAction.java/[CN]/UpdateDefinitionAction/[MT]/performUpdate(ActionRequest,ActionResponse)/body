@@ -1,0 +1,17 @@
+{
+  long definitionId=ParamUtil.getLong(actionRequest,"definitionId");
+  if (definitionId <= 0) {
+    throw new NoSuchDefinitionException();
+  }
+  String definitionName=ParamUtil.getString(actionRequest,"definitionName");
+  if (Validator.isNull(definitionName)) {
+    throw new DefinitionNameException();
+  }
+  String description=ParamUtil.getString(actionRequest,"description");
+  String datasourceName=ParamUtil.getString(actionRequest,"dataSourceName");
+  String format=ParamUtil.getString(actionRequest,"format");
+  String reportParameters=ParamUtil.getString(actionRequest,"reportParameters");
+  ReportDefinition definition=ReportDefinitionLocalServiceUtil.updateReportDefinition(definitionId,definitionName,description,datasourceName,ReportFormat.parse(format),reportParameters);
+  actionRequest.setAttribute("fileName",ParamUtil.getString(actionRequest,"fileName"));
+  actionRequest.setAttribute("definition",definition);
+}

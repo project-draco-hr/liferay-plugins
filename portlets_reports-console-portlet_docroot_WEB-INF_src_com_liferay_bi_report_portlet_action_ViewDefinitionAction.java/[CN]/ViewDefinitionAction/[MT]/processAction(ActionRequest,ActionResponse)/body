@@ -4,12 +4,12 @@
     if (definitionId > 0) {
       ReportDefinition definition=ReportDefinitionLocalServiceUtil.getReportDefinition(definitionId);
       String[] existingAttachments=DLServiceUtil.getFileNames(definition.getCompanyId(),CompanyConstants.SYSTEM,definition.getAttachmentsDir());
-      String existingName=StringPool.NULL;
+      String fileName=StringPool.NULL;
       if (existingAttachments.length != 0) {
-        existingName=StringUtil.extractLast(existingAttachments[0],StringPool.SLASH);
+        fileName=StringUtil.extractLast(existingAttachments[0],StringPool.SLASH);
       }
       actionRequest.setAttribute("definition",definition);
-      actionRequest.setAttribute("existingName",existingName);
+      actionRequest.setAttribute("fileName",fileName);
     }
   }
  catch (  PortalException e) {

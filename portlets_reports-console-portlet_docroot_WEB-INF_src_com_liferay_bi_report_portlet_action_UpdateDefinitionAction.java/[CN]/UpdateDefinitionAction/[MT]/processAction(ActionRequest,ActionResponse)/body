@@ -1,26 +1,20 @@
 {
   String contentType=actionRequest.getContentType();
-  if ((contentType != null) && (contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA))) {
-  }
-  long definitionId=ParamUtil.getLong(actionRequest,"definitionId");
-  if (definitionId == -1) {
-    return false;
-  }
-  String definitionName=ParamUtil.getString(actionRequest,"definitionName");
-  String description=ParamUtil.getString(actionRequest,"description");
-  String datasourceName=ParamUtil.getString(actionRequest,"dataSourceName");
-  String format=ParamUtil.getString(actionRequest,"format");
   try {
-    ReportDefinition definition=ReportDefinitionLocalServiceUtil.updateReportDefinition(definitionId,description,datasourceName,ReportFormat.parse(format));
-    actionRequest.setAttribute("currentDefinition",definition);
+    if ((contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA))) {
+      performUpdateWithFileUpdated(actionRequest,actionResponse);
+    }
+ else {
+      performUpdate(actionRequest,actionResponse);
+    }
   }
  catch (  PortalException e) {
     SessionErrors.add(actionRequest,e.getClass().getName());
-    _log.error(e);
   }
 catch (  SystemException e) {
     _log.error(e);
-    throw new PortletException("Unable to update definition: " + definitionName,e);
+    throw new PortletException("Unable to update definition: ",e);
   }
+  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
   return false;
 }
