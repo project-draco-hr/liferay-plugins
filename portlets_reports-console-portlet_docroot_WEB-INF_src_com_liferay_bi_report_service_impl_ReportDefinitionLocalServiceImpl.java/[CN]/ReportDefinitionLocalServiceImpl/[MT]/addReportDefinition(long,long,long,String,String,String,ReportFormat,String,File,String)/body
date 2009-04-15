@@ -1,19 +1,14 @@
 {
-  if (Validator.isNull(definitionName)) {
-    throw new DefinitionNameException();
-  }
-  if (Validator.isNull(fileName)) {
-    throw new DefinitionFileException();
-  }
   long definitionId=CounterLocalServiceUtil.increment();
   ReportDefinition definition=reportDefinitionPersistence.create(definitionId);
+  definition.setCompanyId(companyId);
+  definition.setGroupId(groupId);
+  definition.setUserId(userId);
   definition.setDefinitionName(definitionName);
   definition.setDescription(description);
   definition.setDataSourceName(datasourceName);
   definition.setReportFormat(format.toString());
-  definition.setCompanyId(companyId);
-  definition.setGroupId(groupId);
-  definition.setUserId(userId);
+  definition.setReportParameters(parameters);
   String portletId=CompanyConstants.SYSTEM_STRING;
   long repositoryId=0;
   long fileEntryId=0;
@@ -21,6 +16,7 @@
   Date modifiedDate=new Date();
   String[] tagsCategories=new String[0];
   String[] tagsEntries=new String[0];
-  DLServiceUtil.addFile(companyId,portletId,groupId,repositoryId,fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
+  DLServiceUtil.addDirectory(companyId,repositoryId,definition.getAttachmentsDir());
+  DLServiceUtil.addFile(companyId,portletId,groupId,repositoryId,definition.getAttachmentsDir() + StringPool.SLASH + fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
   return addReportDefinition(definition);
 }

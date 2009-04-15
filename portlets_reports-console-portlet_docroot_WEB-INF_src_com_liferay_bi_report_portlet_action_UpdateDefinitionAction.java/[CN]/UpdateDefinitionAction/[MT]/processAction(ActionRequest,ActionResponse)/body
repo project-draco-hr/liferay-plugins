@@ -13,13 +13,14 @@
   try {
     ReportDefinition definition=ReportDefinitionLocalServiceUtil.updateReportDefinition(definitionId,description,datasourceName,ReportFormat.parse(format));
     actionRequest.setAttribute("currentDefinition",definition);
-    return true;
   }
  catch (  PortalException e) {
     SessionErrors.add(actionRequest,e.getClass().getName());
-    return false;
+    _log.error(e);
   }
 catch (  SystemException e) {
+    _log.error(e);
     throw new PortletException("Unable to update definition: " + definitionName,e);
   }
+  return false;
 }

@@ -1,0 +1,26 @@
+{
+  try {
+    long definitionId=ParamUtil.getLong(actionRequest,"definitionId",-1);
+    if (definitionId > 0) {
+      ReportDefinition definition=ReportDefinitionLocalServiceUtil.getReportDefinition(definitionId);
+      String[] existingAttachments=DLServiceUtil.getFileNames(definition.getCompanyId(),CompanyConstants.SYSTEM,definition.getAttachmentsDir());
+      String existingName=StringPool.NULL;
+      if (existingAttachments.length != 0) {
+        existingName=StringUtil.extractLast(existingAttachments[0],StringPool.SLASH);
+      }
+      actionRequest.setAttribute("definition",definition);
+      actionRequest.setAttribute("existingName",existingName);
+    }
+  }
+ catch (  PortalException e) {
+    SessionErrors.add(actionRequest,e.getClass().getName());
+    _log.error(e);
+    return true;
+  }
+catch (  SystemException e) {
+    _log.error(e);
+    throw new PortletException("No such a definition",e);
+  }
+  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
+  return false;
+}
