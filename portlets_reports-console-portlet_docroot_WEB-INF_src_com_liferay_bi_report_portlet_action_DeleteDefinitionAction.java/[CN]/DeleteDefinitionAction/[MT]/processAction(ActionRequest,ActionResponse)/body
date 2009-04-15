@@ -1,6 +1,7 @@
 {
   long definitionId=ParamUtil.getLong(actionRequest,"definitionId");
   if (definitionId == -1) {
+    SessionErrors.add(actionRequest,new NoSuchDefinitionException().getClass().getName());
     return false;
   }
   try {
@@ -9,6 +10,6 @@
   }
  catch (  Exception e) {
     _log.error(e);
-    throw new PortletException("Unable to delete new definition",e);
+    throw new PortletException("Unable to delete a definition",e);
   }
 }
