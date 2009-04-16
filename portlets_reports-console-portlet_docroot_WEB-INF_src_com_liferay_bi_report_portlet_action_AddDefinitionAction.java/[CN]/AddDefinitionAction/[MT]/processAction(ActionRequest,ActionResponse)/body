@@ -14,13 +14,14 @@
     SessionErrors.add(actionRequest,DefinitionFormatException.class.getName());
   }
   String fileName=uploadRequest.getFileName("msgFile");
-  if (Validator.isNull(fileName)) {
+  File file=uploadRequest.getFile("msgFile");
+  if (Validator.isNull(fileName) || file.length() <= 0) {
+    fileName=StringPool.BLANK;
     SessionErrors.add(actionRequest,DefinitionFileException.class.getName());
   }
   try {
     String description=ParamUtil.getString(uploadRequest,"description");
     String datasourceName=ParamUtil.getString(uploadRequest,"dataSourceName");
-    File file=uploadRequest.getFile("msgFile");
     String reportParameters=ParamUtil.getString(uploadRequest,"reportParameters");
     ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
     ReportDefinition definition=null;

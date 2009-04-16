@@ -1,0 +1,14 @@
+{
+  long definitionId=ParamUtil.getLong(actionRequest,"definitionId");
+  if (definitionId == -1) {
+    SessionErrors.add(actionRequest,NoSuchDefinitionException.class.getName());
+  }
+  try {
+    ReportDefinitionLocalServiceUtil.genrateReport(actionRequest,definitionId);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+    throw new PortletException("Unable to delete a definition",e);
+  }
+  return true;
+}
