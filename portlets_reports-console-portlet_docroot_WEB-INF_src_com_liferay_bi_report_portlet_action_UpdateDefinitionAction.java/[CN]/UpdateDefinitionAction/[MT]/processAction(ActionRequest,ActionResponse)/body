@@ -1,12 +1,12 @@
 {
   String contentType=actionRequest.getContentType();
-  String jspPageParameter=null;
+  String jspPage=null;
   try {
     if ((contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA))) {
-      jspPageParameter=performUpdateWithFileUpdated(actionRequest,actionResponse);
+      jspPage=performUpdateWithFileUpdated(actionRequest,actionResponse);
     }
  else {
-      jspPageParameter=performUpdate(actionRequest,actionResponse);
+      jspPage=performUpdate(actionRequest,actionResponse);
     }
   }
  catch (  PortalException e) {
@@ -16,6 +16,6 @@ catch (  SystemException e) {
     _log.error(e);
     throw new PortletException("Unable to update definition: ",e);
   }
-  actionResponse.setRenderParameter("jspPage",jspPageParameter);
+  actionResponse.setRenderParameter("jspPage",jspPage);
   return false;
 }

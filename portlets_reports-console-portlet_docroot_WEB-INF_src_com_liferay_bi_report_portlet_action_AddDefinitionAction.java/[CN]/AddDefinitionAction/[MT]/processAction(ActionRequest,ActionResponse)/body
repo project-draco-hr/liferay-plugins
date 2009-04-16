@@ -1,5 +1,6 @@
 {
   UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  actionResponse.setRenderParameter("jspPage",ParamUtil.getString(uploadRequest,"jspPage"));
   String definitionName=ParamUtil.getString(uploadRequest,"definitionName");
   if (Validator.isNull(definitionName)) {
     SessionErrors.add(actionRequest,DefinitionNameException.class.getName());
@@ -13,17 +14,29 @@
     SessionErrors.add(actionRequest,DefinitionFormatException.class.getName());
   }
   String fileName=uploadRequest.getFileName("msgFile");
-  if (Validator.isNull(definitionName)) {
+  if (Validator.isNull(fileName)) {
     SessionErrors.add(actionRequest,DefinitionFileException.class.getName());
   }
   try {
     String description=ParamUtil.getString(uploadRequest,"description");
     String datasourceName=ParamUtil.getString(uploadRequest,"dataSourceName");
     File file=uploadRequest.getFile("msgFile");
-    String parameters=ParamUtil.getString(uploadRequest,"reportParameters");
+    String reportParameters=ParamUtil.getString(uploadRequest,"reportParameters");
     ThemeDisplay themeDisplay=(ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    ReportDefinition definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),definitionName,description,datasourceName,reportFormat,fileName,file,parameters);
-    actionRequest.setAttribute("fileName",fileName);
+    ReportDefinition definition=null;
+    if (SessionErrors.isEmpty(actionRequest)) {
+      definition=ReportDefinitionLocalServiceUtil.addReportDefinition(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),definitionName,description,datasourceName,reportFormat,fileName,file,reportParameters);
+      actionRequest.setAttribute("fileName",fileName);
+      SessionMessages.add(actionRequest,"request_processed");
+    }
+ else {
+      definition=new ReportDefinitionImpl();
+      definition.setDefinitionName(definitionName);
+      definition.setDescription(description);
+      definition.setDataSourceName(datasourceName);
+      definition.setReportFormat(format.toString());
+      definition.setReportParameters(reportParameters);
+    }
     uploadRequest.setAttribute("definition",definition);
   }
  catch (  PortalException e) {
@@ -34,6 +47,5 @@ catch (  SystemException e) {
     _log.error(e);
     throw new PortletException("Unable to create new definition ",e);
   }
-  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
   return false;
 }

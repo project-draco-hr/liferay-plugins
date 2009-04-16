@@ -4,7 +4,7 @@
     if (definitionId > 0) {
       ReportDefinition definition=ReportDefinitionLocalServiceUtil.getReportDefinition(definitionId);
       String[] existingAttachments=DLServiceUtil.getFileNames(definition.getCompanyId(),CompanyConstants.SYSTEM,definition.getAttachmentsDir());
-      String fileName=StringPool.NULL;
+      String fileName=null;
       if (existingAttachments.length != 0) {
         fileName=StringUtil.extractLast(existingAttachments[0],StringPool.SLASH);
       }
@@ -21,6 +21,6 @@ catch (  SystemException e) {
     _log.error(e);
     throw new PortletException("No such a definition",e);
   }
-  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
+  actionResponse.setRenderParameter("jspPage",ParamUtil.getString(actionRequest,"jspPage"));
   return false;
 }
