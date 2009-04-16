@@ -11,10 +11,10 @@
   if (Validator.isNull(description)) {
     description=null;
   }
-  List<ReportDefinition> definitions=ReportDefinitionLocalServiceUtil.search(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,null,isAndOperator,start,end,null);
-  int total=0;
-  if (!definitions.isEmpty()) {
-    total=ReportDefinitionLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,true,null,isAndOperator);
+  int total=ReportDefinitionLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,true,null,isAndOperator);
+  List<ReportDefinition> definitions=EMPTY_LIST;
+  if (total > 0) {
+    definitions=ReportDefinitionLocalServiceUtil.search(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),name,description,null,isAndOperator,start,end,null);
   }
   actionRequest.setAttribute(SEARCH_RESULTS_ATTRIBUTE,definitions);
   actionRequest.setAttribute(SEARCH_TOTAL_ATTRIBUTE,total);

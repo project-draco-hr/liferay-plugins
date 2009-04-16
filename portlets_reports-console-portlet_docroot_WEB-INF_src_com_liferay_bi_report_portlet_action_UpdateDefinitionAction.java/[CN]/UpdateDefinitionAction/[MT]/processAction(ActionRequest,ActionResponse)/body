@@ -1,11 +1,12 @@
 {
   String contentType=actionRequest.getContentType();
+  String jspPageParameter=null;
   try {
     if ((contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA))) {
-      performUpdateWithFileUpdated(actionRequest,actionResponse);
+      jspPageParameter=performUpdateWithFileUpdated(actionRequest,actionResponse);
     }
  else {
-      performUpdate(actionRequest,actionResponse);
+      jspPageParameter=performUpdate(actionRequest,actionResponse);
     }
   }
  catch (  PortalException e) {
@@ -15,6 +16,6 @@ catch (  SystemException e) {
     _log.error(e);
     throw new PortletException("Unable to update definition: ",e);
   }
-  actionResponse.setRenderParameter("jspPage","/definition/edit_definition.jsp");
+  actionResponse.setRenderParameter("jspPage",jspPageParameter);
   return false;
 }

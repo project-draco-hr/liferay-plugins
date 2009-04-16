@@ -1,10 +1,10 @@
 {
   String keywords=ParamUtil.getString(actionRequest,ReportDefinitionDisplayTerms.KEYWORDS);
   actionResponse.setRenderParameter(ReportDefinitionDisplayTerms.KEYWORDS,keywords);
-  List<ReportDefinition> definitions=ReportDefinitionLocalServiceUtil.search(companyId,groupId,keywords,null,start,end,null);
-  int total=0;
-  if (!definitions.isEmpty()) {
-    total=ReportDefinitionLocalServiceUtil.searchCount(companyId,groupId,keywords,true,null);
+  int total=ReportDefinitionLocalServiceUtil.searchCount(companyId,groupId,keywords,true,null);
+  List<ReportDefinition> definitions=EMPTY_LIST;
+  if (total > 0) {
+    definitions=ReportDefinitionLocalServiceUtil.search(companyId,groupId,keywords,null,start,end,null);
   }
   actionRequest.setAttribute(SEARCH_RESULTS_ATTRIBUTE,definitions);
   actionRequest.setAttribute(SEARCH_TOTAL_ATTRIBUTE,total);
