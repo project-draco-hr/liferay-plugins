@@ -1,0 +1,21 @@
+{
+  boolean isNew=reportRequest.isNew();
+  for (  ModelListener<ReportRequest> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(reportRequest);
+    }
+ else {
+      listener.onBeforeUpdate(reportRequest);
+    }
+  }
+  reportRequest=updateImpl(reportRequest,merge);
+  for (  ModelListener<ReportRequest> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(reportRequest);
+    }
+ else {
+      listener.onAfterUpdate(reportRequest);
+    }
+  }
+  return reportRequest;
+}

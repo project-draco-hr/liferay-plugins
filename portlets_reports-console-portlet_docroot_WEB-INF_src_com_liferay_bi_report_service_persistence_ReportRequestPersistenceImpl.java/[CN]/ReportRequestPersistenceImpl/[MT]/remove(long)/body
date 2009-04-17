@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    ReportRequest reportRequest=(ReportRequest)session.get(ReportRequestImpl.class,new Long(requestId));
+    if (reportRequest == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No ReportRequest exists with the primary key " + requestId);
+      }
+      throw new NoSuchRequestException("No ReportRequest exists with the primary key " + requestId);
+    }
+    return remove(reportRequest);
+  }
+ catch (  NoSuchRequestException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
