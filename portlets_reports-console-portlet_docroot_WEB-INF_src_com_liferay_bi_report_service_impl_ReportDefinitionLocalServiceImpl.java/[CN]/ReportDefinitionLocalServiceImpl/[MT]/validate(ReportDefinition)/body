@@ -1,0 +1,14 @@
+{
+  if (definition.getDefinitionId() <= 0) {
+    throw new NoSuchDefinitionException();
+  }
+  if (Validator.isNull(definition.getDefinitionName())) {
+    throw new DefinitionNameException();
+  }
+  try {
+    ReportFormat.parse(definition.getReportFormat());
+  }
+ catch (  IllegalArgumentException e) {
+    throw new DefinitionFormatException();
+  }
+}

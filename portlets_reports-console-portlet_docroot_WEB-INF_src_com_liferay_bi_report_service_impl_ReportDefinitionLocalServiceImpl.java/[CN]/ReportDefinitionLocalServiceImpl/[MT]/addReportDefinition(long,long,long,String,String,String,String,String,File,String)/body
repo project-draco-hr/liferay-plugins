@@ -1,0 +1,29 @@
+{
+  long definitionId=CounterLocalServiceUtil.increment();
+  ReportDefinition definition=reportDefinitionPersistence.create(definitionId);
+  definition.setCompanyId(companyId);
+  definition.setGroupId(groupId);
+  definition.setUserId(userId);
+  definition.setDefinitionName(definitionName);
+  definition.setDescription(description);
+  definition.setDataSourceName(datasourceName);
+  definition.setReportFormat(format);
+  definition.setReportParameters(reportParameters);
+  validate(definition);
+  if (Validator.isNull(fileName)) {
+    throw new DefinitionFileException();
+  }
+  try {
+    DLServiceUtil.addDirectory(companyId,repositoryId,definition.getAttachmentsDir());
+  }
+ catch (  DuplicateDirectoryException dde) {
+  }
+  try {
+    DLServiceUtil.addFile(companyId,portletId,groupId,repositoryId,definition.getAttachmentsDir() + StringPool.SLASH + fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
+  }
+ catch (  PortalException e) {
+    DLServiceUtil.deleteDirectory(companyId,portletId,repositoryId,definition.getAttachmentsDir());
+    throw new DefinitionFileException();
+  }
+  return addReportDefinition(definition);
+}

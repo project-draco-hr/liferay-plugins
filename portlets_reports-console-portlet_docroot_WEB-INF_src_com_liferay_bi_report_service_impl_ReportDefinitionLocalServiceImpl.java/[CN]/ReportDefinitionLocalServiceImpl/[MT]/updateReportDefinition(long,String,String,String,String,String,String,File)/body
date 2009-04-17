@@ -1,0 +1,28 @@
+{
+  ReportDefinition definition=getReportDefinition(definitionId);
+  definition.setDefinitionName(definitionName);
+  definition.setDescription(description);
+  definition.setDataSourceName(datasourceName);
+  definition.setReportFormat(format);
+  definition.setReportParameters(reportParameters);
+  validate(definition);
+  if (Validator.isNull(fileName)) {
+    throw new DefinitionFileException();
+  }
+  fileName=definition.getAttachmentsDir() + StringPool.SLASH + fileName;
+  try {
+    DLServiceUtil.addFile(definition.getCompanyId(),portletId,definition.getGroupId(),repositoryId,fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
+  }
+ catch (  DuplicateFileException e) {
+  }
+catch (  PortalException e) {
+    throw new DefinitionFileException();
+  }
+  String[] existingFiles=definition.getAttachmentsFiles();
+  for (  String existingFile : existingFiles) {
+    if (fileName != existingFile) {
+      DLServiceUtil.deleteFile(definition.getCompanyId(),portletId,repositoryId,existingFile);
+    }
+  }
+  return updateReportDefinition(definition);
+}
