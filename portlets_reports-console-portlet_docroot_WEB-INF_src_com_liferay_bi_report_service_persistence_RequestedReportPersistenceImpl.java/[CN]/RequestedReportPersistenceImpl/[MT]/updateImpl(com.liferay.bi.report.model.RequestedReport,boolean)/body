@@ -1,0 +1,41 @@
+{
+  boolean isNew=requestedReport.isNew();
+  if (Validator.isNull(requestedReport.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    requestedReport.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,requestedReport,merge);
+    requestedReport.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(RequestedReportModelImpl.ENTITY_CACHE_ENABLED,RequestedReportImpl.class,requestedReport.getPrimaryKey(),requestedReport);
+  RequestedReportModelImpl requestedReportModelImpl=(RequestedReportModelImpl)requestedReport;
+  if (!isNew && (!requestedReport.getUuid().equals(requestedReportModelImpl.getOriginalUuid()) || (requestedReport.getGroupId() != requestedReportModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{requestedReportModelImpl.getOriginalUuid(),new Long(requestedReportModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!requestedReport.getUuid().equals(requestedReportModelImpl.getOriginalUuid()) || (requestedReport.getGroupId() != requestedReportModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{requestedReport.getUuid(),new Long(requestedReport.getGroupId())},requestedReport);
+  }
+  if (!isNew && (requestedReport.getRequestId() != requestedReportModelImpl.getOriginalRequestId())) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REQUESTID,new Object[]{new Long(requestedReportModelImpl.getOriginalRequestId())});
+  }
+  if (isNew || (requestedReport.getRequestId() != requestedReportModelImpl.getOriginalRequestId())) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REQUESTID,new Object[]{new Long(requestedReport.getRequestId())},requestedReport);
+  }
+  if (!isNew && (requestedReport.getDefinitionId() != requestedReportModelImpl.getOriginalDefinitionId())) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DEFINITIONID,new Object[]{new Long(requestedReportModelImpl.getOriginalDefinitionId())});
+  }
+  if (isNew || (requestedReport.getDefinitionId() != requestedReportModelImpl.getOriginalDefinitionId())) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_DEFINITIONID,new Object[]{new Long(requestedReport.getDefinitionId())},requestedReport);
+  }
+  return requestedReport;
+}

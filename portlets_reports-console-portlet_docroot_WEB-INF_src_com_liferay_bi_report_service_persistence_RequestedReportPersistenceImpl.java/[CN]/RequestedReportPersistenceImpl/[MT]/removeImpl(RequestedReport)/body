@@ -1,0 +1,27 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (requestedReport.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(RequestedReportImpl.class,requestedReport.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(requestedReport);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  RequestedReportModelImpl requestedReportModelImpl=(RequestedReportModelImpl)requestedReport;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{requestedReportModelImpl.getOriginalUuid(),new Long(requestedReportModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REQUESTID,new Object[]{new Long(requestedReportModelImpl.getOriginalRequestId())});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_DEFINITIONID,new Object[]{new Long(requestedReportModelImpl.getOriginalDefinitionId())});
+  EntityCacheUtil.removeResult(RequestedReportModelImpl.ENTITY_CACHE_ENABLED,RequestedReportImpl.class,requestedReport.getPrimaryKey());
+  return requestedReport;
+}

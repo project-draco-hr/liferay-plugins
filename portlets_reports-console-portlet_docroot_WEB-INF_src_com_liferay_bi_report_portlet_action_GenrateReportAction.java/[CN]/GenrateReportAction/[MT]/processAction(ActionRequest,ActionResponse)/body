@@ -3,8 +3,9 @@
   if (definitionId == -1) {
     SessionErrors.add(actionRequest,NoSuchDefinitionException.class.getName());
   }
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
-    ReportDefinitionLocalServiceUtil.genrateReport(actionRequest,definitionId);
+    RequestedReportLocalServiceUtil.genrateReport(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getUserId(),definitionId);
   }
  catch (  Exception e) {
     _log.error(e);

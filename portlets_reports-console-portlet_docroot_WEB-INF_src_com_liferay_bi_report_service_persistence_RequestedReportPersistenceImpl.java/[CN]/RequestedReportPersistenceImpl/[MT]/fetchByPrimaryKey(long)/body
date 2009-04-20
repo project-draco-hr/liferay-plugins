@@ -1,0 +1,20 @@
+{
+  RequestedReport requestedReport=(RequestedReport)EntityCacheUtil.getResult(RequestedReportModelImpl.ENTITY_CACHE_ENABLED,RequestedReportImpl.class,requestId,this);
+  if (requestedReport == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      requestedReport=(RequestedReport)session.get(RequestedReportImpl.class,new Long(requestId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (requestedReport != null) {
+        cacheResult(requestedReport);
+      }
+      closeSession(session);
+    }
+  }
+  return requestedReport;
+}

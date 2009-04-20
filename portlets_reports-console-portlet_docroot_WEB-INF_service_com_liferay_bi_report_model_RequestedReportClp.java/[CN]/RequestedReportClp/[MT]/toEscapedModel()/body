@@ -1,0 +1,21 @@
+{
+  if (isEscapedModel()) {
+    return this;
+  }
+ else {
+    RequestedReport model=new RequestedReportClp();
+    model.setEscapedModel(true);
+    model.setUuid(HtmlUtil.escape(getUuid()));
+    model.setRequestId(getRequestId());
+    model.setCompanyId(getCompanyId());
+    model.setGroupId(getGroupId());
+    model.setUserId(getUserId());
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setDefinitionId(getDefinitionId());
+    model.setRequestStatus(HtmlUtil.escape(getRequestStatus()));
+    model.setIsSchedule(getIsSchedule());
+    model=(RequestedReport)Proxy.newProxyInstance(RequestedReport.class.getClassLoader(),new Class[]{RequestedReport.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

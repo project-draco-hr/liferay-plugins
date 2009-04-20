@@ -1,0 +1,24 @@
+{
+  ReportDefinition definition=reportDefinitionPersistence.fetchByPrimaryKey(definitionId);
+  String[] existingFiles=definition.getAttachmentsFiles();
+  byte[] definitionFile=DLServiceUtil.getFile(definition.getCompanyId(),repositoryId,existingFiles[0]);
+  ReportDesignRetriever retriever=new MemoryReportDesignRetriever(definition.getDefinitionName(),definitionFile);
+  ReportRequest request=new ReportRequest(retriever,definition.getReportFormat(),null,null);
+  Date now=new Date();
+  long requestId=CounterLocalServiceUtil.increment();
+  RequestedReport requestedReport=requestedReportLocalService.createRequestedReport(requestId);
+  requestedReport.setCompanyId(companyId);
+  requestedReport.setGroupId(groupId);
+  requestedReport.setDefinitionId(definitionId);
+  requestedReport.setUserId(userId);
+  requestedReport.setIsSchedule(false);
+  requestedReport.setRequestStatus(RequestStatus.PENDING.toString());
+  requestedReport.setCreateDate(now);
+  requestedReport.setModifiedDate(now);
+  requestedReportLocalService.addRequestedReport(requestedReport);
+  Message message=new Message();
+  message.setPayload(request);
+  message.setResponseId(String.valueOf(requestedReport.getRequestId()));
+  message.setResponseDestination("liferay/report_responses");
+  MessageBusUtil.sendMessage("liferay/report_requests",message);
+}

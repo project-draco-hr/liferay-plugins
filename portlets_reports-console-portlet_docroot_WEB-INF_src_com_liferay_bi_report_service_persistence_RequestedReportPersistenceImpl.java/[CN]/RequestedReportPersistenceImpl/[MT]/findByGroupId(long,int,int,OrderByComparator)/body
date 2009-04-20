@@ -1,0 +1,42 @@
+{
+  int count=countByGroupId(groupId);
+  if (count == 0) {
+    return Collections.EMPTY_LIST;
+  }
+  Object[] finderArgs=new Object[]{new Long(groupId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<RequestedReport> list=(List<RequestedReport>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_GROUPID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.bi.report.model.RequestedReport WHERE ");
+      query.append("groupId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("modifiedDate ASC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(groupId);
+      list=(List<RequestedReport>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<RequestedReport>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_GROUPID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}
