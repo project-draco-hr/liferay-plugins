@@ -1,16 +1,25 @@
 {
+  boolean isNew=status.isNew();
+  StatusModelImpl statusModelImpl=(StatusModelImpl)status;
   Session session=null;
   try {
     session=openSession();
     BatchSessionUtil.update(session,status,merge);
     status.setNew(false);
-    return status;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Status.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,status.getPrimaryKey(),status);
+  if (!isNew && (status.getUserId() != statusModelImpl.getOriginalUserId())) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{new Long(statusModelImpl.getOriginalUserId())});
+  }
+  if (isNew || (status.getUserId() != statusModelImpl.getOriginalUserId())) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{new Long(status.getUserId())},status);
+  }
+  return status;
 }

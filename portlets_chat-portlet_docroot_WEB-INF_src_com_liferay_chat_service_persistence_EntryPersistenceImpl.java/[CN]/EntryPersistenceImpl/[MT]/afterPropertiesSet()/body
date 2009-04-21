@@ -2,9 +2,9 @@
   String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.chat.model.Entry")));
   if (listenerClassNames.length > 0) {
     try {
-      List<ModelListener> listenersList=new ArrayList<ModelListener>();
+      List<ModelListener<Entry>> listenersList=new ArrayList<ModelListener<Entry>>();
       for (      String listenerClassName : listenerClassNames) {
-        listenersList.add((ModelListener)Class.forName(listenerClassName).newInstance());
+        listenersList.add((ModelListener<Entry>)Class.forName(listenerClassName).newInstance());
       }
       listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
     }

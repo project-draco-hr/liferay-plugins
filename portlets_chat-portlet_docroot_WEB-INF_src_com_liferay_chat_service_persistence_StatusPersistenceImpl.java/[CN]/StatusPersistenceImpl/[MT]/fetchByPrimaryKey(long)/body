@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (Status)session.get(StatusImpl.class,new Long(statusId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  Status status=(Status)EntityCacheUtil.getResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId,this);
+  if (status == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      status=(Status)session.get(StatusImpl.class,new Long(statusId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (status != null) {
+        cacheResult(status);
+      }
+      closeSession(session);
+    }
   }
+  return status;
 }

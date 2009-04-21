@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=EntryModelImpl.CACHE_ENABLED;
-  String finderClassName=Entry.class.getName();
-  String finderMethodName="findByFromUserId";
-  String[] finderParams=new String[]{Long.class.getName()};
   Object[] finderArgs=new Object[]{new Long(fromUserId)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<Entry> list=(List<Entry>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_FROMUSERID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -21,18 +14,19 @@
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(fromUserId);
-      List<Entry> list=q.list();
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=q.list();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<Entry>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_FROMUSERID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<Entry>)result;
-  }
+  return list;
 }
