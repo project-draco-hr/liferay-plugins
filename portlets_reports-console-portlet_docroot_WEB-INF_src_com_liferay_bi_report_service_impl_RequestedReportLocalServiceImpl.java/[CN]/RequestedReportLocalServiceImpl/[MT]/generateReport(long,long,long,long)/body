@@ -1,0 +1,21 @@
+{
+  ReportDefinition definition=reportDefinitionPersistence.fetchByPrimaryKey(definitionId);
+  ReportRequest request=ReportUtil.getReportRequest(definition);
+  Date now=new Date();
+  long requestId=CounterLocalServiceUtil.increment();
+  RequestedReport requestedReport=requestedReportLocalService.createRequestedReport(requestId);
+  requestedReport.setCompanyId(companyId);
+  requestedReport.setGroupId(groupId);
+  requestedReport.setDefinitionId(definitionId);
+  requestedReport.setUserId(userId);
+  requestedReport.setIsSchedule(false);
+  requestedReport.setRequestStatus(RequestStatus.PENDING.toString());
+  requestedReport.setCreateDate(now);
+  requestedReport.setModifiedDate(now);
+  requestedReportLocalService.addRequestedReport(requestedReport);
+  Message message=new Message();
+  message.setPayload(request);
+  message.setResponseId(String.valueOf(requestId));
+  message.setResponseDestination(REPORT_RESPONSES);
+  MessageBusUtil.sendMessage(REPORT_REQUEST,message);
+}

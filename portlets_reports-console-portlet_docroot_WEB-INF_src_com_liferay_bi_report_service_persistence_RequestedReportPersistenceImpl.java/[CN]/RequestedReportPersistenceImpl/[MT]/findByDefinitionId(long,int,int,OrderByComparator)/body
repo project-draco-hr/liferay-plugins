@@ -1,6 +1,6 @@
 {
-  Object[] finderArgs=new Object[]{new Long(definitionId)};
-  List<RequestedReport> list=(List<RequestedReport>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_DEFINITIONID,finderArgs,this);
+  Object[] finderArgs=new Object[]{new Long(definitionId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<RequestedReport> list=(List<RequestedReport>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_DEFINITIONID,finderArgs,this);
   if (list == null) {
     Session session=null;
     try {
@@ -9,12 +9,18 @@
       query.append("FROM com.liferay.bi.report.model.RequestedReport WHERE ");
       query.append("definitionId = ?");
       query.append(" ");
-      query.append("ORDER BY ");
-      query.append("modifiedDate ASC");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        query.append(obc.getOrderBy());
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("modifiedDate ASC");
+      }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(definitionId);
-      list=q.list();
+      list=(List<RequestedReport>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {
       throw processException(e);
@@ -24,7 +30,7 @@
         list=new ArrayList<RequestedReport>();
       }
       cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_DEFINITIONID,finderArgs,list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_DEFINITIONID,finderArgs,list);
       closeSession(session);
     }
   }

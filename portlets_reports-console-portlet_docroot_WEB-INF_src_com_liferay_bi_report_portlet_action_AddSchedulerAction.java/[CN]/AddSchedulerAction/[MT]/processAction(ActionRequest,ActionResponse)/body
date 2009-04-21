@@ -1,0 +1,27 @@
+{
+  long definitionId=ParamUtil.getLong(actionRequest,"definitionId");
+  int recurrenceType=ParamUtil.getInteger(actionRequest,"recurrenceType");
+  String description=ParamUtil.getString(actionRequest,"description");
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long userId=themeDisplay.getUserId();
+  try {
+    Calendar startCal=ReportUtil.getDate(actionRequest,"schedulerStartDate",false);
+    String cronText=ReportUtil.getCronText(actionRequest,startCal,false,recurrenceType);
+    Date schedulerEndDate=null;
+    int endDateType=ParamUtil.getInteger(actionRequest,"endDateType");
+    if (endDateType == 1) {
+      Calendar endCal=ReportUtil.getDate(actionRequest,"schedulerEndDate",false);
+      schedulerEndDate=endCal.getTime();
+    }
+    RequestedReportLocalServiceUtil.addScheduler(definitionId,cronText,startCal.getTime(),schedulerEndDate,description,userId);
+    SessionMessages.add(actionRequest,"request_processed");
+  }
+ catch (  PortalException e) {
+    SessionErrors.add(actionRequest,e.getClass().getName());
+  }
+catch (  SystemException e) {
+    _log.error(e);
+    throw new PortletException("Unable to add the definition to schduler. ",e);
+  }
+  return false;
+}
