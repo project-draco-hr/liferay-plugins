@@ -1,8 +1,8 @@
 {
   ReportDefinition definition=reportDefinitionPersistence.fetchByPrimaryKey(definitionId);
   String[] existingFiles=definition.getAttachmentsFiles();
-  byte[] definitionFile=DLServiceUtil.getFile(definition.getCompanyId(),repositoryId,existingFiles[0]);
-  ReportDesignRetriever retriever=new MemoryReportDesignRetriever(definition.getDefinitionName(),definitionFile);
+  byte[] definitionFile=DLServiceUtil.getFile(definition.getCompanyId(),CompanyConstants.SYSTEM,existingFiles[0]);
+  ReportDesignRetriever retriever=new MemoryReportDesignRetriever(definition.getReportName() + StringPool.PERIOD + definition.getReportFormat(),definitionFile);
   ReportRequest request=new ReportRequest(retriever,definition.getReportFormat(),null,null);
   Date now=new Date();
   long requestId=CounterLocalServiceUtil.increment();
@@ -18,7 +18,7 @@
   requestedReportLocalService.addRequestedReport(requestedReport);
   Message message=new Message();
   message.setPayload(request);
-  message.setResponseId(String.valueOf(requestedReport.getRequestId()));
+  message.setResponseId(String.valueOf(requestId));
   message.setResponseDestination("liferay/report_responses");
   MessageBusUtil.sendMessage("liferay/report_requests",message);
 }

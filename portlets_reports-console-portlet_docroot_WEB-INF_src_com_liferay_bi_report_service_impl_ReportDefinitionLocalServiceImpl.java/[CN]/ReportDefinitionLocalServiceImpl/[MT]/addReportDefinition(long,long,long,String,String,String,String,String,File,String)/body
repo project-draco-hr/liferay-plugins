@@ -13,16 +13,17 @@
   if (Validator.isNull(fileName)) {
     throw new DefinitionFileException();
   }
+  definition.setReportName(StringUtil.extractFirst(fileName,StringPool.PERIOD));
   try {
-    DLServiceUtil.addDirectory(companyId,repositoryId,definition.getAttachmentsDir());
-  }
- catch (  DuplicateDirectoryException dde) {
-  }
-  try {
-    DLServiceUtil.addFile(companyId,portletId,groupId,repositoryId,definition.getAttachmentsDir() + StringPool.SLASH + fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
+    try {
+      DLServiceUtil.addDirectory(companyId,CompanyConstants.SYSTEM,definition.getAttachmentsDir());
+    }
+ catch (    DuplicateDirectoryException dde) {
+    }
+    DLServiceUtil.addFile(companyId,CompanyConstants.SYSTEM_STRING,groupId,CompanyConstants.SYSTEM,definition.getAttachmentsDir() + StringPool.SLASH + fileName,0,StringPool.BLANK,new Date(),new String[0],new String[0],file);
   }
  catch (  PortalException e) {
-    DLServiceUtil.deleteDirectory(companyId,portletId,repositoryId,definition.getAttachmentsDir());
+    DLServiceUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,definition.getAttachmentsDir());
     throw new DefinitionFileException();
   }
   return addReportDefinition(definition);

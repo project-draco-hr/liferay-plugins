@@ -9,9 +9,9 @@
   if (Validator.isNull(fileName)) {
     throw new DefinitionFileException();
   }
-  fileName=definition.getAttachmentsDir() + StringPool.SLASH + fileName;
+  definition.setReportName(StringUtil.extractFirst(fileName,StringPool.PERIOD));
   try {
-    DLServiceUtil.addFile(definition.getCompanyId(),portletId,definition.getGroupId(),repositoryId,fileName,fileEntryId,properties,modifiedDate,tagsCategories,tagsEntries,file);
+    DLServiceUtil.addFile(definition.getCompanyId(),CompanyConstants.SYSTEM_STRING,definition.getGroupId(),CompanyConstants.SYSTEM,definition.getAttachmentsDir() + StringPool.SLASH + fileName,0,StringPool.BLANK,new Date(),new String[0],new String[0],file);
   }
  catch (  DuplicateFileException e) {
   }
@@ -21,7 +21,7 @@ catch (  PortalException e) {
   String[] existingFiles=definition.getAttachmentsFiles();
   for (  String existingFile : existingFiles) {
     if (fileName != existingFile) {
-      DLServiceUtil.deleteFile(definition.getCompanyId(),portletId,repositoryId,existingFile);
+      DLServiceUtil.deleteFile(definition.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,existingFile);
     }
   }
   return updateReportDefinition(definition);

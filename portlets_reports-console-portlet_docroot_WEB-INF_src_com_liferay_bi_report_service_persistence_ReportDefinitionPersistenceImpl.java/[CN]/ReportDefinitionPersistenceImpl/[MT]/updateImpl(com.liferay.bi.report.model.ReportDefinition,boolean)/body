@@ -1,5 +1,6 @@
 {
   boolean isNew=reportDefinition.isNew();
+  ReportDefinitionModelImpl reportDefinitionModelImpl=(ReportDefinitionModelImpl)reportDefinition;
   if (Validator.isNull(reportDefinition.getUuid())) {
     String uuid=PortalUUIDUtil.generate();
     reportDefinition.setUuid(uuid);
@@ -18,7 +19,6 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(ReportDefinitionModelImpl.ENTITY_CACHE_ENABLED,ReportDefinitionImpl.class,reportDefinition.getPrimaryKey(),reportDefinition);
-  ReportDefinitionModelImpl reportDefinitionModelImpl=(ReportDefinitionModelImpl)reportDefinition;
   if (!isNew && (!reportDefinition.getUuid().equals(reportDefinitionModelImpl.getOriginalUuid()) || (reportDefinition.getGroupId() != reportDefinitionModelImpl.getOriginalGroupId()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{reportDefinitionModelImpl.getOriginalUuid(),new Long(reportDefinitionModelImpl.getOriginalGroupId())});
   }

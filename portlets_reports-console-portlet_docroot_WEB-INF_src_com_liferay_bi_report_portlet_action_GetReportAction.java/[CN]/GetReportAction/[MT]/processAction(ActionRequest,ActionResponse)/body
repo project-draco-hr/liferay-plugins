@@ -1,0 +1,25 @@
+{
+  long requestId=ParamUtil.getLong(actionRequest,"requestId");
+  if (requestId == -1) {
+    SessionErrors.add(actionRequest,NoSuchRequestedReportException.class.getName());
+    return false;
+  }
+  try {
+    RequestedReport requestedReport=RequestedReportLocalServiceUtil.getRequestedReport(requestId);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
+    String[] existingFiles=requestedReport.getAttachmentsFiles();
+    byte[] report=null;
+    String fileName=null;
+    for (    String existingFile : existingFiles) {
+      fileName=StringUtil.extractLast(existingFile,StringPool.SLASH);
+      report=DLServiceUtil.getFile(requestedReport.getCompanyId(),0,existingFile);
+      break;
+    }
+    ServletResponseUtil.sendFile(response,fileName,report);
+    return true;
+  }
+ catch (  Exception e) {
+    _log.error(e);
+    throw new PortletException("Unable to get the report",e);
+  }
+}

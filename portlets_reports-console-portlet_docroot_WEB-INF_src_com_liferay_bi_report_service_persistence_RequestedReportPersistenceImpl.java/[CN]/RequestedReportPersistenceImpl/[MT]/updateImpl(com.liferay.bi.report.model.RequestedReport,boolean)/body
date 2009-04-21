@@ -1,5 +1,6 @@
 {
   boolean isNew=requestedReport.isNew();
+  RequestedReportModelImpl requestedReportModelImpl=(RequestedReportModelImpl)requestedReport;
   if (Validator.isNull(requestedReport.getUuid())) {
     String uuid=PortalUUIDUtil.generate();
     requestedReport.setUuid(uuid);
@@ -18,7 +19,6 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(RequestedReportModelImpl.ENTITY_CACHE_ENABLED,RequestedReportImpl.class,requestedReport.getPrimaryKey(),requestedReport);
-  RequestedReportModelImpl requestedReportModelImpl=(RequestedReportModelImpl)requestedReport;
   if (!isNew && (!requestedReport.getUuid().equals(requestedReportModelImpl.getOriginalUuid()) || (requestedReport.getGroupId() != requestedReportModelImpl.getOriginalGroupId()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{requestedReportModelImpl.getOriginalUuid(),new Long(requestedReportModelImpl.getOriginalGroupId())});
   }
