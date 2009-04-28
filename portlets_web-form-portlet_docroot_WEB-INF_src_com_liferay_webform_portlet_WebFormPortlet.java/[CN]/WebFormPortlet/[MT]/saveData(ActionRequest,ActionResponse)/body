@@ -4,6 +4,7 @@
   boolean requireCaptcha=GetterUtil.getBoolean(preferences.getValue("requireCaptcha",StringPool.BLANK));
   String successURL=GetterUtil.getString(preferences.getValue("successURL",StringPool.BLANK));
   boolean sendAsEmail=GetterUtil.getBoolean(preferences.getValue("sendAsEmail",StringPool.BLANK));
+  boolean sendAutomaticResponse=GetterUtil.getBoolean(preferences.getValue("sendAutomaticResponse",StringPool.BLANK));
   boolean saveToDatabase=GetterUtil.getBoolean(preferences.getValue("saveToDatabase",StringPool.BLANK));
   String databaseTableName=GetterUtil.getString(preferences.getValue("databaseTableName",StringPool.BLANK));
   boolean saveToFile=GetterUtil.getBoolean(preferences.getValue("saveToFile",StringPool.BLANK));
@@ -50,6 +51,9 @@
     }
     if (saveToFile) {
       fileSuccess=saveFile(fieldsMap,fileName);
+    }
+    if (sendAutomaticResponse) {
+      sendAutomaticResponse(fieldsMap,preferences);
     }
     if (emailSuccess && databaseSuccess && fileSuccess) {
       SessionMessages.add(actionRequest,"success");
