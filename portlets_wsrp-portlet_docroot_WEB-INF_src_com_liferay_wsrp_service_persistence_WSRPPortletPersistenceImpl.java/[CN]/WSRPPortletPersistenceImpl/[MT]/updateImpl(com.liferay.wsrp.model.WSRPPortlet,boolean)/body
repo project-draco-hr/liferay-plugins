@@ -1,16 +1,25 @@
 {
+  boolean isNew=wsrpPortlet.isNew();
   Session session=null;
   try {
     session=openSession();
     BatchSessionUtil.update(session,wsrpPortlet,merge);
     wsrpPortlet.setNew(false);
-    return wsrpPortlet;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(WSRPPortlet.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(WSRPPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPPortletImpl.class,wsrpPortlet.getPrimaryKey(),wsrpPortlet);
+  WSRPPortletModelImpl wsrpPortletModelImpl=(WSRPPortletModelImpl)wsrpPortlet;
+  if (!isNew && (!wsrpPortlet.getName().equals(wsrpPortletModelImpl.getOriginalName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTLETNAME,new Object[]{wsrpPortletModelImpl.getOriginalName()});
+  }
+  if (isNew || (!wsrpPortlet.getName().equals(wsrpPortletModelImpl.getOriginalName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTLETNAME,new Object[]{wsrpPortlet.getName()},wsrpPortlet);
+  }
+  return wsrpPortlet;
 }

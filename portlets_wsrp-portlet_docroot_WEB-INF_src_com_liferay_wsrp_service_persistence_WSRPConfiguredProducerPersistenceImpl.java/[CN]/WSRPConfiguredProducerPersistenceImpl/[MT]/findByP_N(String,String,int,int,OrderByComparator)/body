@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=WSRPConfiguredProducerModelImpl.CACHE_ENABLED;
-  String finderClassName=WSRPConfiguredProducer.class.getName();
-  String finderMethodName="findByP_N";
-  String[] finderParams=new String[]{String.class.getName(),String.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
   Object[] finderArgs=new Object[]{portalId,namespace,String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<WSRPConfiguredProducer> list=(List<WSRPConfiguredProducer>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_P_N,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -40,18 +33,19 @@
       if (namespace != null) {
         qPos.add(namespace);
       }
-      List<WSRPConfiguredProducer> list=(List<WSRPConfiguredProducer>)QueryUtil.list(q,getDialect(),start,end);
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=(List<WSRPConfiguredProducer>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<WSRPConfiguredProducer>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_P_N,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<WSRPConfiguredProducer>)result;
-  }
+  return list;
 }

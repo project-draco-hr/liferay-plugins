@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (WSRPProducer)session.get(WSRPProducerImpl.class,new Long(producerId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  WSRPProducer wsrpProducer=(WSRPProducer)EntityCacheUtil.getResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,producerId,this);
+  if (wsrpProducer == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      wsrpProducer=(WSRPProducer)session.get(WSRPProducerImpl.class,new Long(producerId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (wsrpProducer != null) {
+        cacheResult(wsrpProducer);
+      }
+      closeSession(session);
+    }
   }
+  return wsrpProducer;
 }

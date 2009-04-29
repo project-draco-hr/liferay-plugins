@@ -2,7 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (BatchSessionUtil.isEnabled()) {
+    if (wsrpPortlet.isCachedModel() || BatchSessionUtil.isEnabled()) {
       Object staleObject=session.get(WSRPPortletImpl.class,wsrpPortlet.getPrimaryKeyObj());
       if (staleObject != null) {
         session.evict(staleObject);
@@ -10,13 +10,16 @@
     }
     session.delete(wsrpPortlet);
     session.flush();
-    return wsrpPortlet;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(WSRPPortlet.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  WSRPPortletModelImpl wsrpPortletModelImpl=(WSRPPortletModelImpl)wsrpPortlet;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTLETNAME,new Object[]{wsrpPortletModelImpl.getOriginalName()});
+  EntityCacheUtil.removeResult(WSRPPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPPortletImpl.class,wsrpPortlet.getPrimaryKey());
+  return wsrpPortlet;
 }
