@@ -10,38 +10,52 @@
       categories.add(category);
     }
     List entries=new ArrayList();
+    int prevStart=-1;
+    int moreStart=-1;
     matcher=_queryPattern.matcher(_url);
     if (matcher.find()) {
       matcher=_queryEntriesPattern.matcher(html);
       while (matcher.find()) {
         String gadgetId=matcher.group(1);
         String name=matcher.group(3);
-        String image=matcher.group(2);
+        String image=HttpUtil.decodeURL(matcher.group(2));
         GGEntry entry=new GGEntry(gadgetId,name,image);
         entries.add(entry);
       }
       matcher=_queryPaginationPattern.matcher(html);
+      if (matcher.find()) {
+        int start=GetterUtil.getInteger(matcher.group(1));
+        int end=GetterUtil.getInteger(matcher.group(2));
+        prevStart=2 * start - end - 2;
+        moreStart=end;
+      }
     }
  else {
       matcher=_categoriesEntriesPattern.matcher(html);
       while (matcher.find()) {
-        String gadgetId=matcher.group(2);
-        String name=matcher.group(1);
-        String image=matcher.group(3);
+        String gadgetId=matcher.group(1);
+        String name=matcher.group(2);
+        String image=HttpUtil.decodeURL(matcher.group(3));
         GGEntry entry=new GGEntry(gadgetId,name,image);
         entries.add(entry);
       }
-      matcher=_categoriesPaginationPattern.matcher(html);
+      matcher=_paginationPattern.matcher(html);
+      if (matcher.find()) {
+        String paginationHtml=matcher.group(1);
+        matcher=_paginationMorePattern.matcher(paginationHtml);
+        if (matcher.find()) {
+          moreStart=GetterUtil.getInteger(matcher.group(1));
+        }
+        matcher=_paginationPrevPattern.matcher(paginationHtml);
+        if (matcher.find()) {
+          prevStart=GetterUtil.getInteger(matcher.group(1));
+          if (prevStart == moreStart) {
+            prevStart=0;
+          }
+        }
+      }
     }
-    int start=0;
-    int end=0;
-    int total=0;
-    if (matcher.find()) {
-      start=GetterUtil.getInteger(matcher.group(1));
-      end=GetterUtil.getInteger(matcher.group(2));
-      total=GetterUtil.getInteger(matcher.group(3));
-    }
-    GGPagination pagination=new GGPagination(GGPagination.DEFAULT_DELTA,start,end,total);
+    GGPagination pagination=new GGPagination(prevStart,moreStart);
     return new GGData(categories,entries,pagination);
   }
  catch (  Exception e) {
