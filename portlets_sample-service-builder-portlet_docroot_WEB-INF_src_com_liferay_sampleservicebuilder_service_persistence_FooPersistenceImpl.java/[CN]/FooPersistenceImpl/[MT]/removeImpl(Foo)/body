@@ -2,7 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (BatchSessionUtil.isEnabled()) {
+    if (foo.isCachedModel() || BatchSessionUtil.isEnabled()) {
       Object staleObject=session.get(FooImpl.class,foo.getPrimaryKeyObj());
       if (staleObject != null) {
         session.evict(staleObject);
@@ -10,13 +10,14 @@
     }
     session.delete(foo);
     session.flush();
-    return foo;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Foo.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey());
+  return foo;
 }

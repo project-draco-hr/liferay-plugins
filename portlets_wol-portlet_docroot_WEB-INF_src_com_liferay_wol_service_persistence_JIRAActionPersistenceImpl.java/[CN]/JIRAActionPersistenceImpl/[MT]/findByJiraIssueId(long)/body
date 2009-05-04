@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=JIRAActionModelImpl.CACHE_ENABLED;
-  String finderClassName=JIRAAction.class.getName();
-  String finderMethodName="findByJiraIssueId";
-  String[] finderParams=new String[]{Long.class.getName()};
   Object[] finderArgs=new Object[]{new Long(jiraIssueId)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<JIRAAction> list=(List<JIRAAction>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_JIRAISSUEID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -21,18 +14,19 @@
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(jiraIssueId);
-      List<JIRAAction> list=q.list();
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=q.list();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<JIRAAction>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_JIRAISSUEID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<JIRAAction>)result;
-  }
+  return list;
 }

@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (JIRAChangeItem)session.get(JIRAChangeItemImpl.class,new Long(jiraChangeItemId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  JIRAChangeItem jiraChangeItem=(JIRAChangeItem)EntityCacheUtil.getResult(JIRAChangeItemModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeItemImpl.class,jiraChangeItemId,this);
+  if (jiraChangeItem == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraChangeItem=(JIRAChangeItem)session.get(JIRAChangeItemImpl.class,new Long(jiraChangeItemId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (jiraChangeItem != null) {
+        cacheResult(jiraChangeItem);
+      }
+      closeSession(session);
+    }
   }
+  return jiraChangeItem;
 }

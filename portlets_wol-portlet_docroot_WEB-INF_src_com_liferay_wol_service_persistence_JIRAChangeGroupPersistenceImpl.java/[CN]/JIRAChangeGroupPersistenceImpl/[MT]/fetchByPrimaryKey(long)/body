@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (JIRAChangeGroup)session.get(JIRAChangeGroupImpl.class,new Long(jiraChangeGroupId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  JIRAChangeGroup jiraChangeGroup=(JIRAChangeGroup)EntityCacheUtil.getResult(JIRAChangeGroupModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeGroupImpl.class,jiraChangeGroupId,this);
+  if (jiraChangeGroup == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraChangeGroup=(JIRAChangeGroup)session.get(JIRAChangeGroupImpl.class,new Long(jiraChangeGroupId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (jiraChangeGroup != null) {
+        cacheResult(jiraChangeGroup);
+      }
+      closeSession(session);
+    }
   }
+  return jiraChangeGroup;
 }

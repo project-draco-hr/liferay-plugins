@@ -4,13 +4,14 @@
     session=openSession();
     BatchSessionUtil.update(session,svnRevision,merge);
     svnRevision.setNew(false);
-    return svnRevision;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(SVNRevision.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,svnRevision.getPrimaryKey(),svnRevision);
+  return svnRevision;
 }

@@ -1,0 +1,56 @@
+{
+  Object[] finderArgs=new Object[]{new Long(userId),new Long(meetupsEntryId)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.wol.model.MeetupsRegistration WHERE ");
+      query.append("userId = ?");
+      query.append(" AND ");
+      query.append("meetupsEntryId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("modifiedDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      qPos.add(meetupsEntryId);
+      List<MeetupsRegistration> list=q.list();
+      result=list;
+      MeetupsRegistration meetupsRegistration=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,list);
+      }
+ else {
+        meetupsRegistration=list.get(0);
+        cacheResult(meetupsRegistration);
+        if ((meetupsRegistration.getUserId() != userId) || (meetupsRegistration.getMeetupsEntryId() != meetupsEntryId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,list);
+        }
+      }
+      return meetupsRegistration;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,new ArrayList<MeetupsRegistration>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List) {
+      return null;
+    }
+ else {
+      return (MeetupsRegistration)result;
+    }
+  }
+}

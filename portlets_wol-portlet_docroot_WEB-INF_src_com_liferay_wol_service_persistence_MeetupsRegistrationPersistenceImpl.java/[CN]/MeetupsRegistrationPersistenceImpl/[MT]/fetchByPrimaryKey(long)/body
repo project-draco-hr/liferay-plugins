@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (MeetupsRegistration)session.get(MeetupsRegistrationImpl.class,new Long(meetupsRegistrationId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  MeetupsRegistration meetupsRegistration=(MeetupsRegistration)EntityCacheUtil.getResult(MeetupsRegistrationModelImpl.ENTITY_CACHE_ENABLED,MeetupsRegistrationImpl.class,meetupsRegistrationId,this);
+  if (meetupsRegistration == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      meetupsRegistration=(MeetupsRegistration)session.get(MeetupsRegistrationImpl.class,new Long(meetupsRegistrationId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (meetupsRegistration != null) {
+        cacheResult(meetupsRegistration);
+      }
+      closeSession(session);
+    }
   }
+  return meetupsRegistration;
 }

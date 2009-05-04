@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=PresenceModelImpl.CACHE_ENABLED;
-  String finderClassName=Presence.class.getName();
-  String finderMethodName="findByU_O";
-  String[] finderParams=new String[]{Long.class.getName(),Boolean.class.getName()};
   Object[] finderArgs=new Object[]{new Long(userId),Boolean.valueOf(online)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<Presence> list=(List<Presence>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_U_O,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -22,18 +15,19 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(userId);
       qPos.add(online);
-      List<Presence> list=q.list();
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=q.list();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<Presence>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_U_O,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<Presence>)result;
-  }
+  return list;
 }

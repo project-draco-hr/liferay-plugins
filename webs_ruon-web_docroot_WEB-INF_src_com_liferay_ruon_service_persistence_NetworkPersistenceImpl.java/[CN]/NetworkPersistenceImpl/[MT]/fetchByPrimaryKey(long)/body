@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (Network)session.get(NetworkImpl.class,new Long(networkId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  Network network=(Network)EntityCacheUtil.getResult(NetworkModelImpl.ENTITY_CACHE_ENABLED,NetworkImpl.class,networkId,this);
+  if (network == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      network=(Network)session.get(NetworkImpl.class,new Long(networkId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (network != null) {
+        cacheResult(network);
+      }
+      closeSession(session);
+    }
   }
+  return network;
 }

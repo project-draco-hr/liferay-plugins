@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
-  String finderClassName=JIRAIssue.class.getName();
-  String finderMethodName="findByReporterJiraUserId";
-  String[] finderParams=new String[]{String.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
   Object[] finderArgs=new Object[]{reporterJiraUserId,String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_REPORTERJIRAUSERID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -34,18 +27,19 @@
       if (reporterJiraUserId != null) {
         qPos.add(reporterJiraUserId);
       }
-      List<JIRAIssue> list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<JIRAIssue>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_REPORTERJIRAUSERID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<JIRAIssue>)result;
-  }
+  return list;
 }

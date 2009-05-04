@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=SVNRevisionModelImpl.CACHE_ENABLED;
-  String finderClassName=SVNRevision.class.getName();
-  String finderMethodName="findBySVNUserId";
-  String[] finderParams=new String[]{String.class.getName()};
   Object[] finderArgs=new Object[]{svnUserId};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<SVNRevision> list=(List<SVNRevision>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_SVNUSERID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -28,18 +21,19 @@
       if (svnUserId != null) {
         qPos.add(svnUserId);
       }
-      List<SVNRevision> list=q.list();
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=q.list();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<SVNRevision>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_SVNUSERID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<SVNRevision>)result;
-  }
+  return list;
 }

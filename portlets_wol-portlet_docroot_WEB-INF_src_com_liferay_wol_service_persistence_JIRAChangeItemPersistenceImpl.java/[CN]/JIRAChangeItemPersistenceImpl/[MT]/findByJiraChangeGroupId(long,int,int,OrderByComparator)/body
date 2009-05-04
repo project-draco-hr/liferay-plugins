@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=JIRAChangeItemModelImpl.CACHE_ENABLED;
-  String finderClassName=JIRAChangeItem.class.getName();
-  String finderMethodName="findByJiraChangeGroupId";
-  String[] finderParams=new String[]{Long.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
   Object[] finderArgs=new Object[]{new Long(jiraChangeGroupId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<JIRAChangeItem> list=(List<JIRAChangeItem>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_JIRACHANGEGROUPID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -23,18 +16,19 @@
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(jiraChangeGroupId);
-      List<JIRAChangeItem> list=(List<JIRAChangeItem>)QueryUtil.list(q,getDialect(),start,end);
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=(List<JIRAChangeItem>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<JIRAChangeItem>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_JIRACHANGEGROUPID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<JIRAChangeItem>)result;
-  }
+  return list;
 }

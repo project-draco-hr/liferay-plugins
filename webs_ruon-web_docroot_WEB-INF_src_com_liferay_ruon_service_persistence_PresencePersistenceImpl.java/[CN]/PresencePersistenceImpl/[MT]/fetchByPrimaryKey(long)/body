@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (Presence)session.get(PresenceImpl.class,new Long(presenceId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  Presence presence=(Presence)EntityCacheUtil.getResult(PresenceModelImpl.ENTITY_CACHE_ENABLED,PresenceImpl.class,presenceId,this);
+  if (presence == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      presence=(Presence)session.get(PresenceImpl.class,new Long(presenceId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (presence != null) {
+        cacheResult(presence);
+      }
+      closeSession(session);
+    }
   }
+  return presence;
 }

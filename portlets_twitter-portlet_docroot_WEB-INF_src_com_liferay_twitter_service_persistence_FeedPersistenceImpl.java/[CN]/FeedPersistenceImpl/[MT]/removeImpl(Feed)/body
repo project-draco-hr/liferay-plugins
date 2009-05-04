@@ -2,7 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (BatchSessionUtil.isEnabled()) {
+    if (feed.isCachedModel() || BatchSessionUtil.isEnabled()) {
       Object staleObject=session.get(FeedImpl.class,feed.getPrimaryKeyObj());
       if (staleObject != null) {
         session.evict(staleObject);
@@ -10,13 +10,17 @@
     }
     session.delete(feed);
     session.flush();
-    return feed;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Feed.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FeedModelImpl feedModelImpl=(FeedModelImpl)feed;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,new Object[]{new Long(feedModelImpl.getOriginalTwitterUserId())});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,new Object[]{feedModelImpl.getOriginalTwitterScreenName()});
+  EntityCacheUtil.removeResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey());
+  return feed;
 }

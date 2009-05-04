@@ -4,13 +4,14 @@
     session=openSession();
     BatchSessionUtil.update(session,jiraChangeItem,merge);
     jiraChangeItem.setNew(false);
-    return jiraChangeItem;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(JIRAChangeItem.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(JIRAChangeItemModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKey(),jiraChangeItem);
+  return jiraChangeItem;
 }

@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (Feed)session.get(FeedImpl.class,new Long(feedId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  Feed feed=(Feed)EntityCacheUtil.getResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId,this);
+  if (feed == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      feed=(Feed)session.get(FeedImpl.class,new Long(feedId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (feed != null) {
+        cacheResult(feed);
+      }
+      closeSession(session);
+    }
   }
+  return feed;
 }

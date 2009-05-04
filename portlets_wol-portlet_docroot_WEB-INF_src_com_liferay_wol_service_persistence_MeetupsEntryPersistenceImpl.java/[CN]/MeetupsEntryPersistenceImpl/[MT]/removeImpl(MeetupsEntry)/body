@@ -2,7 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (BatchSessionUtil.isEnabled()) {
+    if (meetupsEntry.isCachedModel() || BatchSessionUtil.isEnabled()) {
       Object staleObject=session.get(MeetupsEntryImpl.class,meetupsEntry.getPrimaryKeyObj());
       if (staleObject != null) {
         session.evict(staleObject);
@@ -10,13 +10,14 @@
     }
     session.delete(meetupsEntry);
     session.flush();
-    return meetupsEntry;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(MeetupsEntry.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(MeetupsEntryModelImpl.ENTITY_CACHE_ENABLED,MeetupsEntryImpl.class,meetupsEntry.getPrimaryKey());
+  return meetupsEntry;
 }

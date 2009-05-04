@@ -1,16 +1,31 @@
 {
+  boolean isNew=feed.isNew();
+  FeedModelImpl feedModelImpl=(FeedModelImpl)feed;
   Session session=null;
   try {
     session=openSession();
     BatchSessionUtil.update(session,feed,merge);
     feed.setNew(false);
-    return feed;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Feed.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey(),feed);
+  if (!isNew && (feed.getTwitterUserId() != feedModelImpl.getOriginalTwitterUserId())) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,new Object[]{new Long(feedModelImpl.getOriginalTwitterUserId())});
+  }
+  if (isNew || (feed.getTwitterUserId() != feedModelImpl.getOriginalTwitterUserId())) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,new Object[]{new Long(feed.getTwitterUserId())},feed);
+  }
+  if (!isNew && (!feed.getTwitterScreenName().equals(feedModelImpl.getOriginalTwitterScreenName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,new Object[]{feedModelImpl.getOriginalTwitterScreenName()});
+  }
+  if (isNew || (!feed.getTwitterScreenName().equals(feedModelImpl.getOriginalTwitterScreenName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,new Object[]{feed.getTwitterScreenName()},feed);
+  }
+  return feed;
 }

@@ -1,0 +1,54 @@
+{
+  Object[] finderArgs=new Object[]{new Long(userId),new Long(networkId)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.ruon.model.Presence WHERE ");
+      query.append("userId = ?");
+      query.append(" AND ");
+      query.append("networkId = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      qPos.add(networkId);
+      List<Presence> list=q.list();
+      result=list;
+      Presence presence=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,list);
+      }
+ else {
+        presence=list.get(0);
+        cacheResult(presence);
+        if ((presence.getUserId() != userId) || (presence.getNetworkId() != networkId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,list);
+        }
+      }
+      return presence;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,new ArrayList<Presence>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List) {
+      return null;
+    }
+ else {
+      return (Presence)result;
+    }
+  }
+}

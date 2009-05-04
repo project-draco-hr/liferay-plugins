@@ -2,7 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    if (BatchSessionUtil.isEnabled()) {
+    if (jiraChangeItem.isCachedModel() || BatchSessionUtil.isEnabled()) {
       Object staleObject=session.get(JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKeyObj());
       if (staleObject != null) {
         session.evict(staleObject);
@@ -10,13 +10,14 @@
     }
     session.delete(jiraChangeItem);
     session.flush();
-    return jiraChangeItem;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(JIRAChangeItem.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(JIRAChangeItemModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKey());
+  return jiraChangeItem;
 }

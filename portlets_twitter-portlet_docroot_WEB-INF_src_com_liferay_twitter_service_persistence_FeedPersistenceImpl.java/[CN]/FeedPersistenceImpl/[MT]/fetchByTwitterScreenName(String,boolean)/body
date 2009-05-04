@@ -1,0 +1,58 @@
+{
+  Object[] finderArgs=new Object[]{twitterScreenName};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.twitter.model.Feed WHERE ");
+      if (twitterScreenName == null) {
+        query.append("twitterScreenName IS NULL");
+      }
+ else {
+        query.append("twitterScreenName = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (twitterScreenName != null) {
+        qPos.add(twitterScreenName);
+      }
+      List<Feed> list=q.list();
+      result=list;
+      Feed feed=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,list);
+      }
+ else {
+        feed=list.get(0);
+        cacheResult(feed);
+        if ((feed.getTwitterScreenName() == null) || !feed.getTwitterScreenName().equals(twitterScreenName)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,list);
+        }
+      }
+      return feed;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,new ArrayList<Feed>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List) {
+      return null;
+    }
+ else {
+      return (Feed)result;
+    }
+  }
+}

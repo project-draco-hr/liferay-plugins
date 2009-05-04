@@ -1,0 +1,51 @@
+{
+  Object[] finderArgs=new Object[]{new Long(twitterUserId)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("FROM com.liferay.twitter.model.Feed WHERE ");
+      query.append("twitterUserId = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(twitterUserId);
+      List<Feed> list=q.list();
+      result=list;
+      Feed feed=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,list);
+      }
+ else {
+        feed=list.get(0);
+        cacheResult(feed);
+        if ((feed.getTwitterUserId() != twitterUserId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,list);
+        }
+      }
+      return feed;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,new ArrayList<Feed>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List) {
+      return null;
+    }
+ else {
+      return (Feed)result;
+    }
+  }
+}

@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=JIRAIssueModelImpl.CACHE_ENABLED;
-  String finderClassName=JIRAIssue.class.getName();
-  String finderMethodName="countByMD_P_AJUI";
-  String[] finderParams=new String[]{Date.class.getName(),Long.class.getName(),String.class.getName()};
   Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_MD_P_AJUI,finderArgs,this);
+  if (count == null) {
     Session session=null;
     try {
       session=openSession();
@@ -40,25 +33,18 @@
       if (assigneeJiraUserId != null) {
         qPos.add(assigneeJiraUserId);
       }
-      Long count=null;
-      Iterator<Long> itr=q.list().iterator();
-      if (itr.hasNext()) {
-        count=itr.next();
-      }
-      if (count == null) {
-        count=new Long(0);
-      }
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,count);
-      return count.intValue();
+      count=(Long)q.uniqueResult();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (count == null) {
+        count=Long.valueOf(0);
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_MD_P_AJUI,finderArgs,count);
       closeSession(session);
     }
   }
- else {
-    return ((Long)result).intValue();
-  }
+  return count.intValue();
 }

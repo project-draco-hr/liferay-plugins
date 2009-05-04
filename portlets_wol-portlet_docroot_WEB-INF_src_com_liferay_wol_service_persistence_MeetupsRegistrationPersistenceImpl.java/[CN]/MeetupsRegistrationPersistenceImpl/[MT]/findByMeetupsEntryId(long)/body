@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=MeetupsRegistrationModelImpl.CACHE_ENABLED;
-  String finderClassName=MeetupsRegistration.class.getName();
-  String finderMethodName="findByMeetupsEntryId";
-  String[] finderParams=new String[]{Long.class.getName()};
   Object[] finderArgs=new Object[]{new Long(meetupsEntryId)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<MeetupsRegistration> list=(List<MeetupsRegistration>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -21,18 +14,19 @@
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(meetupsEntryId);
-      List<MeetupsRegistration> list=q.list();
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=q.list();
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<MeetupsRegistration>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<MeetupsRegistration>)result;
-  }
+  return list;
 }

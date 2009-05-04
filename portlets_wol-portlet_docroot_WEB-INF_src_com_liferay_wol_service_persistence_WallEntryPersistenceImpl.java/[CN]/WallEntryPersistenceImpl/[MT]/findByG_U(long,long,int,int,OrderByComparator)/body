@@ -1,14 +1,7 @@
 {
-  boolean finderClassNameCacheEnabled=WallEntryModelImpl.CACHE_ENABLED;
-  String finderClassName=WallEntry.class.getName();
-  String finderMethodName="findByG_U";
-  String[] finderParams=new String[]{Long.class.getName(),Long.class.getName(),"java.lang.Integer","java.lang.Integer","com.liferay.portal.kernel.util.OrderByComparator"};
   Object[] finderArgs=new Object[]{new Long(groupId),new Long(userId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
-  Object result=null;
-  if (finderClassNameCacheEnabled) {
-    result=FinderCacheUtil.getResult(finderClassName,finderMethodName,finderParams,finderArgs,this);
-  }
-  if (result == null) {
+  List<WallEntry> list=(List<WallEntry>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_G_U,finderArgs,this);
+  if (list == null) {
     Session session=null;
     try {
       session=openSession();
@@ -30,18 +23,19 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(groupId);
       qPos.add(userId);
-      List<WallEntry> list=(List<WallEntry>)QueryUtil.list(q,getDialect(),start,end);
-      FinderCacheUtil.putResult(finderClassNameCacheEnabled,finderClassName,finderMethodName,finderParams,finderArgs,list);
-      return list;
+      list=(List<WallEntry>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {
       throw processException(e);
     }
  finally {
+      if (list == null) {
+        list=new ArrayList<WallEntry>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_G_U,finderArgs,list);
       closeSession(session);
     }
   }
- else {
-    return (List<WallEntry>)result;
-  }
+  return list;
 }

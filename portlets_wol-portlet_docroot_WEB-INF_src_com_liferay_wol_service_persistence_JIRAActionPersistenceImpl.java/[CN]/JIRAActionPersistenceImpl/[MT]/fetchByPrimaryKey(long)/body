@@ -1,13 +1,20 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    return (JIRAAction)session.get(JIRAActionImpl.class,new Long(jiraActionId));
-  }
- catch (  Exception e) {
-    throw processException(e);
-  }
+  JIRAAction jiraAction=(JIRAAction)EntityCacheUtil.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId,this);
+  if (jiraAction == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraAction=(JIRAAction)session.get(JIRAActionImpl.class,new Long(jiraActionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
  finally {
-    closeSession(session);
+      if (jiraAction != null) {
+        cacheResult(jiraAction);
+      }
+      closeSession(session);
+    }
   }
+  return jiraAction;
 }

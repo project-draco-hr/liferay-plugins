@@ -1,16 +1,25 @@
 {
+  boolean isNew=network.isNew();
+  NetworkModelImpl networkModelImpl=(NetworkModelImpl)network;
   Session session=null;
   try {
     session=openSession();
     BatchSessionUtil.update(session,network,merge);
     network.setNew(false);
-    return network;
   }
  catch (  Exception e) {
     throw processException(e);
   }
  finally {
     closeSession(session);
-    FinderCacheUtil.clearCache(Network.class.getName());
   }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(NetworkModelImpl.ENTITY_CACHE_ENABLED,NetworkImpl.class,network.getPrimaryKey(),network);
+  if (!isNew && (!network.getName().equals(networkModelImpl.getOriginalName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME,new Object[]{networkModelImpl.getOriginalName()});
+  }
+  if (isNew || (!network.getName().equals(networkModelImpl.getOriginalName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,new Object[]{network.getName()},network);
+  }
+  return network;
 }
