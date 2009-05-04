@@ -1,14 +1,15 @@
 {
   Weather weather=null;
   try {
-    String text=HtmlUtil.stripComments(HttpUtil.URLtoString("http://www.google.com/ig/api?weather=" + HttpUtil.encodeURL(_zip)));
-    int x=text.indexOf("temp_f data");
-    x=text.indexOf("\"",x) + 1;
-    int y=text.indexOf("\"",x);
-    float temperature=GetterUtil.getFloat(text.substring(x,y));
-    x=text.indexOf("/images",x);
-    y=text.indexOf("\"",x);
-    String iconURL="http://www.google.com" + text.substring(x,y);
+    String xml=HttpUtil.URLtoString("http://www.google.com/ig/api?weather=" + HttpUtil.encodeURL(_zip));
+    Document doc=SAXReaderUtil.read(xml);
+    Element root=doc.getRootElement();
+    Element weatherElement=root.element("weather");
+    Element currentConditions=weatherElement.element("current_conditions");
+    Element tempF=currentConditions.element("temp_f");
+    float temperature=GetterUtil.getFloat(tempF.attributeValue("data"));
+    Element icon=currentConditions.element("icon");
+    String iconURL="http://www.google.com" + icon.attributeValue("data");
     weather=new Weather(_zip,iconURL,temperature);
   }
  catch (  Exception e) {
