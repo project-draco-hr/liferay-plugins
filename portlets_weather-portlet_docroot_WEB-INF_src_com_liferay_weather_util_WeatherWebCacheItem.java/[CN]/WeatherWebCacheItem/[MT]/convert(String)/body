@@ -4,12 +4,12 @@
     String xml=HttpUtil.URLtoString("http://www.google.com/ig/api?weather=" + HttpUtil.encodeURL(_zip));
     Document doc=SAXReaderUtil.read(xml);
     Element root=doc.getRootElement();
-    Element weatherElement=root.element("weather");
-    Element currentConditions=weatherElement.element("current_conditions");
-    Element tempF=currentConditions.element("temp_f");
-    float temperature=GetterUtil.getFloat(tempF.attributeValue("data"));
-    Element icon=currentConditions.element("icon");
-    String iconURL="http://www.google.com" + icon.attributeValue("data");
+    Element weatherEl=root.element("weather");
+    Element currentConditionsEl=weatherEl.element("current_conditions");
+    Element temperatureEl=currentConditionsEl.element("temp_f");
+    float temperature=GetterUtil.getFloat(temperatureEl.attributeValue("data"));
+    Element iconEl=currentConditionsEl.element("icon");
+    String iconURL="http://www.google.com" + iconEl.attributeValue("data");
     weather=new Weather(_zip,iconURL,temperature);
   }
  catch (  Exception e) {
