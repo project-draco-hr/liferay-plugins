@@ -2,36 +2,36 @@
   if (content == null) {
     return null;
   }
-  Matcher m=_PROXY_URL_PATTERN.matcher(content);
+  Matcher matcher=_proxyUrlPattern.matcher(content);
   StringBuffer sb=new StringBuffer();
   try {
-    while (m.find()) {
-      String uuid=m.group(1);
+    while (matcher.find()) {
+      String uuid=matcher.group(1);
       PortletURL portletURL=renderResponse.createRenderURL();
       portletURL.setParameter("uuid",uuid);
       if (maximizeLinks) {
         portletURL.setWindowState(WindowState.MAXIMIZED);
       }
-      m.appendReplacement(sb,"\"" + portletURL.toString() + "\"");
+      matcher.appendReplacement(sb,"\"" + portletURL.toString() + "\"");
     }
   }
  catch (  Exception e) {
     _log.error(e);
   }
-  m.appendTail(sb);
+  matcher.appendTail(sb);
   content=sb.toString();
-  m=_RESOURCE_URL_PATTERN.matcher(content);
+  matcher=_resourceUrlPattern.matcher(content);
   sb=new StringBuffer();
   try {
-    while (m.find()) {
-      String imagePath=m.group(1);
-      m.appendReplacement(sb,"\"" + getEndpointAddress() + "/alfresco"+ imagePath+ "?guest=true"+ "\"");
+    while (matcher.find()) {
+      String imagePath=matcher.group(1);
+      matcher.appendReplacement(sb,"\"" + getEndpointAddress() + "/alfresco"+ imagePath+ "?guest=true"+ "\"");
     }
   }
  catch (  Exception e) {
     _log.error(e);
   }
-  m.appendTail(sb);
+  matcher.appendTail(sb);
   content=sb.toString();
   return content;
 }

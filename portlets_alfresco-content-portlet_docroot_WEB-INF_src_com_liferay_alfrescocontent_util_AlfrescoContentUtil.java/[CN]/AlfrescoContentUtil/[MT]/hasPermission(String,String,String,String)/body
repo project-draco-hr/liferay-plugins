@@ -2,8 +2,8 @@
   try {
     AccessControlServiceSoapBindingStub accessControlService=WebServiceFactory.getAccessControlService();
     AuthenticationUtils.startSession(login,password);
-    Reference reference=new Reference(_SPACES_STORE,uuid,null);
-    Predicate predicate=new Predicate(new Reference[]{reference},_SPACES_STORE,null);
+    Reference reference=new Reference(_spacesStore,uuid,null);
+    Predicate predicate=new Predicate(new Reference[]{reference},_spacesStore,null);
     HasPermissionsResult[] results=accessControlService.hasPermissions(predicate,new String[]{action});
     if ((results.length == 1) && (results[0].getPermission().equals(action)) && (results[0].getAccessStatus().equals(AccessStatus.acepted))) {
       return true;
