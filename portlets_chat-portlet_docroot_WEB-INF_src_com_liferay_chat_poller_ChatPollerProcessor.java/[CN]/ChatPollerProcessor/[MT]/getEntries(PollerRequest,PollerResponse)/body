@@ -1,0 +1,35 @@
+{
+  Map<Long,Long> latestCreateDates=new HashMap<Long,Long>();
+  long createDate=0;
+  try {
+    Status status=StatusLocalServiceUtil.getUserStatus(pollerRequest.getUserId());
+    createDate=status.getModifiedDate();
+  }
+ catch (  NoSuchStatusException nsse) {
+  }
+  if (createDate <= 0) {
+    createDate=System.currentTimeMillis() - Time.MINUTE;
+  }
+  List<Entry> entries=EntryLocalServiceUtil.getNewEntries(pollerRequest.getUserId(),createDate,0,SearchContainer.DEFAULT_DELTA);
+  entries=ListUtil.copy(entries);
+  Collections.reverse(entries);
+  JSONArray entriesJSON=JSONFactoryUtil.createJSONArray();
+  for (  Entry entry : entries) {
+    JSONObject entryJSON=JSONFactoryUtil.createJSONObject();
+    entryJSON.put("createDate",entry.getCreateDate());
+    entryJSON.put("fromUserId",entry.getFromUserId());
+    if (entry.getFromUserId() != pollerRequest.getUserId()) {
+      User fromUser=UserLocalServiceUtil.getUserById(entry.getFromUserId());
+      entryJSON.put("fromFullName",fromUser.getFullName());
+      entryJSON.put("fromPortraitId",fromUser.getPortraitId());
+    }
+    entryJSON.put("toUserId",entry.getToUserId());
+    entryJSON.put("content",HtmlUtil.escape(entry.getContent()));
+    entriesJSON.put(entryJSON);
+    if (Validator.isNotNull(entry.getContent())) {
+      latestCreateDates.put(entry.getToUserId(),entry.getCreateDate());
+    }
+  }
+  pollerResponse.setParameter("entries",entriesJSON.toString());
+  return latestCreateDates;
+}

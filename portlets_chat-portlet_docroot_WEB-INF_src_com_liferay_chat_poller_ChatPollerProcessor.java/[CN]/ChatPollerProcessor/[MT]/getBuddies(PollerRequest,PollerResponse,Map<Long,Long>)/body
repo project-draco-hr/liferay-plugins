@@ -1,0 +1,37 @@
+{
+  List<Object[]> buddies=ChatUtil.getBuddies(pollerRequest.getUserId());
+  JSONArray buddiesJSON=JSONFactoryUtil.createJSONArray();
+  for (  Object[] buddy : buddies) {
+    long userId=(Long)buddy[0];
+    String firstName=(String)buddy[1];
+    String middleName=(String)buddy[2];
+    String lastName=(String)buddy[3];
+    long portraitId=(Long)buddy[4];
+    boolean awake=(Boolean)buddy[5];
+    String fullName=ContactConstants.getFullName(firstName,middleName,lastName);
+    if (userId == pollerRequest.getUserId()) {
+      continue;
+    }
+    String statusMessage=null;
+    try {
+      Status buddyStatus=StatusLocalServiceUtil.getUserStatus(userId);
+      awake=buddyStatus.getAwake();
+      statusMessage=buddyStatus.getMessage();
+    }
+ catch (    NoSuchStatusException nsse) {
+    }
+    Long latestCreateDate=latestCreateDates.get(userId);
+    if (latestCreateDate == null) {
+      latestCreateDate=new Long(0);
+    }
+    JSONObject curUserJSON=JSONFactoryUtil.createJSONObject();
+    curUserJSON.put("userId",userId);
+    curUserJSON.put("fullName",fullName);
+    curUserJSON.put("portraitId",portraitId);
+    curUserJSON.put("awake",awake);
+    curUserJSON.put("statusMessage",statusMessage);
+    curUserJSON.put("latestCreateDate",latestCreateDate.longValue());
+    buddiesJSON.put(curUserJSON);
+  }
+  pollerResponse.setParameter("buddies",buddiesJSON.toString());
+}

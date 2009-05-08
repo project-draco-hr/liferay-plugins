@@ -1,0 +1,26 @@
+{
+  Status status=statusPersistence.fetchByUserId(userId);
+  if (status == null) {
+    long statusId=CounterLocalServiceUtil.increment();
+    status=statusPersistence.create(statusId);
+    status.setUserId(userId);
+  }
+  status.setModifiedDate(System.currentTimeMillis());
+  if (online != -1) {
+    status.setOnline((online == 1) ? true : false);
+  }
+  if (awake != -1) {
+    status.setAwake((awake == 1) ? true : false);
+  }
+  if (activePanelId != null) {
+    status.setActivePanelId(activePanelId);
+  }
+  if (message != null) {
+    status.setMessage(message);
+  }
+  if (playSound != -1) {
+    status.setPlaySound((playSound == 1) ? true : false);
+  }
+  statusPersistence.update(status,false);
+  return status;
+}
