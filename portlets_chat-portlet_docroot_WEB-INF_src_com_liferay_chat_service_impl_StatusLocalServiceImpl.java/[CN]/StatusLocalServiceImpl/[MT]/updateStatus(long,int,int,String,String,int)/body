@@ -21,6 +21,17 @@
   if (playSound != -1) {
     status.setPlaySound((playSound == 1) ? true : false);
   }
-  statusPersistence.update(status,false);
+  try {
+    statusPersistence.update(status,false);
+  }
+ catch (  SystemException se) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Add failed, fetch {userId=" + userId + "}");
+    }
+    status=statusPersistence.fetchByUserId(userId);
+    if (status == null) {
+      throw se;
+    }
+  }
   return status;
 }
