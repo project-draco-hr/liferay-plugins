@@ -7,8 +7,9 @@
       createDate=status.getModifiedDate();
     }
  catch (    NoSuchStatusException nsse) {
-      createDate=System.currentTimeMillis() - Time.MINUTE;
+      createDate=System.currentTimeMillis();
     }
+    createDate=createDate - Time.MINUTE;
   }
   List<Entry> entries=EntryLocalServiceUtil.getNewEntries(pollerRequest.getUserId(),createDate,0,SearchContainer.DEFAULT_DELTA);
   entries=ListUtil.copy(entries);
