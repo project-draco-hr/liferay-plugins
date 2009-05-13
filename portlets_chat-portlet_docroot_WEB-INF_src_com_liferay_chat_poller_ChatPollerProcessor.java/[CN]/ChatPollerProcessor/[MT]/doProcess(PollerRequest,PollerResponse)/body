@@ -1,8 +1,9 @@
 {
+  long createDate=getLong(pollerRequest,"createDate");
   long toUserId=getLong(pollerRequest,"toUserId");
   String content=getString(pollerRequest,"content");
   if (toUserId > 0) {
-    EntryLocalServiceUtil.addEntry(pollerRequest.getUserId(),toUserId,content);
+    EntryLocalServiceUtil.addEntry(createDate,pollerRequest.getUserId(),toUserId,content);
   }
   Map<Long,Long> latestCreateDates=getEntries(pollerRequest,pollerResponse);
   getBuddies(pollerRequest,pollerResponse,latestCreateDates);
