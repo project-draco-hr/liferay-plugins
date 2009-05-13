@@ -1,2 +1,21 @@
 {
+  try {
+    Company company=getWSRPCompany();
+    Organization organization=_getOrganization(company.getCompanyId(),consumerId);
+    if (organization != null) {
+      long organizationId=organization.getOrganizationId();
+      List<User> users=UserLocalServiceUtil.getOrganizationUsers(organizationId);
+      for (      User user : users) {
+        if (user.getPrimaryKey() != _getAuthlessUser().getPrimaryKey()) {
+          UserLocalServiceUtil.deleteUser(user);
+        }
+      }
+      UserLocalServiceUtil.clearOrganizationUsers(organizationId);
+      OrganizationLocalServiceUtil.deleteOrganization(organizationId);
+    }
+  }
+ catch (  Exception ex) {
+    _log.error(ex,ex);
+    throw new ProducerException(ex);
+  }
 }

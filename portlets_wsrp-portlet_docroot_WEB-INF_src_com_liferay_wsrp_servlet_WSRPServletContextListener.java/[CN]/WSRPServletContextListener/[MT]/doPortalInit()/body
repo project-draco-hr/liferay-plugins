@@ -6,6 +6,12 @@
   serviceManager.addService(Service.DEPLOYMENT_SERVICE_REMOTE,new DeploymentServiceRemoteImpl());
   WSRPConfig.init(properties,"portal1");
   WSRPPersistenceHelper wsrpPersistence=WSRPPersistenceHelper.getInstance();
+  try {
+    UserManagerImpl.getWSRPCompany();
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
   if (isInitialDepoy()) {
     return;
   }
