@@ -1,3 +1,7 @@
 {
-  return statusPersistence.findByUserId(userId);
+  Status status=statusPersistence.fetchByUserId(userId);
+  if (status == null) {
+    status=statusLocalService.updateStatus(userId,1,1,StringPool.BLANK,StringPool.BLANK,1);
+  }
+  return status;
 }
