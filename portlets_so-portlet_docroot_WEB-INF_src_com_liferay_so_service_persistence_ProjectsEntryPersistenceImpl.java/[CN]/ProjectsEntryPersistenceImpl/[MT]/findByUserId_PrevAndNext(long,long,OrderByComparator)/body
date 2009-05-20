@@ -1,0 +1,35 @@
+{
+  ProjectsEntry projectsEntry=findByPrimaryKey(projectsEntryId);
+  int count=countByUserId(userId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("FROM com.liferay.so.model.ProjectsEntry WHERE ");
+    query.append("userId = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      query.append(obc.getOrderBy());
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("endDate ASC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(userId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,projectsEntry);
+    ProjectsEntry[] array=new ProjectsEntryImpl[3];
+    array[0]=(ProjectsEntry)objArray[0];
+    array[1]=(ProjectsEntry)objArray[1];
+    array[2]=(ProjectsEntry)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
