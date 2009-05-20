@@ -1,0 +1,17 @@
+{
+  ProjectsEntry projectsEntry=projectsEntryPersistence.findByPrimaryKey(projectsEntryId);
+  User user=UserLocalServiceUtil.getUserById(projectsEntry.getUserId());
+  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,user.getTimeZone(),new ProjectsEntryStartDateException());
+  Date endDate=null;
+  if (!current) {
+    endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,user.getTimeZone(),new ProjectsEntryEndDateException());
+  }
+  projectsEntry.setModifiedDate(new Date());
+  projectsEntry.setTitle(title);
+  projectsEntry.setDescription(description);
+  projectsEntry.setStartDate(startDate);
+  projectsEntry.setEndDate(endDate);
+  projectsEntry.setData(data);
+  projectsEntryPersistence.update(projectsEntry);
+  return projectsEntry;
+}

@@ -1,0 +1,34 @@
+{
+  Set<Long> projectsEntryIds=new HashSet<Long>();
+  int[] projectsEntriesIndexes=StringUtil.split(ParamUtil.getString(actionRequest,"projectsEntriesIndexes"),0);
+  for (  int projectsEntriesIndex : projectsEntriesIndexes) {
+    long projectsEntryId=ParamUtil.getLong(actionRequest,"projectsEntryId" + projectsEntriesIndex);
+    String title=ParamUtil.getString(actionRequest,"projectsEntryTitle" + projectsEntriesIndex);
+    String description=ParamUtil.getString(actionRequest,"projectsEntryDescription" + projectsEntriesIndex);
+    if (Validator.isNull(title)) {
+      continue;
+    }
+    int startDateMonth=ParamUtil.getInteger(actionRequest,"projectsEntryStartDateMonth" + projectsEntriesIndex);
+    int startDateDay=1;
+    int startDateYear=ParamUtil.getInteger(actionRequest,"projectsEntryStartDateYear" + projectsEntriesIndex);
+    int endDateMonth=ParamUtil.getInteger(actionRequest,"projectsEntryEndDateMonth" + projectsEntriesIndex);
+    int endDateDay=1;
+    int endDateYear=ParamUtil.getInteger(actionRequest,"projectsEntryEndDateYear" + projectsEntriesIndex);
+    boolean current=ParamUtil.getBoolean(actionRequest,"projectsEntryCurrent" + projectsEntriesIndex);
+    String otherMembers=ParamUtil.getString(actionRequest,"projectsEntryOtherMembers" + projectsEntriesIndex);
+    if (projectsEntryId <= 0) {
+      ProjectsEntry projectsEntry=ProjectsEntryLocalServiceUtil.addProjectsEntry(userId,title,description,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,current,otherMembers);
+      projectsEntryId=projectsEntry.getProjectsEntryId();
+    }
+ else {
+      ProjectsEntryLocalServiceUtil.updateProjectsEntry(projectsEntryId,title,description,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,current,otherMembers);
+    }
+    projectsEntryIds.add(projectsEntryId);
+  }
+  List<ProjectsEntry> projectsEntries=ProjectsEntryLocalServiceUtil.getUserProjectsEntries(userId);
+  for (  ProjectsEntry projectsEntry : projectsEntries) {
+    if (!projectsEntryIds.contains(projectsEntry.getProjectsEntryId())) {
+      ProjectsEntryLocalServiceUtil.deleteProjectsEntry(projectsEntry.getProjectsEntryId());
+    }
+  }
+}
