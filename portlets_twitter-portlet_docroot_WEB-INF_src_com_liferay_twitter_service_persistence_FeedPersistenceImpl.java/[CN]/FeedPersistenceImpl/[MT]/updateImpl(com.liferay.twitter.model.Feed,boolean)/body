@@ -21,10 +21,10 @@
   if (isNew || (feed.getTwitterUserId() != feedModelImpl.getOriginalTwitterUserId())) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,new Object[]{new Long(feed.getTwitterUserId())},feed);
   }
-  if (!isNew && (!feed.getTwitterScreenName().equals(feedModelImpl.getOriginalTwitterScreenName()))) {
+  if (!isNew && (!Validator.equals(feed.getTwitterScreenName(),feedModelImpl.getOriginalTwitterScreenName()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,new Object[]{feedModelImpl.getOriginalTwitterScreenName()});
   }
-  if (isNew || (!feed.getTwitterScreenName().equals(feedModelImpl.getOriginalTwitterScreenName()))) {
+  if (isNew || (!Validator.equals(feed.getTwitterScreenName(),feedModelImpl.getOriginalTwitterScreenName()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,new Object[]{feed.getTwitterScreenName()},feed);
   }
   return feed;

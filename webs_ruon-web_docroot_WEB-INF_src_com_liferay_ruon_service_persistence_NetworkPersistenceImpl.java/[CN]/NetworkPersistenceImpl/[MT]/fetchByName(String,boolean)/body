@@ -9,12 +9,12 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.ruon.model.Network WHERE ");
+      query.append("SELECT network FROM Network network WHERE ");
       if (name == null) {
-        query.append("name IS NULL");
+        query.append("network.name IS NULL");
       }
  else {
-        query.append("name = ?");
+        query.append("network.name = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
@@ -32,7 +32,7 @@
         network=list.get(0);
         cacheResult(network);
         if ((network.getName() == null) || !network.getName().equals(name)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,finderArgs,network);
         }
       }
       return network;

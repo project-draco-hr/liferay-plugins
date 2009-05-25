@@ -6,22 +6,22 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
-      query.append("project = ?");
+      query.append("SELECT COUNT(jiraIssue) ");
+      query.append("FROM JIRAIssue jiraIssue WHERE ");
+      query.append("jiraIssue.projectId = ?");
       query.append(" AND ");
       if (assigneeJiraUserId == null) {
-        query.append("assignee IS NULL");
+        query.append("jiraIssue.assigneeJiraUserId IS NULL");
       }
  else {
-        query.append("assignee = ?");
+        query.append("jiraIssue.assigneeJiraUserId = ?");
       }
       query.append(" AND ");
       if (status == null) {
-        query.append("issuestatus IS NULL");
+        query.append("jiraIssue.status IS NULL");
       }
  else {
-        query.append("issuestatus = ?");
+        query.append("jiraIssue.status = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

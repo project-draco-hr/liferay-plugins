@@ -6,21 +6,34 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.JIRAAction WHERE ");
+      query.append("SELECT jiraAction FROM JIRAAction jiraAction WHERE ");
       if (type == null) {
-        query.append("actiontype IS NULL");
+        query.append("jiraAction.type IS NULL");
       }
  else {
-        query.append("actiontype = ?");
+        query.append("jiraAction.type = ?");
       }
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
-        query.append(obc.getOrderBy());
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("jiraAction.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
       }
  else {
         query.append("ORDER BY ");
-        query.append("updated DESC");
+        query.append("jiraAction.modifiedDate DESC");
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);

@@ -6,16 +6,16 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+      query.append("SELECT COUNT(jiraIssue) ");
+      query.append("FROM JIRAIssue jiraIssue WHERE ");
       if (modifiedDate == null) {
-        query.append("updated > null");
+        query.append("jiraIssue.modifiedDate > null");
       }
  else {
-        query.append("updated > ?");
+        query.append("jiraIssue.modifiedDate > ?");
       }
       query.append(" AND ");
-      query.append("project = ?");
+      query.append("jiraIssue.projectId = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);

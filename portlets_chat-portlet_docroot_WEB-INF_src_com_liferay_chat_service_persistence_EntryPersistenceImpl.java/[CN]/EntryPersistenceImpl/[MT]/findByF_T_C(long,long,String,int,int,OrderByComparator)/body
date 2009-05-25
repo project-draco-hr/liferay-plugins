@@ -6,25 +6,38 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.chat.model.Entry WHERE ");
-      query.append("fromUserId = ?");
+      query.append("SELECT entry FROM Entry entry WHERE ");
+      query.append("entry.fromUserId = ?");
       query.append(" AND ");
-      query.append("toUserId = ?");
+      query.append("entry.toUserId = ?");
       query.append(" AND ");
       if (content == null) {
-        query.append("content IS NULL");
+        query.append("entry.content IS NULL");
       }
  else {
-        query.append("content = ?");
+        query.append("entry.content = ?");
       }
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
-        query.append(obc.getOrderBy());
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("entry.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
       }
  else {
         query.append("ORDER BY ");
-        query.append("createDate DESC");
+        query.append("entry.createDate DESC");
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);

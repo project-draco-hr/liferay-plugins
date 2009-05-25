@@ -6,17 +6,17 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.chat.model.Entry WHERE ");
-      query.append("fromUserId = ?");
+      query.append("SELECT COUNT(entry) ");
+      query.append("FROM Entry entry WHERE ");
+      query.append("entry.fromUserId = ?");
       query.append(" AND ");
-      query.append("toUserId = ?");
+      query.append("entry.toUserId = ?");
       query.append(" AND ");
       if (content == null) {
-        query.append("content IS NULL");
+        query.append("entry.content IS NULL");
       }
  else {
-        query.append("content = ?");
+        query.append("entry.content = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

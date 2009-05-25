@@ -15,10 +15,10 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(NetworkModelImpl.ENTITY_CACHE_ENABLED,NetworkImpl.class,network.getPrimaryKey(),network);
-  if (!isNew && (!network.getName().equals(networkModelImpl.getOriginalName()))) {
+  if (!isNew && (!Validator.equals(network.getName(),networkModelImpl.getOriginalName()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_NAME,new Object[]{networkModelImpl.getOriginalName()});
   }
-  if (isNew || (!network.getName().equals(networkModelImpl.getOriginalName()))) {
+  if (isNew || (!Validator.equals(network.getName(),networkModelImpl.getOriginalName()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_NAME,new Object[]{network.getName()},network);
   }
   return network;

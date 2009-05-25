@@ -6,19 +6,19 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wsrp.model.WSRPConfiguredProducer WHERE ");
+      query.append("SELECT wsrpConfiguredProducer FROM WSRPConfiguredProducer wsrpConfiguredProducer WHERE ");
       if (portalId == null) {
-        query.append("portalId IS NULL");
+        query.append("wsrpConfiguredProducer.portalId IS NULL");
       }
  else {
-        query.append("portalId = ?");
+        query.append("wsrpConfiguredProducer.portalId = ?");
       }
       query.append(" AND ");
       if (namespace == null) {
-        query.append("namespace IS NULL");
+        query.append("wsrpConfiguredProducer.namespace IS NULL");
       }
  else {
-        query.append("namespace = ?");
+        query.append("wsrpConfiguredProducer.namespace = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

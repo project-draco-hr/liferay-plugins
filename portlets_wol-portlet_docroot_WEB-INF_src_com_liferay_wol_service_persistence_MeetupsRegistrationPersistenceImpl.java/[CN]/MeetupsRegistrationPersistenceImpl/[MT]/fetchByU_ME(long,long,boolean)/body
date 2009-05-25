@@ -9,13 +9,13 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.MeetupsRegistration WHERE ");
-      query.append("userId = ?");
+      query.append("SELECT meetupsRegistration FROM MeetupsRegistration meetupsRegistration WHERE ");
+      query.append("meetupsRegistration.userId = ?");
       query.append(" AND ");
-      query.append("meetupsEntryId = ?");
+      query.append("meetupsRegistration.meetupsEntryId = ?");
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("modifiedDate DESC");
+      query.append("meetupsRegistration.modifiedDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(userId);
@@ -30,7 +30,7 @@
         meetupsRegistration=list.get(0);
         cacheResult(meetupsRegistration);
         if ((meetupsRegistration.getUserId() != userId) || (meetupsRegistration.getMeetupsEntryId() != meetupsEntryId)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,meetupsRegistration);
         }
       }
       return meetupsRegistration;

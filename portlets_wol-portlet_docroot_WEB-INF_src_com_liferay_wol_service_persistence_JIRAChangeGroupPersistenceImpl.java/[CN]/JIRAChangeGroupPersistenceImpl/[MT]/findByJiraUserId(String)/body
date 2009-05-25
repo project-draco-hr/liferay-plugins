@@ -6,16 +6,16 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.JIRAChangeGroup WHERE ");
+      query.append("SELECT jiraChangeGroup FROM JIRAChangeGroup jiraChangeGroup WHERE ");
       if (jiraUserId == null) {
-        query.append("author IS NULL");
+        query.append("jiraChangeGroup.jiraUserId IS NULL");
       }
  else {
-        query.append("author = ?");
+        query.append("jiraChangeGroup.jiraUserId = ?");
       }
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("created DESC");
+      query.append("jiraChangeGroup.createDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       if (jiraUserId != null) {

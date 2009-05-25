@@ -6,16 +6,16 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.SVNRevision WHERE ");
+      query.append("SELECT svnRevision FROM SVNRevision svnRevision WHERE ");
       if (svnUserId == null) {
-        query.append("svnUserId IS NULL");
+        query.append("svnRevision.svnUserId IS NULL");
       }
  else {
-        query.append("svnUserId = ?");
+        query.append("svnRevision.svnUserId = ?");
       }
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("revisionNumber DESC");
+      query.append("svnRevision.revisionNumber DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       if (svnUserId != null) {

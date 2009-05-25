@@ -6,13 +6,13 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.wol.model.JIRAAction WHERE ");
+      query.append("SELECT COUNT(jiraAction) ");
+      query.append("FROM JIRAAction jiraAction WHERE ");
       if (type == null) {
-        query.append("actiontype IS NULL");
+        query.append("jiraAction.type IS NULL");
       }
  else {
-        query.append("actiontype = ?");
+        query.append("jiraAction.type = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

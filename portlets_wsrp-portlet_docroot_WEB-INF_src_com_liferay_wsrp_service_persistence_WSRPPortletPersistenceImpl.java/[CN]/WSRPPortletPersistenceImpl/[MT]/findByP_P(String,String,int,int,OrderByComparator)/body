@@ -6,24 +6,37 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wsrp.model.WSRPPortlet WHERE ");
+      query.append("SELECT wsrpPortlet FROM WSRPPortlet wsrpPortlet WHERE ");
       if (producerEntityId == null) {
-        query.append("producerEntityId IS NULL");
+        query.append("wsrpPortlet.producerEntityId IS NULL");
       }
  else {
-        query.append("producerEntityId = ?");
+        query.append("wsrpPortlet.producerEntityId = ?");
       }
       query.append(" AND ");
       if (portletHandle == null) {
-        query.append("portletHandle IS NULL");
+        query.append("wsrpPortlet.portletHandle IS NULL");
       }
  else {
-        query.append("portletHandle = ?");
+        query.append("wsrpPortlet.portletHandle = ?");
       }
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
-        query.append(obc.getOrderBy());
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("wsrpPortlet.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);

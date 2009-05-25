@@ -15,10 +15,10 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(WSRPPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPPortletImpl.class,wsrpPortlet.getPrimaryKey(),wsrpPortlet);
-  if (!isNew && (!wsrpPortlet.getName().equals(wsrpPortletModelImpl.getOriginalName()))) {
+  if (!isNew && (!Validator.equals(wsrpPortlet.getName(),wsrpPortletModelImpl.getOriginalName()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTLETNAME,new Object[]{wsrpPortletModelImpl.getOriginalName()});
   }
-  if (isNew || (!wsrpPortlet.getName().equals(wsrpPortletModelImpl.getOriginalName()))) {
+  if (isNew || (!Validator.equals(wsrpPortlet.getName(),wsrpPortletModelImpl.getOriginalName()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTLETNAME,new Object[]{wsrpPortlet.getName()},wsrpPortlet);
   }
   return wsrpPortlet;

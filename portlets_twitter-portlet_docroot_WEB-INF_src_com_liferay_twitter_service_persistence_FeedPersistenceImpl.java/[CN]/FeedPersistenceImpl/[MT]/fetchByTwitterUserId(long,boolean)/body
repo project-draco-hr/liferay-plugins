@@ -9,8 +9,8 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.twitter.model.Feed WHERE ");
-      query.append("twitterUserId = ?");
+      query.append("SELECT feed FROM Feed feed WHERE ");
+      query.append("feed.twitterUserId = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
@@ -25,7 +25,7 @@
         feed=list.get(0);
         cacheResult(feed);
         if ((feed.getTwitterUserId() != twitterUserId)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERUSERID,finderArgs,feed);
         }
       }
       return feed;

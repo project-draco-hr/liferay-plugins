@@ -9,16 +9,16 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.SVNRepository WHERE ");
+      query.append("SELECT svnRepository FROM SVNRepository svnRepository WHERE ");
       if (url == null) {
-        query.append("url IS NULL");
+        query.append("svnRepository.url IS NULL");
       }
  else {
-        query.append("url = ?");
+        query.append("svnRepository.url = ?");
       }
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("url ASC");
+      query.append("svnRepository.url ASC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       if (url != null) {
@@ -34,7 +34,7 @@
         svnRepository=list.get(0);
         cacheResult(svnRepository);
         if ((svnRepository.getUrl() == null) || !svnRepository.getUrl().equals(url)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,svnRepository);
         }
       }
       return svnRepository;

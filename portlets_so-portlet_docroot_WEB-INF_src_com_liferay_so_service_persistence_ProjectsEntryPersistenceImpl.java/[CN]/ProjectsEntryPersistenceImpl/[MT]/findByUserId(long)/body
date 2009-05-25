@@ -6,11 +6,11 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.so.model.ProjectsEntry WHERE ");
-      query.append("userId = ?");
+      query.append("SELECT projectsEntry FROM ProjectsEntry projectsEntry WHERE ");
+      query.append("projectsEntry.userId = ?");
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("endDate ASC");
+      query.append("projectsEntry.endDate ASC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(userId);

@@ -6,12 +6,12 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wsrp.model.WSRPConsumerRegistration WHERE ");
+      query.append("SELECT wsrpConsumerRegistration FROM WSRPConsumerRegistration wsrpConsumerRegistration WHERE ");
       if (producerKey == null) {
-        query.append("producerKey IS NULL");
+        query.append("wsrpConsumerRegistration.producerKey IS NULL");
       }
  else {
-        query.append("producerKey = ?");
+        query.append("wsrpConsumerRegistration.producerKey = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

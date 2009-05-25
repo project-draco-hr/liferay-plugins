@@ -6,20 +6,20 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.wsrp.model.WSRPProducer WHERE ");
+      query.append("SELECT COUNT(wsrpProducer) ");
+      query.append("FROM WSRPProducer wsrpProducer WHERE ");
       if (portalId == null) {
-        query.append("portalId IS NULL");
+        query.append("wsrpProducer.portalId IS NULL");
       }
  else {
-        query.append("portalId = ?");
+        query.append("wsrpProducer.portalId = ?");
       }
       query.append(" AND ");
       if (namespace == null) {
-        query.append("namespace IS NULL");
+        query.append("wsrpProducer.namespace IS NULL");
       }
  else {
-        query.append("namespace = ?");
+        query.append("wsrpProducer.namespace = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

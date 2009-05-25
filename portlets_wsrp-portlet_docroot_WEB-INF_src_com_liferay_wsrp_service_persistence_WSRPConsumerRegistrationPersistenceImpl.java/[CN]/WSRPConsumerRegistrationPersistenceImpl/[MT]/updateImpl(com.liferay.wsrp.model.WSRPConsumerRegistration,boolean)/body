@@ -15,10 +15,10 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(WSRPConsumerRegistrationModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerRegistrationImpl.class,wsrpConsumerRegistration.getPrimaryKey(),wsrpConsumerRegistration);
-  if (!isNew && (!wsrpConsumerRegistration.getRegistrationHandle().equals(wsrpConsumerRegistrationModelImpl.getOriginalRegistrationHandle()) || !wsrpConsumerRegistration.getProducerKey().equals(wsrpConsumerRegistrationModelImpl.getOriginalProducerKey()))) {
+  if (!isNew && (!Validator.equals(wsrpConsumerRegistration.getRegistrationHandle(),wsrpConsumerRegistrationModelImpl.getOriginalRegistrationHandle()) || !Validator.equals(wsrpConsumerRegistration.getProducerKey(),wsrpConsumerRegistrationModelImpl.getOriginalProducerKey()))) {
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_P,new Object[]{wsrpConsumerRegistrationModelImpl.getOriginalRegistrationHandle(),wsrpConsumerRegistrationModelImpl.getOriginalProducerKey()});
   }
-  if (isNew || (!wsrpConsumerRegistration.getRegistrationHandle().equals(wsrpConsumerRegistrationModelImpl.getOriginalRegistrationHandle()) || !wsrpConsumerRegistration.getProducerKey().equals(wsrpConsumerRegistrationModelImpl.getOriginalProducerKey()))) {
+  if (isNew || (!Validator.equals(wsrpConsumerRegistration.getRegistrationHandle(),wsrpConsumerRegistrationModelImpl.getOriginalRegistrationHandle()) || !Validator.equals(wsrpConsumerRegistration.getProducerKey(),wsrpConsumerRegistrationModelImpl.getOriginalProducerKey()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_P,new Object[]{wsrpConsumerRegistration.getRegistrationHandle(),wsrpConsumerRegistration.getProducerKey()},wsrpConsumerRegistration);
   }
   return wsrpConsumerRegistration;

@@ -6,11 +6,11 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.JIRAAction WHERE ");
-      query.append("issueid = ?");
+      query.append("SELECT jiraAction FROM JIRAAction jiraAction WHERE ");
+      query.append("jiraAction.jiraIssueId = ?");
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("updated DESC");
+      query.append("jiraAction.modifiedDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(jiraIssueId);

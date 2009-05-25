@@ -5,24 +5,37 @@
   try {
     session=openSession();
     StringBuilder query=new StringBuilder();
-    query.append("FROM com.liferay.wsrp.model.WSRPProducer WHERE ");
+    query.append("SELECT wsrpProducer FROM WSRPProducer wsrpProducer WHERE ");
     if (portalId == null) {
-      query.append("portalId IS NULL");
+      query.append("wsrpProducer.portalId IS NULL");
     }
  else {
-      query.append("portalId = ?");
+      query.append("wsrpProducer.portalId = ?");
     }
     query.append(" AND ");
     if (namespace == null) {
-      query.append("namespace IS NULL");
+      query.append("wsrpProducer.namespace IS NULL");
     }
  else {
-      query.append("namespace = ?");
+      query.append("wsrpProducer.namespace = ?");
     }
     query.append(" ");
     if (obc != null) {
       query.append("ORDER BY ");
-      query.append(obc.getOrderBy());
+      String[] orderByFields=obc.getOrderByFields();
+      for (int i=0; i < orderByFields.length; i++) {
+        query.append("wsrpProducer.");
+        query.append(orderByFields[i]);
+        if (obc.isAscending()) {
+          query.append(" ASC");
+        }
+ else {
+          query.append(" DESC");
+        }
+        if ((i + 1) < orderByFields.length) {
+          query.append(", ");
+        }
+      }
     }
     Query q=session.createQuery(query.toString());
     QueryPos qPos=QueryPos.getInstance(q);

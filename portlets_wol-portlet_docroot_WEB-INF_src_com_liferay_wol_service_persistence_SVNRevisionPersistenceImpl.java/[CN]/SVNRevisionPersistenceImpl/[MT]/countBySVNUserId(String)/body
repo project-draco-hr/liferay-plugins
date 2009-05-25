@@ -6,13 +6,13 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(*) ");
-      query.append("FROM com.liferay.wol.model.SVNRevision WHERE ");
+      query.append("SELECT COUNT(svnRevision) ");
+      query.append("FROM SVNRevision svnRevision WHERE ");
       if (svnUserId == null) {
-        query.append("svnUserId IS NULL");
+        query.append("svnRevision.svnUserId IS NULL");
       }
  else {
-        query.append("svnUserId = ?");
+        query.append("svnRevision.svnUserId = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());

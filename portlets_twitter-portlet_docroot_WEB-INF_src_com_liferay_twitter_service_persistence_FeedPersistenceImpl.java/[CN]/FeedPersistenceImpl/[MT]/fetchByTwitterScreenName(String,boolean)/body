@@ -9,12 +9,12 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.twitter.model.Feed WHERE ");
+      query.append("SELECT feed FROM Feed feed WHERE ");
       if (twitterScreenName == null) {
-        query.append("twitterScreenName IS NULL");
+        query.append("feed.twitterScreenName IS NULL");
       }
  else {
-        query.append("twitterScreenName = ?");
+        query.append("feed.twitterScreenName = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
@@ -32,7 +32,7 @@
         feed=list.get(0);
         cacheResult(feed);
         if ((feed.getTwitterScreenName() == null) || !feed.getTwitterScreenName().equals(twitterScreenName)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TWITTERSCREENNAME,finderArgs,feed);
         }
       }
       return feed;

@@ -9,10 +9,10 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.ruon.model.Presence WHERE ");
-      query.append("userId = ?");
+      query.append("SELECT presence FROM Presence presence WHERE ");
+      query.append("presence.userId = ?");
       query.append(" AND ");
-      query.append("networkId = ?");
+      query.append("presence.networkId = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
@@ -28,7 +28,7 @@
         presence=list.get(0);
         cacheResult(presence);
         if ((presence.getUserId() != userId) || (presence.getNetworkId() != networkId)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_N,finderArgs,presence);
         }
       }
       return presence;

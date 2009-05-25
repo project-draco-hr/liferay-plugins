@@ -9,12 +9,12 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wsrp.model.WSRPProducer WHERE ");
+      query.append("SELECT wsrpProducer FROM WSRPProducer wsrpProducer WHERE ");
       if (instanceName == null) {
-        query.append("instanceName IS NULL");
+        query.append("wsrpProducer.instanceName IS NULL");
       }
  else {
-        query.append("instanceName = ?");
+        query.append("wsrpProducer.instanceName = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
@@ -32,7 +32,7 @@
         wsrpProducer=list.get(0);
         cacheResult(wsrpProducer);
         if ((wsrpProducer.getInstanceName() == null) || !wsrpProducer.getInstanceName().equals(instanceName)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_INSTANCENAME,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_INSTANCENAME,finderArgs,wsrpProducer);
         }
       }
       return wsrpProducer;

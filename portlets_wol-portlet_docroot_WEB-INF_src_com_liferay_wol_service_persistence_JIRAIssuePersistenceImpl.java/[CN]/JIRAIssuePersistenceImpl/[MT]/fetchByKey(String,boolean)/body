@@ -9,16 +9,16 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
+      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
       if (key == null) {
-        query.append("pkey IS NULL");
+        query.append("jiraIssue.key IS NULL");
       }
  else {
-        query.append("pkey = ?");
+        query.append("jiraIssue.key = ?");
       }
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("updated DESC");
+      query.append("jiraIssue.modifiedDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       if (key != null) {
@@ -34,7 +34,7 @@
         jiraIssue=list.get(0);
         cacheResult(jiraIssue);
         if ((jiraIssue.getKey() == null) || !jiraIssue.getKey().equals(key)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,finderArgs,jiraIssue);
         }
       }
       return jiraIssue;

@@ -6,13 +6,13 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.chat.model.Entry WHERE ");
-      query.append("createDate = ?");
+      query.append("SELECT entry FROM Entry entry WHERE ");
+      query.append("entry.createDate = ?");
       query.append(" AND ");
-      query.append("fromUserId = ?");
+      query.append("entry.fromUserId = ?");
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("createDate DESC");
+      query.append("entry.createDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(createDate);

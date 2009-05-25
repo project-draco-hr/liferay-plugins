@@ -9,19 +9,19 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wsrp.model.WSRPConsumerRegistration WHERE ");
+      query.append("SELECT wsrpConsumerRegistration FROM WSRPConsumerRegistration wsrpConsumerRegistration WHERE ");
       if (registrationHandle == null) {
-        query.append("registrationHandle IS NULL");
+        query.append("wsrpConsumerRegistration.registrationHandle IS NULL");
       }
  else {
-        query.append("registrationHandle = ?");
+        query.append("wsrpConsumerRegistration.registrationHandle = ?");
       }
       query.append(" AND ");
       if (producerKey == null) {
-        query.append("producerKey IS NULL");
+        query.append("wsrpConsumerRegistration.producerKey IS NULL");
       }
  else {
-        query.append("producerKey = ?");
+        query.append("wsrpConsumerRegistration.producerKey = ?");
       }
       query.append(" ");
       Query q=session.createQuery(query.toString());
@@ -42,7 +42,7 @@
         wsrpConsumerRegistration=list.get(0);
         cacheResult(wsrpConsumerRegistration);
         if ((wsrpConsumerRegistration.getRegistrationHandle() == null) || !wsrpConsumerRegistration.getRegistrationHandle().equals(registrationHandle) || (wsrpConsumerRegistration.getProducerKey() == null)|| !wsrpConsumerRegistration.getProducerKey().equals(producerKey)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_P,finderArgs,list);
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_P,finderArgs,wsrpConsumerRegistration);
         }
       }
       return wsrpConsumerRegistration;

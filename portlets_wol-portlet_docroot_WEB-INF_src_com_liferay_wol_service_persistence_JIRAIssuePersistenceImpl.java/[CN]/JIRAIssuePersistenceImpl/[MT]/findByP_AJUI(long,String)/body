@@ -6,18 +6,18 @@
     try {
       session=openSession();
       StringBuilder query=new StringBuilder();
-      query.append("FROM com.liferay.wol.model.JIRAIssue WHERE ");
-      query.append("project = ?");
+      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
+      query.append("jiraIssue.projectId = ?");
       query.append(" AND ");
       if (assigneeJiraUserId == null) {
-        query.append("assignee IS NULL");
+        query.append("jiraIssue.assigneeJiraUserId IS NULL");
       }
  else {
-        query.append("assignee = ?");
+        query.append("jiraIssue.assigneeJiraUserId = ?");
       }
       query.append(" ");
       query.append("ORDER BY ");
-      query.append("updated DESC");
+      query.append("jiraIssue.modifiedDate DESC");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);
