@@ -26,17 +26,19 @@
   if (!entries.isEmpty()) {
     pollerResponse.setParameter(PollerResponse.POLLER_HINT_HIGH_CONNECTIVITY,Boolean.TRUE.toString());
   }
-  boolean updateStatus=false;
-  if (!entries.isEmpty()) {
-    updateStatus=true;
+  boolean updatePresence=getBoolean(pollerRequest,"updatePresence");
+  if (updatePresence) {
+  }
+ else   if (!entries.isEmpty()) {
+    updatePresence=true;
   }
  else {
     long onlineTimestamp=status.getModifiedDate() + ChatUtil.ONLINE_DELTA - ChatUtil.MAX_POLL_LATENCY;
     if (onlineTimestamp < pollerRequest.getTimestamp()) {
-      updateStatus=true;
+      updatePresence=true;
     }
   }
-  if (updateStatus) {
+  if (updatePresence) {
     StatusLocalServiceUtil.updateStatus(pollerRequest.getUserId(),pollerRequest.getTimestamp());
   }
 }
