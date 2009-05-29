@@ -1,0 +1,13 @@
+{
+  PortletPreferences portletSetup=PortletPreferencesFactoryUtil.getLayoutPortletSetup(layout,portletId);
+  Locale[] locales=LanguageUtil.getAvailableLocales();
+  for (int i=0; i < locales.length; i++) {
+    String languageId=LocaleUtil.toLanguageId(locales[i]);
+    if (Validator.isNotNull(languageId)) {
+      String localizedTitle=LanguageUtil.get(locales[i],title);
+      portletSetup.setValue("portlet-setup-title-" + languageId,localizedTitle);
+    }
+  }
+  portletSetup.setValue("portlet-setup-use-custom-title",String.valueOf(Boolean.TRUE));
+  portletSetup.store();
+}
