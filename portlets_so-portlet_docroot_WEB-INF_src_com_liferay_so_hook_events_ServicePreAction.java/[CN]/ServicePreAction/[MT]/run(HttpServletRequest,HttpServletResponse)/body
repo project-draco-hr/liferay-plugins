@@ -1,5 +1,23 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  String currentURL=PortalUtil.getCurrentURL(request);
+  if (displayURL(themeDisplay,currentURL)) {
+    try {
+      long groupId=ParamUtil.getLong(request,"groupId");
+      String redirect=getRedirect(themeDisplay,groupId);
+      if (redirect == null) {
+        redirect=ParamUtil.getString(request,"redirect");
+        SessionErrors.add(request,NoSuchLayoutSetException.class.getName(),new NoSuchLayoutSetException("{groupId=" + groupId + ", privateLayout=0}"));
+      }
+      response.sendRedirect(redirect);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(e,e);
+      }
+    }
+    return;
+  }
   if (!themeDisplay.isSignedIn()) {
     return;
   }
