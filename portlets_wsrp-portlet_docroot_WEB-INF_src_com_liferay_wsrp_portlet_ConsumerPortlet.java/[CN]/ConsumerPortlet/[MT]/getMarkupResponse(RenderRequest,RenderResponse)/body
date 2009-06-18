@@ -5,6 +5,7 @@
   WSRPConsumerPortlet wsrpConsumerPortlet=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletId);
   WSRPConsumer wsrpConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerPortlet.getWsrpConsumerId());
   WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer);
+  PortletDescription portletDescription=wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());
   GetMarkup getMarkup=new GetMarkup();
   MarkupParams markupParams=new MarkupParams();
   List<Locale> locales=Collections.list(renderRequest.getLocales());
@@ -16,10 +17,15 @@
   markupParams.setLocales(localesArray);
   markupParams.setMarkupCharacterSets(new String[]{StringPool.UTF8});
   markupParams.setMimeTypes(new String[]{ContentTypes.TEXT_HTML});
-  markupParams.setMode("wsrp:view");
-  markupParams.setValidNewModes(new String[]{"wsrp:view"});
-  markupParams.setValidNewWindowStates(new String[]{"wsrp:maximized","wsrp:minimized","wsrp:normal"});
-  markupParams.setWindowState("wsrp:normal");
+  markupParams.setMode("wsrp:" + renderRequest.getPortletMode());
+  markupParams.setWindowState("wsrp:" + renderRequest.getWindowState());
+  MarkupType[] markupTypes=portletDescription.getMarkupTypes();
+  for (  MarkupType markupType : markupTypes) {
+    if (markupType.getMimeType().equalsIgnoreCase(ContentTypes.TEXT_HTML)) {
+      markupParams.setValidNewModes(markupType.getModes());
+      markupParams.setValidNewWindowStates(markupType.getWindowStates());
+    }
+  }
   getMarkup.setMarkupParams(markupParams);
   NavigationalContext navigationalContext=new NavigationalContext();
   String navigationalState=renderRequest.getParameter("wsrp-navigationalState");
