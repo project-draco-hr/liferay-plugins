@@ -1,0 +1,19 @@
+{
+  MarkupResponse markupResponse=getMarkupResponse(renderRequest,renderResponse);
+  String content=markupResponse.getMarkupContext().getItemString();
+  Matcher urlMatcher=_urlPattern.matcher(content);
+  StringBuffer sb=new StringBuffer();
+  while (urlMatcher.find()) {
+    String url=urlMatcher.group(1);
+    Map<String,String> parameterMap=new HashMap<String,String>();
+    Matcher parameterMatcher=_urlParametersPattern.matcher(url);
+    while (parameterMatcher.find()) {
+      String name=parameterMatcher.group(1);
+      String value=parameterMatcher.group(2);
+      parameterMap.put(name,HttpUtil.decodeURL(value));
+    }
+    urlMatcher.appendReplacement(sb,rewriteURL(renderResponse,parameterMap));
+  }
+  urlMatcher.appendTail(sb);
+  return sb.toString();
+}

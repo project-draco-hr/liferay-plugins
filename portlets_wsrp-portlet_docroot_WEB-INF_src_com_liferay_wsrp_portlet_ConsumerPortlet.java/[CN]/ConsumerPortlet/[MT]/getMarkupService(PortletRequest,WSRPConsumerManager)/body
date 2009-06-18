@@ -1,0 +1,21 @@
+{
+  PortletSession portletSession=portletRequest.getPortletSession();
+  WSRP_v2_Markup_PortType markupService=(WSRP_v2_Markup_PortType)portletSession.getAttribute(_MARKUP_SERVICE);
+  if (markupService == null) {
+    markupService=wsrpConsumerManager.getMarkupService();
+    ServiceDescription serviceDescription=wsrpConsumerManager.getServiceDescription();
+    String cookie=(String)portletSession.getAttribute(_COOKIE);
+    if (cookie == null) {
+      CookieProtocol cookieProtocol=serviceDescription.getRequiresInitCookie();
+      String cookieProtocolValue=cookieProtocol.getValue();
+      if (cookieProtocolValue.equals(CookieProtocol._perGroup) || cookieProtocolValue.equals(CookieProtocol._perUser)) {
+        InitCookie initCookie=new InitCookie();
+        markupService.initCookie(initCookie);
+        cookie=SimpleHTTPSender.getCurrentCookie();
+        portletSession.setAttribute(_COOKIE,cookie);
+      }
+    }
+    portletSession.setAttribute(_MARKUP_SERVICE,markupService);
+  }
+  return markupService;
+}

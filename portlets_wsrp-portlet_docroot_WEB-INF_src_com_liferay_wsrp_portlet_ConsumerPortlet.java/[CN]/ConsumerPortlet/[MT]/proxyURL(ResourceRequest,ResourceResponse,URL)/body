@@ -1,0 +1,10 @@
+{
+  PortletSession portletSession=resourceRequest.getPortletSession();
+  String cookie=(String)portletSession.getAttribute(_COOKIE);
+  URLConnection urlConnection=url.openConnection();
+  urlConnection.setRequestProperty("Cookie",cookie);
+  urlConnection.connect();
+  resourceResponse.setContentLength(urlConnection.getContentLength());
+  resourceResponse.setContentType(urlConnection.getContentType());
+  PortletResponseUtil.write(resourceResponse,urlConnection.getInputStream());
+}

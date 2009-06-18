@@ -1,0 +1,17 @@
+{
+  _serviceLocator=new WSRP_v2_ServiceLocator();
+  _serviceLocator.setMaintainSession(true);
+  Document document=SAXReaderUtil.read(wsdl);
+  Element root=document.getRootElement();
+  _wsdlNamespace=_getWsdlNamespace(root);
+  List<Element> serviceElements=root.elements(_getWsdlQName("service"));
+  for (  Element serviceElement : serviceElements) {
+    _readServiceElement(serviceElement);
+  }
+  GetServiceDescription getServiceDescription=new GetServiceDescription();
+  _serviceDescription=_serviceDescriptionService.getServiceDescription(getServiceDescription);
+  PortletDescription[] portletDescriptions=_serviceDescription.getOfferedPortlets();
+  for (  PortletDescription portletDescription : portletDescriptions) {
+    _portletDescriptions.put(portletDescription.getPortletHandle(),portletDescription);
+  }
+}
