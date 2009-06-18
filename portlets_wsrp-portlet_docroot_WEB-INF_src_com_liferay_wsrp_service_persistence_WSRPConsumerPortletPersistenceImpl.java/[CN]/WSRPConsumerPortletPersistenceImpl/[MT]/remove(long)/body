@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)session.get(WSRPConsumerPortletImpl.class,new Long(wsrpConsumerPortletId));
+    if (wsrpConsumerPortlet == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No WSRPConsumerPortlet exists with the primary key " + wsrpConsumerPortletId);
+      }
+      throw new NoSuchConsumerPortletException("No WSRPConsumerPortlet exists with the primary key " + wsrpConsumerPortletId);
+    }
+    return remove(wsrpConsumerPortlet);
+  }
+ catch (  NoSuchConsumerPortletException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

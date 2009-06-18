@@ -1,0 +1,32 @@
+{
+  Object[] finderArgs=new Object[]{new Long(wsrpConsumerId)};
+  List<WSRPConsumerPortlet> list=(List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_WSRPCONSUMERID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT wsrpConsumerPortlet FROM WSRPConsumerPortlet wsrpConsumerPortlet WHERE ");
+      query.append("wsrpConsumerPortlet.wsrpConsumerId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("wsrpConsumerPortlet.name ASC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(wsrpConsumerId);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<WSRPConsumerPortlet>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_WSRPCONSUMERID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

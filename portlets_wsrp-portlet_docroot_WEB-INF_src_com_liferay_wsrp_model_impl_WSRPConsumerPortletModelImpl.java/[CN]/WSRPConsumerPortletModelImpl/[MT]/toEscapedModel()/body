@@ -1,0 +1,18 @@
+{
+  if (isEscapedModel()) {
+    return (WSRPConsumerPortlet)this;
+  }
+ else {
+    WSRPConsumerPortlet model=new WSRPConsumerPortletImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setWsrpConsumerPortletId(getWsrpConsumerPortletId());
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setWsrpConsumerId(getWsrpConsumerId());
+    model.setName(HtmlUtil.escape(getName()));
+    model.setPortletHandle(HtmlUtil.escape(getPortletHandle()));
+    model=(WSRPConsumerPortlet)Proxy.newProxyInstance(WSRPConsumerPortlet.class.getClassLoader(),new Class[]{WSRPConsumerPortlet.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
