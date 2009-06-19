@@ -10,7 +10,9 @@
   MarkupParams markupParams=new MarkupParams();
   ClientData clientData=new ClientData();
   clientData.setRequestVerb("GET");
-  clientData.setUserAgent("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; " + "rv:1.9.0.11) Gecko/2009060214 Firefox/3.0.11");
+  LiferayPortletRequest liferayPortletRequest=(LiferayPortletRequest)renderRequest;
+  HttpServletRequest httpServletRequest=liferayPortletRequest.getHttpServletRequest();
+  clientData.setUserAgent(httpServletRequest.getHeader("User-Agent"));
   markupParams.setClientData(clientData);
   List<Locale> locales=Collections.list(renderRequest.getLocales());
   String[] localesArray=new String[locales.size()];
