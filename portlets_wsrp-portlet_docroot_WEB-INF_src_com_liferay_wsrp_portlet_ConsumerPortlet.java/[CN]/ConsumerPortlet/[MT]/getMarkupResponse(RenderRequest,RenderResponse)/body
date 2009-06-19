@@ -1,4 +1,6 @@
 {
+  PortletSession portletSession=renderRequest.getPortletSession();
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String portletName=getPortletConfig().getPortletName();
   long wsrpConsumerPortletId=GetterUtil.getLong(portletName.substring(PORTLET_NAME_PREFIX.length()));
@@ -9,10 +11,8 @@
   GetMarkup getMarkup=new GetMarkup();
   MarkupParams markupParams=new MarkupParams();
   ClientData clientData=new ClientData();
-  clientData.setRequestVerb("GET");
-  LiferayPortletRequest liferayPortletRequest=(LiferayPortletRequest)renderRequest;
-  HttpServletRequest httpServletRequest=liferayPortletRequest.getHttpServletRequest();
-  clientData.setUserAgent(httpServletRequest.getHeader("User-Agent"));
+  clientData.setRequestVerb(HttpMethods.GET);
+  clientData.setUserAgent(request.getHeader(HttpHeaders.USER_AGENT));
   markupParams.setClientData(clientData);
   List<Locale> locales=Collections.list(renderRequest.getLocales());
   String[] localesArray=new String[locales.size()];
@@ -43,7 +43,6 @@
   RuntimeContext runtimeContext=new RuntimeContext();
   runtimeContext.setNamespacePrefix(renderResponse.getNamespace());
   runtimeContext.setPortletInstanceKey(renderResponse.getNamespace());
-  PortletSession portletSession=renderRequest.getPortletSession();
   SessionContext sessionContext=(SessionContext)portletSession.getAttribute(_SESSION_CONTEXT);
   if (sessionContext != null) {
     SessionParams sessionParams=new SessionParams();
