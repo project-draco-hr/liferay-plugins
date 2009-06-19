@@ -8,6 +8,10 @@
   PortletDescription portletDescription=wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());
   GetMarkup getMarkup=new GetMarkup();
   MarkupParams markupParams=new MarkupParams();
+  ClientData clientData=new ClientData();
+  clientData.setRequestVerb("GET");
+  clientData.setUserAgent("Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; " + "rv:1.9.0.11) Gecko/2009060214 Firefox/3.0.11");
+  markupParams.setClientData(clientData);
   List<Locale> locales=Collections.list(renderRequest.getLocales());
   String[] localesArray=new String[locales.size()];
   for (int i=0; i < locales.size(); i++) {
@@ -37,7 +41,14 @@
   RuntimeContext runtimeContext=new RuntimeContext();
   runtimeContext.setNamespacePrefix(renderResponse.getNamespace());
   runtimeContext.setPortletInstanceKey(renderResponse.getNamespace());
-  runtimeContext.setUserAuthentication("wsrp:user");
+  PortletSession portletSession=renderRequest.getPortletSession();
+  SessionContext sessionContext=(SessionContext)portletSession.getAttribute(_SESSION_CONTEXT);
+  if (sessionContext != null) {
+    SessionParams sessionParams=new SessionParams();
+    sessionParams.setSessionID(sessionContext.getSessionID());
+    runtimeContext.setSessionParams(sessionParams);
+  }
+  runtimeContext.setUserAuthentication("wsrp:password");
   getMarkup.setRuntimeContext(runtimeContext);
   UserContext userContext=new UserContext();
   userContext.setUserCategories(new String[]{RoleConstants.USER});
@@ -45,5 +56,9 @@
   getMarkup.setUserContext(userContext);
   WSRP_v2_Markup_PortType markupService=getMarkupService(renderRequest,wsrpConsumerManager);
   MarkupResponse markupResponse=markupService.getMarkup(getMarkup);
+  sessionContext=markupResponse.getSessionContext();
+  if (sessionContext != null) {
+    portletSession.setAttribute(_SESSION_CONTEXT,sessionContext);
+  }
   return markupResponse;
 }
