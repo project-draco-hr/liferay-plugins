@@ -1,26 +1,6 @@
 {
   try {
-    String portletName=getPortletConfig().getPortletName();
-    long wsrpConsumerPortletId=GetterUtil.getLong(portletName.substring(PORTLET_NAME_PREFIX.length()));
-    WSRPConsumerPortlet wsrpConsumerPortlet=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletId);
-    WSRPConsumer wsrpConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerPortlet.getWsrpConsumerId());
-    WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer);
-    InteractionParams interactionParams=new InteractionParams();
-    MarkupParams markupParams=new MarkupParams();
-    PortletContext portletContext=new PortletContext();
-    RuntimeContext runtimeContext=new RuntimeContext();
-    UserContext userContext=new UserContext();
-    initContexts(actionRequest,actionResponse,wsrpConsumerManager,wsrpConsumerPortlet,interactionParams,markupParams,portletContext,runtimeContext,userContext);
-    PerformBlockingInteraction performBlockingInteraction=new PerformBlockingInteraction();
-    performBlockingInteraction.setPortletContext(portletContext);
-    performBlockingInteraction.setRuntimeContext(runtimeContext);
-    performBlockingInteraction.setMarkupParams(markupParams);
-    performBlockingInteraction.setUserContext(userContext);
-    performBlockingInteraction.setInteractionParams(interactionParams);
-    WSRP_v2_Markup_PortType markupService=getMarkupService(actionRequest,wsrpConsumerManager);
-    BlockingInteractionResponse blockingInteractionResponse=markupService.performBlockingInteraction(performBlockingInteraction);
-    blockingInteractionResponse.getUpdateResponse();
-    processBlockingInteractionResponse(actionRequest,actionResponse,blockingInteractionResponse);
+    doProcessAction(actionRequest,actionResponse);
   }
  catch (  IOException ioe) {
     throw ioe;

@@ -3,8 +3,8 @@
   HttpServletRequest request=PortalUtil.getHttpServletRequest(portletRequest);
   ThemeDisplay themeDisplay=(ThemeDisplay)portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
   ClientData clientData=new ClientData();
-  clientData.setRequestVerb("GET");
-  clientData.setUserAgent(request.getHeader("User-Agent"));
+  clientData.setRequestVerb(HttpMethods.GET);
+  clientData.setUserAgent(request.getHeader(HttpHeaders.USER_AGENT));
   markupParams.setClientData(clientData);
   List<Locale> locales=Collections.list(portletRequest.getLocales());
   String[] localesArray=new String[locales.size()];
@@ -13,8 +13,8 @@
     localesArray[i]=locale.toString();
   }
   markupParams.setLocales(localesArray);
-  markupParams.setMarkupCharacterSets(new String[]{StringPool.UTF8});
-  markupParams.setMimeTypes(new String[]{ContentTypes.TEXT_HTML});
+  markupParams.setMarkupCharacterSets(_CHAR_SETS);
+  markupParams.setMimeTypes(_MIME_TYPES);
   markupParams.setMode("wsrp:" + portletRequest.getPortletMode());
   markupParams.setWindowState("wsrp:" + portletRequest.getWindowState());
   PortletDescription portletDescription=wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());

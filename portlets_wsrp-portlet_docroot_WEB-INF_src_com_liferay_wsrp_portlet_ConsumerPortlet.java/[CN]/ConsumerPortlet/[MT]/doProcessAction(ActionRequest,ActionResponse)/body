@@ -1,0 +1,20 @@
+{
+  WSRPConsumerPortlet wsrpConsumerPortlet=getWSRPConsumerPortlet();
+  WSRPConsumerManager wsrpConsumerManager=getWSRPConsumerManager(wsrpConsumerPortlet);
+  InteractionParams interactionParams=new InteractionParams();
+  MarkupParams markupParams=new MarkupParams();
+  PortletContext portletContext=new PortletContext();
+  RuntimeContext runtimeContext=new RuntimeContext();
+  UserContext userContext=new UserContext();
+  initContexts(actionRequest,actionResponse,wsrpConsumerPortlet,wsrpConsumerManager,interactionParams,markupParams,portletContext,runtimeContext,userContext);
+  PerformBlockingInteraction performBlockingInteraction=new PerformBlockingInteraction();
+  performBlockingInteraction.setInteractionParams(interactionParams);
+  performBlockingInteraction.setMarkupParams(markupParams);
+  performBlockingInteraction.setPortletContext(portletContext);
+  performBlockingInteraction.setRuntimeContext(runtimeContext);
+  performBlockingInteraction.setUserContext(userContext);
+  WSRP_v2_Markup_PortType markupService=getMarkupService(actionRequest,wsrpConsumerManager);
+  BlockingInteractionResponse blockingInteractionResponse=markupService.performBlockingInteraction(performBlockingInteraction);
+  blockingInteractionResponse.getUpdateResponse();
+  processBlockingInteractionResponse(actionRequest,actionResponse,blockingInteractionResponse);
+}
