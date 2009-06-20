@@ -1,0 +1,28 @@
+{
+  PortletSession portletSession=portletRequest.getPortletSession();
+  String portletName=getPortletConfig().getPortletName();
+  long wsrpConsumerPortletId=GetterUtil.getLong(portletName.substring(PORTLET_NAME_PREFIX.length()));
+  WSRPConsumerPortlet wsrpConsumerPortlet=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletId);
+  WSRPConsumer wsrpConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerPortlet.getWsrpConsumerId());
+  WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer);
+  GetMarkup getMarkup=new GetMarkup();
+  MarkupParams markupParams=new MarkupParams();
+  PortletContext portletContext=new PortletContext();
+  RuntimeContext runtimeContext=new RuntimeContext();
+  UserContext userContext=new UserContext();
+  initContexts(portletRequest,portletResponse,wsrpConsumerManager,wsrpConsumerPortlet,markupParams,portletContext,runtimeContext,userContext);
+  getMarkup.setMarkupParams(markupParams);
+  PortletContext updatePortletContext=(PortletContext)portletSession.getAttribute(_PORTLET_CONTEXT);
+  if (updatePortletContext != null) {
+    getMarkup.setPortletContext(updatePortletContext);
+  }
+ else {
+    getMarkup.setPortletContext(portletContext);
+  }
+  getMarkup.setRuntimeContext(runtimeContext);
+  getMarkup.setUserContext(userContext);
+  WSRP_v2_Markup_PortType markupService=getMarkupService(portletRequest,wsrpConsumerManager);
+  MarkupResponse markupResponse=markupService.getMarkup(getMarkup);
+  processMarkupResponse(portletRequest,portletResponse,markupResponse);
+  return markupResponse;
+}

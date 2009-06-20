@@ -1,0 +1,13 @@
+{
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+  initContexts(actionRequest,actionResponse,wsrpConsumerManager,wsrpConsumerPortlet,markupParams,portletContext,runtimeContext,userContext);
+  interactionParams.setPortletStateChange(StateChange.cloneBeforeWrite);
+  String interactionState=actionRequest.getParameter("wsrp-interactionState");
+  interactionParams.setInteractionState(interactionState);
+  String contentType=request.getContentType();
+  if (Validator.isNotNull(contentType) && contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA)) {
+  }
+ else {
+    processFormParameters(actionRequest,actionResponse,interactionParams);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  Enumeration<String> nameEnum=actionRequest.getParameterNames();
+  while (nameEnum.hasMoreElements()) {
+    String name=(String)nameEnum.nextElement();
+    if (isReservedParameter(name)) {
+      continue;
+    }
+    String[] values=actionRequest.getParameterValues(name);
+    if (values == null) {
+      continue;
+    }
+    List<NamedString> formParameterList=new ArrayList<NamedString>();
+    for (    String value : values) {
+      NamedString formParameter=new NamedString();
+      formParameter.setName(name);
+      formParameter.setValue(value);
+      formParameterList.add(formParameter);
+    }
+    if (!formParameterList.isEmpty()) {
+      interactionParams.setFormParameters(formParameterList.toArray(new NamedString[]{}));
+    }
+  }
+}
