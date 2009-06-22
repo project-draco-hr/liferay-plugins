@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    WSRPProducer wsrpProducer=(WSRPProducer)session.get(WSRPProducerImpl.class,new Long(wsrpProducerId));
+    if (wsrpProducer == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No WSRPProducer exists with the primary key " + wsrpProducerId);
+      }
+      throw new NoSuchProducerException("No WSRPProducer exists with the primary key " + wsrpProducerId);
+    }
+    return remove(wsrpProducer);
+  }
+ catch (  NoSuchProducerException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

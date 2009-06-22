@@ -1,0 +1,21 @@
+{
+  boolean isNew=wsrpProducer.isNew();
+  for (  ModelListener<WSRPProducer> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(wsrpProducer);
+    }
+ else {
+      listener.onBeforeUpdate(wsrpProducer);
+    }
+  }
+  wsrpProducer=updateImpl(wsrpProducer,merge);
+  for (  ModelListener<WSRPProducer> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(wsrpProducer);
+    }
+ else {
+      listener.onAfterUpdate(wsrpProducer);
+    }
+  }
+  return wsrpProducer;
+}
