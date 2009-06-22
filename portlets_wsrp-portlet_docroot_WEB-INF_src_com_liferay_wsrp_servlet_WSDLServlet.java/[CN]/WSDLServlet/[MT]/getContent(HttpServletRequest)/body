@@ -1,0 +1,16 @@
+{
+  String path=GetterUtil.getString(request.getPathInfo());
+  ServletContext servletContext=getServletContext();
+  if (Validator.isNull(path)) {
+    double version=ParamUtil.getDouble(request,"version",_DEFAULT_VERSION);
+    String content=StringUtil.read(servletContext.getResourceAsStream("/WEB-INF/wsdl/wsrp-" + version + "-service.wsdl"));
+    return replaceLocations(request,content);
+  }
+  for (  String curPath : _PATHS) {
+    if (path.equals(curPath)) {
+      String content=StringUtil.read(servletContext.getResourceAsStream("/WEB-INF/wsdl" + path));
+      return replaceLocations(request,content);
+    }
+  }
+  return null;
+}
