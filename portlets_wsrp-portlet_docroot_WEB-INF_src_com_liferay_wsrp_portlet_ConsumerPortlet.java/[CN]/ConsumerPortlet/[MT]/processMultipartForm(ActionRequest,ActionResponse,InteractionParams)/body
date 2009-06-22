@@ -23,16 +23,15 @@
       sb.append("; filename=");
       sb.append(uploadPortletRequest.getFileName(name));
       NamedString mimeAttribute=new NamedString();
-      mimeAttribute.setName("Content-Disposition");
+      mimeAttribute.setName(HttpHeaders.CONTENT_DISPOSITION);
       mimeAttribute.setValue(sb.toString());
       uploadContext.setMimeAttributes(new NamedString[]{mimeAttribute});
       File file=uploadPortletRequest.getFile(name);
-      byte[] fileBytes=null;
-      fileBytes=FileUtil.getBytes(file);
-      if (fileBytes == null) {
+      byte[] bytes=FileUtil.getBytes(file);
+      if (bytes == null) {
         continue;
       }
-      uploadContext.setUploadData(fileBytes);
+      uploadContext.setUploadData(bytes);
       uploadContexts.add(uploadContext);
     }
   }
