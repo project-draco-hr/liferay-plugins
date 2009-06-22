@@ -1,20 +1,31 @@
 {
-  MarkupResponse markupResponse=getMarkupResponse(renderRequest,renderResponse);
-  String content=markupResponse.getMarkupContext().getItemString();
-  Matcher urlMatcher=_urlPattern.matcher(content);
-  StringBuffer sb=new StringBuffer();
-  while (urlMatcher.find()) {
-    String url=urlMatcher.group(1);
-    Map<String,String> parameterMap=new HashMap<String,String>();
-    Matcher parameterMatcher=_urlParametersPattern.matcher(url);
-    while (parameterMatcher.find()) {
-      String name=parameterMatcher.group(1);
-      String value=parameterMatcher.group(2);
-      parameterMap.put(name,HttpUtil.decodeURL(value));
-    }
-    urlMatcher.appendReplacement(sb,rewriteURL(renderResponse,parameterMap));
+  PortletSession portletSession=renderRequest.getPortletSession();
+  MarkupContext markupContext=(MarkupContext)portletSession.getAttribute(_MARKUP_CONTEXT);
+  if (markupContext == null) {
+    MarkupResponse markupResponse=getMarkupResponse(renderRequest,renderResponse);
+    markupContext=markupResponse.getMarkupContext();
   }
-  urlMatcher.appendTail(sb);
+  String content=markupContext.getItemString();
+  Matcher rewriteMatcher=_rewritePattern.matcher(content);
+  StringBuffer sb=new StringBuffer();
+  while (rewriteMatcher.find()) {
+    String namespace=rewriteMatcher.group(1);
+    String url=rewriteMatcher.group(2);
+    if (Validator.isNotNull(namespace)) {
+      rewriteMatcher.appendReplacement(sb,renderResponse.getNamespace());
+    }
+ else     if (Validator.isNotNull(url)) {
+      Map<String,String> parameterMap=new HashMap<String,String>();
+      Matcher parameterMatcher=_urlParametersPattern.matcher(url);
+      while (parameterMatcher.find()) {
+        String name=parameterMatcher.group(1);
+        String value=parameterMatcher.group(2);
+        parameterMap.put(name,HttpUtil.decodeURL(value));
+      }
+      rewriteMatcher.appendReplacement(sb,rewriteURL(renderResponse,parameterMap));
+    }
+  }
+  rewriteMatcher.appendTail(sb);
   renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
   PortletResponseUtil.write(renderResponse,sb.toString());
 }

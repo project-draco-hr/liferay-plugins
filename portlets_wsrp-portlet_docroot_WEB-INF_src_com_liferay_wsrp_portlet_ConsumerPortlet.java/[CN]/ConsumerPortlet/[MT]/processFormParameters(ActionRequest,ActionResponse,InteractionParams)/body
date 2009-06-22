@@ -1,4 +1,5 @@
 {
+  List<NamedString> formParameters=new ArrayList<NamedString>();
   Enumeration<String> enu=actionRequest.getParameterNames();
   while (enu.hasMoreElements()) {
     String name=enu.nextElement();
@@ -9,15 +10,9 @@
     if (values == null) {
       continue;
     }
-    List<NamedString> formParameters=new ArrayList<NamedString>();
-    for (    String value : values) {
-      NamedString formParameter=new NamedString();
-      formParameter.setName(name);
-      formParameter.setValue(value);
-      formParameters.add(formParameter);
-    }
-    if (!formParameters.isEmpty()) {
-      interactionParams.setFormParameters(formParameters.toArray(new NamedString[formParameters.size()]));
-    }
+    addFormField(formParameters,name,values);
+  }
+  if (!formParameters.isEmpty()) {
+    interactionParams.setFormParameters(formParameters.toArray(new NamedString[formParameters.size()]));
   }
 }
