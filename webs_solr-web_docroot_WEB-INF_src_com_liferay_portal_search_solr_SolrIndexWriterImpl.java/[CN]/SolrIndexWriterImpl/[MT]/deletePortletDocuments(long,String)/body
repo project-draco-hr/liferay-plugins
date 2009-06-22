@@ -1,7 +1,9 @@
 {
   try {
     _solrServer.deleteByQuery(Field.PORTLET_ID + StringPool.COLON + portletId);
-    _solrServer.commit();
+    if (_commit) {
+      _solrServer.commit();
+    }
   }
  catch (  Exception e) {
     throw new SearchException(e);
