@@ -1,0 +1,8 @@
+{
+  HttpServletRequest request=ServletUtil.getRequest();
+  long wsrpProducerId=ParamUtil.getLong(request,"wsrpProducerId");
+  WSRPProducer wsrpProducer=WSRPProducerLocalServiceUtil.getWSRPProducer(wsrpProducerId);
+  ServiceDescription serviceDescription=new ServiceDescription();
+  serviceDescription.setOfferedPortlets(getPortletDescriptions(wsrpProducer));
+  return serviceDescription;
+}

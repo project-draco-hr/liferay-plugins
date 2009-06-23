@@ -1,9 +1,11 @@
 {
-  ServiceDescription serviceDescription=new ServiceDescription();
-  PortletDescription portletDescription=new PortletDescription();
-  portletDescription.setPortletHandle("1");
-  portletDescription.setTitle(new LocalizedString("Hello World",null));
-  PortletDescription[] portletDescriptions={portletDescription};
-  serviceDescription.setOfferedPortlets(portletDescriptions);
-  return serviceDescription;
+  try {
+    return doGetServiceDescription(getServiceDescription);
+  }
+ catch (  RemoteException re) {
+    throw re;
+  }
+catch (  Exception e) {
+    throw new RemoteException(e.getMessage());
+  }
 }
