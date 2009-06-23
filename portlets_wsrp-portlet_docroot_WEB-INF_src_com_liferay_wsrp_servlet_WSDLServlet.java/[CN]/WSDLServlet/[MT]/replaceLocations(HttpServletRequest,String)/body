@@ -1,9 +1,4 @@
 {
-  String url=request.getRequestURL().toString();
-  if (url.endsWith(".wsdl") || url.endsWith(".xsd")) {
-    int pos=url.lastIndexOf(StringPool.SLASH);
-    url=url.substring(0,pos);
-  }
-  long wsrpProducerId=ParamUtil.getLong(request,"wsrpProducerId");
-  return StringUtil.replace(content,new String[]{"http://my.service:8080","/wsdl/services/","${wsrpProducerId}","location=\"wsrp-","schemaLocation=\"wsrp-"},new String[]{url,"/services/",String.valueOf(wsrpProducerId),"location=\"" + url + "/wsrp-","schemaLocation=\"" + url + "/wsrp-"});
+  String url=getURL(request);
+  return StringUtil.replace(content,new String[]{"location=\"wsrp-","schemaLocation=\"wsrp-"},new String[]{"location=\"" + url + "/wsrp-","schemaLocation=\"" + url + "/wsrp-"});
 }
