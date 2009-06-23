@@ -1,0 +1,12 @@
+{
+  _username=username;
+  _password=password;
+  HttpClient httpClient=new HttpClient();
+  if (_username != null && _password != null) {
+    if (authScope == null) {
+      authScope=AuthScope.ANY;
+    }
+    httpClient.getState().setCredentials(authScope,new UsernamePasswordCredentials(_username,_password));
+  }
+  _server=new CommonsHttpSolrServer(url,httpClient);
+}
