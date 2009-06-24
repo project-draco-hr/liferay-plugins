@@ -1,7 +1,7 @@
 {
   NamedList<Object> response=null;
   if (!(request instanceof UpdateRequest)) {
-    throw new IllegalStateException("This SolrServer should be used only to update requests.");
+    throw new IllegalStateException("This SolrServer should be used only to update requests");
   }
   for (  SolrServerWrapper serverWrapper : _serverWrappers) {
     try {
@@ -9,11 +9,11 @@
       response=server.request(request);
     }
  catch (    Exception e) {
-      _log.error("Could not send request to server: " + serverWrapper.getId());
+      _log.error("Could not send request to server " + serverWrapper.getId(),e);
     }
   }
   if (response == null) {
-    throw new SolrServerException("No server available.");
+    throw new SolrServerException("No server available");
   }
   return response;
 }
