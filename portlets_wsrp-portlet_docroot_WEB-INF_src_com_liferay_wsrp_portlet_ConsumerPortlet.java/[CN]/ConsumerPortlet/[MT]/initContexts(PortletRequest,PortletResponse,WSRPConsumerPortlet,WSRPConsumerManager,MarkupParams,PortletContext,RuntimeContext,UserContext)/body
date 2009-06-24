@@ -25,11 +25,20 @@
       markupParams.setValidNewWindowStates(markupType.getWindowStates());
     }
   }
-  NavigationalContext navigationalContext=(NavigationalContext)portletSession.getAttribute(_NAVIGATIONAL_CONTEXT);
-  if (navigationalContext == null) {
-    navigationalContext=new NavigationalContext();
-    String navigationalState=portletRequest.getParameter("wsrp-navigationalState");
-    navigationalContext.setOpaqueValue(navigationalState);
+  NavigationalContext navigationalContext=new NavigationalContext();
+  String navigationalState=portletRequest.getParameter("wsrp-navigationalState");
+  navigationalContext.setOpaqueValue(navigationalState);
+  String navigationalValues=portletRequest.getParameter("wsrp-navigationalValues");
+  if (Validator.isNotNull(navigationalValues)) {
+    List<NamedString> publicValues=new ArrayList<NamedString>();
+    Matcher matcher=_publicValueParameterPattern.matcher(navigationalValues);
+    while (matcher.find()) {
+      NamedString publicValue=new NamedString();
+      publicValue.setName(matcher.group(1));
+      publicValue.setValue(matcher.group(2));
+      publicValues.add(publicValue);
+    }
+    navigationalContext.setPublicValues(publicValues.toArray(new NamedString[publicValues.size()]));
   }
   markupParams.setNavigationalContext(navigationalContext);
   portletContext.setPortletHandle(wsrpConsumerPortlet.getPortletHandle());

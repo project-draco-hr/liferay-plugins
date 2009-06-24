@@ -1,6 +1,8 @@
 {
   PortletSession portletSession=portletRequest.getPortletSession();
-  portletSession.setAttribute(_SESSION_CONTEXT,markupResponse.getSessionContext());
+  SessionContext sessionContext=markupResponse.getSessionContext();
+  if (sessionContext != null) {
+    portletSession.setAttribute(_SESSION_CONTEXT,sessionContext);
+  }
   portletSession.removeAttribute(_MARKUP_CONTEXT);
-  portletSession.removeAttribute(_NAVIGATIONAL_CONTEXT);
 }

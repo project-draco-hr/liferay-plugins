@@ -7,8 +7,39 @@
     return;
   }
   portletSession.setAttribute(_MARKUP_CONTEXT,updateResponse.getMarkupContext());
-  portletSession.setAttribute(_NAVIGATIONAL_CONTEXT,updateResponse.getNavigationalContext());
-  portletSession.setAttribute(_PORTLET_CONTEXT,updateResponse.getPortletContext());
+  NavigationalContext navigationalContext=updateResponse.getNavigationalContext();
+  if (navigationalContext != null) {
+    String opaqueValue=navigationalContext.getOpaqueValue();
+    if (opaqueValue != null) {
+      actionResponse.setRenderParameter("wsrp-navigationalState",opaqueValue);
+    }
+    NamedString[] publicValues=navigationalContext.getPublicValues();
+    if ((publicValues != null) && (publicValues.length > 0)) {
+      int lastIndex=publicValues.length - 2;
+      StringBuilder sb=new StringBuilder();
+      for (int i=0; i < publicValues.length; i++) {
+        NamedString publicValue=publicValues[i];
+        sb.append(publicValue.getName());
+        String value=publicValue.getValue();
+        if (Validator.isNotNull(value)) {
+          sb.append(StringPool.EQUAL);
+          sb.append(publicValue.getValue());
+        }
+        if (i < lastIndex) {
+          sb.append(StringPool.AMPERSAND);
+        }
+      }
+      actionResponse.setRenderParameter("wsrp-navigationalValues",sb.toString());
+    }
+  }
+  PortletContext portletContext=updateResponse.getPortletContext();
+  if (portletContext != null) {
+    portletSession.setAttribute(_PORTLET_CONTEXT,portletContext);
+  }
+  SessionContext sessionContext=updateResponse.getSessionContext();
+  if (sessionContext != null) {
+    portletSession.setAttribute(_SESSION_CONTEXT,sessionContext);
+  }
   String portletMode=updateResponse.getNewMode();
   if (Validator.isNotNull(portletMode)) {
     actionResponse.setPortletMode(getPortletMode(portletMode));
@@ -17,5 +48,4 @@
   if (Validator.isNotNull(windowState)) {
     actionResponse.setWindowState(getWindowState(windowState));
   }
-  portletSession.setAttribute(_SESSION_CONTEXT,updateResponse.getSessionContext());
 }
