@@ -1,0 +1,13 @@
+{
+  Group group=GroupLocalServiceUtil.getGroup(wsrpProducer.getCompanyId(),GroupConstants.GUEST);
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,0,1);
+  if (layouts.isEmpty()) {
+    throw new NoSuchLayoutException();
+  }
+  Layout layout=layouts.get(0);
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  if (!layoutTypePortlet.hasPortletId(portletId)) {
+    layoutTypePortlet.addPortletId(0,portletId,"column-1",-1,false);
+  }
+  return layout;
+}

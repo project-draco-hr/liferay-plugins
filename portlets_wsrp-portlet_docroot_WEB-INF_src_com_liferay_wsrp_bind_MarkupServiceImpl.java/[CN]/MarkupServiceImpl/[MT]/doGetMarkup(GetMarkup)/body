@@ -1,0 +1,14 @@
+{
+  WSRPProducer wsrpProducer=getWSRPProducer();
+  PortletContext portletContext=getMarkup.getPortletContext();
+  String portletId=portletContext.getPortletHandle();
+  Layout layout=getLayout(wsrpProducer,portletId);
+  MarkupParams markupParams=getMarkup.getMarkupParams();
+  String url=getURL(layout,portletId,markupParams.getMode());
+  String content=HttpUtil.URLtoString(url);
+  MarkupContext markupContext=new MarkupContext();
+  markupContext.setItemString(content);
+  MarkupResponse markupResponse=new MarkupResponse();
+  markupResponse.setMarkupContext(markupContext);
+  return markupResponse;
+}
