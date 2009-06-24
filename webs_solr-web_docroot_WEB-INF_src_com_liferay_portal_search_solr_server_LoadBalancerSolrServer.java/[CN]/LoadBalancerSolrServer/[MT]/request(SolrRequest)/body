@@ -1,0 +1,27 @@
+{
+  List<SolrServerWrapper> serverWrappers=_factory.getLiveServers();
+  for (  SolrServerWrapper serverWrapper : serverWrappers) {
+    SolrServer server=_factory.getLiveServer(serverWrapper);
+    if (server == null) {
+      continue;
+    }
+    try {
+      return server.request(request);
+    }
+ catch (    SolrException se) {
+      throw se;
+    }
+catch (    SolrServerException sse) {
+      if (sse.getRootCause() instanceof IOException) {
+        _factory.killServer(serverWrapper);
+      }
+ else {
+        throw sse;
+      }
+    }
+catch (    Exception e) {
+      throw new SolrServerException(e);
+    }
+  }
+  return null;
+}

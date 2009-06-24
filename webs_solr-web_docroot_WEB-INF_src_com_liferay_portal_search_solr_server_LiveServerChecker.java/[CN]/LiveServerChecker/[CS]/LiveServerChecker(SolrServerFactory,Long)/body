@@ -1,0 +1,24 @@
+{
+  ScheduledExecutorService executor=Executors.newScheduledThreadPool(1);
+  Runnable runnable=new Runnable(){
+    public void run(){
+      Collection<SolrServerWrapper> serverWrappers=factory.getDeadServers();
+      for (      SolrServerWrapper serverWrapper : serverWrappers) {
+        SolrServer server=factory.getDeadServer(serverWrapper);
+        if (server == null) {
+          continue;
+        }
+        try {
+          SolrPingResponse response=server.ping();
+          if (response.getStatus() == 0) {
+            factory.aliveServer(serverWrapper);
+          }
+        }
+ catch (        Exception e) {
+        }
+      }
+    }
+  }
+;
+  executor.scheduleWithFixedDelay(runnable,0,delay,TimeUnit.SECONDS);
+}
