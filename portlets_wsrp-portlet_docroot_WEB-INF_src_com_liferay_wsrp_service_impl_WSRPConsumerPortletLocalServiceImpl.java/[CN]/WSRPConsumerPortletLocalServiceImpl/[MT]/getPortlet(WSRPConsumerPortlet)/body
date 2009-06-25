@@ -6,8 +6,13 @@
   WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerPortlet.getWsrpConsumerId());
   WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer);
   PortletDescription portletDescription=wsrpConsumerManager.getPortletDescription(wsrpConsumerPortlet.getPortletHandle());
-  String portletId=PortalUtil.getJsSafePortletId(ConsumerPortlet.PORTLET_NAME_PREFIX + wsrpConsumerPortlet.getWsrpConsumerPortletId());
-  portlet=PortletLocalServiceUtil.newPortlet(CompanyConstants.SYSTEM,portletId);
+  StringBuilder sb=new StringBuilder();
+  sb.append(ConsumerPortlet.PORTLET_NAME_PREFIX);
+  sb.append(wsrpConsumerPortlet.getCompanyId());
+  sb.append(StringPool.UNDERLINE);
+  sb.append(wsrpConsumerPortlet.getWsrpConsumerPortletId());
+  String portletId=PortalUtil.getJsSafePortletId(sb.toString());
+  portlet=PortletLocalServiceUtil.newPortlet(wsrpConsumerPortlet.getCompanyId(),portletId);
   portlet.setTimestamp(System.currentTimeMillis());
   PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.SERVLET_CONTEXT_NAME);
   portlet.setPortletApp(portletApp);
