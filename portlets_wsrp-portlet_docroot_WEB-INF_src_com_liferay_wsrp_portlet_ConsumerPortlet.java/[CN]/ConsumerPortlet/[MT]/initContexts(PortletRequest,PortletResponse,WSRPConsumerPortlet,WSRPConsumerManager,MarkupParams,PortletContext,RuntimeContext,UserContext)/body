@@ -2,7 +2,6 @@
   PortletSession portletSession=portletRequest.getPortletSession();
   HttpServletRequest request=PortalUtil.getHttpServletRequest(portletRequest);
   ThemeDisplay themeDisplay=(ThemeDisplay)portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  ClientData clientData=new ClientData();
   List<NamedString> clientAttributes=new ArrayList<NamedString>();
   Enumeration<String> enu=request.getHeaderNames();
   while (enu.hasMoreElements()) {
@@ -13,6 +12,11 @@
     clientAttribute.setValue(value);
     clientAttributes.add(clientAttribute);
   }
+  User user=themeDisplay.getUser();
+  clientAttributes.add(new NamedString(user.getEmailAddress(),HttpHeaders.LIFERAY_EMAIL_ADDRESS));
+  clientAttributes.add(new NamedString(user.getScreenName(),HttpHeaders.LIFERAY_SCREEN_NAME));
+  clientAttributes.add(new NamedString(String.valueOf(user.getUserId()),HttpHeaders.LIFERAY_USER_ID));
+  ClientData clientData=new ClientData();
   clientData.setClientAttributes(clientAttributes.toArray(new NamedString[clientAttributes.size()]));
   clientData.setRequestVerb(HttpMethods.GET);
   clientData.setUserAgent(request.getHeader(HttpHeaders.USER_AGENT));
