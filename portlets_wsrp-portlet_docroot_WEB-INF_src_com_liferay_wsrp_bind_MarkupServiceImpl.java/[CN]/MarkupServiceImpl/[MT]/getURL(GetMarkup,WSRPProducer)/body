@@ -16,6 +16,15 @@
   String portletMode=getPortletMode(getMarkup);
   sb.append("&p_p_mode=");
   sb.append(HttpUtil.encodeURL(portletMode));
+  NavigationalContext navigationalContext=getMarkup.getMarkupParams().getNavigationalContext();
+  if (navigationalContext != null) {
+    String opaqueValue=navigationalContext.getOpaqueValue();
+    if (Validator.isNotNull(opaqueValue)) {
+      sb.append(StringPool.AMPERSAND);
+      sb.append(HttpUtil.decodeURL(opaqueValue));
+    }
+  }
+  sb.append("&wsrp=1");
   if (_log.isInfoEnabled()) {
     _log.info("URL " + sb.toString());
   }
