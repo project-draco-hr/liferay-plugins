@@ -1,0 +1,34 @@
+{
+  HttpServletRequest request=ServletUtil.getRequest();
+  String portalURL=PortalUtil.getPortalURL(request);
+  StringBuilder sb=new StringBuilder();
+  sb.append(portalURL);
+  sb.append(PortalUtil.getPathMain());
+  sb.append(_PATH_RENDER_PORTLET);
+  sb.append(StringPool.QUESTION);
+  Layout layout=getLayout(portletContext,wsrpProducer);
+  sb.append("p_l_id=");
+  sb.append(layout.getPlid());
+  String portletId=getPortletId(portletContext);
+  sb.append("&p_p_id=");
+  sb.append(HttpUtil.encodeURL(portletId));
+  sb.append("&p_p_lifecycle=");
+  sb.append(lifecycle);
+  sb.append("&p_p_state=exclusive");
+  String portletMode=getPortletMode(markupParams);
+  sb.append("&p_p_mode=");
+  sb.append(HttpUtil.encodeURL(portletMode));
+  NavigationalContext navigationalContext=markupParams.getNavigationalContext();
+  if (navigationalContext != null) {
+    String opaqueValue=navigationalContext.getOpaqueValue();
+    if (Validator.isNotNull(opaqueValue)) {
+      sb.append(StringPool.AMPERSAND);
+      sb.append(HttpUtil.decodeURL(opaqueValue));
+    }
+  }
+  sb.append("&wsrp=1");
+  if (_log.isInfoEnabled()) {
+    _log.info("URL " + sb.toString());
+  }
+  return sb.toString();
+}

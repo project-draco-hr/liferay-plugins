@@ -1,4 +1,31 @@
 {
+  WSRPProducer wsrpProducer=getWSRPProducer();
+  String url=getURL(performBlockingInteraction,wsrpProducer);
+  Http.Options httpOptions=new Http.Options();
+  httpOptions.setLocation(url);
+  MarkupParams markupParams=performBlockingInteraction.getMarkupParams();
+  ClientData clientData=markupParams.getClientData();
+  NamedString[] clientAttributes=clientData.getClientAttributes();
+  for (  NamedString clientAttribute : clientAttributes) {
+    String name=clientAttribute.getName();
+    String value=clientAttribute.getValue();
+    if (name.equalsIgnoreCase(HttpHeaders.ACCEPT_ENCODING) || name.equalsIgnoreCase(HttpHeaders.COOKIE)) {
+      continue;
+    }
+    httpOptions.addHeader(name,value);
+  }
+  InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
+  NamedString[] formParameters=interactionParams.getFormParameters();
+  for (  NamedString formParameter : formParameters) {
+    httpOptions.addPart(formParameter.getName(),formParameter.getValue());
+  }
+  String content=HttpUtil.URLtoString(httpOptions);
+  MarkupContext markupContext=new MarkupContext();
+  markupContext.setItemString(content);
+  markupContext.setRequiresRewriting(true);
   BlockingInteractionResponse blockingInteractionResponse=new BlockingInteractionResponse();
+  UpdateResponse updateResponse=new UpdateResponse();
+  updateResponse.setMarkupContext(markupContext);
+  blockingInteractionResponse.setUpdateResponse(updateResponse);
   return blockingInteractionResponse;
 }
