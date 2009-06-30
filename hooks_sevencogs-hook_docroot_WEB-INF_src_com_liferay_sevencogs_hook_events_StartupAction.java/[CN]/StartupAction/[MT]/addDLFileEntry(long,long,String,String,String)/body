@@ -3,5 +3,10 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(false);
-  return DLFileEntryLocalServiceUtil.addFileEntry(userId,folderId,name,title,description,StringPool.BLANK,bytes,serviceContext);
+  try {
+    return DLFileEntryLocalServiceUtil.addFileEntry(userId,folderId,name,title,description,StringPool.BLANK,bytes,serviceContext);
+  }
+ catch (  DuplicateFileException dfe) {
+    return DLFileEntryLocalServiceUtil.updateFileEntry(userId,folderId,folderId,name,null,title,description,StringPool.BLANK,bytes,serviceContext);
+  }
 }
