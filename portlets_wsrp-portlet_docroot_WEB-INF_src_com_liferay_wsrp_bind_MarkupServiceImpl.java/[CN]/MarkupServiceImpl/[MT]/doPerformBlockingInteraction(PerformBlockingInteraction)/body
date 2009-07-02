@@ -1,16 +1,27 @@
 {
+  HttpSession session=ServletUtil.getRequest().getSession();
   WSRPProducer wsrpProducer=getWSRPProducer();
   String url=getURL(performBlockingInteraction,wsrpProducer);
   Http.Options httpOptions=new Http.Options();
   httpOptions.setLocation(url);
+  httpOptions.setPost(true);
+  Cookie[] cookies=(Cookie[])session.getAttribute("cookies");
+  if (cookies != null) {
+    httpOptions.setCookies(cookies);
+  }
   MarkupParams markupParams=performBlockingInteraction.getMarkupParams();
   addHeaders(markupParams,httpOptions);
+  PortletContext portletContext=performBlockingInteraction.getPortletContext();
   InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
   NamedString[] formParameters=interactionParams.getFormParameters();
   for (  NamedString formParameter : formParameters) {
-    httpOptions.addPart(formParameter.getName(),formParameter.getValue());
+    String name=getPortletId(portletContext) + "_" + formParameter.getName();
+    httpOptions.addPart(name,formParameter.getValue());
   }
   String content=HttpUtil.URLtoString(httpOptions);
+  if (cookies != null) {
+    session.setAttribute("cookies",cookies);
+  }
   MarkupContext markupContext=new MarkupContext();
   markupContext.setItemString(content);
   markupContext.setRequiresRewriting(true);

@@ -1,0 +1,23 @@
+{
+  Matcher rewriteMatcher=_rewritePattern.matcher(content);
+  StringBuffer sb=new StringBuffer();
+  while (rewriteMatcher.find()) {
+    String namespace=rewriteMatcher.group(1);
+    String url=rewriteMatcher.group(2);
+    if (Validator.isNotNull(namespace)) {
+      rewriteMatcher.appendReplacement(sb,portletResponse.getNamespace());
+    }
+ else     if (Validator.isNotNull(url)) {
+      Map<String,String> parameterMap=new HashMap<String,String>();
+      Matcher parameterMatcher=_parameterPattern.matcher(url);
+      while (parameterMatcher.find()) {
+        String name=parameterMatcher.group(1);
+        String value=parameterMatcher.group(2);
+        parameterMap.put(name,HttpUtil.decodeURL(value));
+      }
+      rewriteMatcher.appendReplacement(sb,rewriteURL((LiferayPortletResponse)portletResponse,parameterMap));
+    }
+  }
+  rewriteMatcher.appendTail(sb);
+  return sb.toString();
+}
