@@ -1,14 +1,14 @@
 {
   PortletSession portletSession=renderRequest.getPortletSession();
-  MarkupContext markupContext=(MarkupContext)portletSession.getAttribute(_MARKUP_CONTEXT);
+  MarkupContext markupContext=(MarkupContext)portletSession.getAttribute(WebKeys.MARKUP_CONTEXT);
   if (markupContext != null) {
-    portletSession.removeAttribute(_MARKUP_CONTEXT);
+    portletSession.removeAttribute(WebKeys.MARKUP_CONTEXT);
   }
  else {
     MarkupResponse markupResponse=getMarkupResponse(renderRequest,renderResponse);
     markupContext=markupResponse.getMarkupContext();
   }
   renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
-  String content=rewriteURLs(markupContext.getItemString(),renderResponse);
+  String content=rewriteURLs(renderResponse,markupContext.getItemString());
   PortletResponseUtil.write(renderResponse,content);
 }

@@ -1,0 +1,33 @@
+{
+  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)portletResponse;
+  String lifecycle=parameterMap.get("wsrp-urlType");
+  LiferayPortletURL liferayPortletURL=null;
+  if (lifecycle.equals("blockingAction")) {
+    liferayPortletURL=(LiferayPortletURL)liferayPortletResponse.createActionURL();
+  }
+ else   if (lifecycle.equals("render")) {
+    liferayPortletURL=(LiferayPortletURL)liferayPortletResponse.createRenderURL();
+  }
+ else   if (lifecycle.equals("resource")) {
+    liferayPortletURL=(LiferayPortletURL)liferayPortletResponse.createResourceURL();
+  }
+  for (  Map.Entry<String,String> parameter : parameterMap.entrySet()) {
+    String name=parameter.getKey();
+    String value=parameter.getValue();
+    if (name.equals("wsrp-mode")) {
+      liferayPortletURL.setPortletMode(getPortletMode(value));
+    }
+ else     if (name.equals("wsrp-resourceID")) {
+      liferayPortletURL.setResourceID(value);
+    }
+ else     if (name.equals("wsrp-urlType")) {
+    }
+ else     if (name.equals("wsrp-windowState")) {
+      liferayPortletURL.setWindowState(getWindowState(value));
+    }
+ else {
+      liferayPortletURL.setParameter(name,value);
+    }
+  }
+  return liferayPortletURL.toString();
+}

@@ -1,19 +1,9 @@
 {
-  HttpSession session=ServletUtil.getRequest().getSession();
   WSRPProducer wsrpProducer=getWSRPProducer();
-  String url=getURL(getMarkup,wsrpProducer);
   Http.Options httpOptions=new Http.Options();
-  httpOptions.setLocation(url);
-  Cookie[] cookies=(Cookie[])session.getAttribute("cookies");
-  if (cookies != null) {
-    httpOptions.setCookies(cookies);
-  }
-  MarkupParams markupParams=getMarkup.getMarkupParams();
-  addHeaders(markupParams,httpOptions);
-  String content=HttpUtil.URLtoString(httpOptions);
-  if (cookies != null) {
-    session.setAttribute("cookies",cookies);
-  }
+  addHeaders(getMarkup.getMarkupParams(),httpOptions);
+  httpOptions.setLocation(getURL(getMarkup,wsrpProducer));
+  String content=getContent(httpOptions);
   MarkupContext markupContext=new MarkupContext();
   markupContext.setItemString(content);
   markupContext.setRequiresRewriting(true);

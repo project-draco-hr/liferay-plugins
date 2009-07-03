@@ -3,15 +3,8 @@
   String portalURL=PortalUtil.getPortalURL(request);
   StringBuilder sb=new StringBuilder();
   sb.append(portalURL);
-  if (lifecycle.equals("1")) {
-    sb.append(PortalUtil.getPathContext());
-    sb.append(_PATH_WIDGET);
-  }
- else {
-    sb.append(PortalUtil.getPathMain());
-    sb.append(_PATH_RENDER_PORTLET);
-  }
-  sb.append(StringPool.QUESTION);
+  sb.append(PortalUtil.getPathContext());
+  sb.append(_PATH_WIDGET);
   Layout layout=getLayout(portletContext,wsrpProducer);
   sb.append("p_l_id=");
   sb.append(layout.getPlid());
@@ -20,7 +13,9 @@
   sb.append(HttpUtil.encodeURL(portletId));
   sb.append("&p_p_lifecycle=");
   sb.append(lifecycle);
-  sb.append("&p_p_state=exclusive");
+  String windowState=getWindowState(markupParams);
+  sb.append("&p_p_state=");
+  sb.append(HttpUtil.encodeURL(windowState));
   String portletMode=getPortletMode(markupParams);
   sb.append("&p_p_mode=");
   sb.append(HttpUtil.encodeURL(portletMode));

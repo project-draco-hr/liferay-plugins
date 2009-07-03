@@ -2,14 +2,14 @@
   PortletSession portletSession=actionRequest.getPortletSession();
   String redirectURL=blockingInteractionResponse.getRedirectURL();
   if (Validator.isNotNull(redirectURL)) {
-    sendRedirect(redirectURL,actionResponse);
+    sendRedirect(actionResponse,redirectURL);
     return;
   }
   UpdateResponse updateResponse=blockingInteractionResponse.getUpdateResponse();
   if (updateResponse == null) {
     return;
   }
-  portletSession.setAttribute(_MARKUP_CONTEXT,updateResponse.getMarkupContext());
+  portletSession.setAttribute(WebKeys.MARKUP_CONTEXT,updateResponse.getMarkupContext());
   NavigationalContext navigationalContext=updateResponse.getNavigationalContext();
   if (navigationalContext != null) {
     String opaqueValue=navigationalContext.getOpaqueValue();
@@ -37,11 +37,11 @@
   }
   PortletContext portletContext=updateResponse.getPortletContext();
   if (portletContext != null) {
-    portletSession.setAttribute(_PORTLET_CONTEXT,portletContext);
+    portletSession.setAttribute(WebKeys.PORTLET_CONTEXT,portletContext);
   }
   SessionContext sessionContext=updateResponse.getSessionContext();
   if (sessionContext != null) {
-    portletSession.setAttribute(_SESSION_CONTEXT,sessionContext);
+    portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
   }
   String portletMode=updateResponse.getNewMode();
   if (Validator.isNotNull(portletMode)) {
