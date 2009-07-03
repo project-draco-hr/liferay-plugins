@@ -3,8 +3,14 @@
   String portalURL=PortalUtil.getPortalURL(request);
   StringBuilder sb=new StringBuilder();
   sb.append(portalURL);
-  sb.append(PortalUtil.getPathMain());
-  sb.append(_PATH_RENDER_PORTLET);
+  if (lifecycle.equals("1")) {
+    sb.append(PortalUtil.getPathContext());
+    sb.append(_PATH_WIDGET);
+  }
+ else {
+    sb.append(PortalUtil.getPathMain());
+    sb.append(_PATH_RENDER_PORTLET);
+  }
   sb.append(StringPool.QUESTION);
   Layout layout=getLayout(portletContext,wsrpProducer);
   sb.append("p_l_id=");

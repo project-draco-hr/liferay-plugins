@@ -15,8 +15,12 @@
   InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
   NamedString[] formParameters=interactionParams.getFormParameters();
   for (  NamedString formParameter : formParameters) {
-    String name=getPortletId(portletContext) + "_" + formParameter.getName();
-    httpOptions.addPart(name,formParameter.getValue());
+    StringBuilder sb=new StringBuilder();
+    sb.append(StringPool.UNDERLINE);
+    sb.append(getPortletId(portletContext));
+    sb.append(StringPool.UNDERLINE);
+    sb.append(formParameter.getName());
+    httpOptions.addPart(sb.toString(),formParameter.getValue());
   }
   String content=HttpUtil.URLtoString(httpOptions);
   if (cookies != null) {
@@ -26,8 +30,5 @@
   markupContext.setItemString(content);
   markupContext.setRequiresRewriting(true);
   BlockingInteractionResponse blockingInteractionResponse=new BlockingInteractionResponse();
-  UpdateResponse updateResponse=new UpdateResponse();
-  updateResponse.setMarkupContext(markupContext);
-  blockingInteractionResponse.setUpdateResponse(updateResponse);
   return blockingInteractionResponse;
 }
