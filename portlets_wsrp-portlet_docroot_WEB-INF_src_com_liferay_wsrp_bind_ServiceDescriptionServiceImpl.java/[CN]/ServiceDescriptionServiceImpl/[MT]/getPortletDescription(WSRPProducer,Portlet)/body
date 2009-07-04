@@ -1,18 +1,19 @@
 {
-  String title=PortalUtil.getPortletTitle(portlet,wsrpProducer.getCompanyId(),LocaleUtil.getDefault());
   PortletDescription portletDescription=new PortletDescription();
-  portletDescription.setTitle(getLocalizedString(title));
-  String displayName=GetterUtil.getString(portlet.getDisplayName(),title);
-  portletDescription.setDisplayName(getLocalizedString(displayName));
-  PortletInfo portletInfo=portlet.getPortletInfo();
-  String[] keywords=StringUtil.split(portletInfo.getKeywords());
-  portletDescription.setKeywords(getLocalizedStrings(keywords));
-  portletDescription.setMarkupTypes(getMarkupTypes(portlet));
   portletDescription.setPortletHandle(portlet.getPortletId());
+  portletDescription.setMarkupTypes(getMarkupTypes(portlet));
+  String title=PortalUtil.getPortletTitle(portlet,wsrpProducer.getCompanyId(),LocaleUtil.getDefault());
+  portletDescription.setTitle(getLocalizedString(title));
+  PortletInfo portletInfo=portlet.getPortletInfo();
   String shortTitle=portletInfo.getShortTitle();
   if (shortTitle == null) {
     shortTitle=title;
   }
   portletDescription.setShortTitle(getLocalizedString(shortTitle));
+  String[] keywords=StringUtil.split(portletInfo.getKeywords());
+  portletDescription.setKeywords(getLocalizedStrings(keywords));
+  String displayName=GetterUtil.getString(portlet.getDisplayName(),title);
+  portletDescription.setDisplayName(getLocalizedString(displayName));
+  setExtensions(portletDescription,portlet);
   return portletDescription;
 }

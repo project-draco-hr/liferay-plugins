@@ -1,0 +1,13 @@
+{
+  List<MessageElement> messageElements=new ArrayList<MessageElement>();
+  addMessageElement(messageElements,"css-class-wrapper",portlet.getCssClassWrapper());
+  HttpServletRequest request=ServletUtil.getRequest();
+  String portalURL=PortalUtil.getPortalURL(request);
+  for (  String headerPortletCss : portlet.getHeaderPortletCss()) {
+    if (!HttpUtil.hasProtocol(headerPortletCss)) {
+      headerPortletCss=portalURL + portlet.getContextPath() + headerPortletCss+ "?t="+ portlet.getTimestamp();
+    }
+    addMessageElement(messageElements,"header-portlet-css",headerPortletCss);
+  }
+  portletDescription.setExtensions(getExtensions(messageElements));
+}

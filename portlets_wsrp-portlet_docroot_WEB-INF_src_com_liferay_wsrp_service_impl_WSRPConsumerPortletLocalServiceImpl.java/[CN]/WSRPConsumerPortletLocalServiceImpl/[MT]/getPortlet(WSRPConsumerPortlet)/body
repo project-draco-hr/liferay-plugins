@@ -47,6 +47,16 @@
   String keywords=StringUtil.merge(getLocalizedStringValues(portletDescription.getKeywords()),StringPool.SPACE);
   PortletInfo portletInfo=new PortletInfo(title,shortTitle,keywords);
   portlet.setPortletInfo(portletInfo);
+  Extension[] extensions=portletDescription.getExtensions();
+  if ((extensions != null) && (extensions.length == 1)) {
+    Extension extension=extensions[0];
+    MessageElement[] messageElements=extension.get_any();
+    if (messageElements != null) {
+      for (      MessageElement messageElement : messageElements) {
+        setExtension(wsrpConsumerPortlet,portlet,messageElement);
+      }
+    }
+  }
   _portletsPool.put(wsrpConsumerPortlet.getWsrpConsumerPortletId(),portlet);
   PortletBag portletBag=PortletBagPool.get(_CONSUMER_PORTLET_ID);
   portletBag=(PortletBag)portletBag.clone();
