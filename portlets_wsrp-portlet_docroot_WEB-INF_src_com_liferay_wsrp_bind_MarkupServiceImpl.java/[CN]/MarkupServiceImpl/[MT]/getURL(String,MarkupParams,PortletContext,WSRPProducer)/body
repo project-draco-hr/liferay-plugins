@@ -9,6 +9,15 @@
   sb.append("p_l_id=");
   sb.append(layout.getPlid());
   String portletId=getPortletId(portletContext);
+  NavigationalContext navigationalContext=markupParams.getNavigationalContext();
+  String opaqueValue=null;
+  if (navigationalContext != null) {
+    opaqueValue=navigationalContext.getOpaqueValue();
+    Map<String,String[]> parameterMap=HttpUtil.parameterMapFromString(opaqueValue);
+    if (parameterMap.containsKey(_STRUTS_ACTION_PORTLET_CONFIGURATION)) {
+      portletId=PortletKeys.PORTLET_CONFIGURATION;
+    }
+  }
   sb.append("&p_p_id=");
   sb.append(HttpUtil.encodeURL(portletId));
   sb.append("&p_p_lifecycle=");
@@ -19,15 +28,11 @@
   String portletMode=getPortletMode(markupParams);
   sb.append("&p_p_mode=");
   sb.append(HttpUtil.encodeURL(portletMode));
-  NavigationalContext navigationalContext=markupParams.getNavigationalContext();
-  if (navigationalContext != null) {
-    String opaqueValue=navigationalContext.getOpaqueValue();
-    if (Validator.isNotNull(opaqueValue)) {
-      sb.append(StringPool.AMPERSAND);
-      sb.append(opaqueValue);
-    }
-  }
   sb.append("&wsrp=1");
+  if (Validator.isNotNull(opaqueValue)) {
+    sb.append(StringPool.AMPERSAND);
+    sb.append(opaqueValue);
+  }
   if (_log.isInfoEnabled()) {
     _log.info("URL " + sb.toString());
   }
