@@ -7,14 +7,13 @@
       MimeResponse mimeResponse=(MimeResponse)portletResponse;
       mimeResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
       OutputStream out=mimeResponse.getPortletOutputStream();
-      Throwable te=se.getCause();
+      Throwable t=se.getCause();
       out.write("\n@ERROR@\n".getBytes());
-      te.printStackTrace(new PrintStream(out,true,StringPool.UTF8));
+      t.printStackTrace(new PrintStream(out,true,StringPool.UTF8));
       out.close();
     }
  else {
-      String message="The configured script has errors.";
-      _log.error(message,se);
+      _log.error("The configured script has errors",se);
     }
   }
 }
