@@ -2,18 +2,19 @@
   try {
     declareBeans(consoleInput,portletRequest,portletResponse);
   }
- catch (  BSFException bsfe) {
+ catch (  ScriptingException se) {
     if (portletResponse instanceof MimeResponse) {
       MimeResponse mimeResponse=(MimeResponse)portletResponse;
       mimeResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
       OutputStream out=mimeResponse.getPortletOutputStream();
-      Throwable te=bsfe.getTargetException();
+      Throwable te=se.getCause();
       out.write("\n@ERROR@\n".getBytes());
       te.printStackTrace(new PrintStream(out,true,StringPool.UTF8));
       out.close();
     }
  else {
-      logBSFException(bsfe,"Console input");
+      String message="The configured script has errors.";
+      _log.error(message,se);
     }
   }
 }
