@@ -28,11 +28,21 @@
   String portletMode=getPortletMode(markupParams);
   sb.append("&p_p_mode=");
   sb.append(HttpUtil.encodeURL(portletMode));
-  sb.append("&wsrp=1");
   if (Validator.isNotNull(opaqueValue)) {
     sb.append(StringPool.AMPERSAND);
     sb.append(opaqueValue);
   }
+  MessageElement[] formParameters=ExtensionUtil.getMessageElements(markupParams.getExtensions());
+  if (formParameters != null) {
+    String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext));
+    for (    MessageElement formParameter : formParameters) {
+      sb.append(StringPool.AMPERSAND);
+      sb.append(namespace + formParameter.getName());
+      sb.append(StringPool.EQUAL);
+      sb.append(HttpUtil.encodeURL(formParameter.getValue()));
+    }
+  }
+  sb.append("&wsrp=1");
   if (_log.isInfoEnabled()) {
     _log.info("URL " + sb.toString());
   }
