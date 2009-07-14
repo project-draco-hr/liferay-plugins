@@ -19,7 +19,6 @@
   portlet.setPortletName(portletId);
   portlet.setDisplayName(portletId);
   portlet.setPortletClass(ConsumerPortlet.class.getName());
-  portlet.setFriendlyURLMapperClass(_FRIENDLY_URL_MAPPER);
   Map<String,String> initParams=portlet.getInitParams();
   initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_CONSUMER_PORTLET_NAME);
   MarkupType[] markupTypes=portletDescription.getMarkupTypes();
@@ -48,6 +47,7 @@
   String keywords=StringUtil.merge(getLocalizedStringValues(portletDescription.getKeywords()),StringPool.SPACE);
   PortletInfo portletInfo=new PortletInfo(title,shortTitle,keywords);
   portlet.setPortletInfo(portletInfo);
+  portlet.setFriendlyURLMapperClass(ConsumerFriendlyURLMapper.class.getName());
   MessageElement[] messageElements=ExtensionUtil.getMessageElements(portletDescription.getExtensions());
   if (messageElements != null) {
     for (    MessageElement messageElement : messageElements) {
