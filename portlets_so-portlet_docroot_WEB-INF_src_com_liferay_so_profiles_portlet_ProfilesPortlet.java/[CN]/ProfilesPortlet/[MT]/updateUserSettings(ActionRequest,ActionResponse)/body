@@ -1,40 +1,14 @@
 {
-  long userId=ParamUtil.getLong(actionRequest,"userId");
-  User user=UserLocalServiceUtil.getUser(userId);
-  Contact contact=user.getContact();
-  String oldPassword=getUpdateUserPassword(actionRequest,user.getUserId());
-  String newPassword1=ParamUtil.getString(actionRequest,"password1");
-  String newPassword2=ParamUtil.getString(actionRequest,"password2");
-  boolean passwordReset=false;
-  String reminderQueryQuestion=user.getReminderQueryQuestion();
-  String reminderQueryAnswer=user.getReminderQueryAnswer();
-  String screenName=user.getScreenName();
-  String emailAddress=user.getEmailAddress();
-  String openId=user.getOpenId();
-  String languageId=ParamUtil.getString(actionRequest,"languageId");
-  String timeZoneId=ParamUtil.getString(actionRequest,"timeZoneId");
-  String greeting=user.getGreeting();
-  String comments=user.getComments();
-  String firstName=contact.getFirstName();
-  String middleName=contact.getMiddleName();
-  String lastName=contact.getLastName();
-  int prefixId=contact.getPrefixId();
-  int suffixId=contact.getSuffixId();
-  boolean male=user.isMale();
-  int birthdayMonth=1;
-  int birthdayDay=1;
-  int birthdayYear=1970;
-  String smsSn=contact.getSmsSn();
-  String aimSn=contact.getAimSn();
-  String facebookSn=contact.getFacebookSn();
-  String icqSn=contact.getIcqSn();
-  String jabberSn=contact.getJabberSn();
-  String msnSn=contact.getMsnSn();
-  String mySpaceSn=contact.getMySpaceSn();
-  String skypeSn=contact.getSkypeSn();
-  String twitterSn=contact.getTwitterSn();
-  String ymSn=contact.getYmSn();
-  String jobTitle=contact.getJobTitle();
-  ServiceContext serviceContext=ServiceContextFactory.getInstance(User.class.getName(),actionRequest);
-  UserServiceUtil.updateUser(userId,oldPassword,newPassword1,newPassword2,passwordReset,reminderQueryQuestion,reminderQueryAnswer,screenName,emailAddress,openId,languageId,timeZoneId,greeting,comments,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,smsSn,aimSn,facebookSn,icqSn,jabberSn,msnSn,mySpaceSn,skypeSn,twitterSn,ymSn,jobTitle,null,null,null,null,null,serviceContext);
+  try {
+    doUpdateUserSettings(actionRequest,actionResponse);
+  }
+ catch (  Exception e) {
+    if (e instanceof UserPasswordException) {
+      SessionErrors.add(actionRequest,e.getClass().getName(),e);
+    }
+ else {
+      throw e;
+    }
+    actionResponse.sendRedirect(ParamUtil.getString(actionRequest,"redirectOnError"));
+  }
 }
