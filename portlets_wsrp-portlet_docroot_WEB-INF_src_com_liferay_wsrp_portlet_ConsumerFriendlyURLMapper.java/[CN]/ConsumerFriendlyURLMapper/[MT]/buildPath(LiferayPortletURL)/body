@@ -25,9 +25,10 @@
   portletURL.addParameterIncludedInPath("p_p_cacheability");
   Map<String,String[]> parameterMap=portletURL.getParameterMap();
   String[] navigationalState=parameterMap.get("wsrp-navigationalState");
-  if ((navigationalState != null) && (navigationalState.length > 0)) {
-    addPathElement(sb,navigationalState[0]);
-    portletURL.addParameterIncludedInPath("wsrp-navigationalState");
+  if ((navigationalState == null) || (navigationalState.length <= 0)) {
+    navigationalState=new String[]{null};
   }
+  addPathElement(sb,navigationalState[0]);
+  portletURL.addParameterIncludedInPath("wsrp-navigationalState");
   return sb.toString();
 }

@@ -4,11 +4,14 @@
   while (rewriteMatcher.find()) {
     String namespace=rewriteMatcher.group(1);
     String url=rewriteMatcher.group(2);
+    String extensionURL=rewriteMatcher.group(3);
+    String extensionURL2=rewriteMatcher.group(4);
+    String replacement=null;
+    Map<String,String> parameterMap=new HashMap<String,String>();
     if (Validator.isNotNull(namespace)) {
       rewriteMatcher.appendReplacement(sb,portletResponse.getNamespace());
     }
  else     if (Validator.isNotNull(url)) {
-      Map<String,String> parameterMap=new HashMap<String,String>();
       Matcher parameterMatcher=_parameterPattern.matcher(url);
       while (parameterMatcher.find()) {
         String name=parameterMatcher.group(1);
@@ -16,6 +19,18 @@
         parameterMap.put(name,HttpUtil.decodeURL(value));
       }
       rewriteMatcher.appendReplacement(sb,rewriteURL(portletResponse,parameterMap));
+    }
+ else     if (Validator.isNotNull(extensionURL)) {
+      parameterMap.put("wsrp-urlType","render");
+      parameterMap.put("wsrp-windowState","wsrp:normal");
+      replacement="location.href = '" + rewriteURL(portletResponse,parameterMap) + "'";
+      rewriteMatcher.appendReplacement(sb,replacement);
+    }
+ else     if (Validator.isNotNull(extensionURL2)) {
+      parameterMap.put("wsrp-urlType","render");
+      parameterMap.put("wsrp-windowState","wsrp:normal");
+      replacement="href=\"" + rewriteURL(portletResponse,parameterMap) + "\"";
+      rewriteMatcher.appendReplacement(sb,replacement);
     }
   }
   rewriteMatcher.appendTail(sb);
