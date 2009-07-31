@@ -1,0 +1,23 @@
+{
+  try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
+    if (group.isUser() && themeDisplay.isSignedIn()) {
+      HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
+      HttpSession session=request.getSession();
+      String memberRequestKey=(String)session.getAttribute("LIFERAY_SHARED_MEMBER_REQUEST_KEY");
+      if (Validator.isNotNull(memberRequestKey)) {
+        MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,themeDisplay.getUserId());
+        session.removeAttribute("LIFERAY_SHARED_MEMBER_REQUEST_KEY");
+      }
+    }
+    List<MemberRequest> memberRequests=MemberRequestLocalServiceUtil.getReceiverStatusMemberRequest(themeDisplay.getUserId(),InviteMembersConstants.STATUS_PENDING,-1,-1);
+    if ((group.isUser()) && (memberRequests.size() == 0)) {
+      renderRequest.setAttribute(WebKeys.PORTLET_DECORATE,Boolean.FALSE);
+    }
+    include(viewJSP,renderRequest,renderResponse);
+  }
+ catch (  Exception e) {
+    super.doView(renderRequest,renderResponse);
+  }
+}
