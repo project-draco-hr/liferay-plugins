@@ -1,0 +1,59 @@
+{
+  Object[] finderArgs=new Object[]{new Long(groupId),new Long(receiverUserId),new Integer(status)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT memberRequest FROM MemberRequest memberRequest WHERE ");
+      query.append("memberRequest.groupId = ?");
+      query.append(" AND ");
+      query.append("memberRequest.receiverUserId = ?");
+      query.append(" AND ");
+      query.append("memberRequest.status = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("memberRequest.createDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(groupId);
+      qPos.add(receiverUserId);
+      qPos.add(status);
+      List<MemberRequest> list=q.list();
+      result=list;
+      MemberRequest memberRequest=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,list);
+      }
+ else {
+        memberRequest=list.get(0);
+        cacheResult(memberRequest);
+        if ((memberRequest.getGroupId() != groupId) || (memberRequest.getReceiverUserId() != receiverUserId) || (memberRequest.getStatus() != status)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,memberRequest);
+        }
+      }
+      return memberRequest;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,new ArrayList<MemberRequest>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List) {
+      return null;
+    }
+ else {
+      return (MemberRequest)result;
+    }
+  }
+}
