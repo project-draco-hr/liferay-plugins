@@ -5,14 +5,14 @@
     if (group.isUser() && themeDisplay.isSignedIn()) {
       HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
       HttpSession session=request.getSession();
-      String memberRequestKey=(String)session.getAttribute("LIFERAY_SHARED_MEMBER_REQUEST_KEY");
+      String memberRequestKey=(String)session.getAttribute(WebKeys.MEMBER_REQEUST_KEY);
       if (Validator.isNotNull(memberRequestKey)) {
         MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,themeDisplay.getUserId());
-        session.removeAttribute("LIFERAY_SHARED_MEMBER_REQUEST_KEY");
+        session.removeAttribute(WebKeys.MEMBER_REQEUST_KEY);
       }
     }
-    List<MemberRequest> memberRequests=MemberRequestLocalServiceUtil.getReceiverStatusMemberRequest(themeDisplay.getUserId(),InviteMembersConstants.STATUS_PENDING,-1,-1);
-    if (group.isUser() && (memberRequests.size() == 0)) {
+    List<MemberRequest> memberRequests=MemberRequestLocalServiceUtil.getReceiverStatusMemberRequest(themeDisplay.getUserId(),InviteMembersConstants.STATUS_PENDING,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    if (group.isUser() && memberRequests.isEmpty()) {
       renderRequest.setAttribute(WebKeys.PORTLET_DECORATE,Boolean.FALSE);
     }
     include(viewJSP,renderRequest,renderResponse);
