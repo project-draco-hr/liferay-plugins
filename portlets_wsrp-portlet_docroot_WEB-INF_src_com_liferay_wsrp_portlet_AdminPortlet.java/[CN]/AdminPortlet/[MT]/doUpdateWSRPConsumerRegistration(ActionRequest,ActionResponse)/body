@@ -1,0 +1,21 @@
+{
+  long wsrpConsumerId=ParamUtil.getLong(actionRequest,"wsrpConsumerId");
+  boolean inbandRegistration=ParamUtil.getBoolean(actionRequest,"inbandRegistration");
+  UnicodeProperties registrationProperties=null;
+  String registrationHandle=null;
+  if (inbandRegistration) {
+    registrationProperties=new UnicodeProperties();
+    for (int i=0; ; i++) {
+      String regPropName=ParamUtil.getString(actionRequest,"regPropName" + i);
+      String regPropValue=ParamUtil.getString(actionRequest,"regPropValue" + i);
+      if (Validator.isNull(regPropName)) {
+        break;
+      }
+      registrationProperties.setProperty(regPropName,regPropValue);
+    }
+  }
+ else {
+    registrationHandle=ParamUtil.getString(actionRequest,"registrationHandle");
+  }
+  WSRPConsumerLocalServiceUtil.updateWSRPConsumer(wsrpConsumerId,registrationProperties,registrationHandle);
+}

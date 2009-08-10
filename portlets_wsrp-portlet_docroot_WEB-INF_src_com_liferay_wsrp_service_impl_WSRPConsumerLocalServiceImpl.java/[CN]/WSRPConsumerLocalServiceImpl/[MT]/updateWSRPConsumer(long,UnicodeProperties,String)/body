@@ -1,0 +1,16 @@
+{
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
+  RegistrationContext registrationContext=null;
+  if (registrationProperties != null) {
+    registrationContext=register(wsrpConsumer,registrationProperties);
+  }
+ else   if (Validator.isNotNull(registrationHandle)) {
+    registrationContext=new RegistrationContext();
+    registrationContext.setRegistrationHandle(registrationHandle);
+  }
+  wsrpConsumer.setModifiedDate(new Date());
+  wsrpConsumer.setRegistrationContext(registrationContext);
+  wsrpConsumer.setRegistrationProperties(registrationProperties);
+  wsrpConsumerPersistence.update(wsrpConsumer,false);
+  return wsrpConsumer;
+}
