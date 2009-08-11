@@ -2,7 +2,18 @@
   WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
   RegistrationContext registrationContext=null;
   if (registrationProperties != null) {
-    registrationContext=register(wsrpConsumer,registrationProperties);
+    try {
+      registrationContext=register(wsrpConsumer,registrationProperties);
+    }
+ catch (    PortalException pe) {
+      throw pe;
+    }
+catch (    SystemException se) {
+      throw se;
+    }
+catch (    Exception e) {
+      throw new WSRPConsumerWSDLException(e);
+    }
   }
  else   if (Validator.isNotNull(registrationHandle)) {
     registrationContext=new RegistrationContext();
