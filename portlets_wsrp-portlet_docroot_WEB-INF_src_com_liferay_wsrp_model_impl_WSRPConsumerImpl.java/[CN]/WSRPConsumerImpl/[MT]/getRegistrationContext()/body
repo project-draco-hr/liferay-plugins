@@ -3,8 +3,13 @@
     return _registrationContext;
   }
   String registrationContextString=getRegistrationContextString();
-  if (Validator.isNotNull(registrationContextString)) {
-    _registrationContext=(RegistrationContext)JSONFactoryUtil.deserialize(registrationContextString);
+  try {
+    if (Validator.isNotNull(registrationContextString)) {
+      _registrationContext=(RegistrationContext)_getSerializer().fromJSON(registrationContextString);
+    }
+  }
+ catch (  UnmarshallException ue) {
+    _log.error(ue,ue);
   }
   return _registrationContext;
 }
