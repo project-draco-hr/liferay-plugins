@@ -1,0 +1,21 @@
+{
+  boolean isNew=jiraChangeItem.isNew();
+  for (  ModelListener<JIRAChangeItem> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraChangeItem);
+    }
+ else {
+      listener.onBeforeUpdate(jiraChangeItem);
+    }
+  }
+  jiraChangeItem=updateImpl(jiraChangeItem,merge);
+  for (  ModelListener<JIRAChangeItem> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraChangeItem);
+    }
+ else {
+      listener.onAfterUpdate(jiraChangeItem);
+    }
+  }
+  return jiraChangeItem;
+}

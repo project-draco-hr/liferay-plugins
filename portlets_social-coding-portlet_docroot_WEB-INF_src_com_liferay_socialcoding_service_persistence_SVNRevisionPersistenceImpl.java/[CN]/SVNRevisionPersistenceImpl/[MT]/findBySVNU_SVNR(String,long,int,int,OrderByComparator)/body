@@ -1,0 +1,61 @@
+{
+  Object[] finderArgs=new Object[]{svnUserId,new Long(svnRepositoryId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<SVNRevision> list=(List<SVNRevision>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_SVNU_SVNR,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT svnRevision FROM SVNRevision svnRevision WHERE ");
+      if (svnUserId == null) {
+        query.append("svnRevision.svnUserId IS NULL");
+      }
+ else {
+        query.append("svnRevision.svnUserId = ?");
+      }
+      query.append(" AND ");
+      query.append("svnRevision.svnRepositoryId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("svnRevision.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("svnRevision.revisionNumber DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (svnUserId != null) {
+        qPos.add(svnUserId);
+      }
+      qPos.add(svnRepositoryId);
+      list=(List<SVNRevision>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<SVNRevision>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_SVNU_SVNR,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

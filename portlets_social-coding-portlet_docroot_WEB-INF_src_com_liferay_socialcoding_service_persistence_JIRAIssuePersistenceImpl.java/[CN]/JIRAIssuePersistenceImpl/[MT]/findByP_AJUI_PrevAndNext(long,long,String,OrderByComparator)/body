@@ -1,0 +1,58 @@
+{
+  JIRAIssue jiraIssue=findByPrimaryKey(jiraIssueId);
+  int count=countByP_AJUI(projectId,assigneeJiraUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
+    query.append("jiraIssue.projectId = ?");
+    query.append(" AND ");
+    if (assigneeJiraUserId == null) {
+      query.append("jiraIssue.assigneeJiraUserId IS NULL");
+    }
+ else {
+      query.append("jiraIssue.assigneeJiraUserId = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      String[] orderByFields=obc.getOrderByFields();
+      for (int i=0; i < orderByFields.length; i++) {
+        query.append("jiraIssue.");
+        query.append(orderByFields[i]);
+        if (obc.isAscending()) {
+          query.append(" ASC");
+        }
+ else {
+          query.append(" DESC");
+        }
+        if ((i + 1) < orderByFields.length) {
+          query.append(", ");
+        }
+      }
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("jiraIssue.modifiedDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(projectId);
+    if (assigneeJiraUserId != null) {
+      qPos.add(assigneeJiraUserId);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraIssue);
+    JIRAIssue[] array=new JIRAIssueImpl[3];
+    array[0]=(JIRAIssue)objArray[0];
+    array[1]=(JIRAIssue)objArray[1];
+    array[2]=(JIRAIssue)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

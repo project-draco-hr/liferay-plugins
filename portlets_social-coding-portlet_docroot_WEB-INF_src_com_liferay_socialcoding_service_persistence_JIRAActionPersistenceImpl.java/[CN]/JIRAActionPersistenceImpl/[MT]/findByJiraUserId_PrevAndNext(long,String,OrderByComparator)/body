@@ -1,0 +1,55 @@
+{
+  JIRAAction jiraAction=findByPrimaryKey(jiraActionId);
+  int count=countByJiraUserId(jiraUserId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("SELECT jiraAction FROM JIRAAction jiraAction WHERE ");
+    if (jiraUserId == null) {
+      query.append("jiraAction.jiraUserId IS NULL");
+    }
+ else {
+      query.append("jiraAction.jiraUserId = ?");
+    }
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      String[] orderByFields=obc.getOrderByFields();
+      for (int i=0; i < orderByFields.length; i++) {
+        query.append("jiraAction.");
+        query.append(orderByFields[i]);
+        if (obc.isAscending()) {
+          query.append(" ASC");
+        }
+ else {
+          query.append(" DESC");
+        }
+        if ((i + 1) < orderByFields.length) {
+          query.append(", ");
+        }
+      }
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("jiraAction.modifiedDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    if (jiraUserId != null) {
+      qPos.add(jiraUserId);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,jiraAction);
+    JIRAAction[] array=new JIRAActionImpl[3];
+    array[0]=(JIRAAction)objArray[0];
+    array[1]=(JIRAAction)objArray[1];
+    array[2]=(JIRAAction)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  boolean isNew=jiraIssue.isNew();
+  for (  ModelListener<JIRAIssue> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(jiraIssue);
+    }
+ else {
+      listener.onBeforeUpdate(jiraIssue);
+    }
+  }
+  jiraIssue=updateImpl(jiraIssue,merge);
+  for (  ModelListener<JIRAIssue> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(jiraIssue);
+    }
+ else {
+      listener.onAfterUpdate(jiraIssue);
+    }
+  }
+  return jiraIssue;
+}

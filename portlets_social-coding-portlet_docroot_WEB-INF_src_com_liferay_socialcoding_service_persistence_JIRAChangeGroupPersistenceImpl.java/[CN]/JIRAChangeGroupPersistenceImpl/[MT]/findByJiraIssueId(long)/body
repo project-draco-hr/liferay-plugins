@@ -1,0 +1,32 @@
+{
+  Object[] finderArgs=new Object[]{new Long(jiraIssueId)};
+  List<JIRAChangeGroup> list=(List<JIRAChangeGroup>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_JIRAISSUEID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT jiraChangeGroup FROM JIRAChangeGroup jiraChangeGroup WHERE ");
+      query.append("jiraChangeGroup.jiraIssueId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("jiraChangeGroup.createDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(jiraIssueId);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<JIRAChangeGroup>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_JIRAISSUEID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

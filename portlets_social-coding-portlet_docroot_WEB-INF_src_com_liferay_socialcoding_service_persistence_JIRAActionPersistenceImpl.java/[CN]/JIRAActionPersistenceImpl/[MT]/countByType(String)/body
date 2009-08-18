@@ -1,0 +1,37 @@
+{
+  Object[] finderArgs=new Object[]{type};
+  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_TYPE,finderArgs,this);
+  if (count == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT COUNT(jiraAction) ");
+      query.append("FROM JIRAAction jiraAction WHERE ");
+      if (type == null) {
+        query.append("jiraAction.type IS NULL");
+      }
+ else {
+        query.append("jiraAction.type = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (type != null) {
+        qPos.add(type);
+      }
+      count=(Long)q.uniqueResult();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (count == null) {
+        count=Long.valueOf(0);
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_TYPE,finderArgs,count);
+      closeSession(session);
+    }
+  }
+  return count.intValue();
+}

@@ -1,0 +1,21 @@
+{
+  boolean isNew=svnRepository.isNew();
+  for (  ModelListener<SVNRepository> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(svnRepository);
+    }
+ else {
+      listener.onBeforeUpdate(svnRepository);
+    }
+  }
+  svnRepository=updateImpl(svnRepository,merge);
+  for (  ModelListener<SVNRepository> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(svnRepository);
+    }
+ else {
+      listener.onAfterUpdate(svnRepository);
+    }
+  }
+  return svnRepository;
+}

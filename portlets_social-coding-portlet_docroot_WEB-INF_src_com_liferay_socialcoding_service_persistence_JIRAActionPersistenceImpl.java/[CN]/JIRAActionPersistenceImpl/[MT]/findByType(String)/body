@@ -1,0 +1,39 @@
+{
+  Object[] finderArgs=new Object[]{type};
+  List<JIRAAction> list=(List<JIRAAction>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_TYPE,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT jiraAction FROM JIRAAction jiraAction WHERE ");
+      if (type == null) {
+        query.append("jiraAction.type IS NULL");
+      }
+ else {
+        query.append("jiraAction.type = ?");
+      }
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("jiraAction.modifiedDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (type != null) {
+        qPos.add(type);
+      }
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<JIRAAction>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_TYPE,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

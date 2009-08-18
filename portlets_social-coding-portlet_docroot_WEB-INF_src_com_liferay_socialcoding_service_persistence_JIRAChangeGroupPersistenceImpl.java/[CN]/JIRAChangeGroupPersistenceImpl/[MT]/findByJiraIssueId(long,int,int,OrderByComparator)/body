@@ -1,0 +1,51 @@
+{
+  Object[] finderArgs=new Object[]{new Long(jiraIssueId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<JIRAChangeGroup> list=(List<JIRAChangeGroup>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_JIRAISSUEID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT jiraChangeGroup FROM JIRAChangeGroup jiraChangeGroup WHERE ");
+      query.append("jiraChangeGroup.jiraIssueId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("jiraChangeGroup.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("jiraChangeGroup.createDate DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(jiraIssueId);
+      list=(List<JIRAChangeGroup>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<JIRAChangeGroup>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_JIRAISSUEID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

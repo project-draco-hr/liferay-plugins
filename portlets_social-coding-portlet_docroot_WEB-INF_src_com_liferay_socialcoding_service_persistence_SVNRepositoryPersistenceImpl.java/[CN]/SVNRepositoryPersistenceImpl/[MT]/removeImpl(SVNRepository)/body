@@ -1,0 +1,25 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    if (svnRepository.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(SVNRepositoryImpl.class,svnRepository.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(svnRepository);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  SVNRepositoryModelImpl svnRepositoryModelImpl=(SVNRepositoryModelImpl)svnRepository;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_URL,new Object[]{svnRepositoryModelImpl.getOriginalUrl()});
+  EntityCacheUtil.removeResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepository.getPrimaryKey());
+  return svnRepository;
+}

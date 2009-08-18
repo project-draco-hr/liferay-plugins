@@ -1,0 +1,32 @@
+{
+  Object[] finderArgs=new Object[]{new Long(projectId)};
+  List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_PROJECTID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
+      query.append("jiraIssue.projectId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("jiraIssue.modifiedDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(projectId);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<JIRAIssue>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_PROJECTID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}
