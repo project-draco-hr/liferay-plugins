@@ -1,0 +1,54 @@
+{
+  Object[] finderArgs=new Object[]{new Long(meetupsEntryId),new Integer(status),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<MeetupsRegistration> list=(List<MeetupsRegistration>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_ME_S,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT meetupsRegistration FROM MeetupsRegistration meetupsRegistration WHERE ");
+      query.append("meetupsRegistration.meetupsEntryId = ?");
+      query.append(" AND ");
+      query.append("meetupsRegistration.status = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("meetupsRegistration.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
+      }
+ else {
+        query.append("ORDER BY ");
+        query.append("meetupsRegistration.modifiedDate DESC");
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(meetupsEntryId);
+      qPos.add(status);
+      list=(List<MeetupsRegistration>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<MeetupsRegistration>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_ME_S,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

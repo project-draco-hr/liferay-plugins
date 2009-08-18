@@ -1,0 +1,21 @@
+{
+  boolean isNew=meetupsEntry.isNew();
+  for (  ModelListener<MeetupsEntry> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(meetupsEntry);
+    }
+ else {
+      listener.onBeforeUpdate(meetupsEntry);
+    }
+  }
+  meetupsEntry=updateImpl(meetupsEntry,merge);
+  for (  ModelListener<MeetupsEntry> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(meetupsEntry);
+    }
+ else {
+      listener.onAfterUpdate(meetupsEntry);
+    }
+  }
+  return meetupsEntry;
+}

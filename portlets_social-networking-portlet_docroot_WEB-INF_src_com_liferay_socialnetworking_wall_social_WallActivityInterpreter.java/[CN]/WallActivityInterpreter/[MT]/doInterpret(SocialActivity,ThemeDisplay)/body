@@ -1,0 +1,20 @@
+{
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  String receiverUserName=getUserName(activity.getReceiverUserId(),themeDisplay);
+  User receiverUser=UserLocalServiceUtil.getUserById(activity.getReceiverUserId());
+  int activityType=activity.getType();
+  WallEntry wallEntry=WallEntryLocalServiceUtil.getWallEntry(activity.getClassPK());
+  String link=themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic() + StringPool.SLASH+ receiverUser.getScreenName()+ "/profile/-/wall/"+ activity.getClassPK();
+  String title=StringPool.BLANK;
+  if (activityType == WallActivityKeys.ADD_ENTRY) {
+    title=themeDisplay.translate("activity-wol-wall-add-entry",new Object[]{creatorUserName,receiverUserName});
+  }
+  StringBuilder sb=new StringBuilder();
+  sb.append("<a href=\"");
+  sb.append(link);
+  sb.append("\">");
+  sb.append(cleanContent(wallEntry.getComments()));
+  sb.append("</a>");
+  String body=sb.toString();
+  return new SocialActivityFeedEntry(link,title,body);
+}

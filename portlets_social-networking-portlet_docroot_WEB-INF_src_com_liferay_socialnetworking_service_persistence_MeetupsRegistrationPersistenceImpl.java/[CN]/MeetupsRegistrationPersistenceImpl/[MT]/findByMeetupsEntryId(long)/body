@@ -1,0 +1,32 @@
+{
+  Object[] finderArgs=new Object[]{new Long(meetupsEntryId)};
+  List<MeetupsRegistration> list=(List<MeetupsRegistration>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT meetupsRegistration FROM MeetupsRegistration meetupsRegistration WHERE ");
+      query.append("meetupsRegistration.meetupsEntryId = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("meetupsRegistration.modifiedDate DESC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(meetupsEntryId);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<MeetupsRegistration>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

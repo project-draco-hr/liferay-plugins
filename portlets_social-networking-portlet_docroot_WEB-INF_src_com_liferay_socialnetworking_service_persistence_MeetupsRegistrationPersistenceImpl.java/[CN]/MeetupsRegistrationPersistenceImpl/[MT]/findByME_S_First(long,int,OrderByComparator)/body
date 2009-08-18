@@ -1,0 +1,15 @@
+{
+  List<MeetupsRegistration> list=findByME_S(meetupsEntryId,status,0,1,obc);
+  if (list.isEmpty()) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No MeetupsRegistration exists with the key {");
+    msg.append("meetupsEntryId=" + meetupsEntryId);
+    msg.append(", ");
+    msg.append("status=" + status);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchMeetupsRegistrationException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

@@ -1,0 +1,19 @@
+{
+  User user=UserLocalServiceUtil.getUserById(userId);
+  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,user.getTimeZone(),new MeetupsEntryStartDateException());
+  Date endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,user.getTimeZone(),new MeetupsEntryEndDateException());
+  MeetupsEntry meetupsEntry=meetupsEntryPersistence.findByPrimaryKey(meetupsEntryId);
+  meetupsEntry.setModifiedDate(new Date());
+  meetupsEntry.setTitle(title);
+  meetupsEntry.setDescription(description);
+  meetupsEntry.setStartDate(startDate);
+  meetupsEntry.setEndDate(endDate);
+  meetupsEntry.setTotalAttendees(totalAttendees);
+  meetupsEntry.setMaxAttendees(maxAttendees);
+  meetupsEntry.setPrice(price);
+  meetupsEntryPersistence.update(meetupsEntry,false);
+  if ((thumbnail != null) && (thumbnail.length > 0)) {
+    ImageLocalServiceUtil.updateImage(meetupsEntry.getThumbnailId(),thumbnail);
+  }
+  return meetupsEntry;
+}

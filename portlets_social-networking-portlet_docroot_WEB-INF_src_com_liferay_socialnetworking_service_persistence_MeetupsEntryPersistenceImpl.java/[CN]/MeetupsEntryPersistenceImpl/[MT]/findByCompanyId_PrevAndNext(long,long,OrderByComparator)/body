@@ -1,0 +1,48 @@
+{
+  MeetupsEntry meetupsEntry=findByPrimaryKey(meetupsEntryId);
+  int count=countByCompanyId(companyId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("SELECT meetupsEntry FROM MeetupsEntry meetupsEntry WHERE ");
+    query.append("meetupsEntry.companyId = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      String[] orderByFields=obc.getOrderByFields();
+      for (int i=0; i < orderByFields.length; i++) {
+        query.append("meetupsEntry.");
+        query.append(orderByFields[i]);
+        if (obc.isAscending()) {
+          query.append(" ASC");
+        }
+ else {
+          query.append(" DESC");
+        }
+        if ((i + 1) < orderByFields.length) {
+          query.append(", ");
+        }
+      }
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("meetupsEntry.startDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,meetupsEntry);
+    MeetupsEntry[] array=new MeetupsEntryImpl[3];
+    array[0]=(MeetupsEntry)objArray[0];
+    array[1]=(MeetupsEntry)objArray[1];
+    array[2]=(MeetupsEntry)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
