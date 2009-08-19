@@ -16,6 +16,9 @@
       while (parameterMatcher.find()) {
         String name=parameterMatcher.group(1);
         String value=parameterMatcher.group(2);
+        if (Validator.isNull(value) || value.equals("\"\"")) {
+          continue;
+        }
         parameterMap.put(name,HttpUtil.decodeURL(value));
       }
       rewriteMatcher.appendReplacement(sb,rewriteURL(portletResponse,parameterMap));

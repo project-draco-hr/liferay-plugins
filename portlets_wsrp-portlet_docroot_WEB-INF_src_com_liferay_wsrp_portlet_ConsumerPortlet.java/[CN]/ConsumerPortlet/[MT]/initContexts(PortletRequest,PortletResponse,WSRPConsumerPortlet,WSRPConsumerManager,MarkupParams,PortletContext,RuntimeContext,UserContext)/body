@@ -67,6 +67,16 @@
     runtimeContext.setSessionParams(sessionParams);
   }
   runtimeContext.setUserAuthentication("wsrp:password");
+  if (portletDescription.getDoesUrlTemplateProcessing()) {
+    Templates templates=new Templates();
+    templates.setBlockingActionTemplate(_blockingActionTemplate);
+    templates.setRenderTemplate(_renderTemplate);
+    templates.setResourceTemplate(_resourceTemplate);
+    templates.setSecureBlockingActionTemplate(_blockingActionTemplate);
+    templates.setSecureRenderTemplate(_renderTemplate);
+    templates.setSecureResourceTemplate(_resourceTemplate);
+    runtimeContext.setTemplates(templates);
+  }
   userContext.setUserCategories(new String[]{RoleConstants.USER});
   userContext.setUserContextKey(String.valueOf(themeDisplay.getUserId()));
 }

@@ -1,7 +1,8 @@
 {
   PortletSession portletSession=portletRequest.getPortletSession();
   WSRPConsumerPortlet wsrpConsumerPortlet=getWSRPConsumerPortlet();
-  WSRPConsumerManager wsrpConsumerManager=getWSRPConsumerManager(wsrpConsumerPortlet);
+  WSRPConsumer wsrpConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerPortlet.getWsrpConsumerId());
+  WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer);
   MarkupParams markupParams=new MarkupParams();
   PortletContext portletContext=new PortletContext();
   RuntimeContext runtimeContext=new RuntimeContext();
@@ -16,9 +17,10 @@
  else {
     getMarkup.setPortletContext(portletContext);
   }
+  getMarkup.setRegistrationContext(wsrpConsumer.getRegistrationContext());
   getMarkup.setRuntimeContext(runtimeContext);
   getMarkup.setUserContext(userContext);
-  WSRP_v2_Markup_PortType markupService=getMarkupService(portletRequest,wsrpConsumerManager);
+  WSRP_v2_Markup_PortType markupService=getMarkupService(portletRequest,wsrpConsumerManager,wsrpConsumer);
   MarkupResponse markupResponse=markupService.getMarkup(getMarkup);
   processMarkupResponse(portletRequest,portletResponse,markupResponse);
   return markupResponse;
