@@ -1,0 +1,24 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
+  User user=null;
+  if (group.isUser()) {
+    user=UserLocalServiceUtil.getUserById(group.getClassPK());
+  }
+ else {
+    return;
+  }
+  if (!UserPermissionUtil.contains(themeDisplay.getPermissionChecker(),user.getUserId(),ActionKeys.UPDATE)) {
+    return;
+  }
+  String jiraUserId=ParamUtil.getString(actionRequest,"jiraUserId");
+  try {
+    ExpandoValueLocalServiceUtil.addValue(User.class.getName(),"SC","jiraUserId",user.getUserId(),jiraUserId);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+}
