@@ -1,0 +1,12 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String message=ParamUtil.getString(actionRequest,"message");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  preferences.setValue("message",message);
+  preferences.store();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}
