@@ -1,0 +1,27 @@
+{
+  String wsdl=getWSDL(url);
+  Date now=new Date();
+  validate(name);
+  long wsrpConsumerId=CounterLocalServiceUtil.increment();
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.create(wsrpConsumerId);
+  wsrpConsumer.setCompanyId(companyId);
+  wsrpConsumer.setCreateDate(now);
+  wsrpConsumer.setModifiedDate(now);
+  wsrpConsumer.setName(name);
+  wsrpConsumer.setUrl(url);
+  wsrpConsumer.setWsdl(wsdl);
+  wsrpConsumerPersistence.update(wsrpConsumer,false);
+  try {
+    updatePublicRenderParameters(adminPortletId,wsdl);
+  }
+ catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e) {
+    throw new WSRPConsumerWSDLException(e);
+  }
+  return wsrpConsumer;
+}

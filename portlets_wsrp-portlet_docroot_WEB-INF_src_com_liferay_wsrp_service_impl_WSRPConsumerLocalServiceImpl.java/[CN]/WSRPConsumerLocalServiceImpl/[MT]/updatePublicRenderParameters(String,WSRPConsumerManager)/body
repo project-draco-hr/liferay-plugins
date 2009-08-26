@@ -1,0 +1,27 @@
+{
+  Portlet adminPortlet=PortletLocalServiceUtil.getPortletById(adminPortletId);
+  ServiceDescription serviceDescription=wsrpConsumerManager.getServiceDescription();
+  PortletDescription[] portletDescriptions=serviceDescription.getOfferedPortlets();
+  if (portletDescriptions == null) {
+    return;
+  }
+  for (  PortletDescription portletDescription : portletDescriptions) {
+    ParameterDescription[] parameterDescriptions=portletDescription.getNavigationalPublicValueDescriptions();
+    if (parameterDescriptions == null) {
+      continue;
+    }
+    for (    ParameterDescription parameterDescription : parameterDescriptions) {
+      QName[] wsrpQNames=parameterDescription.getNames();
+      if (wsrpQNames == null && wsrpQNames.length >= 0) {
+        continue;
+      }
+      String localPart=wsrpQNames[0].getLocalPart();
+      String namespaceURI=wsrpQNames[0].getNamespaceURI();
+      String prefix=wsrpQNames[0].getPrefix();
+      Namespace namespace=SAXReaderUtil.createNamespace(prefix,namespaceURI);
+      com.liferay.portal.kernel.xml.QName qName=SAXReaderUtil.createQName(localPart,namespace);
+      PortletApp portletApp=adminPortlet.getPortletApp();
+      portletApp.addPublicRenderParameter(parameterDescription.getIdentifier(),qName);
+    }
+  }
+}
