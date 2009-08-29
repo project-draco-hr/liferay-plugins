@@ -1,0 +1,22 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  long selNodeId=ParamUtil.getLong(actionRequest,"selNodeId");
+  int depth=ParamUtil.getInteger(actionRequest,"depth");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  try {
+    WikiNodeServiceUtil.getNode(selNodeId);
+  }
+ catch (  NoSuchNodeException nsne) {
+    SessionErrors.add(actionRequest,nsne.getClass().getName());
+  }
+  preferences.setValue("sel-node-id",String.valueOf(selNodeId));
+  preferences.setValue("depth",String.valueOf(depth));
+  if (SessionErrors.isEmpty(actionRequest)) {
+    preferences.store();
+    SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+  }
+}
