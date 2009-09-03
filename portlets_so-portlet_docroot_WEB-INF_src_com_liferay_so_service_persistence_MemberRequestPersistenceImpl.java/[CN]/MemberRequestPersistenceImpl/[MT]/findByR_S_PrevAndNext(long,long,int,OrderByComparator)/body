@@ -1,0 +1,51 @@
+{
+  MemberRequest memberRequest=findByPrimaryKey(memberRequestId);
+  int count=countByR_S(receiverUserId,status);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBuilder query=new StringBuilder();
+    query.append("SELECT memberRequest FROM MemberRequest memberRequest WHERE ");
+    query.append("memberRequest.receiverUserId = ?");
+    query.append(" AND ");
+    query.append("memberRequest.status = ?");
+    query.append(" ");
+    if (obc != null) {
+      query.append("ORDER BY ");
+      String[] orderByFields=obc.getOrderByFields();
+      for (int i=0; i < orderByFields.length; i++) {
+        query.append("memberRequest.");
+        query.append(orderByFields[i]);
+        if (obc.isAscending()) {
+          query.append(" ASC");
+        }
+ else {
+          query.append(" DESC");
+        }
+        if ((i + 1) < orderByFields.length) {
+          query.append(", ");
+        }
+      }
+    }
+ else {
+      query.append("ORDER BY ");
+      query.append("memberRequest.createDate DESC");
+    }
+    Query q=session.createQuery(query.toString());
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(receiverUserId);
+    qPos.add(status);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,memberRequest);
+    MemberRequest[] array=new MemberRequestImpl[3];
+    array[0]=(MemberRequest)objArray[0];
+    array[1]=(MemberRequest)objArray[1];
+    array[2]=(MemberRequest)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

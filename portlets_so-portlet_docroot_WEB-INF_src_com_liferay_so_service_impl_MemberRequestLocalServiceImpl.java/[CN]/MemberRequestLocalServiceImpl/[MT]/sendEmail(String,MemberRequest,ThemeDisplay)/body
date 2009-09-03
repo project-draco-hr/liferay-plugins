@@ -1,0 +1,26 @@
+{
+  long companyId=memberRequest.getCompanyId();
+  String url=getMemberRequestURL(memberRequest.getKey(),themeDisplay);
+  Group group=GroupLocalServiceUtil.getGroup(memberRequest.getGroupId());
+  User user=UserLocalServiceUtil.getUser(memberRequest.getUserId());
+  User receiverUser=null;
+  if (memberRequest.getReceiverUserId() > 0) {
+    receiverUser=UserLocalServiceUtil.getUser(memberRequest.getReceiverUserId());
+  }
+  String fromName=PrefsPropsUtil.getString(companyId,"admin.email.from.name");
+  String fromAddress=PrefsPropsUtil.getString(companyId,"admin.email.from.address");
+  String toName=StringPool.BLANK;
+  String toAddress=emailAddress;
+  if (receiverUser != null) {
+    toName=receiverUser.getFullName();
+  }
+  ClassLoader classLoader=getClass().getClassLoader();
+  String subject=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/subject.tmpl");
+  String body=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/body.tmpl");
+  subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(),user.getFullName()});
+  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]","[$MEMBER_REQUEST_URL$]"},new String[]{fromAddress,fromName,group.getDescriptiveName(),user.getFullName(),url});
+  InternetAddress from=new InternetAddress(fromAddress,fromName);
+  InternetAddress to=new InternetAddress(toAddress,toName);
+  MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
+  MailServiceUtil.sendEmail(mailMessage);
+}

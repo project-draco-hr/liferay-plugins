@@ -1,0 +1,18 @@
+{
+  MemberRequest memberRequest=fetchByG_R_S(groupId,receiverUserId,status);
+  if (memberRequest == null) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No MemberRequest exists with the key {");
+    msg.append("groupId=" + groupId);
+    msg.append(", ");
+    msg.append("receiverUserId=" + receiverUserId);
+    msg.append(", ");
+    msg.append("status=" + status);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchMemberRequestException(msg.toString());
+  }
+  return memberRequest;
+}

@@ -1,0 +1,23 @@
+{
+  try {
+    doUpdateUserProfile(actionRequest,actionResponse);
+  }
+ catch (  Exception e) {
+    if (e instanceof AddressCityException || e instanceof AddressStreetException || e instanceof AddressZipException|| e instanceof ContactFirstNameException|| e instanceof ContactLastNameException|| e instanceof DuplicateUserEmailAddressException|| e instanceof EmailAddressException|| e instanceof NoSuchCountryException|| e instanceof NoSuchListTypeException|| e instanceof NoSuchRegionException|| e instanceof PhoneNumberException|| e instanceof RequiredUserException|| e instanceof ReservedUserEmailAddressException|| e instanceof UserEmailAddressException|| e instanceof UserIdException|| e instanceof WebsiteURLException) {
+      if (e instanceof NoSuchListTypeException) {
+        NoSuchListTypeException nslte=(NoSuchListTypeException)e;
+        SessionErrors.add(actionRequest,e.getClass().getName() + nslte.getType());
+      }
+ else {
+        SessionErrors.add(actionRequest,e.getClass().getName(),e);
+      }
+      actionResponse.sendRedirect(ParamUtil.getString(actionRequest,"redirectOnError"));
+      if (e instanceof RequiredUserException) {
+        actionResponse.sendRedirect(ParamUtil.getString(actionRequest,"redirect"));
+      }
+    }
+ else {
+      throw e;
+    }
+  }
+}
