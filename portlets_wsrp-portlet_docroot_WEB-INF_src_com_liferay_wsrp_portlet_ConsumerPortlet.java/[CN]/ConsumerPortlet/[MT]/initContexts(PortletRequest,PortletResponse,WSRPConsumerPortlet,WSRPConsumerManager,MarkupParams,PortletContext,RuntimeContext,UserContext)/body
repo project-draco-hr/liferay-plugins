@@ -43,18 +43,19 @@
   NavigationalContext navigationalContext=new NavigationalContext();
   String navigationalState=portletRequest.getParameter("wsrp-navigationalState");
   navigationalContext.setOpaqueValue(navigationalState);
-  String navigationalValues=portletRequest.getParameter("wsrp-navigationalValues");
-  if (Validator.isNotNull(navigationalValues)) {
-    List<NamedString> publicValues=new ArrayList<NamedString>();
-    Matcher matcher=_navigationalValuesPattern.matcher(navigationalValues);
-    while (matcher.find()) {
+  Map<String,String[]> publicParameterMap=portletRequest.getPublicParameterMap();
+  Set<String> names=publicParameterMap.keySet();
+  List<NamedString> publicValues=new ArrayList<NamedString>();
+  for (  String name : names) {
+    String[] values=publicParameterMap.get(name);
+    for (    String value : values) {
       NamedString publicValue=new NamedString();
-      publicValue.setName(matcher.group(1));
-      publicValue.setValue(matcher.group(2));
+      publicValue.setName(name);
+      publicValue.setValue(value);
       publicValues.add(publicValue);
     }
-    navigationalContext.setPublicValues(publicValues.toArray(new NamedString[publicValues.size()]));
   }
+  navigationalContext.setPublicValues(publicValues.toArray(new NamedString[publicValues.size()]));
   markupParams.setNavigationalContext(navigationalContext);
   processFormParameters(portletRequest,portletResponse,markupParams);
   portletContext.setPortletHandle(wsrpConsumerPortlet.getPortletHandle());

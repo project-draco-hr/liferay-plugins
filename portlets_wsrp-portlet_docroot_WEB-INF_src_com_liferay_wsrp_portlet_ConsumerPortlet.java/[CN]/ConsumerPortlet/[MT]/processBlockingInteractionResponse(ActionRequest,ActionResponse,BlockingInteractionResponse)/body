@@ -17,22 +17,17 @@
       actionResponse.setRenderParameter("wsrp-navigationalState",opaqueValue);
     }
     NamedString[] publicValues=navigationalContext.getPublicValues();
-    if ((publicValues != null) && (publicValues.length > 0)) {
-      int lastIndex=publicValues.length - 2;
-      StringBuilder sb=new StringBuilder();
-      for (int i=0; i < publicValues.length; i++) {
-        NamedString publicValue=publicValues[i];
-        sb.append(publicValue.getName());
+    if (publicValues != null) {
+      for (      NamedString publicValue : publicValues) {
+        String name=publicValue.getName();
         String value=publicValue.getValue();
         if (Validator.isNotNull(value)) {
-          sb.append(StringPool.EQUAL);
-          sb.append(publicValue.getValue());
+          actionResponse.setRenderParameter(name,value);
         }
-        if (i < lastIndex) {
-          sb.append(StringPool.AMPERSAND);
+ else {
+          actionResponse.removePublicRenderParameter(name);
         }
       }
-      actionResponse.setRenderParameter("wsrp-navigationalValues",sb.toString());
     }
   }
   PortletContext portletContext=updateResponse.getPortletContext();
