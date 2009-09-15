@@ -44,10 +44,10 @@
   String navigationalState=portletRequest.getParameter("wsrp-navigationalState");
   navigationalContext.setOpaqueValue(navigationalState);
   Map<String,String[]> publicParameterMap=portletRequest.getPublicParameterMap();
-  Set<String> names=publicParameterMap.keySet();
   List<NamedString> publicValues=new ArrayList<NamedString>();
-  for (  String name : names) {
-    String[] values=publicParameterMap.get(name);
+  for (  Map.Entry<String,String[]> entry : publicParameterMap.entrySet()) {
+    String name=entry.getKey();
+    String[] values=entry.getValue();
     for (    String value : values) {
       NamedString publicValue=new NamedString();
       publicValue.setName(name);
