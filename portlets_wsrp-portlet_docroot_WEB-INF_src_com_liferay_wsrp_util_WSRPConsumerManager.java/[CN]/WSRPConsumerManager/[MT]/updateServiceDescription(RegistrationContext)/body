@@ -1,5 +1,19 @@
 {
   GetServiceDescription getServiceDescription=new GetServiceDescription();
-  getServiceDescription.setRegistrationContext(registrationContext);
+  if (registrationContext != null) {
+    getServiceDescription.setRegistrationContext(registrationContext);
+  }
   _serviceDescription=_serviceDescriptionService.getServiceDescription(getServiceDescription);
+  _portletDescriptions=new HashMap<String,PortletDescription>();
+  PortletDescription[] portletDescriptions=_serviceDescription.getOfferedPortlets();
+  for (  PortletDescription portletDescription : portletDescriptions) {
+    _portletDescriptions.put(portletDescription.getPortletHandle(),portletDescription);
+  }
+  _propertyDescriptions=new HashMap<String,PropertyDescription>();
+  PropertyDescription[] propertyDescriptions=getPropertyDescriptions();
+  if (propertyDescriptions != null) {
+    for (    PropertyDescription propertyDescription : propertyDescriptions) {
+      _propertyDescriptions.put(propertyDescription.getName().toString(),propertyDescription);
+    }
+  }
 }
