@@ -20,18 +20,13 @@
   EventDescription[] eventDescriptions=_serviceDescription.getEventDescriptions();
   if (eventDescriptions != null) {
     for (    EventDescription eventDescription : eventDescriptions) {
-      javax.xml.namespace.QName[] aliases=eventDescription.getAliases();
-      javax.xml.namespace.QName name=eventDescription.getName();
-      String localPart=name.getLocalPart();
-      String prefix=name.getPrefix();
-      String namespaceURI=name.getNamespaceURI();
-      Namespace namespace=SAXReaderUtil.createNamespace(prefix,namespaceURI);
-      QName qName=SAXReaderUtil.createQName(localPart,namespace);
-      String key=PortletQNameUtil.getKey(qName);
-      _events.put(key,qName);
-      for (      javax.xml.namespace.QName alias : aliases) {
+      QName[] aliases=eventDescription.getAliases();
+      QName name=eventDescription.getName();
+      String key=PortletQNameUtil.getKey(name.getNamespaceURI(),name.getLocalPart());
+      _events.put(key,name);
+      for (      QName alias : aliases) {
         key=PortletQNameUtil.getKey(alias.getNamespaceURI(),alias.getLocalPart());
-        _events.put(key,qName);
+        _events.put(key,name);
       }
     }
   }

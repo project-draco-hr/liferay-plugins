@@ -46,4 +46,12 @@
   if (Validator.isNotNull(windowState)) {
     actionResponse.setWindowState(getWindowState(windowState));
   }
+  Event[] events=updateResponse.getEvents();
+  if (events != null) {
+    for (    Event event : events) {
+      QName qName=wsrpConsumerManager.getEventQName(event.getName());
+      event.setName(qName);
+      actionResponse.setEvent(qName,event);
+    }
+  }
 }
