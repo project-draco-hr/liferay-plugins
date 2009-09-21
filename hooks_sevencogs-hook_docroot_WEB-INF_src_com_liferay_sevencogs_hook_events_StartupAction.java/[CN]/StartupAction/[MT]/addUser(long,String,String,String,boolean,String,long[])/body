@@ -19,7 +19,7 @@
   long[] organizationIds=new long[]{sevenCogsOrganization.getOrganizationId()};
   long[] userGroupIds=null;
   boolean sendEmail=false;
-  ServiceContext serviceContext=null;
+  ServiceContext serviceContext=new ServiceContext();
   User user=UserLocalServiceUtil.addUser(creatorUserId,companyId,autoPassword,password1,password2,autoScreenName,screenName,emailAddress,openId,locale,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,jobTitle,groupIds,organizationIds,roleIds,userGroupIds,sendEmail,serviceContext);
   byte[] portrait=getBytes("/users/" + screenName + "/portrait.jpg");
   UserLocalServiceUtil.updatePortrait(user.getUserId(),portrait);
@@ -31,7 +31,8 @@
   Layout layout=addLayout(group,"Profile",false,"/profile","2_columns_ii");
   String portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
-  JournalArticle journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"my_community_" + user.getScreenName() + ".xml");
+  serviceContext.setAssetTagNames(new String[]{"community","tips"});
+  JournalArticle journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"my_community_" + user.getScreenName() + ".xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,"1_WAR_wolportlet","column-1");
   addPortletId(layout,PortletKeys.REQUESTS,"column-1");
@@ -46,7 +47,8 @@
   addPortletId(layout,PortletKeys.REQUESTS,"column-1");
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
-  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"private_pages_" + user.getScreenName() + ".xml");
+  serviceContext.setAssetTagNames(new String[]{"social","tips"});
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"private_pages_" + user.getScreenName() + ".xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,"6_WAR_wolportlet","column-2");
   portletId=addPortletId(layout,PortletKeys.IFRAME,"column-1");
@@ -71,7 +73,8 @@
   addPortletId(layout,PortletKeys.IMAGE_GALLERY,"column-1");
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
-  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"My documents","workspace_docs.xml");
+  serviceContext.setAssetTagNames(new String[]{"documents","tips"});
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"My documents","workspace_docs.xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,PortletKeys.CALENDAR,"column-2");
   layout=addLayout(group,"Email",true,"/email","1_column");
