@@ -1,57 +1,8 @@
 {
-  PortletSession portletSession=actionRequest.getPortletSession();
   String redirectURL=blockingInteractionResponse.getRedirectURL();
   if (Validator.isNotNull(redirectURL)) {
     sendRedirect(actionResponse,redirectURL);
     return;
   }
-  UpdateResponse updateResponse=blockingInteractionResponse.getUpdateResponse();
-  if (updateResponse == null) {
-    return;
-  }
-  portletSession.setAttribute(WebKeys.MARKUP_CONTEXT,updateResponse.getMarkupContext());
-  NavigationalContext navigationalContext=updateResponse.getNavigationalContext();
-  if (navigationalContext != null) {
-    String opaqueValue=navigationalContext.getOpaqueValue();
-    if (opaqueValue != null) {
-      actionResponse.setRenderParameter("wsrp-navigationalState",opaqueValue);
-    }
-    NamedString[] publicValues=navigationalContext.getPublicValues();
-    if (publicValues != null) {
-      for (      NamedString publicValue : publicValues) {
-        String name=publicValue.getName();
-        String value=publicValue.getValue();
-        if (Validator.isNotNull(value)) {
-          actionResponse.setRenderParameter(name,value);
-        }
- else {
-          actionResponse.removePublicRenderParameter(name);
-        }
-      }
-    }
-  }
-  PortletContext portletContext=updateResponse.getPortletContext();
-  if (portletContext != null) {
-    portletSession.setAttribute(WebKeys.PORTLET_CONTEXT,portletContext);
-  }
-  SessionContext sessionContext=updateResponse.getSessionContext();
-  if (sessionContext != null) {
-    portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
-  }
-  String portletMode=updateResponse.getNewMode();
-  if (Validator.isNotNull(portletMode)) {
-    actionResponse.setPortletMode(getPortletMode(portletMode));
-  }
-  String windowState=updateResponse.getNewWindowState();
-  if (Validator.isNotNull(windowState)) {
-    actionResponse.setWindowState(getWindowState(windowState));
-  }
-  Event[] events=updateResponse.getEvents();
-  if (events != null) {
-    for (    Event event : events) {
-      QName qName=wsrpConsumerManager.getEventQName(event.getName());
-      event.setName(qName);
-      actionResponse.setEvent(qName,event);
-    }
-  }
+  processUpdateResponse(actionRequest,actionResponse,wsrpConsumerManager,blockingInteractionResponse.getUpdateResponse());
 }
