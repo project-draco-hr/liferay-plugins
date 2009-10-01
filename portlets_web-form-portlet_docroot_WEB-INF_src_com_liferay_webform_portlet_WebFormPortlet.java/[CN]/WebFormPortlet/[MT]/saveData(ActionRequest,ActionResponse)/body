@@ -14,6 +14,7 @@
     }
  catch (    CaptchaTextException cte) {
       SessionErrors.add(actionRequest,CaptchaTextException.class.getName());
+      actionResponse.setRenderParameters(actionRequest.getParameterMap());
       return;
     }
   }
@@ -31,6 +32,7 @@
   }
  catch (  Exception e) {
     SessionErrors.add(actionRequest,"validation-script-error",e.getMessage().trim());
+    actionResponse.setRenderParameters(actionRequest.getParameterMap());
     return;
   }
   if (validationErrors.isEmpty()) {
@@ -56,11 +58,13 @@
     }
  else {
       SessionErrors.add(actionRequest,"error");
+      actionResponse.setRenderParameters(actionRequest.getParameterMap());
     }
   }
  else {
     for (    String badField : validationErrors) {
       SessionErrors.add(actionRequest,"error" + badField);
+      actionResponse.setRenderParameters(actionRequest.getParameterMap());
     }
   }
   if (SessionErrors.isEmpty(actionRequest) && Validator.isNotNull(successURL)) {
