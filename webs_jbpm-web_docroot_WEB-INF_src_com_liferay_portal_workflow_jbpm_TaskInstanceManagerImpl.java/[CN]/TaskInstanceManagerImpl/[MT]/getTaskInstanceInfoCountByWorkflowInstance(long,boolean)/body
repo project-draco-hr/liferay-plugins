@@ -1,0 +1,13 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    CustomSession customSession=new CustomSession(jbpmContext);
+    return customSession.countTaskInstances(-1,workflowInstanceId,null,false,completed);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

@@ -1,0 +1,30 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
+    TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(taskInstanceId);
+    if (attributes != null) {
+      taskInstance.addVariables(attributes);
+    }
+    taskInstance.addComment(comment);
+    Set<PooledActor> pooledActors=taskInstance.getPooledActors();
+    if ((pooledActors == null) || pooledActors.isEmpty()) {
+      throw new WorkflowException("Task has not been assigned to a role");
+    }
+    PooledActor pooledActor=(PooledActor)pooledActors.iterator().next();
+    long roleId=GetterUtil.getLong(pooledActor.getActorId());
+    Set<Long> roleIds=userCredential.getRoleIds();
+    if (!roleIds.contains(roleId)) {
+      throw new WorkflowException(userCredential.getUserId() + " does not have the role to be assigned to task " + taskInstanceId);
+    }
+    taskInstance.setActorId(String.valueOf(userCredential.getUserId()));
+    jbpmContext.save(taskInstance);
+    return new TaskInstanceInfoImpl(taskInstance);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}
