@@ -1,0 +1,17 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    ProcessDefinition processDefinition=getProcessDefinition(jbpmContext,workflowDefinitionName,workflowDefinitionVersion);
+    CustomSession customSession=new CustomSession(jbpmContext);
+    return customSession.countProcessInstances(processDefinition.getId(),finished);
+  }
+ catch (  WorkflowException we) {
+    throw we;
+  }
+catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

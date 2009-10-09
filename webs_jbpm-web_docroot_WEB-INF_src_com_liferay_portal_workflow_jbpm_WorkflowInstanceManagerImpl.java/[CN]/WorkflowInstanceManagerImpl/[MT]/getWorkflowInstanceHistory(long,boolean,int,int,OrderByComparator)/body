@@ -1,0 +1,33 @@
+{
+  List<WorkflowInstanceHistory> workflowInstanceHistories=new ArrayList<WorkflowInstanceHistory>();
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    LoggingSession loggingSession=jbpmContext.getLoggingSession();
+    Token token=jbpmContext.loadToken(workflowInstanceId);
+    List<ProcessLog> processLogs=loggingSession.findLogsByToken(token);
+    for (    ProcessLog processLog : processLogs) {
+      workflowInstanceHistories.add(new WorkflowInstanceHistoryImpl(processLog));
+    }
+    if (includeChildren) {
+      Stack<Token> tokens=new Stack<Token>();
+      tokens.addAll(token.getChildren().values());
+      while (!tokens.isEmpty()) {
+        Token childToken=tokens.pop();
+        processLogs=loggingSession.findLogsByToken(childToken);
+        for (        ProcessLog processLog : processLogs) {
+          workflowInstanceHistories.add(new WorkflowInstanceHistoryImpl(processLog));
+        }
+        tokens.addAll(childToken.getChildren().values());
+      }
+    }
+    Collections.sort(workflowInstanceHistories,orderByComparator);
+    workflowInstanceHistories=ListUtil.subList(workflowInstanceHistories,start,end);
+    return workflowInstanceHistories;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

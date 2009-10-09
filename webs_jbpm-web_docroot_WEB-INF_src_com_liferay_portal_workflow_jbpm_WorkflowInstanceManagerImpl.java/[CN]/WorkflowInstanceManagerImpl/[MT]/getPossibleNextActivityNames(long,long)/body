@@ -1,0 +1,18 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    Token token=jbpmContext.loadToken(workflowInstanceId);
+    Set<Transition> transitions=token.getAvailableTransitions();
+    List<String> names=new ArrayList<String>(transitions.size());
+    for (    Transition transition : transitions) {
+      names.add(transition.getName());
+    }
+    return names;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

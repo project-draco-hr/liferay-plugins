@@ -1,0 +1,14 @@
+{
+  GraphSession graphSession=jbpmContext.getGraphSession();
+  ProcessDefinition processDefinition=null;
+  if (workflowDefinitionVersion != null) {
+    processDefinition=graphSession.findProcessDefinition(workflowDefinitionName,workflowDefinitionVersion);
+  }
+ else {
+    processDefinition=graphSession.findLatestProcessDefinition(workflowDefinitionName);
+  }
+  if (processDefinition != null) {
+    return processDefinition;
+  }
+  throw new WorkflowException("No workflow definition with name " + workflowDefinitionName + " and version "+ workflowDefinitionVersion);
+}

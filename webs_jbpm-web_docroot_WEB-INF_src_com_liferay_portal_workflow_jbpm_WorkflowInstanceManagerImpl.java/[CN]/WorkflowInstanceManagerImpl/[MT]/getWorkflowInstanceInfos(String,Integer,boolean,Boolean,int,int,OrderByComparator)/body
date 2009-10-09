@@ -1,0 +1,27 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    ProcessDefinition processDefinition=getProcessDefinition(jbpmContext,workflowDefinitionName,workflowDefinitionVersion);
+    CustomSession customSession=new CustomSession(jbpmContext);
+    List<ProcessInstance> processInstances=customSession.findProcessInstances(processDefinition.getId(),finished,start,end,orderByComparator);
+    List<WorkflowInstanceInfo> workflowInstanceInfos=new ArrayList<WorkflowInstanceInfo>(processInstances.size());
+    for (    ProcessInstance processInstance : processInstances) {
+      Token token=processInstance.getRootToken();
+      WorkflowInstanceInfoImpl workflowInstanceInfoImpl=new WorkflowInstanceInfoImpl(token);
+      if (retrieveChildrenInfo) {
+        populateChildrenWorkflowInstanceInfos(token,workflowInstanceInfoImpl);
+      }
+      workflowInstanceInfos.add(workflowInstanceInfoImpl);
+    }
+    return workflowInstanceInfos;
+  }
+ catch (  WorkflowException we) {
+    throw we;
+  }
+catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

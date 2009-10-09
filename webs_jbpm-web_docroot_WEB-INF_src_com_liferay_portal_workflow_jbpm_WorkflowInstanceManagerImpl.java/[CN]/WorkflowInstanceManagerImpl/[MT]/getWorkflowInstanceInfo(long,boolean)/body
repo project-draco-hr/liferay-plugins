@@ -1,0 +1,17 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    Token token=jbpmContext.loadToken(workflowInstanceId);
+    WorkflowInstanceInfoImpl workflowInstanceInfoImpl=new WorkflowInstanceInfoImpl(token);
+    if (retrieveChildrenInfo) {
+      populateChildrenWorkflowInstanceInfos(token,workflowInstanceInfoImpl);
+    }
+    return workflowInstanceInfoImpl;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

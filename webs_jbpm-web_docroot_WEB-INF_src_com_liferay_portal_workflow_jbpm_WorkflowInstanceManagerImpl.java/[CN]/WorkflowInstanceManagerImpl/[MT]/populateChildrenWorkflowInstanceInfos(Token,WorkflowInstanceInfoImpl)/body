@@ -1,0 +1,15 @@
+{
+  Stack<ObjectValuePair<Token,WorkflowInstanceInfoImpl>> objectValuePairs=new Stack<ObjectValuePair<Token,WorkflowInstanceInfoImpl>>();
+  objectValuePairs.push(new ObjectValuePair<Token,WorkflowInstanceInfoImpl>(token,workflowInstanceInfoImpl));
+  while (!objectValuePairs.isEmpty()) {
+    ObjectValuePair<Token,WorkflowInstanceInfoImpl> objectValuePair=objectValuePairs.pop();
+    Token parentToken=objectValuePair.getKey();
+    WorkflowInstanceInfoImpl parentWorkflowInstanceInfoImpl=objectValuePair.getValue();
+    for (    Token childToken : parentToken.getChildren().values()) {
+      WorkflowInstanceInfoImpl childWorkflowInstanceInfoImpl=new WorkflowInstanceInfoImpl(childToken);
+      parentWorkflowInstanceInfoImpl.addChild(childWorkflowInstanceInfoImpl);
+      childWorkflowInstanceInfoImpl.setParent(parentWorkflowInstanceInfoImpl);
+      objectValuePairs.push(new ObjectValuePair<Token,WorkflowInstanceInfoImpl>(childToken,childWorkflowInstanceInfoImpl));
+    }
+  }
+}

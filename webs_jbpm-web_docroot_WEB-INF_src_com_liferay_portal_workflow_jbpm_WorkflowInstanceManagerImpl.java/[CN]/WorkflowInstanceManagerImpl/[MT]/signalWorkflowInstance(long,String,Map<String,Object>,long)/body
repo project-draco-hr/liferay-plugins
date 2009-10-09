@@ -1,0 +1,28 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    Token token=jbpmContext.loadToken(workflowInstanceId);
+    if (attributes != null) {
+      ProcessInstance processInstance=token.getProcessInstance();
+      ContextInstance contextInstance=processInstance.getContextInstance();
+      for (      Map.Entry<String,Object> entry : attributes.entrySet()) {
+        contextInstance.setVariableLocally(entry.getKey(),entry.getValue(),token);
+      }
+      jbpmContext.save(token);
+    }
+    if (Validator.isNull(activityName)) {
+      token.signal();
+    }
+ else {
+      token.signal(activityName);
+    }
+    jbpmContext.save(token);
+    return new WorkflowInstanceInfoImpl(token);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}
