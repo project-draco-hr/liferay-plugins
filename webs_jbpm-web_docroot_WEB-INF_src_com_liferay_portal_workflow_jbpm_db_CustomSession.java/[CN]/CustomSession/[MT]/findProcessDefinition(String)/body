@@ -1,0 +1,14 @@
+{
+  try {
+    Criteria criteria=_session.createCriteria(ProcessDefinition.class);
+    criteria.add(Restrictions.eq("name",name));
+    Order order=Order.desc("version");
+    criteria.addOrder(order);
+    criteria.setFirstResult(0);
+    criteria.setMaxResults(1);
+    return (ProcessDefinition)criteria.uniqueResult();
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}

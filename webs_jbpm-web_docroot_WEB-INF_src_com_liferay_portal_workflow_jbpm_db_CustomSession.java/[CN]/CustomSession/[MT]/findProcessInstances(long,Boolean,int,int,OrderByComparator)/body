@@ -1,0 +1,20 @@
+{
+  try {
+    Criteria criteria=_session.createCriteria(ProcessInstance.class);
+    criteria.add(Restrictions.eq("processDefinition.id",processDefinitionId));
+    if (finished != null) {
+      if (finished.booleanValue()) {
+        criteria.add(Restrictions.isNotNull("end"));
+      }
+ else {
+        criteria.add(Restrictions.isNull("end"));
+      }
+    }
+    addPagination(criteria,start,end);
+    addOrder(criteria,orderByComparator);
+    return criteria.list();
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}

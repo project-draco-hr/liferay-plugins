@@ -1,0 +1,19 @@
+{
+  try {
+    Criteria criteria=_session.createCriteria(ProcessDefinition.class);
+    if (latest) {
+      criteria.setProjection(Projections.countDistinct("name"));
+    }
+ else {
+      criteria.setProjection(Projections.rowCount());
+    }
+    if (name != null) {
+      criteria.add(Restrictions.eq("name",name));
+    }
+    Number count=(Number)criteria.uniqueResult();
+    return count.intValue();
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}

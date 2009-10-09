@@ -1,0 +1,20 @@
+{
+  if (orderByComparator == null) {
+    return;
+  }
+  String[] orderByFields=orderByComparator.getOrderByFields();
+  for (  String orderByField : orderByFields) {
+    Order order=null;
+    String jbpmField=_fieldMap.get(orderByField);
+    if (jbpmField == null) {
+      jbpmField=orderByField;
+    }
+    if (orderByComparator.isAscending()) {
+      order=Order.asc(jbpmField);
+    }
+ else {
+      order=Order.desc(jbpmField);
+    }
+    criteria.addOrder(order);
+  }
+}

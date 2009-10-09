@@ -1,0 +1,39 @@
+{
+  if (type.equals("user")) {
+    if (Validator.isNull(id)) {
+      User user=UserLocalServiceUtil.getUserByEmailAddress(GetterUtil.getLong(companyId),name);
+      assignable.setActorId(String.valueOf(user.getUserId()));
+    }
+ else {
+      assignable.setActorId(type);
+    }
+  }
+ else   if (type.equals("community")) {
+    if (Validator.isNull(id)) {
+      Group group=GroupLocalServiceUtil.getGroup(GetterUtil.getLong(companyId),name);
+      id=String.valueOf(group.getGroupId());
+    }
+    long[] userIds=UserLocalServiceUtil.getGroupUserIds(GetterUtil.getLong(id));
+    String[] actorIds=new String[userIds.length];
+    for (int i=0; i < userIds.length; i++) {
+      actorIds[i]=String.valueOf(userIds[i]);
+    }
+    assignable.setPooledActors(actorIds);
+  }
+ else   if (type.equals("role")) {
+    if (Validator.isNull(id)) {
+      Role role=RoleLocalServiceUtil.getRole(GetterUtil.getLong(companyId),name);
+      id=String.valueOf(role.getRoleId());
+    }
+    long[] userIds=UserLocalServiceUtil.getRoleUserIds(GetterUtil.getLong(id));
+    String[] actorIds=new String[userIds.length];
+    for (int i=0; i < userIds.length; i++) {
+      actorIds[i]=String.valueOf(userIds[i]);
+    }
+    assignable.setPooledActors(actorIds);
+  }
+ else {
+    assignable.setActorId(null);
+    assignable.setPooledActors((String[])null);
+  }
+}

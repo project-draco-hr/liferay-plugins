@@ -1,0 +1,25 @@
+{
+  try {
+    Criteria criteria=_session.createCriteria(ProcessDefinition.class);
+    if (latest) {
+      criteria.setProjection(Projections.distinct(Projections.groupProperty("name")));
+      Order order=Order.desc("version");
+      criteria.addOrder(order);
+    }
+    if (name != null) {
+      criteria.add(Restrictions.eq("name",name));
+    }
+    addPagination(criteria,start,end);
+    addOrder(criteria,orderByComparator);
+    if (latest) {
+      List<String> names=criteria.list();
+      return findProcessDefinitions(names);
+    }
+ else {
+      return criteria.list();
+    }
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}

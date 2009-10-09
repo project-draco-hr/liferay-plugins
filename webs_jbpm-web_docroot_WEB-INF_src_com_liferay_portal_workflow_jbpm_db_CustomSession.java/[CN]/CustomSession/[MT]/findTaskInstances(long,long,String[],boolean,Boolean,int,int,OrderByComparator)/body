@@ -1,0 +1,34 @@
+{
+  if ((actorIds != null) && (actorIds.length == 0)) {
+    return Collections.EMPTY_LIST;
+  }
+  try {
+    Criteria criteria=_session.createCriteria(TaskInstance.class);
+    if (processInstanceId > 0) {
+      criteria.add(Restrictions.eq("processInstance.id",processInstanceId));
+    }
+ else     if (tokenId > 0) {
+      criteria.add(Restrictions.eq("token.id",tokenId));
+    }
+ else     if (actorIds != null) {
+      if (pooledActors) {
+        criteria.createCriteria("pooledActors");
+      }
+      criteria.add(Restrictions.in("actorId",actorIds));
+    }
+    if (finished != null) {
+      if (finished.booleanValue()) {
+        criteria.add(Restrictions.isNotNull("end"));
+      }
+ else {
+        criteria.add(Restrictions.isNull("end"));
+      }
+    }
+    addPagination(criteria,start,end);
+    addOrder(criteria,orderByComparator);
+    return criteria.list();
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}
