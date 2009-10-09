@@ -1,0 +1,11 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    CustomSession customSession=new CustomSession(jbpmContext);
+    List<ProcessDefinition> processDefinitions=customSession.findProcessDefinitions(null,true,start,end,orderByComparator);
+    return toWorkflowDefinitions(processDefinitions);
+  }
+  finally {
+    jbpmContext.close();
+  }
+}

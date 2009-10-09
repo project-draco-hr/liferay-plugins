@@ -1,0 +1,44 @@
+{
+  ResourceRetriever resourceRetriever=workflowDefinition.getJar();
+  String name=workflowDefinition.getWorkflowDefinitionName();
+  int version=workflowDefinition.getWorkflowDefinitionVersion();
+  ProcessDefinition processDefinition=null;
+  ZipInputStream processStream=new ZipInputStream(resourceRetriever.getInputStream());
+  try {
+    ProcessArchive processArchive=new ProcessArchive(processStream);
+    processDefinition=processArchive.parseProcessDefinition();
+  }
+ catch (  IOException ioe) {
+    throw new WorkflowException(ioe);
+  }
+ finally {
+    try {
+      processStream.close();
+    }
+ catch (    IOException ioe) {
+    }
+  }
+  if (Validator.isNotNull(name)) {
+    processDefinition.setName(name);
+  }
+  if (version > 0) {
+    processDefinition.setVersion(version);
+  }
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    if (version > 0) {
+      GraphSession graphSession=jbpmContext.getGraphSession();
+      ProcessDefinition oldProcessDefinition=graphSession.findProcessDefinition(name,version);
+      if (oldProcessDefinition != null) {
+        graphSession.deleteProcessDefinition(oldProcessDefinition);
+      }
+      graphSession.saveProcessDefinition(processDefinition);
+    }
+ else {
+      jbpmContext.deployProcessDefinition(processDefinition);
+    }
+  }
+  finally {
+    jbpmContext.close();
+  }
+}
