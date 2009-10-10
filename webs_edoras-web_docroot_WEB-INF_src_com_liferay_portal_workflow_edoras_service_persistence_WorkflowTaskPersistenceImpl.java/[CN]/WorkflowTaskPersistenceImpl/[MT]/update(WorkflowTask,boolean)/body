@@ -1,0 +1,21 @@
+{
+  boolean isNew=workflowTask.isNew();
+  for (  ModelListener<WorkflowTask> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(workflowTask);
+    }
+ else {
+      listener.onBeforeUpdate(workflowTask);
+    }
+  }
+  workflowTask=updateImpl(workflowTask,merge);
+  for (  ModelListener<WorkflowTask> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(workflowTask);
+    }
+ else {
+      listener.onAfterUpdate(workflowTask);
+    }
+  }
+  return workflowTask;
+}

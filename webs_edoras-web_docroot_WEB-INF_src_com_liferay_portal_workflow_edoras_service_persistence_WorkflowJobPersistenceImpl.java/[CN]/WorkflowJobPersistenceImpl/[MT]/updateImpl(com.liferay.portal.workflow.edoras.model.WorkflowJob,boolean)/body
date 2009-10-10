@@ -1,0 +1,18 @@
+{
+  workflowJob=toUnwrappedModel(workflowJob);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,workflowJob,merge);
+    workflowJob.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(WorkflowJobModelImpl.ENTITY_CACHE_ENABLED,WorkflowJobImpl.class,workflowJob.getPrimaryKey(),workflowJob);
+  return workflowJob;
+}

@@ -1,0 +1,20 @@
+{
+  WorkflowInstance workflowInstance=(WorkflowInstance)EntityCacheUtil.getResult(WorkflowInstanceModelImpl.ENTITY_CACHE_ENABLED,WorkflowInstanceImpl.class,workflowInstanceId,this);
+  if (workflowInstance == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      workflowInstance=(WorkflowInstance)session.get(WorkflowInstanceImpl.class,new Long(workflowInstanceId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (workflowInstance != null) {
+        cacheResult(workflowInstance);
+      }
+      closeSession(session);
+    }
+  }
+  return workflowInstance;
+}

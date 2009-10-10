@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.portal.workflow.edoras.model.WorkflowJob")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<WorkflowJob>> listenersList=new ArrayList<ModelListener<WorkflowJob>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<WorkflowJob>)Class.forName(listenerClassName).newInstance());
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}

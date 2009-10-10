@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    WorkflowLog workflowLog=(WorkflowLog)session.get(WorkflowLogImpl.class,new Long(workflowLogId));
+    if (workflowLog == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No WorkflowLog exists with the primary key " + workflowLogId);
+      }
+      throw new NoSuchWorkflowLogException("No WorkflowLog exists with the primary key " + workflowLogId);
+    }
+    return remove(workflowLog);
+  }
+ catch (  NoSuchWorkflowLogException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

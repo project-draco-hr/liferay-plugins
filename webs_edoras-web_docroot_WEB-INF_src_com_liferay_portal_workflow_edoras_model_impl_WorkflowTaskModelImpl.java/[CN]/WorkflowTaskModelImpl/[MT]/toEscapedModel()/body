@@ -1,0 +1,27 @@
+{
+  if (isEscapedModel()) {
+    return (WorkflowTask)this;
+  }
+ else {
+    WorkflowTask model=new WorkflowTaskImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setWorkflowTaskId(getWorkflowTaskId());
+    model.setCompanyId(getCompanyId());
+    model.setCreateDate(getCreateDate());
+    model.setFriendlyId(HtmlUtil.escape(getFriendlyId()));
+    model.setWorkflowDefinitionId(getWorkflowDefinitionId());
+    model.setWorkflowInstanceId(getWorkflowInstanceId());
+    model.setMetaName(HtmlUtil.escape(getMetaName()));
+    model.setRelation(HtmlUtil.escape(getRelation()));
+    model.setDueDate(getDueDate());
+    model.setCompletionDate(getCompletionDate());
+    model.setState(getState());
+    model.setPriority(getPriority());
+    model.setAssigneeUserId(getAssigneeUserId());
+    model.setAssigneeUserName(HtmlUtil.escape(getAssigneeUserName()));
+    model.setRoleId(getRoleId());
+    model=(WorkflowTask)Proxy.newProxyInstance(WorkflowTask.class.getClassLoader(),new Class[]{WorkflowTask.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

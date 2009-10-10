@@ -1,0 +1,33 @@
+{
+  if (isEscapedModel()) {
+    return (WorkflowInstance)this;
+  }
+ else {
+    WorkflowInstance model=new WorkflowInstanceImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setWorkflowInstanceId(getWorkflowInstanceId());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setSetupId(HtmlUtil.escape(getSetupId()));
+    model.setFriendlyId(HtmlUtil.escape(getFriendlyId()));
+    model.setWorkflowDefinitionId(getWorkflowDefinitionId());
+    model.setParentWorkflowInstanceId(getParentWorkflowInstanceId());
+    model.setClassName(HtmlUtil.escape(getClassName()));
+    model.setClassPK(getClassPK());
+    model.setAttributes(HtmlUtil.escape(getAttributes()));
+    model.setNestedWorkflowDefinitionIds(HtmlUtil.escape(getNestedWorkflowDefinitionIds()));
+    model.setNestedWorkflowDefinitionVersions(HtmlUtil.escape(getNestedWorkflowDefinitionVersions()));
+    model.setNestedRelatedElements(HtmlUtil.escape(getNestedRelatedElements()));
+    model.setCurrentElementName(HtmlUtil.escape(getCurrentElementName()));
+    model.setRelatedElementName(HtmlUtil.escape(getRelatedElementName()));
+    model.setFinished(getFinished());
+    model.setFinishedDated(getFinishedDated());
+    model.setActive(getActive());
+    model=(WorkflowInstance)Proxy.newProxyInstance(WorkflowInstance.class.getClassLoader(),new Class[]{WorkflowInstance.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

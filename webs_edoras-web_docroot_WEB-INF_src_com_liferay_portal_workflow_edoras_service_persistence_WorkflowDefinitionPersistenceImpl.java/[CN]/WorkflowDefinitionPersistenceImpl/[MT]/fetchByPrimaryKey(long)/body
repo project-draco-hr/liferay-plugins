@@ -1,0 +1,20 @@
+{
+  WorkflowDefinition workflowDefinition=(WorkflowDefinition)EntityCacheUtil.getResult(WorkflowDefinitionModelImpl.ENTITY_CACHE_ENABLED,WorkflowDefinitionImpl.class,workflowDefinitionId,this);
+  if (workflowDefinition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      workflowDefinition=(WorkflowDefinition)session.get(WorkflowDefinitionImpl.class,new Long(workflowDefinitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (workflowDefinition != null) {
+        cacheResult(workflowDefinition);
+      }
+      closeSession(session);
+    }
+  }
+  return workflowDefinition;
+}

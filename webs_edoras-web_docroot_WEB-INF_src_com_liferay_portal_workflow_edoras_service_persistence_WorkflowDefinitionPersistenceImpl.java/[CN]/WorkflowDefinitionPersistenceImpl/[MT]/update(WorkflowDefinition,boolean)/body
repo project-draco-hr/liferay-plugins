@@ -1,0 +1,21 @@
+{
+  boolean isNew=workflowDefinition.isNew();
+  for (  ModelListener<WorkflowDefinition> listener : listeners) {
+    if (isNew) {
+      listener.onBeforeCreate(workflowDefinition);
+    }
+ else {
+      listener.onBeforeUpdate(workflowDefinition);
+    }
+  }
+  workflowDefinition=updateImpl(workflowDefinition,merge);
+  for (  ModelListener<WorkflowDefinition> listener : listeners) {
+    if (isNew) {
+      listener.onAfterCreate(workflowDefinition);
+    }
+ else {
+      listener.onAfterUpdate(workflowDefinition);
+    }
+  }
+  return workflowDefinition;
+}

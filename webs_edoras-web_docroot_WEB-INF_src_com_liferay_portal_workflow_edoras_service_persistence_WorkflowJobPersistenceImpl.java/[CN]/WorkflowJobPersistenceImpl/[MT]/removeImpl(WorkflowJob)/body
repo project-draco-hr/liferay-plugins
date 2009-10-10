@@ -1,0 +1,24 @@
+{
+  workflowJob=toUnwrappedModel(workflowJob);
+  Session session=null;
+  try {
+    session=openSession();
+    if (workflowJob.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(WorkflowJobImpl.class,workflowJob.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(workflowJob);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(WorkflowJobModelImpl.ENTITY_CACHE_ENABLED,WorkflowJobImpl.class,workflowJob.getPrimaryKey());
+  return workflowJob;
+}

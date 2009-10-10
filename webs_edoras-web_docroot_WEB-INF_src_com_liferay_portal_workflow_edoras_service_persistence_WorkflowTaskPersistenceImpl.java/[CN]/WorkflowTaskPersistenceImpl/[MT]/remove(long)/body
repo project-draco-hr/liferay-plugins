@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    WorkflowTask workflowTask=(WorkflowTask)session.get(WorkflowTaskImpl.class,new Long(workflowTaskId));
+    if (workflowTask == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("No WorkflowTask exists with the primary key " + workflowTaskId);
+      }
+      throw new NoSuchWorkflowTaskException("No WorkflowTask exists with the primary key " + workflowTaskId);
+    }
+    return remove(workflowTask);
+  }
+ catch (  NoSuchWorkflowTaskException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

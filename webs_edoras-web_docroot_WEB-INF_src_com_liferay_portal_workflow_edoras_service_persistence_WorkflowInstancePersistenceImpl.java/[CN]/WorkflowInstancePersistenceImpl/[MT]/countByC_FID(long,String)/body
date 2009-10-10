@@ -1,0 +1,40 @@
+{
+  Object[] finderArgs=new Object[]{new Long(companyId),friendlyId};
+  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_C_FID,finderArgs,this);
+  if (count == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT COUNT(workflowInstance) ");
+      query.append("FROM WorkflowInstance workflowInstance WHERE ");
+      query.append("workflowInstance.companyId = ?");
+      query.append(" AND ");
+      if (friendlyId == null) {
+        query.append("workflowInstance.friendlyId IS NULL");
+      }
+ else {
+        query.append("workflowInstance.friendlyId = ?");
+      }
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(companyId);
+      if (friendlyId != null) {
+        qPos.add(friendlyId);
+      }
+      count=(Long)q.uniqueResult();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (count == null) {
+        count=Long.valueOf(0);
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_FID,finderArgs,count);
+      closeSession(session);
+    }
+  }
+  return count.intValue();
+}
