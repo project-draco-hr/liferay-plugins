@@ -1,8 +1,9 @@
 {
   PortletSession portletSession=portletRequest.getPortletSession();
-  WSRP_v2_Markup_PortType markupService=(WSRP_v2_Markup_PortType)portletSession.getAttribute(WebKeys.MARKUP_SERVICE,PortletSession.APPLICATION_SCOPE);
-  if (markupService == null) {
-    markupService=wsrpConsumerManager.getMarkupService();
+  MarkupServiceHolder markupServiceHolder=(MarkupServiceHolder)portletSession.getAttribute(WebKeys.MARKUP_SERVICE,PortletSession.APPLICATION_SCOPE);
+  if (markupServiceHolder == null) {
+    WSRP_v2_Markup_PortType markupService=wsrpConsumerManager.getMarkupService();
+    markupServiceHolder=new MarkupServiceHolder(markupService);
     ServiceDescription serviceDescription=wsrpConsumerManager.getServiceDescription();
     String cookie=(String)portletSession.getAttribute(WebKeys.COOKIE);
     CookieProtocol cookieProtocol=serviceDescription.getRequiresInitCookie();
@@ -16,7 +17,7 @@
         portletSession.setAttribute(WebKeys.COOKIE,cookie,PortletSession.APPLICATION_SCOPE);
       }
     }
-    portletSession.setAttribute(WebKeys.MARKUP_SERVICE,markupService,PortletSession.APPLICATION_SCOPE);
+    portletSession.setAttribute(WebKeys.MARKUP_SERVICE,markupServiceHolder,PortletSession.APPLICATION_SCOPE);
   }
-  return markupService;
+  return markupServiceHolder.getMarkupService();
 }
