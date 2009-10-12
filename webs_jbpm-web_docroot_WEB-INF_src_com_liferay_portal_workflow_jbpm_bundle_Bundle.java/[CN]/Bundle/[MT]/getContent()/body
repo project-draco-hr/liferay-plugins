@@ -1,0 +1,19 @@
+{
+  ByteArrayOutputStream baos=new ByteArrayOutputStream();
+  JarOutputStream jos=new JarOutputStream(baos);
+  List<BundleEntry> bundleEntries=new ArrayList<BundleEntry>(_bundleEntries);
+  for (  BundleEntry bundleEntry : bundleEntries) {
+    JarEntry jarEntry=new JarEntry(bundleEntry.getName());
+    jos.putNextEntry(jarEntry);
+    BufferedInputStream bis=new BufferedInputStream(bundleEntry.getResourceRetriever().getInputStream());
+    int i=-1;
+    while ((i=bis.read()) != -1) {
+      jos.write(i);
+    }
+    bis.close();
+    jos.closeEntry();
+  }
+  jos.close();
+  baos.close();
+  return baos.toByteArray();
+}
