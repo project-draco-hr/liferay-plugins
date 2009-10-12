@@ -1,0 +1,15 @@
+{
+  ObjectFactory objectFactory=ObjectFactoryParser.parseResource(resource);
+  JbpmConfiguration jbpmConfiguration=new JbpmConfiguration(objectFactory);
+  JbpmContext jbpmContext=null;
+  try {
+    jbpmContext=jbpmConfiguration.createJbpmContext();
+    jbpmContext.setSessionFactory(sessionFactory);
+  }
+  finally {
+    if (jbpmContext != null) {
+      jbpmContext.close();
+    }
+  }
+  return jbpmConfiguration;
+}

@@ -1,0 +1,22 @@
+{
+  DB db=PortalUtil.getDB();
+  String type=db.getType();
+  String jbpmType=type;
+  if (type.equals(DB.TYPE_HYPERSONIC)) {
+    jbpmType=_JBPM_TYPE_HYPERSONIC;
+  }
+ else   if (type.equals(DB.TYPE_INFORMIX)) {
+    throw new RuntimeException("jBPM does not support Informix");
+  }
+ else   if (type.equals(DB.TYPE_SAP)) {
+    jbpmType=_JBPM_TYPE_SAP;
+  }
+ else   if (type.equals(DB.TYPE_SQLSERVER)) {
+    jbpmType=_JBPM_TYPE_SQLSERVER;
+  }
+  String configLocation="/META-INF/hibernate.cfg." + jbpmType + ".xml";
+  if (_log.isInfoEnabled()) {
+    _log.info("Loading " + configLocation);
+  }
+  setConfigLocation(new ClassPathResource(configLocation));
+}
