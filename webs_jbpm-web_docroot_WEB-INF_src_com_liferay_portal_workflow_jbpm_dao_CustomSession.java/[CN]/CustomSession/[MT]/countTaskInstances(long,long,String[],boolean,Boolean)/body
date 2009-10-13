@@ -1,9 +1,10 @@
 {
   if ((actorIds != null) && (actorIds.length == 0)) {
-    return Collections.EMPTY_LIST;
+    return 0;
   }
   try {
     Criteria criteria=_session.createCriteria(TaskInstance.class);
+    criteria.setProjection(Projections.countDistinct("id"));
     if (processInstanceId > 0) {
       criteria.add(Restrictions.eq("processInstance.id",processInstanceId));
     }
@@ -12,7 +13,8 @@
     }
  else     if (actorIds != null) {
       if (pooledActors) {
-        criteria.createCriteria("pooledActors").add(Restrictions.in("actorId",actorIds));
+        Criteria subCriteria=criteria.createCriteria("pooledActors");
+        subCriteria.add(Restrictions.in("actorId",actorIds));
       }
  else {
         criteria.add(Restrictions.in("actorId",actorIds));
@@ -26,9 +28,8 @@
         criteria.add(Restrictions.isNull("end"));
       }
     }
-    addPagination(criteria,start,end);
-    addOrder(criteria,orderByComparator);
-    return criteria.list();
+    Number count=(Number)criteria.uniqueResult();
+    return count.intValue();
   }
  catch (  Exception e) {
     throw new JbpmException(e);

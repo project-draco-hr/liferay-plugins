@@ -17,11 +17,10 @@
     }
     addPagination(criteria,start,end);
     if (latest) {
-      List results=criteria.list();
-      List<String> names=new ArrayList<String>(results.size());
-      for (      Object result : results) {
-        Object[] values=(Object[])result;
-        names.add((String)values[0]);
+      List<Object[]> list=criteria.list();
+      List<String> names=new ArrayList<String>(list.size());
+      for (      Object[] array : list) {
+        names.add((String)array[0]);
       }
       return findProcessDefinitions(names);
     }
