@@ -1,8 +1,10 @@
 {
   try {
-    _remoteMethods.get("releaseSavepoint").invoke(_remoteTransactionStatus,null);
+    Method method=_remoteMethods.get("releaseSavepoint");
+    method.invoke(_remoteTransactionStatus);
   }
  catch (  Exception e) {
-    throw new IllegalArgumentException("Could not invoke remote transaction status",e);
+    _log.error(e,e);
+    throw new TransactionSystemException(e.getMessage());
   }
 }

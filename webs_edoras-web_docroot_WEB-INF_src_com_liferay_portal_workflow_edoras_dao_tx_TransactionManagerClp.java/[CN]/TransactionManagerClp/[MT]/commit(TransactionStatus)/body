@@ -1,8 +1,10 @@
 {
   try {
-    _transactionManagerMethods.get("commit").invoke(_transactionManager,unwrapTransactionStatus(status));
+    Method method=_transactionManagerMethods.get("commit");
+    method.invoke(_transactionManager,unwrapTransactionStatus(transactionStatus));
   }
  catch (  Exception e) {
-    throw new TransactionSystemException("Could not commit transaction via remote transaction manager",e);
+    _log.error(e,e);
+    throw new TransactionSystemException(e.getMessage());
   }
 }

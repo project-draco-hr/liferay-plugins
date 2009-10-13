@@ -1,8 +1,10 @@
 {
   try {
-    return (Boolean)_remoteMethods.get("isNewTransaction").invoke(_remoteTransactionStatus,null);
+    Method method=_remoteMethods.get("isNewTransaction");
+    return (Boolean)method.invoke(_remoteTransactionStatus);
   }
  catch (  Exception e) {
-    throw new IllegalArgumentException("Could not invoke remote transaction status",e);
+    _log.error(e,e);
+    throw new RuntimeException(e.getMessage());
   }
 }

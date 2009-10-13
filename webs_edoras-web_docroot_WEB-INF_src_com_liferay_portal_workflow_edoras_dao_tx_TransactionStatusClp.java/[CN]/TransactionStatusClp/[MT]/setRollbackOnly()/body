@@ -1,8 +1,10 @@
 {
   try {
-    _remoteMethods.get("setRollbackOnly").invoke(_remoteTransactionStatus,null);
+    Method method=_remoteMethods.get("setRollbackOnly");
+    method.invoke(_remoteTransactionStatus);
   }
  catch (  Exception e) {
-    throw new IllegalArgumentException("Could not invoke remote transaction status",e);
+    _log.error(e,e);
+    throw new RuntimeException(e.getMessage());
   }
 }
