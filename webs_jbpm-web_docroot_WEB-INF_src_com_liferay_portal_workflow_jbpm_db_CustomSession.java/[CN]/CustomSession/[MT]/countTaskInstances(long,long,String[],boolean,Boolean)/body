@@ -13,9 +13,11 @@
     }
  else     if (actorIds != null) {
       if (pooledActors) {
-        criteria.createCriteria("pooledActors");
+        criteria.createCriteria("pooledActors").add(Restrictions.in("actorId",actorIds));
       }
-      criteria.add(Restrictions.in("actorId",actorIds));
+ else {
+        criteria.add(Restrictions.in("actorId",actorIds));
+      }
     }
     if (completed != null) {
       if (completed.booleanValue()) {

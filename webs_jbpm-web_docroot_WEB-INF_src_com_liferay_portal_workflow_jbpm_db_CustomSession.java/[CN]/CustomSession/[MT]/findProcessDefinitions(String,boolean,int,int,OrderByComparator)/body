@@ -2,17 +2,27 @@
   try {
     Criteria criteria=_session.createCriteria(ProcessDefinition.class);
     if (latest) {
-      criteria.setProjection(Projections.distinct(Projections.groupProperty("name")));
-      Order order=Order.desc("version");
-      criteria.addOrder(order);
+      ProjectionList projectionList=Projections.projectionList();
+      projectionList.add(Projections.groupProperty("name"));
+      projectionList.add(Projections.max("version"));
+      criteria.setProjection(projectionList);
+      addOrder(criteria,orderByComparator,"version");
     }
     if (name != null) {
       criteria.add(Restrictions.eq("name",name));
+      addOrder(criteria,orderByComparator,"name");
+    }
+    if (latest == false && name == null) {
+      addOrder(criteria,orderByComparator);
     }
     addPagination(criteria,start,end);
-    addOrder(criteria,orderByComparator);
     if (latest) {
-      List<String> names=criteria.list();
+      List results=criteria.list();
+      List<String> names=new ArrayList<String>(results.size());
+      for (      Object result : results) {
+        Object[] values=(Object[])result;
+        names.add((String)values[0]);
+      }
       return findProcessDefinitions(names);
     }
  else {

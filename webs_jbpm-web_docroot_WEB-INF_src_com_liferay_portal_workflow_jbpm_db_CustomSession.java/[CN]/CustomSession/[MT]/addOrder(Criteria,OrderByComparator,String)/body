@@ -3,18 +3,21 @@
     return;
   }
   String[] orderByFields=orderByComparator.getOrderByFields();
+  Arrays.sort(escapeFields);
   for (  String orderByField : orderByFields) {
     Order order=null;
     String jbpmField=_fieldMap.get(orderByField);
     if (jbpmField == null) {
       jbpmField=orderByField;
     }
-    if (orderByComparator.isAscending()) {
-      order=Order.asc(jbpmField);
-    }
+    if (Arrays.binarySearch(escapeFields,jbpmField) < 0) {
+      if (orderByComparator.isAscending()) {
+        order=Order.asc(jbpmField);
+      }
  else {
-      order=Order.desc(jbpmField);
+        order=Order.desc(jbpmField);
+      }
+      criteria.addOrder(order);
     }
-    criteria.addOrder(order);
   }
 }
