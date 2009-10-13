@@ -1,0 +1,12 @@
+{
+  long id=(Long)identity;
+  try {
+    return (T)WorkflowDefinitionUtil.findByPrimaryKey(id);
+  }
+ catch (  NoSuchWorkflowDefinitionException e) {
+    throw new ProcessException("Could not load workflow definition with id [" + id + "]",e);
+  }
+catch (  SystemException e) {
+    throw new ProcessException("Could not load workflow definition with id [" + id + "]",e);
+  }
+}

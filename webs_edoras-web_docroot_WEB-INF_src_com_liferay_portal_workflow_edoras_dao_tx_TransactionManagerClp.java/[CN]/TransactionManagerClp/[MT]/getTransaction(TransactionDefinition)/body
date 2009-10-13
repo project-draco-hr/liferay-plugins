@@ -1,0 +1,10 @@
+{
+  Object transactionStatus;
+  try {
+    transactionStatus=_transactionManagerMethods.get("getTransaction").invoke(_transactionManager,createRemoteTransactionDefinition(definition));
+  }
+ catch (  Exception e) {
+    throw new TransactionSystemException("Could not invoke remote transaction manager",e);
+  }
+  return new TransactionStatusClp(transactionStatus);
+}

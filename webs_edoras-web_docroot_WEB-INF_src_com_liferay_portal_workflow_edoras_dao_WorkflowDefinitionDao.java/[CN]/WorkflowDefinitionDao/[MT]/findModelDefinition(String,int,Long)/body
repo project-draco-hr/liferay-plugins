@@ -1,0 +1,12 @@
+{
+  long companyId=(tenantId == null ? CompanyConstants.SYSTEM : tenantId.longValue());
+  try {
+    return (ProcessModelDefinition)WorkflowDefinitionUtil.findByC_N_V(companyId,modelId,modelVersion);
+  }
+ catch (  SystemException e) {
+    throw new ProcessException("Could not find workflow definition [" + modelId + " / "+ modelVersion+ "].",e);
+  }
+catch (  NoSuchWorkflowDefinitionException e) {
+    throw new ProcessException("Could not find workflow definition [" + modelId + " / "+ modelVersion+ "].",e);
+  }
+}

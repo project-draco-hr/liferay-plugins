@@ -1,0 +1,14 @@
+{
+  int count=countByC(companyId);
+  List<WorkflowDefinition> list=findByC(companyId,count - 1,count,obc);
+  if (list.isEmpty()) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No WorkflowDefinition exists with the key {");
+    msg.append("companyId=" + companyId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchWorkflowDefinitionException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
