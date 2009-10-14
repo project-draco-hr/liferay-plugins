@@ -8,7 +8,7 @@
   sb.append(themeDisplay.getPortalURL());
   sb.append(themeDisplay.getPathFriendlyURLPublic());
   sb.append(StringPool.SLASH);
-  sb.append(creatorUser.getScreenName());
+  sb.append(HtmlUtil.escapeURL(creatorUser.getScreenName()));
   sb.append("/profile\">");
   sb.append(creatorUserName);
   sb.append("</a>");
@@ -16,11 +16,11 @@
   title=themeDisplay.translate("activity-twitter-add-status",new Object[]{creatorUserNameURL});
   sb=new StringBuilder();
   sb.append("<a href=\"http://twitter.com/");
-  sb.append(creatorUser.getContact().getTwitterSn());
+  sb.append(HtmlUtil.escapeURL(creatorUser.getContact().getTwitterSn()));
   sb.append("/statuses/");
   sb.append(activity.getClassPK());
   sb.append("\" target=\"_blank\">");
-  sb.append(extraData.getString("text"));
+  sb.append(HtmlUtil.escape(extraData.getString("text")));
   sb.append("</a>");
   String body=sb.toString();
   return new SocialActivityFeedEntry(title,body);
