@@ -1,0 +1,14 @@
+{
+  return (List<? extends MutableProcessInstance>)getTxTemplateReadOnly().execute(new TransactionCallback(){
+    public Object doInTransaction(    TransactionStatus arg0){
+      try {
+        List<WorkflowInstance> list=WorkflowInstanceUtil.findByC_C(relationType,relationId);
+        return WorkflowEntityTransferUtil.transferLoadedObjects(list,null,true);
+      }
+ catch (      SystemException se) {
+        throw new ProcessException("Could not load workflow instances based on relation [" + relationType + " / "+ relationId+ "]",se);
+      }
+    }
+  }
+);
+}

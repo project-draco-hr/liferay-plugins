@@ -1,0 +1,30 @@
+{
+  Object[] finderArgs=new Object[]{Boolean.valueOf(finished)};
+  List<WorkflowInstance> list=(List<WorkflowInstance>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_FINISHED,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT workflowInstance FROM WorkflowInstance workflowInstance WHERE ");
+      query.append("workflowInstance.finished = ?");
+      query.append(" ");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(finished);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<WorkflowInstance>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_FINISHED,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

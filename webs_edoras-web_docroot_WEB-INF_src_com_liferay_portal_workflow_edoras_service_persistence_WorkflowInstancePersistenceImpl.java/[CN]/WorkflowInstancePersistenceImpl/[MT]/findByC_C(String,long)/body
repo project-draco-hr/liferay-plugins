@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{className,new Long(classPK)};
+  Object[] finderArgs=new Object[]{relationClassName,new Long(relationClassPK)};
   List<WorkflowInstance> list=(List<WorkflowInstance>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_C_C,finderArgs,this);
   if (list == null) {
     Session session=null;
@@ -7,21 +7,21 @@
       session=openSession();
       StringBuilder query=new StringBuilder();
       query.append("SELECT workflowInstance FROM WorkflowInstance workflowInstance WHERE ");
-      if (className == null) {
-        query.append("workflowInstance.className IS NULL");
+      if (relationClassName == null) {
+        query.append("workflowInstance.relationClassName IS NULL");
       }
  else {
-        query.append("workflowInstance.className = ?");
+        query.append("workflowInstance.relationClassName = ?");
       }
       query.append(" AND ");
-      query.append("workflowInstance.classPK = ?");
+      query.append("workflowInstance.relationClassPK = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      if (className != null) {
-        qPos.add(className);
+      if (relationClassName != null) {
+        qPos.add(relationClassName);
       }
-      qPos.add(classPK);
+      qPos.add(relationClassPK);
       list=q.list();
     }
  catch (    Exception e) {

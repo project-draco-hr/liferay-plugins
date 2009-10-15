@@ -1,0 +1,14 @@
+{
+  return (List<? extends MutableProcessInstance>)getTxTemplateReadOnly().execute(new TransactionCallback(){
+    public Object doInTransaction(    TransactionStatus status){
+      try {
+        List<WorkflowInstance> list=WorkflowInstanceUtil.findByFinished(false);
+        return WorkflowEntityTransferUtil.transferLoadedObjects(list,null,true);
+      }
+ catch (      SystemException se) {
+        throw new ProcessException("Could not load open workflow instances",se);
+      }
+    }
+  }
+);
+}

@@ -1,0 +1,11 @@
+{
+  if (getParentWorkflowInstanceId() == 0) {
+    return null;
+  }
+  try {
+    return WorkflowInstanceUtil.findByPrimaryKey(getParentWorkflowInstanceId());
+  }
+ catch (  Exception e) {
+    throw new ProcessException("Could not lazily fetch parent workflow instance with id [" + getParentWorkflowInstanceId() + "]");
+  }
+}

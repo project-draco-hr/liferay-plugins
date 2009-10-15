@@ -1,0 +1,16 @@
+{
+  if (entity.getPrimaryKey() == 0) {
+    try {
+      entity.setPrimaryKey(CounterLocalServiceUtil.increment());
+      entity.setNew(true);
+      return true;
+    }
+ catch (    SystemException se) {
+      throw new ProcessException("Could not obtain a new primary key from counter service",se);
+    }
+  }
+ else {
+    entity.setNew(false);
+    return false;
+  }
+}

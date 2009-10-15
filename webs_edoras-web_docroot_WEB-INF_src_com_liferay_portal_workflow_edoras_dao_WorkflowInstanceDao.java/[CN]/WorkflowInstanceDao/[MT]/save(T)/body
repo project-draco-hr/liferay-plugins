@@ -1,0 +1,19 @@
+{
+  WorkflowInstanceImpl workflowInstance=(WorkflowInstanceImpl)entity;
+  if (super.checkAndInitializeNewInstance(workflowInstance)) {
+    workflowInstance.initializeForInsert();
+  }
+ else {
+    workflowInstance.initializeForUpdate();
+  }
+  try {
+    WorkflowInstance inst=new com.liferay.portal.workflow.edoras.model.impl.WorkflowInstanceImpl();
+    inst.setNew(true);
+    inst.setPrimaryKey(CounterLocalServiceUtil.increment());
+    WorkflowInstance inst2=workflowInstance.unwrap();
+    WorkflowInstanceUtil.update(inst2);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not update workflow instance",se);
+  }
+}

@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{className,new Long(classPK)};
+  Object[] finderArgs=new Object[]{relationClassName,new Long(relationClassPK)};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_C_C,finderArgs,this);
   if (count == null) {
     Session session=null;
@@ -8,21 +8,21 @@
       StringBuilder query=new StringBuilder();
       query.append("SELECT COUNT(workflowInstance) ");
       query.append("FROM WorkflowInstance workflowInstance WHERE ");
-      if (className == null) {
-        query.append("workflowInstance.className IS NULL");
+      if (relationClassName == null) {
+        query.append("workflowInstance.relationClassName IS NULL");
       }
  else {
-        query.append("workflowInstance.className = ?");
+        query.append("workflowInstance.relationClassName = ?");
       }
       query.append(" AND ");
-      query.append("workflowInstance.classPK = ?");
+      query.append("workflowInstance.relationClassPK = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      if (className != null) {
-        qPos.add(className);
+      if (relationClassName != null) {
+        qPos.add(relationClassName);
       }
-      qPos.add(classPK);
+      qPos.add(relationClassPK);
       count=(Long)q.uniqueResult();
     }
  catch (    Exception e) {

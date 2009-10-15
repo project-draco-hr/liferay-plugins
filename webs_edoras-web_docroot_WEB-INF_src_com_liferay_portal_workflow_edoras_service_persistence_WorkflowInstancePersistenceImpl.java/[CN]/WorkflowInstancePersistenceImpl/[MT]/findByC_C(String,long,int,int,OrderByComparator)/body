@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{className,new Long(classPK),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{relationClassName,new Long(relationClassPK),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
   List<WorkflowInstance> list=(List<WorkflowInstance>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_C_C,finderArgs,this);
   if (list == null) {
     Session session=null;
@@ -7,14 +7,14 @@
       session=openSession();
       StringBuilder query=new StringBuilder();
       query.append("SELECT workflowInstance FROM WorkflowInstance workflowInstance WHERE ");
-      if (className == null) {
-        query.append("workflowInstance.className IS NULL");
+      if (relationClassName == null) {
+        query.append("workflowInstance.relationClassName IS NULL");
       }
  else {
-        query.append("workflowInstance.className = ?");
+        query.append("workflowInstance.relationClassName = ?");
       }
       query.append(" AND ");
-      query.append("workflowInstance.classPK = ?");
+      query.append("workflowInstance.relationClassPK = ?");
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
@@ -35,10 +35,10 @@
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      if (className != null) {
-        qPos.add(className);
+      if (relationClassName != null) {
+        qPos.add(relationClassName);
       }
-      qPos.add(classPK);
+      qPos.add(relationClassPK);
       list=(List<WorkflowInstance>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {

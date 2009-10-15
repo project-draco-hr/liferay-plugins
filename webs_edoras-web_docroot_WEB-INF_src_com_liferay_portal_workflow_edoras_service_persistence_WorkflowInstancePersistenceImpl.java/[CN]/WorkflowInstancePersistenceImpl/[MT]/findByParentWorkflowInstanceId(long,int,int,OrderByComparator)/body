@@ -1,0 +1,47 @@
+{
+  Object[] finderArgs=new Object[]{new Long(parentWorkflowInstanceId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  List<WorkflowInstance> list=(List<WorkflowInstance>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_PARENTWORKFLOWINSTANCEID,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT workflowInstance FROM WorkflowInstance workflowInstance WHERE ");
+      query.append("workflowInstance.parentWorkflowInstanceId = ?");
+      query.append(" ");
+      if (obc != null) {
+        query.append("ORDER BY ");
+        String[] orderByFields=obc.getOrderByFields();
+        for (int i=0; i < orderByFields.length; i++) {
+          query.append("workflowInstance.");
+          query.append(orderByFields[i]);
+          if (obc.isAscending()) {
+            query.append(" ASC");
+          }
+ else {
+            query.append(" DESC");
+          }
+          if ((i + 1) < orderByFields.length) {
+            query.append(", ");
+          }
+        }
+      }
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(parentWorkflowInstanceId);
+      list=(List<WorkflowInstance>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<WorkflowInstance>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_PARENTWORKFLOWINSTANCEID,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

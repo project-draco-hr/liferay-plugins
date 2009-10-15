@@ -1,0 +1,17 @@
+{
+  return (T)getTxTemplateReadOnly().execute(new TransactionCallback(){
+    public Object doInTransaction(    TransactionStatus status){
+      try {
+        WorkflowInstance instance=WorkflowInstanceUtil.findByPrimaryKey(primaryKey);
+        return new WorkflowInstanceImpl(null,instance,true);
+      }
+ catch (      NoSuchWorkflowInstanceException nswie) {
+        return null;
+      }
+catch (      SystemException se) {
+        throw new ProcessException("Could not load workflow instances with id [" + primaryKey + "]",se);
+      }
+    }
+  }
+);
+}
