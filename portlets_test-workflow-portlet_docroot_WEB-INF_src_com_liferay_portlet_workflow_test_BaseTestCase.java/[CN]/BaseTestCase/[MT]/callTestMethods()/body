@@ -1,0 +1,43 @@
+{
+  List<String> testResults=new ArrayList<String>();
+  Class<? extends BaseTestCase> clazz=getClass();
+  Method setUpMethod=null;
+  Method tearDownMethod=null;
+  try {
+    setUpMethod=clazz.getMethod("setUp");
+  }
+ catch (  Exception ignore) {
+  }
+  try {
+    tearDownMethod=clazz.getMethod("tearDown");
+  }
+ catch (  Exception ignore) {
+  }
+  Method[] methods=clazz.getMethods();
+  for (  Method method : methods) {
+    if (method.getName().startsWith("test")) {
+      StringBuilder result=new StringBuilder();
+      result.append(method.getDeclaringClass().getName());
+      result.append(".");
+      result.append(method.getName());
+      result.append("()=");
+      try {
+        if (setUpMethod != null) {
+          setUpMethod.invoke(this);
+        }
+        method.invoke(this);
+        if (tearDownMethod != null) {
+          tearDownMethod.invoke(this);
+        }
+        result.append(PASSED_KEY);
+      }
+ catch (      Exception e) {
+        result.append(FAILED_KEY);
+        result.append("-message-");
+        result.append(e.getMessage());
+      }
+      testResults.add(result.toString());
+    }
+  }
+  return testResults;
+}
