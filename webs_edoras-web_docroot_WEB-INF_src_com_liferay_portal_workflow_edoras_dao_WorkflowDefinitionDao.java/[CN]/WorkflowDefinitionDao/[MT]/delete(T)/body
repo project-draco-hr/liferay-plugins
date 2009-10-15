@@ -1,13 +1,14 @@
 {
-  long id=0;
+  long primaryKey=0;
   try {
-    id=((WorkflowDefinition)entity).getWorkflowDefinitionId();
-    WorkflowDefinitionUtil.remove(id);
+    WorkflowDefinition workflowDefinition=(WorkflowDefinition)entity;
+    primaryKey=workflowDefinition.getWorkflowDefinitionId();
+    WorkflowDefinitionUtil.remove(primaryKey);
   }
  catch (  NoSuchWorkflowDefinitionException nswde) {
-    throw new ProcessException("Could not delete workflow definition with id " + id,nswde);
+    throw new ProcessException("Could not delete workflow definition with id " + primaryKey,nswde);
   }
 catch (  SystemException se) {
-    throw new ProcessException("Could not delete workflow definition with id " + id,se);
+    throw new ProcessException("Could not delete workflow definition with id " + primaryKey,se);
   }
 }

@@ -2,7 +2,7 @@
   ProcessSession processSession=ProcessSystemUtil.getCurrentSession();
   setId(workflowInstance.getPrimaryKey());
   setTenantId(workflowInstance.getCompanyId());
-  Class<?> setupId=WorkflowEntityTransferUtil.getSetupClassForName(workflowInstance.getSetupId());
+  Class<?> setupId=WorkflowEntityBridgeUtil.getSetupClassForName(workflowInstance.getSetupId());
   setSetupId(setupId);
   setBusinessId(workflowInstance.getFriendlyId());
   setRelationType(workflowInstance.getRelationClassName());
@@ -22,7 +22,7 @@
   setCreatedAt(workflowInstance.getCreateDate());
   setModifiedAt(workflowInstance.getModifiedDate());
   setFinishedAt(workflowInstance.getFinishedDated());
-  setParent(parentWorkflowInstanceImpl);
+  setParent(parentWorkflowInstanceBridge);
   setCurrentElement(workflowInstance.getCurrentElementName());
   setRelatedElement(workflowInstance.getRelatedElementName());
   setFinished(workflowInstance.getFinished());
@@ -30,7 +30,7 @@
   setXmlAttributeMap(workflowInstance.getAttributes());
   postLoad();
   if (loadChildren) {
-    List<ProcessInstance> processInstances=(List<ProcessInstance>)WorkflowEntityTransferUtil.transferLoadedObjects(workflowInstance.getChildren(),this,loadChildren);
+    List<ProcessInstance> processInstances=(List<ProcessInstance>)WorkflowEntityBridgeUtil.transferLoadedObjects(workflowInstance.getChildren(),this,loadChildren);
     setChildren(processInstances);
   }
 }
