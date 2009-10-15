@@ -1,13 +1,14 @@
 {
-  long id=0;
+  long primaryKey=0;
   try {
-    id=((WorkflowInstanceImpl)entity).getPrimaryKey();
-    WorkflowInstanceUtil.remove(id);
+    WorkflowInstanceImpl workflowInstanceImpl=(WorkflowInstanceImpl)entity;
+    primaryKey=workflowInstanceImpl.getPrimaryKey();
+    WorkflowInstanceUtil.remove(primaryKey);
   }
  catch (  NoSuchWorkflowInstanceException nswie) {
-    throw new ProcessException("Could not delete workflow instance with id " + id,nswie);
+    throw new ProcessException("Could not delete workflow instance with id " + primaryKey,nswie);
   }
 catch (  SystemException se) {
-    throw new ProcessException("Could not delete workflow instance with id " + id,se);
+    throw new ProcessException("Could not delete workflow instance with id " + primaryKey,se);
   }
 }

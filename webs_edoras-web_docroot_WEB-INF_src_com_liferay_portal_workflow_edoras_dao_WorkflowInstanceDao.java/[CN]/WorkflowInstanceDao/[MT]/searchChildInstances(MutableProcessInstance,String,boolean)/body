@@ -1,15 +1,15 @@
 {
-  List<WorkflowInstance> list=null;
+  List<WorkflowInstance> workflowInstances=null;
   try {
     if (onlyOpen) {
-      list=WorkflowInstanceUtil.findByC_P_R_F(parentInstance.getTenantId(),parentInstance.getPrimaryKey(),cause,false);
+      workflowInstances=WorkflowInstanceUtil.findByC_P_R_F(parentInstance.getTenantId(),parentInstance.getPrimaryKey(),cause,false);
     }
  else {
-      list=WorkflowInstanceUtil.findByC_P_R(parentInstance.getTenantId(),parentInstance.getPrimaryKey(),cause);
+      workflowInstances=WorkflowInstanceUtil.findByC_P_R(parentInstance.getTenantId(),parentInstance.getPrimaryKey(),cause);
     }
-    return (List<? extends MutableProcessInstance>)WorkflowEntityTransferUtil.transferLoadedObjects(list,(WorkflowInstanceImpl)parentInstance,false);
+    return (List<? extends MutableProcessInstance>)WorkflowEntityTransferUtil.transferLoadedObjects(workflowInstances,(WorkflowInstanceImpl)parentInstance,false);
   }
  catch (  SystemException se) {
-    throw new ProcessException("Could not load children for workflow instance with id [" + parentInstance.getPrimaryKey() + "]",se);
+    throw new ProcessException("Could not load children for workflow instance with id " + parentInstance.getPrimaryKey(),se);
   }
 }

@@ -1,8 +1,9 @@
 {
   if (_worflowDefinitionId == 0) {
-    ProcessSession session=ProcessSystemUtil.getCurrentSession();
-    ProcessModel model=session.getService().getProcessModel(getProcessModelId(),getProcessModelVersion());
-    _worflowDefinitionId=model.getRepositoryPK();
+    ProcessSession processSession=ProcessSystemUtil.getCurrentSession();
+    ProcessService processService=processSession.getService();
+    ProcessModel processModel=processService.getProcessModel(getProcessModelId(),getProcessModelVersion());
+    _worflowDefinitionId=processModel.getRepositoryPK();
   }
   return _worflowDefinitionId;
 }

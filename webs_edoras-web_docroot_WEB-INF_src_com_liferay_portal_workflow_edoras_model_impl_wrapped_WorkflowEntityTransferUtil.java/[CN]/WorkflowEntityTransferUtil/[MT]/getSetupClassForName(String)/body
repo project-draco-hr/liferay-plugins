@@ -2,11 +2,12 @@
   Class<?> setupClass=_setupClassMap.get(setupId);
   if (setupClass == null) {
     try {
-      setupClass=WorkflowEntityTransferUtil.class.getClassLoader().loadClass(setupId);
+      ClassLoader classLoader=WorkflowEntityTransferUtil.class.getClassLoader();
+      setupClass=classLoader.loadClass(setupId);
       _setupClassMap.put(setupId,setupClass);
     }
- catch (    ClassNotFoundException e) {
-      throw new ProcessException("Could not load setup id class [" + setupId + "]",e);
+ catch (    ClassNotFoundException cnfe) {
+      throw new ProcessException("Could not load setup id class " + setupId,cnfe);
     }
   }
   return setupClass;
