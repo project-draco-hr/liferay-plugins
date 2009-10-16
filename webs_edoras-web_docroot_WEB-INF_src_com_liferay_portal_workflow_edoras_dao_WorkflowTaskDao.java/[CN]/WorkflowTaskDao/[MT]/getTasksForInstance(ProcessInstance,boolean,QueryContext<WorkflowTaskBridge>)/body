@@ -1,0 +1,24 @@
+{
+  DynamicQuery query=DynamicQueryFactoryUtil.forClass(WorkflowTask.class);
+  if (onlyOpenTasks) {
+    query.add(RestrictionsFactoryUtil.eq("completed",false));
+  }
+  if (queryContext != null) {
+    if (queryContext.isPaging()) {
+      query.setLimit(queryContext.getBeginRowIndex(),queryContext.getEndRowIndex());
+    }
+    if (queryContext.hasOrder()) {
+      List<Order> orderList=WorkflowEntityBridgeUtil.createOrderList(WorkflowTask.class,queryContext.getOrderComparator());
+      for (      Order order : orderList) {
+        query.addOrder(order);
+      }
+    }
+  }
+  try {
+    List taskList=WorkflowTaskUtil.findWithDynamicQuery(query);
+    return (List<WorkflowTaskBridge>)WorkflowEntityBridgeUtil.wrapWorkflowTaskList(taskList);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not find tasks for workflow instance with id [" + processInstance.getPrimaryKey() + "]",se);
+  }
+}

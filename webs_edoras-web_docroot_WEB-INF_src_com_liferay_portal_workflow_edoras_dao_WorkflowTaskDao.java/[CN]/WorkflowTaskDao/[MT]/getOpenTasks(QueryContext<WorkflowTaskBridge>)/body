@@ -1,0 +1,15 @@
+{
+  try {
+    List<WorkflowTask> taskList=null;
+    if (queryContext != null && queryContext.isPaging()) {
+      taskList=WorkflowTaskUtil.findByCompleted(false,queryContext.getBeginRowIndex(),queryContext.getEndRowIndex());
+    }
+ else {
+      taskList=WorkflowTaskUtil.findByCompleted(false);
+    }
+    return (List<WorkflowTaskBridge>)WorkflowEntityBridgeUtil.wrapWorkflowTaskList(taskList);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not load open tasks",se);
+  }
+}

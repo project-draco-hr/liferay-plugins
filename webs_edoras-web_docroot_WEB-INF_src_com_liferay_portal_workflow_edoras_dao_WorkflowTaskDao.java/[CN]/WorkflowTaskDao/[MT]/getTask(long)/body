@@ -1,0 +1,13 @@
+{
+  try {
+    WorkflowTask workflowTask=WorkflowTaskUtil.findByPrimaryKey(primaryKey);
+    WorkflowTaskBridge workflowTaskBridge=new WorkflowTaskBridge(workflowTask);
+    return workflowTaskBridge;
+  }
+ catch (  NoSuchWorkflowTaskException e) {
+    return null;
+  }
+catch (  SystemException se) {
+    throw new ProcessException("Could not load workflow task with id [" + primaryKey + "]",se);
+  }
+}

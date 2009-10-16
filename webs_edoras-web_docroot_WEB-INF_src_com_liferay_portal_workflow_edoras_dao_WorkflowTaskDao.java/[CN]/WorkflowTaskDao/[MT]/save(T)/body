@@ -1,0 +1,15 @@
+{
+  WorkflowTaskBridge workflowTaskBridge=(WorkflowTaskBridge)workflowTask;
+  if (super.checkAndInitializeNewInstance(workflowTaskBridge)) {
+    workflowTaskBridge.initializeForInsert();
+  }
+ else {
+    workflowTaskBridge.initializeForUpdate();
+  }
+  try {
+    WorkflowTaskUtil.update(workflowTaskBridge.unwrap());
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not update workflow task",se);
+  }
+}
