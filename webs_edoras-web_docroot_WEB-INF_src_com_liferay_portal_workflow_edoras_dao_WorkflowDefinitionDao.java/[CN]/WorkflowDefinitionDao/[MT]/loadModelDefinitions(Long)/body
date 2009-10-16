@@ -1,11 +1,13 @@
 {
   try {
+    List<WorkflowDefinition> workflowDefinitionList=null;
     if (tenantId == null) {
-      return WorkflowDefinitionUtil.findAll();
+      workflowDefinitionList=WorkflowDefinitionUtil.findAll();
     }
  else {
-      return WorkflowDefinitionUtil.findByCompanyId(tenantId.longValue());
+      workflowDefinitionList=WorkflowDefinitionUtil.findByCompanyId(tenantId.longValue());
     }
+    return WorkflowEntityBridgeUtil.wrapWorkflowDefinitionList(workflowDefinitionList);
   }
  catch (  SystemException se) {
     throw new ProcessException("Could not find workflow definitions",se);

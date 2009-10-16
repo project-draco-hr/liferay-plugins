@@ -1,7 +1,13 @@
 {
-  super.checkAndInitializeNewInstance((WorkflowEntity)workflowEntity);
+  WorkflowDefinitionBridge workflowDefinitionBridge=(WorkflowDefinitionBridge)workflowEntity;
+  if (super.checkAndInitializeNewInstance(workflowDefinitionBridge)) {
+    workflowDefinitionBridge.initializeForInsert();
+  }
+ else {
+    workflowDefinitionBridge.initializeForUpdate();
+  }
   try {
-    WorkflowDefinitionUtil.update((WorkflowDefinition)workflowEntity);
+    WorkflowDefinitionUtil.update(workflowDefinitionBridge.unwrap());
   }
  catch (  SystemException se) {
     throw new ProcessException("Could not update workflow definition",se);

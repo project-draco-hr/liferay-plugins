@@ -1,7 +1,8 @@
 {
   long primaryKey=(Long)identity;
   try {
-    return (T)WorkflowDefinitionUtil.findByPrimaryKey(primaryKey);
+    WorkflowDefinition workflowDefinition=WorkflowDefinitionUtil.findByPrimaryKey(primaryKey);
+    return (T)new WorkflowDefinitionBridge(workflowDefinition);
   }
  catch (  NoSuchWorkflowDefinitionException nswde) {
     return null;
