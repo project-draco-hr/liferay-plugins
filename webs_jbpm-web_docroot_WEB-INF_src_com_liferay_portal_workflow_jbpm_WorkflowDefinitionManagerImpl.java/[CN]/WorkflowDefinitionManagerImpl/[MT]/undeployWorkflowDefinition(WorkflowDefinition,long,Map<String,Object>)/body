@@ -1,0 +1,21 @@
+{
+  String name=workflowDefinition.getWorkflowDefinitionName();
+  int version=workflowDefinition.getWorkflowDefinitionVersion();
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    GraphSession graphSession=jbpmContext.getGraphSession();
+    ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
+    if (processDefinition != null) {
+      List<ProcessInstance> processInstances=graphSession.findProcessInstances(processDefinition.getId());
+      for (      ProcessInstance processInstance : processInstances) {
+        if (!processInstance.hasEnded()) {
+          throw new WorkflowException("There are stilling running process instances");
+        }
+      }
+      graphSession.deleteProcessDefinition(processDefinition);
+    }
+  }
+  finally {
+    jbpmContext.close();
+  }
+}
