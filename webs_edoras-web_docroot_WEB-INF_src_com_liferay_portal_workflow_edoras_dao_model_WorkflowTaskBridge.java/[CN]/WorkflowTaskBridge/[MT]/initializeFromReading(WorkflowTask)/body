@@ -1,0 +1,24 @@
+{
+  ProcessSession processSession=ProcessSystemUtil.getCurrentSession();
+  Assert.notNull(processSession,"No process session while reading workflow entities.");
+  setId(workflowTask.getPrimaryKey());
+  setTenantId(workflowTask.getCompanyId());
+  setCreationDate(workflowTask.getCreateDate());
+  setDueDate(workflowTask.getDueDate());
+  setCompletionDate(workflowTask.getCompletionDate());
+  setCompleted(workflowTask.getCompleted());
+  WorkflowInstance workflowInstance=workflowTask.getWorkflowInstance();
+  WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
+  setProcessInstance(workflowInstanceBridge);
+  setMetaName(workflowTask.getMetaName());
+  setRelation(workflowTask.getRelation());
+  ProcessModel processModel=processSession.getService().getProcessModel(workflowTask.getWorkflowDefinitionId());
+  setProcessModelId(processModel.getProcessModelId());
+  setProcessModelVersion(processModel.getProcessModelVersion());
+  setTaskId(workflowTask.getFriendlyId());
+  setAssignee(workflowTask.getAssigneeUserName());
+  setPriority(TaskPriority.getPriority(workflowTask.getPriority()));
+  setState(TaskState.getState(workflowTask.getState()));
+  setAssignedGroup(workflowTask.getAssignedGroup());
+  postLoad();
+}
