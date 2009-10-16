@@ -1,0 +1,16 @@
+{
+  unwrap();
+  _workflowDefinition.setPrimaryKey(getPrimaryKey());
+  _workflowDefinition.setModelXml(getProcessModelAsXML());
+  _workflowDefinition.setGraphicalXml(getGraphicalProcessModelAsXML());
+  _workflowDefinition.setName(getProcessModelId());
+  _workflowDefinition.setVersion(getProcessModelVersion());
+  _workflowDefinition.setDesignerVersion(getModelDesignerVersion());
+  Long tenantId=getTenantId();
+  if (tenantId == null) {
+    _workflowDefinition.setCompanyId(CompanyConstants.SYSTEM);
+  }
+ else {
+    _workflowDefinition.setCompanyId(tenantId.longValue());
+  }
+}
