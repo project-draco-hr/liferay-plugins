@@ -1,6 +1,6 @@
 {
   WorkflowLog workflowLog=findByPrimaryKey(workflowLogId);
-  int count=countByW_T(workflowInstanceId,type);
+  int count=countByW_T(workflowInstanceId,logEntityType);
   Session session=null;
   try {
     session=openSession();
@@ -8,7 +8,7 @@
     query.append("SELECT workflowLog FROM WorkflowLog workflowLog WHERE ");
     query.append("workflowLog.workflowInstanceId = ?");
     query.append(" AND ");
-    query.append("workflowLog.type = ?");
+    query.append("workflowLog.logEntityType = ?");
     query.append(" ");
     if (obc != null) {
       query.append("ORDER BY ");
@@ -34,7 +34,7 @@
     Query q=session.createQuery(query.toString());
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(workflowInstanceId);
-    qPos.add(type);
+    qPos.add(logEntityType);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,workflowLog);
     WorkflowLog[] array=new WorkflowLogImpl[3];
     array[0]=(WorkflowLog)objArray[0];

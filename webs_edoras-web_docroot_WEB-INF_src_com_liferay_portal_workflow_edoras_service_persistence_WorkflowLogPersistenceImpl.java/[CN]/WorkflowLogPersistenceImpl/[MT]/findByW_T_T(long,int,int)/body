@@ -1,0 +1,38 @@
+{
+  Object[] finderArgs=new Object[]{new Long(workflowInstanceId),new Integer(logEntityType),new Integer(type)};
+  List<WorkflowLog> list=(List<WorkflowLog>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_W_T_T,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBuilder query=new StringBuilder();
+      query.append("SELECT workflowLog FROM WorkflowLog workflowLog WHERE ");
+      query.append("workflowLog.workflowInstanceId = ?");
+      query.append(" AND ");
+      query.append("workflowLog.logEntityType = ?");
+      query.append(" AND ");
+      query.append("workflowLog.type = ?");
+      query.append(" ");
+      query.append("ORDER BY ");
+      query.append("workflowLog.createDate ASC");
+      Query q=session.createQuery(query.toString());
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(workflowInstanceId);
+      qPos.add(logEntityType);
+      qPos.add(type);
+      list=q.list();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<WorkflowLog>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_W_T_T,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

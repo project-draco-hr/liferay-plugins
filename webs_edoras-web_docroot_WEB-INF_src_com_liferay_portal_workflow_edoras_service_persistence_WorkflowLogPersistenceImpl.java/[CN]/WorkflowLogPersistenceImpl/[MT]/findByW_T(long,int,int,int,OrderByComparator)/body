@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{new Long(workflowInstanceId),new Integer(type),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{new Long(workflowInstanceId),new Integer(logEntityType),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
   List<WorkflowLog> list=(List<WorkflowLog>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_W_T,finderArgs,this);
   if (list == null) {
     Session session=null;
@@ -9,7 +9,7 @@
       query.append("SELECT workflowLog FROM WorkflowLog workflowLog WHERE ");
       query.append("workflowLog.workflowInstanceId = ?");
       query.append(" AND ");
-      query.append("workflowLog.type = ?");
+      query.append("workflowLog.logEntityType = ?");
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
@@ -35,7 +35,7 @@
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(workflowInstanceId);
-      qPos.add(type);
+      qPos.add(logEntityType);
       list=(List<WorkflowLog>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {

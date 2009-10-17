@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{new Long(workflowInstanceId),new Integer(type)};
+  Object[] finderArgs=new Object[]{new Long(workflowInstanceId),new Integer(logEntityType)};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_W_T,finderArgs,this);
   if (count == null) {
     Session session=null;
@@ -10,12 +10,12 @@
       query.append("FROM WorkflowLog workflowLog WHERE ");
       query.append("workflowLog.workflowInstanceId = ?");
       query.append(" AND ");
-      query.append("workflowLog.type = ?");
+      query.append("workflowLog.logEntityType = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(workflowInstanceId);
-      qPos.add(type);
+      qPos.add(logEntityType);
       count=(Long)q.uniqueResult();
     }
  catch (    Exception e) {

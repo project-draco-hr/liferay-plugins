@@ -1,15 +1,3 @@
 {
-  WorkflowInstanceBridge workflowInstanceBridge=(WorkflowInstanceBridge)workflowEntity;
-  if (super.checkAndInitializeNewInstance(workflowInstanceBridge)) {
-    workflowInstanceBridge.initializeForInsert();
-  }
- else {
-    workflowInstanceBridge.initializeForUpdate();
-  }
-  try {
-    WorkflowInstanceUtil.update(workflowInstanceBridge.unwrap());
-  }
- catch (  SystemException se) {
-    throw new ProcessException("Could not update workflow instance",se);
-  }
+  saveInternally((WorkflowInstanceBridge)workflowInstance);
 }

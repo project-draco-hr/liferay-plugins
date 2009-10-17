@@ -1,0 +1,9 @@
+{
+  try {
+    List<WorkflowLog> logList=WorkflowLogUtil.findByW_T(instance.getPrimaryKey(),type.getId());
+    return WorkflowEntityBridgeUtil.wrapWorkflowLogList(logList);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not load [" + type + "] logs for workflow instance with id ["+ instance.getPrimaryKey()+ "]",se);
+  }
+}

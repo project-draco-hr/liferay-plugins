@@ -1,0 +1,15 @@
+{
+  List<WorkflowLog> logList=null;
+  try {
+    if (commentType == null) {
+      logList=WorkflowLogUtil.findByW_T(instance.getPrimaryKey(),ProcessLogType.COMMENT.getId());
+    }
+ else {
+      logList=WorkflowLogUtil.findByW_T_T(instance.getPrimaryKey(),ProcessLogType.COMMENT.getId(),commentType.intValue());
+    }
+    return (List<? extends CommentLog>)WorkflowEntityBridgeUtil.wrapWorkflowLogList(logList);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not load comment logs for workflow instance with id [" + instance.getPrimaryKey() + "]",se);
+  }
+}

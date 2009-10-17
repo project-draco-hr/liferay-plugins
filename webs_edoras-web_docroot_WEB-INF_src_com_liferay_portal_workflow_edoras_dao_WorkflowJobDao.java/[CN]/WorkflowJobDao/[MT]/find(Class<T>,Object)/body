@@ -1,0 +1,13 @@
+{
+  Long primaryKey=(Long)identity;
+  try {
+    WorkflowJob workflowJob=WorkflowJobUtil.findByPrimaryKey(primaryKey.longValue());
+    return (T)new WorkflowJobBridge(workflowJob);
+  }
+ catch (  NoSuchWorkflowJobException e) {
+    return null;
+  }
+catch (  SystemException se) {
+    throw new ProcessException("Could not find workflow job with id [" + primaryKey + "]",se);
+  }
+}

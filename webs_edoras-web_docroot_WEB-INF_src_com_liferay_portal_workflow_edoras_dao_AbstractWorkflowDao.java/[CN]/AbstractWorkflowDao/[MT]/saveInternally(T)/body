@@ -1,0 +1,14 @@
+{
+  if (checkAndInitializeNewInstance(workflowEntity)) {
+    workflowEntity.initializeForInsert();
+  }
+ else {
+    workflowEntity.initializeForUpdate();
+  }
+  try {
+    saveThroughPersistenceUtil(workflowEntity);
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not update workflow entity [" + workflowEntity.getClass().getName() + "] wiht id ["+ workflowEntity.getPrimaryKey()+ "]",se);
+  }
+}
