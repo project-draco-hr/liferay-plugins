@@ -1,16 +1,14 @@
 {
   _workflowDefinition=workflowDefinition;
+  Long companyId=workflowDefinition.getCompanyId();
+  if (companyId == CompanyConstants.SYSTEM) {
+    companyId=null;
+  }
   setPrimaryKey(workflowDefinition.getPrimaryKey());
-  setProcessModelAsXML(workflowDefinition.getModelXml());
-  setGraphicalProcessModelAsXML(workflowDefinition.getGraphicalXml());
+  setTenantId(companyId);
   setProcessModelId(workflowDefinition.getName());
   setProcessModelVersion(workflowDefinition.getVersion());
   setModelDesignerVersion(workflowDefinition.getDesignerVersion());
-  long companyId=workflowDefinition.getCompanyId();
-  if (companyId == CompanyConstants.SYSTEM) {
-    setTenantId(null);
-  }
- else {
-    setTenantId(companyId);
-  }
+  setProcessModelAsXML(workflowDefinition.getModelXml());
+  setGraphicalProcessModelAsXML(workflowDefinition.getGraphicalXml());
 }

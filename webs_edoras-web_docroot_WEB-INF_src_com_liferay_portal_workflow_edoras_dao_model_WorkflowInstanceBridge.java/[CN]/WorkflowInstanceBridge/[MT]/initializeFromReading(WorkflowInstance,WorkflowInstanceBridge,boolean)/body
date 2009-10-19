@@ -7,10 +7,9 @@
   Class<?> setupId=WorkflowEntityBridgeUtil.getSetupClassForName(workflowInstance.getSetupId());
   ProcessService processService=processSession.getService();
   ProcessModel processModel=processService.getProcessModel(workflowInstance.getWorkflowDefinitionId());
-  Long relationId=null;
-  long relationClassPK=workflowInstance.getRelationClassPK();
-  if (relationClassPK > 0) {
-    relationId=Long.valueOf(relationClassPK);
+  Long relationClassPK=workflowInstance.getRelationClassPK();
+  if (relationClassPK == 0) {
+    relationClassPK=null;
   }
   setId(workflowInstance.getPrimaryKey());
   setTenantId(workflowInstance.getCompanyId());
@@ -22,7 +21,7 @@
   setProcessModelVersion(processModel.getProcessModelVersion());
   setParent(parentWorkflowInstanceBridge);
   setRelationType(workflowInstance.getRelationClassName());
-  setRelationId(relationId);
+  setRelationId(relationClassPK);
   setXmlAttributeMap(workflowInstance.getAttributes());
   setNestedProcessModelIds(workflowInstance.getNestedWorkflowDefinitionIds());
   setNestedProcessVersions(workflowInstance.getNestedWorkflowDefinitionVersions());
