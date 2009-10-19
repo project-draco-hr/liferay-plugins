@@ -1,14 +1,9 @@
 {
-  long primaryKey=0;
   try {
-    WorkflowInstanceBridge workflowInstanceBridge=(WorkflowInstanceBridge)workflowInstance;
-    primaryKey=workflowInstanceBridge.getPrimaryKey();
-    WorkflowInstanceUtil.remove(primaryKey);
+    WorkflowInstanceBridge workflowInstanceBridge=(WorkflowInstanceBridge)workflowEntityBridge;
+    WorkflowInstanceUtil.remove(workflowInstanceBridge.getPrimaryKey());
   }
- catch (  NoSuchWorkflowInstanceException nswie) {
-    throw new ProcessException("Could not delete workflow instance with id " + primaryKey,nswie);
-  }
-catch (  SystemException se) {
-    throw new ProcessException("Could not delete workflow instance with id " + primaryKey,se);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

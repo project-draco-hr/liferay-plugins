@@ -1,15 +1,19 @@
 {
   int logEntityType=workflowLog.getLogEntityType();
-  ProcessLogType logType=ProcessLogType.getLogType(logEntityType);
-switch (logType) {
-case ACTIVITY:
+  ProcessLogType processLogType=ProcessLogType.getLogType(logEntityType);
+  if (processLogType.equals(ProcessLogType.ACTIVITY)) {
     return new ActivityLogBridge(workflowLog);
-case COMMENT:
-  return new CommentLogBridge(workflowLog);
-case TRANSITION:
-return new TransitionLogBridge(workflowLog);
-case TASK:
-return new TaskLogBridge(workflowLog);
-}
-throw new IllegalArgumentException("The log entity type [" + logEntityType + "] is not valid");
+  }
+ else   if (processLogType.equals(ProcessLogType.COMMENT)) {
+    return new CommentLogBridge(workflowLog);
+  }
+ else   if (processLogType.equals(ProcessLogType.TASK)) {
+    return new TaskLogBridge(workflowLog);
+  }
+ else   if (processLogType.equals(ProcessLogType.TRANSITION)) {
+    return new TransitionLogBridge(workflowLog);
+  }
+ else {
+    throw new IllegalArgumentException("The log entity type " + logEntityType + " is invalid");
+  }
 }

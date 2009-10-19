@@ -1,14 +1,14 @@
 {
-  if (checkAndInitializeNewInstance(workflowEntity)) {
-    workflowEntity.initializeForInsert();
+  if (checkAndInitializeNewInstance(workflowEntityBridge)) {
+    workflowEntityBridge.initializeForInsert();
   }
  else {
-    workflowEntity.initializeForUpdate();
+    workflowEntityBridge.initializeForUpdate();
   }
   try {
-    saveThroughPersistenceUtil(workflowEntity);
+    saveThroughPersistenceUtil(workflowEntityBridge);
   }
- catch (  SystemException se) {
-    throw new ProcessException("Could not update workflow entity [" + workflowEntity.getClass().getName() + "] wiht id ["+ workflowEntity.getPrimaryKey()+ "]",se);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

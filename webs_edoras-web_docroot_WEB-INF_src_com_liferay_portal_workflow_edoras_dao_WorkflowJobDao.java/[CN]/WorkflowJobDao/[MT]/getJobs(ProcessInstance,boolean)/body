@@ -1,9 +1,9 @@
 {
   try {
-    List<WorkflowJob> jobList=WorkflowJobUtil.findByWorkflowInstanceId(instance.getPrimaryKey());
-    return WorkflowEntityBridgeUtil.wrapWorkflowJobList(jobList);
+    List<WorkflowJob> workflowJobs=WorkflowJobUtil.findByWorkflowInstanceId(processInstance.getPrimaryKey());
+    return WorkflowEntityBridgeUtil.wrapWorkflowJobs(workflowJobs);
   }
- catch (  SystemException se) {
-    throw new ProcessException("Could not load open jobs related to workflow instance with id [" + instance.getPrimaryKey() + "]",se);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

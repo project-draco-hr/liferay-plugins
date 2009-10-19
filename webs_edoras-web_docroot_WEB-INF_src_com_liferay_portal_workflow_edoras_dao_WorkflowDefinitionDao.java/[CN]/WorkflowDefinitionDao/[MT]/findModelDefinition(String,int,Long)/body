@@ -1,16 +1,16 @@
 {
-  long companyId=CompanyConstants.SYSTEM;
-  if (tenantId != null) {
-    companyId=tenantId.longValue();
-  }
   try {
+    long companyId=CompanyConstants.SYSTEM;
+    if (tenantId != null) {
+      companyId=tenantId;
+    }
     WorkflowDefinition workflowDefinition=WorkflowDefinitionUtil.findByC_N_V(companyId,modelId,modelVersion);
     return new WorkflowDefinitionBridge(workflowDefinition);
   }
  catch (  NoSuchWorkflowDefinitionException nswde) {
     return null;
   }
-catch (  SystemException se) {
-    throw new ProcessException("Could not find workflow definition with id " + modelId + " and version "+ modelVersion,se);
+catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

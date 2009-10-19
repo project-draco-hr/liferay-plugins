@@ -1,0 +1,15 @@
+{
+  String[] fields=orderComparator.getFields();
+  boolean[] fieldOrders=orderComparator.getFieldOrders();
+  List<Order> orders=new ArrayList<Order>(fields.length);
+  for (int i=0; i < fields.length; i++) {
+    String fieldName=fields[i];
+    if (fieldOrders[i]) {
+      orders.add(OrderFactoryUtil.asc(fieldName));
+    }
+ else {
+      orders.add(OrderFactoryUtil.desc(fieldName));
+    }
+  }
+  return orders;
+}

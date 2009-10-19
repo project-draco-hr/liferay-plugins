@@ -3,10 +3,10 @@
     public Object doInTransaction(    TransactionStatus transactionStatus){
       try {
         List<WorkflowInstance> workflowInstances=WorkflowInstanceUtil.findByFinished(false);
-        return WorkflowEntityBridgeUtil.wrapWorkflowInstanceList(workflowInstances,null,true);
+        return WorkflowEntityBridgeUtil.wrapWorkflowInstances(workflowInstances,null,true);
       }
- catch (      SystemException se) {
-        throw new ProcessException("Could not load open workflow instances",se);
+ catch (      Exception e) {
+        throw new ProcessException(e.getMessage(),e);
       }
     }
   }

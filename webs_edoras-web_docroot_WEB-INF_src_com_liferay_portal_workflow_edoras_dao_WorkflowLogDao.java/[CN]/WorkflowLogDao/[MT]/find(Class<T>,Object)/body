@@ -1,13 +1,13 @@
 {
-  Long primaryKey=(Long)identity;
   try {
+    long primaryKey=(Long)identity;
     WorkflowLog workflowLog=WorkflowLogUtil.findByPrimaryKey(primaryKey);
     return (T)WorkflowEntityBridgeUtil.wrapWorkflowLog(workflowLog);
   }
- catch (  NoSuchWorkflowLogException e) {
+ catch (  NoSuchWorkflowLogException nswle) {
     return null;
   }
-catch (  SystemException se) {
-    throw new ProcessException("Could not load log entry with id [" + primaryKey + "]",se);
+catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

@@ -1,15 +1,15 @@
 {
   try {
-    List<WorkflowDefinition> workflowDefinitionList=null;
+    List<WorkflowDefinition> workflowDefinitions=null;
     if (tenantId == null) {
-      workflowDefinitionList=WorkflowDefinitionUtil.findAll();
+      workflowDefinitions=WorkflowDefinitionUtil.findAll();
     }
  else {
-      workflowDefinitionList=WorkflowDefinitionUtil.findByCompanyId(tenantId.longValue());
+      workflowDefinitions=WorkflowDefinitionUtil.findByCompanyId(tenantId);
     }
-    return WorkflowEntityBridgeUtil.wrapWorkflowDefinitionList(workflowDefinitionList);
+    return WorkflowEntityBridgeUtil.wrapWorkflowDefinitions(workflowDefinitions);
   }
- catch (  SystemException se) {
-    throw new ProcessException("Could not find workflow definitions",se);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

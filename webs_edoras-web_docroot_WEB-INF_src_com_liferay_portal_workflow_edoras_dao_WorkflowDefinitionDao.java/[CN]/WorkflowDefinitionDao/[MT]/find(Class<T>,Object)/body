@@ -1,13 +1,13 @@
 {
-  long primaryKey=(Long)identity;
   try {
+    long primaryKey=(Long)identity;
     WorkflowDefinition workflowDefinition=WorkflowDefinitionUtil.findByPrimaryKey(primaryKey);
-    return (T)new WorkflowDefinitionBridge(workflowDefinition);
+    return (T)(new WorkflowDefinitionBridge(workflowDefinition));
   }
  catch (  NoSuchWorkflowDefinitionException nswde) {
     return null;
   }
-catch (  SystemException se) {
-    throw new ProcessException("Could not load workflow definition with id " + primaryKey,se);
+catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

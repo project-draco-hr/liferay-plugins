@@ -4,10 +4,10 @@
     WorkflowTaskBridge workflowTaskBridge=new WorkflowTaskBridge(workflowTask);
     return workflowTaskBridge;
   }
- catch (  NoSuchWorkflowTaskException e) {
+ catch (  NoSuchWorkflowTaskException nswte) {
     return null;
   }
-catch (  SystemException se) {
-    throw new ProcessException("Could not load workflow task with id [" + primaryKey + "]",se);
+catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }

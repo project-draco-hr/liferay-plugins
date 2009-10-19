@@ -1,16 +1,16 @@
 {
-  if (workflowEntity.getPrimaryKey() == 0) {
+  if (workflowEntityBridge.getPrimaryKey() == 0) {
     try {
-      workflowEntity.setNew(true);
-      workflowEntity.setPrimaryKey(CounterLocalServiceUtil.increment());
+      workflowEntityBridge.setNew(true);
+      workflowEntityBridge.setPrimaryKey(CounterLocalServiceUtil.increment());
       return true;
     }
- catch (    SystemException se) {
-      throw new ProcessException("Could not obtain a new primary key from counter service",se);
+ catch (    Exception e) {
+      throw new ProcessException(e.getMessage(),e);
     }
   }
  else {
-    workflowEntity.setNew(false);
+    workflowEntityBridge.setNew(false);
     return false;
   }
 }
