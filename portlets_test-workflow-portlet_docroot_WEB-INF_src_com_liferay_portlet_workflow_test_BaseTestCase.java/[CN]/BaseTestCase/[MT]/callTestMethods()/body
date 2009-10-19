@@ -16,7 +16,7 @@
  catch (  Exception e) {
   }
   JSONArray testResults=JSONFactoryUtil.createJSONArray();
-  testCaseResult.put("testCaseResults",testResults);
+  testCaseResult.put("testResults",testResults);
   Method[] methods=clazz.getMethods();
   for (  Method method : methods) {
     if (method.getName().startsWith("test")) {
@@ -30,11 +30,11 @@
         if (tearDownMethod != null) {
           tearDownMethod.invoke(this);
         }
-        testResult.put("status",PASSED_KEY);
+        testResult.put("status",_STATUS_PASSED);
       }
  catch (      Exception e) {
         Throwable cause=e.getCause();
-        testResult.put("status",FAILED_KEY);
+        testResult.put("status",_STATUS_FAILED);
         testResult.put("exceptionMessage",cause.getMessage());
         StringWriter stringWriter=new StringWriter();
         PrintWriter printWriter=new PrintWriter(stringWriter);

@@ -1,56 +1,32 @@
 {
-  OrderByComparator comparator=new WorkflowDefinitionNameComparator();
-  List<WorkflowDefinition> definitions=WorkflowDefinitionManagerUtil.getWorkflowDefinitions(TEST_DEFINITION_NAME_1,QueryUtil.ALL_POS,QueryUtil.ALL_POS,comparator);
-  if (definitions.size() != 3) {
-    throw new Exception("There should be 3 definitions, but found " + definitions.size());
-  }
-  WorkflowDefinition definition1_3=definitions.get(0);
-  String definitionName1_3=definition1_3.getWorkflowDefinitionName();
-  int definitionVersion1_3=definition1_3.getWorkflowDefinitionVersion();
-  if (!definitionName1_3.equals(TEST_DEFINITION_NAME_1)) {
-    throw new Exception("The name of 1/3 workflow definition should be " + TEST_DEFINITION_NAME_1 + ", but found "+ definitionName1_3);
-  }
-  if (definitionVersion1_3 != 3) {
-    throw new Exception("The version of 1/3 workflow definition should be " + 3 + ", but found "+ definitionVersion1_3);
-  }
-  WorkflowDefinition definition1_2=definitions.get(1);
-  String definitionName1_2=definition1_2.getWorkflowDefinitionName();
-  int definitionVersion1_2=definition1_2.getWorkflowDefinitionVersion();
-  if (!definitionName1_2.equals(TEST_DEFINITION_NAME_1)) {
-    throw new Exception("The name of 2/3 workflow definition should be " + TEST_DEFINITION_NAME_1 + ", but found "+ definitionName1_2);
-  }
-  if (definitionVersion1_2 != 2) {
-    throw new Exception("The version of 2/3 workflow definition should be " + 2 + ", but found "+ definitionVersion1_2);
-  }
-  WorkflowDefinition definition1_1=definitions.get(2);
-  String definitionName1_1=definition1_1.getWorkflowDefinitionName();
-  int definitionVersion1_1=definition1_1.getWorkflowDefinitionVersion();
-  if (!definitionName1_1.equals(TEST_DEFINITION_NAME_1)) {
-    throw new Exception("The name of 3/3 workflow definition should be " + TEST_DEFINITION_NAME_1 + ", but found "+ definitionName1_1);
-  }
-  if (definitionVersion1_1 != 1) {
-    throw new Exception("The version of 3/3 workflow definition should be " + 1 + ", but found "+ definitionVersion1_1);
-  }
-  definitions=WorkflowDefinitionManagerUtil.getWorkflowDefinitions(TEST_DEFINITION_NAME_1,0,2,comparator);
-  if (definitions.size() != 2) {
-    throw new Exception("There should be 2 definitions, but found " + definitions.size());
-  }
-  definition1_3=definitions.get(0);
-  definitionName1_3=definition1_3.getWorkflowDefinitionName();
-  definitionVersion1_3=definition1_3.getWorkflowDefinitionVersion();
-  if (!definitionName1_3.equals(TEST_DEFINITION_NAME_1)) {
-    throw new Exception("The name of 1/2 workflow definition should be " + TEST_DEFINITION_NAME_1 + ", but found "+ definitionName1_3);
-  }
-  if (definitionVersion1_3 != 3) {
-    throw new Exception("The version of 1/2 workflow definition should be " + 3 + ", but found "+ definitionVersion1_3);
-  }
-  definition1_2=definitions.get(1);
-  definitionName1_2=definition1_2.getWorkflowDefinitionName();
-  definitionVersion1_2=definition1_2.getWorkflowDefinitionVersion();
-  if (!definitionName1_2.equals(TEST_DEFINITION_NAME_1)) {
-    throw new Exception("The name of 2/2 workflow definition should be " + TEST_DEFINITION_NAME_1 + ", but found "+ definitionName1_2);
-  }
-  if (definitionVersion1_2 != 2) {
-    throw new Exception("The version of 2/2 workflow definition should be " + 2 + ", but found "+ definitionVersion1_2);
-  }
+  OrderByComparator orderByComparator=new WorkflowDefinitionNameComparator();
+  List<WorkflowDefinition> workflowDefinitions=WorkflowDefinitionManagerUtil.getWorkflowDefinitions(_WORKFLOW_DEFINITION_NAME_1,QueryUtil.ALL_POS,QueryUtil.ALL_POS,orderByComparator);
+  assertEquals(3,workflowDefinitions.size());
+  WorkflowDefinition workflowDefinition1_3=workflowDefinitions.get(0);
+  String workflowDefinitionName1_3=workflowDefinition1_3.getWorkflowDefinitionName();
+  int workflowDefinitionVersion1_3=workflowDefinition1_3.getWorkflowDefinitionVersion();
+  assertEquals(_WORKFLOW_DEFINITION_NAME_1,workflowDefinitionName1_3);
+  assertEquals(3,workflowDefinitionVersion1_3);
+  WorkflowDefinition workflowDefinition1_2=workflowDefinitions.get(1);
+  String workflowDefinitionName1_2=workflowDefinition1_2.getWorkflowDefinitionName();
+  int workflowDefinitionVersion1_2=workflowDefinition1_2.getWorkflowDefinitionVersion();
+  assertEquals(_WORKFLOW_DEFINITION_NAME_1,workflowDefinitionName1_2);
+  assertEquals(2,workflowDefinitionVersion1_2);
+  WorkflowDefinition workflowDefinition1_1=workflowDefinitions.get(2);
+  String workflowDefinitionName1_1=workflowDefinition1_1.getWorkflowDefinitionName();
+  int workflowDefinitionVersion1_1=workflowDefinition1_1.getWorkflowDefinitionVersion();
+  assertEquals(_WORKFLOW_DEFINITION_NAME_1,workflowDefinitionName1_1);
+  assertEquals(1,workflowDefinitionVersion1_1);
+  workflowDefinitions=WorkflowDefinitionManagerUtil.getWorkflowDefinitions(_WORKFLOW_DEFINITION_NAME_1,0,2,orderByComparator);
+  assertEquals(2,workflowDefinitions.size());
+  workflowDefinition1_3=workflowDefinitions.get(0);
+  workflowDefinitionName1_3=workflowDefinition1_3.getWorkflowDefinitionName();
+  workflowDefinitionVersion1_3=workflowDefinition1_3.getWorkflowDefinitionVersion();
+  assertEquals(_WORKFLOW_DEFINITION_NAME_1,workflowDefinitionName1_3);
+  assertEquals(3,workflowDefinitionVersion1_3);
+  workflowDefinition1_2=workflowDefinitions.get(1);
+  workflowDefinitionName1_2=workflowDefinition1_2.getWorkflowDefinitionName();
+  workflowDefinitionVersion1_2=workflowDefinition1_2.getWorkflowDefinitionVersion();
+  assertEquals(_WORKFLOW_DEFINITION_NAME_1,workflowDefinitionName1_2);
+  assertEquals(2,workflowDefinitionVersion1_2);
 }

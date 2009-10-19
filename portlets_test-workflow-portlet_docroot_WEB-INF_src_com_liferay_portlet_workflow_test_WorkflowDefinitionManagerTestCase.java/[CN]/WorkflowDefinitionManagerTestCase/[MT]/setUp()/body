@@ -1,30 +1,23 @@
 {
-  List<Company> companyList=CompanyLocalServiceUtil.getCompanies(0,1);
-  _testUser=UserLocalServiceUtil.getDefaultUser(companyList.get(0).getCompanyId());
+  long companyId=PortalUtil.getDefaultCompanyId();
+  _user=UserLocalServiceUtil.getDefaultUser(companyId);
   String workflowEngineKey=WorkflowEngineManagerUtil.getWorkflowEngineKey();
-  String testFileName="WEB-INF/" + workflowEngineKey + "-test-workflow.zip";
-  ZipInputStream testFileInputStream=new ZipInputStream(servletContext.getResourceAsStream(testFileName));
-  ZipEntry testFileEntry;
-  while ((testFileEntry=testFileInputStream.getNextEntry()) != null) {
-    String entryName=testFileEntry.getName();
-    if (entryName.equals(TEST_DEFINITION_NAME_1 + ".jar")) {
-      _testDefinitionContent1=readContent(testFileInputStream);
+  ZipInputStream zipInputStream=new ZipInputStream(servletContext.getResourceAsStream("WEB-INF/tests/" + workflowEngineKey + "-web.zip"));
+  ZipEntry zipEntry=null;
+  while ((zipEntry=zipInputStream.getNextEntry()) != null) {
+    String name=zipEntry.getName();
+    if (name.equals(_WORKFLOW_DEFINITION_NAME_1 + ".jar")) {
+      _workflowDefinitionContent1=FileUtil.getBytes(zipInputStream);
     }
- else     if (entryName.equals(TEST_DEFINITION_NAME_2 + ".jar")) {
-      _testDefinitionContent2=readContent(testFileInputStream);
+ else     if (name.equals(_WORKFLOW_DEFINITION_NAME_2 + ".jar")) {
+      _workflowDefinitionContent2=FileUtil.getBytes(zipInputStream);
     }
- else     if (entryName.equals(TEST_DEFINITION_NAME_3 + ".jar")) {
-      _testDefinitionContent3=readContent(testFileInputStream);
+ else     if (name.equals(_WORKFLOW_DEFINITION_NAME_3 + ".jar")) {
+      _workflowDefinitionContent3=FileUtil.getBytes(zipInputStream);
     }
   }
-  if (_testDefinitionContent1 == null) {
-    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_1);
-  }
-  if (_testDefinitionContent2 == null) {
-    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_2);
-  }
-  if (_testDefinitionContent3 == null) {
-    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_3);
-  }
-  testFileInputStream.close();
+  zipInputStream.close();
+  assertNotNull(_workflowDefinitionContent1);
+  assertNotNull(_workflowDefinitionContent2);
+  assertNotNull(_workflowDefinitionContent3);
 }
