@@ -1,0 +1,30 @@
+{
+  List<Company> companyList=CompanyLocalServiceUtil.getCompanies(0,1);
+  _testUser=UserLocalServiceUtil.getDefaultUser(companyList.get(0).getCompanyId());
+  String workflowEngineKey=WorkflowEngineManagerUtil.getWorkflowEngineKey();
+  String testFileName="WEB-INF/" + workflowEngineKey + "-test-workflow.zip";
+  ZipInputStream testFileInputStream=new ZipInputStream(servletContext.getResourceAsStream(testFileName));
+  ZipEntry testFileEntry;
+  while ((testFileEntry=testFileInputStream.getNextEntry()) != null) {
+    String entryName=testFileEntry.getName();
+    if (entryName.equals(TEST_DEFINITION_NAME_1 + ".jar")) {
+      _testDefinitionContent1=readContent(testFileInputStream);
+    }
+ else     if (entryName.equals(TEST_DEFINITION_NAME_2 + ".jar")) {
+      _testDefinitionContent2=readContent(testFileInputStream);
+    }
+ else     if (entryName.equals(TEST_DEFINITION_NAME_3 + ".jar")) {
+      _testDefinitionContent3=readContent(testFileInputStream);
+    }
+  }
+  if (_testDefinitionContent1 == null) {
+    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_1);
+  }
+  if (_testDefinitionContent2 == null) {
+    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_2);
+  }
+  if (_testDefinitionContent3 == null) {
+    throw new Exception("Failed to load " + TEST_DEFINITION_NAME_3);
+  }
+  testFileInputStream.close();
+}
