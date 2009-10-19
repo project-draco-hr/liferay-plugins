@@ -1,6 +1,8 @@
 {
-  List<String> testResults=new ArrayList<String>();
+  JSONObject testCaseResult=JSONFactoryUtil.createJSONObject();
   Class<? extends BaseTestCase> clazz=getClass();
+  String testCaseName=clazz.getName();
+  testCaseResult.put("name",testCaseName);
   Method setUpMethod=null;
   try {
     setUpMethod=clazz.getMethod("setUp");
@@ -13,14 +15,13 @@
   }
  catch (  Exception e) {
   }
+  JSONArray testResults=JSONFactoryUtil.createJSONArray();
+  testCaseResult.put("testCaseResults",testResults);
   Method[] methods=clazz.getMethods();
   for (  Method method : methods) {
     if (method.getName().startsWith("test")) {
-      StringBuilder sb=new StringBuilder();
-      sb.append(method.getDeclaringClass().getName());
-      sb.append(".");
-      sb.append(method.getName());
-      sb.append("()=");
+      JSONObject testResult=JSONFactoryUtil.createJSONObject();
+      testResult.put("name",method.getName());
       try {
         if (setUpMethod != null) {
           setUpMethod.invoke(this);
@@ -29,15 +30,20 @@
         if (tearDownMethod != null) {
           tearDownMethod.invoke(this);
         }
-        sb.append(PASSED_KEY);
+        testResult.put("status",PASSED_KEY);
       }
  catch (      Exception e) {
-        sb.append(FAILED_KEY);
-        sb.append("-message-");
-        sb.append(e.getMessage());
+        Throwable cause=e.getCause();
+        testResult.put("status",FAILED_KEY);
+        testResult.put("exceptionMessage",cause.getMessage());
+        StringWriter stringWriter=new StringWriter();
+        PrintWriter printWriter=new PrintWriter(stringWriter);
+        cause.printStackTrace(printWriter);
+        testResult.put("exceptionStackTrace",stringWriter.toString());
+        printWriter.close();
       }
-      testResults.add(sb.toString());
+      testResults.put(testResult);
     }
   }
-  return testResults;
+  return testCaseResult;
 }
