@@ -1,15 +1,15 @@
 {
   _workflowJob=workflowJob;
-  setId(workflowJob.getPrimaryKey());
-  setTenantId(workflowJob.getCompanyId());
   Class<?> setupId=WorkflowEntityBridgeUtil.getSetupClassForName(workflowJob.getSetupId());
-  setSetupId(setupId);
   WorkflowInstance workflowInstance=workflowJob.getWorkflowInstance();
   WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
+  setId(workflowJob.getPrimaryKey());
+  setTenantId(workflowJob.getCompanyId());
+  setCreatedAt(workflowJob.getCreateDate());
+  setSetupId(setupId);
   setProcessInstance(workflowInstanceBridge);
   setElementName(workflowJob.getElementName());
   setCause(workflowJob.getCause());
-  setCreatedAt(workflowJob.getCreateDate());
   setDueDate(workflowJob.getDueDate());
   setNotBeforeDate(workflowJob.getNotBeforeDate());
   postLoad();
