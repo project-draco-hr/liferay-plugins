@@ -4,17 +4,17 @@
   if (processSession == null) {
     throw new IllegalArgumentException("No process session while reading workflow entities");
   }
-  workflowLogTarget.setId(workflowLogSource.getPrimaryKey());
-  workflowLogTarget.setTenantId(workflowLogSource.getCompanyId());
-  workflowLogTarget.setCreationTime(workflowLogSource.getCreateDate());
-  workflowLogTarget.setCreationUser(workflowLogSource.getUserName());
-  WorkflowInstance workflowInstance=workflowLogSource.getWorkflowInstance();
-  WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
-  workflowLogTarget.setProcessInstance(workflowInstanceBridge);
   ProcessService processService=processSession.getService();
   ProcessModel processModel=processService.getProcessModel(workflowLogSource.getWorkflowDefinitionId());
+  WorkflowInstance workflowInstance=workflowLogSource.getWorkflowInstance();
+  WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
+  workflowLogTarget.setId(workflowLogSource.getPrimaryKey());
+  workflowLogTarget.setTenantId(workflowLogSource.getCompanyId());
+  workflowLogTarget.setCreationUser(workflowLogSource.getUserName());
+  workflowLogTarget.setCreationTime(workflowLogSource.getCreateDate());
   workflowLogTarget.setProcessModel(processModel);
   workflowLogTarget.setProcessId(processModel.getProcessModelId());
   workflowLogTarget.setProcessVersion(processModel.getProcessModelVersion());
+  workflowLogTarget.setProcessInstance(workflowInstanceBridge);
   workflowLogTarget.setInformation(workflowLogSource.getDescription());
 }
