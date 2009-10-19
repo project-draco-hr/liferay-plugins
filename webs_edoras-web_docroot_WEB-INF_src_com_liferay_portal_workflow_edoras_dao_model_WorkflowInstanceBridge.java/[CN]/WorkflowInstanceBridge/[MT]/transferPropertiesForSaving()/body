@@ -1,33 +1,30 @@
 {
-  _workflowInstance.setPrimaryKey(getPrimaryKey());
-  _workflowInstance.setCompanyId(getTenantId());
-  _workflowInstance.setSetupId(getSetupId().getName());
-  _workflowInstance.setFriendlyId(getBusinessId());
-  _workflowInstance.setRelationClassName(getRelationType());
+  long parentWorkflowInstanceId=0;
+  ProcessInstance parentProcessInstance=getParent();
+  if (parentProcessInstance != null) {
+    parentWorkflowInstanceId=parentProcessInstance.getPrimaryKey();
+  }
   Long relationId=getRelationId();
   if (relationId == null) {
-    _workflowInstance.setRelationClassPK(0);
+    relationId=Long.valueOf(0);
   }
- else {
-    _workflowInstance.setRelationClassPK(getRelationId());
-  }
+  _workflowInstance.setPrimaryKey(getPrimaryKey());
+  _workflowInstance.setCompanyId(getTenantId());
+  _workflowInstance.setCreateDate(getCreatedAt());
+  _workflowInstance.setModifiedDate(getModifiedAt());
+  _workflowInstance.setSetupId(getSetupId().getName());
+  _workflowInstance.setFriendlyId(getBusinessId());
   _workflowInstance.setWorkflowDefinitionId(getWorkflowDefinitionId());
+  _workflowInstance.setParentWorkflowInstanceId(parentWorkflowInstanceId);
+  _workflowInstance.setRelationClassName(getRelationType());
+  _workflowInstance.setRelationClassPK(relationId);
+  _workflowInstance.setAttributes(getXmlAttributeMap());
   _workflowInstance.setNestedWorkflowDefinitionIds(getNestedProcessModelIds());
   _workflowInstance.setNestedWorkflowDefinitionVersions(getNestedProcessVersions());
   _workflowInstance.setNestedRelatedElements(getNestedRelatedElements());
-  _workflowInstance.setCreateDate(getCreatedAt());
-  _workflowInstance.setModifiedDate(getModifiedAt());
-  _workflowInstance.setFinishedDated(getFinishedAt());
-  ProcessInstance parentProcessInstance=getParent();
-  if (parentProcessInstance == null) {
-    _workflowInstance.setParentWorkflowInstanceId(0);
-  }
- else {
-    _workflowInstance.setParentWorkflowInstanceId(parentProcessInstance.getPrimaryKey());
-  }
   _workflowInstance.setCurrentElementName(getCurrentElement());
   _workflowInstance.setRelatedElementName(getRelatedElement());
   _workflowInstance.setFinished(isFinished());
+  _workflowInstance.setFinishedDated(getFinishedAt());
   _workflowInstance.setActive(isActive());
-  _workflowInstance.setAttributes(getXmlAttributeMap());
 }

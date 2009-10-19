@@ -4,34 +4,34 @@
   if (processSession == null) {
     throw new IllegalArgumentException("No process session while reading workflow entities");
   }
+  Class<?> setupId=WorkflowEntityBridgeUtil.getSetupClassForName(workflowInstance.getSetupId());
+  ProcessService processService=processSession.getService();
+  ProcessModel processModel=processService.getProcessModel(workflowInstance.getWorkflowDefinitionId());
+  Long relationId=null;
+  long relationClassPK=workflowInstance.getRelationClassPK();
+  if (relationClassPK > 0) {
+    relationId=Long.valueOf(relationClassPK);
+  }
   setId(workflowInstance.getPrimaryKey());
   setTenantId(workflowInstance.getCompanyId());
-  Class<?> setupId=WorkflowEntityBridgeUtil.getSetupClassForName(workflowInstance.getSetupId());
+  setCreatedAt(workflowInstance.getCreateDate());
+  setModifiedAt(workflowInstance.getModifiedDate());
   setSetupId(setupId);
   setBusinessId(workflowInstance.getFriendlyId());
-  setRelationType(workflowInstance.getRelationClassName());
-  long relationPK=workflowInstance.getRelationClassPK();
-  if (relationPK == 0) {
-    setRelationId(null);
-  }
- else {
-    setRelationId(relationPK);
-  }
-  ProcessModel processModel=processSession.getService().getProcessModel(workflowInstance.getWorkflowDefinitionId());
   setProcessModelId(processModel.getProcessModelId());
   setProcessModelVersion(processModel.getProcessModelVersion());
+  setParent(parentWorkflowInstanceBridge);
+  setRelationType(workflowInstance.getRelationClassName());
+  setRelationId(relationId);
+  setXmlAttributeMap(workflowInstance.getAttributes());
   setNestedProcessModelIds(workflowInstance.getNestedWorkflowDefinitionIds());
   setNestedProcessVersions(workflowInstance.getNestedWorkflowDefinitionVersions());
   setNestedRelatedElements(workflowInstance.getNestedRelatedElements());
-  setCreatedAt(workflowInstance.getCreateDate());
-  setModifiedAt(workflowInstance.getModifiedDate());
-  setFinishedAt(workflowInstance.getFinishedDated());
-  setParent(parentWorkflowInstanceBridge);
   setCurrentElement(workflowInstance.getCurrentElementName());
   setRelatedElement(workflowInstance.getRelatedElementName());
   setFinished(workflowInstance.getFinished());
+  setFinishedAt(workflowInstance.getFinishedDated());
   setActive(workflowInstance.getActive());
-  setXmlAttributeMap(workflowInstance.getAttributes());
   postLoad();
   if (loadChildren) {
     List<ProcessInstance> processInstances=(List<ProcessInstance>)WorkflowEntityBridgeUtil.wrapWorkflowInstances(workflowInstance.getChildren(),this,loadChildren);
