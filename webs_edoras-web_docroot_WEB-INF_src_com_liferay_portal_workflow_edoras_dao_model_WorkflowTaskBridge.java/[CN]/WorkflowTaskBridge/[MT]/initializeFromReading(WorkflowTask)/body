@@ -4,25 +4,25 @@
   if (processSession == null) {
     throw new IllegalArgumentException("No process session while reading workflow entities");
   }
+  ProcessService processService=processSession.getService();
+  ProcessModel processModel=processService.getProcessModel(workflowTask.getWorkflowDefinitionId());
+  WorkflowInstance workflowInstance=workflowTask.getWorkflowInstance();
+  WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
   setId(workflowTask.getPrimaryKey());
   setTenantId(workflowTask.getCompanyId());
   setCreationDate(workflowTask.getCreateDate());
-  setDueDate(workflowTask.getDueDate());
-  setCompletionDate(workflowTask.getCompletionDate());
-  setCompleted(workflowTask.getCompleted());
-  WorkflowInstance workflowInstance=workflowTask.getWorkflowInstance();
-  WorkflowInstanceBridge workflowInstanceBridge=new WorkflowInstanceBridge(workflowInstance);
+  setTaskId(workflowTask.getFriendlyId());
+  setProcessModelId(processModel.getProcessModelId());
+  setProcessModelVersion(processModel.getProcessModelVersion());
   setProcessInstance(workflowInstanceBridge);
   setMetaName(workflowTask.getMetaName());
   setRelation(workflowTask.getRelation());
-  ProcessService processService=processSession.getService();
-  ProcessModel processModel=processService.getProcessModel(workflowTask.getWorkflowDefinitionId());
-  setProcessModelId(processModel.getProcessModelId());
-  setProcessModelVersion(processModel.getProcessModelVersion());
-  setTaskId(workflowTask.getFriendlyId());
-  setAssignee(workflowTask.getAssigneeUserName());
-  setPriority(TaskPriority.getPriority(workflowTask.getPriority()));
+  setDueDate(workflowTask.getDueDate());
+  setCompletionDate(workflowTask.getCompletionDate());
+  setCompleted(workflowTask.getCompleted());
   setState(TaskState.getState(workflowTask.getState()));
+  setPriority(TaskPriority.getPriority(workflowTask.getPriority()));
+  setAssignee(workflowTask.getAssigneeUserName());
   setAssignedGroup(workflowTask.getAssignedGroupName());
   postLoad();
 }
