@@ -1,3 +1,9 @@
 {
-  return null;
+  try {
+    List<WorkflowInstance> workflowInstances=WorkflowInstanceUtil.findByC_C(relationType,relationId,start,end,orderByComparator);
+    return WorkflowManagerUtil.wrapWorkflowInstances(workflowInstances,retrieveChildrenInfo);
+  }
+ catch (  SystemException se) {
+    throw new WorkflowException(se.getMessage(),se);
+  }
 }

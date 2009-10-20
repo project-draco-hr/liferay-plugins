@@ -1,3 +1,6 @@
 {
-  return null;
+  ProcessSession processSession=ProcessSystemUtil.getCurrentSession();
+  ProcessInstance processInstance=processSession.getEngine().createProcessInstance(workflowDefinitionName,workflowDefinitionVersion,context);
+  processSession.getEngine().executeActivity(activityName,processInstance);
+  return new WorkflowInstanceInfoImpl(processInstance,true);
 }
