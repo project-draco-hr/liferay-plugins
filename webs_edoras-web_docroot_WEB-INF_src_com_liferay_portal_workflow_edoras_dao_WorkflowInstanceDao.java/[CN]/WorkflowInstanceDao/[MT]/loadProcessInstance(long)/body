@@ -1,18 +1,3 @@
 {
-  TransactionCallback transactionCallback=new TransactionCallback(){
-    public Object doInTransaction(    TransactionStatus transactionStatus){
-      try {
-        WorkflowInstance workflowInstance=WorkflowInstanceUtil.findByPrimaryKey(primaryKey);
-        return new WorkflowInstanceBridge(workflowInstance,null,true);
-      }
- catch (      NoSuchWorkflowInstanceException nswie) {
-        return null;
-      }
-catch (      Exception e) {
-        throw new ProcessException(e.getMessage(),e);
-      }
-    }
-  }
-;
-  return (T)getTxTemplateReadOnly().execute(transactionCallback);
+  return (T)loadProcessInstance(primaryKey,true);
 }

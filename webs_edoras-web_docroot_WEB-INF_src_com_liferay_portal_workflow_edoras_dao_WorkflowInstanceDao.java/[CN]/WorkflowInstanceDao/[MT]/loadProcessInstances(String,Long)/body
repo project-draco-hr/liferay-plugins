@@ -1,15 +1,9 @@
 {
-  TransactionCallback transactionCallback=new TransactionCallback(){
-    public Object doInTransaction(    TransactionStatus transactionStatus){
-      try {
-        List<WorkflowInstance> workflowInstances=WorkflowInstanceUtil.findByC_C(relationType,relationId);
-        return WorkflowEntityBridgeUtil.wrapWorkflowInstances(workflowInstances,null,true);
-      }
- catch (      Exception e) {
-        throw new ProcessException(e.getMessage(),e);
-      }
-    }
+  try {
+    List<WorkflowInstance> workflowInstances=WorkflowInstanceUtil.findByC_C(relationType,relationId);
+    return (List<? extends MutableProcessInstance>)WorkflowEntityBridgeUtil.wrapWorkflowInstances(workflowInstances,null,true);
   }
-;
-  return (List<? extends MutableProcessInstance>)getTxTemplateReadOnly().execute(transactionCallback);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
+  }
 }

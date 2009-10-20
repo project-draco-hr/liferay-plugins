@@ -1,3 +1,10 @@
 {
-  return null;
+  ProcessSetup setup=getSetup();
+  ProcessInstance instance=setup.getProcessDao().loadProcessInstance(workflowInstanceId,false);
+  List<String> activityNames=new ArrayList<String>();
+  List<Activity> activities=getSetup().getEngine().getNextActivities(instance,true);
+  for (  Activity activity : activities) {
+    activityNames.add(activity.getName());
+  }
+  return activityNames;
 }

@@ -1,0 +1,12 @@
+{
+  try {
+    WorkflowInstance workflowInstance=WorkflowInstanceUtil.findByPrimaryKey(primaryKey);
+    return (T)new WorkflowInstanceBridge(workflowInstance,null,includeChildren);
+  }
+ catch (  NoSuchWorkflowInstanceException nswie) {
+    return null;
+  }
+catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
+  }
+}

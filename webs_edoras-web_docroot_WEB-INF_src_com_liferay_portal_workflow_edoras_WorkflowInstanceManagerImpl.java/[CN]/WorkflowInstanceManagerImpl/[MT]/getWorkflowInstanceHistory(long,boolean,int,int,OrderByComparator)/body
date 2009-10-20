@@ -1,3 +1,32 @@
 {
-  return null;
+  if (!includeChildren) {
+    try {
+      List<WorkflowLog> logs=WorkflowLogUtil.findByWorkflowInstanceId(workflowInstanceId,start,end,orderByComparator);
+      return WorkflowManagerUtil.wrapWorkflowHistory(logs);
+    }
+ catch (    SystemException se) {
+      throw new WorkflowException(se.getMessage(),se);
+    }
+  }
+  ProcessInstance processInstance=getSetup().getProcessDao().loadProcessInstance(workflowInstanceId,true);
+  List<ProcessInstance> processInstances=new ArrayList<ProcessInstance>();
+  WorkflowManagerUtil.getFlatProcessInstanceList(processInstance,processInstances);
+  List<WorkflowLog> allLogs=new ArrayList<WorkflowLog>();
+  try {
+    for (    ProcessInstance instance : processInstances) {
+      List<WorkflowLog> logs=WorkflowLogUtil.findByWorkflowInstanceId(instance.getPrimaryKey());
+      allLogs.addAll(logs);
+    }
+    List<WorkflowInstanceHistory> history=WorkflowManagerUtil.wrapWorkflowHistory(allLogs);
+    if (orderByComparator != null) {
+      Collections.sort(history,orderByComparator);
+    }
+    if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
+      history=ListUtil.subList(history,start,end);
+    }
+    return history;
+  }
+ catch (  SystemException se) {
+    throw new WorkflowException(se.getMessage(),se);
+  }
 }

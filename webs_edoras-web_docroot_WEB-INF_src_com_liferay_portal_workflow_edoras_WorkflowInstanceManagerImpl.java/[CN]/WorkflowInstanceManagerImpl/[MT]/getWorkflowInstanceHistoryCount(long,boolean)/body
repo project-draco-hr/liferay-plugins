@@ -1,3 +1,18 @@
 {
-  return 0;
+  try {
+    if (!includeChildren) {
+      return WorkflowLogUtil.countByWorkflowInstanceId(workflowInstanceId);
+    }
+    ProcessInstance processInstance=getSetup().getProcessDao().loadProcessInstance(workflowInstanceId,true);
+    List<ProcessInstance> processInstances=new ArrayList<ProcessInstance>();
+    WorkflowManagerUtil.getFlatProcessInstanceList(processInstance,processInstances);
+    int count=0;
+    for (    ProcessInstance instance : processInstances) {
+      count+=WorkflowLogUtil.countByWorkflowInstanceId(instance.getPrimaryKey());
+    }
+    return count;
+  }
+ catch (  SystemException e) {
+    throw new WorkflowException(e.getMessage(),e);
+  }
 }
