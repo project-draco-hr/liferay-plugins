@@ -1,32 +1,34 @@
 {
   if (!includeChildren) {
     try {
-      List<WorkflowLog> logs=WorkflowLogUtil.findByWorkflowInstanceId(workflowInstanceId,start,end,orderByComparator);
-      return WorkflowManagerUtil.wrapWorkflowHistory(logs);
+      List<WorkflowLog> workflowLogs=WorkflowLogUtil.findByWorkflowInstanceId(workflowInstanceId,start,end,orderByComparator);
+      return WorkflowManagerUtil.wrapWorkflowHistory(workflowLogs);
     }
- catch (    SystemException se) {
-      throw new WorkflowException(se.getMessage(),se);
+ catch (    Exception e) {
+      throw new WorkflowException(e.getMessage(),e);
     }
   }
-  ProcessInstance processInstance=getSetup().getProcessDao().loadProcessInstance(workflowInstanceId,true);
+  ProcessSetup processSetup=getSetup();
+  ProcessDao processDao=processSetup.getProcessDao();
+  ProcessInstance processInstance=processDao.loadProcessInstance(workflowInstanceId,true);
   List<ProcessInstance> processInstances=new ArrayList<ProcessInstance>();
   WorkflowManagerUtil.getFlatProcessInstances(processInstance,processInstances);
-  List<WorkflowLog> allLogs=new ArrayList<WorkflowLog>();
+  List<WorkflowLog> workflowLogs=new ArrayList<WorkflowLog>();
   try {
-    for (    ProcessInstance instance : processInstances) {
-      List<WorkflowLog> logs=WorkflowLogUtil.findByWorkflowInstanceId(instance.getPrimaryKey());
-      allLogs.addAll(logs);
+    for (    ProcessInstance curProcessInstance : processInstances) {
+      List<WorkflowLog> curWorkflowLogs=WorkflowLogUtil.findByWorkflowInstanceId(curProcessInstance.getPrimaryKey());
+      workflowLogs.addAll(curWorkflowLogs);
     }
-    List<WorkflowInstanceHistory> history=WorkflowManagerUtil.wrapWorkflowHistory(allLogs);
+    List<WorkflowInstanceHistory> workflowInstanceHistory=WorkflowManagerUtil.wrapWorkflowHistory(workflowLogs);
     if (orderByComparator != null) {
-      Collections.sort(history,orderByComparator);
+      Collections.sort(workflowInstanceHistory,orderByComparator);
     }
     if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
-      history=ListUtil.subList(history,start,end);
+      workflowInstanceHistory=ListUtil.subList(workflowInstanceHistory,start,end);
     }
-    return history;
+    return workflowInstanceHistory;
   }
- catch (  SystemException se) {
-    throw new WorkflowException(se.getMessage(),se);
+ catch (  Exception e) {
+    throw new WorkflowException(e.getMessage(),e);
   }
 }
