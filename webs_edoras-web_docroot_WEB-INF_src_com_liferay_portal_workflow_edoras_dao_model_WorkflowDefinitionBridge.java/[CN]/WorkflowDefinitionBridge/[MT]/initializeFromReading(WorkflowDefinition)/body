@@ -1,11 +1,8 @@
 {
   _workflowDefinition=workflowDefinition;
-  Long companyId=workflowDefinition.getCompanyId();
-  if (companyId == CompanyConstants.SYSTEM) {
-    companyId=null;
-  }
+  Long tenantId=WorkflowManagerUtil.getTenantId(workflowDefinition.getCompanyId());
   setPrimaryKey(workflowDefinition.getPrimaryKey());
-  setTenantId(companyId);
+  setTenantId(tenantId);
   setProcessModelId(workflowDefinition.getName());
   setProcessModelVersion(workflowDefinition.getVersion());
   setModelDesignerVersion(workflowDefinition.getDesignerVersion());
