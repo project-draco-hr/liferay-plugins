@@ -1,3 +1,10 @@
 {
-  return null;
+  WorkflowTaskHandler taskHandler=(WorkflowTaskHandler)getSetup().getTaskHandler();
+  MutableWorkflowTask workflowTask=loadWorkflowTask(taskInstanceId);
+  if (attributes != null) {
+    ProcessInstance processInstance=workflowTask.getProcessInstance();
+    processInstance.getAttributeMap().copyFrom(attributes);
+  }
+  taskHandler.completeTask(workflowTask);
+  return new TaskInstanceInfoImpl(workflowTask);
 }

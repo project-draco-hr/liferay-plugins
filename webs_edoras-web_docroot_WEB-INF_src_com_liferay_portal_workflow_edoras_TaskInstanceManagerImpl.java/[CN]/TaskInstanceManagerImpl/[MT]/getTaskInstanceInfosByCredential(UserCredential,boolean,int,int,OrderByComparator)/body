@@ -1,3 +1,12 @@
 {
-  return null;
+  DynamicQuery dynamicQuery=createUserCredentialQuery(userCredential,true);
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("completed",completed));
+  applyOrder(dynamicQuery,orderByComparator);
+  try {
+    List workflowTasks=WorkflowTaskUtil.findWithDynamicQuery(dynamicQuery,start,end);
+    return WorkflowManagerUtil.wrapWorkflowTasks(workflowTasks);
+  }
+ catch (  SystemException se) {
+    throw new WorkflowException(se.getMessage(),se);
+  }
 }

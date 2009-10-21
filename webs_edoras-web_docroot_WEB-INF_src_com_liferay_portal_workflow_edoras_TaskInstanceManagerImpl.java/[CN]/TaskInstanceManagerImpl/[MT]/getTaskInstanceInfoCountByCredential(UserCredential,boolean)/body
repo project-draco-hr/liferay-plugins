@@ -1,3 +1,11 @@
 {
-  return 0;
+  DynamicQuery dynamicQuery=createUserCredentialQuery(userCredential,true);
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("completed",completed));
+  try {
+    List<Object> count=WorkflowTaskUtil.findWithDynamicQuery(dynamicQuery);
+    return (Integer)count.get(0);
+  }
+ catch (  SystemException se) {
+    throw new WorkflowException(se.getMessage(),se);
+  }
 }

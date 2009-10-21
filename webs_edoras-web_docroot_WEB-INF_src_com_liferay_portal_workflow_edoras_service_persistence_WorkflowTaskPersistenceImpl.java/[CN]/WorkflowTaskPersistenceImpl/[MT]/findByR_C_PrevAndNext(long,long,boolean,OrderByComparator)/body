@@ -1,12 +1,12 @@
 {
   WorkflowTask workflowTask=findByPrimaryKey(workflowTaskId);
-  int count=countByR_C(roleId,completed);
+  int count=countByR_C(assigneeRoleId,completed);
   Session session=null;
   try {
     session=openSession();
     StringBuilder query=new StringBuilder();
     query.append("SELECT workflowTask FROM WorkflowTask workflowTask WHERE ");
-    query.append("workflowTask.roleId = ?");
+    query.append("workflowTask.assigneeRoleId = ?");
     query.append(" AND ");
     query.append("workflowTask.completed = ?");
     query.append(" ");
@@ -29,7 +29,7 @@
     }
     Query q=session.createQuery(query.toString());
     QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(roleId);
+    qPos.add(assigneeRoleId);
     qPos.add(completed);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,workflowTask);
     WorkflowTask[] array=new WorkflowTaskImpl[3];

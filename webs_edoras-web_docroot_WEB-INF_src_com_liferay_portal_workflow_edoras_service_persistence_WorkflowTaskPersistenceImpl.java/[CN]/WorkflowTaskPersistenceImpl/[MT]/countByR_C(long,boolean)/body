@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{new Long(roleId),Boolean.valueOf(completed)};
+  Object[] finderArgs=new Object[]{new Long(assigneeRoleId),Boolean.valueOf(completed)};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_R_C,finderArgs,this);
   if (count == null) {
     Session session=null;
@@ -8,13 +8,13 @@
       StringBuilder query=new StringBuilder();
       query.append("SELECT COUNT(workflowTask) ");
       query.append("FROM WorkflowTask workflowTask WHERE ");
-      query.append("workflowTask.roleId = ?");
+      query.append("workflowTask.assigneeRoleId = ?");
       query.append(" AND ");
       query.append("workflowTask.completed = ?");
       query.append(" ");
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(roleId);
+      qPos.add(assigneeRoleId);
       qPos.add(completed);
       count=(Long)q.uniqueResult();
     }

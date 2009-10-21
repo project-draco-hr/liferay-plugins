@@ -1,5 +1,5 @@
 {
-  Object[] finderArgs=new Object[]{new Long(roleId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{new Long(assigneeRoleId),String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
   List<WorkflowTask> list=(List<WorkflowTask>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_ROLEID,finderArgs,this);
   if (list == null) {
     Session session=null;
@@ -7,7 +7,7 @@
       session=openSession();
       StringBuilder query=new StringBuilder();
       query.append("SELECT workflowTask FROM WorkflowTask workflowTask WHERE ");
-      query.append("workflowTask.roleId = ?");
+      query.append("workflowTask.assigneeRoleId = ?");
       query.append(" ");
       if (obc != null) {
         query.append("ORDER BY ");
@@ -28,7 +28,7 @@
       }
       Query q=session.createQuery(query.toString());
       QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(roleId);
+      qPos.add(assigneeRoleId);
       list=(List<WorkflowTask>)QueryUtil.list(q,getDialect(),start,end);
     }
  catch (    Exception e) {

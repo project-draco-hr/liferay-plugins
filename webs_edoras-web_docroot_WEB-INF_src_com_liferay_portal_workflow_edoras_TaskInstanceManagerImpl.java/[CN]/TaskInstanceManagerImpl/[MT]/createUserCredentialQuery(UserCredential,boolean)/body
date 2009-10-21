@@ -1,0 +1,10 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(WorkflowTask.class);
+  if (createCountQuery) {
+    dynamicQuery.setProjection(ProjectionFactoryUtil.rowCount());
+  }
+  Criterion roleCriterion=RestrictionsFactoryUtil.in("assigneeRoleId",userCredential.getRoleIds());
+  Criterion userCriterion=RestrictionsFactoryUtil.eq("assigneeUserId",userCredential.getUserId());
+  dynamicQuery.add(RestrictionsFactoryUtil.or(userCriterion,roleCriterion));
+  return dynamicQuery;
+}

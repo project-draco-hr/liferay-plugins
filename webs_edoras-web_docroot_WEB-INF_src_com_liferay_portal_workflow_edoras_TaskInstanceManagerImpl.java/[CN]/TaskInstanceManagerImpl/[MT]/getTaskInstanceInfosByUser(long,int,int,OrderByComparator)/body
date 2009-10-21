@@ -1,3 +1,9 @@
 {
-  return null;
+  try {
+    List<WorkflowTask> taskList=WorkflowTaskUtil.findByAssigneeUserId(userId,start,end,orderByComparator);
+    return WorkflowManagerUtil.wrapWorkflowTasks(taskList);
+  }
+ catch (  SystemException e) {
+    throw new WorkflowException(e.getMessage(),e);
+  }
 }
