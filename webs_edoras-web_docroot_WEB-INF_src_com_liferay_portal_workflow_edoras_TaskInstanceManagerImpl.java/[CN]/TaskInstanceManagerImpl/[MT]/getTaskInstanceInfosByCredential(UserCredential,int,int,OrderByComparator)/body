@@ -1,11 +1,11 @@
 {
-  DynamicQuery dynamicQuery=createUserCredentialQuery(userCredential,true);
-  applyOrder(dynamicQuery,orderByComparator);
+  DynamicQuery dynamicQuery=getUserCredentialDynamicQuery(userCredential,true);
+  addOrder(dynamicQuery,orderByComparator);
   try {
     List workflowTasks=WorkflowTaskUtil.findWithDynamicQuery(dynamicQuery,start,end);
     return WorkflowManagerUtil.wrapWorkflowTasks(workflowTasks);
   }
- catch (  SystemException se) {
-    throw new WorkflowException(se.getMessage(),se);
+ catch (  Exception e) {
+    throw new WorkflowException(e.getMessage(),e);
   }
 }

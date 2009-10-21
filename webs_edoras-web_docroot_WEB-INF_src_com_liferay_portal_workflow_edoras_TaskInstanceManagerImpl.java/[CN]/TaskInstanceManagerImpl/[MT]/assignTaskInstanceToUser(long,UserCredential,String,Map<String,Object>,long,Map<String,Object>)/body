@@ -1,10 +1,11 @@
 {
-  WorkflowTaskHandler taskHandler=(WorkflowTaskHandler)getSetup().getTaskHandler();
-  MutableWorkflowTask workflowTask=loadWorkflowTask(taskInstanceId);
+  ProcessSetup processSetup=getSetup();
+  WorkflowTaskHandler workflowTaskHandler=(WorkflowTaskHandler)processSetup.getTaskHandler();
+  MutableWorkflowTask mutableWorkflowTask=loadWorkflowTask(taskInstanceId);
   if (attributes != null) {
-    ProcessInstance processInstance=workflowTask.getProcessInstance();
+    ProcessInstance processInstance=mutableWorkflowTask.getProcessInstance();
     processInstance.getAttributeMap().copyFrom(attributes);
   }
-  taskHandler.assignTaskToUser(workflowTask,userCredential.getUserId());
-  return new TaskInstanceInfoImpl(workflowTask);
+  workflowTaskHandler.assignTaskToUser(mutableWorkflowTask,userCredential.getUserId());
+  return new TaskInstanceInfoImpl(mutableWorkflowTask);
 }
