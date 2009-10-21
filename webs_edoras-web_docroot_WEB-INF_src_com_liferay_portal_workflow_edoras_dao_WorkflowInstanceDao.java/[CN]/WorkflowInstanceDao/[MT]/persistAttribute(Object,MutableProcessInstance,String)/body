@@ -3,16 +3,20 @@
     return null;
   }
   try {
-    BasePersistenceManagerUtil.update((BaseModel)attribute,true);
-    ModelIdentity modelIdentity=BasePersistenceManagerUtil.getIdentity((BaseModel)attribute);
-    if (modelIdentity.getPrimaryKey() instanceof Long) {
-      return new ServiceBuilderObjectIdentityLong(modelIdentity,attributeName,attribute);
+    BaseModel<?> baseModel=(BaseModel<?>)attribute;
+    String servletContextName=PortalUtil.getServletContextName(baseModel);
+    String className=baseModel.getClass().getName();
+    BasePersistence basePersistence=PortalUtil.getBasePersistence(servletContextName,className);
+    basePersistence.update(baseModel,true);
+    Serializable primaryKeyObj=baseModel.getPrimaryKeyObj();
+    if (primaryKeyObj instanceof Long) {
+      return new ServiceBuilderObjectIdentityLong(servletContextName,className,primaryKeyObj,attributeName,attribute);
     }
  else {
-      return new ServiceBuilderObjectIdentity(modelIdentity,attributeName,attribute);
+      return new ServiceBuilderObjectIdentity(servletContextName,className,primaryKeyObj,attributeName,attribute);
     }
   }
- catch (  SystemException se) {
-    throw new ProcessException("Could not persist entity through service builder",se);
+ catch (  Exception e) {
+    throw new ProcessException(e.getMessage(),e);
   }
 }
