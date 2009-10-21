@@ -2,14 +2,14 @@
   try {
     List<WorkflowInstance> workflowInstances=null;
     if (workflowDefinitionVersion == null) {
-      workflowInstances=WorkflowInstanceUtil.findByworkflowDefinitionName(workflowDefinitionName,start,end,orderByComparator);
+      workflowInstances=WorkflowInstanceUtil.findByWorkflowDefinitionName(workflowDefinitionName,start,end,orderByComparator);
     }
  else {
       workflowInstances=WorkflowInstanceUtil.findByN_V(workflowDefinitionName,workflowDefinitionVersion,start,end,orderByComparator);
     }
     return WorkflowManagerUtil.wrapWorkflowInstances(workflowInstances,retrieveChildrenInfo);
   }
- catch (  SystemException se) {
-    throw new WorkflowException(se.getMessage(),se);
+ catch (  Exception e) {
+    throw new WorkflowException(e.getMessage(),e);
   }
 }

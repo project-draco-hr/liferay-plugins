@@ -1,14 +1,14 @@
 {
-  AbstractWorkflowManager target=(AbstractWorkflowManager)joinPoint.getTarget();
+  AbstractWorkflowManager target=(AbstractWorkflowManager)proceedingJoinPoint.getTarget();
   Class<?> setupId=target.getDefaultSetupId();
-  ProcessSession session=null;
+  ProcessSession processSession=null;
   try {
-    session=ProcessSystemUtil.createSession(setupId);
-    return joinPoint.proceed();
+    processSession=ProcessSystemUtil.createSession(setupId);
+    return proceedingJoinPoint.proceed();
   }
   finally {
-    if (session != null) {
-      session.close();
+    if (processSession != null) {
+      processSession.close();
     }
   }
 }

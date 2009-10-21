@@ -1,9 +1,11 @@
 {
   ProcessSession processSession=ProcessSystemUtil.getCurrentSession();
-  ProcessInstance processInstance=processSession.getProcessDao().loadProcessInstance(workflowInstanceId,true);
+  ProcessDao processDao=processSession.getProcessDao();
+  ProcessInstance processInstance=processDao.loadProcessInstance(workflowInstanceId,true);
   if (attributes != null) {
     processInstance.getAttributeMap().copyFrom(attributes);
   }
-  processSession.getEngine().executeActivity(activityName,processInstance);
+  ProcessEngine processEngine=processSession.getEngine();
+  processEngine.executeActivity(activityName,processInstance);
   return new WorkflowInstanceInfoImpl(processInstance,true);
 }

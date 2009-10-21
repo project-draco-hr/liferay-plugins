@@ -1,7 +1,9 @@
 {
-  List<? extends MutableProcessInstance> processInstances=getSetup().getProcessDao().loadProcessInstances(relationType,relationId,retrieveChildrenInfo);
-  if (processInstances.size() > 0) {
-    return new WorkflowInstanceInfoImpl(processInstances.get(0),retrieveChildrenInfo);
+  ProcessSetup processSetup=getSetup();
+  ProcessDao processDao=processSetup.getProcessDao();
+  List<? extends MutableProcessInstance> mutableProcessInstances=processDao.loadProcessInstances(relationType,relationId,retrieveChildrenInfo);
+  if (!mutableProcessInstances.isEmpty()) {
+    return new WorkflowInstanceInfoImpl(mutableProcessInstances.get(0),retrieveChildrenInfo);
   }
   return null;
 }
