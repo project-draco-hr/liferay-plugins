@@ -1,3 +1,18 @@
 {
-  return null;
+  if (!(attribute instanceof BaseModel)) {
+    return null;
+  }
+  try {
+    BasePersistenceManagerUtil.update((BaseModel)attribute,true);
+    ModelIdentity modelIdentity=BasePersistenceManagerUtil.getIdentity((BaseModel)attribute);
+    if (modelIdentity.getPrimaryKey() instanceof Long) {
+      return new ServiceBuilderObjectIdentityLong(modelIdentity,attributeName,attribute);
+    }
+ else {
+      return new ServiceBuilderObjectIdentity(modelIdentity,attributeName,attribute);
+    }
+  }
+ catch (  SystemException se) {
+    throw new ProcessException("Could not persist entity through service builder",se);
+  }
 }

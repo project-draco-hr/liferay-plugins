@@ -1,0 +1,16 @@
+{
+  int count=countByR_C(roleId,completed);
+  List<WorkflowTask> list=findByR_C(roleId,completed,count - 1,count,obc);
+  if (list.isEmpty()) {
+    StringBuilder msg=new StringBuilder();
+    msg.append("No WorkflowTask exists with the key {");
+    msg.append("roleId=" + roleId);
+    msg.append(", ");
+    msg.append("completed=" + completed);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchWorkflowTaskException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

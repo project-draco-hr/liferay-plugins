@@ -1,3 +1,14 @@
 {
-  return null;
+  AbstractServiceBuilderObjectIdentity identity=(AbstractServiceBuilderObjectIdentity)objectIdentity;
+  try {
+    BaseModel attribute=BasePersistenceManagerUtil.findByIdentity(identity.getModelIdentity());
+    return (T)attribute;
+  }
+ catch (  NoSuchModelException nsme) {
+    _log.warn("Could not find referenced workflow attribute, " + "it was silently ignored",nsme);
+    return null;
+  }
+catch (  SystemException se) {
+    throw new ProcessException(se.getMessage(),se);
+  }
 }
