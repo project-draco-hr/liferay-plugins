@@ -2,6 +2,9 @@
   String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   String receiverUserName=getUserName(activity.getReceiverUserId(),themeDisplay);
   User receiverUser=UserLocalServiceUtil.getUserById(activity.getReceiverUserId());
+  if (!SocialRelationLocalServiceUtil.hasRelation(themeDisplay.getUserId(),activity.getReceiverUserId(),SocialRelationConstants.TYPE_BI_FRIEND)) {
+    return null;
+  }
   int activityType=activity.getType();
   WallEntry wallEntry=WallEntryLocalServiceUtil.getWallEntry(activity.getClassPK());
   String link=themeDisplay.getPortalURL() + themeDisplay.getPathFriendlyURLPublic() + StringPool.SLASH+ HtmlUtil.escapeURL(receiverUser.getScreenName())+ "/profile/-/wall/"+ activity.getClassPK();
