@@ -1,7 +1,5 @@
 {
   long companyId=memberRequest.getCompanyId();
-  String url=getMemberRequestURL(memberRequest.getKey(),themeDisplay);
-  String createAccountUrl=getMemberRequestCreateAccountURL(memberRequest.getKey(),themeDisplay);
   Group group=GroupLocalServiceUtil.getGroup(memberRequest.getGroupId());
   User user=UserLocalServiceUtil.getUser(memberRequest.getUserId());
   User receiverUser=null;
@@ -19,13 +17,15 @@
   String subject=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/subject.tmpl");
   String body=StringPool.BLANK;
   if (memberRequest.getReceiverUserId() > 0) {
-    body=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/body.tmpl");
+    body=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/" + "existing_user_body.tmpl");
   }
  else {
-    body=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/" + "body_create_account.tmpl");
+    body=StringUtil.read(classLoader,"com/liferay/so/invitemembers/dependencies/" + "new_user_body.tmpl");
   }
+  String createAccountURL=getCreateAccountURL(memberRequest.getKey(),themeDisplay);
+  String loginURL=getLoginURL(memberRequest.getKey(),themeDisplay);
   subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(),user.getFullName()});
-  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]","[$MEMBER_REQUEST_URL$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]"},new String[]{fromAddress,fromName,group.getDescriptiveName(),user.getFullName(),url,createAccountUrl});
+  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,createAccountURL,group.getDescriptiveName(),loginURL,user.getFullName()});
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
