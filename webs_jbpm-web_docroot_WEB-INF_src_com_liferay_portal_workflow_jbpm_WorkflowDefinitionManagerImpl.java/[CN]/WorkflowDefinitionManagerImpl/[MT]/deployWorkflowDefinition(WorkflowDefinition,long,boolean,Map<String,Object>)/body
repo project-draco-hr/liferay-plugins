@@ -1,12 +1,9 @@
 {
-  ResourceRetriever resourceRetriever=workflowDefinition.getJar();
-  String name=workflowDefinition.getWorkflowDefinitionName();
-  int version=workflowDefinition.getWorkflowDefinitionVersion();
-  if (!autoIncrementVersionNumber && (version < 0)) {
+  if ((!autoIncrementVersionNumber) && (workflowDefinition.getVersion() < 0)) {
     throw new WorkflowException("Workflow definition version number must be a positive number");
   }
   ProcessDefinition processDefinition=null;
-  ZipInputStream processStream=new ZipInputStream(resourceRetriever.getInputStream());
+  ZipInputStream processStream=new ZipInputStream(workflowDefinition.getInputStream());
   try {
     ProcessArchive processArchive=new ProcessArchive(processStream);
     processDefinition=processArchive.parseProcessDefinition();
@@ -21,17 +18,17 @@
  catch (    IOException ioe) {
     }
   }
-  if (Validator.isNotNull(name)) {
-    processDefinition.setName(name);
+  if (Validator.isNotNull(workflowDefinition.getName())) {
+    processDefinition.setName(workflowDefinition.getName());
   }
   if (!autoIncrementVersionNumber) {
-    processDefinition.setVersion(version);
+    processDefinition.setVersion(workflowDefinition.getVersion());
   }
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     if (!autoIncrementVersionNumber) {
       GraphSession graphSession=jbpmContext.getGraphSession();
-      ProcessDefinition oldProcessDefinition=graphSession.findProcessDefinition(name,version);
+      ProcessDefinition oldProcessDefinition=graphSession.findProcessDefinition(workflowDefinition.getName(),workflowDefinition.getVersion());
       if (oldProcessDefinition != null) {
         graphSession.deleteProcessDefinition(oldProcessDefinition);
       }

@@ -1,10 +1,8 @@
 {
-  String name=workflowDefinition.getWorkflowDefinitionName();
-  int version=workflowDefinition.getWorkflowDefinitionVersion();
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     GraphSession graphSession=jbpmContext.getGraphSession();
-    ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
+    ProcessDefinition processDefinition=graphSession.findProcessDefinition(workflowDefinition.getName(),workflowDefinition.getVersion());
     if (processDefinition != null) {
       List<ProcessInstance> processInstances=graphSession.findProcessInstances(processDefinition.getId());
       for (      ProcessInstance processInstance : processInstances) {
