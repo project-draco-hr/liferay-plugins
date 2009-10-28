@@ -13,11 +13,10 @@
     }
     PooledActor pooledActor=pooledActors.iterator().next();
     long roleId=GetterUtil.getLong(pooledActor.getActorId());
-    Set<Long> roleIds=userCredential.getRoleIds();
-    if (!roleIds.contains(roleId)) {
-      throw new WorkflowException(userCredential.getUserId() + " does not have the role to be assigned to task " + taskInstanceId);
+    if (!RoleLocalServiceUtil.hasUserRole(userId,roleId)) {
+      throw new WorkflowException(userId + " does not have the role to be assigned to task " + taskInstanceId);
     }
-    taskInstance.setActorId(String.valueOf(userCredential.getUserId()));
+    taskInstance.setActorId(String.valueOf(userId));
     jbpmContext.save(taskInstance);
     return new TaskInstanceInfoImpl(taskInstance);
   }

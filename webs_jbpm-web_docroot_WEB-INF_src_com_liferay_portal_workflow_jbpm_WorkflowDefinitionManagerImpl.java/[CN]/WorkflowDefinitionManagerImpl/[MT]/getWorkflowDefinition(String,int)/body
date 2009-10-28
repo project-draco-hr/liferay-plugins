@@ -1,0 +1,16 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    GraphSession graphSession=jbpmContext.getGraphSession();
+    ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
+    if (processDefinition != null) {
+      return new WorkflowDefinitionImpl(processDefinition);
+    }
+ else {
+      throw new WorkflowException("No WorkflowDefinition exists with the key {name=" + name + ", version="+ version+ "}");
+    }
+  }
+  finally {
+    jbpmContext.close();
+  }
+}

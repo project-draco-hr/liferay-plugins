@@ -1,0 +1,29 @@
+{
+  ProcessDefinition processDefinition=null;
+  ZipInputStream processStream=new ZipInputStream(inputStream);
+  try {
+    ProcessArchive processArchive=new ProcessArchive(processStream);
+    processDefinition=processArchive.parseProcessDefinition();
+  }
+ catch (  IOException ioe) {
+    throw new WorkflowException(ioe);
+  }
+ finally {
+    try {
+      processStream.close();
+    }
+ catch (    IOException ioe) {
+    }
+  }
+  if (Validator.isNotNull(name)) {
+    processDefinition.setName(name);
+  }
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    jbpmContext.deployProcessDefinition(processDefinition);
+  }
+  finally {
+    jbpmContext.close();
+  }
+  return new WorkflowDefinitionImpl(processDefinition);
+}
