@@ -4,16 +4,16 @@
     ProcessDefinition processDefinition=getProcessDefinition(jbpmContext,workflowDefinitionName,workflowDefinitionVersion);
     CustomSession customSession=new CustomSession(jbpmContext);
     List<ProcessInstance> processInstances=customSession.findProcessInstances(processDefinition.getId(),completed,start,end,orderByComparator);
-    List<WorkflowInstanceInfo> workflowInstanceInfos=new ArrayList<WorkflowInstanceInfo>(processInstances.size());
+    List<WorkflowInstance> workflowInstances=new ArrayList<WorkflowInstance>(processInstances.size());
     for (    ProcessInstance processInstance : processInstances) {
       Token token=processInstance.getRootToken();
-      WorkflowInstanceInfoImpl workflowInstanceInfoImpl=new WorkflowInstanceInfoImpl(token);
+      WorkflowInstanceImpl workflowInstanceImpl=new WorkflowInstanceImpl(token);
       if (retrieveChildrenInfo) {
-        populateChildrenWorkflowInstanceInfos(token,workflowInstanceInfoImpl);
+        populateChildrenWorkflowInstances(token,workflowInstanceImpl);
       }
-      workflowInstanceInfos.add(workflowInstanceInfoImpl);
+      workflowInstances.add(workflowInstanceImpl);
     }
-    return workflowInstanceInfos;
+    return workflowInstances;
   }
  catch (  WorkflowException we) {
     throw we;
