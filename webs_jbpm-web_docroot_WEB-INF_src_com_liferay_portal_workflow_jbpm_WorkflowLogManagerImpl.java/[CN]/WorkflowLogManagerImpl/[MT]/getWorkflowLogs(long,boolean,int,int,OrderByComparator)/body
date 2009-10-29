@@ -1,12 +1,12 @@
 {
-  List<WorkflowInstanceHistory> workflowInstanceHistories=new ArrayList<WorkflowInstanceHistory>();
+  List<WorkflowLog> workflowLogs=new ArrayList<WorkflowLog>();
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     LoggingSession loggingSession=jbpmContext.getLoggingSession();
     Token token=jbpmContext.loadToken(workflowInstanceId);
     List<ProcessLog> processLogs=loggingSession.findLogsByToken(token);
     for (    ProcessLog processLog : processLogs) {
-      workflowInstanceHistories.add(new WorkflowInstanceHistoryImpl(processLog));
+      workflowLogs.add(new WorkflowLogImpl(processLog));
     }
     if (includeChildren) {
       Stack<Token> tokens=new Stack<Token>();
@@ -15,16 +15,16 @@
         Token childToken=tokens.pop();
         processLogs=loggingSession.findLogsByToken(childToken);
         for (        ProcessLog processLog : processLogs) {
-          workflowInstanceHistories.add(new WorkflowInstanceHistoryImpl(processLog));
+          workflowLogs.add(new WorkflowLogImpl(processLog));
         }
         tokens.addAll(childToken.getChildren().values());
       }
     }
-    Collections.sort(workflowInstanceHistories,orderByComparator);
+    Collections.sort(workflowLogs,orderByComparator);
     if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
-      workflowInstanceHistories=ListUtil.subList(workflowInstanceHistories,start,end);
+      workflowLogs=ListUtil.subList(workflowLogs,start,end);
     }
-    return workflowInstanceHistories;
+    return workflowLogs;
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
