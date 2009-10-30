@@ -1,0 +1,23 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    GraphSession graphSession=jbpmContext.getGraphSession();
+    Token token=graphSession.getToken(workflowInstanceId);
+    if (token != null) {
+      if (token.isRoot()) {
+        graphSession.deleteProcessInstance(token.getProcessInstance());
+      }
+ else       if (_log.isWarnEnabled()) {
+        _log.warn("Unable to delete a child workflow instance " + workflowInstanceId + ". You can only delete a "+ "root workflow instance.");
+      }
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Unable to delete workflow instance " + workflowInstanceId,e);
+    }
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

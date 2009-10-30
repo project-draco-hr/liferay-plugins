@@ -1,0 +1,29 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
+    TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
+    long actorId=GetterUtil.getLong(taskInstance.getActorId());
+    if (actorId != userId) {
+      throw new WorkflowException("Workflow task " + workflowTaskId + " is not assigned to user "+ userId);
+    }
+    taskInstance.addComment(comment);
+    if (context != null) {
+      taskInstance.addVariables(context);
+    }
+    if (transitionName == null) {
+      taskInstance.end();
+    }
+ else {
+      taskInstance.end(transitionName);
+    }
+    jbpmContext.save(taskInstance);
+    return new WorkflowTaskImpl(taskInstance);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

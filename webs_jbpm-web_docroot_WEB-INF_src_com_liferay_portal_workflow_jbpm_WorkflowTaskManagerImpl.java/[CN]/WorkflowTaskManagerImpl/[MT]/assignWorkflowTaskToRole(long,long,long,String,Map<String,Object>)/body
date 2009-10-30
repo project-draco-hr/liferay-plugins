@@ -1,0 +1,20 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
+    TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
+    taskInstance.setPooledActors(String.valueOf(roleId));
+    taskInstance.addComment(comment);
+    if (context != null) {
+      taskInstance.addVariables(context);
+    }
+    jbpmContext.save(taskInstance);
+    return new WorkflowTaskImpl(taskInstance);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}
