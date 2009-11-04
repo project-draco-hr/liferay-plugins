@@ -1,0 +1,25 @@
+{
+  WorkflowInstance workflowInstance1_1=WorkflowInstanceManagerUtil.startWorkflowInstance(USER.getUserId(),_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  WorkflowInstance workflowInstance1_2=WorkflowInstanceManagerUtil.startWorkflowInstance(USER.getUserId(),_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  WorkflowInstance workflowInstance1_3=WorkflowInstanceManagerUtil.startWorkflowInstance(USER.getUserId(),_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  WorkflowInstance workflowInstance2_1=WorkflowInstanceManagerUtil.startWorkflowInstance(USER.getUserId(),_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
+  WorkflowInstance workflowInstance2_2=WorkflowInstanceManagerUtil.startWorkflowInstance(USER.getUserId(),_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
+  workflowInstance1_1=WorkflowInstanceManagerUtil.signalWorkflowInstance(USER.getUserId(),workflowInstance1_1.getWorkflowInstanceId(),"toTaskNode",null);
+  workflowInstance1_1=WorkflowInstanceManagerUtil.signalWorkflowInstance(USER.getUserId(),workflowInstance1_1.getWorkflowInstanceId(),"toEnd",null);
+  workflowInstance1_2=WorkflowInstanceManagerUtil.signalWorkflowInstance(USER.getUserId(),workflowInstance1_2.getWorkflowInstanceId(),"toTaskNode",null);
+  workflowInstance1_2=WorkflowInstanceManagerUtil.signalWorkflowInstance(USER.getUserId(),workflowInstance1_2.getWorkflowInstanceId(),"toEnd",null);
+  workflowInstance2_1=WorkflowInstanceManagerUtil.signalWorkflowInstance(USER.getUserId(),workflowInstance2_1.getWorkflowInstanceId(),"toEnd",null);
+  int count1=WorkflowInstanceManagerUtil.getWorkflowInstanceCount(NAME_1,_workflowDefinition1.getVersion(),Boolean.TRUE);
+  assertEquals(2,count1);
+  int count2=WorkflowInstanceManagerUtil.getWorkflowInstanceCount(NAME_1,_workflowDefinition1.getVersion(),Boolean.FALSE);
+  assertEquals(1,count2);
+  int count3=WorkflowInstanceManagerUtil.getWorkflowInstanceCount(NAME_2,_workflowDefinition2.getVersion(),Boolean.TRUE);
+  assertEquals(1,count3);
+  int count4=WorkflowInstanceManagerUtil.getWorkflowInstanceCount(NAME_2,_workflowDefinition2.getVersion(),Boolean.FALSE);
+  assertEquals(1,count4);
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance1_1.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance1_2.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance1_3.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance2_1.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance2_2.getWorkflowInstanceId());
+}
