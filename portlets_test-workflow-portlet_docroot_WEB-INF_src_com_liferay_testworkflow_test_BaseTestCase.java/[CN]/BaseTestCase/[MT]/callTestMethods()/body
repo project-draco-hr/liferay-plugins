@@ -1,0 +1,50 @@
+{
+  JSONObject testCaseResult=JSONFactoryUtil.createJSONObject();
+  Class<? extends BaseTestCase> clazz=getClass();
+  String testCaseName=clazz.getName();
+  testCaseResult.put("name",testCaseName);
+  Method setUpMethod=null;
+  try {
+    setUpMethod=clazz.getMethod("setUp");
+  }
+ catch (  Exception e) {
+  }
+  Method tearDownMethod=null;
+  try {
+    tearDownMethod=clazz.getMethod("tearDown");
+  }
+ catch (  Exception e) {
+  }
+  JSONArray testResults=JSONFactoryUtil.createJSONArray();
+  testCaseResult.put("testResults",testResults);
+  Method[] methods=clazz.getMethods();
+  Arrays.sort(methods,new MethodComparator());
+  for (  Method method : methods) {
+    if (method.getName().startsWith("test")) {
+      JSONObject testResult=JSONFactoryUtil.createJSONObject();
+      testResult.put("name",method.getName());
+      try {
+        if (setUpMethod != null) {
+          setUpMethod.invoke(this);
+        }
+        method.invoke(this);
+        if (tearDownMethod != null) {
+          tearDownMethod.invoke(this);
+        }
+        testResult.put("status",_STATUS_PASSED);
+      }
+ catch (      Exception e) {
+        Throwable cause=e.getCause();
+        testResult.put("status",_STATUS_FAILED);
+        testResult.put("exceptionMessage",cause.getMessage());
+        StringWriter stringWriter=new StringWriter();
+        PrintWriter printWriter=new PrintWriter(stringWriter);
+        cause.printStackTrace(printWriter);
+        testResult.put("exceptionStackTrace",stringWriter.toString());
+        printWriter.close();
+      }
+      testResults.put(testResult);
+    }
+  }
+  return testCaseResult;
+}
