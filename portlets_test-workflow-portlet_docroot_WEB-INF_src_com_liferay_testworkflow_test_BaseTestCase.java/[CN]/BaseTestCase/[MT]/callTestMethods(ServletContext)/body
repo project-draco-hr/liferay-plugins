@@ -1,4 +1,8 @@
 {
+  if (servletContext == null) {
+    throw new IllegalArgumentException("ServletContext is null");
+  }
+  SERVLET_CONTEXT=servletContext;
   JSONObject testCaseResult=JSONFactoryUtil.createJSONObject();
   Class<? extends BaseTestCase> clazz=getClass();
   String testCaseName=clazz.getName();
@@ -19,6 +23,20 @@
   testCaseResult.put("testResults",testResults);
   Method[] methods=clazz.getMethods();
   Arrays.sort(methods,new MethodComparator());
+  try {
+    Method method=clazz.getMethod("setUpClass");
+    if (Modifier.isStatic(method.getModifiers())) {
+      method.invoke(null);
+    }
+  }
+ catch (  NoSuchMethodException nsme) {
+  }
+catch (  Exception e) {
+    JSONObject testResult=JSONFactoryUtil.createJSONObject();
+    testResult.put("name","setUpClass");
+    setupErrorMessage(e,testResult);
+    testResults.put(testResult);
+  }
   for (  Method method : methods) {
     if (method.getName().startsWith("test")) {
       JSONObject testResult=JSONFactoryUtil.createJSONObject();
@@ -34,17 +52,24 @@
         testResult.put("status",_STATUS_PASSED);
       }
  catch (      Exception e) {
-        Throwable cause=e.getCause();
-        testResult.put("status",_STATUS_FAILED);
-        testResult.put("exceptionMessage",cause.getMessage());
-        StringWriter stringWriter=new StringWriter();
-        PrintWriter printWriter=new PrintWriter(stringWriter);
-        cause.printStackTrace(printWriter);
-        testResult.put("exceptionStackTrace",stringWriter.toString());
-        printWriter.close();
+        setupErrorMessage(e,testResult);
       }
       testResults.put(testResult);
     }
+  }
+  try {
+    Method method=clazz.getMethod("tearDownClass");
+    if (Modifier.isStatic(method.getModifiers())) {
+      method.invoke(null);
+    }
+  }
+ catch (  NoSuchMethodException nsme) {
+  }
+catch (  Exception e) {
+    JSONObject testResult=JSONFactoryUtil.createJSONObject();
+    testResult.put("name","tearDownClass");
+    setupErrorMessage(e,testResult);
+    testResults.put(testResult);
   }
   return testCaseResult;
 }
