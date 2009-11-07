@@ -1,0 +1,26 @@
+{
+  long companyId=PortalUtil.getDefaultCompanyId();
+  user=UserLocalServiceUtil.getDefaultUser(companyId);
+  ZipInputStream zipInputStream=new ZipInputStream(servletContext.getResourceAsStream("WEB-INF/bundles/" + WorkflowEngineManagerUtil.getKey() + "-tests.zip"));
+  ZipEntry zipEntry=null;
+  while ((zipEntry=zipInputStream.getNextEntry()) != null) {
+    String name=zipEntry.getName();
+    if (name.equals(_JAR_1)) {
+      definitionBytes1=readBytes(zipInputStream);
+    }
+ else     if (name.equals(_JAR_2)) {
+      definitionBytes2=readBytes(zipInputStream);
+    }
+ else     if (name.equals(_JAR_3)) {
+      definitionBytes3=readBytes(zipInputStream);
+    }
+ else     if (name.equals(_JAR_4)) {
+      definitionBytes4=readBytes(zipInputStream);
+    }
+  }
+  zipInputStream.close();
+  assertNotNull(definitionBytes1);
+  assertNotNull(definitionBytes2);
+  assertNotNull(definitionBytes3);
+  assertNotNull(definitionBytes4);
+}
