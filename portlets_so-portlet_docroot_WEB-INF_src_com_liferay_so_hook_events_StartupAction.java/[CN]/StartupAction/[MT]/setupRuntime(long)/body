@@ -3,6 +3,10 @@
   List<String> applicationsAllowed=Arrays.asList(PortletPropsValues.APPLICATIONS_ALLOWED);
   List<String> controlPanelItems=Arrays.asList(PortletPropsValues.CONTROL_PANEL_ITEMS);
   for (  Portlet portlet : portlets) {
+    PortletApp portletApp=portlet.getPortletApp();
+    if (portletApp.isWARFile()) {
+      continue;
+    }
     String portletId=portlet.getPortletId();
     if (applicationsAllowed.contains(portletId)) {
       portlet.setSystem(false);
