@@ -7,7 +7,9 @@
   InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
   NamedString[] formParameters=interactionParams.getFormParameters();
   if (formParameters != null) {
-    String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext));
+    MarkupParams markupParams=performBlockingInteraction.getMarkupParams();
+    NavigationalContext navigationalContext=markupParams.getNavigationalContext();
+    String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext,navigationalContext));
     for (    NamedString formParameter : formParameters) {
       httpOptions.addPart(namespace + formParameter.getName(),formParameter.getValue());
     }

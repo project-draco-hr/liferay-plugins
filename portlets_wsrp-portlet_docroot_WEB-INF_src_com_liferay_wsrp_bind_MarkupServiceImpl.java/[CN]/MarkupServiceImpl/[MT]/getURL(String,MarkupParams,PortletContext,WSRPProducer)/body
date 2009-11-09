@@ -8,16 +8,8 @@
   Layout layout=getLayout(portletContext,wsrpProducer);
   sb.append("p_l_id=");
   sb.append(layout.getPlid());
-  String portletId=getPortletId(portletContext);
   NavigationalContext navigationalContext=markupParams.getNavigationalContext();
-  String opaqueValue=null;
-  if (navigationalContext != null) {
-    opaqueValue=navigationalContext.getOpaqueValue();
-    Map<String,String[]> parameterMap=HttpUtil.parameterMapFromString(opaqueValue);
-    if (parameterMap.containsKey(_STRUTS_ACTION_PORTLET_CONFIGURATION)) {
-      portletId=PortletKeys.PORTLET_CONFIGURATION;
-    }
-  }
+  String portletId=getPortletId(portletContext,navigationalContext);
   sb.append("&p_p_id=");
   sb.append(HttpUtil.encodeURL(portletId));
   sb.append("&p_p_lifecycle=");
@@ -28,18 +20,24 @@
   String portletMode=getPortletMode(markupParams);
   sb.append("&p_p_mode=");
   sb.append(HttpUtil.encodeURL(portletMode));
+  String opaqueValue=null;
+  if (navigationalContext != null) {
+    opaqueValue=navigationalContext.getOpaqueValue();
+  }
   if (Validator.isNotNull(opaqueValue)) {
     sb.append(StringPool.AMPERSAND);
     sb.append(opaqueValue);
   }
-  MessageElement[] formParameters=ExtensionUtil.getMessageElements(markupParams.getExtensions());
-  if (formParameters != null) {
-    String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext));
-    for (    MessageElement formParameter : formParameters) {
-      sb.append(StringPool.AMPERSAND);
-      sb.append(namespace + formParameter.getName());
-      sb.append(StringPool.EQUAL);
-      sb.append(HttpUtil.encodeURL(formParameter.getValue()));
+  if (lifecycle.equals("0")) {
+    MessageElement[] formParameters=ExtensionUtil.getMessageElements(markupParams.getExtensions());
+    if (formParameters != null) {
+      String namespace=PortalUtil.getPortletNamespace(portletId);
+      for (      MessageElement formParameter : formParameters) {
+        sb.append(StringPool.AMPERSAND);
+        sb.append(namespace + formParameter.getName());
+        sb.append(StringPool.EQUAL);
+        sb.append(HttpUtil.encodeURL(formParameter.getValue()));
+      }
     }
   }
   sb.append("&wsrp=1");
