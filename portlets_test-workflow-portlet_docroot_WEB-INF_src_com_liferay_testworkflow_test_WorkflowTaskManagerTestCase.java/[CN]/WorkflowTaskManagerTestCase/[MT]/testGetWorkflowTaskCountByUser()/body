@@ -1,5 +1,5 @@
 {
-  int count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,null);
+  int count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,null);
   assertEquals(0,count);
   WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,DEFINITION_NAME_3,_workflowDefinition.getVersion(),null,null);
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
@@ -12,11 +12,11 @@
     childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToUser(defaultUserId,childWorkflowTask.getWorkflowTaskId(),defaultUserId,null,null);
     assertEquals(guestRoleId,childWorkflowTask.getAssigneeRoleId());
   }
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,null);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,null);
   assertEquals(3,count);
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,Boolean.TRUE);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,Boolean.TRUE);
   assertEquals(0,count);
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,Boolean.FALSE);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,Boolean.FALSE);
   assertEquals(3,count);
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
     List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
@@ -24,11 +24,11 @@
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
     WorkflowTaskManagerUtil.completeWorkflowTask(defaultUserId,childWorkflowTask.getWorkflowTaskId(),null,null,null);
   }
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,null);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,null);
+  assertEquals(4,count);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,Boolean.TRUE);
   assertEquals(3,count);
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,Boolean.TRUE);
-  assertEquals(3,count);
-  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByRole(guestRoleId,Boolean.FALSE);
-  assertEquals(0,count);
+  count=WorkflowTaskManagerUtil.getWorkflowTaskCountByUser(defaultUserId,Boolean.FALSE);
+  assertEquals(1,count);
   WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance.getWorkflowInstanceId());
 }
