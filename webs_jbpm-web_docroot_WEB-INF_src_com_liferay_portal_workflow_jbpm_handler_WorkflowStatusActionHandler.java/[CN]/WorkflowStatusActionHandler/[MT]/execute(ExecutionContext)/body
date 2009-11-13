@@ -1,0 +1,11 @@
+{
+  long userId=0;
+  if (executionContext.getTaskInstance() != null) {
+    userId=Long.valueOf(executionContext.getTaskInstance().getActorId());
+  }
+  long companyId=(Long)executionContext.getVariable(ContextConstants.COMPANY_ID);
+  long groupId=(Long)executionContext.getVariable(ContextConstants.GROUP_ID);
+  String className=(String)executionContext.getVariable(ContextConstants.ENTRY_CLASS_NAME);
+  long classPK=(Long)executionContext.getVariable(ContextConstants.ENTRY_CLASS_PK);
+  WorkflowStatusManagerUtil.updateStatus(companyId,groupId,userId,className,classPK,status);
+}
