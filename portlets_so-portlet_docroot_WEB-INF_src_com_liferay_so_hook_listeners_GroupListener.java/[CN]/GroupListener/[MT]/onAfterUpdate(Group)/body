@@ -1,0 +1,17 @@
+{
+  try {
+    if (!group.isCommunity()) {
+      return;
+    }
+    if ((group.getType() == GroupConstants.TYPE_COMMUNITY_PRIVATE) && group.hasPrivateLayouts()) {
+      return;
+    }
+    if ((group.getType() == GroupConstants.TYPE_COMMUNITY_OPEN) && group.hasPublicLayouts()) {
+      return;
+    }
+    convertCommunity(group);
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}
