@@ -1,10 +1,16 @@
 {
-  setupRuntime(companyId);
-  if (isFirstRun(companyId)) {
-    return;
+  try {
+    PortletPreferencesThreadLocal.setStrict(false);
+    setupRuntime(companyId);
+    if (isFirstRun(companyId)) {
+      return;
+    }
+    setupCompany(companyId);
+    setupPermissions(companyId);
+    setupLayouts(companyId);
+    setupUsers(companyId);
   }
-  setupCompany(companyId);
-  setupPermissions(companyId);
-  setupLayouts(companyId);
-  setupUsers(companyId);
+  finally {
+    PortletPreferencesThreadLocal.setStrict(true);
+  }
 }
