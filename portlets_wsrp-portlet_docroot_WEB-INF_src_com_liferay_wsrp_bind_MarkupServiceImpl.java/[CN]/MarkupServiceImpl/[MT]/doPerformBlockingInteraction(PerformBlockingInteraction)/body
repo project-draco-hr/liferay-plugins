@@ -15,10 +15,13 @@
     }
   }
   httpOptions.setPost(true);
-  String content=getContent(httpOptions);
+  String rawContent=getRawContent(httpOptions);
+  String content=getContent(rawContent);
   MarkupContext markupContext=new MarkupContext();
   markupContext.setItemString(content);
   markupContext.setRequiresRewriting(true);
+  Extension[] configurationURLExtension=getConfigurationURLExtension(rawContent);
+  markupContext.setExtensions(configurationURLExtension);
   BlockingInteractionResponse blockingInteractionResponse=new BlockingInteractionResponse();
   UpdateResponse updateResponse=new UpdateResponse();
   updateResponse.setMarkupContext(markupContext);
