@@ -10,10 +10,11 @@
     markupContext=markupResponse.getMarkupContext();
   }
   MessageElement[] messageElements=ExtensionUtil.getMessageElements(markupContext.getExtensions());
-  if (messageElements != null && messageElements.length > 0) {
-    if (messageElements[0].getName().equals("configurationURL")) {
+  if ((messageElements != null) && (messageElements.length > 0)) {
+    MessageElement messageElement=messageElements[0];
+    if (messageElement.getName().equals("configurationURL")) {
       PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
-      String configurationURL=messageElements[0].getValue();
+      String configurationURL=messageElement.getValue();
       configurationURL=rewriteURLs(renderResponse,configurationURL);
       portletDisplay.setURLConfiguration(configurationURL);
     }
