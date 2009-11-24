@@ -14,7 +14,13 @@
         query.append("jiraIssue.key IS NULL");
       }
  else {
+        if (key.equals(StringPool.BLANK)) {
+          query.append("(jiraIssue.key IS NULL OR ");
+        }
         query.append("jiraIssue.key = ?");
+        if (key.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       query.append("ORDER BY ");

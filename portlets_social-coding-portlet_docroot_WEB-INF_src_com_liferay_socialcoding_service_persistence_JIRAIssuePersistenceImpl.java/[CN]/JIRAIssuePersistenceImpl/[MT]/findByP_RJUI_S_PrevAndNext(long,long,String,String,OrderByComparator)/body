@@ -12,14 +12,26 @@
       query.append("jiraIssue.reporterJiraUserId IS NULL");
     }
  else {
+      if (reporterJiraUserId.equals(StringPool.BLANK)) {
+        query.append("(jiraIssue.reporterJiraUserId IS NULL OR ");
+      }
       query.append("jiraIssue.reporterJiraUserId = ?");
+      if (reporterJiraUserId.equals(StringPool.BLANK)) {
+        query.append(")");
+      }
     }
     query.append(" AND ");
     if (status == null) {
       query.append("jiraIssue.status IS NULL");
     }
  else {
+      if (status.equals(StringPool.BLANK)) {
+        query.append("(jiraIssue.status IS NULL OR ");
+      }
       query.append("jiraIssue.status = ?");
+      if (status.equals(StringPool.BLANK)) {
+        query.append(")");
+      }
     }
     query.append(" ");
     if (obc != null) {

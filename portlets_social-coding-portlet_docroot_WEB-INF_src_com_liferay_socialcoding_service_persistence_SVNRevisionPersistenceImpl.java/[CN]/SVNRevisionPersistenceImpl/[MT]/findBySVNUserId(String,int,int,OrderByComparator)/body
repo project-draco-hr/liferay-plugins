@@ -11,7 +11,13 @@
         query.append("svnRevision.svnUserId IS NULL");
       }
  else {
+        if (svnUserId.equals(StringPool.BLANK)) {
+          query.append("(svnRevision.svnUserId IS NULL OR ");
+        }
         query.append("svnRevision.svnUserId = ?");
+        if (svnUserId.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       if (obc != null) {

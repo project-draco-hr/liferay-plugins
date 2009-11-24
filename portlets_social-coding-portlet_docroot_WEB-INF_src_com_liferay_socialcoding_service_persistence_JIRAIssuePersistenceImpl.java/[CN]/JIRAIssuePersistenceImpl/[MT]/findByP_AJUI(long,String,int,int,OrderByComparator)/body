@@ -13,7 +13,13 @@
         query.append("jiraIssue.assigneeJiraUserId IS NULL");
       }
  else {
+        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+          query.append("(jiraIssue.assigneeJiraUserId IS NULL OR ");
+        }
         query.append("jiraIssue.assigneeJiraUserId = ?");
+        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       if (obc != null) {

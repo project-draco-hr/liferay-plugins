@@ -20,7 +20,13 @@
         query.append("jiraIssue.reporterJiraUserId IS NULL");
       }
  else {
+        if (reporterJiraUserId.equals(StringPool.BLANK)) {
+          query.append("(jiraIssue.reporterJiraUserId IS NULL OR ");
+        }
         query.append("jiraIssue.reporterJiraUserId = ?");
+        if (reporterJiraUserId.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       query.append("ORDER BY ");

@@ -11,7 +11,13 @@
         query.append("jiraAction.jiraUserId IS NULL");
       }
  else {
+        if (jiraUserId.equals(StringPool.BLANK)) {
+          query.append("(jiraAction.jiraUserId IS NULL OR ");
+        }
         query.append("jiraAction.jiraUserId = ?");
+        if (jiraUserId.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       if (obc != null) {

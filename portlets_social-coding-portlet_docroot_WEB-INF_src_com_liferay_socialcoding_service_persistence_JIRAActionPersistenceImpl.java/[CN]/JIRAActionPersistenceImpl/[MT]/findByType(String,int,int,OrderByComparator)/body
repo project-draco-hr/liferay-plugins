@@ -11,7 +11,13 @@
         query.append("jiraAction.type IS NULL");
       }
  else {
+        if (type.equals(StringPool.BLANK)) {
+          query.append("(jiraAction.type IS NULL OR ");
+        }
         query.append("jiraAction.type = ?");
+        if (type.equals(StringPool.BLANK)) {
+          query.append(")");
+        }
       }
       query.append(" ");
       if (obc != null) {
