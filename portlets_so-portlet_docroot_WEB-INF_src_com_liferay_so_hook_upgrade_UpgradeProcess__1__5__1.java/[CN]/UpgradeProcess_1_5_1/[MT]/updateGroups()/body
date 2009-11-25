@@ -1,0 +1,17 @@
+{
+  List<Group> groups=GroupLocalServiceUtil.getGroups(-1,-1);
+  for (  Group group : groups) {
+    Layout layout=null;
+    try {
+      layout=LayoutLocalServiceUtil.getLayout(group.getGroupId(),group.hasPrivateLayouts(),1);
+    }
+ catch (    Exception e) {
+      continue;
+    }
+    if (!layout.getFriendlyURL().equals("/home")) {
+      continue;
+    }
+    addPortlets(group,layout);
+    updateLayouts(group);
+  }
+}
