@@ -10,18 +10,18 @@
   }
   long companyId=group.getCompanyId();
   boolean privateLayout=group.hasPrivateLayouts();
-  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
-  for (  Layout layout : layouts) {
-    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),!privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layout.getName("en_US"),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,layout.getFriendlyURL());
-    LayoutLocalServiceUtil.updateLayout(targetLayout.getGroupId(),targetLayout.isPrivateLayout(),targetLayout.getLayoutId(),layout.getTypeSettings());
-    LayoutTypePortlet sourceLayoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  List<Layout> sourceLayouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
+  for (  Layout sourceLayout : sourceLayouts) {
+    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),!privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,sourceLayout.getName(LocaleUtil.getDefault().toString()),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,sourceLayout.getFriendlyURL());
+    LayoutLocalServiceUtil.updateLayout(targetLayout.getGroupId(),targetLayout.isPrivateLayout(),targetLayout.getLayoutId(),sourceLayout.getTypeSettings());
+    LayoutTypePortlet sourceLayoutTypePortlet=(LayoutTypePortlet)sourceLayout.getLayoutType();
     List<Portlet> sourcePortlets=sourceLayoutTypePortlet.getAllPortlets();
     for (    Portlet sourcePortlet : sourcePortlets) {
       String sourcePortletId=sourcePortlet.getPortletId();
       PortletPreferencesLocalServiceUtil.getPreferences(companyId,PortletKeys.PREFS_OWNER_ID_DEFAULT,PortletKeys.PREFS_OWNER_TYPE_LAYOUT,targetLayout.getPlid(),sourcePortletId);
-      PortletPreferences sourcePreferences=PortletPreferencesLocalServiceUtil.getPreferences(companyId,PortletKeys.PREFS_OWNER_ID_DEFAULT,PortletKeys.PREFS_OWNER_TYPE_LAYOUT,layout.getPlid(),sourcePortletId);
+      PortletPreferences sourcePreferences=PortletPreferencesLocalServiceUtil.getPreferences(companyId,PortletKeys.PREFS_OWNER_ID_DEFAULT,PortletKeys.PREFS_OWNER_TYPE_LAYOUT,sourceLayout.getPlid(),sourcePortletId);
       PortletPreferencesLocalServiceUtil.updatePreferences(PortletKeys.PREFS_OWNER_ID_DEFAULT,PortletKeys.PREFS_OWNER_TYPE_LAYOUT,targetLayout.getPlid(),sourcePortletId,sourcePreferences);
     }
-    LayoutLocalServiceUtil.deleteLayout(layout.getPlid());
+    LayoutLocalServiceUtil.deleteLayout(sourceLayout.getPlid());
   }
 }
