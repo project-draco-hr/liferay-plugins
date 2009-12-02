@@ -1,0 +1,20 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
+    TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
+    Set<PooledActor> pooledActors=taskInstance.getPooledActors();
+    if (pooledActors == null || pooledActors.isEmpty()) {
+      return null;
+    }
+    PooledActor pooledActor=pooledActors.iterator().next();
+    long roleId=GetterUtil.getLong(pooledActor.getActorId());
+    return UserLocalServiceUtil.getRoleUserIds(roleId);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}
