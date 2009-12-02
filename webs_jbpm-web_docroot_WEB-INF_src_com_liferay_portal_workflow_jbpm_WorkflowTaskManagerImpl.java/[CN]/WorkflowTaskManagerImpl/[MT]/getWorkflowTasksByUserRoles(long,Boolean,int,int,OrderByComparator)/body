@@ -1,0 +1,13 @@
+{
+  try {
+    List<Role> roles=RoleLocalServiceUtil.getUserRoles(userId);
+    long[] roleIds=StringUtil.split(ListUtil.toString(roles,"roleId"),0L);
+    return getWorkflowTasks(-1,roleIds,true,completed,start,end,orderByComparator);
+  }
+ catch (  WorkflowException we) {
+    throw we;
+  }
+catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}
