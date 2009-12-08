@@ -2,7 +2,12 @@
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     CustomSession customSession=new CustomSession(jbpmContext);
-    return customSession.countTaskInstances(-1,-1,ArrayUtil.toStringArray(actorIds),pooledActors,completed);
+    if (actorIds != null) {
+      return customSession.countTaskInstances(-1,-1,ArrayUtil.toStringArray(actorIds),pooledActors,completed);
+    }
+ else {
+      return customSession.countTaskInstances(-1,-1,null,pooledActors,completed);
+    }
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
