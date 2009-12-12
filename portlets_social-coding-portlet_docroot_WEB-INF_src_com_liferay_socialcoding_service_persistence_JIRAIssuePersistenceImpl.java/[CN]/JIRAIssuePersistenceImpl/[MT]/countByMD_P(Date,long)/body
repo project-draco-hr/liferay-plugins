@@ -5,19 +5,17 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(jiraIssue) ");
-      query.append("FROM JIRAIssue jiraIssue WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_JIRAISSUE_WHERE);
       if (modifiedDate == null) {
-        query.append("jiraIssue.modifiedDate > null");
+        query.append(_FINDER_COLUMN_MD_P_MODIFIEDDATE_1);
       }
  else {
-        query.append("jiraIssue.modifiedDate > ?");
+        query.append(_FINDER_COLUMN_MD_P_MODIFIEDDATE_2);
       }
-      query.append(" AND ");
-      query.append("jiraIssue.projectId = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      query.append(_FINDER_COLUMN_MD_P_PROJECTID_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (modifiedDate != null) {
         qPos.add(CalendarUtil.getTimestamp(modifiedDate));

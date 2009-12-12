@@ -5,15 +5,13 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT wallEntry FROM WallEntry wallEntry WHERE ");
-      query.append("wallEntry.groupId = ?");
-      query.append(" AND ");
-      query.append("wallEntry.userId = ?");
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("wallEntry.createDate DESC");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_SELECT_WALLENTRY_WHERE);
+      query.append(_FINDER_COLUMN_G_U_GROUPID_2);
+      query.append(_FINDER_COLUMN_G_U_USERID_2);
+      query.append(WallEntryModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(groupId);
       qPos.add(userId);

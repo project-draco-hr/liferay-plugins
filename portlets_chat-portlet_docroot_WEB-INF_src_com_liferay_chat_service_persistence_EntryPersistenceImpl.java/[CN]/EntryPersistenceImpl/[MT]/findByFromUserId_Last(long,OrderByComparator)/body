@@ -2,9 +2,10 @@
   int count=countByFromUserId(fromUserId);
   List<Entry> list=findByFromUserId(fromUserId,count - 1,count,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No Entry exists with the key {");
-    msg.append("fromUserId=" + fromUserId);
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("fromUserId=");
+    msg.append(fromUserId);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchEntryException(msg.toString());
   }

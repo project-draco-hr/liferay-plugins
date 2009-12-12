@@ -2,9 +2,10 @@
   int count=countByOnline(online);
   List<Status> list=findByOnline(online,count - 1,count,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No Status exists with the key {");
-    msg.append("online=" + online);
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("online=");
+    msg.append(online);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchStatusException(msg.toString());
   }

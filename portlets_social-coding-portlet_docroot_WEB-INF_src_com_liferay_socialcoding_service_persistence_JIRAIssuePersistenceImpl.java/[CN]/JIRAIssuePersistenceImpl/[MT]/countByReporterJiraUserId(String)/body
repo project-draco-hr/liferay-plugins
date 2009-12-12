@@ -5,23 +5,21 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(jiraIssue) ");
-      query.append("FROM JIRAIssue jiraIssue WHERE ");
+      StringBundler query=new StringBundler(2);
+      query.append(_SQL_COUNT_JIRAISSUE_WHERE);
       if (reporterJiraUserId == null) {
-        query.append("jiraIssue.reporterJiraUserId IS NULL");
+        query.append(_FINDER_COLUMN_REPORTERJIRAUSERID_REPORTERJIRAUSERID_1);
       }
  else {
         if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.reporterJiraUserId IS NULL OR ");
+          query.append(_FINDER_COLUMN_REPORTERJIRAUSERID_REPORTERJIRAUSERID_3);
         }
-        query.append("jiraIssue.reporterJiraUserId = ?");
-        if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_REPORTERJIRAUSERID_REPORTERJIRAUSERID_2);
         }
       }
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (reporterJiraUserId != null) {
         qPos.add(reporterJiraUserId);

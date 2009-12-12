@@ -5,13 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT entry FROM Entry entry WHERE ");
-      query.append("entry.createDate = ?");
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("entry.createDate DESC");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_ENTRY_WHERE);
+      query.append(_FINDER_COLUMN_CREATEDATE_CREATEDATE_2);
+      query.append(EntryModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(createDate);
       list=q.list();

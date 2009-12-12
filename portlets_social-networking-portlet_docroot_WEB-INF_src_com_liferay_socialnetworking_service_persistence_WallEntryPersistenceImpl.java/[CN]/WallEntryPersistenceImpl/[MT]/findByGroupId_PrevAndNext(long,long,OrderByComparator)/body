@@ -4,32 +4,23 @@
   Session session=null;
   try {
     session=openSession();
-    StringBuilder query=new StringBuilder();
-    query.append("SELECT wallEntry FROM WallEntry wallEntry WHERE ");
-    query.append("wallEntry.groupId = ?");
-    query.append(" ");
+    StringBundler query=null;
     if (obc != null) {
-      query.append("ORDER BY ");
-      String[] orderByFields=obc.getOrderByFields();
-      for (int i=0; i < orderByFields.length; i++) {
-        query.append("wallEntry.");
-        query.append(orderByFields[i]);
-        if (obc.isAscending()) {
-          query.append(" ASC");
-        }
- else {
-          query.append(" DESC");
-        }
-        if ((i + 1) < orderByFields.length) {
-          query.append(", ");
-        }
-      }
+      query=new StringBundler(3 + (obc.getOrderByFields().length * 3));
     }
  else {
-      query.append("ORDER BY ");
-      query.append("wallEntry.createDate DESC");
+      query=new StringBundler(3);
     }
-    Query q=session.createQuery(query.toString());
+    query.append(_SQL_SELECT_WALLENTRY_WHERE);
+    query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+    if (obc != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+    }
+ else {
+      query.append(WallEntryModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(groupId);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,wallEntry);

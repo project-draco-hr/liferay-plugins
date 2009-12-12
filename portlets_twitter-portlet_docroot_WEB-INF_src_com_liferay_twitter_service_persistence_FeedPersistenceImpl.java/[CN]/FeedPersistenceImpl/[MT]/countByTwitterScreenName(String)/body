@@ -5,23 +5,21 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(feed) ");
-      query.append("FROM Feed feed WHERE ");
+      StringBundler query=new StringBundler(2);
+      query.append(_SQL_COUNT_FEED_WHERE);
       if (twitterScreenName == null) {
-        query.append("feed.twitterScreenName IS NULL");
+        query.append(_FINDER_COLUMN_TWITTERSCREENNAME_TWITTERSCREENNAME_1);
       }
  else {
         if (twitterScreenName.equals(StringPool.BLANK)) {
-          query.append("(feed.twitterScreenName IS NULL OR ");
+          query.append(_FINDER_COLUMN_TWITTERSCREENNAME_TWITTERSCREENNAME_3);
         }
-        query.append("feed.twitterScreenName = ?");
-        if (twitterScreenName.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_TWITTERSCREENNAME_TWITTERSCREENNAME_2);
         }
       }
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (twitterScreenName != null) {
         qPos.add(twitterScreenName);

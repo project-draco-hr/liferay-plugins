@@ -1,11 +1,12 @@
 {
   List<Status> list=findByM_O(modifiedDate,online,0,1,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No Status exists with the key {");
-    msg.append("modifiedDate=" + modifiedDate);
-    msg.append(", ");
-    msg.append("online=" + online);
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("modifiedDate=");
+    msg.append(modifiedDate);
+    msg.append(", online=");
+    msg.append(online);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchStatusException(msg.toString());
   }

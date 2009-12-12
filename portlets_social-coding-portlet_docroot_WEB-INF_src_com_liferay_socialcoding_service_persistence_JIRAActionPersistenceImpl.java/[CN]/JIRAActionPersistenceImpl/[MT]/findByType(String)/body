@@ -5,24 +5,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT jiraAction FROM JIRAAction jiraAction WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_JIRAACTION_WHERE);
       if (type == null) {
-        query.append("jiraAction.type IS NULL");
+        query.append(_FINDER_COLUMN_TYPE_TYPE_1);
       }
  else {
         if (type.equals(StringPool.BLANK)) {
-          query.append("(jiraAction.type IS NULL OR ");
+          query.append(_FINDER_COLUMN_TYPE_TYPE_3);
         }
-        query.append("jiraAction.type = ?");
-        if (type.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_TYPE_TYPE_2);
         }
       }
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("jiraAction.modifiedDate DESC");
-      Query q=session.createQuery(query.toString());
+      query.append(JIRAActionModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (type != null) {
         qPos.add(type);

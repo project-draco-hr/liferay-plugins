@@ -5,14 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(entry) ");
-      query.append("FROM Entry entry WHERE ");
-      query.append("entry.createDate = ?");
-      query.append(" AND ");
-      query.append("entry.fromUserId = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_ENTRY_WHERE);
+      query.append(_FINDER_COLUMN_C_F_CREATEDATE_2);
+      query.append(_FINDER_COLUMN_C_F_FROMUSERID_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(createDate);
       qPos.add(fromUserId);

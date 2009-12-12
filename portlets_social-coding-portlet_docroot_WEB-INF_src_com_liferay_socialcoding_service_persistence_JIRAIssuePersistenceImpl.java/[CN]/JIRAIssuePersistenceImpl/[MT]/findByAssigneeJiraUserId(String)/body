@@ -5,24 +5,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_JIRAISSUE_WHERE);
       if (assigneeJiraUserId == null) {
-        query.append("jiraIssue.assigneeJiraUserId IS NULL");
+        query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_1);
       }
  else {
         if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.assigneeJiraUserId IS NULL OR ");
+          query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_3);
         }
-        query.append("jiraIssue.assigneeJiraUserId = ?");
-        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_2);
         }
       }
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("jiraIssue.modifiedDate DESC");
-      Query q=session.createQuery(query.toString());
+      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (assigneeJiraUserId != null) {
         qPos.add(assigneeJiraUserId);

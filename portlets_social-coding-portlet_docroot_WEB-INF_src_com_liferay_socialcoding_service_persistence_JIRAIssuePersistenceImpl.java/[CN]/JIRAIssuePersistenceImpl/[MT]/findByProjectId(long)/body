@@ -5,13 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
-      query.append("jiraIssue.projectId = ?");
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("jiraIssue.modifiedDate DESC");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+      query.append(_FINDER_COLUMN_PROJECTID_PROJECTID_2);
+      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);
       list=q.list();

@@ -4,43 +4,33 @@
   Session session=null;
   try {
     session=openSession();
-    StringBuilder query=new StringBuilder();
-    query.append("SELECT jiraChangeGroup FROM JIRAChangeGroup jiraChangeGroup WHERE ");
-    if (jiraUserId == null) {
-      query.append("jiraChangeGroup.jiraUserId IS NULL");
-    }
- else {
-      if (jiraUserId.equals(StringPool.BLANK)) {
-        query.append("(jiraChangeGroup.jiraUserId IS NULL OR ");
-      }
-      query.append("jiraChangeGroup.jiraUserId = ?");
-      if (jiraUserId.equals(StringPool.BLANK)) {
-        query.append(")");
-      }
-    }
-    query.append(" ");
+    StringBundler query=null;
     if (obc != null) {
-      query.append("ORDER BY ");
-      String[] orderByFields=obc.getOrderByFields();
-      for (int i=0; i < orderByFields.length; i++) {
-        query.append("jiraChangeGroup.");
-        query.append(orderByFields[i]);
-        if (obc.isAscending()) {
-          query.append(" ASC");
-        }
+      query=new StringBundler(3 + (obc.getOrderByFields().length * 3));
+    }
  else {
-          query.append(" DESC");
-        }
-        if ((i + 1) < orderByFields.length) {
-          query.append(", ");
-        }
+      query=new StringBundler(3);
+    }
+    query.append(_SQL_SELECT_JIRACHANGEGROUP_WHERE);
+    if (jiraUserId == null) {
+      query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_1);
+    }
+ else {
+      if (jiraUserId.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_2);
       }
     }
- else {
-      query.append("ORDER BY ");
-      query.append("jiraChangeGroup.createDate DESC");
+    if (obc != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
     }
-    Query q=session.createQuery(query.toString());
+ else {
+      query.append(JIRAChangeGroupModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
     QueryPos qPos=QueryPos.getInstance(q);
     if (jiraUserId != null) {
       qPos.add(jiraUserId);

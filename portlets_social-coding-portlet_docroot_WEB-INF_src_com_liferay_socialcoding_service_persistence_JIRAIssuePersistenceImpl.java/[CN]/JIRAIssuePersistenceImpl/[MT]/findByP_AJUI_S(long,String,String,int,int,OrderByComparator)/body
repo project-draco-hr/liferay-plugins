@@ -5,58 +5,45 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT jiraIssue FROM JIRAIssue jiraIssue WHERE ");
-      query.append("jiraIssue.projectId = ?");
-      query.append(" AND ");
-      if (assigneeJiraUserId == null) {
-        query.append("jiraIssue.assigneeJiraUserId IS NULL");
-      }
- else {
-        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.assigneeJiraUserId IS NULL OR ");
-        }
-        query.append("jiraIssue.assigneeJiraUserId = ?");
-        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-          query.append(")");
-        }
-      }
-      query.append(" AND ");
-      if (status == null) {
-        query.append("jiraIssue.status IS NULL");
-      }
- else {
-        if (status.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.status IS NULL OR ");
-        }
-        query.append("jiraIssue.status = ?");
-        if (status.equals(StringPool.BLANK)) {
-          query.append(")");
-        }
-      }
-      query.append(" ");
+      StringBundler query=null;
       if (obc != null) {
-        query.append("ORDER BY ");
-        String[] orderByFields=obc.getOrderByFields();
-        for (int i=0; i < orderByFields.length; i++) {
-          query.append("jiraIssue.");
-          query.append(orderByFields[i]);
-          if (obc.isAscending()) {
-            query.append(" ASC");
-          }
+        query=new StringBundler(5 + (obc.getOrderByFields().length * 3));
+      }
  else {
-            query.append(" DESC");
-          }
-          if ((i + 1) < orderByFields.length) {
-            query.append(", ");
-          }
+        query=new StringBundler(5);
+      }
+      query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+      query.append(_FINDER_COLUMN_P_AJUI_S_PROJECTID_2);
+      if (assigneeJiraUserId == null) {
+        query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_1);
+      }
+ else {
+        if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_2);
         }
       }
- else {
-        query.append("ORDER BY ");
-        query.append("jiraIssue.modifiedDate DESC");
+      if (status == null) {
+        query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_1);
       }
-      Query q=session.createQuery(query.toString());
+ else {
+        if (status.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_2);
+        }
+      }
+      if (obc != null) {
+        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+      }
+ else {
+        query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+      }
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);
       if (assigneeJiraUserId != null) {

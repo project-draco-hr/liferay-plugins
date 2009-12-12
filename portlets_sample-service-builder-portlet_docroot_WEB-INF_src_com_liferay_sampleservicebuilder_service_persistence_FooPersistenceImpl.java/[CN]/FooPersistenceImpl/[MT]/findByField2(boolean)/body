@@ -5,13 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT foo FROM Foo foo WHERE ");
-      query.append("foo.field2 = ?");
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("foo.field1 ASC");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_FOO_WHERE);
+      query.append(_FINDER_COLUMN_FIELD2_FIELD2_2);
+      query.append(FooModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(field2);
       list=q.list();

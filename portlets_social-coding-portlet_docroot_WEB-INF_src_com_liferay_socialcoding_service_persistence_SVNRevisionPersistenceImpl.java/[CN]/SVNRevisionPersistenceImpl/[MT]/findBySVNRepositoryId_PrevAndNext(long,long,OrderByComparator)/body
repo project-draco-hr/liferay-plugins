@@ -4,32 +4,23 @@
   Session session=null;
   try {
     session=openSession();
-    StringBuilder query=new StringBuilder();
-    query.append("SELECT svnRevision FROM SVNRevision svnRevision WHERE ");
-    query.append("svnRevision.svnRepositoryId = ?");
-    query.append(" ");
+    StringBundler query=null;
     if (obc != null) {
-      query.append("ORDER BY ");
-      String[] orderByFields=obc.getOrderByFields();
-      for (int i=0; i < orderByFields.length; i++) {
-        query.append("svnRevision.");
-        query.append(orderByFields[i]);
-        if (obc.isAscending()) {
-          query.append(" ASC");
-        }
- else {
-          query.append(" DESC");
-        }
-        if ((i + 1) < orderByFields.length) {
-          query.append(", ");
-        }
-      }
+      query=new StringBundler(3 + (obc.getOrderByFields().length * 3));
     }
  else {
-      query.append("ORDER BY ");
-      query.append("svnRevision.revisionNumber DESC");
+      query=new StringBundler(3);
     }
-    Query q=session.createQuery(query.toString());
+    query.append(_SQL_SELECT_SVNREVISION_WHERE);
+    query.append(_FINDER_COLUMN_SVNREPOSITORYID_SVNREPOSITORYID_2);
+    if (obc != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+    }
+ else {
+      query.append(SVNRevisionModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(svnRepositoryId);
     Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,svnRevision);

@@ -8,24 +8,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT memberRequest FROM MemberRequest memberRequest WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_MEMBERREQUEST_WHERE);
       if (key == null) {
-        query.append("memberRequest.key IS NULL");
+        query.append(_FINDER_COLUMN_KEY_KEY_1);
       }
  else {
         if (key.equals(StringPool.BLANK)) {
-          query.append("(memberRequest.key IS NULL OR ");
+          query.append(_FINDER_COLUMN_KEY_KEY_3);
         }
-        query.append("memberRequest.key = ?");
-        if (key.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_KEY_KEY_2);
         }
       }
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("memberRequest.createDate DESC");
-      Query q=session.createQuery(query.toString());
+      query.append(MemberRequestModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (key != null) {
         qPos.add(key);

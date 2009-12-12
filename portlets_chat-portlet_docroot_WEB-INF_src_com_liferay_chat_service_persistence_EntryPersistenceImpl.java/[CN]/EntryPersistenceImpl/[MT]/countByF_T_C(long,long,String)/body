@@ -5,27 +5,23 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(entry) ");
-      query.append("FROM Entry entry WHERE ");
-      query.append("entry.fromUserId = ?");
-      query.append(" AND ");
-      query.append("entry.toUserId = ?");
-      query.append(" AND ");
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_COUNT_ENTRY_WHERE);
+      query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
+      query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
       if (content == null) {
-        query.append("entry.content IS NULL");
+        query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
       }
  else {
         if (content.equals(StringPool.BLANK)) {
-          query.append("(entry.content IS NULL OR ");
+          query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
         }
-        query.append("entry.content = ?");
-        if (content.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
         }
       }
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(fromUserId);
       qPos.add(toUserId);

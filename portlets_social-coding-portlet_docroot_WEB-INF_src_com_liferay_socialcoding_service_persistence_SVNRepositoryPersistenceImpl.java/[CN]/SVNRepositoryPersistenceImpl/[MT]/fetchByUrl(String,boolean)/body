@@ -8,24 +8,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT svnRepository FROM SVNRepository svnRepository WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_SVNREPOSITORY_WHERE);
       if (url == null) {
-        query.append("svnRepository.url IS NULL");
+        query.append(_FINDER_COLUMN_URL_URL_1);
       }
  else {
         if (url.equals(StringPool.BLANK)) {
-          query.append("(svnRepository.url IS NULL OR ");
+          query.append(_FINDER_COLUMN_URL_URL_3);
         }
-        query.append("svnRepository.url = ?");
-        if (url.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_URL_URL_2);
         }
       }
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("svnRepository.url ASC");
-      Query q=session.createQuery(query.toString());
+      query.append(SVNRepositoryModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (url != null) {
         qPos.add(url);

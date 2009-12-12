@@ -5,38 +5,33 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(jiraIssue) ");
-      query.append("FROM JIRAIssue jiraIssue WHERE ");
-      query.append("jiraIssue.projectId = ?");
-      query.append(" AND ");
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_COUNT_JIRAISSUE_WHERE);
+      query.append(_FINDER_COLUMN_P_RJUI_S_PROJECTID_2);
       if (reporterJiraUserId == null) {
-        query.append("jiraIssue.reporterJiraUserId IS NULL");
+        query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_1);
       }
  else {
         if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.reporterJiraUserId IS NULL OR ");
+          query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_3);
         }
-        query.append("jiraIssue.reporterJiraUserId = ?");
-        if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_2);
         }
       }
-      query.append(" AND ");
       if (status == null) {
-        query.append("jiraIssue.status IS NULL");
+        query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_1);
       }
  else {
         if (status.equals(StringPool.BLANK)) {
-          query.append("(jiraIssue.status IS NULL OR ");
+          query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_3);
         }
-        query.append("jiraIssue.status = ?");
-        if (status.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_2);
         }
       }
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);
       if (reporterJiraUserId != null) {

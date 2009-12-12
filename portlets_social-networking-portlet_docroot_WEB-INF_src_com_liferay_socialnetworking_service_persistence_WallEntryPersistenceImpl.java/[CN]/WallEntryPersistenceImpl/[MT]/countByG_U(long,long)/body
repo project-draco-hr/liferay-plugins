@@ -5,14 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(wallEntry) ");
-      query.append("FROM WallEntry wallEntry WHERE ");
-      query.append("wallEntry.groupId = ?");
-      query.append(" AND ");
-      query.append("wallEntry.userId = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_WALLENTRY_WHERE);
+      query.append(_FINDER_COLUMN_G_U_GROUPID_2);
+      query.append(_FINDER_COLUMN_G_U_USERID_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(groupId);
       qPos.add(userId);

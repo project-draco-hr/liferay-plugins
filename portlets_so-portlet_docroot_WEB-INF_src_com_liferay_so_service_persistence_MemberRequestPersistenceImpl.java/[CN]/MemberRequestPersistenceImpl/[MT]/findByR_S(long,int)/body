@@ -5,15 +5,13 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT memberRequest FROM MemberRequest memberRequest WHERE ");
-      query.append("memberRequest.receiverUserId = ?");
-      query.append(" AND ");
-      query.append("memberRequest.status = ?");
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("memberRequest.createDate DESC");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_SELECT_MEMBERREQUEST_WHERE);
+      query.append(_FINDER_COLUMN_R_S_RECEIVERUSERID_2);
+      query.append(_FINDER_COLUMN_R_S_STATUS_2);
+      query.append(MemberRequestModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(receiverUserId);
       qPos.add(status);

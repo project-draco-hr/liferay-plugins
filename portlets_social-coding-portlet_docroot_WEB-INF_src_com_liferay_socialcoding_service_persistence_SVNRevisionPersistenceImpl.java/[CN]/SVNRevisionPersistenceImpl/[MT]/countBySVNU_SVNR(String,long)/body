@@ -5,25 +5,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(svnRevision) ");
-      query.append("FROM SVNRevision svnRevision WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_SVNREVISION_WHERE);
       if (svnUserId == null) {
-        query.append("svnRevision.svnUserId IS NULL");
+        query.append(_FINDER_COLUMN_SVNU_SVNR_SVNUSERID_1);
       }
  else {
         if (svnUserId.equals(StringPool.BLANK)) {
-          query.append("(svnRevision.svnUserId IS NULL OR ");
+          query.append(_FINDER_COLUMN_SVNU_SVNR_SVNUSERID_3);
         }
-        query.append("svnRevision.svnUserId = ?");
-        if (svnUserId.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_SVNU_SVNR_SVNUSERID_2);
         }
       }
-      query.append(" AND ");
-      query.append("svnRevision.svnRepositoryId = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      query.append(_FINDER_COLUMN_SVNU_SVNR_SVNREPOSITORYID_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (svnUserId != null) {
         qPos.add(svnUserId);

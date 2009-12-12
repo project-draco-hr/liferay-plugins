@@ -1,9 +1,10 @@
 {
   List<MemberRequest> list=findByReceiverUserId(receiverUserId,0,1,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No MemberRequest exists with the key {");
-    msg.append("receiverUserId=" + receiverUserId);
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("receiverUserId=");
+    msg.append(receiverUserId);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchMemberRequestException(msg.toString());
   }

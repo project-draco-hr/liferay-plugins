@@ -5,14 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(meetupsRegistration) ");
-      query.append("FROM MeetupsRegistration meetupsRegistration WHERE ");
-      query.append("meetupsRegistration.meetupsEntryId = ?");
-      query.append(" AND ");
-      query.append("meetupsRegistration.status = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_MEETUPSREGISTRATION_WHERE);
+      query.append(_FINDER_COLUMN_ME_S_MEETUPSENTRYID_2);
+      query.append(_FINDER_COLUMN_ME_S_STATUS_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(meetupsEntryId);
       qPos.add(status);

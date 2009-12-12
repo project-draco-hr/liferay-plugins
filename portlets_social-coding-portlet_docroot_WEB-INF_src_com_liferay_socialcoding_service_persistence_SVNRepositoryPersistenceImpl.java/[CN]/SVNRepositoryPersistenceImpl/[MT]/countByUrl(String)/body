@@ -5,23 +5,21 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(svnRepository) ");
-      query.append("FROM SVNRepository svnRepository WHERE ");
+      StringBundler query=new StringBundler(2);
+      query.append(_SQL_COUNT_SVNREPOSITORY_WHERE);
       if (url == null) {
-        query.append("svnRepository.url IS NULL");
+        query.append(_FINDER_COLUMN_URL_URL_1);
       }
  else {
         if (url.equals(StringPool.BLANK)) {
-          query.append("(svnRepository.url IS NULL OR ");
+          query.append(_FINDER_COLUMN_URL_URL_3);
         }
-        query.append("svnRepository.url = ?");
-        if (url.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_URL_URL_2);
         }
       }
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (url != null) {
         qPos.add(url);

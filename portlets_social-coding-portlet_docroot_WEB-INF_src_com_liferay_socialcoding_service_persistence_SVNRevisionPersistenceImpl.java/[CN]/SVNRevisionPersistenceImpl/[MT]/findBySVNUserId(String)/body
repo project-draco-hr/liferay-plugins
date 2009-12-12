@@ -5,24 +5,22 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT svnRevision FROM SVNRevision svnRevision WHERE ");
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_SVNREVISION_WHERE);
       if (svnUserId == null) {
-        query.append("svnRevision.svnUserId IS NULL");
+        query.append(_FINDER_COLUMN_SVNUSERID_SVNUSERID_1);
       }
  else {
         if (svnUserId.equals(StringPool.BLANK)) {
-          query.append("(svnRevision.svnUserId IS NULL OR ");
+          query.append(_FINDER_COLUMN_SVNUSERID_SVNUSERID_3);
         }
-        query.append("svnRevision.svnUserId = ?");
-        if (svnUserId.equals(StringPool.BLANK)) {
-          query.append(")");
+ else {
+          query.append(_FINDER_COLUMN_SVNUSERID_SVNUSERID_2);
         }
       }
-      query.append(" ");
-      query.append("ORDER BY ");
-      query.append("svnRevision.revisionNumber DESC");
-      Query q=session.createQuery(query.toString());
+      query.append(SVNRevisionModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       if (svnUserId != null) {
         qPos.add(svnUserId);

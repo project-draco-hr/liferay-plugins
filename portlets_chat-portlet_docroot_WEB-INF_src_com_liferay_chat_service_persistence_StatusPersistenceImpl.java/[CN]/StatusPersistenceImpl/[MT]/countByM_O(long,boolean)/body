@@ -5,14 +5,12 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(status) ");
-      query.append("FROM Status status WHERE ");
-      query.append("status.modifiedDate = ?");
-      query.append(" AND ");
-      query.append("status.online = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_COUNT_STATUS_WHERE);
+      query.append(_FINDER_COLUMN_M_O_MODIFIEDDATE_2);
+      query.append(_FINDER_COLUMN_M_O_ONLINE_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(modifiedDate);
       qPos.add(online);

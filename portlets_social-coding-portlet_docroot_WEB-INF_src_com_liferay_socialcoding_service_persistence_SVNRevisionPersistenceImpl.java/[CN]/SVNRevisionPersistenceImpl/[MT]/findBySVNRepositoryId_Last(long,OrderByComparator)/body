@@ -2,9 +2,10 @@
   int count=countBySVNRepositoryId(svnRepositoryId);
   List<SVNRevision> list=findBySVNRepositoryId(svnRepositoryId,count - 1,count,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No SVNRevision exists with the key {");
-    msg.append("svnRepositoryId=" + svnRepositoryId);
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("svnRepositoryId=");
+    msg.append(svnRepositoryId);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchSVNRevisionException(msg.toString());
   }

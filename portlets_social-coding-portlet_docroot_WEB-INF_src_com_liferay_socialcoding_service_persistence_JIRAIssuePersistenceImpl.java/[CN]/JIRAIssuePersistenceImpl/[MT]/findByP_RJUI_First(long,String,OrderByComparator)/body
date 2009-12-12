@@ -1,11 +1,12 @@
 {
   List<JIRAIssue> list=findByP_RJUI(projectId,reporterJiraUserId,0,1,obc);
   if (list.isEmpty()) {
-    StringBuilder msg=new StringBuilder();
-    msg.append("No JIRAIssue exists with the key {");
-    msg.append("projectId=" + projectId);
-    msg.append(", ");
-    msg.append("reporterJiraUserId=" + reporterJiraUserId);
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("projectId=");
+    msg.append(projectId);
+    msg.append(", reporterJiraUserId=");
+    msg.append(reporterJiraUserId);
     msg.append(StringPool.CLOSE_CURLY_BRACE);
     throw new NoSuchJIRAIssueException(msg.toString());
   }

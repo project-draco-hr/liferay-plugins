@@ -5,12 +5,11 @@
     Session session=null;
     try {
       session=openSession();
-      StringBuilder query=new StringBuilder();
-      query.append("SELECT COUNT(foo) ");
-      query.append("FROM Foo foo WHERE ");
-      query.append("foo.field2 = ?");
-      query.append(" ");
-      Query q=session.createQuery(query.toString());
+      StringBundler query=new StringBundler(2);
+      query.append(_SQL_COUNT_FOO_WHERE);
+      query.append(_FINDER_COLUMN_FIELD2_FIELD2_2);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(field2);
       count=(Long)q.uniqueResult();
