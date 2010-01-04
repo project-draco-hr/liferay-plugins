@@ -12,6 +12,14 @@
     if (!RoleLocalServiceUtil.hasUserRole(assigneeUserId,roleId)) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " cannot be assigned to user "+ assigneeUserId);
     }
+    WorkflowLogImpl workflowLog=new WorkflowLogImpl();
+    workflowLog.setComment(comment);
+    workflowLog.setCreateDate(new Date());
+    workflowLog.setPreviousUserId(GetterUtil.getLong(taskInstance.getActorId()));
+    workflowLog.setTaskInstance(taskInstance);
+    workflowLog.setType(WorkflowLog.TASK_ASSIGN);
+    workflowLog.setUserId(assigneeUserId);
+    jbpmContext.getSession().save(workflowLog);
     taskInstance.setActorId(String.valueOf(assigneeUserId));
     taskInstance.addComment(comment);
     if (context != null) {

@@ -1,0 +1,21 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    Session session=jbpmContext.getSession();
+    Criteria criteria=session.createCriteria(WorkflowLogImpl.class);
+    criteria.add(Restrictions.eq("taskInstance.id",workflowInstanceId));
+    criteria.setProjection(Projections.rowCount());
+    Iterator<Integer> it=criteria.list().iterator();
+    int count=0;
+    if (it.hasNext()) {
+      count=it.next();
+    }
+    return count;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}
