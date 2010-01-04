@@ -3,6 +3,7 @@
   try {
     TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
     TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
+    String oldActorId=taskInstance.getActorId();
     Set<PooledActor> pooledActors=taskInstance.getPooledActors();
     if ((pooledActors == null) || pooledActors.isEmpty()) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " has not been assigned to a role");
@@ -12,20 +13,21 @@
     if (!RoleLocalServiceUtil.hasUserRole(assigneeUserId,roleId)) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " cannot be assigned to user "+ assigneeUserId);
     }
-    WorkflowLogImpl workflowLog=new WorkflowLogImpl();
-    workflowLog.setComment(comment);
-    workflowLog.setCreateDate(new Date());
-    workflowLog.setPreviousUserId(GetterUtil.getLong(taskInstance.getActorId()));
-    workflowLog.setTaskInstance(taskInstance);
-    workflowLog.setType(WorkflowLog.TASK_ASSIGN);
-    workflowLog.setUserId(assigneeUserId);
-    jbpmContext.getSession().save(workflowLog);
     taskInstance.setActorId(String.valueOf(assigneeUserId));
     taskInstance.addComment(comment);
     if (context != null) {
       taskInstance.addVariables(context);
     }
     jbpmContext.save(taskInstance);
+    WorkflowLogImpl workflowLogImpl=new WorkflowLogImpl();
+    workflowLogImpl.setComment(comment);
+    workflowLogImpl.setCreateDate(new Date());
+    workflowLogImpl.setPreviousUserId(GetterUtil.getLong(oldActorId));
+    workflowLogImpl.setTaskInstance(taskInstance);
+    workflowLogImpl.setType(WorkflowLog.TASK_ASSIGN);
+    workflowLogImpl.setUserId(assigneeUserId);
+    Session session=jbpmContext.getSession();
+    session.save(workflowLogImpl);
     return new WorkflowTaskImpl(taskInstance);
   }
  catch (  Exception e) {

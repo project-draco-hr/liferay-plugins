@@ -3,17 +3,12 @@
   try {
     TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
     TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
+    Token oldToken=taskInstance.getToken();
+    Node oldNode=oldToken.getNode();
     long actorId=GetterUtil.getLong(taskInstance.getActorId());
     if (actorId != userId) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " is not assigned to user "+ userId);
     }
-    WorkflowLogImpl workflowLog=new WorkflowLogImpl();
-    workflowLog.setCreateDate(new Date());
-    workflowLog.setComment(comment);
-    workflowLog.setPreviousState(taskInstance.getToken().getNode().getName());
-    workflowLog.setTaskInstance(taskInstance);
-    workflowLog.setType(WorkflowLog.TRANSITION);
-    workflowLog.setUserId(GetterUtil.getLong(taskInstance.getActorId()));
     taskInstance.addComment(comment);
     if (context != null) {
       taskInstance.addVariables(context);
@@ -25,8 +20,18 @@
       taskInstance.end(transitionName);
     }
     jbpmContext.save(taskInstance);
-    workflowLog.setState(taskInstance.getToken().getNode().getName());
-    jbpmContext.getSession().save(workflowLog);
+    Token token=taskInstance.getToken();
+    Node node=token.getNode();
+    WorkflowLogImpl workflowLogImpl=new WorkflowLogImpl();
+    workflowLogImpl.setCreateDate(new Date());
+    workflowLogImpl.setComment(comment);
+    workflowLogImpl.setPreviousState(oldNode.getName());
+    workflowLogImpl.setState(node.getName());
+    workflowLogImpl.setTaskInstance(taskInstance);
+    workflowLogImpl.setType(WorkflowLog.TRANSITION);
+    workflowLogImpl.setUserId(actorId);
+    Session session=jbpmContext.getSession();
+    session.save(workflowLogImpl);
     return new WorkflowTaskImpl(taskInstance);
   }
  catch (  Exception e) {
