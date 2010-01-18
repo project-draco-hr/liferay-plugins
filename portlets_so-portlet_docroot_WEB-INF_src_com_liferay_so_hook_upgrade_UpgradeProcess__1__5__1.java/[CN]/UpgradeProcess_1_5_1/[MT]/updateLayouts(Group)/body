@@ -11,9 +11,8 @@
   long companyId=group.getCompanyId();
   boolean privateLayout=group.hasPrivateLayouts();
   List<Layout> sourceLayouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
-  ServiceContext serviceContext=new ServiceContext();
   for (  Layout sourceLayout : sourceLayouts) {
-    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),!privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,sourceLayout.getName(LocaleUtil.getDefault().toString()),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,sourceLayout.getFriendlyURL(),serviceContext);
+    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),!privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,sourceLayout.getName(LocaleUtil.getDefault().toString()),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,sourceLayout.getFriendlyURL());
     LayoutLocalServiceUtil.updateLayout(targetLayout.getGroupId(),targetLayout.isPrivateLayout(),targetLayout.getLayoutId(),sourceLayout.getTypeSettings());
     LayoutTypePortlet sourceLayoutTypePortlet=(LayoutTypePortlet)sourceLayout.getLayoutType();
     List<Portlet> sourcePortlets=sourceLayoutTypePortlet.getAllPortlets();
