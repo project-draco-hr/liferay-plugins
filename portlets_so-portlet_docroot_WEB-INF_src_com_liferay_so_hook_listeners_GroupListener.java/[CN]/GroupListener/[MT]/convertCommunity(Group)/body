@@ -5,7 +5,8 @@
   }
   List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),!privateLayout);
   for (  Layout layout : layouts) {
-    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layout.getName("en_US"),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,layout.getFriendlyURL());
+    ServiceContext serviceContext=new ServiceContext();
+    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layout.getName("en_US"),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,layout.getFriendlyURL(),serviceContext);
     copyLayout(layout,targetLayout);
     LayoutLocalServiceUtil.deleteLayout(layout.getPlid());
   }
