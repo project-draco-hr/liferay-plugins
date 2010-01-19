@@ -1,0 +1,18 @@
+{
+  if (isEscapedModel()) {
+    return this;
+  }
+ else {
+    OpenSocialGadget model=new OpenSocialGadgetClp();
+    model.setEscapedModel(true);
+    model.setOpenSocialGadgetId(getOpenSocialGadgetId());
+    model.setCompanyId(getCompanyId());
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setName(HtmlUtil.escape(getName()));
+    model.setUrl(HtmlUtil.escape(getUrl()));
+    model.setXml(HtmlUtil.escape(getXml()));
+    model=(OpenSocialGadget)Proxy.newProxyInstance(OpenSocialGadget.class.getClassLoader(),new Class[]{OpenSocialGadget.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}
