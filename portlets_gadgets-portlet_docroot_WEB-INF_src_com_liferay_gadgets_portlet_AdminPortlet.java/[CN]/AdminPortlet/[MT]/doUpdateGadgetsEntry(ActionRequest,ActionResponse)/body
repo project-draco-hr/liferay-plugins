@@ -1,0 +1,13 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long gadgetsEntryId=ParamUtil.getLong(actionRequest,"gadgetsEntryId");
+  String name=ParamUtil.getString(actionRequest,"name");
+  String url=ParamUtil.getString(actionRequest,"url");
+  String xml=ParamUtil.getString(actionRequest,"xml");
+  if (gadgetsEntryId <= 0) {
+    GadgetsEntryLocalServiceUtil.addGadgetsEntry(themeDisplay.getCompanyId(),name,url,xml);
+  }
+ else {
+    GadgetsEntryLocalServiceUtil.updateGadgetsEntry(gadgetsEntryId,name,xml);
+  }
+}

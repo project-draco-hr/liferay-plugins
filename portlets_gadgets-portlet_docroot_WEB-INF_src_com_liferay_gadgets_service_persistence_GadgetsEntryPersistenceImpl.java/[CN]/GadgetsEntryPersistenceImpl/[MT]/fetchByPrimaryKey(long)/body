@@ -1,0 +1,20 @@
+{
+  GadgetsEntry gadgetsEntry=(GadgetsEntry)EntityCacheUtil.getResult(GadgetsEntryModelImpl.ENTITY_CACHE_ENABLED,GadgetsEntryImpl.class,gadgetEntryId,this);
+  if (gadgetsEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      gadgetsEntry=(GadgetsEntry)session.get(GadgetsEntryImpl.class,new Long(gadgetEntryId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (gadgetsEntry != null) {
+        cacheResult(gadgetsEntry);
+      }
+      closeSession(session);
+    }
+  }
+  return gadgetsEntry;
+}
