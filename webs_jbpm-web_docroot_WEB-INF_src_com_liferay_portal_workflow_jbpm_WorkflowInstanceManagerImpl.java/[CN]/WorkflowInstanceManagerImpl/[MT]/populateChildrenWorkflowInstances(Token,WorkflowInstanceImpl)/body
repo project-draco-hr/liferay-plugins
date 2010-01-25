@@ -1,0 +1,20 @@
+{
+  Stack<ObjectValuePair<Token,WorkflowInstanceImpl>> objectValuePairs=new Stack<ObjectValuePair<Token,WorkflowInstanceImpl>>();
+  objectValuePairs.push(new ObjectValuePair<Token,WorkflowInstanceImpl>(token,workflowInstanceImpl));
+  while (!objectValuePairs.isEmpty()) {
+    ObjectValuePair<Token,WorkflowInstanceImpl> objectValuePair=objectValuePairs.pop();
+    Token parentToken=objectValuePair.getKey();
+    WorkflowInstanceImpl parentWorkflowInstanceImpl=objectValuePair.getValue();
+    Map<String,Token> children=parentToken.getChildren();
+    if (children == null) {
+      continue;
+    }
+    for (    Token childToken : children.values()) {
+      WorkflowInstanceImpl childWorkflowInstanceImpl=new WorkflowInstanceImpl(childToken);
+      parentWorkflowInstanceImpl.addChildWorkflowInstance(childWorkflowInstanceImpl);
+      childWorkflowInstanceImpl.setParentWorkflowInstance(parentWorkflowInstanceImpl);
+      objectValuePairs.push(new ObjectValuePair<Token,WorkflowInstanceImpl>(childToken,childWorkflowInstanceImpl));
+    }
+  }
+  Collections.sort(workflowInstanceImpl.getChildrenWorkflowInstances(),new WorkflowInstanceStateComparator(true));
+}
