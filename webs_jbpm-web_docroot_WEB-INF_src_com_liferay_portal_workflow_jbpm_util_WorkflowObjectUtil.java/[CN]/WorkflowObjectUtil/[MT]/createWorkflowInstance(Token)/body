@@ -1,0 +1,16 @@
+{
+  ProcessInstance processInstance=token.getProcessInstance();
+  Map<String,Object> context=processInstance.getContextInstance().getVariables(token);
+  if (context == null) {
+    context=Collections.EMPTY_MAP;
+  }
+  context=Collections.unmodifiableMap(context);
+  Date endDate=token.getEnd();
+  Date startDate=token.getStart();
+  String state=token.getNode().getName();
+  ProcessDefinition processDefinition=processInstance.getProcessDefinition();
+  String workflowDefinitionName=processDefinition.getName();
+  int workflowDefinitionVersion=processDefinition.getVersion();
+  long workflowInstanceId=token.getId();
+  return new WorkflowInstanceImpl(workflowInstanceId,context,endDate,startDate,state,workflowDefinitionName,workflowDefinitionVersion);
+}
