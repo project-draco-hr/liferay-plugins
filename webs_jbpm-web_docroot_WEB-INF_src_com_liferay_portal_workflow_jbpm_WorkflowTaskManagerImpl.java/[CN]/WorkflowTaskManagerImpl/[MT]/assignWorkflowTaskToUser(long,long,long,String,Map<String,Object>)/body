@@ -23,9 +23,9 @@
     workflowLogImpl.setComment(comment);
     workflowLogImpl.setCreateDate(new Date());
     workflowLogImpl.setPreviousUserId(GetterUtil.getLong(oldActorId));
+    workflowLogImpl.setTaskInstance(taskInstance);
     workflowLogImpl.setType(WorkflowLog.TASK_ASSIGN);
     workflowLogImpl.setUserId(assigneeUserId);
-    workflowLogImpl.setWorkflowInstanceId(taskInstance.getId());
     Session session=jbpmContext.getSession();
     session.save(workflowLogImpl);
     return new WorkflowTaskImpl(taskInstance);
