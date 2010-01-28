@@ -1,0 +1,21 @@
+{
+  if (Validator.isNull(highlights)) {
+    return StringPool.BLANK;
+  }
+  String key=(String)doc.getFieldValue(Field.UID);
+  List<String> snippets=highlights.get(key).get(Field.CONTENT);
+  String snippet=StringUtil.merge(snippets,"...");
+  if (Validator.isNotNull(snippet)) {
+    snippet=snippet + "...";
+  }
+ else {
+    snippet=StringPool.BLANK;
+  }
+  Matcher m=Pattern.compile("<em>(.*?)</em>").matcher(snippet);
+  while (m.find()) {
+    queryTerms.add(m.group(1));
+  }
+  snippet=StringUtil.replace(snippet,"<em>","");
+  snippet=StringUtil.replace(snippet,"</em>","");
+  return snippet;
+}

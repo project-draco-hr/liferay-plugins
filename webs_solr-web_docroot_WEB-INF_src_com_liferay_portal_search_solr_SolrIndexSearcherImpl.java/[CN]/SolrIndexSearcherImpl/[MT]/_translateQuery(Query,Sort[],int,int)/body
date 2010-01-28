@@ -1,0 +1,41 @@
+{
+  try {
+    SolrQuery solrQuery=new SolrQuery();
+    String queryString=query.toString();
+    queryString=queryString.replaceAll(":\\*",":");
+    solrQuery.setQuery(queryString);
+    solrQuery.setIncludeScore(true);
+    if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+      solrQuery.setRows(0);
+    }
+ else {
+      solrQuery.setStart(start);
+      solrQuery.setRows(end - start);
+    }
+    if ((sorts != null) && (sorts.length > 0)) {
+      for (int i=0; i < sorts.length; i++) {
+        Sort sortField=sorts[i];
+        if (sortField == null) {
+          continue;
+        }
+        String sortFieldName=sortField.getFieldName();
+        if (sortFieldName == null) {
+          sortFieldName="score";
+        }
+        ORDER order=ORDER.asc;
+        if (sortField.isReverse()) {
+          order=ORDER.desc;
+        }
+        solrQuery.addSortField(sortFieldName,order);
+      }
+    }
+    solrQuery.setHighlightFragsize(80);
+    solrQuery.setHighlightSnippets(3);
+    solrQuery.setHighlight(true);
+    return solrQuery;
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+    throw new SearchException(e.getMessage());
+  }
+}
