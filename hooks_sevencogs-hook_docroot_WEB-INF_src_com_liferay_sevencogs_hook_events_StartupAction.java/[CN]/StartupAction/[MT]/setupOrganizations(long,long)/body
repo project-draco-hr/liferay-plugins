@@ -161,4 +161,13 @@
   serviceContext.setAssetTagNames(new String[]{"documents","sharing"});
   journalArticle=addJournalArticle(defaultUserId,group.getGroupId(),"Shared Documents","shared_docs.xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
+  parentOrganizationId=organization.getOrganizationId();
+  name="7Cogs, Inc. Mobile";
+  organization=OrganizationLocalServiceUtil.addOrganization(userId,parentOrganizationId,name,type,recursable,regionId,countryId,statusId,comments,serviceContext);
+  group=organization.getGroup();
+  GroupLocalServiceUtil.updateFriendlyURL(group.getGroupId(),"/7cogs-mobile");
+  serviceContext.setScopeGroupId(group.getGroupId());
+  LayoutSetLocalServiceUtil.updateLogo(group.getGroupId(),false,true,getInputStream("/images/seven_cogs_log.png"));
+  LayoutSetLocalServiceUtil.updateLookAndFeel(group.getGroupId(),false,"sevencogsmobile_WAR_sevencogsmobiletheme","01","",false);
+  layout=addLayout(group,"Home",false,"/home","1_column");
 }
