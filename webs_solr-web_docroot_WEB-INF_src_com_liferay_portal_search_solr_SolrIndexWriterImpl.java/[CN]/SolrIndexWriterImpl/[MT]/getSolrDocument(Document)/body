@@ -1,10 +1,10 @@
 {
-  SolrInputDocument solrDoc=new SolrInputDocument();
-  Collection<Field> fields=doc.getFields().values();
+  SolrInputDocument solrInputDocument=new SolrInputDocument();
+  Collection<Field> fields=document.getFields().values();
   for (  Field field : fields) {
     String name=field.getName();
     float boost=field.getBoost();
-    StringBuffer sb=new StringBuffer();
+    StringBuilder sb=new StringBuilder();
     for (    String value : field.getValues()) {
       if (Validator.isNull(value)) {
         continue;
@@ -13,8 +13,8 @@
       sb.append(StringPool.SPACE);
     }
     if (sb.length() > 0) {
-      solrDoc.addField(name,sb.toString().trim(),boost);
+      solrInputDocument.addField(name,sb.toString().trim(),boost);
     }
   }
-  return solrDoc;
+  return solrInputDocument;
 }

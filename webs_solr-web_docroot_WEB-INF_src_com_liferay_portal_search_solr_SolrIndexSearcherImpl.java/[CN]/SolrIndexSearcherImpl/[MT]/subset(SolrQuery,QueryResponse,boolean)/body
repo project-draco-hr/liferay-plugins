@@ -1,12 +1,12 @@
 {
   long startTime=System.currentTimeMillis();
   Hits subset=new HitsImpl();
-  SolrDocumentList results=response.getResults();
+  SolrDocumentList results=queryResponse.getResults();
   long length=results.getNumFound();
   if (allResults && (length > 0)) {
     solrQuery.setRows((int)length);
     results=_solrServer.query(solrQuery).getResults();
-    return subset(solrQuery,response,false);
+    return subset(solrQuery,queryResponse,false);
   }
   float maxScore=results.getMaxScore();
   int subsetTotal=results.size();
@@ -14,28 +14,28 @@
   String[] subsetSnippets=new String[subsetTotal];
   float[] subsetScores=new float[subsetTotal];
   int j=0;
-  Map<String,Map<String,List<String>>> highlights=response.getHighlighting();
+  Map<String,Map<String,List<String>>> highlights=queryResponse.getHighlighting();
   Set<String> queryTerms=new HashSet<String>();
   for (  SolrDocument solrDocument : results) {
-    Document doc=new DocumentImpl();
+    Document document=new DocumentImpl();
     Collection<String> names=solrDocument.getFieldNames();
     for (    String name : names) {
       Field field=new Field(name,solrDocument.getFieldValue(name).toString(),false);
-      doc.add(field);
+      document.add(field);
     }
     float score=Float.valueOf(solrDocument.getFieldValue("score").toString());
-    subsetDocs[j]=doc;
+    subsetDocs[j]=document;
     subsetSnippets[j]=getSnippet(solrDocument,queryTerms,highlights);
     subsetScores[j]=score / maxScore;
     j++;
   }
-  subset.setLength((int)length);
+  float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
   subset.setDocs(subsetDocs);
+  subset.setLength((int)length);
+  subset.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
   subset.setScores(subsetScores);
+  subset.setSearchTime(searchTime);
   subset.setSnippets(subsetSnippets);
   subset.setStart(startTime);
-  subset.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
-  float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
-  subset.setSearchTime(searchTime);
   return subset;
 }

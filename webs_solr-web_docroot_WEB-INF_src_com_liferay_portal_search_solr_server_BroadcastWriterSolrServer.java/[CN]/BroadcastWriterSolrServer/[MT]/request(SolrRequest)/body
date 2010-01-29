@@ -1,15 +1,15 @@
 {
   NamedList<Object> response=null;
-  if (!(request instanceof UpdateRequest)) {
+  if (!(solrRequest instanceof UpdateRequest)) {
     throw new IllegalStateException("This SolrServer should be used only to update requests");
   }
-  for (  SolrServerWrapper serverWrapper : _serverWrappers) {
+  for (  SolrServerWrapper solrServerWrapper : _solrServerWrappers) {
     try {
-      SolrServer server=serverWrapper.getServer();
-      response=server.request(request);
+      SolrServer server=solrServerWrapper.getServer();
+      response=server.request(solrRequest);
     }
  catch (    Exception e) {
-      _log.error("Could not send request to server " + serverWrapper.getId(),e);
+      _log.error("Could not send request to server " + solrServerWrapper.getId(),e);
     }
   }
   if (response == null) {

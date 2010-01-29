@@ -1,19 +1,19 @@
 {
-  List<SolrServerWrapper> serverWrappers=_factory.getLiveServers();
-  for (  SolrServerWrapper serverWrapper : serverWrappers) {
-    SolrServer server=_factory.getLiveServer(serverWrapper);
-    if (server == null) {
+  List<SolrServerWrapper> solrServerWrappers=_solrServerFactory.getLiveServers();
+  for (  SolrServerWrapper solrServerWrapper : solrServerWrappers) {
+    SolrServer solrServer=_solrServerFactory.getLiveServer(solrServerWrapper);
+    if (solrServer == null) {
       continue;
     }
     try {
-      return server.request(request);
+      return solrServer.request(solrRequest);
     }
  catch (    SolrException se) {
       throw se;
     }
 catch (    SolrServerException sse) {
       if (sse.getRootCause() instanceof IOException) {
-        _factory.killServer(serverWrapper);
+        _solrServerFactory.killServer(solrServerWrapper);
       }
  else {
         throw sse;

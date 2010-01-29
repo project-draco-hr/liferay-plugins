@@ -1,16 +1,17 @@
 {
   try {
     SolrQuery solrQuery=new SolrQuery();
-    String queryString=query.toString();
-    queryString=queryString.replaceAll(":\\*",":");
-    solrQuery.setQuery(queryString);
+    solrQuery.setHighlight(true);
+    solrQuery.setHighlightFragsize(80);
+    solrQuery.setHighlightSnippets(3);
     solrQuery.setIncludeScore(true);
+    solrQuery.setQuery(query.toString().replaceAll(":\\*",":"));
     if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
       solrQuery.setRows(0);
     }
  else {
-      solrQuery.setStart(start);
       solrQuery.setRows(end - start);
+      solrQuery.setStart(start);
     }
     if ((sorts != null) && (sorts.length > 0)) {
       for (int i=0; i < sorts.length; i++) {
@@ -29,9 +30,6 @@
         solrQuery.addSortField(sortFieldName,order);
       }
     }
-    solrQuery.setHighlightFragsize(80);
-    solrQuery.setHighlightSnippets(3);
-    solrQuery.setHighlight(true);
     return solrQuery;
   }
  catch (  Exception e) {

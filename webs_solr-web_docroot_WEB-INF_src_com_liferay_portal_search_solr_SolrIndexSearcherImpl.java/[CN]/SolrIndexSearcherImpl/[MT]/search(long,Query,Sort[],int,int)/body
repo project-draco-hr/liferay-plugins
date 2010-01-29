@@ -1,13 +1,12 @@
 {
   try {
-    SolrQuery solrQuery=_translateQuery(query,sorts,start,end);
-    QueryResponse response=_solrServer.query(solrQuery);
+    SolrQuery solrQuery=translateQuery(query,sorts,start,end);
+    QueryResponse queryResponse=_solrServer.query(solrQuery);
     boolean allResults=false;
     if (solrQuery.getRows() == 0) {
       allResults=true;
     }
-    Hits subset=subset(solrQuery,response,allResults);
-    return subset;
+    return subset(solrQuery,queryResponse,allResults);
   }
  catch (  Exception e) {
     _log.error(e,e);

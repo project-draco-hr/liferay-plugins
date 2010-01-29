@@ -1,17 +1,17 @@
 {
-  ScheduledExecutorService executor=Executors.newSingleThreadScheduledExecutor();
+  ScheduledExecutorService scheduledExecutorService=Executors.newSingleThreadScheduledExecutor();
   Runnable runnable=new Runnable(){
     public void run(){
-      Collection<SolrServerWrapper> serverWrappers=factory.getDeadServers();
-      for (      SolrServerWrapper serverWrapper : serverWrappers) {
-        SolrServer server=factory.getDeadServer(serverWrapper);
-        if (server == null) {
+      Collection<SolrServerWrapper> solrServerWrappers=solrServerFactory.getDeadServers();
+      for (      SolrServerWrapper solrServerWrapper : solrServerWrappers) {
+        SolrServer solrServer=solrServerFactory.getDeadServer(solrServerWrapper);
+        if (solrServer == null) {
           continue;
         }
         try {
-          SolrPingResponse response=server.ping();
-          if (response.getStatus() == 0) {
-            factory.startServer(serverWrapper);
+          SolrPingResponse solrPingResponse=solrServer.ping();
+          if (solrPingResponse.getStatus() == 0) {
+            solrServerFactory.startServer(solrServerWrapper);
           }
         }
  catch (        Exception e) {
@@ -20,5 +20,5 @@
     }
   }
 ;
-  executor.scheduleWithFixedDelay(runnable,0,delay,TimeUnit.SECONDS);
+  scheduledExecutorService.scheduleWithFixedDelay(runnable,0,delay,TimeUnit.SECONDS);
 }

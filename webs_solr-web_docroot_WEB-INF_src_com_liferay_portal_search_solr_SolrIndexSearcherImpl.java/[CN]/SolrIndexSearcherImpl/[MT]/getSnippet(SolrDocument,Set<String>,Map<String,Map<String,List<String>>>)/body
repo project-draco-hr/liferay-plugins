@@ -2,7 +2,7 @@
   if (Validator.isNull(highlights)) {
     return StringPool.BLANK;
   }
-  String key=(String)doc.getFieldValue(Field.UID);
+  String key=(String)solrDocument.getFieldValue(Field.UID);
   List<String> snippets=highlights.get(key).get(Field.CONTENT);
   String snippet=StringUtil.merge(snippets,"...");
   if (Validator.isNotNull(snippet)) {
@@ -11,9 +11,9 @@
  else {
     snippet=StringPool.BLANK;
   }
-  Matcher m=Pattern.compile("<em>(.*?)</em>").matcher(snippet);
-  while (m.find()) {
-    queryTerms.add(m.group(1));
+  Matcher matcher=Pattern.compile("<em>(.*?)</em>").matcher(snippet);
+  while (matcher.find()) {
+    queryTerms.add(matcher.group(1));
   }
   snippet=StringUtil.replace(snippet,"<em>","");
   snippet=StringUtil.replace(snippet,"</em>","");
