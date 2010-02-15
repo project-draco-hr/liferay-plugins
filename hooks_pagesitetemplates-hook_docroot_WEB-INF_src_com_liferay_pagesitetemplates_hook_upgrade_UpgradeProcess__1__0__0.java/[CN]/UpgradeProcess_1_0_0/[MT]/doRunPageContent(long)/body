@@ -1,0 +1,13 @@
+{
+  String description="Content Liferay's template with the following " + "portlet: Asset Publisher.";
+  Map<Locale,String> titleMap=new HashMap<Locale,String>();
+  String portletIdd=StringPool.BLANK;
+  long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
+  titleMap.put(Locale.US,"Content");
+  LayoutPrototype layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(defaultUserId,companyId,titleMap,description,true);
+  Layout layout=layoutPrototype.getLayout();
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  layoutTypePortlet.setLayoutTemplateId(0,"1_column",false);
+  portletIdd=layoutTypePortlet.addPortletId(0,"101","column-1",-1,false);
+  updateLayout(layout);
+}

@@ -1,0 +1,37 @@
+{
+  String description="Public Site Liferay's template containing the " + "following pages: home, blog, wiki and forum.";
+  Map<Locale,String> titleMap=new HashMap<Locale,String>();
+  String portletIdd=StringPool.BLANK;
+  long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
+  ServiceContext serviceContext=new ServiceContext();
+  titleMap.put(Locale.US,"Public Site Liferay's template");
+  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(defaultUserId,companyId,titleMap,description,true);
+  LayoutLocalServiceUtil.deleteLayouts(layoutSetPrototype.getGroup().getGroupId(),true);
+  Layout layout=LayoutLocalServiceUtil.addLayout(defaultUserId,layoutSetPrototype.getGroup().getGroupId(),true,0,"Home",null,null,"portlet",false,"/home",serviceContext);
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  layoutTypePortlet.setLayoutTemplateId(0,"1_2_columns_ii",false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.JOURNAL_CONTENT_SEARCH,"column-1",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.JOURNAL_CONTENT,"column-1",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.ASSET_PUBLISHER,"column-2",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.POLLS_DISPLAY,"column-3",-1,false);
+  updateLayout(layout);
+  layout=LayoutLocalServiceUtil.addLayout(defaultUserId,layoutSetPrototype.getGroup().getGroupId(),true,0,"Blog",null,null,"portlet",false,"/blog",serviceContext);
+  layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  layoutTypePortlet.setLayoutTemplateId(0,"2_columns_iii",false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.BLOGS,"column-1",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.TAGS_CLOUD,"column-2",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.RECENT_BLOGGERS,"column-2",-1,false);
+  updateLayout(layout);
+  layout=LayoutLocalServiceUtil.addLayout(defaultUserId,layoutSetPrototype.getGroup().getGroupId(),true,0,"Wiki",null,null,"portlet",false,"/wiki",serviceContext);
+  layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  layoutTypePortlet.setLayoutTemplateId(0,"2_columns_iii",false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.WIKI,"column-1",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.TAGS_CATEGORIES_NAVIGATION,"column-2",-1,false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.TAGS_ENTRIES_NAVIGATION,"column-2",-1,false);
+  updateLayout(layout);
+  layout=LayoutLocalServiceUtil.addLayout(defaultUserId,layoutSetPrototype.getGroup().getGroupId(),true,0,"Forum",null,null,"portlet",false,"/forum",serviceContext);
+  layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  layoutTypePortlet.setLayoutTemplateId(0,"1_column",false);
+  portletIdd=layoutTypePortlet.addPortletId(0,PortletKeys.MESSAGE_BOARDS,"column-1",-1,false);
+  updateLayout(layout);
+}
