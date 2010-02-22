@@ -1,0 +1,18 @@
+{
+  if (isEscapedModel()) {
+    return this;
+  }
+ else {
+    Gadget model=new GadgetClp();
+    model.setEscapedModel(true);
+    model.setGadgetId(getGadgetId());
+    model.setCompanyId(getCompanyId());
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setName(HtmlUtil.escape(getName()));
+    model.setUrl(HtmlUtil.escape(getUrl()));
+    model.setXml(HtmlUtil.escape(getXml()));
+    model=(Gadget)Proxy.newProxyInstance(Gadget.class.getClassLoader(),new Class[]{Gadget.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

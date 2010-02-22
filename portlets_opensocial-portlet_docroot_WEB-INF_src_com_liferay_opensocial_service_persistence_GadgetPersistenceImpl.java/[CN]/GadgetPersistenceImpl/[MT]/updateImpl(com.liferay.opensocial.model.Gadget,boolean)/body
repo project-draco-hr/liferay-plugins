@@ -1,0 +1,18 @@
+{
+  gadget=toUnwrappedModel(gadget);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,gadget,merge);
+    gadget.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadget.getPrimaryKey(),gadget);
+  return gadget;
+}

@@ -1,0 +1,29 @@
+{
+  Portlet portlet=_portletsPool.get(gadget.getGadgetId());
+  if (portlet != null) {
+    return portlet;
+  }
+  StringBuilder sb=new StringBuilder();
+  sb.append(GadgetPortlet.PORTLET_NAME_PREFIX);
+  sb.append(gadget.getCompanyId());
+  sb.append(StringPool.UNDERLINE);
+  sb.append(gadget.getGadgetId());
+  String portletId=PortalUtil.getJsSafePortletId(sb.toString());
+  portlet=PortletLocalServiceUtil.newPortlet(gadget.getCompanyId(),portletId);
+  portlet.setTimestamp(System.currentTimeMillis());
+  PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.SERVLET_CONTEXT_NAME);
+  portlet.setPortletApp(portletApp);
+  portlet.setPortletName(portletId);
+  portlet.setDisplayName(portletId);
+  portlet.setPortletClass(GadgetPortlet.class.getName());
+  Map<String,String> initParams=portlet.getInitParams();
+  initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_GADGET_PORTLET_NAME);
+  addPortletExtraInfo(portlet,portletApp,gadget.getName());
+  _portletsPool.put(gadget.getGadgetId(),portlet);
+  PortletBag portletBag=PortletBagPool.get(_GADGET_PORTLET_ID);
+  portletBag=(PortletBag)portletBag.clone();
+  portletBag.setPortletName(portletId);
+  portletBag.setPortletInstance(new GadgetPortlet());
+  PortletBagPool.put(portletId,portletBag);
+  return portlet;
+}
