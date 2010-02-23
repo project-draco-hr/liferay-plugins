@@ -1,0 +1,34 @@
+{
+  List<User> users=UserLocalServiceUtil.search(companyId,null,null,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+  for (  User user : users) {
+    UserLocalServiceUtil.deleteUser(user.getUserId());
+  }
+  long creatorUserId=0;
+  boolean autoPassword=false;
+  String password1="admin";
+  String password2=password1;
+  boolean autoScreenName=false;
+  String screenName="admin";
+  String emailAddress="admin@admin.com";
+  String openId=StringPool.BLANK;
+  Locale locale=Locale.US;
+  String firstName="Admin";
+  String middleName=StringPool.BLANK;
+  String lastName="Admin";
+  int prefixId=0;
+  int suffixId=0;
+  boolean male=true;
+  int birthdayMonth=Calendar.JANUARY;
+  int birthdayDay=1;
+  int birthdayYear=1970;
+  String jobTitle=StringPool.BLANK;
+  long[] groupIds=null;
+  long[] organizationIds=null;
+  long[] userGroupIds=null;
+  Role adminRole=RoleLocalServiceUtil.getRole(companyId,RoleConstants.ADMINISTRATOR);
+  Role powerUserRole=RoleLocalServiceUtil.getRole(companyId,RoleConstants.POWER_USER);
+  long[] roleIds=new long[]{adminRole.getRoleId(),powerUserRole.getRoleId()};
+  boolean sendEmail=false;
+  ServiceContext serviceContext=null;
+  UserLocalServiceUtil.addUser(creatorUserId,companyId,autoPassword,password1,password2,autoScreenName,screenName,emailAddress,openId,locale,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,jobTitle,groupIds,organizationIds,roleIds,userGroupIds,sendEmail,serviceContext);
+}

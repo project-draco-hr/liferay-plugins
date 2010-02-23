@@ -1,0 +1,34 @@
+{
+  try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
+    if (group.isUser() && themeDisplay.isSignedIn()) {
+      HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
+      HttpSession session=request.getSession();
+      String memberRequestKey=(String)session.getAttribute(WebKeys.MEMBER_REQEUST_KEY);
+      if (Validator.isNotNull(memberRequestKey)) {
+        MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,themeDisplay.getUserId());
+        session.removeAttribute(WebKeys.MEMBER_REQEUST_KEY);
+      }
+    }
+    List<MemberRequest> memberRequests=MemberRequestLocalServiceUtil.getReceiverStatusMemberRequest(themeDisplay.getUserId(),InviteMembersConstants.STATUS_PENDING,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    Iterator<MemberRequest> itr=memberRequests.iterator();
+    while (itr.hasNext()) {
+      MemberRequest memberRequest=itr.next();
+      try {
+        GroupLocalServiceUtil.getGroup(memberRequest.getGroupId());
+      }
+ catch (      NoSuchGroupException nsge) {
+        MemberRequestLocalServiceUtil.deleteMemberRequest(memberRequest);
+        itr.remove();
+      }
+    }
+    if (group.isUser() && memberRequests.isEmpty()) {
+      renderRequest.setAttribute(WebKeys.PORTLET_DECORATE,Boolean.FALSE);
+    }
+    include(viewJSP,renderRequest,renderResponse);
+  }
+ catch (  Exception e) {
+    super.doView(renderRequest,renderResponse);
+  }
+}

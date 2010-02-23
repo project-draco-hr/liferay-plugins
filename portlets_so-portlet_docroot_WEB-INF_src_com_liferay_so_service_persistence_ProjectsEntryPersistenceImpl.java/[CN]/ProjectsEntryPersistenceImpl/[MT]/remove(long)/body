@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    ProjectsEntry projectsEntry=(ProjectsEntry)session.get(ProjectsEntryImpl.class,new Long(projectsEntryId));
+    if (projectsEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + projectsEntryId);
+      }
+      throw new NoSuchProjectsEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + projectsEntryId);
+    }
+    return remove(projectsEntry);
+  }
+ catch (  NoSuchProjectsEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

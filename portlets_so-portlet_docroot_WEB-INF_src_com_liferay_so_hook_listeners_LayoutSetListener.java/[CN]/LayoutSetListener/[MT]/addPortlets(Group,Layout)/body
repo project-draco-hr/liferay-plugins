@@ -1,0 +1,17 @@
+{
+  String prefix=PortletPropsKeys.SITE_LAYOUT_PORTLETS;
+  if (group.isUser()) {
+    prefix=PortletPropsKeys.USER_LAYOUT_PORTLETS;
+  }
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
+  List<String> columns=layoutTemplate.getColumns();
+  for (  String column : columns) {
+    layoutTypePortlet.setPortletIds(column,PortletProps.get(prefix + column));
+  }
+  LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+  List<String> portletIds=layoutTypePortlet.getPortletIds();
+  if (portletIds.contains("1_WAR_wysiwygportlet")) {
+    updatePortletTitle(layout,"1_WAR_wysiwygportlet","Welcome");
+  }
+}

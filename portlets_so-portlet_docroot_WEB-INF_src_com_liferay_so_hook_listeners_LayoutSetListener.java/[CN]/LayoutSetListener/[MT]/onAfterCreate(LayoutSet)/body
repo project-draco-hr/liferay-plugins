@@ -1,0 +1,18 @@
+{
+  try {
+    if (layoutSet.isPrivateLayout()) {
+      return;
+    }
+    Group group=GroupLocalServiceUtil.getGroup(layoutSet.getGroupId());
+    if (group.isCommunity()) {
+      addCommunityLayouts(group);
+      updateFriendlyURL(group);
+    }
+ else     if (group.isUser()) {
+      addUserLayouts(group);
+    }
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}

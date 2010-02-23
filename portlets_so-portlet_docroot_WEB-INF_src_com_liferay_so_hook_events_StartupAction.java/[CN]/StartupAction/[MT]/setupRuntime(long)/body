@@ -1,0 +1,25 @@
+{
+  Set<String> applicationsAllowed=SetUtil.fromArray(PortletPropsValues.APPLICATIONS_ALLOWED);
+  Set<String> controlPanelItems=SetUtil.fromArray(PortletPropsValues.CONTROL_PANEL_ITEMS);
+  List<Portlet> portlets=PortletLocalServiceUtil.getPortlets();
+  for (  Portlet portlet : portlets) {
+    PortletApp portletApp=portlet.getPortletApp();
+    if (portletApp.isWARFile()) {
+      continue;
+    }
+    String portletId=portlet.getPortletId();
+    if (applicationsAllowed.contains(portletId)) {
+      portlet.setSystem(false);
+    }
+ else {
+      portlet.setSystem(true);
+    }
+    if (!controlPanelItems.contains(portletId)) {
+      portlet.setControlPanelEntryCategory(StringPool.BLANK);
+    }
+  }
+  Portlet portlet=PortletLocalServiceUtil.getPortletById(PortletKeys.COMMUNITIES);
+  portlet.setAddDefaultResource(true);
+  portlet=PortletLocalServiceUtil.getPortletById(PortletKeys.DIRECTORY);
+  portlet.setAddDefaultResource(true);
+}
