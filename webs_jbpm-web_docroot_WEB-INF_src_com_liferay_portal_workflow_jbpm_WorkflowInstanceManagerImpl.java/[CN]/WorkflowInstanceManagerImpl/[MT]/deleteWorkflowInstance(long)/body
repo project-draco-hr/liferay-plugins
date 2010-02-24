@@ -6,8 +6,9 @@
     if (token != null) {
       if (token.isRoot()) {
         CustomSession customSession=new CustomSession(jbpmContext);
-        customSession.deleteWorkflowLogs(token.getProcessInstance().getId());
-        graphSession.deleteProcessInstance(token.getProcessInstance());
+        ProcessInstance processInstance=token.getProcessInstance();
+        customSession.deleteWorkflowLogs(processInstance.getId());
+        graphSession.deleteProcessInstance(processInstance);
       }
  else       if (_log.isWarnEnabled()) {
         _log.warn("Unable to delete a child workflow instance " + workflowInstanceId + ". You can only delete a "+ "root workflow instance.");
