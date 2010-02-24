@@ -1,0 +1,47 @@
+{
+  List<Node> contentNodes=moduleElement.selectNodes("//Content");
+  String content=null;
+  for (  Node contentNode : contentNodes) {
+    Element contentElement=(Element)contentNode;
+    Attribute viewAttribute=contentElement.attribute("view");
+    content=contentElement.getText();
+    if (viewAttribute == null) {
+      _contents.put(GadgetPortlet.VIEW_DEFAULT,content);
+    }
+ else {
+      String views=viewAttribute.getText();
+      String[] viewArray=views.split(",");
+      for (      String view : viewArray) {
+        view=view.toLowerCase().trim();
+        _contents.put(view,content);
+      }
+    }
+  }
+  content=getContent(GadgetPortlet.VIEW_DEFAULT);
+  if (content == null) {
+    content=getContent(GadgetPortlet.VIEW_PROFILE);
+  }
+  if (content == null) {
+    content=getContent(GadgetPortlet.VIEW_CANVAS);
+  }
+  if (content == null) {
+    content=getContent(GadgetPortlet.VIEW_HOME);
+  }
+  if (content != null) {
+    _contents.put(GadgetPortlet.VIEW_DEFAULT,content);
+  }
+  content=getContent(GadgetPortlet.VIEW_HOME);
+  if (content == null) {
+    content=getContent(GadgetPortlet.VIEW_PROFILE);
+  }
+  if (content != null) {
+    _contents.put(GadgetPortlet.VIEW_HOME,content);
+  }
+  content=getContent(GadgetPortlet.VIEW_PROFILE);
+  if (content == null) {
+    content=getContent(GadgetPortlet.VIEW_HOME);
+  }
+  if (content != null) {
+    _contents.put(GadgetPortlet.VIEW_PROFILE,content);
+  }
+}
