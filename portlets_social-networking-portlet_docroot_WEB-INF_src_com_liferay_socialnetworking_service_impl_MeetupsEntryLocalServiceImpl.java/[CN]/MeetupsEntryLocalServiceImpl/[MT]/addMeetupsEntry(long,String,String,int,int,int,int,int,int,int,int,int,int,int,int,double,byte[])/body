@@ -3,7 +3,7 @@
   Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,user.getTimeZone(),new MeetupsEntryStartDateException());
   Date endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,user.getTimeZone(),new MeetupsEntryEndDateException());
   Date now=new Date();
-  long meetupsEntryId=CounterLocalServiceUtil.increment();
+  long meetupsEntryId=counterLocalService.increment();
   MeetupsEntry meetupsEntry=meetupsEntryPersistence.create(meetupsEntryId);
   meetupsEntry.setCompanyId(user.getCompanyId());
   meetupsEntry.setUserId(user.getUserId());
@@ -17,7 +17,7 @@
   meetupsEntry.setTotalAttendees(totalAttendees);
   meetupsEntry.setMaxAttendees(maxAttendees);
   meetupsEntry.setPrice(price);
-  meetupsEntry.setThumbnailId(CounterLocalServiceUtil.increment());
+  meetupsEntry.setThumbnailId(counterLocalService.increment());
   meetupsEntryPersistence.update(meetupsEntry,false);
   if ((thumbnail != null) && (thumbnail.length > 0)) {
     ImageLocalServiceUtil.updateImage(meetupsEntry.getThumbnailId(),thumbnail);
