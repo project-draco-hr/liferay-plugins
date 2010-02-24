@@ -1,0 +1,11 @@
+{
+  List<TaskInstance> taskInstances=findTaskInstances(processInstanceId,0l,null,false,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  for (  TaskInstance taskInstance : taskInstances) {
+    Criteria criteria=_session.createCriteria(WorkflowLogImpl.class);
+    criteria.add(Restrictions.eq("taskInstance.id",taskInstance.getId()));
+    List<WorkflowLog> workflowLogs=criteria.list();
+    for (    WorkflowLog workflowLog : workflowLogs) {
+      _session.delete(workflowLog);
+    }
+  }
+}
