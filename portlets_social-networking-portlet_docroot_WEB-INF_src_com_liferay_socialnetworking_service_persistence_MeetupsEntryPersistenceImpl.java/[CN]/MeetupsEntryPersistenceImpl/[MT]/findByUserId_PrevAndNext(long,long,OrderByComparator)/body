@@ -1,0 +1,39 @@
+{
+  MeetupsEntry meetupsEntry=findByPrimaryKey(meetupsEntryId);
+  int count=countByUserId(userId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (obc != null) {
+      query=new StringBundler(3 + (obc.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(3);
+    }
+    query.append(_SQL_SELECT_MEETUPSENTRY_WHERE);
+    query.append(_FINDER_COLUMN_USERID_USERID_2);
+    if (obc != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+    }
+ else {
+      query.append(MeetupsEntryModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(userId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,meetupsEntry);
+    MeetupsEntry[] array=new MeetupsEntryImpl[3];
+    array[0]=(MeetupsEntry)objArray[0];
+    array[1]=(MeetupsEntry)objArray[1];
+    array[2]=(MeetupsEntry)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
