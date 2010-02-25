@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest);
   String databaseTableName=preferences.getValue("databaseTableName",StringPool.BLANK);
   String title=preferences.getValue("title","no-title");
@@ -17,10 +18,10 @@
   sb.deleteCharAt(sb.length() - 1);
   sb.append("\n");
   if (Validator.isNotNull(databaseTableName)) {
-    List<ExpandoRow> rows=ExpandoRowLocalServiceUtil.getRows(WebFormUtil.class.getName(),databaseTableName,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    List<ExpandoRow> rows=ExpandoRowLocalServiceUtil.getRows(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     for (    ExpandoRow row : rows) {
       for (      String fieldName : fieldLabels) {
-        String data=ExpandoValueLocalServiceUtil.getData(WebFormUtil.class.getName(),databaseTableName,fieldName,row.getClassPK(),StringPool.BLANK);
+        String data=ExpandoValueLocalServiceUtil.getData(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName,fieldName,row.getClassPK(),StringPool.BLANK);
         data=data.replaceAll("\"","\\\"");
         sb.append("\"");
         sb.append(data);

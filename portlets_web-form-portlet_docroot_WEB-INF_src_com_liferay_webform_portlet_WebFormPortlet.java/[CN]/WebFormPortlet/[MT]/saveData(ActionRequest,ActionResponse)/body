@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String portletId=(String)actionRequest.getAttribute(WebKeys.PORTLET_ID);
   PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletId);
   boolean requireCaptcha=GetterUtil.getBoolean(preferences.getValue("requireCaptcha",StringPool.BLANK));
@@ -46,7 +47,7 @@
         preferences.setValue("databaseTableName",databaseTableName);
         preferences.store();
       }
-      databaseSuccess=saveDatabase(fieldsMap,preferences,databaseTableName);
+      databaseSuccess=saveDatabase(themeDisplay.getCompanyId(),fieldsMap,preferences,databaseTableName);
     }
     if (saveToFile) {
       fileSuccess=saveFile(fieldsMap,fileName);

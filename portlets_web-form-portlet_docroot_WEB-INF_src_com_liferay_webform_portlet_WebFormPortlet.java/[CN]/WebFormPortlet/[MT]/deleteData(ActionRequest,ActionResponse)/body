@@ -1,7 +1,8 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest);
   String databaseTableName=preferences.getValue("databaseTableName",StringPool.BLANK);
   if (Validator.isNotNull(databaseTableName)) {
-    ExpandoTableLocalServiceUtil.deleteTable(WebFormUtil.class.getName(),databaseTableName);
+    ExpandoTableLocalServiceUtil.deleteTable(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName);
   }
 }
