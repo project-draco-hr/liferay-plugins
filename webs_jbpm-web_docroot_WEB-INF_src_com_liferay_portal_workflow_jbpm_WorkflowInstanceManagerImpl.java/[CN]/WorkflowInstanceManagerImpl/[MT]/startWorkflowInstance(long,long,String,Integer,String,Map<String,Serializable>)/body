@@ -5,7 +5,8 @@
     ProcessInstance processInstance=new ProcessInstance(processDefinition);
     if (context != null) {
       ContextInstance contextInstance=processInstance.getContextInstance();
-      contextInstance.addVariables(context);
+      Map<String,Object> contextObjects=new HashMap<String,Object>(context);
+      contextInstance.addVariables(contextObjects);
     }
     if (Validator.isNotNull(transitionName)) {
       processInstance.signal(transitionName);
