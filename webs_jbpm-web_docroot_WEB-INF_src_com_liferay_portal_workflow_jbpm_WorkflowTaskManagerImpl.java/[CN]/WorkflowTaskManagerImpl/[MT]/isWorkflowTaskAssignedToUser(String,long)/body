@@ -1,11 +1,15 @@
 {
   try {
-    String id=String.valueOf(userId);
+    if (actorId.equals(String.valueOf(userId))) {
+      return true;
+    }
     if (Validator.isEmailAddress(actorId)) {
       User user=UserLocalServiceUtil.getUser(userId);
-      id=user.getEmailAddress();
+      if (actorId.equals(user.getEmailAddress())) {
+        return true;
+      }
     }
-    return Validator.equals(actorId,id);
+    return false;
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
