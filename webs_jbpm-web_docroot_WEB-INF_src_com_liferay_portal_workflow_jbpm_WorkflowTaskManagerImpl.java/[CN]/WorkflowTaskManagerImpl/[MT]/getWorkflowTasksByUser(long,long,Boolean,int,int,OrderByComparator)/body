@@ -1,3 +1,13 @@
 {
-  return getWorkflowTasks(-1,new long[]{userId},false,completed,start,end,orderByComparator);
+  try {
+    User user=UserLocalServiceUtil.getUser(userId);
+    String[] actorIds=new String[]{String.valueOf(userId),user.getEmailAddress()};
+    return getWorkflowTasks(-1,actorIds,false,completed,start,end,orderByComparator);
+  }
+ catch (  WorkflowException we) {
+    throw we;
+  }
+catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
 }

@@ -6,7 +6,7 @@
     Token oldToken=taskInstance.getToken();
     Node oldNode=oldToken.getNode();
     long actorId=GetterUtil.getLong(taskInstance.getActorId());
-    if (actorId != userId) {
+    if (!isWorkflowTaskAssignedToUser(taskInstance.getActorId(),userId)) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " is not assigned to user "+ userId);
     }
     taskInstance.addComment(comment);

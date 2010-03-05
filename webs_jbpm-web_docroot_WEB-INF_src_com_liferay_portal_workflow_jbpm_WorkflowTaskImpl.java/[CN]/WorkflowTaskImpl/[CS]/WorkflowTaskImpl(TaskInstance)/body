@@ -7,7 +7,12 @@
     PooledActor pooledActor=pooledActors.iterator().next();
     setAssigneeRoleId(GetterUtil.getLong(pooledActor.getActorId()));
   }
-  setAssigneeUserId(GetterUtil.getLong(taskInstance.getActorId()));
+  if (Validator.isEmailAddress(taskInstance.getActorId())) {
+    setAssigneeEmailAddress(taskInstance.getActorId());
+  }
+ else {
+    setAssigneeUserId(GetterUtil.getLong(taskInstance.getActorId()));
+  }
   setAsynchronous(!taskInstance.isBlocking());
   setCompletionDate(taskInstance.getEnd());
   setCreateDate(taskInstance.getCreate());

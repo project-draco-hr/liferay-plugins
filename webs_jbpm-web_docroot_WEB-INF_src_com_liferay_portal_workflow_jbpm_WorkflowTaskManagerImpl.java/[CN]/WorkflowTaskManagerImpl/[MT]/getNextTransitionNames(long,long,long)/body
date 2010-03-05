@@ -3,8 +3,7 @@
   try {
     TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
     TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
-    long actorId=GetterUtil.getLong(taskInstance.getActorId());
-    if (actorId != userId) {
+    if (!isWorkflowTaskAssignedToUser(taskInstance.getActorId(),userId)) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " is not assigned to user "+ userId);
     }
     Task task=taskInstance.getTask();
