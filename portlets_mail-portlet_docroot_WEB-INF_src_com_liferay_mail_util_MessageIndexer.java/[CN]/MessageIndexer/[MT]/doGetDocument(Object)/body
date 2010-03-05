@@ -1,0 +1,26 @@
+{
+  MessageEntry entry=(MessageEntry)obj;
+  long companyId=entry.getCompanyId();
+  long groupId=entry.getGroupId();
+  long userId=entry.getUserId();
+  String emailAddress=entry.getEmailAddress();
+  String folderName=entry.getFolderName();
+  long messageUid=entry.getMessageUid();
+  String title=entry.getTitle();
+  String content=entry.getContent();
+  content=HtmlUtil.extractText(content);
+  Document document=new DocumentImpl();
+  document.addKeyword(Field.UID,getUID(userId,emailAddress,folderName,messageUid));
+  document.addModifiedDate();
+  document.addKeyword(Field.COMPANY_ID,companyId);
+  document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
+  document.addKeyword(Field.GROUP_ID,groupId);
+  document.addKeyword(Field.USER_ID,userId);
+  document.addKeyword(EMAIL_ADDRESS,emailAddress);
+  document.addKeyword(FOLDER_NAME,folderName);
+  document.addText(Field.TITLE,title);
+  document.addText(Field.CONTENT,content);
+  document.addKeyword(Field.ENTRY_CLASS_NAME,MessageEntry.class.getName());
+  document.addKeyword(Field.ENTRY_CLASS_PK,messageUid);
+  return document;
+}

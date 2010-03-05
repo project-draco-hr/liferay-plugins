@@ -12,7 +12,9 @@
   String subject=message.getString("subject");
   String body=message.getString("body");
   try {
-    Indexer.addMessage(user.getCompanyId(),user.getGroup().getGroupId(),user.getUserId(),emailAddress,_encodeFolderName(folderName),messageUid,subject,body);
+    Indexer indexer=IndexerRegistryUtil.getIndexer(MessageEntry.class);
+    MessageEntry entry=new MessageEntry(user.getCompanyId(),user.getGroup().getGroupId(),user.getUserId(),emailAddress,_encodeFolderName(folderName),messageUid,subject,body);
+    indexer.reindex(entry);
   }
  catch (  Exception e) {
     _log.error(e,e);
