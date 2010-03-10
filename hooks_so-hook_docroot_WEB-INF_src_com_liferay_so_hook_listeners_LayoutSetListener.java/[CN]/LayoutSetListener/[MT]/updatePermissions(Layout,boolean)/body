@@ -5,11 +5,10 @@
   String name=Layout.class.getName();
   int scope=ResourceConstants.SCOPE_INDIVIDUAL;
   String primKey=String.valueOf(layout.getPrimaryKey());
-  Resource resource=ResourceLocalServiceUtil.getResource(companyId,name,scope,primKey);
-  PermissionLocalServiceUtil.setRolePermissions(role.getRoleId(),actionIds,resource.getResourceId());
+  ResourcePermissionLocalServiceUtil.setResourcePermissions(companyId,name,scope,primKey,role.getRoleId(),actionIds);
   if (addDefaultActionIds) {
     actionIds=new String[]{ActionKeys.VIEW};
   }
   role=RoleLocalServiceUtil.getRole(companyId,RoleConstants.POWER_USER);
-  PermissionLocalServiceUtil.setRolePermissions(role.getRoleId(),actionIds,resource.getResourceId());
+  ResourcePermissionLocalServiceUtil.setResourcePermissions(companyId,name,scope,primKey,role.getRoleId(),actionIds);
 }
