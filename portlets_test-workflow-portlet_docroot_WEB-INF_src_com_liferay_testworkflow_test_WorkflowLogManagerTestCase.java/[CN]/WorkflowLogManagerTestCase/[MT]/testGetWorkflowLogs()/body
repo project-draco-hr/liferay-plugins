@@ -1,17 +1,17 @@
 {
-  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition.getName(),_workflowDefinition.getVersion(),null,null);
-  workflowInstance=WorkflowInstanceManagerUtil.getWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition.getName(),_workflowDefinition.getVersion(),null,null);
+  workflowInstance=WorkflowInstanceManagerUtil.getWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
   assertEquals(3,childrenWorkflowInstances.size());
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
-    List<WorkflowLog> childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
+    List<WorkflowLog> childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
     assertTrue(childWorkflowLogs.isEmpty());
-    WorkflowTaskManagerUtil.completeWorkflowTask(childWorkflowTask.getAssigneeUserId(),childWorkflowTask.getWorkflowTaskId(),null,null,null);
-    childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
+    WorkflowTaskManagerUtil.completeWorkflowTask(companyId,childWorkflowTask.getAssigneeUserId(),childWorkflowTask.getWorkflowTaskId(),null,null,null);
+    childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
     assertTrue(!childWorkflowLogs.isEmpty());
   }
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
 }

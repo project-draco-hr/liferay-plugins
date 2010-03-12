@@ -1,11 +1,11 @@
 {
-  WorkflowInstance workflowInstance1=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
-  WorkflowInstance workflowInstance2=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
-  WorkflowInstance workflowInstance3=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition3.getName(),_workflowDefinition3.getVersion(),null,null);
+  WorkflowInstance workflowInstance1=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  WorkflowInstance workflowInstance2=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
+  WorkflowInstance workflowInstance3=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition3.getName(),_workflowDefinition3.getVersion(),null,null);
   long workflowInstanceId1=workflowInstance1.getWorkflowInstanceId();
-  workflowInstance1=WorkflowInstanceManagerUtil.getWorkflowInstance(workflowInstance1.getWorkflowInstanceId());
+  workflowInstance1=WorkflowInstanceManagerUtil.getWorkflowInstance(companyId,workflowInstance1.getWorkflowInstanceId());
   assertEquals(0,workflowInstance1.getChildrenWorkflowInstanceCount());
-  Map<String,Object> context1=workflowInstance1.getContext();
+  Map<String,Serializable> context1=workflowInstance1.getContext();
   assertNotNull(context1);
   assertEquals(1,context1.size());
   assertEquals("success",context1.get("javaNode11"));
@@ -17,9 +17,9 @@
   assertEquals(_workflowDefinition1.getVersion(),workflowInstance1.getWorkflowDefinitionVersion());
   assertEquals(workflowInstanceId1,workflowInstance1.getWorkflowInstanceId());
   long workflowInstanceId2=workflowInstance2.getWorkflowInstanceId();
-  workflowInstance2=WorkflowInstanceManagerUtil.getWorkflowInstance(workflowInstance2.getWorkflowInstanceId());
+  workflowInstance2=WorkflowInstanceManagerUtil.getWorkflowInstance(companyId,workflowInstance2.getWorkflowInstanceId());
   assertEquals(0,workflowInstance2.getChildrenWorkflowInstanceCount());
-  Map<String,Object> context2=workflowInstance2.getContext();
+  Map<String,Serializable> context2=workflowInstance2.getContext();
   assertNotNull(context2);
   assertEquals(1,context2.size());
   assertEquals("success",context2.get("javaNode21"));
@@ -31,12 +31,12 @@
   assertEquals(_workflowDefinition2.getVersion(),workflowInstance2.getWorkflowDefinitionVersion());
   assertEquals(workflowInstanceId2,workflowInstance2.getWorkflowInstanceId());
   long workflowInstanceId3=workflowInstance3.getWorkflowInstanceId();
-  workflowInstance3=WorkflowInstanceManagerUtil.getWorkflowInstance(workflowInstance3.getWorkflowInstanceId());
+  workflowInstance3=WorkflowInstanceManagerUtil.getWorkflowInstance(companyId,workflowInstance3.getWorkflowInstanceId());
   List<WorkflowInstance> childrenInstances=workflowInstance3.getChildrenWorkflowInstances();
   assertEquals(3,childrenInstances.size());
   WorkflowInstance childWorkflowInstance3_1=childrenInstances.get(0);
   assertEquals(0,childWorkflowInstance3_1.getChildrenWorkflowInstanceCount());
-  Map<String,Object> context3_1=childWorkflowInstance3_1.getContext();
+  Map<String,Serializable> context3_1=childWorkflowInstance3_1.getContext();
   assertNotNull(context3_1);
   assertEquals(1,context3_1.size());
   assertEquals("success",context3_1.get("javaNode31"));
@@ -48,7 +48,7 @@
   assertEquals(_workflowDefinition3.getVersion(),childWorkflowInstance3_1.getWorkflowDefinitionVersion());
   WorkflowInstance childWorkflowInstance3_2=childrenInstances.get(1);
   assertEquals(0,childWorkflowInstance3_2.getChildrenWorkflowInstanceCount());
-  Map<String,Object> context3_2=childWorkflowInstance3_2.getContext();
+  Map<String,Serializable> context3_2=childWorkflowInstance3_2.getContext();
   assertNotNull(context3_2);
   assertEquals(1,context3_2.size());
   assertEquals("success",context3_2.get("javaNode31"));
@@ -60,7 +60,7 @@
   assertEquals(_workflowDefinition3.getVersion(),childWorkflowInstance3_2.getWorkflowDefinitionVersion());
   WorkflowInstance childWorkflowInstance3_3=childrenInstances.get(2);
   assertEquals(0,childWorkflowInstance3_3.getChildrenWorkflowInstanceCount());
-  Map<String,Object> context3_3=childWorkflowInstance3_3.getContext();
+  Map<String,Serializable> context3_3=childWorkflowInstance3_3.getContext();
   assertNotNull(context3_3);
   assertEquals(1,context3_3.size());
   assertEquals("success",context3_3.get("javaNode31"));
@@ -70,7 +70,7 @@
   assertNotNull(childWorkflowInstance3_3.getStartDate());
   assertEquals(DEFINITION_NAME_3,childWorkflowInstance3_3.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition3.getVersion(),childWorkflowInstance3_3.getWorkflowDefinitionVersion());
-  Map<String,Object> context3=workflowInstance3.getContext();
+  Map<String,Serializable> context3=workflowInstance3.getContext();
   assertNotNull(context3);
   assertEquals(1,context3.size());
   assertEquals("success",context3.get("javaNode31"));
@@ -81,7 +81,7 @@
   assertEquals(DEFINITION_NAME_3,workflowInstance3.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition3.getVersion(),workflowInstance3.getWorkflowDefinitionVersion());
   assertEquals(workflowInstanceId3,workflowInstance3.getWorkflowInstanceId());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance1.getWorkflowInstanceId());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance2.getWorkflowInstanceId());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance3.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance1.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance2.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance3.getWorkflowInstanceId());
 }

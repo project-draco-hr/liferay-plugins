@@ -1,19 +1,19 @@
 {
-  WorkflowInstance workflowInstance1=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
-  WorkflowInstance workflowInstance2=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
-  WorkflowInstance workflowInstance3=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition3.getName(),_workflowDefinition3.getVersion(),null,null);
-  List<String> nextTransitionNames1=WorkflowInstanceManagerUtil.getNextTransitionNames(defaultUserId,workflowInstance1.getWorkflowInstanceId());
+  WorkflowInstance workflowInstance1=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  WorkflowInstance workflowInstance2=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
+  WorkflowInstance workflowInstance3=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition3.getName(),_workflowDefinition3.getVersion(),null,null);
+  List<String> nextTransitionNames1=WorkflowInstanceManagerUtil.getNextTransitionNames(companyId,defaultUserId,workflowInstance1.getWorkflowInstanceId());
   assertEquals(1,nextTransitionNames1.size());
   assertEquals("toTaskNode",nextTransitionNames1.get(0));
-  List<String> nextTransitionNames2=WorkflowInstanceManagerUtil.getNextTransitionNames(defaultUserId,workflowInstance2.getWorkflowInstanceId());
+  List<String> nextTransitionNames2=WorkflowInstanceManagerUtil.getNextTransitionNames(companyId,defaultUserId,workflowInstance2.getWorkflowInstanceId());
   assertEquals(1,nextTransitionNames2.size());
   assertEquals("toEnd",nextTransitionNames2.get(0));
-  List<String> nextTransitionNames3=WorkflowInstanceManagerUtil.getNextTransitionNames(defaultUserId,workflowInstance3.getWorkflowInstanceId());
+  List<String> nextTransitionNames3=WorkflowInstanceManagerUtil.getNextTransitionNames(companyId,defaultUserId,workflowInstance3.getWorkflowInstanceId());
   assertEquals(3,nextTransitionNames3.size());
   assertTrue(nextTransitionNames3.contains("branch1"));
   assertTrue(nextTransitionNames3.contains("branch2"));
   assertTrue(nextTransitionNames3.contains("branch3"));
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance1.getWorkflowInstanceId());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance2.getWorkflowInstanceId());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance3.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance1.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance2.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance3.getWorkflowInstanceId());
 }

@@ -1,18 +1,18 @@
 {
-  List<WorkflowTask> workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  List<WorkflowTask> workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(0,workflowTasks.size());
-  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,DEFINITION_NAME_3,_workflowDefinition.getVersion(),null,null);
+  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,DEFINITION_NAME_3,_workflowDefinition.getVersion(),null,null);
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
     assertEquals(0L,childWorkflowTask.getAssigneeRoleId());
-    childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToRole(defaultUserId,childWorkflowTask.getWorkflowTaskId(),guestRoleId,null,null);
-    childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToUser(defaultUserId,childWorkflowTask.getWorkflowTaskId(),defaultUserId,null,null);
+    childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToRole(companyId,defaultUserId,childWorkflowTask.getWorkflowTaskId(),guestRoleId,null,null);
+    childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToUser(companyId,defaultUserId,childWorkflowTask.getWorkflowTaskId(),defaultUserId,null,null);
     assertEquals(defaultUserId,childWorkflowTask.getAssigneeUserId());
   }
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(3,workflowTasks.size());
   WorkflowTask workflowTask1=workflowTasks.get(0);
   assertEquals(defaultUserId,workflowTask1.getAssigneeUserId());
@@ -26,9 +26,9 @@
   assertEquals(defaultUserId,workflowTask3.getAssigneeUserId());
   assertNull(workflowTask3.getCompletionDate());
   assertEquals("Task3-3",workflowTask3.getName());
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(0,workflowTasks.size());
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(3,workflowTasks.size());
   workflowTask1=workflowTasks.get(0);
   assertEquals(defaultUserId,workflowTask1.getAssigneeUserId());
@@ -43,12 +43,12 @@
   assertNull(workflowTask3.getCompletionDate());
   assertEquals("Task3-3",workflowTask3.getName());
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
-    WorkflowTaskManagerUtil.completeWorkflowTask(defaultUserId,childWorkflowTask.getWorkflowTaskId(),null,null,null);
+    WorkflowTaskManagerUtil.completeWorkflowTask(companyId,defaultUserId,childWorkflowTask.getWorkflowTaskId(),null,null,null);
   }
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(4,workflowTasks.size());
   workflowTask1=workflowTasks.get(0);
   assertEquals(defaultUserId,workflowTask1.getAssigneeUserId());
@@ -66,7 +66,7 @@
   assertEquals(0L,workflowTask4.getAssigneeUserId());
   assertNull(workflowTask4.getCompletionDate());
   assertEquals("Task3-4",workflowTask4.getName());
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(3,workflowTasks.size());
   workflowTask1=workflowTasks.get(0);
   assertEquals(defaultUserId,workflowTask1.getAssigneeUserId());
@@ -80,11 +80,11 @@
   assertEquals(defaultUserId,workflowTask3.getAssigneeUserId());
   assertNotNull(workflowTask3.getCompletionDate());
   assertEquals("Task3-3",workflowTask3.getName());
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(defaultUserId,Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
   assertEquals(1,workflowTasks.size());
   workflowTask4=workflowTasks.get(0);
   assertEquals(0L,workflowTask4.getAssigneeUserId());
   assertNull(workflowTask4.getCompletionDate());
   assertEquals("Task3-4",workflowTask4.getName());
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
 }

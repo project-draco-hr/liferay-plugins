@@ -1,17 +1,17 @@
 {
-  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition.getName(),_workflowDefinition.getVersion(),null,null);
-  workflowInstance=WorkflowInstanceManagerUtil.getWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition.getName(),_workflowDefinition.getVersion(),null,null);
+  workflowInstance=WorkflowInstanceManagerUtil.getWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
   assertEquals(3,childrenWorkflowInstances.size());
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
-    int childCount=WorkflowLogManagerUtil.getWorkflowLogCount(childWorkflowTask.getWorkflowTaskId());
+    int childCount=WorkflowLogManagerUtil.getWorkflowLogCount(companyId,childWorkflowTask.getWorkflowTaskId());
     assertEquals(0,childCount);
-    WorkflowTaskManagerUtil.completeWorkflowTask(childWorkflowTask.getAssigneeUserId(),childWorkflowTask.getWorkflowTaskId(),null,null,null);
-    childCount=WorkflowLogManagerUtil.getWorkflowLogCount(childWorkflowTask.getWorkflowTaskId());
+    WorkflowTaskManagerUtil.completeWorkflowTask(companyId,childWorkflowTask.getAssigneeUserId(),childWorkflowTask.getWorkflowTaskId(),null,null,null);
+    childCount=WorkflowLogManagerUtil.getWorkflowLogCount(companyId,childWorkflowTask.getWorkflowTaskId());
     assertEquals(1,childCount);
   }
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
 }

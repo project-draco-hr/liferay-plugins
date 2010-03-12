@@ -1,27 +1,27 @@
 {
-  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
-  Map<String,Object> context=workflowInstance.getContext();
+  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  Map<String,Serializable> context=workflowInstance.getContext();
   assertNotNull(context);
   assertEquals(1,context.size());
   assertEquals("success",context.get("javaNode11"));
   String testKey="testKey";
   String testValue1="testValue1";
   String testValue2="testValue2";
-  Map<String,Object> updateContext=new HashMap<String,Object>();
+  Map<String,Serializable> updateContext=new HashMap<String,Serializable>();
   updateContext.put(testKey,testValue1);
-  workflowInstance=WorkflowInstanceManagerUtil.updateContext(workflowInstance.getWorkflowInstanceId(),updateContext);
+  workflowInstance=WorkflowInstanceManagerUtil.updateContext(companyId,workflowInstance.getWorkflowInstanceId(),updateContext);
   context=workflowInstance.getContext();
   assertNotNull(context);
   assertEquals(2,context.size());
   assertEquals("success",context.get("javaNode11"));
   assertEquals(testValue1,context.get(testKey));
-  updateContext=new HashMap<String,Object>();
+  updateContext=new HashMap<String,Serializable>();
   updateContext.put(testKey,testValue2);
-  workflowInstance=WorkflowInstanceManagerUtil.updateContext(workflowInstance.getWorkflowInstanceId(),updateContext);
+  workflowInstance=WorkflowInstanceManagerUtil.updateContext(companyId,workflowInstance.getWorkflowInstanceId(),updateContext);
   context=workflowInstance.getContext();
   assertNotNull(context);
   assertEquals(2,context.size());
   assertEquals("success",context.get("javaNode11"));
   assertEquals(testValue2,context.get(testKey));
-  WorkflowInstanceManagerUtil.deleteWorkflowInstance(workflowInstance.getWorkflowInstanceId());
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
 }
