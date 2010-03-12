@@ -1,10 +1,10 @@
 {
-  List<WorkflowTask> workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  List<WorkflowTask> workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getTaskNameComparator(true));
   assertEquals(0,workflowTasks.size());
   WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,DEFINITION_NAME_3,_workflowDefinition.getVersion(),null,null);
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
     assertEquals(100L,childWorkflowTask.getAssigneeUserId());
@@ -12,7 +12,7 @@
     childWorkflowTask=WorkflowTaskManagerUtil.assignWorkflowTaskToUser(companyId,defaultUserId,childWorkflowTask.getWorkflowTaskId(),defaultUserId,null,null);
     assertEquals(defaultUserId,childWorkflowTask.getAssigneeUserId());
   }
-  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+  workflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByUser(companyId,defaultUserId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getTaskNameComparator(true));
   assertEquals(3,workflowTasks.size());
   WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
 }

@@ -4,13 +4,13 @@
   List<WorkflowInstance> childrenWorkflowInstances=workflowInstance.getChildrenWorkflowInstances();
   assertEquals(3,childrenWorkflowInstances.size());
   for (  WorkflowInstance childWorkflowInstance : childrenWorkflowInstances) {
-    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowTaskNameComparator(true));
+    List<WorkflowTask> childWorkflowTasks=WorkflowTaskManagerUtil.getWorkflowTasksByWorkflowInstance(companyId,childWorkflowInstance.getWorkflowInstanceId(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getTaskNameComparator(true));
     assertEquals(1,childWorkflowTasks.size());
     WorkflowTask childWorkflowTask=childWorkflowTasks.get(0);
-    List<WorkflowLog> childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
+    List<WorkflowLog> childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getLogCreateDateComparator(true));
     assertTrue(childWorkflowLogs.isEmpty());
     WorkflowTaskManagerUtil.completeWorkflowTask(companyId,childWorkflowTask.getAssigneeUserId(),childWorkflowTask.getWorkflowTaskId(),null,null,null);
-    childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowLogCreateDateComparator(true));
+    childWorkflowLogs=WorkflowLogManagerUtil.getWorkflowLogs(companyId,childWorkflowTask.getWorkflowTaskId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getLogCreateDateComparator(true));
     assertTrue(!childWorkflowLogs.isEmpty());
   }
   WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());

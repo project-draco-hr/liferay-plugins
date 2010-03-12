@@ -9,7 +9,7 @@
   WorkflowInstance workflowInstance2_1=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
   workflowInstance2_1=WorkflowInstanceManagerUtil.signalWorkflowInstance(companyId,defaultUserId,workflowInstance2_1.getWorkflowInstanceId(),"toEnd",null);
   WorkflowInstance workflowInstance2_2=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition2.getName(),_workflowDefinition2.getVersion(),null,null);
-  List<WorkflowInstance> workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowInstanceStartDateComparator(true));
+  List<WorkflowInstance> workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getInstanceStartDateComparator(true));
   assertEquals(2,workflowInstances.size());
   WorkflowInstance workflowInstance1=workflowInstances.get(0);
   assertEquals(0,workflowInstance1.getChildrenWorkflowInstanceCount());
@@ -35,7 +35,7 @@
   assertEquals(DEFINITION_NAME_1,workflowInstance2.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition1.getVersion(),workflowInstance2.getWorkflowDefinitionVersion());
   assertEquals(workflowInstance1_2.getWorkflowInstanceId(),workflowInstance2.getWorkflowInstanceId());
-  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.TRUE,1,2,new WorkflowInstanceStartDateComparator(true));
+  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.TRUE,1,2,WorkflowComparatorFactoryUtil.getInstanceStartDateComparator(true));
   assertEquals(1,workflowInstances.size());
   WorkflowInstance workflowInstance3=workflowInstances.get(0);
   assertEquals(0,workflowInstance3.getChildrenWorkflowInstanceCount());
@@ -49,7 +49,7 @@
   assertEquals(DEFINITION_NAME_1,workflowInstance3.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition1.getVersion(),workflowInstance3.getWorkflowDefinitionVersion());
   assertEquals(workflowInstance1_2.getWorkflowInstanceId(),workflowInstance3.getWorkflowInstanceId());
-  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowInstanceStartDateComparator(true));
+  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_1,_workflowDefinition1.getVersion(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getInstanceStartDateComparator(true));
   assertEquals(1,workflowInstances.size());
   WorkflowInstance workflowInstance4=workflowInstances.get(0);
   assertEquals(0,workflowInstance4.getChildrenWorkflowInstanceCount());
@@ -63,7 +63,7 @@
   assertEquals(DEFINITION_NAME_1,workflowInstance4.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition1.getVersion(),workflowInstance4.getWorkflowDefinitionVersion());
   assertEquals(workflowInstance1_3.getWorkflowInstanceId(),workflowInstance4.getWorkflowInstanceId());
-  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_2,_workflowDefinition2.getVersion(),Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowInstanceStartDateComparator(true));
+  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_2,_workflowDefinition2.getVersion(),Boolean.TRUE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getInstanceStartDateComparator(true));
   assertEquals(1,workflowInstances.size());
   WorkflowInstance workflowInstance5=workflowInstances.get(0);
   assertEquals(0,workflowInstance5.getChildrenWorkflowInstanceCount());
@@ -77,7 +77,7 @@
   assertEquals(DEFINITION_NAME_2,workflowInstance5.getWorkflowDefinitionName());
   assertEquals(_workflowDefinition2.getVersion(),workflowInstance5.getWorkflowDefinitionVersion());
   assertEquals(workflowInstance2_1.getWorkflowInstanceId(),workflowInstance5.getWorkflowInstanceId());
-  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_2,_workflowDefinition2.getVersion(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new WorkflowInstanceStartDateComparator(true));
+  workflowInstances=WorkflowInstanceManagerUtil.getWorkflowInstances(companyId,DEFINITION_NAME_2,_workflowDefinition2.getVersion(),Boolean.FALSE,QueryUtil.ALL_POS,QueryUtil.ALL_POS,WorkflowComparatorFactoryUtil.getInstanceStartDateComparator(true));
   assertEquals(1,workflowInstances.size());
   WorkflowInstance workflowInstance6=workflowInstances.get(0);
   assertEquals(0,workflowInstance6.getChildrenWorkflowInstanceCount());
