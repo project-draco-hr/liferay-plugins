@@ -1,0 +1,58 @@
+{
+  List<MessageElement> messageElements=new ArrayList<MessageElement>();
+  ExtensionUtil.addMessageElement(messageElements,"css-class-wrapper",portlet.getCssClassWrapper());
+  HttpServletRequest request=ServletUtil.getRequest();
+  String portalURL=PortalUtil.getPortalURL(request);
+  String portalPath=portalURL + PortalUtil.getPathContext();
+  String portletPath=portalURL + portlet.getContextPath();
+  long timestamp=portlet.getTimestamp();
+  for (  String footerPortalCss : portlet.getHeaderPortalCss()) {
+    if (!HttpUtil.hasProtocol(footerPortalCss)) {
+      footerPortalCss=portalPath + footerPortalCss + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"footer-portal-css",footerPortalCss);
+  }
+  for (  String footerPortalJavaScript : portlet.getHeaderPortalJavaScript()) {
+    if (!HttpUtil.hasProtocol(footerPortalJavaScript)) {
+      footerPortalJavaScript=portalPath + footerPortalJavaScript + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"footer-portal-css",footerPortalJavaScript);
+  }
+  for (  String footerPortletCss : portlet.getHeaderPortletCss()) {
+    if (!HttpUtil.hasProtocol(footerPortletCss)) {
+      footerPortletCss=portletPath + footerPortletCss + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"footer-portlet-css",footerPortletCss);
+  }
+  for (  String footerPortletJavaScript : portlet.getHeaderPortletJavaScript()) {
+    if (!HttpUtil.hasProtocol(footerPortletJavaScript)) {
+      footerPortletJavaScript=portletPath + footerPortletJavaScript + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"footer-portlet-css",footerPortletJavaScript);
+  }
+  for (  String headerPortalCss : portlet.getHeaderPortalCss()) {
+    if (!HttpUtil.hasProtocol(headerPortalCss)) {
+      headerPortalCss=portalPath + headerPortalCss + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"header-portal-css",headerPortalCss);
+  }
+  for (  String headerPortalJavaScript : portlet.getHeaderPortalJavaScript()) {
+    if (!HttpUtil.hasProtocol(headerPortalJavaScript)) {
+      headerPortalJavaScript=portalPath + headerPortalJavaScript + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"header-portal-css",headerPortalJavaScript);
+  }
+  for (  String headerPortletCss : portlet.getHeaderPortletCss()) {
+    if (!HttpUtil.hasProtocol(headerPortletCss)) {
+      headerPortletCss=portletPath + headerPortletCss + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"header-portlet-css",headerPortletCss);
+  }
+  for (  String headerPortletJavaScript : portlet.getHeaderPortletJavaScript()) {
+    if (!HttpUtil.hasProtocol(headerPortletJavaScript)) {
+      headerPortletJavaScript=portletPath + headerPortletJavaScript + "?t="+ timestamp;
+    }
+    ExtensionUtil.addMessageElement(messageElements,"header-portlet-css",headerPortletJavaScript);
+  }
+  portletDescription.setExtensions(ExtensionUtil.getExtensions(messageElements));
+}

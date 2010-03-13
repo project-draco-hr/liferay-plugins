@@ -1,0 +1,17 @@
+{
+  String path=GetterUtil.getString(request.getPathInfo());
+  ServletContext servletContext=getServletContext();
+  for (  String curPath : _PATHS) {
+    if (path.equals(curPath)) {
+      String content=StringUtil.read(servletContext.getResourceAsStream("/WEB-INF/wsdl" + path));
+      return replaceLocations(request,content);
+    }
+  }
+  double version=ParamUtil.getDouble(request,"version",_DEFAULT_VERSION);
+  String content=StringUtil.read(servletContext.getResourceAsStream("/WEB-INF/wsdl/wsrp-" + version + "-service.wsdl"));
+  content=replaceLocations(request,content);
+  String url=request.getRequestURL().toString();
+  int pos=url.lastIndexOf(StringPool.SLASH);
+  long wsrpProducerId=GetterUtil.getLong(url.substring(pos));
+  return StringUtil.replace(content,new String[]{"http://my.service:8080","${wsrpProducerId}"},new String[]{getURL(request),String.valueOf(wsrpProducerId)});
+}

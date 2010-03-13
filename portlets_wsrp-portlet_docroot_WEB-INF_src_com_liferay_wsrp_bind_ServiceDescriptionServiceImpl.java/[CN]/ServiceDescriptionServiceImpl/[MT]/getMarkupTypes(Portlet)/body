@@ -1,0 +1,24 @@
+{
+  Map<String,Set<String>> portletModes=portlet.getPortletModes();
+  Map<String,Set<String>> windowStates=portlet.getWindowStates();
+  Set<String> mimeTypes=new HashSet<String>();
+  mimeTypes.addAll(portletModes.keySet());
+  mimeTypes.addAll(windowStates.keySet());
+  List<MarkupType> markupTypes=new ArrayList<MarkupType>();
+  for (  String mimeType : mimeTypes) {
+    Set<String> mimeTypePortletModes=portletModes.get(mimeType);
+    if (mimeTypePortletModes == null) {
+      mimeTypePortletModes=Collections.EMPTY_SET;
+    }
+    Set<String> mimeTypeWindowStates=windowStates.get(mimeType);
+    if (mimeTypeWindowStates == null) {
+      mimeTypeWindowStates=Collections.EMPTY_SET;
+    }
+    MarkupType markupType=new MarkupType();
+    markupType.setMimeType(mimeType);
+    markupType.setModes(mimeTypePortletModes.toArray(new String[mimeTypePortletModes.size()]));
+    markupType.setWindowStates(mimeTypeWindowStates.toArray(new String[mimeTypeWindowStates.size()]));
+    markupTypes.add(markupType);
+  }
+  return markupTypes.toArray(new MarkupType[markupTypes.size()]);
+}

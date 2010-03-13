@@ -1,0 +1,49 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append(getWidgetPath());
+  sb.append(StringPool.QUESTION);
+  Layout layout=getLayout(portletContext,wsrpProducer);
+  sb.append("p_l_id=");
+  sb.append(layout.getPlid());
+  NavigationalContext navigationalContext=mimeRequest.getNavigationalContext();
+  String portletId=getPortletId(portletContext,navigationalContext);
+  sb.append("&p_p_id=");
+  sb.append(HttpUtil.encodeURL(portletId));
+  sb.append("&p_p_lifecycle=");
+  sb.append(lifecycle);
+  String windowState=getWindowState(mimeRequest);
+  sb.append("&p_p_state=");
+  sb.append(HttpUtil.encodeURL(windowState));
+  String portletMode=getPortletMode(mimeRequest);
+  sb.append("&p_p_mode=");
+  sb.append(HttpUtil.encodeURL(portletMode));
+  if (lifecycle.equals("2") && Validator.isNotNull(resourceId)) {
+    sb.append("&p_p_resource_id=");
+    sb.append(resourceId);
+  }
+  String opaqueValue=null;
+  if (navigationalContext != null) {
+    opaqueValue=navigationalContext.getOpaqueValue();
+  }
+  if (Validator.isNotNull(opaqueValue)) {
+    sb.append(StringPool.AMPERSAND);
+    sb.append(opaqueValue);
+  }
+  if (lifecycle.equals("0")) {
+    MessageElement[] formParameters=ExtensionUtil.getMessageElements(mimeRequest.getExtensions());
+    if (formParameters != null) {
+      String namespace=PortalUtil.getPortletNamespace(portletId);
+      for (      MessageElement formParameter : formParameters) {
+        sb.append(StringPool.AMPERSAND);
+        sb.append(namespace + formParameter.getName());
+        sb.append(StringPool.EQUAL);
+        sb.append(HttpUtil.encodeURL(formParameter.getValue()));
+      }
+    }
+  }
+  sb.append("&wsrp=1");
+  if (_log.isInfoEnabled()) {
+    _log.info("URL " + sb.toString());
+  }
+  return sb.toString();
+}

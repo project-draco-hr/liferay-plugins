@@ -1,0 +1,26 @@
+{
+  PortletSession portletSession=portletRequest.getPortletSession();
+  String markupServiceKey=getSessionKey(WebKeys.MARKUP_SERVICE,portletRequest,wsrpConsumer);
+  TransientValue<WSRP_v2_Markup_PortType> markupServiceTransientValue=(TransientValue<WSRP_v2_Markup_PortType>)portletSession.getAttribute(markupServiceKey,PortletSession.APPLICATION_SCOPE);
+  if ((markupServiceTransientValue == null) || (markupServiceTransientValue.isNull())) {
+    String userToken=WSRPConsumerManager.getUserToken(portletRequest);
+    WSRP_v2_Markup_PortType markupService=wsrpConsumerManager.getMarkupService(userToken);
+    markupServiceTransientValue=new TransientValue<WSRP_v2_Markup_PortType>(markupService);
+    ServiceDescription serviceDescription=wsrpConsumerManager.getServiceDescription();
+    String cookieKey=getSessionKey(WebKeys.COOKIE,portletRequest,wsrpConsumer);
+    String cookie=(String)portletSession.getAttribute(cookieKey,PortletSession.APPLICATION_SCOPE);
+    CookieProtocol cookieProtocol=serviceDescription.getRequiresInitCookie();
+    if ((cookie == null) && (cookieProtocol != null)) {
+      String cookieProtocolValue=cookieProtocol.getValue();
+      if (cookieProtocolValue.equals(CookieProtocol._perGroup) || cookieProtocolValue.equals(CookieProtocol._perUser)) {
+        InitCookie initCookie=new InitCookie();
+        initCookie.setRegistrationContext(wsrpConsumer.getRegistrationContext());
+        markupService.initCookie(initCookie);
+        cookie=SimpleHTTPSender.getCurrentCookie();
+        portletSession.setAttribute(cookieKey,cookie,PortletSession.APPLICATION_SCOPE);
+      }
+    }
+    portletSession.setAttribute(markupServiceKey,markupServiceTransientValue,PortletSession.APPLICATION_SCOPE);
+  }
+  return markupServiceTransientValue.getValue();
+}

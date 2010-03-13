@@ -1,0 +1,33 @@
+{
+  PortletSession portletSession=resourceRequest.getPortletSession();
+  PortletContext portletContext=wsrpResourceResponse.getPortletContext();
+  if (portletContext != null) {
+    portletSession.setAttribute(WebKeys.PORTLET_CONTEXT,portletContext);
+  }
+  SessionContext sessionContext=wsrpResourceResponse.getSessionContext();
+  if (sessionContext != null) {
+    portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
+  }
+  ResourceContext resourceContext=wsrpResourceResponse.getResourceContext();
+  NamedString[] clientAttributes=resourceContext.getClientAttributes();
+  if (clientAttributes != null) {
+    for (    NamedString clientAttribute : clientAttributes) {
+      String name=clientAttribute.getName();
+      String value=clientAttribute.getValue();
+      if (name.equalsIgnoreCase(HttpHeaders.CONTENT_LENGTH)) {
+        resourceResponse.setContentLength(Integer.parseInt(value));
+      }
+ else       if (name.equalsIgnoreCase(HttpHeaders.CONTENT_TYPE)) {
+        resourceResponse.setContentType(value);
+      }
+    }
+  }
+  String itemString=resourceContext.getItemString();
+  byte[] itemBinary=resourceContext.getItemBinary();
+  if (Validator.isNotNull(itemString)) {
+    PortletResponseUtil.write(resourceResponse,itemString);
+  }
+ else   if (itemBinary != null) {
+    PortletResponseUtil.write(resourceResponse,itemBinary);
+  }
+}

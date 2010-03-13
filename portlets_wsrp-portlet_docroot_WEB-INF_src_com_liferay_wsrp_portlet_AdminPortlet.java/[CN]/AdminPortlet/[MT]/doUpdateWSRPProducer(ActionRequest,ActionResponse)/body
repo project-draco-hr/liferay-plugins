@@ -1,0 +1,12 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long wsrpProducerId=ParamUtil.getLong(actionRequest,"wsrpProducerId");
+  String name=ParamUtil.getString(actionRequest,"name");
+  String portletIds=ParamUtil.getString(actionRequest,"portletIds");
+  if (wsrpProducerId <= 0) {
+    WSRPProducerLocalServiceUtil.addWSRPProducer(themeDisplay.getCompanyId(),name,portletIds);
+  }
+ else {
+    WSRPProducerLocalServiceUtil.updateWSRPProducer(wsrpProducerId,name,portletIds);
+  }
+}

@@ -1,0 +1,39 @@
+{
+  WSRPConsumerPortlet wsrpConsumerPortlet=findByPrimaryKey(wsrpConsumerPortletId);
+  int count=countByWsrpConsumerId(wsrpConsumerId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (obc != null) {
+      query=new StringBundler(3 + (obc.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(3);
+    }
+    query.append(_SQL_SELECT_WSRPCONSUMERPORTLET_WHERE);
+    query.append(_FINDER_COLUMN_WSRPCONSUMERID_WSRPCONSUMERID_2);
+    if (obc != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+    }
+ else {
+      query.append(WSRPConsumerPortletModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(wsrpConsumerId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,obc,wsrpConsumerPortlet);
+    WSRPConsumerPortlet[] array=new WSRPConsumerPortletImpl[3];
+    array[0]=(WSRPConsumerPortlet)objArray[0];
+    array[1]=(WSRPConsumerPortlet)objArray[1];
+    array[2]=(WSRPConsumerPortlet)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

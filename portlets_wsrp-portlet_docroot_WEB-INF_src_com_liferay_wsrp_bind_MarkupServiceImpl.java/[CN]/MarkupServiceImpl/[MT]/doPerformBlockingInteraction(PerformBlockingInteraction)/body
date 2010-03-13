@@ -1,0 +1,47 @@
+{
+  WSRPProducer wsrpProducer=getWSRPProducer();
+  Http.Options httpOptions=new Http.Options();
+  addHeaders(performBlockingInteraction.getMarkupParams(),httpOptions);
+  httpOptions.setLocation(getURL(performBlockingInteraction,wsrpProducer));
+  PortletContext portletContext=performBlockingInteraction.getPortletContext();
+  InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
+  NamedString[] formParameters=interactionParams.getFormParameters();
+  if (formParameters != null) {
+    MarkupParams markupParams=performBlockingInteraction.getMarkupParams();
+    NavigationalContext navigationalContext=markupParams.getNavigationalContext();
+    String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext,navigationalContext));
+    for (    NamedString formParameter : formParameters) {
+      httpOptions.addPart(namespace + formParameter.getName(),formParameter.getValue());
+    }
+  }
+  httpOptions.setFollowRedirects(false);
+  httpOptions.setPost(true);
+  String rawContent=getRawContent(httpOptions);
+  Http.Response response=httpOptions.getResponse();
+  String redirect=response.getRedirect();
+  String widgetPath=getWidgetPath();
+  BlockingInteractionResponse blockingInteractionResponse=new BlockingInteractionResponse();
+  if (Validator.isNotNull(redirect) && !redirect.startsWith(widgetPath)) {
+    int pos=redirect.indexOf("wsrp_rewrite?");
+    if (pos >= 0) {
+      redirect=redirect.substring(pos);
+    }
+    blockingInteractionResponse.setRedirectURL(redirect);
+  }
+ else {
+    if (Validator.isNotNull(redirect) && redirect.startsWith(widgetPath)) {
+      httpOptions.setLocation(redirect);
+      rawContent=getRawContent(httpOptions);
+    }
+    String content=getContent(rawContent);
+    MarkupContext markupContext=new MarkupContext();
+    markupContext.setItemString(content);
+    markupContext.setRequiresRewriting(true);
+    Extension[] configurationURLExtension=getConfigurationURLExtension(rawContent);
+    markupContext.setExtensions(configurationURLExtension);
+    UpdateResponse updateResponse=new UpdateResponse();
+    updateResponse.setMarkupContext(markupContext);
+    blockingInteractionResponse.setUpdateResponse(updateResponse);
+  }
+  return blockingInteractionResponse;
+}

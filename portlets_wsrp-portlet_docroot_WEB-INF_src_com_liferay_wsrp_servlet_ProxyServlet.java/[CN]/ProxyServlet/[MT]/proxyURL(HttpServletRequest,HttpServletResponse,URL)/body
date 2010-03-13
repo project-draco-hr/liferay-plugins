@@ -1,0 +1,12 @@
+{
+  HttpSession session=request.getSession();
+  URLConnection urlConnection=url.openConnection();
+  String cookie=(String)session.getAttribute(WebKeys.COOKIE);
+  if (cookie != null) {
+    urlConnection.setRequestProperty(HttpHeaders.COOKIE,cookie);
+  }
+  urlConnection.connect();
+  response.setContentLength(urlConnection.getContentLength());
+  response.setContentType(urlConnection.getContentType());
+  ServletResponseUtil.write(response,urlConnection.getInputStream());
+}

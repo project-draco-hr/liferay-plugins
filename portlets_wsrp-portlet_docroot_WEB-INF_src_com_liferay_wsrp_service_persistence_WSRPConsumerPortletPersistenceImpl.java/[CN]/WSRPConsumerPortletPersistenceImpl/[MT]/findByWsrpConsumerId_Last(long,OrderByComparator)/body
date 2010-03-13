@@ -1,0 +1,15 @@
+{
+  int count=countByWsrpConsumerId(wsrpConsumerId);
+  List<WSRPConsumerPortlet> list=findByWsrpConsumerId(wsrpConsumerId,count - 1,count,obc);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("wsrpConsumerId=");
+    msg.append(wsrpConsumerId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchConsumerPortletException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

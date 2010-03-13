@@ -1,0 +1,14 @@
+{
+  List<Element> bindingElements=element.elements(_getWsdlQName("port"));
+  Element firstBindingElement=bindingElements.get(0);
+  String binding=firstBindingElement.attributeValue("binding");
+  boolean v2=false;
+  if (binding.contains("v2")) {
+    v2=true;
+    _serviceHandler.setV2(v2);
+  }
+  for (  Element bindingElement : bindingElements) {
+    _readBindingElement(bindingElement);
+  }
+  return v2;
+}

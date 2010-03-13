@@ -1,0 +1,17 @@
+{
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
+  try {
+    WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
+    RegistrationContext registrationContext=wsrpConsumer.getRegistrationContext();
+    wsrpConsumerManager.updateServiceDescription(registrationContext);
+  }
+ catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}

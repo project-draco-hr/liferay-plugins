@@ -1,0 +1,35 @@
+{
+  String methodName=method.getName();
+  URL bindingURL=(URL)args[0];
+  if (_v2) {
+    if (methodName.equals(_GET_WSRP_V2_MARKUP_SERVICE_METHOD)) {
+      return getV2MarkupService(bindingURL);
+    }
+ else {
+      return method.invoke(_v2ServiceLocator,args);
+    }
+  }
+  Class<?> proxyInterface=null;
+  InvocationHandler invocationHandler=null;
+  if (methodName.equals(_GET_WSRP_V2_MARKUP_SERVICE_METHOD)) {
+    proxyInterface=WSRP_v2_Markup_PortType.class;
+    WSRP_v1_Markup_PortType markupService=getV1MarkupService(bindingURL);
+    invocationHandler=new MarkupServiceHandler(markupService);
+  }
+ else   if (methodName.equals(_GET_WSRP_V2_PORTLET_MANAGEMENT_SERVICE_METHOD)) {
+    proxyInterface=WSRP_v2_PortletManagement_PortType.class;
+    WSRP_v1_PortletManagement_PortType portletManagementService=_v1ServiceLocator.getWSRPPortletManagementService(bindingURL);
+    invocationHandler=new PortletManagementServiceHandler(portletManagementService);
+  }
+ else   if (methodName.equals(_GET_WSRP_V2_REGISTRATION_SERVICE_METHOD)) {
+    proxyInterface=WSRP_v2_Registration_PortType.class;
+    WSRP_v1_Registration_PortType registrationService=_v1ServiceLocator.getWSRPRegistrationService(bindingURL);
+    invocationHandler=new RegistrationServiceHandler(registrationService);
+  }
+ else   if (methodName.equals(_GET_WSRP_V2_SERVICE_DESCRIPTION_SERVICE_METHOD)) {
+    proxyInterface=WSRP_v2_ServiceDescription_PortType.class;
+    WSRP_v1_ServiceDescription_PortType serviceDescriptionService=_v1ServiceLocator.getWSRPServiceDescriptionService(bindingURL);
+    invocationHandler=new ServiceDescriptionServiceHandler(serviceDescriptionService);
+  }
+  return Proxy.newProxyInstance(ServiceHandler.class.getClassLoader(),new Class[]{proxyInterface},invocationHandler);
+}

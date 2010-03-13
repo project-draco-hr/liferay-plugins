@@ -1,0 +1,16 @@
+{
+  WSRPProducer wsrpProducer=getWSRPProducer();
+  Http.Options httpOptions=new Http.Options();
+  addHeaders(getMarkup.getMarkupParams(),httpOptions);
+  httpOptions.setLocation(getURL(getMarkup,wsrpProducer));
+  String rawContent=getRawContent(httpOptions);
+  String content=getContent(rawContent);
+  MarkupContext markupContext=new MarkupContext();
+  markupContext.setItemString(content);
+  markupContext.setRequiresRewriting(true);
+  Extension[] configurationURLExtension=getConfigurationURLExtension(rawContent);
+  markupContext.setExtensions(configurationURLExtension);
+  MarkupResponse markupResponse=new MarkupResponse();
+  markupResponse.setMarkupContext(markupContext);
+  return markupResponse;
+}

@@ -1,0 +1,22 @@
+{
+  WSRPConsumerPortlet wsrpConsumerPortlet=getWSRPConsumerPortlet();
+  WSRPConsumer wsrpConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerPortlet.getWsrpConsumerId());
+  String userToken=WSRPConsumerManager.getUserToken(actionRequest);
+  WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
+  InteractionParams interactionParams=new InteractionParams();
+  MarkupParams markupParams=new MarkupParams();
+  PortletContext portletContext=new PortletContext();
+  RuntimeContext runtimeContext=new RuntimeContext();
+  UserContext userContext=new UserContext();
+  initContexts(actionRequest,actionResponse,wsrpConsumerPortlet,wsrpConsumerManager,interactionParams,markupParams,portletContext,runtimeContext,userContext);
+  PerformBlockingInteraction performBlockingInteraction=new PerformBlockingInteraction();
+  performBlockingInteraction.setInteractionParams(interactionParams);
+  performBlockingInteraction.setMarkupParams(markupParams);
+  performBlockingInteraction.setPortletContext(portletContext);
+  performBlockingInteraction.setRegistrationContext(wsrpConsumer.getRegistrationContext());
+  performBlockingInteraction.setRuntimeContext(runtimeContext);
+  performBlockingInteraction.setUserContext(userContext);
+  WSRP_v2_Markup_PortType markupService=getMarkupService(actionRequest,wsrpConsumerManager,wsrpConsumer);
+  BlockingInteractionResponse blockingInteractionResponse=markupService.performBlockingInteraction(performBlockingInteraction);
+  processBlockingInteractionResponse(actionRequest,actionResponse,wsrpConsumerManager,blockingInteractionResponse);
+}

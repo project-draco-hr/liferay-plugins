@@ -1,0 +1,13 @@
+{
+  Handler handler=new WSDoAllSender();
+  handler.setOption(WSHandlerConstants.ACTION,"UsernameToken");
+  handler.setOption(WSHandlerConstants.MUST_UNDERSTAND,"false");
+  handler.setOption(UsernameToken.PASSWORD_TYPE,WSConstants.PW_NONE);
+  handler.setOption(WSHandlerConstants.PW_CALLBACK_CLASS,PasswordCallback.class.getName());
+  handler.setOption(WSHandlerConstants.USER,_userToken);
+  SimpleChain simpleChain=new SimpleChain();
+  simpleChain.addHandler(handler);
+  SimpleProvider simpleProvider=new SimpleProvider();
+  simpleProvider.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME,new SimpleTargetedChain(simpleChain,new HTTPSender(),null));
+  return simpleProvider;
+}
