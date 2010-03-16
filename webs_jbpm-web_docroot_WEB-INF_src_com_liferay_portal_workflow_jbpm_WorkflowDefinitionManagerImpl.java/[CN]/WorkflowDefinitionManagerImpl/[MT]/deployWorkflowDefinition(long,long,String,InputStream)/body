@@ -24,9 +24,11 @@ catch (  JpdlException jpdle) {
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     jbpmContext.deployProcessDefinition(processDefinition);
+    WorkflowDefinitionStatusImpl wfDefinitionStatus=new WorkflowDefinitionStatusImpl(true,processDefinition);
+    jbpmContext.getSession().save(wfDefinitionStatus);
   }
   finally {
     jbpmContext.close();
   }
-  return new WorkflowDefinitionImpl(processDefinition);
+  return new WorkflowDefinitionImpl(processDefinition,true);
 }
