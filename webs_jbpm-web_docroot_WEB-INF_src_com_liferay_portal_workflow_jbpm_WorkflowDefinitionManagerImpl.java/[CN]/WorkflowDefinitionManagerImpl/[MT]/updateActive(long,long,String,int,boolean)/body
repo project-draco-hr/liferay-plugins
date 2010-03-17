@@ -1,0 +1,20 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    GraphSession graphSession=jbpmContext.getGraphSession();
+    ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
+    if (processDefinition != null) {
+      CustomSession customSession=new CustomSession(jbpmContext);
+      WorkflowDefinitionStatusImpl wfDefinitionStatus=customSession.findWorkflowDefinitonStatus(processDefinition.getId());
+      wfDefinitionStatus.setActive(active);
+      jbpmContext.getSession().update(wfDefinitionStatus);
+      return new WorkflowDefinitionImpl(processDefinition,wfDefinitionStatus.isActive());
+    }
+ else {
+      throw new WorkflowException("No workflow definition with name " + name + " and version "+ version);
+    }
+  }
+  finally {
+    jbpmContext.close();
+  }
+}
