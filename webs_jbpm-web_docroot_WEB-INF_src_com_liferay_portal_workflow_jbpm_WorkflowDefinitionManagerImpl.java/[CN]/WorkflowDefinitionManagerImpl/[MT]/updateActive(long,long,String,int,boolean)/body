@@ -5,10 +5,11 @@
     ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
     if (processDefinition != null) {
       CustomSession customSession=new CustomSession(jbpmContext);
-      WorkflowDefinitionStatusImpl wfDefinitionStatus=customSession.findWorkflowDefinitonStatus(processDefinition.getId());
-      wfDefinitionStatus.setActive(active);
-      jbpmContext.getSession().update(wfDefinitionStatus);
-      return new WorkflowDefinitionImpl(processDefinition,wfDefinitionStatus.isActive());
+      WorkflowDefinitionStatusImpl workflowDefinitionStatus=customSession.findWorkflowDefinitonStatus(processDefinition.getId());
+      workflowDefinitionStatus.setActive(active);
+      Session session=jbpmContext.getSession();
+      session.update(workflowDefinitionStatus);
+      return new WorkflowDefinitionImpl(processDefinition,workflowDefinitionStatus.isActive());
     }
  else {
       throw new WorkflowException("No workflow definition with name " + name + " and version "+ version);
