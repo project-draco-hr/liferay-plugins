@@ -7,11 +7,14 @@
       List<ProcessInstance> processInstances=graphSession.findProcessInstances(processDefinition.getId());
       for (      ProcessInstance processInstance : processInstances) {
         if (!processInstance.hasEnded()) {
-          throw new WorkflowException("Process instance " + processInstance.getId() + " is required");
+          throw new RequiredWorkflowDefinitionException("Process instance " + processInstance.getId() + " is required");
         }
       }
       CustomSession customSession=new CustomSession(jbpmContext);
       customSession.deleteWorkflowDefinitionStatus(processDefinition.getId());
+      for (      ProcessInstance processInstance : processInstances) {
+        customSession.deleteWorkflowLogs(processInstance.getId());
+      }
       graphSession.deleteProcessDefinition(processDefinition);
     }
   }
