@@ -1,5 +1,7 @@
 {
   wsrpConsumerPortlet=toUnwrappedModel(wsrpConsumerPortlet);
+  boolean isNew=wsrpConsumerPortlet.isNew();
+  WSRPConsumerPortletModelImpl wsrpConsumerPortletModelImpl=(WSRPConsumerPortletModelImpl)wsrpConsumerPortlet;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerPortletImpl.class,wsrpConsumerPortlet.getPrimaryKey(),wsrpConsumerPortlet);
+  if (!isNew && (!Validator.equals(wsrpConsumerPortlet.getPortletHandle(),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PORTLETHANDLE,new Object[]{wsrpConsumerPortletModelImpl.getOriginalPortletHandle()});
+  }
+  if (isNew || (!Validator.equals(wsrpConsumerPortlet.getPortletHandle(),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PORTLETHANDLE,new Object[]{wsrpConsumerPortlet.getPortletHandle()},wsrpConsumerPortlet);
+  }
   return wsrpConsumerPortlet;
 }
