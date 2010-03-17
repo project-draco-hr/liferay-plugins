@@ -1,0 +1,25 @@
+{
+  String language=kaleoAction.getLanguage();
+  String script=kaleoAction.getScript();
+  Map<String,Serializable> context=executionContext.getContext();
+  if (context == null) {
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+    context=ContextUtil.convert(kaleoInstance.getContext());
+  }
+  Map<String,Object> inputObjects=new HashMap<String,Object>(context);
+  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=executionContext.getKaleoTaskInstanceAssigment();
+  if (kaleoTaskInstanceAssignment != null) {
+    inputObjects.put("assigneeClassName",kaleoTaskInstanceAssignment.getAssigneeClassName());
+    inputObjects.put("assigneeClassPK",kaleoTaskInstanceAssignment.getAssigneeClassPK());
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+    KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
+    inputObjects.put("taskName",kaleoTask.getName());
+    inputObjects.put("userId",kaleoTaskInstanceAssignment.getUserId());
+  }
+ else {
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    inputObjects.put("userId",kaleoInstanceToken.getUserId());
+  }
+  ScriptingUtil.exec(null,inputObjects,language,script);
+}

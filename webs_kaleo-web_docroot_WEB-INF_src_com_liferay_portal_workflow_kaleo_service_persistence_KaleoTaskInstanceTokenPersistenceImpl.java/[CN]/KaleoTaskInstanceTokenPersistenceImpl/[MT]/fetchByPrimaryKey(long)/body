@@ -1,0 +1,20 @@
+{
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=(KaleoTaskInstanceToken)EntityCacheUtil.getResult(KaleoTaskInstanceTokenModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskInstanceTokenImpl.class,kaleoTaskInstanceTokenId,this);
+  if (kaleoTaskInstanceToken == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoTaskInstanceToken=(KaleoTaskInstanceToken)session.get(KaleoTaskInstanceTokenImpl.class,new Long(kaleoTaskInstanceTokenId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoTaskInstanceToken != null) {
+        cacheResult(kaleoTaskInstanceToken);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoTaskInstanceToken;
+}

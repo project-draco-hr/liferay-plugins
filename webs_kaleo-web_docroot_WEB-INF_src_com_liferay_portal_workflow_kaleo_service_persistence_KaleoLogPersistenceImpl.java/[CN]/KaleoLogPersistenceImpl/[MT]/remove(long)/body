@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    KaleoLog kaleoLog=(KaleoLog)session.get(KaleoLogImpl.class,new Long(kaleoLogId));
+    if (kaleoLog == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kaleoLogId);
+      }
+      throw new NoSuchLogException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kaleoLogId);
+    }
+    return remove(kaleoLog);
+  }
+ catch (  NoSuchLogException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

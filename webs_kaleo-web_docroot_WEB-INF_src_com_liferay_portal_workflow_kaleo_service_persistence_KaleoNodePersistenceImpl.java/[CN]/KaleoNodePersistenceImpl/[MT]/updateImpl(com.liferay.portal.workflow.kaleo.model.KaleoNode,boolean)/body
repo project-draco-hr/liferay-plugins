@@ -1,0 +1,18 @@
+{
+  kaleoNode=toUnwrappedModel(kaleoNode);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kaleoNode,merge);
+    kaleoNode.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KaleoNodeModelImpl.ENTITY_CACHE_ENABLED,KaleoNodeImpl.class,kaleoNode.getPrimaryKey(),kaleoNode);
+  return kaleoNode;
+}

@@ -1,0 +1,10 @@
+{
+  Map<String,Serializable> context=executionContext.getContext();
+  ServiceContext serviceContext=executionContext.getServiceContext();
+  KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+  KaleoTask kaleoTask=KaleoTaskLocalServiceUtil.getKaleoNodeKaleoTask(currentKaleoNode.getKaleoNodeId());
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.addKaleoTaskInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),kaleoTask.getKaleoTaskId(),context,serviceContext);
+  KaleoTaskAssignment kaleoTaskAssignment=kaleoTask.getDefaultKaleoTaskAssignment();
+  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=KaleoTaskInstanceAssignmentLocalServiceUtil.addKaleoTaskInstanceAssignment(kaleoTaskInstanceToken.getKaleoInstanceTokenId(),kaleoTaskAssignment.getKaleoTaskAssignmentId(),context);
+  KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,null,kaleoTaskInstanceAssignment,"Assigned initial task.",context,serviceContext);
+}

@@ -1,0 +1,32 @@
+{
+  Object paramObj0=new LongWrapper(kaleoDefinitionId);
+  Object paramObj1=new LongWrapper(kaleoNodeId);
+  Object paramObj2=new LongWrapper(kaleoTaskId);
+  Object paramObj3=ClpSerializer.translateInput(assignment);
+  if (assignment == null) {
+    paramObj3=new NullWrapper("com.liferay.portal.workflow.kaleo.definition.Assignment");
+  }
+  Object paramObj4=ClpSerializer.translateInput(serviceContext);
+  if (serviceContext == null) {
+    paramObj4=new NullWrapper("com.liferay.portal.service.ServiceContext");
+  }
+  Object returnObj=null;
+  try {
+    returnObj=_classLoaderProxy.invoke("addKaleoTaskAssignment",new Object[]{paramObj0,paramObj1,paramObj2,paramObj3,paramObj4});
+  }
+ catch (  Throwable t) {
+    if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+      throw (com.liferay.portal.kernel.exception.PortalException)t;
+    }
+    if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+      throw (com.liferay.portal.kernel.exception.SystemException)t;
+    }
+    if (t instanceof RuntimeException) {
+      throw (RuntimeException)t;
+    }
+ else {
+      throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
+    }
+  }
+  return (com.liferay.portal.workflow.kaleo.model.KaleoTaskAssignment)ClpSerializer.translateOutput(returnObj);
+}

@@ -1,0 +1,20 @@
+{
+  KaleoTransition kaleoTransition=(KaleoTransition)EntityCacheUtil.getResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,KaleoTransitionImpl.class,kaleoTransitionId,this);
+  if (kaleoTransition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoTransition=(KaleoTransition)session.get(KaleoTransitionImpl.class,new Long(kaleoTransitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoTransition != null) {
+        cacheResult(kaleoTransition);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoTransition;
+}

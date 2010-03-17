@@ -1,0 +1,26 @@
+{
+  kaleoTaskAssignment=toUnwrappedModel(kaleoTaskAssignment);
+  Session session=null;
+  try {
+    session=openSession();
+    if (kaleoTaskAssignment.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(KaleoTaskAssignmentImpl.class,kaleoTaskAssignment.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(kaleoTaskAssignment);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  KaleoTaskAssignmentModelImpl kaleoTaskAssignmentModelImpl=(KaleoTaskAssignmentModelImpl)kaleoTaskAssignment;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KTI_DA,new Object[]{new Long(kaleoTaskAssignmentModelImpl.getOriginalKaleoTaskId()),Boolean.valueOf(kaleoTaskAssignmentModelImpl.getOriginalDefaultAssignment())});
+  EntityCacheUtil.removeResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentImpl.class,kaleoTaskAssignment.getPrimaryKey());
+  return kaleoTaskAssignment;
+}

@@ -1,0 +1,13 @@
+{
+  KaleoLog kaleoLog=createKaleoLog(kaleoInstanceToken,LogType.NODE_ENTRY,serviceContext);
+  kaleoLog.setKaleoNodeId(targetKaleoNode.getKaleoNodeId());
+  kaleoLog.setKaleoNodeName(targetKaleoNode.getName());
+  kaleoLog.setTerminalKaleoNode(targetKaleoNode.isTerminal());
+  if (sourceKaleoNode != null) {
+    kaleoLog.setPreviousKaleoNodeId(sourceKaleoNode.getKaleoNodeId());
+    kaleoLog.setPreviousKaleoNodeName(sourceKaleoNode.getName());
+  }
+  kaleoLog.setStartDate(kaleoLog.getCreateDate());
+  kaleoLogPersistence.update(kaleoLog,false);
+  return kaleoLog;
+}

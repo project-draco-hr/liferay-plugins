@@ -1,0 +1,19 @@
+{
+  Object[] finderArgs=new Object[]{new Long(pk),new Long(kaleoNodePK)};
+  Boolean value=(Boolean)FinderCacheUtil.getResult(FINDER_PATH_CONTAINS_KALEONODE,finderArgs,this);
+  if (value == null) {
+    try {
+      value=Boolean.valueOf(containsKaleoNode.contains(pk,kaleoNodePK));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (value == null) {
+        value=Boolean.FALSE;
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_CONTAINS_KALEONODE,finderArgs,value);
+    }
+  }
+  return value.booleanValue();
+}

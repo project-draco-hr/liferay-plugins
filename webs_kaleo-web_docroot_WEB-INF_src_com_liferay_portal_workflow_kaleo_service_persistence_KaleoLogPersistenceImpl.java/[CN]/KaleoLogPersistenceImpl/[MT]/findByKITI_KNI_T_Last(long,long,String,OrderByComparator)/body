@@ -1,0 +1,19 @@
+{
+  int count=countByKITI_KNI_T(kaleoInstanceTokenId,kaleoNodeId,type);
+  List<KaleoLog> list=findByKITI_KNI_T(kaleoInstanceTokenId,kaleoNodeId,type,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(8);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("kaleoInstanceTokenId=");
+    msg.append(kaleoInstanceTokenId);
+    msg.append(", kaleoNodeId=");
+    msg.append(kaleoNodeId);
+    msg.append(", type=");
+    msg.append(type);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchLogException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

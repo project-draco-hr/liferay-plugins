@@ -1,0 +1,53 @@
+{
+  KaleoAction kaleoAction=findByPrimaryKey(kaleoActionId);
+  int count=countByKNI_ET(kaleoNodeId,executionType);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(4);
+    }
+    query.append(_SQL_SELECT_KALEOACTION_WHERE);
+    query.append(_FINDER_COLUMN_KNI_ET_KALEONODEID_2);
+    if (executionType == null) {
+      query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_1);
+    }
+ else {
+      if (executionType.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_2);
+      }
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(KaleoActionModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(kaleoNodeId);
+    if (executionType != null) {
+      qPos.add(executionType);
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,kaleoAction);
+    KaleoAction[] array=new KaleoActionImpl[3];
+    array[0]=(KaleoAction)objArray[0];
+    array[1]=(KaleoAction)objArray[1];
+    array[2]=(KaleoAction)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

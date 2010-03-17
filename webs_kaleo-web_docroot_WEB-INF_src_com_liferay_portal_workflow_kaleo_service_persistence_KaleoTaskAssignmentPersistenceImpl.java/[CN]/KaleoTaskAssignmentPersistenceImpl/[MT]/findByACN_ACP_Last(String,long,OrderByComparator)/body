@@ -1,0 +1,17 @@
+{
+  int count=countByACN_ACP(assigneeClassName,assigneeClassPK);
+  List<KaleoTaskAssignment> list=findByACN_ACP(assigneeClassName,assigneeClassPK,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("assigneeClassName=");
+    msg.append(assigneeClassName);
+    msg.append(", assigneeClassPK=");
+    msg.append(assigneeClassPK);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchTaskAssignmentException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

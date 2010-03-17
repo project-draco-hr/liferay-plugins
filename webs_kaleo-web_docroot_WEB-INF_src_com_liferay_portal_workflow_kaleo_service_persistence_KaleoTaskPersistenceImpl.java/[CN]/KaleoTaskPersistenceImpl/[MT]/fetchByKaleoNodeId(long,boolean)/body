@@ -1,0 +1,52 @@
+{
+  Object[] finderArgs=new Object[]{new Long(kaleoNodeId)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_KALEONODEID,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=new StringBundler(3);
+      query.append(_SQL_SELECT_KALEOTASK_WHERE);
+      query.append(_FINDER_COLUMN_KALEONODEID_KALEONODEID_2);
+      query.append(KaleoTaskModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(kaleoNodeId);
+      List<KaleoTask> list=q.list();
+      result=list;
+      KaleoTask kaleoTask=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,finderArgs,list);
+      }
+ else {
+        kaleoTask=list.get(0);
+        cacheResult(kaleoTask);
+        if ((kaleoTask.getKaleoNodeId() != kaleoNodeId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,finderArgs,kaleoTask);
+        }
+      }
+      return kaleoTask;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,finderArgs,new ArrayList<KaleoTask>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (KaleoTask)result;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  KaleoLog kaleoLog=createKaleoLog(kaleoInstanceToken,LogType.NODE_EXIT,serviceContext);
+  kaleoLog.setKaleoNodeId(departingKaleoNode.getKaleoNodeId());
+  kaleoLog.setKaleoNodeName(departingKaleoNode.getName());
+  kaleoLog.setEndDate(kaleoLog.getCreateDate());
+  try {
+    KaleoLog previousKaleoLog=getPreviousLog(kaleoLog.getKaleoInstanceTokenId(),kaleoLog.getKaleoNodeId(),LogType.WORKFLOW_INSTANCE_START);
+    Date startDate=previousKaleoLog.getStartDate();
+    Date endDate=kaleoLog.getEndDate();
+    kaleoLog.setDuration(endDate.getTime() - startDate.getTime());
+  }
+ catch (  NoSuchLogException nsle) {
+  }
+  kaleoLogPersistence.update(kaleoLog,false);
+  return kaleoLog;
+}

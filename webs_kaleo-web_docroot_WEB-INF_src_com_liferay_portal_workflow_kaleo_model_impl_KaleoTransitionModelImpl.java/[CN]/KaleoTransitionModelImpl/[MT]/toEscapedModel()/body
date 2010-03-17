@@ -1,0 +1,27 @@
+{
+  if (isEscapedModel()) {
+    return (KaleoTransition)this;
+  }
+ else {
+    KaleoTransition model=new KaleoTransitionImpl();
+    model.setNew(isNew());
+    model.setEscapedModel(true);
+    model.setKaleoTransitionId(getKaleoTransitionId());
+    model.setCompanyId(getCompanyId());
+    model.setUserId(getUserId());
+    model.setUserName(HtmlUtil.escape(getUserName()));
+    model.setCreateDate(getCreateDate());
+    model.setModifiedDate(getModifiedDate());
+    model.setKaleoDefinitionId(getKaleoDefinitionId());
+    model.setKaleoNodeId(getKaleoNodeId());
+    model.setName(HtmlUtil.escape(getName()));
+    model.setDescription(HtmlUtil.escape(getDescription()));
+    model.setSourceKaleoNodeId(getSourceKaleoNodeId());
+    model.setSourceKaleoNodeName(HtmlUtil.escape(getSourceKaleoNodeName()));
+    model.setTargetKaleoNodeId(getTargetKaleoNodeId());
+    model.setTargetKaleoNodeName(HtmlUtil.escape(getTargetKaleoNodeName()));
+    model.setDefaultTransition(getDefaultTransition());
+    model=(KaleoTransition)Proxy.newProxyInstance(KaleoTransition.class.getClassLoader(),new Class[]{KaleoTransition.class},new ReadOnlyBeanHandler(model));
+    return model;
+  }
+}

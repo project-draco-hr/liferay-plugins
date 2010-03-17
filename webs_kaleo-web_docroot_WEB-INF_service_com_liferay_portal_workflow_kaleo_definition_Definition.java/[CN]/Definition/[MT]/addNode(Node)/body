@@ -1,0 +1,15 @@
+{
+  if (_nodesMap.containsKey(node.getName())) {
+    throw new IllegalArgumentException("Duplicate node " + node.getName());
+  }
+  _nodesMap.put(node.getName(),node);
+  if (node instanceof State) {
+    State state=(State)node;
+    if (state.isInitial()) {
+      if (_initialState != null) {
+        throw new WorkflowException("Duplicate initial state " + state.getName());
+      }
+      _initialState=state;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  KaleoInstanceToken kaleoInstanceToken=findByPrimaryKey(kaleoInstanceTokenId);
+  int count=countByC_PKITI_CD(companyId,parentKaleoInstanceTokenId,completionDate);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(5);
+    }
+    query.append(_SQL_SELECT_KALEOINSTANCETOKEN_WHERE);
+    query.append(_FINDER_COLUMN_C_PKITI_CD_COMPANYID_2);
+    query.append(_FINDER_COLUMN_C_PKITI_CD_PARENTKALEOINSTANCETOKENID_2);
+    if (completionDate == null) {
+      query.append(_FINDER_COLUMN_C_PKITI_CD_COMPLETIONDATE_1);
+    }
+ else {
+      query.append(_FINDER_COLUMN_C_PKITI_CD_COMPLETIONDATE_2);
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(KaleoInstanceTokenModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    qPos.add(parentKaleoInstanceTokenId);
+    if (completionDate != null) {
+      qPos.add(CalendarUtil.getTimestamp(completionDate));
+    }
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,kaleoInstanceToken);
+    KaleoInstanceToken[] array=new KaleoInstanceTokenImpl[3];
+    array[0]=(KaleoInstanceToken)objArray[0];
+    array[1]=(KaleoInstanceToken)objArray[1];
+    array[2]=(KaleoInstanceToken)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

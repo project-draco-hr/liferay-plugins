@@ -1,0 +1,17 @@
+{
+  try {
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+    KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
+    List<KaleoTaskAssignment> kaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(Role.class.getName(),kaleoTask.getKaleoTaskId());
+    PrimitiveLongList pooledActors=new PrimitiveLongList();
+    for (    KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
+      long roleId=kaleoTaskAssignment.getAssigneeClassPK();
+      long[] userIds=UserLocalServiceUtil.getRoleUserIds(roleId);
+      pooledActors.addAll(userIds);
+    }
+    return pooledActors.getArray();
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}

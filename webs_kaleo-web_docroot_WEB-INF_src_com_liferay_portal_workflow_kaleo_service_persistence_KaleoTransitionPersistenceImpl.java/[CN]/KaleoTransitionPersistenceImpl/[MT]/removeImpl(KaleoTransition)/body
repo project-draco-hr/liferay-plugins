@@ -1,0 +1,27 @@
+{
+  kaleoTransition=toUnwrappedModel(kaleoTransition);
+  Session session=null;
+  try {
+    session=openSession();
+    if (kaleoTransition.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(KaleoTransitionImpl.class,kaleoTransition.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(kaleoTransition);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  KaleoTransitionModelImpl kaleoTransitionModelImpl=(KaleoTransitionModelImpl)kaleoTransition;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KNI_N,new Object[]{new Long(kaleoTransitionModelImpl.getOriginalKaleoNodeId()),kaleoTransitionModelImpl.getOriginalName()});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KNI_DT,new Object[]{new Long(kaleoTransitionModelImpl.getOriginalKaleoNodeId()),Boolean.valueOf(kaleoTransitionModelImpl.getOriginalDefaultTransition())});
+  EntityCacheUtil.removeResult(KaleoTransitionModelImpl.ENTITY_CACHE_ENABLED,KaleoTransitionImpl.class,kaleoTransition.getPrimaryKey());
+  return kaleoTransition;
+}

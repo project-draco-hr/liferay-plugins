@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<KaleoTaskInstanceToken>> listenersList=new ArrayList<ModelListener<KaleoTaskInstanceToken>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<KaleoTaskInstanceToken>)Class.forName(listenerClassName).newInstance());
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}

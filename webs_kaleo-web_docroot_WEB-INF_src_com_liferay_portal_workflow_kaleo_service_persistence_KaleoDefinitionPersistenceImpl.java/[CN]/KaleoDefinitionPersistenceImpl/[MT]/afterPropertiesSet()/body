@@ -1,0 +1,16 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.portal.workflow.kaleo.model.KaleoDefinition")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<KaleoDefinition>> listenersList=new ArrayList<ModelListener<KaleoDefinition>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<KaleoDefinition>)Class.forName(listenerClassName).newInstance());
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+  containsKaleoNode=new ContainsKaleoNode(this);
+}

@@ -1,0 +1,22 @@
+{
+  KaleoInstance kaleoInstance=kaleoInstancePersistence.findByPrimaryKey(kaleoInstanceId);
+  long rootKaleoInstanceTokenId=kaleoInstance.getRootKaleoInstanceTokenId();
+  if (rootKaleoInstanceTokenId > 0) {
+    return kaleoInstanceTokenPersistence.findByPrimaryKey(rootKaleoInstanceTokenId);
+  }
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  rootKaleoInstanceTokenId=counterLocalService.increment();
+  KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.create(rootKaleoInstanceTokenId);
+  kaleoInstanceToken.setCompanyId(user.getCompanyId());
+  kaleoInstanceToken.setUserId(user.getUserId());
+  kaleoInstanceToken.setUserName(user.getFullName());
+  kaleoInstanceToken.setCreateDate(now);
+  kaleoInstanceToken.setModifiedDate(now);
+  kaleoInstanceToken.setKaleoInstanceId(kaleoInstance.getKaleoInstanceId());
+  kaleoInstanceToken.setParentKaleoInstanceTokenId(KaleoInstanceTokenImpl.DEFAULT_PARENT_KALEO_INSTANCE_TOKEN_ID);
+  kaleoInstanceTokenPersistence.update(kaleoInstanceToken,false);
+  kaleoInstance.setRootKaleoInstanceTokenId(rootKaleoInstanceTokenId);
+  kaleoInstancePersistence.update(kaleoInstance,false);
+  return kaleoInstanceToken;
+}

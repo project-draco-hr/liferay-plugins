@@ -1,0 +1,13 @@
+{
+  List<Role> roles=RoleLocalServiceUtil.getUserRoles(serviceContext.getUserId());
+  List<Group> groups=GroupLocalServiceUtil.getUserGroups(serviceContext.getUserId(),true);
+  List<Role> relatedRoles=RoleLocalServiceUtil.getUserRelatedRoles(serviceContext.getUserId(),groups);
+  List<Long> roleIds=new ArrayList<Long>(roles.size() + relatedRoles.size());
+  for (  Role role : roles) {
+    roleIds.add(role.getRoleId());
+  }
+  for (  Role relatedRole : relatedRoles) {
+    roleIds.add(relatedRole.getRoleId());
+  }
+  return roleIds;
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    KaleoInstanceToken kaleoInstanceToken=(KaleoInstanceToken)session.get(KaleoInstanceTokenImpl.class,new Long(kaleoInstanceTokenId));
+    if (kaleoInstanceToken == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kaleoInstanceTokenId);
+      }
+      throw new NoSuchInstanceTokenException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kaleoInstanceTokenId);
+    }
+    return remove(kaleoInstanceToken);
+  }
+ catch (  NoSuchInstanceTokenException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

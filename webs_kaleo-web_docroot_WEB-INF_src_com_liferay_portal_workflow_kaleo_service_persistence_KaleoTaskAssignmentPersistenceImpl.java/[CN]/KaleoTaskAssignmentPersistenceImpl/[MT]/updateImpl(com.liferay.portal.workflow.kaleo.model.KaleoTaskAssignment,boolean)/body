@@ -1,0 +1,26 @@
+{
+  kaleoTaskAssignment=toUnwrappedModel(kaleoTaskAssignment);
+  boolean isNew=kaleoTaskAssignment.isNew();
+  KaleoTaskAssignmentModelImpl kaleoTaskAssignmentModelImpl=(KaleoTaskAssignmentModelImpl)kaleoTaskAssignment;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kaleoTaskAssignment,merge);
+    kaleoTaskAssignment.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentImpl.class,kaleoTaskAssignment.getPrimaryKey(),kaleoTaskAssignment);
+  if (!isNew && ((kaleoTaskAssignment.getKaleoTaskId() != kaleoTaskAssignmentModelImpl.getOriginalKaleoTaskId()) || (kaleoTaskAssignment.getDefaultAssignment() != kaleoTaskAssignmentModelImpl.getOriginalDefaultAssignment()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KTI_DA,new Object[]{new Long(kaleoTaskAssignmentModelImpl.getOriginalKaleoTaskId()),Boolean.valueOf(kaleoTaskAssignmentModelImpl.getOriginalDefaultAssignment())});
+  }
+  if (isNew || ((kaleoTaskAssignment.getKaleoTaskId() != kaleoTaskAssignmentModelImpl.getOriginalKaleoTaskId()) || (kaleoTaskAssignment.getDefaultAssignment() != kaleoTaskAssignmentModelImpl.getOriginalDefaultAssignment()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KTI_DA,new Object[]{new Long(kaleoTaskAssignment.getKaleoTaskId()),Boolean.valueOf(kaleoTaskAssignment.getDefaultAssignment())},kaleoTaskAssignment);
+  }
+  return kaleoTaskAssignment;
+}

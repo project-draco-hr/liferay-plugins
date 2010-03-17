@@ -1,0 +1,8 @@
+{
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenPersistence.findByPrimaryKey(kaleoTaskInstanceTokenId);
+  kaleoTaskInstanceToken.setCompletionUserId(serviceContext.getUserId());
+  kaleoTaskInstanceToken.setCompletionDate(new Date());
+  kaleoTaskInstanceTokenPersistence.update(kaleoTaskInstanceToken,false);
+  kaleoInstanceTokenLocalService.completeKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
+  return kaleoTaskInstanceToken;
+}

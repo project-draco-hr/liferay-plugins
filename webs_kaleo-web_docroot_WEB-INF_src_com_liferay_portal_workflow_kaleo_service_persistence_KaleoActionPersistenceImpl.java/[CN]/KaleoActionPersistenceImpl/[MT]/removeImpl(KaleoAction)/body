@@ -1,0 +1,24 @@
+{
+  kaleoAction=toUnwrappedModel(kaleoAction);
+  Session session=null;
+  try {
+    session=openSession();
+    if (kaleoAction.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(KaleoActionImpl.class,kaleoAction.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(kaleoAction);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(KaleoActionModelImpl.ENTITY_CACHE_ENABLED,KaleoActionImpl.class,kaleoAction.getPrimaryKey());
+  return kaleoAction;
+}

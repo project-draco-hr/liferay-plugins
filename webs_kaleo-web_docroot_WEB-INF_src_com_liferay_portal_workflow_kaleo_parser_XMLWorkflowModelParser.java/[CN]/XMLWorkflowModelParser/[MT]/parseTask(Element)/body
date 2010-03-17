@@ -1,0 +1,16 @@
+{
+  String name=taskElement.attributeValue("name");
+  String description=taskElement.elementText("description");
+  Task task=new Task(name,description);
+  Element actionsElement=taskElement.element("actions");
+  if (actionsElement != null) {
+    Set<Action> actions=parseActions(actionsElement);
+    task.setActions(actions);
+  }
+  Element assignmentsElement=taskElement.element("assignments");
+  if (assignmentsElement != null) {
+    Set<Assignment> assignments=parseAssignments(assignmentsElement);
+    task.setAssignments(assignments);
+  }
+  return task;
+}

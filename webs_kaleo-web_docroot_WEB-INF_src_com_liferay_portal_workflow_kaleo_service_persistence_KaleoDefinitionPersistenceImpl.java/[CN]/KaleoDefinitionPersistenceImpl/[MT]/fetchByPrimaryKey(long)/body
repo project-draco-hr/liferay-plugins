@@ -1,0 +1,20 @@
+{
+  KaleoDefinition kaleoDefinition=(KaleoDefinition)EntityCacheUtil.getResult(KaleoDefinitionModelImpl.ENTITY_CACHE_ENABLED,KaleoDefinitionImpl.class,kaleoDefinitionId,this);
+  if (kaleoDefinition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoDefinition=(KaleoDefinition)session.get(KaleoDefinitionImpl.class,new Long(kaleoDefinitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoDefinition != null) {
+        cacheResult(kaleoDefinition);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoDefinition;
+}

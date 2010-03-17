@@ -1,0 +1,25 @@
+{
+  String sourceName=nodeElement.attributeValue("name");
+  Node sourceNode=definition.getNode(sourceName);
+  if (sourceNode == null) {
+    throw new WorkflowException("Unable to find source node " + sourceName);
+  }
+  Element transitionsElement=nodeElement.element("transitions");
+  if (transitionsElement == null) {
+    return;
+  }
+  List<Element> transitionElements=transitionsElement.elements("transition");
+  for (  Element transitionElement : transitionElements) {
+    String transitionName=transitionElement.attributeValue("name");
+    Transition transition=new Transition(transitionName,sourceNode);
+    boolean defaultValue=GetterUtil.getBoolean(transitionElement.attributeValue("default"));
+    transition.setDefault(defaultValue);
+    String targetName=transitionElement.attributeValue("target");
+    Node targetNode=definition.getNode(targetName);
+    if (targetNode == null) {
+      throw new WorkflowException("Unable to find target node " + targetName);
+    }
+    transition.setTargetNode(targetNode);
+    sourceNode.addTransition(transition);
+  }
+}

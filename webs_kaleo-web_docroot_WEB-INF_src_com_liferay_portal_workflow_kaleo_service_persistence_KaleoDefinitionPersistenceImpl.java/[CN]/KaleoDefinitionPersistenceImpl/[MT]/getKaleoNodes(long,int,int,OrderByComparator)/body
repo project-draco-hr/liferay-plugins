@@ -1,0 +1,34 @@
+{
+  Object[] finderArgs=new Object[]{new Long(pk),String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
+  List<com.liferay.portal.workflow.kaleo.model.KaleoNode> list=(List<com.liferay.portal.workflow.kaleo.model.KaleoNode>)FinderCacheUtil.getResult(FINDER_PATH_GET_KALEONODES,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      String sql=null;
+      if (orderByComparator != null) {
+        sql=_SQL_GETKALEONODES.concat(ORDER_BY_CLAUSE).concat(orderByComparator.getOrderBy());
+      }
+ else {
+        sql=_SQL_GETKALEONODES.concat(com.liferay.portal.workflow.kaleo.model.impl.KaleoNodeModelImpl.ORDER_BY_SQL);
+      }
+      SQLQuery q=session.createSQLQuery(sql);
+      q.addEntity("Kaleo_KaleoNode",com.liferay.portal.workflow.kaleo.model.impl.KaleoNodeImpl.class);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(pk);
+      list=(List<com.liferay.portal.workflow.kaleo.model.KaleoNode>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<com.liferay.portal.workflow.kaleo.model.KaleoNode>();
+      }
+      kaleoNodePersistence.cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_GET_KALEONODES,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

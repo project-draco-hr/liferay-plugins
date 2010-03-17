@@ -1,0 +1,26 @@
+{
+  kaleoDefinition=toUnwrappedModel(kaleoDefinition);
+  boolean isNew=kaleoDefinition.isNew();
+  KaleoDefinitionModelImpl kaleoDefinitionModelImpl=(KaleoDefinitionModelImpl)kaleoDefinition;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kaleoDefinition,merge);
+    kaleoDefinition.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KaleoDefinitionModelImpl.ENTITY_CACHE_ENABLED,KaleoDefinitionImpl.class,kaleoDefinition.getPrimaryKey(),kaleoDefinition);
+  if (!isNew && ((kaleoDefinition.getCompanyId() != kaleoDefinitionModelImpl.getOriginalCompanyId()) || !Validator.equals(kaleoDefinition.getName(),kaleoDefinitionModelImpl.getOriginalName()) || (kaleoDefinition.getVersion() != kaleoDefinitionModelImpl.getOriginalVersion()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_N_V,new Object[]{new Long(kaleoDefinitionModelImpl.getOriginalCompanyId()),kaleoDefinitionModelImpl.getOriginalName(),new Integer(kaleoDefinitionModelImpl.getOriginalVersion())});
+  }
+  if (isNew || ((kaleoDefinition.getCompanyId() != kaleoDefinitionModelImpl.getOriginalCompanyId()) || !Validator.equals(kaleoDefinition.getName(),kaleoDefinitionModelImpl.getOriginalName()) || (kaleoDefinition.getVersion() != kaleoDefinitionModelImpl.getOriginalVersion()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_N_V,new Object[]{new Long(kaleoDefinition.getCompanyId()),kaleoDefinition.getName(),new Integer(kaleoDefinition.getVersion())},kaleoDefinition);
+  }
+  return kaleoDefinition;
+}

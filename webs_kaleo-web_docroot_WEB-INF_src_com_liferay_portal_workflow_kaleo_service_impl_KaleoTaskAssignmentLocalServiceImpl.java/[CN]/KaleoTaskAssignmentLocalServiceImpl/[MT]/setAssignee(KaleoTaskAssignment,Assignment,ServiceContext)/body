@@ -1,0 +1,24 @@
+{
+  AssignmentType assignmentType=assignment.getAssignmentType();
+  if (assignmentType.equals(AssignmentType.ROLE)) {
+    kaleoTaskAssignment.setAssigneeClassName(Role.class.getName());
+    RoleAssignment roleAssignment=(RoleAssignment)assignment;
+    Role role=roleLocalService.getRole(serviceContext.getCompanyId(),roleAssignment.getRoleName());
+    kaleoTaskAssignment.setAssigneeClassPK(role.getClassPK());
+  }
+  if (assignmentType.equals(AssignmentType.USER)) {
+    kaleoTaskAssignment.setAssigneeClassName(User.class.getName());
+    UserAssignment userAssignment=(UserAssignment)assignment;
+    User user=null;
+    if (userAssignment.getUserId() > 0) {
+      user=userLocalService.getUser(userAssignment.getUserId());
+    }
+ else     if (Validator.isNotNull(userAssignment.getScreenName())) {
+      user=userLocalService.getUserByScreenName(serviceContext.getCompanyId(),userAssignment.getScreenName());
+    }
+ else {
+      user=userLocalService.getUserByEmailAddress(serviceContext.getCompanyId(),userAssignment.getEmailAddress());
+    }
+    kaleoTaskAssignment.setAssigneeClassPK(user.getUserId());
+  }
+}

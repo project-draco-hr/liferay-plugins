@@ -1,0 +1,13 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoInstance.class);
+  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  dynamicQuery.add(PropertyFactoryUtil.forName("kaleoDefinitionName").eq(kaleoDefinitionName));
+  dynamicQuery.add(PropertyFactoryUtil.forName("kaleoDefinitionVersion").eq(kaleoDefinitionVersion));
+  if (completed) {
+    dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNotNull());
+  }
+ else {
+    dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNull());
+  }
+  return dynamicQueryCount(dynamicQuery);
+}

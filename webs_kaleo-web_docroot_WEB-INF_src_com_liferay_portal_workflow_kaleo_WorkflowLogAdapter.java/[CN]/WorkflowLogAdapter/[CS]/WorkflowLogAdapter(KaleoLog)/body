@@ -1,0 +1,29 @@
+{
+  setComment(kaleoLogEntry.getComment());
+  setCreateDate(kaleoLogEntry.getCreateDate());
+  setPreviousState(kaleoLogEntry.getPreviousKaleoNodeName());
+  long previousAssigneeClassPK=kaleoLogEntry.getCurrentAssigneeClassPK();
+  if (previousAssigneeClassPK > 0) {
+    String previousAssigneeClassName=kaleoLogEntry.getCurrentAssigneeClassName();
+    if (previousAssigneeClassName.equals(Role.class.getName())) {
+      setRoleId(previousAssigneeClassPK);
+    }
+ else {
+      setUserId(previousAssigneeClassPK);
+    }
+  }
+  long currentAssigneeClassPK=kaleoLogEntry.getCurrentAssigneeClassPK();
+  if (currentAssigneeClassPK > 0) {
+    String currentAssigneeClassName=kaleoLogEntry.getCurrentAssigneeClassName();
+    if (currentAssigneeClassName.equals(Role.class.getName())) {
+      setRoleId(currentAssigneeClassPK);
+    }
+ else {
+      setUserId(currentAssigneeClassPK);
+    }
+  }
+  setState(kaleoLogEntry.getKaleoNodeName());
+  setType(convertType(kaleoLogEntry.getType()));
+  setWorkflowLogId(kaleoLogEntry.getKaleoLogId());
+  setWorkflowTaskId(kaleoLogEntry.getKaleoTaskInstanceTokenId());
+}

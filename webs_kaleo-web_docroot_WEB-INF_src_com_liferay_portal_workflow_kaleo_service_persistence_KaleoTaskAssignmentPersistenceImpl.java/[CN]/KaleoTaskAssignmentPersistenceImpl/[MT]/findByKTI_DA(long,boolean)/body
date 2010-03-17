@@ -1,0 +1,17 @@
+{
+  KaleoTaskAssignment kaleoTaskAssignment=fetchByKTI_DA(kaleoTaskId,defaultAssignment);
+  if (kaleoTaskAssignment == null) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("kaleoTaskId=");
+    msg.append(kaleoTaskId);
+    msg.append(", defaultAssignment=");
+    msg.append(defaultAssignment);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchTaskAssignmentException(msg.toString());
+  }
+  return kaleoTaskAssignment;
+}

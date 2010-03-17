@@ -1,0 +1,26 @@
+{
+  if (assignmentsElement == null) {
+    return Collections.EMPTY_SET;
+  }
+  Set<Assignment> assignments=new HashSet<Assignment>();
+  List<Element> roleAssignmentElements=assignmentsElement.elements("role");
+  for (  Element roleAssignmentElement : roleAssignmentElements) {
+    String name=roleAssignmentElement.attributeValue("name");
+    boolean defaultValue=GetterUtil.getBoolean(roleAssignmentElement.attributeValue("default"));
+    RoleAssignment roleAssignment=new RoleAssignment(name,defaultValue);
+    assignments.add(roleAssignment);
+  }
+  List<Element> userAssignmentElements=assignmentsElement.elements("user");
+  for (  Element userAssignmentElement : userAssignmentElements) {
+    boolean defaultValue=GetterUtil.getBoolean(userAssignmentElement.attributeValue("default"));
+    UserAssignment userAssignment=new UserAssignment(defaultValue);
+    long userId=GetterUtil.getLong(userAssignmentElement.attributeValue("user-id"));
+    userAssignment.setUserId(userId);
+    String screenName=userAssignmentElement.attributeValue("screen-name");
+    userAssignment.setScreenName(screenName);
+    String emailAddress=userAssignmentElement.attributeValue("email-address");
+    userAssignment.setEmailAddress(emailAddress);
+    assignments.add(userAssignment);
+  }
+  return assignments;
+}

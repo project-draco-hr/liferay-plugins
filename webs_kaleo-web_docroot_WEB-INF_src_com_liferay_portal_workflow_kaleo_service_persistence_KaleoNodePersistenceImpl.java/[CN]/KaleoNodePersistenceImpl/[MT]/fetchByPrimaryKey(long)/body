@@ -1,0 +1,20 @@
+{
+  KaleoNode kaleoNode=(KaleoNode)EntityCacheUtil.getResult(KaleoNodeModelImpl.ENTITY_CACHE_ENABLED,KaleoNodeImpl.class,kaleoNodeId,this);
+  if (kaleoNode == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoNode=(KaleoNode)session.get(KaleoNodeImpl.class,new Long(kaleoNodeId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoNode != null) {
+        cacheResult(kaleoNode);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoNode;
+}

@@ -1,0 +1,12 @@
+{
+  try {
+    ExecutionContext executionContext=_graphWalker.initialize(workflowDefinitionName,workflowDefinitionVersion,context,serviceContext);
+    _graphWalker.signalEntry(transitionName,executionContext);
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+    return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,context);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}

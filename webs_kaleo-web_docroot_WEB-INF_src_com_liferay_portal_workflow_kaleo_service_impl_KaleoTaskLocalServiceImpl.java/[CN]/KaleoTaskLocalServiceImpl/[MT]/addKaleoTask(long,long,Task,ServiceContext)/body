@@ -1,0 +1,20 @@
+{
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  long kaleoTaskId=counterLocalService.increment();
+  KaleoTask kaleoTask=kaleoTaskPersistence.create(kaleoTaskId);
+  kaleoTask.setCompanyId(user.getCompanyId());
+  kaleoTask.setUserId(user.getUserId());
+  kaleoTask.setUserName(user.getFullName());
+  kaleoTask.setCreateDate(now);
+  kaleoTask.setModifiedDate(now);
+  kaleoTask.setKaleoDefinitionId(kaleoDefinitionId);
+  kaleoTask.setKaleoNodeId(kaleoNodeId);
+  kaleoTask.setName(task.getName());
+  kaleoTaskPersistence.update(kaleoTask,false);
+  Set<Assignment> assignments=task.getAssignments();
+  for (  Assignment assignment : assignments) {
+    kaleoTaskAssignmentLocalService.addKaleoTaskAssignment(kaleoDefinitionId,kaleoNodeId,kaleoTaskId,assignment,serviceContext);
+  }
+  return kaleoTask;
+}

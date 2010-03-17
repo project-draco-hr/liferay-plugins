@@ -1,0 +1,10 @@
+{
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  KaleoTaskInstanceAssignment kaleoTaskInstanceAssigment=executionContext.getKaleoTaskInstanceAssigment();
+  kaleoTaskInstanceAssigment=KaleoTaskInstanceAssignmentLocalServiceUtil.completeKaleoTaskInstanceAssignment(kaleoTaskInstanceAssigment.getKaleoTaskInstanceAssignmentId());
+  kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.completeKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),executionContext.getServiceContext());
+  KaleoInstanceToken kaleoInstanceToken=KaleoInstanceTokenLocalServiceUtil.getKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
+  KaleoInstanceToken parentKaleoInstanceToken=KaleoInstanceTokenLocalServiceUtil.getKaleoInstanceToken(kaleoInstanceToken.getParentKaleoInstanceTokenId());
+  KaleoLogLocalServiceUtil.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssigment,comment,executionContext.getContext(),executionContext.getServiceContext());
+  return new ExecutionContext(parentKaleoInstanceToken,executionContext.getContext(),executionContext.getServiceContext());
+}

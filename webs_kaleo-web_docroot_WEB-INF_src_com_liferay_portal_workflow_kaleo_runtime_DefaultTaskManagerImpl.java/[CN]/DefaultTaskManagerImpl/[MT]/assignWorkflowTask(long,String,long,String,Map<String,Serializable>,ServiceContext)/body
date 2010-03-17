@@ -1,0 +1,10 @@
+{
+  KaleoTaskInstanceToken currentKaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+  if (currentKaleoTaskInstanceToken.isCompleted()) {
+    throw new WorkflowException("Cannot reassign a completed task " + workflowTaskInstanceId);
+  }
+  KaleoTaskInstanceAssignment currentKaleoTaskInstanceAssignment=currentKaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
+  KaleoTaskInstanceAssignment newKaleoTaskInstanceAssignment=KaleoTaskInstanceAssignmentLocalServiceUtil.assignKaleoTaskInstanceAssignment(currentKaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId(),assigneeClassName,assigneeClassPK,context,serviceContext);
+  KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(currentKaleoTaskInstanceToken,currentKaleoTaskInstanceAssignment,newKaleoTaskInstanceAssignment,comment,context,serviceContext);
+  return new WorkflowTaskAdapter(currentKaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context);
+}
