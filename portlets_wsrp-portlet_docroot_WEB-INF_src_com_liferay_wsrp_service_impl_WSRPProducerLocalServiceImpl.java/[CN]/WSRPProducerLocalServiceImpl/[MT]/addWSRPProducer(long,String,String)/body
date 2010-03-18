@@ -1,14 +1,15 @@
 {
+  User user=userPersistence.findByPrimaryKey(userId);
   Date now=new Date();
   validate(name);
   long wsrpProducerId=CounterLocalServiceUtil.increment();
   WSRPProducer wsrpProducer=wsrpProducerPersistence.create(wsrpProducerId);
-  wsrpProducer.setCompanyId(companyId);
+  wsrpProducer.setCompanyId(user.getCompanyId());
   wsrpProducer.setCreateDate(now);
   wsrpProducer.setModifiedDate(now);
   wsrpProducer.setName(name);
   wsrpProducer.setPortletIds(portletIds);
-  createWSRPCommunity(companyId,userId);
   wsrpProducerPersistence.update(wsrpProducer,false);
+  addGroup(user);
   return wsrpProducer;
 }
