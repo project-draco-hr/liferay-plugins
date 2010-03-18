@@ -1,13 +1,13 @@
 {
-  Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId,String.valueOf(start),String.valueOf(end),String.valueOf(obc)};
+  Object[] finderArgs=new Object[]{modifiedDate,new Long(projectId),assigneeJiraUserId,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
   List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_MD_P_AJUI,finderArgs,this);
   if (list == null) {
     Session session=null;
     try {
       session=openSession();
       StringBundler query=null;
-      if (obc != null) {
-        query=new StringBundler(5 + (obc.getOrderByFields().length * 3));
+      if (orderByComparator != null) {
+        query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
       }
  else {
         query=new StringBundler(5);
@@ -31,8 +31,8 @@
           query.append(_FINDER_COLUMN_MD_P_AJUI_ASSIGNEEJIRAUSERID_2);
         }
       }
-      if (obc != null) {
-        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,obc);
+      if (orderByComparator != null) {
+        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
       }
  else {
         query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
