@@ -2,15 +2,11 @@
   String[] portletIds=StringUtil.split(wsrpProducer.getPortletIds());
   List<PortletDescription> portletDescriptions=new ArrayList<PortletDescription>();
   for (  String portletId : portletIds) {
-    String rootPortletId=portletId;
-    if (rootPortletId.indexOf(PortletConstants.INSTANCE_SEPARATOR) != -1) {
-      rootPortletId=PortletConstants.getRootPortletId(rootPortletId);
-    }
-    Portlet portlet=PortletLocalServiceUtil.getPortletById(rootPortletId);
+    Portlet portlet=PortletLocalServiceUtil.getPortletById(portletId);
     if (portlet == null) {
       continue;
     }
-    PortletDescription portletDescription=getPortletDescription(wsrpProducer,portletId,portlet);
+    PortletDescription portletDescription=getPortletDescription(wsrpProducer,portlet);
     portletDescriptions.add(portletDescription);
   }
   return portletDescriptions.toArray(new PortletDescription[portletDescriptions.size()]);
