@@ -2,16 +2,11 @@
   String name=taskElement.attributeValue("name");
   String description=taskElement.elementText("description");
   Task task=new Task(name,description);
-  String dueDateDurationStr=taskElement.elementText("due-date-duration");
-  if (Validator.isNotNull(dueDateDurationStr)) {
-    double duration=Double.parseDouble(dueDateDurationStr);
-    String dueDateScaleStr=taskElement.attributeValue("due-date-scale");
-    if (Validator.isNull(dueDateScaleStr)) {
-      throw new WorkflowException("Must specify a scale for the due date duration of task :" + task.getName());
-    }
-    DurationScale durationScale=DurationScale.getValue(dueDateScaleStr);
-    DueDateDuration dueDateDuration=new DueDateDuration(duration,durationScale);
-    task.setDueDateDuration(dueDateDuration);
+  double dueDateDuration=GetterUtil.getDouble(taskElement.elementText("due-date-duration"));
+  if (dueDateDuration > 0) {
+    DurationScale dueDateScale=DurationScale.parse(taskElement.attributeValue("due-date-scale"));
+    DueDateDuration dueDateDurationModel=new DueDateDuration(dueDateDuration,dueDateScale);
+    task.setDueDateDuration(dueDateDurationModel);
   }
   Element actionsElement=taskElement.element("actions");
   if (actionsElement != null) {
