@@ -5,10 +5,10 @@
     TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
     taskInstance.setPooledActors(String.valueOf(roleId));
     taskInstance.addComment(comment);
+    setDueDate(taskInstance,dueDate);
     if (context != null) {
       taskInstance.addVariables(new HashMap<String,Object>(context));
     }
-    setDueDate(dueDate,taskInstance);
     jbpmContext.save(taskInstance);
     return new WorkflowTaskImpl(taskInstance);
   }

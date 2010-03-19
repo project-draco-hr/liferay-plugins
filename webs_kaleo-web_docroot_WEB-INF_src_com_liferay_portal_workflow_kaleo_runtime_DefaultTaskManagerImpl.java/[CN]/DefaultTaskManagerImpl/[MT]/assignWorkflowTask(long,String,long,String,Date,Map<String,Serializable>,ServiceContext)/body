@@ -1,14 +1,13 @@
 {
-  KaleoTaskInstanceToken currentKaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
-  if (currentKaleoTaskInstanceToken.isCompleted()) {
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+  if (kaleoTaskInstanceToken.isCompleted()) {
     throw new WorkflowException("Cannot reassign a completed task " + workflowTaskInstanceId);
   }
   if (dueDate != null) {
-    comment=comment + "; Task due dated moved to : " + dueDate;
     KaleoTaskInstanceTokenLocalServiceUtil.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
   }
-  KaleoTaskInstanceAssignment currentKaleoTaskInstanceAssignment=currentKaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
-  KaleoTaskInstanceAssignment newKaleoTaskInstanceAssignment=KaleoTaskInstanceAssignmentLocalServiceUtil.assignKaleoTaskInstanceAssignment(currentKaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId(),assigneeClassName,assigneeClassPK,context,serviceContext);
-  KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(currentKaleoTaskInstanceToken,currentKaleoTaskInstanceAssignment,newKaleoTaskInstanceAssignment,comment,context,serviceContext);
-  return new WorkflowTaskAdapter(currentKaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context);
+  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
+  KaleoTaskInstanceAssignment newKaleoTaskInstanceAssignment=KaleoTaskInstanceAssignmentLocalServiceUtil.assignKaleoTaskInstanceAssignment(kaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId(),assigneeClassName,assigneeClassPK,context,serviceContext);
+  KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,newKaleoTaskInstanceAssignment,comment,context,serviceContext);
+  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context);
 }

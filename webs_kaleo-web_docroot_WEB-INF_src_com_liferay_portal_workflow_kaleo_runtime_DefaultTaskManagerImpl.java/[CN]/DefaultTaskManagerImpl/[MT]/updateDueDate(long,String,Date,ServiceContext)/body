@@ -1,25 +1,18 @@
 {
   try {
-    KaleoTaskInstanceToken currentKaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
-    if (currentKaleoTaskInstanceToken.isCompleted()) {
-      throw new WorkflowException("Cannot set a due date for a completed task " + workflowTaskInstanceId);
-    }
-    if (currentKaleoTaskInstanceToken.isCompleted()) {
-      throw new WorkflowException("Cannot reassign a completed task " + workflowTaskInstanceId);
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+    if (kaleoTaskInstanceToken.isCompleted()) {
+      throw new WorkflowException("Cannot update due date for completed task " + workflowTaskInstanceId);
     }
     if (dueDate != null) {
       KaleoTaskInstanceTokenLocalServiceUtil.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
     }
-    KaleoTaskInstanceAssignment currentKaleoTaskInstanceAssignment=currentKaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
-    Map<String,Serializable> context=ContextUtil.convert(currentKaleoTaskInstanceAssignment.getContext());
-    comment="Task due dated moved to : " + dueDate + "; "+ comment;
-    KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(currentKaleoTaskInstanceToken,currentKaleoTaskInstanceAssignment,currentKaleoTaskInstanceAssignment,comment,context,serviceContext);
-    return new WorkflowTaskAdapter(currentKaleoTaskInstanceToken,currentKaleoTaskInstanceAssignment,context);
+    KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
+    Map<String,Serializable> context=ContextUtil.convert(kaleoTaskInstanceAssignment.getContext());
+    KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,kaleoTaskInstanceAssignment,comment,context,serviceContext);
+    return new WorkflowTaskAdapter(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,context);
   }
- catch (  PortalException e) {
-    throw new WorkflowException("Unable to find task instance" + workflowTaskInstanceId);
-  }
-catch (  SystemException e) {
-    throw new WorkflowException("Unable to find task instance" + workflowTaskInstanceId);
+ catch (  Exception e) {
+    throw new WorkflowException(e);
   }
 }
