@@ -1,15 +1,17 @@
 {
-  Map<String,Object> inputObjects=executionContext.getContextInstance().getVariables();
+  ContextInstance contextInstance=executionContext.getContextInstance();
+  Map<String,Object> inputObjects=new HashMap<String,Object>(contextInstance.getVariables());
   Long companyId=(Long)inputObjects.get(ContextConstants.COMPANY_ID);
   TaskInstance taskInstance=executionContext.getTaskInstance();
   if (taskInstance != null) {
-    inputObjects.put("assigneeClassPK",taskInstance.getActorId());
     inputObjects.put("assigneeClassName",User.class.getName());
+    inputObjects.put("assigneeClassPK",taskInstance.getActorId());
     inputObjects.put("taskName",taskInstance.getName());
     inputObjects.put("userId",taskInstance.getActorId());
   }
  else   if (companyId != null) {
-    inputObjects.put("userId",UserLocalServiceUtil.getDefaultUser(companyId).getUserId());
+    User user=UserLocalServiceUtil.getDefaultUser(companyId);
+    inputObjects.put("userId",user.getUserId());
   }
   ScriptingUtil.exec(null,inputObjects,language,script);
 }
