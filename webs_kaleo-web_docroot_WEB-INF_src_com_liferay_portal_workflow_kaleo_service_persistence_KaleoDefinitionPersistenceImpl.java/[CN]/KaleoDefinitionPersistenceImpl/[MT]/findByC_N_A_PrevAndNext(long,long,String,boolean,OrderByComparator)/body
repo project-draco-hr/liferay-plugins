@@ -1,0 +1,55 @@
+{
+  KaleoDefinition kaleoDefinition=findByPrimaryKey(kaleoDefinitionId);
+  int count=countByC_N_A(companyId,name,active);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(5);
+    }
+    query.append(_SQL_SELECT_KALEODEFINITION_WHERE);
+    query.append(_FINDER_COLUMN_C_N_A_COMPANYID_2);
+    if (name == null) {
+      query.append(_FINDER_COLUMN_C_N_A_NAME_1);
+    }
+ else {
+      if (name.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_C_N_A_NAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_C_N_A_NAME_2);
+      }
+    }
+    query.append(_FINDER_COLUMN_C_N_A_ACTIVE_2);
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(KaleoDefinitionModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    if (name != null) {
+      qPos.add(name);
+    }
+    qPos.add(active);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,kaleoDefinition);
+    KaleoDefinition[] array=new KaleoDefinitionImpl[3];
+    array[0]=(KaleoDefinition)objArray[0];
+    array[1]=(KaleoDefinition)objArray[1];
+    array[2]=(KaleoDefinition)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
