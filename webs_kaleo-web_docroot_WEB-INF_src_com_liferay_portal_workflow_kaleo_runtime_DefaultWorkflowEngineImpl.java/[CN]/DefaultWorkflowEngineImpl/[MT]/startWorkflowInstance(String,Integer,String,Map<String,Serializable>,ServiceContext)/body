@@ -1,10 +1,15 @@
 {
   try {
-    ExecutionContext executionContext=_graphWalker.initialize(workflowDefinitionName,workflowDefinitionVersion,context,serviceContext);
-    _graphWalker.signalEntry(transitionName,executionContext);
-    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
-    KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
-    return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,context);
+    KaleoDefinition kaleoDefinition=kaleoDefinitionLocalService.getKaleoDefinition(workflowDefinitionName,workflowDefinitionVersion,serviceContext);
+    if (!kaleoDefinition.isActive()) {
+      throw new WorkflowException("Inactive workflow definition with name " + workflowDefinitionName + " and version "+ workflowDefinitionVersion);
+    }
+    KaleoInstance kaleoInstance=kaleoInstanceLocalService.addKaleoInstance(kaleoDefinition.getKaleoDefinitionId(),kaleoDefinition.getName(),kaleoDefinition.getVersion(),context,serviceContext);
+    KaleoInstanceToken rootKaleoInstanceToken=kaleoInstance.getRootKaleoInstanceToken(context,serviceContext);
+    kaleoLogLocalService.addWorkflowInstanceStartKaleoLog(rootKaleoInstanceToken,serviceContext);
+    ExecutionContext executionContext=new ExecutionContext(rootKaleoInstanceToken,context,serviceContext);
+    _kaleoSignaler.signalEntry(transitionName,executionContext);
+    return new WorkflowInstanceAdapter(kaleoInstance,rootKaleoInstanceToken,context);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);

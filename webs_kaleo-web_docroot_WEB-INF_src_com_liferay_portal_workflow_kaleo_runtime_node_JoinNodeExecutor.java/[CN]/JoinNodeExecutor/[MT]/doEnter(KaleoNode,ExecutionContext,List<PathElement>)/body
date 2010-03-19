@@ -2,12 +2,12 @@
   Map<String,Serializable> context=executionContext.getContext();
   ServiceContext serviceContext=executionContext.getServiceContext();
   KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
-  kaleoInstanceToken=KaleoInstanceTokenLocalServiceUtil.completeKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId());
+  kaleoInstanceToken=kaleoInstanceTokenLocalService.completeKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId());
   KaleoInstanceToken parentKaleoInstanceToken=kaleoInstanceToken.getParentKaleoInstanceToken();
   if (parentKaleoInstanceToken.hasIncompleteChildrenKaleoInstanceToken()) {
     return;
   }
-  parentKaleoInstanceToken=KaleoInstanceTokenLocalServiceUtil.updateKaleoInstanceToken(parentKaleoInstanceToken.getKaleoInstanceTokenId(),currentKaleoNode.getKaleoNodeId());
+  parentKaleoInstanceToken=kaleoInstanceTokenLocalService.updateKaleoInstanceToken(parentKaleoInstanceToken.getKaleoInstanceTokenId(),currentKaleoNode.getKaleoNodeId());
   KaleoTransition kaleoTransition=currentKaleoNode.getDefaultKaleoTransition();
   ExecutionContext newExecutionContext=new ExecutionContext(parentKaleoInstanceToken,context,serviceContext);
   PathElement pathElement=new PathElement(currentKaleoNode,kaleoTransition.getTargetKaleoNode(),newExecutionContext);

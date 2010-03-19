@@ -1,0 +1,10 @@
+{
+  KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+  KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+  KaleoDefinition kaleoDefinition=kaleoInstance.getKaleoDefinition();
+  KaleoNode kaleoStartNode=kaleoDefinition.getKaleoStartNode();
+  kaleoInstanceToken.setCurrentNode(kaleoStartNode);
+  executionContext.setTransitionName(transitionName);
+  PathElement startPathElement=new PathElement(null,kaleoStartNode,executionContext);
+  _singleDestinationMessageSender.send(startPathElement);
+}
