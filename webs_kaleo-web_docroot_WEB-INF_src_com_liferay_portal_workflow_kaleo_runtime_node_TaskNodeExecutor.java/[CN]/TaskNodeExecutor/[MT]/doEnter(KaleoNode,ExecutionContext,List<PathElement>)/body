@@ -3,7 +3,12 @@
   ServiceContext serviceContext=executionContext.getServiceContext();
   KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
   KaleoTask kaleoTask=KaleoTaskLocalServiceUtil.getKaleoNodeKaleoTask(currentKaleoNode.getKaleoNodeId());
-  KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.addKaleoTaskInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),kaleoTask.getKaleoTaskId(),context,serviceContext);
+  Date dueDate=null;
+  if (kaleoTask.getDueDateDuration() > 0) {
+    DueDateDuration dueDateDuration=new DueDateDuration(kaleoTask.getDueDateDuration(),DurationScale.getValue(kaleoTask.getDueDateScale()));
+    dueDate=_dueDateCalculator.getDueDate(new Date(),dueDateDuration);
+  }
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.addKaleoTaskInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),kaleoTask.getKaleoTaskId(),dueDate,context,serviceContext);
   KaleoTaskAssignment kaleoTaskAssignment=kaleoTask.getDefaultKaleoTaskAssignment();
   KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=KaleoTaskInstanceAssignmentLocalServiceUtil.addKaleoTaskInstanceAssignment(kaleoTaskInstanceToken,kaleoTaskAssignment.getKaleoTaskAssignmentId(),context);
   KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,null,kaleoTaskInstanceAssignment,"Assigned initial task.",context,serviceContext);
