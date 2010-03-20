@@ -1,0 +1,56 @@
+{
+  Object[] finderArgs=new Object[]{new Long(kaleoNodeId),executionType,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
+  List<KaleoNotification> list=(List<KaleoNotification>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_OBC_KNI_ET,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=null;
+      if (orderByComparator != null) {
+        query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
+      }
+ else {
+        query=new StringBundler(4);
+      }
+      query.append(_SQL_SELECT_KALEONOTIFICATION_WHERE);
+      query.append(_FINDER_COLUMN_KNI_ET_KALEONODEID_2);
+      if (executionType == null) {
+        query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_1);
+      }
+ else {
+        if (executionType.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_KNI_ET_EXECUTIONTYPE_2);
+        }
+      }
+      if (orderByComparator != null) {
+        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+      }
+ else {
+        query.append(KaleoNotificationModelImpl.ORDER_BY_JPQL);
+      }
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(kaleoNodeId);
+      if (executionType != null) {
+        qPos.add(executionType);
+      }
+      list=(List<KaleoNotification>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<KaleoNotification>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_OBC_KNI_ET,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}

@@ -1,0 +1,11 @@
+{
+  try {
+    InternetAddress from=new InternetAddress(_fromAddress,_fromName);
+    MailMessage mailMessage=new MailMessage(from,subject,notificationMessage,true);
+    mailMessage.setTo(getRecipients(notificationRecipients));
+    MailServiceUtil.sendEmail(mailMessage);
+  }
+ catch (  Exception e) {
+    throw new NotificationMessageSenderException("Unable to send mail message",e);
+  }
+}

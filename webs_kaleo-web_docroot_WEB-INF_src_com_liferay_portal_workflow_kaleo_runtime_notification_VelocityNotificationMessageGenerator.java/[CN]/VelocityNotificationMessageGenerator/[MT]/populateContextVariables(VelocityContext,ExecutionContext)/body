@@ -1,0 +1,24 @@
+{
+  Map<String,Serializable> context=executionContext.getContext();
+  if (context == null) {
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+    context=ContextUtil.convert(kaleoInstance.getContext());
+  }
+  for (  Map.Entry<String,Serializable> contextEntry : context.entrySet()) {
+    velocityContext.put(contextEntry.getKey(),contextEntry.getValue());
+  }
+  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=executionContext.getKaleoTaskInstanceAssigment();
+  if (kaleoTaskInstanceAssignment != null) {
+    velocityContext.put("assigneeClassName",kaleoTaskInstanceAssignment.getAssigneeClassName());
+    velocityContext.put("assigneeClassPK",kaleoTaskInstanceAssignment.getAssigneeClassPK());
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+    KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
+    velocityContext.put("taskName",kaleoTask.getName());
+    velocityContext.put("userId",kaleoTaskInstanceAssignment.getUserId());
+  }
+ else {
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    velocityContext.put("userId",kaleoInstanceToken.getUserId());
+  }
+}

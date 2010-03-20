@@ -1,0 +1,14 @@
+{
+  FreeMarkerEngine freeMarkerEngine=FreeMarkerEngineUtil.getFreeMarkerEngine();
+  FreeMarkerContext freeMarketContext=FreeMarkerEngineUtil.getWrappedRestrictedToolsContext();
+  try {
+    populateContextVariables(freeMarketContext,executionContext);
+    StringWriter messageWriter=new StringWriter();
+    String templateId=notificationName + kaleoNodeId;
+    freeMarkerEngine.mergeTemplate(templateId,notificationTemplate,freeMarketContext,messageWriter);
+    return messageWriter.toString();
+  }
+ catch (  Exception e) {
+    throw new NotificationMessageGenerationException("Unable to generate notification message",e);
+  }
+}

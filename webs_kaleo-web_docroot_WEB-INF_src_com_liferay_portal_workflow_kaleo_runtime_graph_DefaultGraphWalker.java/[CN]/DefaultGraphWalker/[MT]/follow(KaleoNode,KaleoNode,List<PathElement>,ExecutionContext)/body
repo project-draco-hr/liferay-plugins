@@ -3,10 +3,12 @@
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(sourceKaleoNode.getType()));
     nodeExecutor.exit(sourceKaleoNode,executionContext,remainingPathElement);
     executeKaleoActions(sourceKaleoNode.getKaleoNodeId(),ActionType.ON_EXIT,executionContext);
+    sendKaleoNotifications(sourceKaleoNode.getKaleoNodeId(),ActionType.ON_EXIT,executionContext);
   }
   if (targetKaleoNode != null) {
     kaleoLogLocalService.addNodeEntryKaleoLog(executionContext.getKaleoInstanceToken(),sourceKaleoNode,targetKaleoNode,executionContext.getServiceContext());
     executeKaleoActions(targetKaleoNode.getKaleoNodeId(),ActionType.ON_ENTRY,executionContext);
+    sendKaleoNotifications(targetKaleoNode.getKaleoNodeId(),ActionType.ON_ENTRY,executionContext);
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(targetKaleoNode.getType()));
     nodeExecutor.enter(targetKaleoNode,executionContext,remainingPathElement);
   }

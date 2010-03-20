@@ -1,0 +1,14 @@
+{
+  VelocityEngine velocityEngine=VelocityEngineUtil.getVelocityEngine();
+  VelocityContext velocityContext=VelocityEngineUtil.getRestrictedToolsContext();
+  try {
+    populateContextVariables(velocityContext,executionContext);
+    StringWriter messageWriter=new StringWriter();
+    String templateId=notificationName + kaleoNodeId;
+    velocityEngine.mergeTemplate(templateId,notificationTemplate,velocityContext,messageWriter);
+    return messageWriter.toString();
+  }
+ catch (  Exception e) {
+    throw new NotificationMessageGenerationException("Unable to generate notification message",e);
+  }
+}

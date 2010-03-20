@@ -1,0 +1,16 @@
+{
+  List<KaleoNotification> list=findByKNI_ET(kaleoNodeId,executionType,0,1,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("kaleoNodeId=");
+    msg.append(kaleoNodeId);
+    msg.append(", executionType=");
+    msg.append(executionType);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchNotificationException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

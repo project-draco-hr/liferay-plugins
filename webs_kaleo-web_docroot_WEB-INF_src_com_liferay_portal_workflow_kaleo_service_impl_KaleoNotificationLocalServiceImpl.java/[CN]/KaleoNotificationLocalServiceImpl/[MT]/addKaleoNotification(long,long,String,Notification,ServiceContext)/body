@@ -15,10 +15,11 @@
   kaleoNotification.setDescription(notification.getDescription());
   kaleoNotification.setLanguage(notification.getLanguage().getValue());
   kaleoNotification.setTemplate(notification.getTemplate());
-  Set<Notification.Type> notificationTypes=notification.getNotificationTypes();
+  kaleoNotification.setExecutionType(notification.getActionType().getType());
+  Set<Notification.NotificationType> notificationTypes=notification.getNotificationTypes();
   if (!notificationTypes.isEmpty()) {
     StringBundler bundler=new StringBundler(notificationTypes.size() * 2);
-    Iterator<Notification.Type> notificationTypeIter=notificationTypes.iterator();
+    Iterator<Notification.NotificationType> notificationTypeIter=notificationTypes.iterator();
     while (notificationTypeIter.hasNext()) {
       bundler.append(notificationTypeIter.next().getValue());
       if (notificationTypeIter.hasNext()) {
