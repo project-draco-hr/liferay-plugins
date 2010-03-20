@@ -1,0 +1,44 @@
+{
+  if (actionsElement == null) {
+    return;
+  }
+  Set<Action> actions=new HashSet<Action>();
+  List<Element> actionElements=actionsElement.elements("action");
+  for (  Element actionElement : actionElements) {
+    String name=actionElement.attributeValue("name");
+    String type=actionElement.attributeValue("type");
+    String language=actionElement.attributeValue("language");
+    Action action=new Action(name,type,language);
+    int executionOrder=GetterUtil.getInteger(actionElement.attributeValue("execution-order"));
+    action.setExecutionOrder(executionOrder);
+    String description=actionElement.attributeValue("description");
+    if (Validator.isNotNull(description)) {
+      action.setDescription(description);
+    }
+    Element scriptElement=actionElement.element("script");
+    action.setScript(scriptElement.getText());
+    actions.add(action);
+  }
+  node.setActions(actions);
+  Set<Notification> notifications=new HashSet<Notification>();
+  List<Element> notificationElements=actionsElement.elements("notification");
+  for (  Element notificationElement : notificationElements) {
+    String name=notificationElement.attributeValue("name");
+    String language=notificationElement.attributeValue("language");
+    Notification notification=new Notification(name,language);
+    String description=notificationElement.attributeValue("description");
+    if (Validator.isNotNull(description)) {
+      notification.setDescription(description);
+    }
+    Element recipientsElement=notificationElement.element("recipients");
+    parseRecipients(recipientsElement,notification);
+    List<Element> notificationTypeElements=notificationElement.elements("notification-type");
+    for (    Element notificationTypeElement : notificationTypeElements) {
+      notification.addNotificationType(notificationTypeElement.attributeValue("value"));
+    }
+    Element scriptElement=notificationElement.element("template");
+    notification.setTemplate(scriptElement.getText());
+    notifications.add(notification);
+  }
+  node.setNotifications(notifications);
+}

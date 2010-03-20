@@ -1,0 +1,41 @@
+{
+  KaleoNode kaleoNode=findByPrimaryKey(kaleoNodeId);
+  int count=countByC_KDI(companyId,kaleoDefinitionId);
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(4);
+    }
+    query.append(_SQL_SELECT_KALEONODE_WHERE);
+    query.append(_FINDER_COLUMN_C_KDI_COMPANYID_2);
+    query.append(_FINDER_COLUMN_C_KDI_KALEODEFINITIONID_2);
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(KaleoNodeModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    qPos.add(kaleoDefinitionId);
+    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,kaleoNode);
+    KaleoNode[] array=new KaleoNodeImpl[3];
+    array[0]=(KaleoNode)objArray[0];
+    array[1]=(KaleoNode)objArray[1];
+    array[2]=(KaleoNode)objArray[2];
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

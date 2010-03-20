@@ -1,0 +1,34 @@
+{
+  Recipient.Type recipientType=recipient.getRecipientType();
+  if (recipientType.equals(Recipient.Type.ROLE)) {
+    kaleoNotificationRecipient.setRecipientClassName(Role.class.getName());
+    RoleRecipient roleRecipient=(RoleRecipient)recipient;
+    Role role=null;
+    if (Validator.isNotNull(roleRecipient.getRoleName())) {
+      role=roleLocalService.getRole(serviceContext.getCompanyId(),roleRecipient.getRoleName());
+    }
+ else {
+      role=roleLocalService.getRole(roleRecipient.getRoleId());
+    }
+    kaleoNotificationRecipient.setRecipientClassPK(role.getClassPK());
+  }
+ else   if (recipientType.equals(Recipient.Type.USER)) {
+    kaleoNotificationRecipient.setRecipientClassName(User.class.getName());
+    UserRecipient roleRecipient=(UserRecipient)recipient;
+    User user=null;
+    if (roleRecipient.getUserId() > 0) {
+      user=userLocalService.getUser(roleRecipient.getUserId());
+    }
+ else     if (Validator.isNotNull(roleRecipient.getScreenName())) {
+      user=userLocalService.getUserByScreenName(serviceContext.getCompanyId(),roleRecipient.getScreenName());
+    }
+ else {
+      user=userLocalService.getUserByEmailAddress(serviceContext.getCompanyId(),roleRecipient.getEmailAddress());
+    }
+    kaleoNotificationRecipient.setRecipientClassPK(user.getUserId());
+  }
+ else {
+    AddressRecipient addressRecipient=(AddressRecipient)recipient;
+    kaleoNotificationRecipient.setAddress(addressRecipient.getAddress());
+  }
+}

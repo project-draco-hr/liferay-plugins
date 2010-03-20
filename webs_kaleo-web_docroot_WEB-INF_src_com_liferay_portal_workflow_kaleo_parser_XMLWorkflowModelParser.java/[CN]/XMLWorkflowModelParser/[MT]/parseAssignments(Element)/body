@@ -6,8 +6,15 @@
   List<Element> roleAssignmentElements=assignmentsElement.elements("role");
   for (  Element roleAssignmentElement : roleAssignmentElements) {
     String name=roleAssignmentElement.attributeValue("name");
+    Long roleId=GetterUtil.getLong(roleAssignmentElement.attributeValue("role-id"),0);
     boolean defaultValue=GetterUtil.getBoolean(roleAssignmentElement.attributeValue("default"));
-    RoleAssignment roleAssignment=new RoleAssignment(name,defaultValue);
+    RoleAssignment roleAssignment=null;
+    if (Validator.isNotNull(name)) {
+      roleAssignment=new RoleAssignment(name,defaultValue);
+    }
+ else {
+      roleAssignment=new RoleAssignment(roleId,defaultValue);
+    }
     assignments.add(roleAssignment);
   }
   List<Element> userAssignmentElements=assignmentsElement.elements("user");

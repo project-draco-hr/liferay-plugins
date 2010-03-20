@@ -1,0 +1,20 @@
+{
+  KaleoNotification kaleoNotification=(KaleoNotification)EntityCacheUtil.getResult(KaleoNotificationModelImpl.ENTITY_CACHE_ENABLED,KaleoNotificationImpl.class,kaleoNotificationId,this);
+  if (kaleoNotification == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoNotification=(KaleoNotification)session.get(KaleoNotificationImpl.class,new Long(kaleoNotificationId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoNotification != null) {
+        cacheResult(kaleoNotification);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoNotification;
+}

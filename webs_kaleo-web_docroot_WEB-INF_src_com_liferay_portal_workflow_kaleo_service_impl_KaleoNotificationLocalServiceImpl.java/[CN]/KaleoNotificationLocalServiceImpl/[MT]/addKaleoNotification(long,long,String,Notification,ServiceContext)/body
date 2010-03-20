@@ -1,0 +1,36 @@
+{
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  long kaleoNotificationId=counterLocalService.increment();
+  KaleoNotification kaleoNotification=kaleoNotificationPersistence.create(kaleoNotificationId);
+  kaleoNotification.setCompanyId(user.getCompanyId());
+  kaleoNotification.setUserId(user.getUserId());
+  kaleoNotification.setUserName(user.getFullName());
+  kaleoNotification.setCreateDate(now);
+  kaleoNotification.setModifiedDate(now);
+  kaleoNotification.setKaleoDefinitionId(kaleoDefinitionId);
+  kaleoNotification.setKaleoNodeId(kaleoNodeId);
+  kaleoNotification.setKaleoNodeName(kaleoNodeName);
+  kaleoNotification.setName(notification.getName());
+  kaleoNotification.setDescription(notification.getDescription());
+  kaleoNotification.setLanguage(notification.getLanguage().getValue());
+  kaleoNotification.setTemplate(notification.getTemplate());
+  Set<Notification.Type> notificationTypes=notification.getNotificationTypes();
+  if (!notificationTypes.isEmpty()) {
+    StringBundler bundler=new StringBundler(notificationTypes.size() * 2);
+    Iterator<Notification.Type> notificationTypeIter=notificationTypes.iterator();
+    while (notificationTypeIter.hasNext()) {
+      bundler.append(notificationTypeIter.next().getValue());
+      if (notificationTypeIter.hasNext()) {
+        bundler.append(StringPool.COMMA);
+      }
+    }
+    kaleoNotification.setNotificationTypes(bundler.toString());
+  }
+  kaleoNotificationPersistence.update(kaleoNotification,false);
+  Set<Recipient> recipients=notification.getRecipients();
+  for (  Recipient recipient : recipients) {
+    kaleoNotificationRecipientLocalService.addRecipient(kaleoNotificationId,recipient,serviceContext);
+  }
+  return kaleoNotification;
+}

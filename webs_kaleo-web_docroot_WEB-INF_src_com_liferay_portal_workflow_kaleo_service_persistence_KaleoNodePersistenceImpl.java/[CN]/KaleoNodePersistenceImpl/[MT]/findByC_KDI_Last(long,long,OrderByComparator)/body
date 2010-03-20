@@ -1,0 +1,17 @@
+{
+  int count=countByC_KDI(companyId,kaleoDefinitionId);
+  List<KaleoNode> list=findByC_KDI(companyId,kaleoDefinitionId,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("companyId=");
+    msg.append(companyId);
+    msg.append(", kaleoDefinitionId=");
+    msg.append(kaleoDefinitionId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchNodeException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

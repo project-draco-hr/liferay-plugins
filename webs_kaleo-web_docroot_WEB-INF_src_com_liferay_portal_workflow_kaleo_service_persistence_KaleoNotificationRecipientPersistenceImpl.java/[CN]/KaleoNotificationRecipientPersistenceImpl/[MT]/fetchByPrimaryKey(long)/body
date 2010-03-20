@@ -1,0 +1,20 @@
+{
+  KaleoNotificationRecipient kaleoNotificationRecipient=(KaleoNotificationRecipient)EntityCacheUtil.getResult(KaleoNotificationRecipientModelImpl.ENTITY_CACHE_ENABLED,KaleoNotificationRecipientImpl.class,kaleoRecipientId,this);
+  if (kaleoNotificationRecipient == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kaleoNotificationRecipient=(KaleoNotificationRecipient)session.get(KaleoNotificationRecipientImpl.class,new Long(kaleoRecipientId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kaleoNotificationRecipient != null) {
+        cacheResult(kaleoNotificationRecipient);
+      }
+      closeSession(session);
+    }
+  }
+  return kaleoNotificationRecipient;
+}
