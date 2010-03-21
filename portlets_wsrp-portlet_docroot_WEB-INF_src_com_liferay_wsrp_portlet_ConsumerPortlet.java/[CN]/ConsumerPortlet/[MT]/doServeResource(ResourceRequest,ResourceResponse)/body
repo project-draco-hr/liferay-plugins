@@ -1,10 +1,16 @@
 {
   String resourceID=resourceRequest.getResourceID();
   String url=resourceRequest.getParameter("wsrp-url");
-  if (Validator.isNotNull(url)) {
-    proxyURL(resourceRequest,resourceResponse,url);
-  }
- else   if (Validator.isNotNull(resourceID)) {
+  boolean preferOperation=ParamUtil.getBoolean(resourceRequest,"wsrp-preferOperation");
+  if (preferOperation) {
     getResource(resourceRequest,resourceResponse);
+  }
+ else {
+    if (Validator.isNotNull(url)) {
+      proxyURL(resourceRequest,resourceResponse,url);
+    }
+ else     if (Validator.isNotNull(resourceID)) {
+      getResource(resourceRequest,resourceResponse);
+    }
   }
 }
