@@ -1,15 +1,15 @@
 {
   try {
-    KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(workflowTaskInstanceId);
     if (kaleoTaskInstanceToken.isCompleted()) {
       throw new WorkflowException("Cannot update due date for completed task " + workflowTaskInstanceId);
     }
     if (dueDate != null) {
-      KaleoTaskInstanceTokenLocalServiceUtil.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
+      kaleoTaskInstanceTokenLocalService.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
     }
     KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
     Map<String,Serializable> context=ContextUtil.convert(kaleoTaskInstanceAssignment.getContext());
-    KaleoLogLocalServiceUtil.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,kaleoTaskInstanceAssignment,comment,context,serviceContext);
+    kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,kaleoTaskInstanceAssignment,comment,context,serviceContext);
     return new WorkflowTaskAdapter(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,context);
   }
  catch (  Exception e) {

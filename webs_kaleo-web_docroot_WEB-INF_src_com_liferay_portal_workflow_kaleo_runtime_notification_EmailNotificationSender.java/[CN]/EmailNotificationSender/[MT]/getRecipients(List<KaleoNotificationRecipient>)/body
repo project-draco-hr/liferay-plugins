@@ -7,11 +7,11 @@
  else {
       String recipientClass=recipient.getRecipientClassName();
       if (User.class.getName().equals(recipientClass)) {
-        User user=userLocalService.getUser(recipient.getRecipientClassPK());
+        User user=UserLocalServiceUtil.getUser(recipient.getRecipientClassPK());
         internetAddresses.add(new InternetAddress(user.getEmailAddress(),user.getFullName()));
       }
  else {
-        List<User> roleUsers=userLocalService.getRoleUsers(recipient.getRecipientClassPK());
+        List<User> roleUsers=UserLocalServiceUtil.getRoleUsers(recipient.getRecipientClassPK());
         for (        User user : roleUsers) {
           internetAddresses.add(new InternetAddress(user.getEmailAddress(),user.getFullName()));
         }
