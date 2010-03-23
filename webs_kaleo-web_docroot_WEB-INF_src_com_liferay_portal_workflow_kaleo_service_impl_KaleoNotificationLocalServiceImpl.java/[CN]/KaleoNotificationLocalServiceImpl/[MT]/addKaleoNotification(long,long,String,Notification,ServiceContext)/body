@@ -15,14 +15,15 @@
   kaleoNotification.setDescription(notification.getDescription());
   kaleoNotification.setLanguage(notification.getLanguage().getValue());
   kaleoNotification.setTemplate(notification.getTemplate());
-  kaleoNotification.setExecutionType(notification.getActionType().getType());
-  Set<Notification.NotificationType> notificationTypes=notification.getNotificationTypes();
+  kaleoNotification.setExecutionType(notification.getActionType().getValue());
+  Set<NotificationType> notificationTypes=notification.getNotificationTypes();
   if (!notificationTypes.isEmpty()) {
     StringBundler bundler=new StringBundler(notificationTypes.size() * 2);
-    Iterator<Notification.NotificationType> notificationTypeIter=notificationTypes.iterator();
-    while (notificationTypeIter.hasNext()) {
-      bundler.append(notificationTypeIter.next().getValue());
-      if (notificationTypeIter.hasNext()) {
+    Iterator<NotificationType> itr=notificationTypes.iterator();
+    while (itr.hasNext()) {
+      NotificationType notificationType=itr.next();
+      bundler.append(notificationType.getValue());
+      if (itr.hasNext()) {
         bundler.append(StringPool.COMMA);
       }
     }
@@ -31,7 +32,7 @@
   kaleoNotificationPersistence.update(kaleoNotification,false);
   Set<Recipient> recipients=notification.getRecipients();
   for (  Recipient recipient : recipients) {
-    kaleoNotificationRecipientLocalService.addRecipient(kaleoNotificationId,recipient,serviceContext);
+    kaleoNotificationRecipientLocalService.addKaleoNotificationRecipient(kaleoNotificationId,recipient,serviceContext);
   }
   return kaleoNotification;
 }

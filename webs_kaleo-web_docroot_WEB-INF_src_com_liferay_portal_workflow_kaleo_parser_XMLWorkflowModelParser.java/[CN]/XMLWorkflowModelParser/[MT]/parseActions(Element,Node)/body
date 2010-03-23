@@ -12,11 +12,9 @@
     int executionOrder=GetterUtil.getInteger(actionElement.attributeValue("execution-order"));
     action.setExecutionOrder(executionOrder);
     String description=actionElement.attributeValue("description");
-    if (Validator.isNotNull(description)) {
-      action.setDescription(description);
-    }
-    Element scriptElement=actionElement.element("script");
-    action.setScript(scriptElement.getText());
+    action.setDescription(description);
+    String script=actionElement.elementText("script");
+    action.setScript(script);
     actions.add(action);
   }
   node.setActions(actions);
@@ -28,17 +26,15 @@
     String type=notificationElement.attributeValue("type");
     Notification notification=new Notification(name,language,type);
     String description=notificationElement.attributeValue("description");
-    if (Validator.isNotNull(description)) {
-      notification.setDescription(description);
-    }
+    notification.setDescription(description);
     Element recipientsElement=notificationElement.element("recipients");
     parseRecipients(recipientsElement,notification);
     List<Element> notificationTypeElements=notificationElement.elements("notification-type");
     for (    Element notificationTypeElement : notificationTypeElements) {
       notification.addNotificationType(notificationTypeElement.attributeValue("value"));
     }
-    Element scriptElement=notificationElement.element("template");
-    notification.setTemplate(scriptElement.getText());
+    String template=notificationElement.elementText("template");
+    notification.setTemplate(template);
     notifications.add(notification);
   }
   node.setNotifications(notifications);

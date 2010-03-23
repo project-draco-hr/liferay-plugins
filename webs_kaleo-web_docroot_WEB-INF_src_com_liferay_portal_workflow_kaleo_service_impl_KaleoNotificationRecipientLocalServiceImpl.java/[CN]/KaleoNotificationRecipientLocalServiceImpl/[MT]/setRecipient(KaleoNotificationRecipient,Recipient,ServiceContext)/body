@@ -1,6 +1,6 @@
 {
-  Recipient.Type recipientType=recipient.getRecipientType();
-  if (recipientType.equals(Recipient.Type.ROLE)) {
+  RecipientType recipientType=recipient.getRecipientType();
+  if (recipientType.equals(RecipientType.ROLE)) {
     kaleoNotificationRecipient.setRecipientClassName(Role.class.getName());
     RoleRecipient roleRecipient=(RoleRecipient)recipient;
     Role role=null;
@@ -12,18 +12,18 @@
     }
     kaleoNotificationRecipient.setRecipientClassPK(role.getClassPK());
   }
- else   if (recipientType.equals(Recipient.Type.USER)) {
+ else   if (recipientType.equals(RecipientType.USER)) {
     kaleoNotificationRecipient.setRecipientClassName(User.class.getName());
-    UserRecipient roleRecipient=(UserRecipient)recipient;
+    UserRecipient userRecipient=(UserRecipient)recipient;
     User user=null;
-    if (roleRecipient.getUserId() > 0) {
-      user=userLocalService.getUser(roleRecipient.getUserId());
+    if (userRecipient.getUserId() > 0) {
+      user=userLocalService.getUser(userRecipient.getUserId());
     }
- else     if (Validator.isNotNull(roleRecipient.getScreenName())) {
-      user=userLocalService.getUserByScreenName(serviceContext.getCompanyId(),roleRecipient.getScreenName());
+ else     if (Validator.isNotNull(userRecipient.getScreenName())) {
+      user=userLocalService.getUserByScreenName(serviceContext.getCompanyId(),userRecipient.getScreenName());
     }
  else {
-      user=userLocalService.getUserByEmailAddress(serviceContext.getCompanyId(),roleRecipient.getEmailAddress());
+      user=userLocalService.getUserByEmailAddress(serviceContext.getCompanyId(),userRecipient.getEmailAddress());
     }
     kaleoNotificationRecipient.setRecipientClassPK(user.getUserId());
   }
