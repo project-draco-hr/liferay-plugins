@@ -1,0 +1,40 @@
+{
+  LinkedHashMap groupParams=new LinkedHashMap();
+  List types=new ArrayList();
+  types.add(new Integer(GroupConstants.TYPE_COMMUNITY_OPEN));
+  types.add(new Integer(GroupConstants.TYPE_COMMUNITY_PRIVATE));
+  types.add(new Integer(GroupConstants.TYPE_COMMUNITY_RESTRICTED));
+  groupParams.put("types",types);
+  groupParams.put("active",Boolean.TRUE);
+  List<Group> communities=GroupLocalServiceUtil.search(company.getCompanyId(),null,null,groupParams,0,100);
+  User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
+  for (  Group community : communities) {
+    for (    Map.Entry<String,String> definitionEntry : _definitionAssetMap.entrySet()) {
+      try {
+        String assetClassName=definitionEntry.getKey();
+        String definitionName=definitionEntry.getValue();
+        ServiceContext serviceContext=new ServiceContext();
+        serviceContext.setCompanyId(company.getCompanyId());
+        try {
+          WorkflowDefinitionLinkLocalServiceUtil.getWorkflowDefinitionLink(company.getCompanyId(),community.getGroupId(),assetClassName);
+        }
+ catch (        NoSuchWorkflowDefinitionLinkException e) {
+          List<WorkflowDefinition> workflowDefinitions=_workflowDefinitionManager.getWorkflowDefinitions(company.getCompanyId(),definitionName,0,20,new WorkflowDefinitionNameComparator(false));
+          if (workflowDefinitions.isEmpty()) {
+            if (_log.isWarnEnabled()) {
+              _log.warn("No definitions found for:" + definitionName);
+            }
+            continue;
+          }
+          WorkflowDefinition workflowDefinition=workflowDefinitions.get(0);
+          WorkflowDefinitionLinkLocalServiceUtil.addWorkflowDefinitionLink(defaultUser.getUserId(),company.getCompanyId(),community.getGroupId(),assetClassName,workflowDefinition.getName(),workflowDefinition.getVersion());
+        }
+      }
+ catch (      Exception e) {
+        if (_log.isErrorEnabled()) {
+          _log.error("Unable to deploy default definition: " + definitionEntry.getKey(),e);
+        }
+      }
+    }
+  }
+}

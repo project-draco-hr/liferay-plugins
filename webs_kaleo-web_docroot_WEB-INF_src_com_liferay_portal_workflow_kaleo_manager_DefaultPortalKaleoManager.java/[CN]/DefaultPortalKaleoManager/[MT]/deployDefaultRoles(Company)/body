@@ -1,0 +1,18 @@
+{
+  User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
+  for (  Map.Entry<String,String> defaultRole : _defaultRoles.entrySet()) {
+    try {
+      try {
+        RoleLocalServiceUtil.getRole(company.getCompanyId(),defaultRole.getKey());
+      }
+ catch (      NoSuchRoleException e) {
+        RoleLocalServiceUtil.addRole(defaultUser.getUserId(),company.getCompanyId(),defaultRole.getKey(),null,defaultRole.getValue(),RoleConstants.TYPE_REGULAR);
+      }
+    }
+ catch (    Exception e) {
+      if (_log.isErrorEnabled()) {
+        _log.error("Unable to add default role: " + defaultRole.getKey(),e);
+      }
+    }
+  }
+}
