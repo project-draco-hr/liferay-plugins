@@ -1,0 +1,66 @@
+{
+  Object[] finderArgs=new Object[]{new Long(wsrpConsumerId),portletHandle};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_SELECT_WSRPCONSUMERPORTLET_WHERE);
+      query.append(_FINDER_COLUMN_W_P_WSRPCONSUMERID_2);
+      if (portletHandle == null) {
+        query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_1);
+      }
+ else {
+        if (portletHandle.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_2);
+        }
+      }
+      query.append(WSRPConsumerPortletModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(wsrpConsumerId);
+      if (portletHandle != null) {
+        qPos.add(portletHandle);
+      }
+      List<WSRPConsumerPortlet> list=q.list();
+      result=list;
+      WSRPConsumerPortlet wsrpConsumerPortlet=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,list);
+      }
+ else {
+        wsrpConsumerPortlet=list.get(0);
+        cacheResult(wsrpConsumerPortlet);
+        if ((wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerId) || (wsrpConsumerPortlet.getPortletHandle() == null) || !wsrpConsumerPortlet.getPortletHandle().equals(portletHandle)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,wsrpConsumerPortlet);
+        }
+      }
+      return wsrpConsumerPortlet;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,new ArrayList<WSRPConsumerPortlet>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (WSRPConsumerPortlet)result;
+    }
+  }
+}

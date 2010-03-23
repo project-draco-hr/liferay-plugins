@@ -1,0 +1,14 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  name=getGroupName(name);
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  int type=GroupConstants.TYPE_COMMUNITY_PRIVATE;
+  params.put("type",type);
+  List<Group> groups=groupLocalService.search(user.getCompanyId(),name,null,params,0,1);
+  if (!groups.isEmpty()) {
+    return groups.get(0);
+  }
+  Group group=groupLocalService.addGroup(user.getUserId(),null,0,0,name,null,type,null,true,null);
+  layoutLocalService.addLayout(user.getUserId(),group.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,"Portlets",null,null,LayoutConstants.TYPE_PORTLET,false,"/portlets",null);
+  return group;
+}
