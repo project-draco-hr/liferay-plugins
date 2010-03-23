@@ -3,10 +3,9 @@
   FreeMarkerContext freeMarketContext=FreeMarkerEngineUtil.getWrappedRestrictedToolsContext();
   try {
     populateContextVariables(freeMarketContext,executionContext);
-    StringWriter messageWriter=new StringWriter();
-    String templateId=notificationName + kaleoNodeId;
-    freeMarkerEngine.mergeTemplate(templateId,notificationTemplate,freeMarketContext,messageWriter);
-    return messageWriter.toString();
+    StringWriter stringWriter=new StringWriter();
+    freeMarkerEngine.mergeTemplate(notificationName + kaleoNodeId,notificationTemplate,freeMarketContext,stringWriter);
+    return stringWriter.toString();
   }
  catch (  Exception e) {
     throw new NotificationMessageGenerationException("Unable to generate notification message",e);

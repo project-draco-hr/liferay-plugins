@@ -1,34 +1,6 @@
 {
   List<KaleoNotification> kaleoNotifications=kaleoNotificationLocalService.getKaleoNotifications(kaleoNodeId,actionType.getValue());
   for (  KaleoNotification kaleoNotification : kaleoNotifications) {
-    try {
-      NotificationMessageGenerator notificationMessageGenerator=NotificationMessageGeneratorFactory.getNotificationMessageGenerator(kaleoNotification.getLanguage());
-      String notificationMessage=notificationMessageGenerator.generateMessage(kaleoNotification.getName(),kaleoNotification.getKaleoNodeId(),kaleoNotification.getTemplate(),executionContext);
-      String notificationSubject=kaleoNotification.getDescription();
-      String[] notificationTypes=StringUtil.split(kaleoNotification.getNotificationTypes());
-      List<KaleoNotificationRecipient> notificationRecipients=kaleoNotificationRecipientLocalService.getKaleoNotificationRecipients(kaleoNotification.getKaleoNotificationId());
-      if (notificationRecipients.isEmpty()) {
-        if (_log.isInfoEnabled()) {
-          _log.info("No recipients found to notify with message " + kaleoNotification.getName() + " "+ notificationMessage);
-        }
-        return;
-      }
-      for (      String notificationType : notificationTypes) {
-        try {
-          NotificationSender notificationSender=NotificationSenderFactory.getNotificationSender(notificationType);
-          notificationSender.sendNotification(notificationRecipients,notificationSubject,notificationMessage,executionContext);
-        }
- catch (        WorkflowException e) {
-          if (_log.isErrorEnabled()) {
-            _log.error("Unable to send notifications",e);
-          }
-        }
-      }
-    }
- catch (    Exception e) {
-      if (_log.isErrorEnabled()) {
-        _log.error("Unable to send notifications",e);
-      }
-    }
+    sendKaleoNotification(kaleoNotification,executionContext);
   }
 }
