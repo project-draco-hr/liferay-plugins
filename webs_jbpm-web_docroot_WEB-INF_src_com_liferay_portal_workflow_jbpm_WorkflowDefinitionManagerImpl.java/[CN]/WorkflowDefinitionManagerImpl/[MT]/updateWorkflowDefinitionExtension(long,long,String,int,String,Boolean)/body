@@ -6,6 +6,14 @@
     if (processDefinition != null) {
       CustomSession customSession=new CustomSession(jbpmContext);
       WorkflowDefinitionExtensionImpl workflowDefinitionExtension=customSession.findWorkflowDefinitonExtension(processDefinition.getId());
+      if (title != null) {
+        workflowDefinitionExtension.setTitle(title);
+      }
+      if (active != null) {
+        workflowDefinitionExtension.setActive(active);
+      }
+      Session session=jbpmContext.getSession();
+      session.update(workflowDefinitionExtension);
       return new WorkflowDefinitionImpl(processDefinition,workflowDefinitionExtension.getTitle(),workflowDefinitionExtension.isActive());
     }
  else {

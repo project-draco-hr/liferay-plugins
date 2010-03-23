@@ -1,21 +1,3 @@
 {
-  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
-  try {
-    GraphSession graphSession=jbpmContext.getGraphSession();
-    ProcessDefinition processDefinition=graphSession.findProcessDefinition(name,version);
-    if (processDefinition != null) {
-      CustomSession customSession=new CustomSession(jbpmContext);
-      WorkflowDefinitionStatusImpl workflowDefinitionStatus=customSession.findWorkflowDefinitonStatus(processDefinition.getId());
-      workflowDefinitionStatus.setActive(active);
-      Session session=jbpmContext.getSession();
-      session.update(workflowDefinitionStatus);
-      return new WorkflowDefinitionImpl(processDefinition,workflowDefinitionStatus.isActive());
-    }
- else {
-      throw new WorkflowException("No workflow definition with name " + name + " and version "+ version);
-    }
-  }
-  finally {
-    jbpmContext.close();
-  }
+  return updateWorkflowDefinitionExtension(companyId,userId,name,version,null,active);
 }

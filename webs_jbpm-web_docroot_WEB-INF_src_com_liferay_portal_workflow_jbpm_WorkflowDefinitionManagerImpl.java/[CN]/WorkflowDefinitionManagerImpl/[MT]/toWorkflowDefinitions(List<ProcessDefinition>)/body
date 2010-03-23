@@ -4,8 +4,8 @@
     List<WorkflowDefinition> workflowDefinitions=new ArrayList<WorkflowDefinition>(processDefinitions.size());
     for (    ProcessDefinition processDefinition : processDefinitions) {
       CustomSession customSession=new CustomSession(jbpmContext);
-      WorkflowDefinitionStatusImpl workflowDefinitionStatus=customSession.findWorkflowDefinitonStatus(processDefinition.getId());
-      WorkflowDefinition workflowDefinition=new WorkflowDefinitionImpl(processDefinition,workflowDefinitionStatus.isActive());
+      WorkflowDefinitionExtensionImpl workflowDefinitionExtension=customSession.findWorkflowDefinitonExtension(processDefinition.getId());
+      WorkflowDefinition workflowDefinition=new WorkflowDefinitionImpl(processDefinition,workflowDefinitionExtension.getTitle(),workflowDefinitionExtension.isActive());
       workflowDefinitions.add(workflowDefinition);
     }
     return workflowDefinitions;
