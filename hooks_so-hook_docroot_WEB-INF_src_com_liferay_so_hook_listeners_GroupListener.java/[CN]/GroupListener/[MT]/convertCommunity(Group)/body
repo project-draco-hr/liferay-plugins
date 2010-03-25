@@ -3,10 +3,17 @@
   if (group.getType() == GroupConstants.TYPE_COMMUNITY_PRIVATE) {
     privateLayout=true;
   }
+  long userId=group.getCreatorUserId();
+  try {
+    UserLocalServiceUtil.getUser(userId);
+  }
+ catch (  NoSuchUserException nsue) {
+    userId=UserLocalServiceUtil.getDefaultUserId(group.getCompanyId());
+  }
   List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),!privateLayout);
   ServiceContext serviceContext=new ServiceContext();
   for (  Layout layout : layouts) {
-    Layout targetLayout=LayoutLocalServiceUtil.addLayout(group.getCreatorUserId(),group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layout.getName("en_US"),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,layout.getFriendlyURL(),serviceContext);
+    Layout targetLayout=LayoutLocalServiceUtil.addLayout(userId,group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layout.getName("en_US"),StringPool.BLANK,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,layout.getFriendlyURL(),serviceContext);
     copyLayout(layout,targetLayout);
     LayoutLocalServiceUtil.deleteLayout(layout.getPlid());
   }
