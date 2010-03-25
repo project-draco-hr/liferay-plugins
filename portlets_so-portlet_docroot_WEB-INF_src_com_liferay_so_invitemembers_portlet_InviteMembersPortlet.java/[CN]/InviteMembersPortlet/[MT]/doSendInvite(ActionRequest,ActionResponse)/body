@@ -2,10 +2,11 @@
   long groupId=ParamUtil.getLong(actionRequest,"groupId");
   long[] receiverUserIds=getLongArray(actionRequest,"receiverUserIds");
   String[] receiverEmailAddresses=getStringArray(actionRequest,"receiverEmailAddresses");
+  long invitedTeamId=ParamUtil.getLong(actionRequest,"invitedTeamId");
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   if (!UserLocalServiceUtil.hasGroupUser(groupId,themeDisplay.getUserId())) {
     return;
   }
-  MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverUserIds,themeDisplay);
-  MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverEmailAddresses,themeDisplay);
+  MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverUserIds,invitedTeamId,themeDisplay);
+  MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverEmailAddresses,invitedTeamId,themeDisplay);
 }
