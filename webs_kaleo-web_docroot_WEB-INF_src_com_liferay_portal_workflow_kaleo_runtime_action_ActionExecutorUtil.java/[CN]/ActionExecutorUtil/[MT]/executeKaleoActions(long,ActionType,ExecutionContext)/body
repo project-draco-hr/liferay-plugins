@@ -1,5 +1,5 @@
 {
-  List<KaleoAction> kaleoActions=kaleoActionLocalService.getKaleoActions(kaleoNodeId,actionType.getValue());
+  List<KaleoAction> kaleoActions=KaleoActionLocalServiceUtil.getKaleoActions(kaleoNodeId,actionType.getValue());
   for (  KaleoAction kaleoAction : kaleoActions) {
     long startTime=System.currentTimeMillis();
     String comment=_COMMENT_ACTION_SUCCESS;
@@ -11,7 +11,7 @@
       comment=e.getMessage();
     }
  finally {
-      kaleoLogLocalService.addActionExecutionKaleoLog(executionContext.getKaleoInstanceToken(),kaleoAction,startTime,System.currentTimeMillis(),comment,executionContext.getServiceContext());
+      KaleoLogLocalServiceUtil.addActionExecutionKaleoLog(executionContext.getKaleoInstanceToken(),kaleoAction,startTime,System.currentTimeMillis(),comment,executionContext.getServiceContext());
     }
   }
 }

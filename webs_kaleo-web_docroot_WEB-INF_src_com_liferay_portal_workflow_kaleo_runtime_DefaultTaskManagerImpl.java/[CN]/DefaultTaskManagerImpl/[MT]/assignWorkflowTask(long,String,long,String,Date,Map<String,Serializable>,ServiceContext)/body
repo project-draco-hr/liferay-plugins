@@ -8,6 +8,9 @@
   }
   KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
   KaleoTaskInstanceAssignment newKaleoTaskInstanceAssignment=kaleoTaskInstanceAssignmentLocalService.assignKaleoTaskInstanceAssignment(kaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId(),assigneeClassName,assigneeClassPK,context,serviceContext);
+  ExecutionContext executionContext=new ExecutionContext(kaleoTaskInstanceToken.getKaleoInstanceToken(),kaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context,serviceContext);
+  ActionExecutorUtil.executeKaleoActions(kaleoTaskInstanceToken.getKaleoTask().getKaleoNodeId(),ActionType.ON_ASSIGNMENT,executionContext);
+  NotificationUtil.sendKaleoNotifications(kaleoTaskInstanceToken.getKaleoTask().getKaleoNodeId(),ActionType.ON_ASSIGNMENT,executionContext);
   kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,newKaleoTaskInstanceAssignment,comment,context,serviceContext);
   return new WorkflowTaskAdapter(kaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context);
 }
