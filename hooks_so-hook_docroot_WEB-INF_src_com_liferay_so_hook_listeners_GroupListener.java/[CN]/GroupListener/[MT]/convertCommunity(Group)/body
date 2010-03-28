@@ -3,13 +3,7 @@
   if (group.getType() == GroupConstants.TYPE_COMMUNITY_PRIVATE) {
     privateLayout=true;
   }
-  long userId=group.getCreatorUserId();
-  try {
-    UserLocalServiceUtil.getUser(userId);
-  }
- catch (  NoSuchUserException nsue) {
-    userId=UserLocalServiceUtil.getDefaultUserId(group.getCompanyId());
-  }
+  long userId=PortalUtil.getValidUserId(group.getCompanyId(),group.getCreatorUserId());
   List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),!privateLayout);
   ServiceContext serviceContext=new ServiceContext();
   for (  Layout layout : layouts) {

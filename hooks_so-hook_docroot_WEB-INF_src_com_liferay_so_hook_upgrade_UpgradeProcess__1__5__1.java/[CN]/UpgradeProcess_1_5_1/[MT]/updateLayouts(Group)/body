@@ -9,13 +9,7 @@
     return;
   }
   long companyId=group.getCompanyId();
-  long userId=group.getCreatorUserId();
-  try {
-    UserLocalServiceUtil.getUser(userId);
-  }
- catch (  NoSuchUserException nsue) {
-    userId=UserLocalServiceUtil.getDefaultUserId(companyId);
-  }
+  long userId=PortalUtil.getValidUserId(companyId,group.getCreatorUserId());
   boolean privateLayout=group.hasPrivateLayouts();
   List<Layout> sourceLayouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
   ServiceContext serviceContext=new ServiceContext();
