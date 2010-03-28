@@ -1,14 +1,8 @@
 {
-  String contextName=(String)message.get("servletContextName");
-  if (!_contextName.equals(contextName)) {
-    return;
-  }
   try {
-    _portalKaleoManager.deployKaleoDefaults();
+    doReceive(message);
   }
  catch (  Exception e) {
-    if (_log.isErrorEnabled()) {
-      _log.error("Unable to deploy Kaleo defaults",e);
-    }
+    _log.error("Unable to process message " + message,e);
   }
 }

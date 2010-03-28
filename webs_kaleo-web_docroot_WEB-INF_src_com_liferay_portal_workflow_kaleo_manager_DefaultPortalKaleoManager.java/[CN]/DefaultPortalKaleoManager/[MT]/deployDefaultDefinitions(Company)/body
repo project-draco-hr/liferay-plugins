@@ -1,28 +1,22 @@
 {
-  for (  Map.Entry<String,String> definitionEntry : _definitionFilesMap.entrySet()) {
-    try {
-      String definitionName=definitionEntry.getKey();
-      ServiceContext serviceContext=new ServiceContext();
-      serviceContext.setCompanyId(company.getCompanyId());
-      int definitionCount=_kaleoDefinitionLocalService.getKaleoDefinitionsCount(definitionName,serviceContext);
-      if (definitionCount > 0) {
-        return;
-      }
-      ClassLoader classLoader=getClass().getClassLoader();
-      InputStream inputStream=classLoader.getResourceAsStream(definitionEntry.getValue());
-      if (inputStream == null) {
-        if (_log.isWarnEnabled()) {
-          _log.warn("Unable to find definition file for: " + definitionName + " file name: "+ definitionEntry.getValue());
-        }
-        return;
-      }
-      User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
-      _workflowDefinitionManager.deployWorkflowDefinition(serviceContext.getCompanyId(),defaultUser.getUserId(),definitionName,inputStream);
+  for (  Map.Entry<String,String> entry : _definitionFiles.entrySet()) {
+    String definitionName=entry.getKey();
+    String fileName=entry.getValue();
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setCompanyId(company.getCompanyId());
+    int kaleoDefinitionsCount=kaleoDefinitionLocalService.getKaleoDefinitionsCount(definitionName,serviceContext);
+    if (kaleoDefinitionsCount > 0) {
+      return;
     }
- catch (    Exception e) {
-      if (_log.isErrorEnabled()) {
-        _log.error("Unable to deploy default definition: " + definitionEntry.getKey(),e);
+    ClassLoader classLoader=getClass().getClassLoader();
+    InputStream inputStream=classLoader.getResourceAsStream(fileName);
+    if (inputStream == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unable to find definition file for " + definitionName + " with file name "+ fileName);
       }
+      return;
     }
+    User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
+    _workflowDefinitionManager.deployWorkflowDefinition(serviceContext.getCompanyId(),defaultUser.getUserId(),definitionName,inputStream);
   }
 }

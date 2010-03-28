@@ -1,14 +1,14 @@
 {
   List<Company> companies=CompanyLocalServiceUtil.getCompanies();
   for (  Company company : companies) {
-    Group companyGroup=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
     User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
+    Group companyGroup=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
     String definitionName=_defaultDefinitionName;
-    if (_definitionAssetMap.containsKey(assetClassName)) {
-      definitionName=_definitionAssetMap.get(assetClassName);
+    if (_definitionAssets.containsKey(assetClassName)) {
+      definitionName=_definitionAssets.get(assetClassName);
     }
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setCompanyId(company.getCompanyId());
-    doDeployDefaultDefinitionLink(company,assetClassName,companyGroup,defaultUser,definitionName);
+    deployDefaultDefinitionLink(defaultUser,company,companyGroup,assetClassName,definitionName);
   }
 }

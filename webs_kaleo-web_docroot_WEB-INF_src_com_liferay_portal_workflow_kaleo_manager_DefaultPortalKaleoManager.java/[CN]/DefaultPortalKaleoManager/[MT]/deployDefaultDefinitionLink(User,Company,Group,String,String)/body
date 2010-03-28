@@ -1,0 +1,17 @@
+{
+  try {
+    WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(company.getCompanyId(),assetClassName);
+    return;
+  }
+ catch (  NoSuchWorkflowDefinitionLinkException nswdle) {
+  }
+  List<WorkflowDefinition> workflowDefinitions=_workflowDefinitionManager.getActiveWorkflowDefinitions(company.getCompanyId(),workflowDefinitionName,0,20,new WorkflowDefinitionNameComparator(false));
+  if (workflowDefinitions.isEmpty()) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("No workflow definitions found for " + workflowDefinitionName);
+    }
+    return;
+  }
+  WorkflowDefinition workflowDefinition=workflowDefinitions.get(0);
+  WorkflowDefinitionLinkLocalServiceUtil.addWorkflowDefinitionLink(defaultUser.getUserId(),company.getCompanyId(),companyGroup.getGroupId(),assetClassName,workflowDefinition.getName(),workflowDefinition.getVersion());
+}

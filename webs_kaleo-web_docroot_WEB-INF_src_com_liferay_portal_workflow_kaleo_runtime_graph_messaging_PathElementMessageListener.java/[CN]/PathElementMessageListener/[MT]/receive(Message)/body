@@ -1,13 +1,8 @@
 {
-  PathElement pathElement=(PathElement)message.getPayload();
-  List<PathElement> remainingPathElements=new ArrayList<PathElement>();
   try {
-    _graphWalker.follow(pathElement.getStartNode(),pathElement.getTargetNode(),remainingPathElements,pathElement.getExecutionContext());
+    doReceive(message);
   }
  catch (  Exception e) {
-    _log.error(e,e);
-  }
-  for (  PathElement remainingPathElement : remainingPathElements) {
-    _singleDestinationMessageSender.send(remainingPathElement);
+    _log.error("Unable to process message " + message,e);
   }
 }

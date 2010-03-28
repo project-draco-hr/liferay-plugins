@@ -1,18 +1,11 @@
 {
-  Group companyGroup=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
   User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
+  Group companyGroup=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setCompanyId(company.getCompanyId());
-  for (  Map.Entry<String,String> definitionEntry : _definitionAssetMap.entrySet()) {
-    String assetClassName=definitionEntry.getKey();
-    String definitionName=definitionEntry.getValue();
-    try {
-      doDeployDefaultDefinitionLink(company,assetClassName,companyGroup,defaultUser,definitionName);
-    }
- catch (    Exception e) {
-      if (_log.isErrorEnabled()) {
-        _log.error("Unable to deploy default definition: " + definitionEntry.getKey(),e);
-      }
-    }
+  for (  Map.Entry<String,String> entry : _definitionAssets.entrySet()) {
+    String definitionName=entry.getKey();
+    String assetClassName=entry.getValue();
+    deployDefaultDefinitionLink(defaultUser,company,companyGroup,assetClassName,definitionName);
   }
 }
