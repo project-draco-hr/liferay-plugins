@@ -5,16 +5,6 @@
   String description=rootElement.elementText("description");
   int version=GetterUtil.getInteger(rootElement.elementText("version"));
   Definition definition=new Definition(name,description,version);
-  List<Element> stateElements=rootElement.elements("state");
-  for (  Element stateElement : stateElements) {
-    State state=parseState(stateElement);
-    definition.addNode(state);
-  }
-  List<Element> taskElements=rootElement.elements("task");
-  for (  Element taskElement : taskElements) {
-    Task task=parseTask(taskElement);
-    definition.addNode(task);
-  }
   List<Element> forkElements=rootElement.elements("fork");
   for (  Element forkElement : forkElements) {
     Fork fork=parseFork(forkElement);
@@ -25,6 +15,16 @@
     Join join=parseJoin(joinElement);
     definition.addNode(join);
   }
-  processTransitions(definition,stateElements,taskElements,forkElements,joinElements);
+  List<Element> stateElements=rootElement.elements("state");
+  for (  Element stateElement : stateElements) {
+    State state=parseState(stateElement);
+    definition.addNode(state);
+  }
+  List<Element> taskElements=rootElement.elements("task");
+  for (  Element taskElement : taskElements) {
+    Task task=parseTask(taskElement);
+    definition.addNode(task);
+  }
+  processTransitions(definition,forkElements,joinElements,stateElements,taskElements);
   return definition;
 }

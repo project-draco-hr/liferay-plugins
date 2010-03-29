@@ -1,0 +1,17 @@
+{
+  List<KaleoAction> kaleoActions=KaleoActionLocalServiceUtil.getKaleoActions(kaleoNodeId,executionType.getValue());
+  for (  KaleoAction kaleoAction : kaleoActions) {
+    long startTime=System.currentTimeMillis();
+    String comment=_COMMENT_ACTION_SUCCESS;
+    try {
+      ActionExecutor actionExecutor=ActionExecutorFactory.getActionExecutor(kaleoAction.getScriptLanguage());
+      actionExecutor.execute(kaleoAction,executionContext);
+    }
+ catch (    Exception e) {
+      comment=e.getMessage();
+    }
+ finally {
+      KaleoLogLocalServiceUtil.addActionExecutionKaleoLog(executionContext.getKaleoInstanceToken(),kaleoAction,startTime,System.currentTimeMillis(),comment,executionContext.getServiceContext());
+    }
+  }
+}

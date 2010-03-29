@@ -5,13 +5,13 @@
   Set<Assignment> assignments=new HashSet<Assignment>();
   List<Element> roleAssignmentElements=assignmentsElement.elements("role");
   for (  Element roleAssignmentElement : roleAssignmentElements) {
-    String name=roleAssignmentElement.attributeValue("name");
-    long roleId=GetterUtil.getLong(roleAssignmentElement.attributeValue("role-id"));
-    boolean defaultValue=GetterUtil.getBoolean(roleAssignmentElement.attributeValue("default"));
+    long roleId=GetterUtil.getLong(roleAssignmentElement.elementText("role-id"));
+    String name=roleAssignmentElement.elementText("name");
+    boolean defaultValue=GetterUtil.getBoolean(roleAssignmentElement.elementText("default"));
     RoleAssignment roleAssignment=null;
     if (Validator.isNotNull(name)) {
       roleAssignment=new RoleAssignment(name,defaultValue);
-      boolean autoCreate=GetterUtil.getBoolean(roleAssignmentElement.attributeValue("auto-create"),true);
+      boolean autoCreate=GetterUtil.getBoolean(roleAssignmentElement.elementText("auto-create"),true);
       roleAssignment.setAutoCreate(autoCreate);
     }
  else {
@@ -21,14 +21,11 @@
   }
   List<Element> userAssignmentElements=assignmentsElement.elements("user");
   for (  Element userAssignmentElement : userAssignmentElements) {
-    boolean defaultValue=GetterUtil.getBoolean(userAssignmentElement.attributeValue("default"));
-    UserAssignment userAssignment=new UserAssignment(defaultValue);
-    long userId=GetterUtil.getLong(userAssignmentElement.attributeValue("user-id"));
-    userAssignment.setUserId(userId);
-    String screenName=userAssignmentElement.attributeValue("screen-name");
-    userAssignment.setScreenName(screenName);
-    String emailAddress=userAssignmentElement.attributeValue("email-address");
-    userAssignment.setEmailAddress(emailAddress);
+    long userId=GetterUtil.getLong(userAssignmentElement.elementText("user-id"));
+    String screenName=userAssignmentElement.elementText("screen-name");
+    String emailAddress=userAssignmentElement.elementText("email-address");
+    boolean defaultValue=GetterUtil.getBoolean(userAssignmentElement.elementText("default"));
+    UserAssignment userAssignment=new UserAssignment(userId,screenName,emailAddress,defaultValue);
     assignments.add(userAssignment);
   }
   return assignments;
