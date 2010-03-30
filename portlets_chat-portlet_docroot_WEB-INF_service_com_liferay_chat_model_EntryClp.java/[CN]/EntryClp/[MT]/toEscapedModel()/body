@@ -3,14 +3,6 @@
     return this;
   }
  else {
-    Entry model=new EntryClp();
-    model.setEscapedModel(true);
-    model.setEntryId(getEntryId());
-    model.setCreateDate(getCreateDate());
-    model.setFromUserId(getFromUserId());
-    model.setToUserId(getToUserId());
-    model.setContent(HtmlUtil.escape(getContent()));
-    model=(Entry)Proxy.newProxyInstance(Entry.class.getClassLoader(),new Class[]{Entry.class},new ReadOnlyBeanHandler(model));
-    return model;
+    return (Entry)Proxy.newProxyInstance(Entry.class.getClassLoader(),new Class[]{Entry.class},new AutoEscapeBeanHandler(this));
   }
 }

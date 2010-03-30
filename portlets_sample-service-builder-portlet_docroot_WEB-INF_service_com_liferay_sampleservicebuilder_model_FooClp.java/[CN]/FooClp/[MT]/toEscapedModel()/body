@@ -3,20 +3,6 @@
     return this;
   }
  else {
-    Foo model=new FooClp();
-    model.setEscapedModel(true);
-    model.setFooId(getFooId());
-    model.setCompanyId(getCompanyId());
-    model.setUserId(getUserId());
-    model.setUserName(HtmlUtil.escape(getUserName()));
-    model.setCreateDate(getCreateDate());
-    model.setModifiedDate(getModifiedDate());
-    model.setField1(HtmlUtil.escape(getField1()));
-    model.setField2(getField2());
-    model.setField3(getField3());
-    model.setField4(getField4());
-    model.setField5(HtmlUtil.escape(getField5()));
-    model=(Foo)Proxy.newProxyInstance(Foo.class.getClassLoader(),new Class[]{Foo.class},new ReadOnlyBeanHandler(model));
-    return model;
+    return (Foo)Proxy.newProxyInstance(Foo.class.getClassLoader(),new Class[]{Foo.class},new AutoEscapeBeanHandler(this));
   }
 }
