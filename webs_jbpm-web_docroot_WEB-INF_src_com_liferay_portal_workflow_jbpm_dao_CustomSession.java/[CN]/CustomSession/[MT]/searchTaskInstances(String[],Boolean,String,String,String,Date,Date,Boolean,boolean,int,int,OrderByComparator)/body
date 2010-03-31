@@ -1,0 +1,13 @@
+{
+  try {
+    Criteria criteria=_session.createCriteria(TaskInstance.class);
+    criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    createSearchCriteria(criteria,actorIds,pooledActors,name,type,state,dueDateGT,dueDateLT,completed,andOperator);
+    addPagination(criteria,start,end);
+    addOrder(criteria,orderByComparator);
+    return criteria.list();
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+}

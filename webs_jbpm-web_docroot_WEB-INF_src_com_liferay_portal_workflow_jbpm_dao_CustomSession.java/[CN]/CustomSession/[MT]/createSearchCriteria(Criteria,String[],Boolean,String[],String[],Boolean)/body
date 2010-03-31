@@ -1,0 +1,31 @@
+{
+  if (actorIds != null) {
+    if ((pooledActors != null) && pooledActors.booleanValue()) {
+      Criteria subCriteria=criteria.createCriteria("pooledActors");
+      subCriteria.add(Restrictions.in("actorId",actorIds));
+      criteria.add(Restrictions.isNull("actorId"));
+    }
+ else {
+      criteria.add(Restrictions.in("actorId",actorIds));
+    }
+  }
+  Disjunction kewordsDisjunction=Restrictions.disjunction();
+  if ((names != null) && (names.length > 0)) {
+    addDisjunction(kewordsDisjunction,"name",names);
+  }
+  if ((states != null) && (states.length > 0)) {
+    criteria.createAlias("processInstance","processInstance");
+    criteria.createAlias("processInstance.rootToken","rootToken");
+    criteria.createAlias("rootToken.node","node");
+    addDisjunction(kewordsDisjunction,"node.name",states);
+  }
+  criteria.add(kewordsDisjunction);
+  if (completed != null) {
+    if (completed.booleanValue()) {
+      criteria.add(Restrictions.isNotNull("end"));
+    }
+ else {
+      criteria.add(Restrictions.isNull("end"));
+    }
+  }
+}

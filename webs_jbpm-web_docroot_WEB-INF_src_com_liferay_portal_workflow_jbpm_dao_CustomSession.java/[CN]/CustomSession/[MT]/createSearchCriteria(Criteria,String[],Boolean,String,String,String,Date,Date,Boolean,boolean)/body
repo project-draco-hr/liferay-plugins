@@ -1,0 +1,50 @@
+{
+  if (actorIds != null) {
+    if ((pooledActors != null) && pooledActors.booleanValue()) {
+      Criteria subCriteria=criteria.createCriteria("pooledActors");
+      subCriteria.add(Restrictions.in("actorId",actorIds));
+      criteria.add(Restrictions.isNull("actorId"));
+    }
+ else {
+      criteria.add(Restrictions.in("actorId",actorIds));
+    }
+  }
+  Junction kewordsJunction;
+  if (andOperator) {
+    kewordsJunction=Restrictions.conjunction();
+  }
+ else {
+    kewordsJunction=Restrictions.disjunction();
+  }
+  if (name != null) {
+    kewordsJunction.add(Restrictions.like("name",name));
+  }
+  if (state != null) {
+    criteria.createAlias("processInstance","processInstance");
+    criteria.createAlias("processInstance.rootToken","rootToken");
+    criteria.createAlias("rootToken.node","node");
+    kewordsJunction.add(Restrictions.like("node.name",state));
+  }
+  if (type != null) {
+    if (state == null) {
+      criteria.createAlias("processInstance","processInstance");
+    }
+    criteria.createAlias("processInstance.instances","instances");
+    criteria.createAlias("instances.tokenVariableMaps","varMaps");
+    criteria.createAlias("varMaps.variableInstances","varInstances");
+    Criterion typeCriterion=Restrictions.and(Restrictions.eq("varInstances.name",ContextConstants.ENTRY_TYPE),Restrictions.like("varInstances.value",type));
+    kewordsJunction.add(typeCriterion);
+  }
+  if ((dueDateGT != null) && (dueDateLT != null)) {
+    kewordsJunction.add(Restrictions.between("dueDate",dueDateGT,dueDateLT));
+  }
+  criteria.add(kewordsJunction);
+  if (completed != null) {
+    if (completed.booleanValue()) {
+      criteria.add(Restrictions.isNotNull("end"));
+    }
+ else {
+      criteria.add(Restrictions.isNull("end"));
+    }
+  }
+}
