@@ -1,3 +1,13 @@
 {
-  return getWorkflowTasks(-1,new String[]{String.valueOf(roleId)},true,completed,start,end,orderByComparator);
+  try {
+    Role role=RoleLocalServiceUtil.getRole(roleId);
+    String[] actorIds=new String[]{String.valueOf(roleId),role.getName()};
+    return getWorkflowTasks(-1,actorIds,true,completed,start,end,orderByComparator);
+  }
+ catch (  WorkflowException we) {
+    throw we;
+  }
+catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
 }

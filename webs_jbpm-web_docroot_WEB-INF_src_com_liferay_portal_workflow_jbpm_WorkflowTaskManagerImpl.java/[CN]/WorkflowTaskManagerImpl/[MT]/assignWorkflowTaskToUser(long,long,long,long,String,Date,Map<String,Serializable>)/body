@@ -9,8 +9,16 @@
       throw new WorkflowException("Workflow task " + workflowTaskId + " has not been assigned to a role");
     }
     PooledActor pooledActor=pooledActors.iterator().next();
-    long roleId=GetterUtil.getLong(pooledActor.getActorId());
-    if (!RoleLocalServiceUtil.hasUserRole(assigneeUserId,roleId)) {
+    String actorId=pooledActor.getActorId();
+    boolean hasUserRole=false;
+    if (Validator.isNumber(actorId)) {
+      long roleId=GetterUtil.getLong(actorId);
+      hasUserRole=RoleLocalServiceUtil.hasUserRole(assigneeUserId,roleId);
+    }
+ else {
+      hasUserRole=RoleLocalServiceUtil.hasUserRole(assigneeUserId,companyId,actorId,true);
+    }
+    if (!hasUserRole) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " cannot be assigned to user "+ assigneeUserId);
     }
     taskInstance.setActorId(String.valueOf(assigneeUserId));

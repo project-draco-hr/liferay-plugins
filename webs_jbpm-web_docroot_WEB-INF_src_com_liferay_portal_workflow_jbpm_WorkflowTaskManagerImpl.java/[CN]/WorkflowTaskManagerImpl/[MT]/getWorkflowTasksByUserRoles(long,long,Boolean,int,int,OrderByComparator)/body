@@ -1,8 +1,12 @@
 {
   try {
     List<Role> roles=RoleLocalServiceUtil.getUserRoles(userId);
-    String[] roleIds=StringUtil.split(ListUtil.toString(roles,"roleId"));
-    return getWorkflowTasks(-1,roleIds,true,completed,start,end,orderByComparator);
+    StringBundler sb=new StringBundler();
+    sb.append(ListUtil.toString(roles,"roleId"));
+    sb.append(StringPool.COMMA);
+    sb.append(ListUtil.toString(roles,"name"));
+    String[] actorIds=StringUtil.split(sb.toString());
+    return getWorkflowTasks(-1,actorIds,true,completed,start,end,orderByComparator);
   }
  catch (  WorkflowException we) {
     throw we;
