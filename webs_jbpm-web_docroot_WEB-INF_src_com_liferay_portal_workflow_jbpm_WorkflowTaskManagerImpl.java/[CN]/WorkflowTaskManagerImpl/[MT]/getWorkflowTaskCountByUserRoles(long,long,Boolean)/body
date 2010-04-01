@@ -1,11 +1,7 @@
 {
   try {
     List<Role> roles=RoleLocalServiceUtil.getUserRoles(userId);
-    StringBundler sb=new StringBundler();
-    sb.append(ListUtil.toString(roles,"roleId"));
-    sb.append(StringPool.COMMA);
-    sb.append(ListUtil.toString(roles,"name"));
-    String[] actorIds=StringUtil.split(sb.toString());
+    String[] actorIds=getActorIds(roles);
     return getWorkflowTaskCount(actorIds,true,completed);
   }
  catch (  WorkflowException we) {
