@@ -1,0 +1,26 @@
+{
+  boolean deleteFolder=true;
+  List<DLFileEntry> fileEntries=DLFileEntryLocalServiceUtil.getFileEntries(groupId,rootFolderId);
+  for (  DLFileEntry fileEntry : fileEntries) {
+    ServiceContext serviceContext=new ServiceContext();
+    try {
+      DLFileEntryLocalServiceUtil.updateFileEntry(fileEntry.getUserId(),fileEntry.getGroupId(),fileEntry.getFolderId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,fileEntry.getName(),StringPool.BLANK,fileEntry.getTitle(),fileEntry.getDescription(),StringPool.BLANK,false,fileEntry.getExtraSettings(),(File)null,serviceContext);
+    }
+ catch (    Exception e) {
+      deleteFolder=false;
+    }
+  }
+  List<DLFolder> folders=DLFolderLocalServiceUtil.getFolders(groupId,rootFolderId);
+  for (  DLFolder folder : folders) {
+    ServiceContext serviceContext=new ServiceContext();
+    try {
+      DLFolderLocalServiceUtil.updateFolder(folder.getFolderId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,folder.getName(),folder.getDescription(),serviceContext);
+    }
+ catch (    Exception e) {
+      deleteFolder=false;
+    }
+  }
+  if (deleteFolder) {
+    DLFolderLocalServiceUtil.deleteFolder(rootFolderId);
+  }
+}
