@@ -1,0 +1,20 @@
+{
+  Folder folder=(Folder)EntityCacheUtil.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folderId,this);
+  if (folder == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      folder=(Folder)session.get(FolderImpl.class,new Long(folderId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (folder != null) {
+        cacheResult(folder);
+      }
+      closeSession(session);
+    }
+  }
+  return folder;
+}

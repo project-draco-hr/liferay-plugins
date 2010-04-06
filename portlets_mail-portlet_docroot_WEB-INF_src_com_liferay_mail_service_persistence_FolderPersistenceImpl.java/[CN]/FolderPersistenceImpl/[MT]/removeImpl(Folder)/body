@@ -1,0 +1,24 @@
+{
+  folder=toUnwrappedModel(folder);
+  Session session=null;
+  try {
+    session=openSession();
+    if (folder.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(FolderImpl.class,folder.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(folder);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folder.getPrimaryKey());
+  return folder;
+}

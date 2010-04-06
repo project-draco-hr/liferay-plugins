@@ -1,0 +1,20 @@
+{
+  Message message=(Message)EntityCacheUtil.getResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId,this);
+  if (message == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      message=(Message)session.get(MessageImpl.class,new Long(messageId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (message != null) {
+        cacheResult(message);
+      }
+      closeSession(session);
+    }
+  }
+  return message;
+}

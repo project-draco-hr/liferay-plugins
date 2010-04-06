@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.mail.model.Account")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<Account>> listenersList=new ArrayList<ModelListener<Account>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<Account>)Class.forName(listenerClassName).newInstance());
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}
