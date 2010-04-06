@@ -1,0 +1,16 @@
+{
+  Set<String> names=SetUtil.fromArray(PortletPropsValues.SITE_AUTO_CREATE_TEAM_NAMES);
+  if (names.isEmpty()) {
+    return;
+  }
+  List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    if (!group.isCommunity() || group.getName().equals(GroupConstants.CONTROL_PANEL) || group.getName().equals(GroupConstants.GUEST)) {
+      continue;
+    }
+    long userId=PortalUtil.getValidUserId(group.getCompanyId(),group.getCreatorUserId());
+    for (    String name : names) {
+      TeamLocalServiceUtil.addTeam(userId,group.getGroupId(),name,StringPool.BLANK);
+    }
+  }
+}
