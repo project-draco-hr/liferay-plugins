@@ -1,0 +1,17 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Message message=messagePersistence.findByPrimaryKey(messageId);
+  Folder folder=folderPersistence.findByPrimaryKey(message.getFolderId());
+  long attachmentId=counterLocalService.increment();
+  Attachment attachment=attachmentPersistence.create(attachmentId);
+  attachment.setCompanyId(user.getCompanyId());
+  attachment.setUserId(user.getUserId());
+  attachment.setAccountId(folder.getAccountId());
+  attachment.setFolderId(folder.getFolderId());
+  attachment.setMessageId(messageId);
+  attachment.setContentPath(contentPath);
+  attachment.setFileName(fileName);
+  attachment.setSize(size);
+  attachmentPersistence.update(attachment,false);
+  return attachment;
+}
