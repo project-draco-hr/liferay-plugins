@@ -1,0 +1,66 @@
+{
+  Object[] finderArgs=new Object[]{new Long(accountId),fullName};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_A_F,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_SELECT_FOLDER_WHERE);
+      query.append(_FINDER_COLUMN_A_F_ACCOUNTID_2);
+      if (fullName == null) {
+        query.append(_FINDER_COLUMN_A_F_FULLNAME_1);
+      }
+ else {
+        if (fullName.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_A_F_FULLNAME_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_A_F_FULLNAME_2);
+        }
+      }
+      query.append(FolderModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(accountId);
+      if (fullName != null) {
+        qPos.add(fullName);
+      }
+      List<Folder> list=q.list();
+      result=list;
+      Folder folder=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,finderArgs,list);
+      }
+ else {
+        folder=list.get(0);
+        cacheResult(folder);
+        if ((folder.getAccountId() != accountId) || (folder.getFullName() == null) || !folder.getFullName().equals(fullName)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,finderArgs,folder);
+        }
+      }
+      return folder;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,finderArgs,new ArrayList<Folder>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (Folder)result;
+    }
+  }
+}

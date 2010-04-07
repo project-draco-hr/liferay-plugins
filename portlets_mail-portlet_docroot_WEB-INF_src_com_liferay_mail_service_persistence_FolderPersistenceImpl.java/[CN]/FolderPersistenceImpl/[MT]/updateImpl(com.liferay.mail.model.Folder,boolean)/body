@@ -1,5 +1,7 @@
 {
   folder=toUnwrappedModel(folder);
+  boolean isNew=folder.isNew();
+  FolderModelImpl folderModelImpl=(FolderModelImpl)folder;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folder.getPrimaryKey(),folder);
+  if (!isNew && ((folder.getAccountId() != folderModelImpl.getOriginalAccountId()) || !Validator.equals(folder.getFullName(),folderModelImpl.getOriginalFullName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{new Long(folderModelImpl.getOriginalAccountId()),folderModelImpl.getOriginalFullName()});
+  }
+  if (isNew || ((folder.getAccountId() != folderModelImpl.getOriginalAccountId()) || !Validator.equals(folder.getFullName(),folderModelImpl.getOriginalFullName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{new Long(folder.getAccountId()),folder.getFullName()},folder);
+  }
   return folder;
 }
