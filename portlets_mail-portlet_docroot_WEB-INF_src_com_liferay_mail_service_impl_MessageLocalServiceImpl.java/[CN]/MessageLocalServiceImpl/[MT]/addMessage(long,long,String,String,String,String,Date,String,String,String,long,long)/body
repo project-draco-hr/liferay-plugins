@@ -1,0 +1,27 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Folder folder=folderPersistence.findByPrimaryKey(folderId);
+  Date now=new Date();
+  long messageId=counterLocalService.increment();
+  Message message=messagePersistence.create(messageId);
+  message.setCompanyId(user.getCompanyId());
+  message.setUserId(user.getUserId());
+  message.setUserName(user.getFullName());
+  message.setCreateDate(now);
+  message.setModifiedDate(now);
+  message.setAccountId(folder.getAccountId());
+  message.setFolderId(folderId);
+  message.setSender(sender);
+  message.setRecipientsTo(recipientsTo);
+  message.setRecipientsCc(recipientsCc);
+  message.setRecipientsBcc(recipientsBcc);
+  message.setSentDate(sentDate);
+  message.setSubject(subject);
+  message.setPreview(body);
+  message.setBody(body);
+  message.setFlags(flags);
+  message.setSize(size);
+  message.setRemoteMessageId(remoteMessageId);
+  messagePersistence.update(message,false);
+  return message;
+}
