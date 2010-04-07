@@ -1,5 +1,7 @@
 {
   message=toUnwrappedModel(message);
+  boolean isNew=message.isNew();
+  MessageModelImpl messageModelImpl=(MessageModelImpl)message;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,message.getPrimaryKey(),message);
+  if (!isNew && ((message.getFolderId() != messageModelImpl.getOriginalFolderId()) || (message.getRemoteMessageId() != messageModelImpl.getOriginalRemoteMessageId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{new Long(messageModelImpl.getOriginalFolderId()),new Long(messageModelImpl.getOriginalRemoteMessageId())});
+  }
+  if (isNew || ((message.getFolderId() != messageModelImpl.getOriginalFolderId()) || (message.getRemoteMessageId() != messageModelImpl.getOriginalRemoteMessageId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{new Long(message.getFolderId()),new Long(message.getRemoteMessageId())},message);
+  }
   return message;
 }

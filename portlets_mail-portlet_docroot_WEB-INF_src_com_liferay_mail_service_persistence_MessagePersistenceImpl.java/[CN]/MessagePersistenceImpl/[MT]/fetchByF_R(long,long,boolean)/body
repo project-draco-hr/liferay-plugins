@@ -1,0 +1,54 @@
+{
+  Object[] finderArgs=new Object[]{new Long(folderId),new Long(remoteMessageId)};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,this);
+  }
+  if (result == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=new StringBundler(4);
+      query.append(_SQL_SELECT_MESSAGE_WHERE);
+      query.append(_FINDER_COLUMN_F_R_FOLDERID_2);
+      query.append(_FINDER_COLUMN_F_R_REMOTEMESSAGEID_2);
+      query.append(MessageModelImpl.ORDER_BY_JPQL);
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(folderId);
+      qPos.add(remoteMessageId);
+      List<Message> list=q.list();
+      result=list;
+      Message message=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,list);
+      }
+ else {
+        message=list.get(0);
+        cacheResult(message);
+        if ((message.getFolderId() != folderId) || (message.getRemoteMessageId() != remoteMessageId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,message);
+        }
+      }
+      return message;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,new ArrayList<Message>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (Message)result;
+    }
+  }
+}

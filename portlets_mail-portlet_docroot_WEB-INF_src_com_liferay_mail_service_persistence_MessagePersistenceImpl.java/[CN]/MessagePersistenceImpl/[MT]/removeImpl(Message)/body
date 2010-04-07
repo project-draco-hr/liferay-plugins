@@ -19,6 +19,8 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  MessageModelImpl messageModelImpl=(MessageModelImpl)message;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{new Long(messageModelImpl.getOriginalFolderId()),new Long(messageModelImpl.getOriginalRemoteMessageId())});
   EntityCacheUtil.removeResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,message.getPrimaryKey());
   return message;
 }
