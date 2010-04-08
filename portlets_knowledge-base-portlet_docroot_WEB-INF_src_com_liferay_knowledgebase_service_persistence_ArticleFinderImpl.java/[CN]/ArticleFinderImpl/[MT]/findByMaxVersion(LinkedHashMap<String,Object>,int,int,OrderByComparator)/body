@@ -1,0 +1,21 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(FIND_BY_MAX_VERSION);
+    sql=StringUtil.replace(sql,"[$JOIN$]",getJoin(params));
+    sql=StringUtil.replace(sql,"[$WHERE$]",getWhere(params));
+    sql=CustomSQLUtil.replaceOrderBy(sql,obc);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addEntity("KB_Article",ArticleImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    setJoin(qPos,params);
+    return (List<Article>)QueryUtil.list(q,getDialect(),start,end);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
