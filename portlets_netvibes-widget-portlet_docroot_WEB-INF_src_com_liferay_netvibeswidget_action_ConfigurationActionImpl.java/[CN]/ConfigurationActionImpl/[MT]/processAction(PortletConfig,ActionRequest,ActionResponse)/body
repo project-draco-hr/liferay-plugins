@@ -1,0 +1,26 @@
+{
+  String link=ParamUtil.getString(actionRequest,"link");
+  String title=ParamUtil.getString(actionRequest,"title");
+  String description=ParamUtil.getString(actionRequest,"description");
+  String thumbnail=ParamUtil.getString(actionRequest,"thumbnail");
+  String[] htmlAttributes=StringUtil.split(ParamUtil.getString(actionRequest,"htmlAttributes"),StringPool.NEW_LINE);
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  preferences.setValue("link",link);
+  preferences.setValue("title",title);
+  preferences.setValue("description",description);
+  preferences.setValue("thumbnail",thumbnail);
+  for (  String htmlAttribute : htmlAttributes) {
+    int pos=htmlAttribute.indexOf(StringPool.EQUAL);
+    if (pos == -1) {
+      continue;
+    }
+    String key=htmlAttribute.substring(0,pos);
+    String value=htmlAttribute.substring(pos + 1,htmlAttribute.length());
+    preferences.setValue(key,value);
+  }
+  if (SessionErrors.isEmpty(actionRequest)) {
+    preferences.store();
+    SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+  }
+}

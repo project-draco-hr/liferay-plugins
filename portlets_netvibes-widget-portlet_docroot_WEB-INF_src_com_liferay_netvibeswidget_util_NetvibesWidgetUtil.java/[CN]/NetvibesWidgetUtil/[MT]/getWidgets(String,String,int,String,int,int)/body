@@ -1,0 +1,36 @@
+{
+  StringBuilder sb=new StringBuilder();
+  sb.append("http://api.eco.netvibes.com/search?category=");
+  sb.append(category);
+  sb.append("&format=json&limit=");
+  sb.append(limit);
+  sb.append("&page=");
+  sb.append(page);
+  sb.append("&query=");
+  sb.append(HttpUtil.encodeURL(query));
+  sb.append("&region=");
+  sb.append(HttpUtil.encodeURL(region));
+  sb.append("&sort=");
+  sb.append(HttpUtil.encodeURL(sort));
+  sb.append("&thumbheight=48&thumbwidth=64&type=uwa");
+  String jsonString=HttpUtil.URLtoString(HtmlUtil.stripComments(sb.toString()));
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(jsonString);
+  JSONArray jsonArray=jsonObject.getJSONArray("items");
+  List<Object[]> results=new ArrayList<Object[]>();
+  int total=0;
+  if (jsonArray != null) {
+    for (int i=0; i < jsonArray.length(); i++) {
+      JSONObject curJSONObject=jsonArray.getJSONObject(i);
+      String link=curJSONObject.getString("link");
+      String title=curJSONObject.getString("title");
+      String description=curJSONObject.getString("description");
+      String thumbnail=curJSONObject.getString("thumbnail");
+      if (Validator.isNull(link) || Validator.isNull(title)) {
+        continue;
+      }
+      results.add(new Object[]{link,title,description,thumbnail});
+    }
+    total=jsonObject.getInt("total");
+  }
+  return new Object[]{results,total};
+}

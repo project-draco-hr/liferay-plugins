@@ -1,0 +1,15 @@
+{
+  String jsonString=HttpUtil.URLtoString(HtmlUtil.stripComments("http://api.eco.netvibes.com/categories?format=json"));
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(jsonString);
+  JSONArray jsonArray=jsonObject.getJSONArray("categories");
+  if (jsonArray == null) {
+    return new String[0][2];
+  }
+  String[][] categories=new String[jsonArray.length()][2];
+  for (int i=0; i < jsonArray.length(); i++) {
+    JSONObject curJSONObject=jsonArray.getJSONObject(i);
+    categories[i][0]=String.valueOf(curJSONObject.getInt("id"));
+    categories[i][1]=curJSONObject.getString("label");
+  }
+  return categories;
+}
