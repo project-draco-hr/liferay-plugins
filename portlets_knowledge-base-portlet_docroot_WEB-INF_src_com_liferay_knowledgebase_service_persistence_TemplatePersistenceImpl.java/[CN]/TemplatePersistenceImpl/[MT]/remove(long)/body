@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Template template=(Template)session.get(TemplateImpl.class,new Long(templateId));
+    if (template == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + templateId);
+      }
+      throw new NoSuchTemplateException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + templateId);
+    }
+    return remove(template);
+  }
+ catch (  NoSuchTemplateException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

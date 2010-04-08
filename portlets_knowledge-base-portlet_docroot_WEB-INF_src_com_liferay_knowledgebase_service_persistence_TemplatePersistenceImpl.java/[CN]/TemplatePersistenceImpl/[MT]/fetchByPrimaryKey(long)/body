@@ -1,0 +1,20 @@
+{
+  Template template=(Template)EntityCacheUtil.getResult(TemplateModelImpl.ENTITY_CACHE_ENABLED,TemplateImpl.class,templateId,this);
+  if (template == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      template=(Template)session.get(TemplateImpl.class,new Long(templateId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (template != null) {
+        cacheResult(template);
+      }
+      closeSession(session);
+    }
+  }
+  return template;
+}

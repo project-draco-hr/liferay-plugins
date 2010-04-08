@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Article article=(Article)session.get(ArticleImpl.class,new Long(articleId));
+    if (article == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + articleId);
+      }
+      throw new NoSuchArticleException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + articleId);
+    }
+    return remove(article);
+  }
+ catch (  NoSuchArticleException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

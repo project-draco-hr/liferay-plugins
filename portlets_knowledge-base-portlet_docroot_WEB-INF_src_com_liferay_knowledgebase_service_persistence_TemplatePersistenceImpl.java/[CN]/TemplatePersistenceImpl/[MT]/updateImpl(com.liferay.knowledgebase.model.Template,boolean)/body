@@ -1,0 +1,30 @@
+{
+  template=toUnwrappedModel(template);
+  boolean isNew=template.isNew();
+  TemplateModelImpl templateModelImpl=(TemplateModelImpl)template;
+  if (Validator.isNull(template.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    template.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,template,merge);
+    template.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(TemplateModelImpl.ENTITY_CACHE_ENABLED,TemplateImpl.class,template.getPrimaryKey(),template);
+  if (!isNew && (!Validator.equals(template.getUuid(),templateModelImpl.getOriginalUuid()) || (template.getGroupId() != templateModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{templateModelImpl.getOriginalUuid(),new Long(templateModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(template.getUuid(),templateModelImpl.getOriginalUuid()) || (template.getGroupId() != templateModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{template.getUuid(),new Long(template.getGroupId())},template);
+  }
+  return template;
+}

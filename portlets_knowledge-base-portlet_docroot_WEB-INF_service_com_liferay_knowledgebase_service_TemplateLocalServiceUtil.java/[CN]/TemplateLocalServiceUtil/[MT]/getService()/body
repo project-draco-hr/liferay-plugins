@@ -1,0 +1,10 @@
+{
+  if (_service == null) {
+    Object obj=PortletBeanLocatorUtil.locate(ClpSerializer.SERVLET_CONTEXT_NAME,TemplateLocalService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.SERVLET_CONTEXT_NAME,"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,TemplateLocalService.class.getName(),portletClassLoader);
+    _service=new TemplateLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+  }
+  return _service;
+}

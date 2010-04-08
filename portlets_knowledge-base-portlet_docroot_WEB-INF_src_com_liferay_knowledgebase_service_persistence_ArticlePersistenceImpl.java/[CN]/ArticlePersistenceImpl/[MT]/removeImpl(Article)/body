@@ -1,0 +1,27 @@
+{
+  article=toUnwrappedModel(article);
+  Session session=null;
+  try {
+    session=openSession();
+    if (article.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(ArticleImpl.class,article.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(article);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  ArticleModelImpl articleModelImpl=(ArticleModelImpl)article;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{articleModelImpl.getOriginalUuid(),new Long(articleModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{new Long(articleModelImpl.getOriginalResourcePrimKey()),new Double(articleModelImpl.getOriginalVersion())});
+  EntityCacheUtil.removeResult(ArticleModelImpl.ENTITY_CACHE_ENABLED,ArticleImpl.class,article.getPrimaryKey());
+  return article;
+}
