@@ -31,7 +31,7 @@
   _assetCategories.put("Products",productsAssetCategory);
   _assetCategories.put("Liferay",liferayAssetCategory);
   addJournalStructure(defaultUserId,group.getGroupId(),"/sample/journal/structures/single_image.xml");
-  addJournalTemplate(defaultUserId,group.getGroupId(),"/sample/journal/template/single_image.xml");
+  addJournalTemplate(defaultUserId,group.getGroupId(),"/sample/journal/templates/single_image.xml");
   serviceContext.setScopeGroupId(group.getGroupId());
   IGFolder igFolder=IGFolderLocalServiceUtil.addFolder(null,defaultUserId,0,"7Cogs Web Content","Images used for content",serviceContext);
   serviceContext.setAssetTagNames(new String[]{"add"});
@@ -76,7 +76,7 @@
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   configurePortletTitle(layout,portletId,"Edit and Add Content");
   serviceContext.setAssetTagNames(new String[]{"liferay","tips"});
-  journalArticle=addJournalArticle(defaultUserId,group.getGroupId(),"Fron Page - Edit and Create","/sample/journal/articles/home_page_edit_and_create.xml",serviceContext);
+  journalArticle=addJournalArticle(defaultUserId,group.getGroupId(),"Fron Page - Edit and Create","/sample/journal/articles/home_page_edit_and_create_info.xml",serviceContext);
   content=StringUtil.replace(journalArticle.getContent(),new String[]{"[$ADD_ICON_IG_IMAGE_UUID$]","[$CONFIGURATION_ICON_IG_IMAGE_UUID$]","[$EDIT_ICON_IG_IMAGE_UUID$]","[$GROUP_ID$]","[$LOOK_ICON_IG_IMAGE_UUID$]"},new String[]{String.valueOf(addIconIGImage.getUuid()),String.valueOf(configurationIconIGImage.getUuid()),String.valueOf(editIconIGImage.getUuid()),String.valueOf(group.getGroupId()),String.valueOf(lookIconIGImage.getUuid())});
   JournalArticleLocalServiceUtil.updateContent(group.getGroupId(),journalArticle.getArticleId(),journalArticle.getVersion(),content);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
