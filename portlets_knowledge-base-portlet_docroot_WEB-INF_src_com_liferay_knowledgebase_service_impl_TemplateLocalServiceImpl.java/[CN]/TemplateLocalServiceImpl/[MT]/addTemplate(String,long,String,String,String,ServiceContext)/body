@@ -1,0 +1,20 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
+  Date now=new Date();
+  validate(title,content);
+  long templateId=counterLocalService.increment();
+  Template template=templatePersistence.create(templateId);
+  template.setUuid(uuid);
+  template.setGroupId(groupId);
+  template.setCompanyId(user.getCompanyId());
+  template.setUserId(user.getUserId());
+  template.setUserName(user.getFullName());
+  template.setCreateDate(now);
+  template.setModifiedDate(now);
+  template.setTitle(title);
+  template.setContent(content);
+  template.setDescription(description);
+  templatePersistence.update(template,false);
+  return template;
+}
