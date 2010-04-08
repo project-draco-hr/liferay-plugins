@@ -1,0 +1,8 @@
+{
+  Article article=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
+  List<Article> articles=getGroupArticles(article.getGroupId(),article.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  for (  Article curArticle : articles) {
+    deleteArticle(curArticle.getResourcePrimKey());
+  }
+  deleteArticle(article);
+}
