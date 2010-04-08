@@ -5,8 +5,8 @@
   long accountId=message.getAccountId();
   long folderId=message.getFolderId();
   long messageId=message.getMessageId();
-  String title=message.getSubject();
-  String content=HtmlUtil.extractText(message.getBody());
+  String subject=message.getSubject();
+  String body=HtmlUtil.extractText(message.getBody());
   long remoteMessageId=message.getRemoteMessageId();
   Date modifiedDate=message.getModifiedDate();
   ExpandoBridge expandoBridge=message.getExpandoBridge();
@@ -16,12 +16,11 @@
   document.addKeyword(Field.COMPANY_ID,companyId);
   document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
   document.addKeyword(Field.USER_ID,userId);
+  document.addText(Field.TITLE,subject);
+  document.addText(Field.CONTENT,body);
+  document.addKeyword("remoteMessageId",remoteMessageId);
   document.addKeyword("accountId",accountId);
   document.addKeyword("folderId",folderId);
-  document.addKeyword("messageId",messageId);
-  document.addText(Field.TITLE,title);
-  document.addText(Field.CONTENT,content);
-  document.addKeyword("remoteMessageId",remoteMessageId);
   document.addKeyword(Field.ENTRY_CLASS_NAME,Message.class.getName());
   document.addKeyword(Field.ENTRY_CLASS_PK,messageId);
   ExpandoBridgeIndexerUtil.addAttributes(document,expandoBridge);
