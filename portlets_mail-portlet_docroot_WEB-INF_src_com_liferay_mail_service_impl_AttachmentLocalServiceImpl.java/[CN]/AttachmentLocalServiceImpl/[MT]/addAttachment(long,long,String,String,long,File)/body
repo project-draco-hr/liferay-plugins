@@ -11,6 +11,22 @@
   attachment.setContentPath(contentPath);
   attachment.setFileName(fileName);
   attachment.setSize(size);
+  if (Validator.isNotNull(file)) {
+    try {
+      DLServiceUtil.addDirectory(attachment.getCompanyId(),_repositoryId,getDirectoryPath(attachment.getMessageId()));
+    }
+ catch (    DuplicateDirectoryException dde) {
+    }
+    try {
+      String filePath=getFilePath(attachment.getMessageId(),fileName);
+      DLServiceUtil.addFile(attachment.getCompanyId(),_portletId,_groupId,_repositoryId,filePath,0,StringPool.BLANK,new Date(),new ServiceContext(),file);
+    }
+ catch (    DuplicateFileException dfe) {
+      if (_log.isDebugEnabled()) {
+        _log.debug(dfe.getMessage());
+      }
+    }
+  }
   attachmentPersistence.update(attachment,false);
   return attachment;
 }

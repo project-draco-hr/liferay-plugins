@@ -1,0 +1,17 @@
+{
+  Attachment attachment=attachmentPersistence.findByPrimaryKey(attachmentId);
+  try {
+    DLServiceUtil.deleteFile(attachment.getCompanyId(),_portletId,_repositoryId,getFilePath(attachment.getMessageId(),attachment.getFileName()));
+  }
+ catch (  NoSuchDirectoryException nsde) {
+    if (_log.isDebugEnabled()) {
+      _log.debug(nsde.getMessage());
+    }
+  }
+catch (  NoSuchFileException nsfe) {
+    if (_log.isDebugEnabled()) {
+      _log.debug(nsfe.getMessage());
+    }
+  }
+  attachmentPersistence.remove(attachmentId);
+}

@@ -1,0 +1,15 @@
+{
+  List<Attachment> attachments=attachmentPersistence.findByMessageId(messageId);
+  for (  Attachment attachment : attachments) {
+    deleteAttachment(attachment);
+  }
+  Message message=messagePersistence.findByPrimaryKey(messageId);
+  try {
+    DLServiceUtil.deleteDirectory(message.getCompanyId(),_portletId,_repositoryId,getDirectoryPath(messageId));
+  }
+ catch (  NoSuchDirectoryException nsde) {
+    if (_log.isDebugEnabled()) {
+      _log.debug(nsde.getMessage());
+    }
+  }
+}
