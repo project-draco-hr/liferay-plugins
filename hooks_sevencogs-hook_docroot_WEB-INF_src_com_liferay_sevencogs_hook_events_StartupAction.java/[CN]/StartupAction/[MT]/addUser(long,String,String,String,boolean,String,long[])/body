@@ -22,7 +22,7 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setScopeGroupId(guestGroup.getGroupId());
   User user=UserLocalServiceUtil.addUser(creatorUserId,companyId,autoPassword,password1,password2,autoScreenName,screenName,emailAddress,openId,locale,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,jobTitle,groupIds,organizationIds,roleIds,userGroupIds,sendEmail,serviceContext);
-  byte[] portrait=getBytes("/users/" + screenName + "/portrait.jpg");
+  byte[] portrait=getBytes("/users/images/" + screenName + "_portrait.jpg");
   UserLocalServiceUtil.updatePortrait(user.getUserId(),portrait);
   String[] questions=StringUtil.split(PropsUtil.get("users.reminder.queries.questions"));
   String question=questions[0];
@@ -33,7 +33,8 @@
   String portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
   serviceContext.setAssetTagNames(new String[]{"community","tips"});
-  JournalArticle journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"my_community_" + user.getScreenName() + ".xml",serviceContext);
+  String fileName="/users/journal/articles/my_community_" + user.getScreenName() + ".xml";
+  JournalArticle journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),fileName,serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,"1_WAR_socialnetworkingportlet","column-1");
   addPortletId(layout,PortletKeys.REQUESTS,"column-1");
@@ -49,7 +50,8 @@
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
   serviceContext.setAssetTagNames(new String[]{"social","tips"});
-  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),"private_pages_" + user.getScreenName() + ".xml",serviceContext);
+  fileName="/users/journal/articles/private_pages_" + user.getScreenName() + ".xml";
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"Public Pages " + user.getScreenName(),fileName,serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,"4_WAR_socialnetworkingportlet","column-2");
   portletId=addPortletId(layout,PortletKeys.IFRAME,"column-1");
@@ -75,7 +77,7 @@
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-2");
   highlightPortlet(layout,portletId);
   serviceContext.setAssetTagNames(new String[]{"documents","tips"});
-  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"My documents","workspace_docs.xml",serviceContext);
+  journalArticle=addJournalArticle(user.getUserId(),group.getGroupId(),"My documents","/users/journal/articles/workspace_docs.xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   addPortletId(layout,PortletKeys.CALENDAR,"column-2");
   return user;
