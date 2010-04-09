@@ -1,17 +1,18 @@
 {
   Attachment attachment=attachmentPersistence.findByPrimaryKey(attachmentId);
+  attachmentPersistence.remove(attachmentId);
+  String filePath=getFilePath(attachment.getMessageId(),attachment.getFileName());
   try {
-    DLServiceUtil.deleteFile(attachment.getCompanyId(),_portletId,_repositoryId,getFilePath(attachment.getMessageId(),attachment.getFileName()));
+    DLServiceUtil.deleteFile(attachment.getCompanyId(),_PORTLET_ID,_REPOSITORY_ID,filePath);
   }
  catch (  NoSuchDirectoryException nsde) {
     if (_log.isDebugEnabled()) {
-      _log.debug(nsde.getMessage());
+      _log.debug(nsde,nsde);
     }
   }
 catch (  NoSuchFileException nsfe) {
     if (_log.isDebugEnabled()) {
-      _log.debug(nsfe.getMessage());
+      _log.debug(nsfe,nsfe);
     }
   }
-  attachmentPersistence.remove(attachmentId);
 }

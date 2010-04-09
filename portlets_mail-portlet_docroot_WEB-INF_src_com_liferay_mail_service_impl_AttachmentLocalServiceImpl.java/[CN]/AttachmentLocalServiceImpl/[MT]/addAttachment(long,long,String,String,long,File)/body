@@ -11,22 +11,23 @@
   attachment.setContentPath(contentPath);
   attachment.setFileName(fileName);
   attachment.setSize(size);
-  if (Validator.isNotNull(file)) {
+  attachmentPersistence.update(attachment,false);
+  if (file != null) {
+    String directoryPath=getDirectoryPath(attachment.getMessageId());
     try {
-      DLServiceUtil.addDirectory(attachment.getCompanyId(),_repositoryId,getDirectoryPath(attachment.getMessageId()));
+      DLServiceUtil.addDirectory(attachment.getCompanyId(),_REPOSITORY_ID,directoryPath);
     }
  catch (    DuplicateDirectoryException dde) {
     }
+    String filePath=getFilePath(attachment.getMessageId(),fileName);
     try {
-      String filePath=getFilePath(attachment.getMessageId(),fileName);
-      DLServiceUtil.addFile(attachment.getCompanyId(),_portletId,_groupId,_repositoryId,filePath,0,StringPool.BLANK,new Date(),new ServiceContext(),file);
+      DLServiceUtil.addFile(attachment.getCompanyId(),_PORTLET_ID,_GROUP_ID,_REPOSITORY_ID,filePath,0,StringPool.BLANK,new Date(),new ServiceContext(),file);
     }
  catch (    DuplicateFileException dfe) {
       if (_log.isDebugEnabled()) {
-        _log.debug(dfe.getMessage());
+        _log.debug(dfe,dfe);
       }
     }
   }
-  attachmentPersistence.update(attachment,false);
   return attachment;
 }

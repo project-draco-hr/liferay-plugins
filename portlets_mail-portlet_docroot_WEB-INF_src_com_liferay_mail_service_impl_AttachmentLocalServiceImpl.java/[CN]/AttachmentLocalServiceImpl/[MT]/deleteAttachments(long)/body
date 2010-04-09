@@ -4,8 +4,9 @@
     deleteAttachment(attachment);
   }
   Message message=messagePersistence.findByPrimaryKey(messageId);
+  String directoryPath=getDirectoryPath(messageId);
   try {
-    DLServiceUtil.deleteDirectory(message.getCompanyId(),_portletId,_repositoryId,getDirectoryPath(messageId));
+    DLServiceUtil.deleteDirectory(message.getCompanyId(),_PORTLET_ID,_REPOSITORY_ID,directoryPath);
   }
  catch (  NoSuchDirectoryException nsde) {
     if (_log.isDebugEnabled()) {
