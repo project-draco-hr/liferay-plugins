@@ -1,0 +1,22 @@
+{
+  List<Article> articles=ListUtil.copy(getGroupArticles(article.getGroupId(),article.getParentResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true)));
+  articles.remove(article);
+  articles.add(priority,article);
+  for (int i=0; i < articles.size(); i++) {
+    Article curArticle=articles.get(i);
+    long curParentResourcePrimKey=curArticle.getParentResourcePrimKey();
+    if (priority == i) {
+      curParentResourcePrimKey=parentResourcePrimKey;
+    }
+    List<Article> articles2=articlePersistence.findByResourcePrimKey(curArticle.getResourcePrimKey());
+    for (    Article curArticle2 : articles2) {
+      curArticle2.setParentResourcePrimKey(curParentResourcePrimKey);
+      curArticle2.setPriority(i);
+      articlePersistence.update(curArticle2,false);
+      if (article.getArticleId() == curArticle2.getArticleId()) {
+        article=curArticle2;
+      }
+    }
+  }
+  return article;
+}
