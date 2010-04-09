@@ -1,0 +1,15 @@
+{
+  DynamicQuery subselectDynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article2",PortletClassLoaderUtil.getClassLoader());
+  subselectDynamicQuery.setProjection(PropertyFactoryUtil.forName("version").max());
+  Property resourcePrimKeyProperty1=PropertyFactoryUtil.forName("article1.resourcePrimKey");
+  Property resourcePrimKeyProperty2=PropertyFactoryUtil.forName("article2.resourcePrimKey");
+  subselectDynamicQuery.add(resourcePrimKeyProperty1.eqProperty(resourcePrimKeyProperty2));
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article1",PortletClassLoaderUtil.getClassLoader());
+  for (  Map.Entry<String,Long> entry : params.entrySet()) {
+    String name=entry.getKey();
+    Property property=PropertyFactoryUtil.forName(name);
+    dynamicQuery.add(property.eq(entry.getValue()));
+  }
+  dynamicQuery.add(PropertyFactoryUtil.forName("version").in(subselectDynamicQuery));
+  return dynamicQuery;
+}
