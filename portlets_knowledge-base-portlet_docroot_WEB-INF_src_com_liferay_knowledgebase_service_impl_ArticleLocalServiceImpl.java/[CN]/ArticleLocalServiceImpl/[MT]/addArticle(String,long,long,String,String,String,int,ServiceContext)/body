@@ -1,22 +1,20 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
-  long resourcePrimKey=counterLocalService.increment(Article.class.getName());
-  long groupId=serviceContext.getScopeGroupId();
-  double version=1.0;
   Date now=new Date();
   validate(title,content);
   long articleId=counterLocalService.increment();
+  long resourcePrimKey=counterLocalService.increment(Article.class.getName());
   Article article=articlePersistence.create(articleId);
   article.setUuid(uuid);
   article.setResourcePrimKey(resourcePrimKey);
-  article.setGroupId(groupId);
+  article.setGroupId(serviceContext.getScopeGroupId());
   article.setCompanyId(user.getCompanyId());
   article.setUserId(user.getUserId());
   article.setUserName(user.getFullName());
   article.setCreateDate(now);
   article.setModifiedDate(now);
   article.setParentResourcePrimKey(parentResourcePrimKey);
-  article.setVersion(version);
+  article.setVersion(ArticleConstants.DEFAULT_VERSION);
   article.setTitle(title);
   article.setContent(content);
   article.setDescription(description);

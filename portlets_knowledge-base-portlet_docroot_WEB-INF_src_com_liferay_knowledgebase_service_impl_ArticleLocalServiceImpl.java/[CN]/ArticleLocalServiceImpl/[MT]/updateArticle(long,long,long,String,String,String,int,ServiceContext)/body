@@ -1,7 +1,6 @@
 {
-  Article oldArticle=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
   User user=userPersistence.findByPrimaryKey(userId);
-  double version=MathUtil.format(oldArticle.getVersion() + 0.1,1,1);
+  Article oldArticle=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
   Date now=new Date();
   validate(title,content);
   long articleId=counterLocalService.increment();
@@ -14,7 +13,7 @@
   article.setCreateDate(oldArticle.getCreateDate());
   article.setModifiedDate(now);
   article.setParentResourcePrimKey(parentResourcePrimKey);
-  article.setVersion(version);
+  article.setVersion(MathUtil.format(oldArticle.getVersion() + 0.1,1,1));
   article.setTitle(title);
   article.setContent(content);
   article.setDescription(description);

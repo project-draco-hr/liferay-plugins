@@ -8,13 +8,13 @@
     if (priority == i) {
       curParentResourcePrimKey=parentResourcePrimKey;
     }
-    List<Article> articles2=articlePersistence.findByResourcePrimKey(curArticle.getResourcePrimKey());
-    for (    Article curArticle2 : articles2) {
-      curArticle2.setParentResourcePrimKey(curParentResourcePrimKey);
-      curArticle2.setPriority(i);
-      articlePersistence.update(curArticle2,false);
-      if (article.getArticleId() == curArticle2.getArticleId()) {
-        article=curArticle2;
+    List<Article> childrenArticles=articlePersistence.findByResourcePrimKey(curArticle.getResourcePrimKey());
+    for (    Article childrenArticle : childrenArticles) {
+      childrenArticle.setParentResourcePrimKey(curParentResourcePrimKey);
+      childrenArticle.setPriority(i);
+      articlePersistence.update(childrenArticle,false);
+      if (article.getArticleId() == childrenArticle.getArticleId()) {
+        article=childrenArticle;
       }
     }
   }
