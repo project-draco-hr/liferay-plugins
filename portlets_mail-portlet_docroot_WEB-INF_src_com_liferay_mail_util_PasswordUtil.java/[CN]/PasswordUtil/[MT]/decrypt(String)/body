@@ -1,0 +1,14 @@
+{
+  String password=null;
+  try {
+    if (Validator.isNull(encryptedPassword)) {
+      return StringPool.BLANK;
+    }
+    byte[] passwordBytes=Base64.decode(encryptedPassword);
+    password=new String(passwordBytes,StringPool.UTF8);
+  }
+ catch (  UnsupportedEncodingException uee) {
+    _log.error("Unable to decrypt the password",uee);
+  }
+  return password;
+}
