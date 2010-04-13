@@ -1,7 +1,8 @@
 {
-  Object paramObj0=new LongWrapper(groupId);
+  Object paramObj0=new LongWrapper(resourcePrimKey);
+  Object returnObj=null;
   try {
-    _classLoaderProxy.invoke("deleteGroupArticles",new Object[]{paramObj0});
+    returnObj=_classLoaderProxy.invoke("getLatestArticle",new Object[]{paramObj0});
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -17,4 +18,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
+  return (com.liferay.knowledgebase.model.Article)ClpSerializer.translateOutput(returnObj);
 }
