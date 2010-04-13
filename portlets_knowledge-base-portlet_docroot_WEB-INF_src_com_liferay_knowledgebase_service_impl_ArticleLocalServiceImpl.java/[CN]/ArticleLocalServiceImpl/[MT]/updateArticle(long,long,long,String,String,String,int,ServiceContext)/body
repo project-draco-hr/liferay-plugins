@@ -19,6 +19,9 @@
   article.setDescription(description);
   article.setPriority(priority);
   articlePersistence.update(article,false);
+  if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
+    updateArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
   updateDisplayOrder(article,parentResourcePrimKey,priority);
   return article;
 }

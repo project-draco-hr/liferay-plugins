@@ -20,6 +20,12 @@
   article.setDescription(description);
   article.setPriority(priority);
   articlePersistence.update(article,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addArticleResources(article,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
   updateDisplayOrder(article,parentResourcePrimKey,priority);
   return article;
 }
