@@ -8,7 +8,8 @@
     dynamicQuery.addOrder(OrderFactoryUtil.asc(orderByField));
   }
   if (Validator.isNotNull(keywords)) {
-    Junction junction=RestrictionsFactoryUtil.conjunction().add(RestrictionsFactoryUtil.ilike("subject","%" + keywords + "%")).add(RestrictionsFactoryUtil.ilike("body","%" + keywords + "%"));
+    String value="%" + keywords + "%";
+    Junction junction=RestrictionsFactoryUtil.conjunction().add(RestrictionsFactoryUtil.ilike("subject",value)).add(RestrictionsFactoryUtil.ilike("body",value));
     dynamicQuery.add(junction);
   }
   int start=messagesPerPage * (pageNumber - 1);
