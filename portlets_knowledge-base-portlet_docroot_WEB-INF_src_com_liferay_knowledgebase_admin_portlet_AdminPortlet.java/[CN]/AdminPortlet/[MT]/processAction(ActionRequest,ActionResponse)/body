@@ -1,0 +1,28 @@
+{
+  try {
+    if (!isProcessActionRequest(actionRequest)) {
+      return;
+    }
+    if (!callActionMethod(actionRequest,actionResponse)) {
+      return;
+    }
+    if (!SessionErrors.isEmpty(actionRequest)) {
+      return;
+    }
+    SessionMessages.add(actionRequest,"request_processed");
+    String redirect=ParamUtil.getString(actionRequest,"redirect");
+    if (Validator.isNotNull(redirect)) {
+      actionResponse.sendRedirect(redirect);
+    }
+  }
+ catch (  PortletException pe) {
+    Throwable cause=pe.getCause();
+    if (cause instanceof ArticleContentException || cause instanceof ArticleTitleException || cause instanceof NoSuchArticleException|| cause instanceof PrincipalException) {
+      SessionErrors.add(actionRequest,cause.getClass().getName());
+    }
+ else {
+      throw pe;
+    }
+  }
+  PortalUtil.copyRequestParameters(actionRequest,actionResponse);
+}

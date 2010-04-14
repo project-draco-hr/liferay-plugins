@@ -1,0 +1,15 @@
+{
+  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+  long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
+  String title=ParamUtil.getString(actionRequest,"title");
+  String content=ParamUtil.getString(actionRequest,"content");
+  String description=ParamUtil.getString(actionRequest,"description");
+  int priority=ParamUtil.getInteger(actionRequest,"priority");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Article.class.getName(),actionRequest);
+  if (resourcePrimKey <= 0) {
+    ArticleServiceUtil.addArticle(parentResourcePrimKey,title,content,description,priority,serviceContext);
+  }
+ else {
+    ArticleServiceUtil.updateArticle(resourcePrimKey,parentResourcePrimKey,title,content,description,priority,serviceContext);
+  }
+}
