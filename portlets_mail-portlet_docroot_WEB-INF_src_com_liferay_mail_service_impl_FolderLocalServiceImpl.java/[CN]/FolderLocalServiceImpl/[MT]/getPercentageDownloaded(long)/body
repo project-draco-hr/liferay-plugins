@@ -1,0 +1,9 @@
+{
+  Folder folder=folderPersistence.findByPrimaryKey(folderId);
+  int localMessageCount=messagePersistence.countByFolderId(folderId);
+  int remoteMessageCount=folder.getRemoteMessageCount();
+  if (remoteMessageCount == 0) {
+    return 100;
+  }
+  return (int)((localMessageCount / (double)remoteMessageCount) * 100);
+}

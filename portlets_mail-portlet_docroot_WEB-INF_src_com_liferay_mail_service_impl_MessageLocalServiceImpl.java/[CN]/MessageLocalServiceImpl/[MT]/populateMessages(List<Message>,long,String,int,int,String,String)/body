@@ -1,0 +1,19 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Message.class,PortletClassLoaderUtil.getClassLoader());
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("folderId",folderId));
+  if (orderByType.equals("desc")) {
+    dynamicQuery.addOrder(OrderFactoryUtil.desc(orderByField));
+  }
+ else {
+    dynamicQuery.addOrder(OrderFactoryUtil.asc(orderByField));
+  }
+  if (Validator.isNotNull(keywords)) {
+    Junction junction=RestrictionsFactoryUtil.conjunction().add(RestrictionsFactoryUtil.ilike("subject","%" + keywords + "%")).add(RestrictionsFactoryUtil.ilike("body","%" + keywords + "%"));
+    dynamicQuery.add(junction);
+  }
+  int start=messagesPerPage * (pageNumber - 1);
+  int end=messagesPerPage * pageNumber;
+  List<Object> results=messagePersistence.findWithDynamicQuery(dynamicQuery,start,end);
+  messages=toMessages(results);
+  return dynamicQueryCount(dynamicQuery);
+}
