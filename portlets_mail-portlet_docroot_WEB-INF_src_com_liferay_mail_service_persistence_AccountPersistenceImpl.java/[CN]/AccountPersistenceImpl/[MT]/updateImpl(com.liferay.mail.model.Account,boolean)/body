@@ -1,5 +1,7 @@
 {
   account=toUnwrappedModel(account);
+  boolean isNew=account.isNew();
+  AccountModelImpl accountModelImpl=(AccountModelImpl)account;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(AccountModelImpl.ENTITY_CACHE_ENABLED,AccountImpl.class,account.getPrimaryKey(),account);
+  if (!isNew && ((account.getUserId() != accountModelImpl.getOriginalUserId()) || !Validator.equals(account.getAddress(),accountModelImpl.getOriginalAddress()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_A,new Object[]{new Long(accountModelImpl.getOriginalUserId()),accountModelImpl.getOriginalAddress()});
+  }
+  if (isNew || ((account.getUserId() != accountModelImpl.getOriginalUserId()) || !Validator.equals(account.getAddress(),accountModelImpl.getOriginalAddress()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,new Object[]{new Long(account.getUserId()),account.getAddress()},account);
+  }
   return account;
 }
