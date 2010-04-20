@@ -1,0 +1,26 @@
+{
+  if (Validator.isNull(_session)) {
+    boolean debug=GetterUtil.getBoolean(PortletProps.get("javamail.debug"));
+    Properties props=new Properties();
+    props.put("mail.imap.host",_incomingHostName);
+    props.put("mail.imap.port",_incomingPort);
+    props.put("mail.imaps.auth","true");
+    props.put("mail.imaps.host",_incomingHostName);
+    props.put("mail.imaps.port",_incomingPort);
+    props.put("mail.imaps.socketFactory.port",_incomingPort);
+    props.put("mail.imaps.socketFactory.class",_SSL_FACTORY);
+    props.put("mail.imaps.socketFactory.fallback","false");
+    props.put("mail.smtp.host",_outgoingHostName);
+    props.put("mail.smtp.port",_outgoingPort);
+    props.put("mail.smtps.auth","true");
+    props.put("mail.smtps.host",_outgoingHostName);
+    props.put("mail.smtps.port",_outgoingPort);
+    props.put("mail.smtps.socketFactory.port",_outgoingPort);
+    props.put("mail.smtps.socketFactory.class",_SSL_FACTORY);
+    props.put("mail.smtps.socketFactory.fallback","false");
+    props.put("mail.debug",Boolean.toString(debug));
+    _session=Session.getInstance(props);
+    _session.setDebug(debug);
+  }
+  return _session;
+}

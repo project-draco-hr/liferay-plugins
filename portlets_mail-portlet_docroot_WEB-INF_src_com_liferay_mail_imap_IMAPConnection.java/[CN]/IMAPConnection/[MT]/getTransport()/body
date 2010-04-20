@@ -1,0 +1,14 @@
+{
+  String transportKey=_login + "_TRANSPORT_" + _incomingHostName;
+  Transport transport=null;
+  Session session=getSession();
+  if (_outgoingSecure) {
+    transport=session.getTransport("smtps");
+  }
+ else {
+    transport=session.getTransport("smtp");
+  }
+  transport.addConnectionListener(new ConnectionListener(transportKey));
+  transport.connect(_outgoingHostName,_outgoingPort,_login,_password);
+  return transport;
+}
