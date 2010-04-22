@@ -2,5 +2,7 @@
   Message message=messagePersistence.findByPrimaryKey(messageId);
   message.setSize(size);
   messagePersistence.update(message,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(Message.class);
+  indexer.reindex(message);
   return message;
 }

@@ -1,0 +1,28 @@
+{
+  Message message=(Message)obj;
+  long companyId=message.getCompanyId();
+  long userId=message.getUserId();
+  long accountId=message.getAccountId();
+  long folderId=message.getFolderId();
+  long messageId=message.getMessageId();
+  String subject=message.getSubject();
+  String body=HtmlUtil.extractText(message.getBody());
+  long remoteMessageId=message.getRemoteMessageId();
+  Date modifiedDate=message.getModifiedDate();
+  ExpandoBridge expandoBridge=message.getExpandoBridge();
+  Document document=new DocumentImpl();
+  document.addUID(PORTLET_ID,message.getMessageId());
+  document.addModifiedDate(modifiedDate);
+  document.addKeyword(Field.COMPANY_ID,companyId);
+  document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
+  document.addKeyword(Field.USER_ID,userId);
+  document.addText(Field.TITLE,subject);
+  document.addText(Field.CONTENT,body);
+  document.addKeyword("remoteMessageId",remoteMessageId);
+  document.addKeyword("accountId",accountId);
+  document.addKeyword("folderId",folderId);
+  document.addKeyword(Field.ENTRY_CLASS_NAME,Message.class.getName());
+  document.addKeyword(Field.ENTRY_CLASS_PK,messageId);
+  ExpandoBridgeIndexerUtil.addAttributes(document,expandoBridge);
+  return document;
+}
