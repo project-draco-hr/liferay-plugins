@@ -1,0 +1,15 @@
+{
+  long companyId=GetterUtil.getLong(ids[0]);
+  int count=ArticleLocalServiceUtil.getCompanyArticlesCount(companyId);
+  int pages=count / Indexer.DEFAULT_INTERVAL;
+  for (int i=0; i <= pages; i++) {
+    int start=(i * Indexer.DEFAULT_INTERVAL);
+    int end=start + Indexer.DEFAULT_INTERVAL;
+    List<Article> articles=ArticleLocalServiceUtil.getCompanyArticles(companyId,start,end,new ArticleCreateDateComparator());
+    Collection<Document> documents=new ArrayList<Document>();
+    for (    Article article : articles) {
+      documents.add(getDocument(article));
+    }
+    SearchEngineUtil.updateDocuments(companyId,documents);
+  }
+}

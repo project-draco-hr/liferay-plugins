@@ -27,6 +27,8 @@
     addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
   MBMessageLocalServiceUtil.addDiscussionMessage(userId,article.getUserName(),Article.class.getName(),resourcePrimKey,StatusConstants.APPROVED);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
+  indexer.reindex(article);
   updateDisplayOrder(article,parentResourcePrimKey,priority);
   return article;
 }

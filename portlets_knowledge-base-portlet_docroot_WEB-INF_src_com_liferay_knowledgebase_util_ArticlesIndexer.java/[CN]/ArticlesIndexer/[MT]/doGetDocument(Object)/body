@@ -1,0 +1,30 @@
+{
+  Article article=(Article)obj;
+  long companyId=article.getCompanyId();
+  long groupId=getParentGroupId(article.getGroupId());
+  long scopeGroupId=article.getGroupId();
+  long userId=article.getUserId();
+  String userName=PortalUtil.getUserName(userId,article.getUserName());
+  long resourcePrimKey=article.getResourcePrimKey();
+  String title=article.getTitle();
+  String content=HtmlUtil.extractText(article.getContent());
+  String description=article.getDescription();
+  Date modifiedDate=article.getModifiedDate();
+  ExpandoBridge expandoBridge=article.getExpandoBridge();
+  Document document=new DocumentImpl();
+  document.addUID(PORTLET_ID,resourcePrimKey);
+  document.addModifiedDate(modifiedDate);
+  document.addKeyword(Field.COMPANY_ID,companyId);
+  document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
+  document.addKeyword(Field.GROUP_ID,groupId);
+  document.addKeyword(Field.SCOPE_GROUP_ID,scopeGroupId);
+  document.addKeyword(Field.USER_ID,userId);
+  document.addText(Field.USER_NAME,userName);
+  document.addText(Field.TITLE,title);
+  document.addText(Field.CONTENT,content);
+  document.addText(Field.DESCRIPTION,description);
+  document.addKeyword(Field.ENTRY_CLASS_NAME,Article.class.getName());
+  document.addKeyword(Field.ENTRY_CLASS_PK,resourcePrimKey);
+  ExpandoBridgeIndexerUtil.addAttributes(document,expandoBridge);
+  return document;
+}

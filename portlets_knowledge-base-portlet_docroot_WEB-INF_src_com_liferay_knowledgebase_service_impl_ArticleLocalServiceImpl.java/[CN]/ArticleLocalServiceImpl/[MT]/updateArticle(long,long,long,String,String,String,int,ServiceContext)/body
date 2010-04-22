@@ -22,6 +22,8 @@
   if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
     updateArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
+  Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
+  indexer.reindex(article);
   updateDisplayOrder(article,parentResourcePrimKey,priority);
   return article;
 }
