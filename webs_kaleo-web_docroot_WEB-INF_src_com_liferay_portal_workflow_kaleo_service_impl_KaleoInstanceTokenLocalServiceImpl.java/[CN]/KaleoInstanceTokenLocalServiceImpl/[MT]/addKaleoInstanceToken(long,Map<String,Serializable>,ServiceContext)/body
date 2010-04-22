@@ -5,7 +5,6 @@
   long kaleoInstanceTokenId=counterLocalService.increment();
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.create(kaleoInstanceTokenId);
   kaleoInstanceToken.setCompanyId(user.getCompanyId());
-  kaleoInstanceToken.setCompleted(false);
   kaleoInstanceToken.setUserId(user.getUserId());
   kaleoInstanceToken.setUserName(user.getFullName());
   kaleoInstanceToken.setCreateDate(now);
@@ -13,6 +12,7 @@
   kaleoInstanceToken.setKaleoInstanceId(parentKaleoInstanceToken.getKaleoInstanceId());
   kaleoInstanceToken.setParentKaleoInstanceTokenId(parentKaleoInstanceToken.getKaleoInstanceTokenId());
   setCurrentKaleoNode(kaleoInstanceToken,parentKaleoInstanceToken.getCurrentKaleoNodeId());
+  kaleoInstanceToken.setCompleted(false);
   kaleoInstanceTokenPersistence.update(kaleoInstanceToken,false);
   return kaleoInstanceToken;
 }

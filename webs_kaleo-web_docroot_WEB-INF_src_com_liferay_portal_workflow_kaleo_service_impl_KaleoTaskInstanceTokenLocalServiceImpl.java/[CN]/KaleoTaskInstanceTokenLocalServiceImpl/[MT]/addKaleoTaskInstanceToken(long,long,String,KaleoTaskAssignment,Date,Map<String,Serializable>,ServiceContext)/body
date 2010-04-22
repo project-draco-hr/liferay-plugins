@@ -4,7 +4,6 @@
   Date now=new Date();
   long kaleoTaskInstanceTokenId=counterLocalService.increment();
   KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenPersistence.create(kaleoTaskInstanceTokenId);
-  kaleoTaskInstanceToken.setCompleted(false);
   kaleoTaskInstanceToken.setCompanyId(user.getCompanyId());
   kaleoTaskInstanceToken.setUserId(user.getUserId());
   kaleoTaskInstanceToken.setUserName(user.getFullName());
@@ -12,12 +11,13 @@
   kaleoTaskInstanceToken.setModifiedDate(now);
   kaleoTaskInstanceToken.setDueDate(dueDate);
   kaleoTaskInstanceToken.setKaleoInstanceId(kaleoInstanceToken.getKaleoInstanceId());
-  kaleoTaskInstanceToken.setAssigneeClassName(kaleoTaskAssignment.getAssigneeClassName());
-  kaleoTaskInstanceToken.setAssigneeClassPK(kaleoTaskAssignment.getAssigneeClassPK());
   KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),context,serviceContext);
   kaleoTaskInstanceToken.setKaleoInstanceTokenId(childKaleoInstanceToken.getKaleoInstanceTokenId());
   kaleoTaskInstanceToken.setKaleoTaskId(kaleoTaskId);
   kaleoTaskInstanceToken.setKaleoTaskName(kaleoTaskName);
+  kaleoTaskInstanceToken.setAssigneeClassName(kaleoTaskAssignment.getAssigneeClassName());
+  kaleoTaskInstanceToken.setAssigneeClassPK(kaleoTaskAssignment.getAssigneeClassPK());
+  kaleoTaskInstanceToken.setCompleted(false);
   kaleoTaskInstanceToken.setContext(ContextUtil.convert(context));
   kaleoTaskInstanceTokenPersistence.update(kaleoTaskInstanceToken,false);
   return kaleoTaskInstanceToken;

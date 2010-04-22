@@ -1,7 +1,7 @@
 {
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoTaskInstanceToken.class);
   dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
-  if (Validator.isNotNull(taskName) || Validator.isNotNull(assetType) || Validator.isNotNull(dueDateGT)|| Validator.isNotNull(dueDateLT)) {
+  if (Validator.isNotNull(taskName) || Validator.isNotNull(assetType) || (dueDateGT != null)|| (dueDateLT != null)) {
     Junction junction=null;
     if (andOperator) {
       junction=RestrictionsFactoryUtil.conjunction();
@@ -10,9 +10,9 @@
       junction=RestrictionsFactoryUtil.disjunction();
     }
     if (Validator.isNotNull(taskName)) {
-      String[] taskNameKeyWords=StringUtil.split(taskName,StringPool.SPACE);
-      for (      String taskNameKeyWord : taskNameKeyWords) {
-        junction.add(PropertyFactoryUtil.forName("kaleoTaskName").like(taskNameKeyWord));
+      String[] taskNameKeywords=StringUtil.split(taskName,StringPool.SPACE);
+      for (      String taskNameKeyword : taskNameKeywords) {
+        junction.add(PropertyFactoryUtil.forName("kaleoTaskName").like(taskNameKeyword));
       }
     }
     if (Validator.isNotNull(assetType)) {
@@ -29,7 +29,7 @@
     }
     dynamicQuery.add(junction);
   }
-  addSearchByUserRoles(dynamicQuery,searchByUserRoles,serviceContext);
+  addSearchByUserRolesCriterion(dynamicQuery,searchByUserRoles,serviceContext);
   addCompletedCriterion(dynamicQuery,completed);
   return dynamicQuery;
 }
