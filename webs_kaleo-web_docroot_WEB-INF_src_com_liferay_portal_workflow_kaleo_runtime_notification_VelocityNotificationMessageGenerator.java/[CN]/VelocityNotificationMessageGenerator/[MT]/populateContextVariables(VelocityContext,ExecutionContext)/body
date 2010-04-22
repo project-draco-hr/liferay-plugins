@@ -8,14 +8,13 @@
   for (  Map.Entry<String,Serializable> contextEntry : context.entrySet()) {
     velocityContext.put(contextEntry.getKey(),contextEntry.getValue());
   }
-  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=executionContext.getKaleoTaskInstanceAssigment();
-  if (kaleoTaskInstanceAssignment != null) {
-    velocityContext.put("assigneeClassName",kaleoTaskInstanceAssignment.getAssigneeClassName());
-    velocityContext.put("assigneeClassPK",kaleoTaskInstanceAssignment.getAssigneeClassPK());
-    KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  if (kaleoTaskInstanceToken != null) {
+    velocityContext.put("assigneeClassName",kaleoTaskInstanceToken.getAssigneeClassName());
+    velocityContext.put("assigneeClassPK",kaleoTaskInstanceToken.getAssigneeClassPK());
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     velocityContext.put("taskName",kaleoTask.getName());
-    velocityContext.put("userId",kaleoTaskInstanceAssignment.getUserId());
+    velocityContext.put("userId",kaleoTaskInstanceToken.getUserId());
   }
  else {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();

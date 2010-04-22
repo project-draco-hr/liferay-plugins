@@ -6,14 +6,14 @@
     context=ContextUtil.convert(kaleoInstance.getContext());
   }
   Map<String,Object> inputObjects=new HashMap<String,Object>(context);
-  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=executionContext.getKaleoTaskInstanceAssigment();
-  if (kaleoTaskInstanceAssignment != null) {
-    inputObjects.put("assigneeClassName",kaleoTaskInstanceAssignment.getAssigneeClassName());
-    inputObjects.put("assigneeClassPK",kaleoTaskInstanceAssignment.getAssigneeClassPK());
-    KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  inputObjects.put("workflowContext",context);
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  if (kaleoTaskInstanceToken != null) {
+    inputObjects.put("assigneeClassName",kaleoTaskInstanceToken.getAssigneeClassName());
+    inputObjects.put("assigneeClassPK",kaleoTaskInstanceToken.getAssigneeClassPK());
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     inputObjects.put("taskName",kaleoTask.getName());
-    inputObjects.put("userId",kaleoTaskInstanceAssignment.getUserId());
+    inputObjects.put("userId",kaleoTaskInstanceToken.getUserId());
   }
  else {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();

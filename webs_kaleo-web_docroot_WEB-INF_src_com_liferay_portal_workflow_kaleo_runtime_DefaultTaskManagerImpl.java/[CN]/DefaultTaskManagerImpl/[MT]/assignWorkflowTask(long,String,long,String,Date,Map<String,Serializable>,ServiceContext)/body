@@ -6,12 +6,11 @@
   if (dueDate != null) {
     kaleoTaskInstanceTokenLocalService.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
   }
-  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceToken.getKaleoTaskInstanceAssignment();
-  KaleoTaskInstanceAssignment newKaleoTaskInstanceAssignment=kaleoTaskInstanceAssignmentLocalService.assignKaleoTaskInstanceAssignment(kaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId(),assigneeClassName,assigneeClassPK,context,serviceContext);
-  ExecutionContext executionContext=new ExecutionContext(kaleoTaskInstanceToken.getKaleoInstanceToken(),kaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context,serviceContext);
+  KaleoTaskInstanceToken newKaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.assignKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),assigneeClassName,assigneeClassPK,context,serviceContext);
+  ExecutionContext executionContext=new ExecutionContext(newKaleoTaskInstanceToken.getKaleoInstanceToken(),newKaleoTaskInstanceToken,context,serviceContext);
   KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
   ActionExecutorUtil.executeKaleoActions(kaleoTask.getKaleoNodeId(),ExecutionType.ON_ASSIGNMENT,executionContext);
   NotificationUtil.sendKaleoNotifications(kaleoTask.getKaleoNodeId(),ExecutionType.ON_ASSIGNMENT,executionContext);
-  kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,newKaleoTaskInstanceAssignment,comment,context,serviceContext);
-  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,newKaleoTaskInstanceAssignment,context);
+  kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,newKaleoTaskInstanceToken,comment,context,serviceContext);
+  return new WorkflowTaskAdapter(newKaleoTaskInstanceToken,context);
 }

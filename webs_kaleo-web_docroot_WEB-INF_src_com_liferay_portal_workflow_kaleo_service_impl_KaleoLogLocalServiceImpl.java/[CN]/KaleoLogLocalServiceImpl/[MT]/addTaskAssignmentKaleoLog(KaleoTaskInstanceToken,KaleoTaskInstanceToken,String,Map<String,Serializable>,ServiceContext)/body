@@ -1,0 +1,18 @@
+{
+  KaleoInstanceToken kaleoInstanceToken=newKaleoTaskInstanceToken.getKaleoInstanceToken();
+  KaleoLog kaleoLog=createKaleoLog(kaleoInstanceToken,LogType.TASK_ASSIGNMENT,serviceContext);
+  kaleoLog.setKaleoTaskInstanceTokenId(newKaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
+  KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
+  kaleoLog.setKaleoNodeId(currentKaleoNode.getKaleoNodeId());
+  kaleoLog.setKaleoNodeName(currentKaleoNode.getName());
+  if (previousKaleoTaskInstanceToken != null) {
+    kaleoLog.setPreviousAssigneeClassName(previousKaleoTaskInstanceToken.getAssigneeClassName());
+    kaleoLog.setPreviousAssigneeClassPK(previousKaleoTaskInstanceToken.getAssigneeClassPK());
+  }
+  kaleoLog.setCurrentAssigneeClassName(newKaleoTaskInstanceToken.getAssigneeClassName());
+  kaleoLog.setCurrentAssigneeClassPK(newKaleoTaskInstanceToken.getAssigneeClassPK());
+  kaleoLog.setComment(comment);
+  kaleoLog.setContext(ContextUtil.convert(context));
+  kaleoLogPersistence.update(kaleoLog,false);
+  return kaleoLog;
+}

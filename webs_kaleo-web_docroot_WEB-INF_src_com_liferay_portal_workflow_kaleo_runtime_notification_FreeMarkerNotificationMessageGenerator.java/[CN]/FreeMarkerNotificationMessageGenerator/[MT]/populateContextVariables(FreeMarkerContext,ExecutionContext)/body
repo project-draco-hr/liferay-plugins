@@ -8,14 +8,13 @@
   for (  Map.Entry<String,Serializable> contextEntry : context.entrySet()) {
     freeMarkerContext.put(contextEntry.getKey(),contextEntry.getValue());
   }
-  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=executionContext.getKaleoTaskInstanceAssigment();
-  if (kaleoTaskInstanceAssignment != null) {
-    freeMarkerContext.put("assigneeClassName",kaleoTaskInstanceAssignment.getAssigneeClassName());
-    freeMarkerContext.put("assigneeClassPK",kaleoTaskInstanceAssignment.getAssigneeClassPK());
-    KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  if (kaleoTaskInstanceToken != null) {
+    freeMarkerContext.put("assigneeClassName",kaleoTaskInstanceToken.getAssigneeClassName());
+    freeMarkerContext.put("assigneeClassPK",kaleoTaskInstanceToken.getAssigneeClassPK());
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     freeMarkerContext.put("taskName",kaleoTask.getName());
-    freeMarkerContext.put("userId",kaleoTaskInstanceAssignment.getUserId());
+    freeMarkerContext.put("userId",kaleoTaskInstanceToken.getUserId());
   }
  else {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();

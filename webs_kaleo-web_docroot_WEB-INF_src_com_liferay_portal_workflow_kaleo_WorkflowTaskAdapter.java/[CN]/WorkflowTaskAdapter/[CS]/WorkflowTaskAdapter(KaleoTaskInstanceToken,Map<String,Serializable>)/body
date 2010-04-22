@@ -1,0 +1,30 @@
+{
+  String assigneeClassName=kaleoTaskInstanceToken.getAssigneeClassName();
+  long assigneeClassPK=kaleoTaskInstanceToken.getAssigneeClassPK();
+  if (assigneeClassName.equals(Role.class.getName())) {
+    setAssigneeRoleId(assigneeClassPK);
+  }
+ else {
+    setAssigneeUserId(assigneeClassPK);
+    User user=UserLocalServiceUtil.getUser(assigneeClassPK);
+    setAssigneeEmailAddress(user.getEmailAddress());
+  }
+  setCreateDate(kaleoTaskInstanceToken.getCreateDate());
+  setCompletionDate(kaleoTaskInstanceToken.getCompletionDate());
+  setDueDate(kaleoTaskInstanceToken.getDueDate());
+  setName(kaleoTaskInstanceToken.getKaleoTask().getName());
+  setDescription(kaleoTaskInstanceToken.getKaleoTask().getDescription());
+  if (optionalAttributes != null) {
+    setOptionalAttributes(optionalAttributes);
+  }
+ else {
+    setOptionalAttributes(ContextUtil.convert(kaleoTaskInstanceToken.getContext()));
+  }
+  KaleoInstanceToken kaleoInstanceToken=kaleoTaskInstanceToken.getKaleoInstanceToken();
+  KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+  setWorkflowDefinitionId(kaleoInstance.getKaleoDefinitionId());
+  setWorkflowDefinitionName(kaleoInstance.getKaleoDefinitionName());
+  setWorkflowDefinitionVersion(kaleoInstance.getKaleoDefinitionVersion());
+  setWorkflowInstanceId(kaleoInstance.getKaleoInstanceId());
+  setWorkflowTaskId(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
+}

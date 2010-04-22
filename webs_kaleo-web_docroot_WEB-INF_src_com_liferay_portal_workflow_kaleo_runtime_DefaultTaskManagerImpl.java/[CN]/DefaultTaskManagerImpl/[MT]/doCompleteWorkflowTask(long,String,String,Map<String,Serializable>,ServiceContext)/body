@@ -1,15 +1,13 @@
 {
   KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(workflowTaskInstanceId);
-  KaleoTaskInstanceAssignment kaleoTaskInstanceAssignment=kaleoTaskInstanceAssignmentLocalService.getKaleoTaskInstanceAssignment(workflowTaskInstanceId,User.class.getName(),serviceContext.getUserId());
-  if (kaleoTaskInstanceAssignment.isCompleted()) {
+  if (kaleoTaskInstanceToken.isCompleted()) {
     throw new WorkflowException("Cannot complete an already completed task " + workflowTaskInstanceId + " for user "+ serviceContext.getUserId());
   }
-  kaleoTaskInstanceAssignment=kaleoTaskInstanceAssignmentLocalService.completeKaleoTaskInstanceAssignment(kaleoTaskInstanceAssignment.getKaleoTaskInstanceAssignmentId());
   kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.completeKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),serviceContext);
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
   KaleoInstanceToken parentKaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoInstanceToken.getParentKaleoInstanceTokenId());
-  kaleoLogLocalService.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,comment,context,serviceContext);
+  kaleoLogLocalService.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,comment,context,serviceContext);
   ExecutionContext executionContext=new ExecutionContext(parentKaleoInstanceToken,context,serviceContext);
   _kaleoSignaler.signalExit(transitionName,executionContext);
-  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,kaleoTaskInstanceAssignment,context);
+  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,context);
 }

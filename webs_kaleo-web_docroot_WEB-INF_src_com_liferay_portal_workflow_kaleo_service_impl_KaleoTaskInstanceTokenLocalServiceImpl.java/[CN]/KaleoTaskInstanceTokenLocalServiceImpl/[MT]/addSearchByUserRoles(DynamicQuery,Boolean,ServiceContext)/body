@@ -1,0 +1,13 @@
+{
+  if (searchByUserRoles == null) {
+    return;
+  }
+  if (!searchByUserRoles) {
+    dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassName").eq(User.class.getName()));
+    dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassPK").eq(serviceContext.getUserId()));
+    return;
+  }
+  dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassName").eq(Role.class.getName()));
+  List<Long> roleIds=RoleRetrievalUtil.getRoleIds(serviceContext);
+  dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassPK").in(roleIds.toArray(new Long[roleIds.size()])));
+}

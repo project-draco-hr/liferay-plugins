@@ -1,0 +1,8 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoTaskInstanceToken.class);
+  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassName").eq(Role.class.getName()));
+  dynamicQuery.add(PropertyFactoryUtil.forName("assigneeClassPK").in(roleIds.toArray(new Long[roleIds.size()])));
+  addCompletedCriterion(dynamicQuery,completed);
+  return dynamicQuery;
+}

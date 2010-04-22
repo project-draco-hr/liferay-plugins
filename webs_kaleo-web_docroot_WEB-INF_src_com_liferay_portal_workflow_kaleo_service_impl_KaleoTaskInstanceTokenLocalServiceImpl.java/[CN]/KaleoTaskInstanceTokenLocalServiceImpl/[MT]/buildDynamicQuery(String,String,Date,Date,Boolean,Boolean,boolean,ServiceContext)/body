@@ -1,0 +1,35 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoTaskInstanceToken.class);
+  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  if (Validator.isNotNull(taskName) || Validator.isNotNull(assetType) || Validator.isNotNull(dueDateGT)|| Validator.isNotNull(dueDateLT)) {
+    Junction junction=null;
+    if (andOperator) {
+      junction=RestrictionsFactoryUtil.conjunction();
+    }
+ else {
+      junction=RestrictionsFactoryUtil.disjunction();
+    }
+    if (Validator.isNotNull(taskName)) {
+      String[] taskNameKeyWords=StringUtil.split(taskName,StringPool.SPACE);
+      for (      String taskNameKeyWord : taskNameKeyWords) {
+        junction.add(PropertyFactoryUtil.forName("kaleoTaskName").like(taskNameKeyWord));
+      }
+    }
+    if (Validator.isNotNull(assetType)) {
+      String[] assetTypeKeywords=StringUtil.split(assetType,StringPool.SPACE);
+      for (      String assetTypeKeyword : assetTypeKeywords) {
+        junction.add(PropertyFactoryUtil.forName("context").like(assetTypeKeyword));
+      }
+    }
+    if (dueDateGT != null) {
+      junction.add(PropertyFactoryUtil.forName("dueDate").ge(dueDateGT));
+    }
+    if (dueDateLT != null) {
+      junction.add(PropertyFactoryUtil.forName("dueDate").lt(dueDateLT));
+    }
+    dynamicQuery.add(junction);
+  }
+  addSearchByUserRoles(dynamicQuery,searchByUserRoles,serviceContext);
+  addCompletedCriterion(dynamicQuery,completed);
+  return dynamicQuery;
+}
