@@ -16,23 +16,15 @@
  else {
     kewordsJunction=Restrictions.disjunction();
   }
-  if (name != null) {
-    kewordsJunction.add(Restrictions.like("name",name));
+  if (taskName != null) {
+    kewordsJunction.add(Restrictions.like("name",taskName));
   }
-  if (state != null) {
+  if (assetType != null) {
     criteria.createAlias("processInstance","processInstance");
-    criteria.createAlias("processInstance.rootToken","rootToken");
-    criteria.createAlias("rootToken.node","node");
-    kewordsJunction.add(Restrictions.like("node.name",state));
-  }
-  if (type != null) {
-    if (state == null) {
-      criteria.createAlias("processInstance","processInstance");
-    }
     criteria.createAlias("processInstance.instances","instances");
     criteria.createAlias("instances.tokenVariableMaps","varMaps");
     criteria.createAlias("varMaps.variableInstances","varInstances");
-    Criterion typeCriterion=Restrictions.and(Restrictions.eq("varInstances.name",ContextConstants.ENTRY_TYPE),Restrictions.like("varInstances.value",type));
+    Criterion typeCriterion=Restrictions.and(Restrictions.eq("varInstances.name",ContextConstants.ENTRY_TYPE),Restrictions.like("varInstances.value",assetType));
     kewordsJunction.add(typeCriterion);
   }
   if ((dueDateGT != null) && (dueDateLT != null)) {

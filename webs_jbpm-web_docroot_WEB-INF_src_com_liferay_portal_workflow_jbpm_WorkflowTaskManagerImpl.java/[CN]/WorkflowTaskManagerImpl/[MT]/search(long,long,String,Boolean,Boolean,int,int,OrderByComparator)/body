@@ -3,9 +3,8 @@
   try {
     CustomSession customSession=new CustomSession(jbpmContext);
     String[] actorIds=getActorIds(userId,searchByUserRoles);
-    String[] names=CustomSQLUtil.keywords(keywords);
-    String[] states=CustomSQLUtil.keywords(keywords);
-    List<TaskInstance> taskInstances=customSession.searchTaskInstances(actorIds,searchByUserRoles,names,states,completed,start,end,orderByComparator);
+    String[] taskNames=CustomSQLUtil.keywords(keywords);
+    List<TaskInstance> taskInstances=customSession.searchTaskInstances(actorIds,searchByUserRoles,taskNames,completed,start,end,orderByComparator);
     return toWorkflowTasks(taskInstances);
   }
  catch (  Exception e) {
