@@ -1,6 +1,6 @@
 {
   Store store=null;
-  String storeKey=_incomingHostName + _outgoingHostName + _login;
+  String storeKey=_incomingHostName.concat(_outgoingHostName).concat(_login);
   if (useOldStores) {
     store=_allStores.get(storeKey);
     if (Validator.isNotNull(store) && !store.isConnected()) {
@@ -8,7 +8,7 @@
       store=null;
     }
   }
-  if (Validator.isNull(store)) {
+  if (store == null) {
     Session session=getSession();
     if (_incomingSecure) {
       store=session.getStore("imaps");
