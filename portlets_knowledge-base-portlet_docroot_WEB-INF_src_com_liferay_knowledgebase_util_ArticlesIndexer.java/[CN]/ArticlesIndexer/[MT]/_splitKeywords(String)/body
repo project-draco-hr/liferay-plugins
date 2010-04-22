@@ -1,11 +1,26 @@
 {
-  if (Validator.isNull(keywords)) {
+  String s=keywords.trim();
+  if (Validator.isNull(s)) {
     return new String[0];
   }
-  for (  char c : keywords.toCharArray()) {
-    if (!Character.isLetterOrDigit(c) && !Character.isWhitespace(c)) {
+  List<String> list=new ArrayList<String>();
+  StringBuilder sb=new StringBuilder();
+  for (  char c : s.toCharArray()) {
+    if (Character.isWhitespace(c)) {
+      if (sb.length() > 0) {
+        list.add(sb.toString());
+        sb=new StringBuilder();
+      }
+    }
+ else     if (Character.isLetterOrDigit(c)) {
+      sb.append(c);
+    }
+ else {
       return new String[0];
     }
   }
-  return StringUtil.split(keywords,StringPool.SPACE);
+  if (sb.length() > 0) {
+    list.add(sb.toString());
+  }
+  return list.toArray(new String[list.size()]);
 }
