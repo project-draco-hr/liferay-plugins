@@ -1,0 +1,18 @@
+{
+  String friendlyURLPath=null;
+  String jspPage=GetterUtil.getString(portletURL.getParameter("jspPage"));
+  if (jspPage.equals("/admin/view_article.jsp")) {
+    String resourcePrimKey=GetterUtil.getString(portletURL.getParameter("resourcePrimKey"));
+    friendlyURLPath="/admin/article/" + resourcePrimKey;
+    portletURL.addParameterIncludedInPath("jspPage");
+    portletURL.addParameterIncludedInPath("resourcePrimKey");
+  }
+  if (friendlyURLPath != null) {
+    WindowState windowState=portletURL.getWindowState();
+    if (!windowState.equals(WindowState.NORMAL)) {
+      friendlyURLPath+=StringPool.SLASH + windowState;
+    }
+    portletURL.addParameterIncludedInPath("p_p_id");
+  }
+  return friendlyURLPath;
+}
