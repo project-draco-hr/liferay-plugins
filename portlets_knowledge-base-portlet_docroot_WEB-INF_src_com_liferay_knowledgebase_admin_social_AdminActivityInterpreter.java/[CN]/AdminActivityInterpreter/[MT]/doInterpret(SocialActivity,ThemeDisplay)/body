@@ -1,0 +1,36 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  if (!ArticlePermission.contains(permissionChecker,activity.getClassPK(),ActionKeys.VIEW)) {
+    return null;
+  }
+  String link=StringPool.BLANK;
+  String layoutFullURL=PortalUtil.getLayoutFullURL(activity.getGroupId(),"1_WAR_knowledgebaseportlet");
+  if (Validator.isNotNull(layoutFullURL)) {
+    link=layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "knowledge_base/article/"+ activity.getClassPK();
+  }
+  String title=StringPool.BLANK;
+  String groupName=StringPool.BLANK;
+  if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+    groupName=getGroupName(activity.getGroupId(),themeDisplay);
+  }
+  String pattern=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_ARTICLE) {
+    pattern="activity-knowledge-base-admin-add-article";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_ARTICLE) {
+    pattern="activity-knowledge-base-admin-update-article";
+  }
+  if (Validator.isNotNull(groupName)) {
+    pattern+="-in";
+  }
+  Object[] arguments=new Object[0];
+  Article article=ArticleLocalServiceUtil.getArticle(activity.getClassPK());
+  String text=HtmlUtil.escape(cleanContent(article.getTitle()));
+  if (Validator.isNotNull(link)) {
+    text=wrapLink(link,text);
+  }
+  arguments=new Object[]{getUserName(activity.getUserId(),themeDisplay),text,groupName};
+  title=themeDisplay.translate(pattern,arguments);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}
