@@ -1,0 +1,30 @@
+{
+  long companyId=message.getLong("companyId");
+  long groupId=message.getLong("groupId");
+  long userId=message.getLong("userId");
+  long resourcePrimKey=message.getLong("resourcePrimKey");
+  String fromName=message.getString("fromName");
+  String fromAddress=message.getString("fromAddress");
+  String subject=message.getString("subject");
+  String body=message.getString("body");
+  String replyToAddress=message.getString("replyToAddress");
+  String mailId=message.getString("mailId");
+  boolean htmlFormat=message.getBoolean("htmlFormat");
+  Set<Long> sent=new HashSet<Long>();
+  if (_log.isInfoEnabled()) {
+    _log.info("Sending notifications for {mailId=" + mailId + ", resourcePrimKey="+ resourcePrimKey+ "}");
+  }
+  List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),resourcePrimKey);
+  sendEmail(userId,resourcePrimKey,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+  Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey);
+  while (article.getParentResourcePrimKey() > 0) {
+    article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey());
+    subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),article.getResourcePrimKey());
+    sendEmail(userId,resourcePrimKey,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+  }
+  subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),groupId);
+  sendEmail(userId,resourcePrimKey,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+  if (_log.isInfoEnabled()) {
+    _log.info("Finished sending notifications");
+  }
+}
