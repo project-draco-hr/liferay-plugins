@@ -1,0 +1,12 @@
+{
+  List<Article> articles=ArticleLocalServiceUtil.getCompanyArticles(companyId,start,end,new ArticleCreateDateComparator());
+  if (articles.isEmpty()) {
+    return;
+  }
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  Article article : articles) {
+    Document document=getDocument(article);
+    documents.add(document);
+  }
+  SearchEngineUtil.updateDocuments(companyId,documents);
+}
