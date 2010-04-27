@@ -1,33 +1,12 @@
 {
   KaleoTaskAssignment kaleoTaskAssignment=findByPrimaryKey(kaleoTaskAssignmentId);
-  int count=countByKaleoTaskId(kaleoTaskId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(3);
-    }
-    query.append(_SQL_SELECT_KALEOTASKASSIGNMENT_WHERE);
-    query.append(_FINDER_COLUMN_KALEOTASKID_KALEOTASKID_2);
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(KaleoTaskAssignmentModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(kaleoTaskId);
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,kaleoTaskAssignment);
     KaleoTaskAssignment[] array=new KaleoTaskAssignmentImpl[3];
-    array[0]=(KaleoTaskAssignment)objArray[0];
-    array[1]=(KaleoTaskAssignment)objArray[1];
-    array[2]=(KaleoTaskAssignment)objArray[2];
+    array[0]=getByKaleoTaskId_PrevAndNext(session,kaleoTaskAssignment,kaleoTaskId,orderByComparator,true);
+    array[1]=kaleoTaskAssignment;
+    array[2]=getByKaleoTaskId_PrevAndNext(session,kaleoTaskAssignment,kaleoTaskId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {
