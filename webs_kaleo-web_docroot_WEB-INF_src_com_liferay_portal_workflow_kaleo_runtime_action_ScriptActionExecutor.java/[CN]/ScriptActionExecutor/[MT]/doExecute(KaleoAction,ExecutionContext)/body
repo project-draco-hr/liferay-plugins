@@ -1,12 +1,12 @@
 {
-  Map<String,Serializable> context=executionContext.getContext();
-  if (context == null) {
+  Map<String,Serializable> workflowContext=executionContext.getWorkflowContext();
+  if (workflowContext == null) {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
     KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
-    context=WorkflowContextUtil.convert(kaleoInstance.getContext());
+    workflowContext=WorkflowContextUtil.convert(kaleoInstance.getContext());
   }
-  Map<String,Object> inputObjects=new HashMap<String,Object>(context);
-  inputObjects.put("workflowContext",context);
+  Map<String,Object> inputObjects=new HashMap<String,Object>(workflowContext);
+  inputObjects.put("workflowContext",workflowContext);
   KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
   if (kaleoTaskInstanceToken != null) {
     inputObjects.put("assigneeClassName",kaleoTaskInstanceToken.getAssigneeClassName());

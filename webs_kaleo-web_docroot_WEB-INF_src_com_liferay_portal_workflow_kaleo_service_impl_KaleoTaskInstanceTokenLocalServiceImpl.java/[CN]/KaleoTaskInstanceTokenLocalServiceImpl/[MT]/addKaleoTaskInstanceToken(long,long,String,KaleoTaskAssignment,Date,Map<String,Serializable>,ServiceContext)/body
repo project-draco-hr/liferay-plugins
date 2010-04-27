@@ -11,14 +11,14 @@
   kaleoTaskInstanceToken.setModifiedDate(now);
   kaleoTaskInstanceToken.setDueDate(dueDate);
   kaleoTaskInstanceToken.setKaleoInstanceId(kaleoInstanceToken.getKaleoInstanceId());
-  KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),context,serviceContext);
+  KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),workflowContext,serviceContext);
   kaleoTaskInstanceToken.setKaleoInstanceTokenId(childKaleoInstanceToken.getKaleoInstanceTokenId());
   kaleoTaskInstanceToken.setKaleoTaskId(kaleoTaskId);
   kaleoTaskInstanceToken.setKaleoTaskName(kaleoTaskName);
   kaleoTaskInstanceToken.setAssigneeClassName(kaleoTaskAssignment.getAssigneeClassName());
   kaleoTaskInstanceToken.setAssigneeClassPK(kaleoTaskAssignment.getAssigneeClassPK());
   kaleoTaskInstanceToken.setCompleted(false);
-  kaleoTaskInstanceToken.setContext(WorkflowContextUtil.convert(context));
+  kaleoTaskInstanceToken.setContext(WorkflowContextUtil.convert(workflowContext));
   kaleoTaskInstanceTokenPersistence.update(kaleoTaskInstanceToken,false);
   return kaleoTaskInstanceToken;
 }

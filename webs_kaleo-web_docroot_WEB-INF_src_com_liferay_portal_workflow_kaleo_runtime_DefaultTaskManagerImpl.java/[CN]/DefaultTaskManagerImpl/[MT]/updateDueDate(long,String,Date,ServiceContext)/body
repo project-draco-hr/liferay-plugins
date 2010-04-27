@@ -7,9 +7,9 @@
     if (dueDate != null) {
       kaleoTaskInstanceTokenLocalService.updateDueDate(workflowTaskInstanceId,dueDate,serviceContext);
     }
-    Map<String,Serializable> context=WorkflowContextUtil.convert(kaleoTaskInstanceToken.getContext());
-    kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceToken,comment,context,serviceContext);
-    return new WorkflowTaskAdapter(kaleoTaskInstanceToken,context);
+    Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTaskInstanceToken.getContext());
+    kaleoLogLocalService.addTaskAssignmentKaleoLog(kaleoTaskInstanceToken,kaleoTaskInstanceToken,comment,workflowContext,serviceContext);
+    return new WorkflowTaskAdapter(kaleoTaskInstanceToken,workflowContext);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);

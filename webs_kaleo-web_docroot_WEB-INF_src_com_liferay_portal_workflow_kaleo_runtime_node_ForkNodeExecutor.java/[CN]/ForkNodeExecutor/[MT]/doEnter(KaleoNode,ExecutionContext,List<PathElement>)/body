@@ -1,16 +1,16 @@
 {
-  Map<String,Serializable> context=executionContext.getContext();
+  Map<String,Serializable> workflowContext=executionContext.getWorkflowContext();
   ServiceContext serviceContext=executionContext.getServiceContext();
   List<KaleoTransition> kaleoTransitions=currentKaleoNode.getKaleoTransitions();
   Map<String,KaleoInstanceToken> childKaleoInstanceTokens=new HashMap<String,KaleoInstanceToken>();
   for (  KaleoTransition kaleoTransition : kaleoTransitions) {
     KaleoInstanceToken parentKaleoInstanceToken=executionContext.getKaleoInstanceToken();
-    KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(parentKaleoInstanceToken.getKaleoInstanceTokenId(),context,serviceContext);
+    KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(parentKaleoInstanceToken.getKaleoInstanceTokenId(),workflowContext,serviceContext);
     childKaleoInstanceTokens.put(kaleoTransition.getName(),childKaleoInstanceToken);
   }
   for (  KaleoTransition kaleoTransition : kaleoTransitions) {
     KaleoInstanceToken childKaleoInstanceToken=childKaleoInstanceTokens.get(kaleoTransition.getName());
-    ExecutionContext forkedExecutionContext=new ExecutionContext(childKaleoInstanceToken,context,serviceContext);
+    ExecutionContext forkedExecutionContext=new ExecutionContext(childKaleoInstanceToken,workflowContext,serviceContext);
     PathElement pathElement=new PathElement(currentKaleoNode,kaleoTransition.getTargetKaleoNode(),forkedExecutionContext);
     remainingPathElement.add(pathElement);
   }

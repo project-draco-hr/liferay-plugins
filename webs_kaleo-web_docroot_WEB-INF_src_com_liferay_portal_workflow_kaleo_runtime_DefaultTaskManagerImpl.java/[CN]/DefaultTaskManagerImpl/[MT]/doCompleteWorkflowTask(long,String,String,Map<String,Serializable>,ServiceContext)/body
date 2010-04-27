@@ -6,8 +6,8 @@
   kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.completeKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),serviceContext);
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
   KaleoInstanceToken parentKaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoInstanceToken.getParentKaleoInstanceTokenId());
-  kaleoLogLocalService.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,comment,context,serviceContext);
-  ExecutionContext executionContext=new ExecutionContext(parentKaleoInstanceToken,context,serviceContext);
+  kaleoLogLocalService.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,comment,workflowContext,serviceContext);
+  ExecutionContext executionContext=new ExecutionContext(parentKaleoInstanceToken,workflowContext,serviceContext);
   _kaleoSignaler.signalExit(transitionName,executionContext);
-  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,context);
+  return new WorkflowTaskAdapter(kaleoTaskInstanceToken,workflowContext);
 }

@@ -1,5 +1,5 @@
 {
-  Map<String,Serializable> context=executionContext.getContext();
+  Map<String,Serializable> workflowContext=executionContext.getWorkflowContext();
   ServiceContext serviceContext=executionContext.getServiceContext();
   String transitionName=executionContext.getTransitionName();
   KaleoTransition kaleoTransition=null;
@@ -9,7 +9,7 @@
  else {
     kaleoTransition=currentKaleoNode.getKaleoTransition(transitionName);
   }
-  ExecutionContext newExecutionContext=new ExecutionContext(executionContext.getKaleoInstanceToken(),context,serviceContext);
+  ExecutionContext newExecutionContext=new ExecutionContext(executionContext.getKaleoInstanceToken(),workflowContext,serviceContext);
   PathElement pathElement=new PathElement(null,kaleoTransition.getTargetKaleoNode(),newExecutionContext);
   remainingPathElement.add(pathElement);
 }

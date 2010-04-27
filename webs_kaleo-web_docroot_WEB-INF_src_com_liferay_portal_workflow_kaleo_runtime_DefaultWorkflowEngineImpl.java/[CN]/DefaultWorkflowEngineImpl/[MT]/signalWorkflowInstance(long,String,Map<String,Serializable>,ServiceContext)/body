@@ -1,10 +1,10 @@
 {
   try {
-    KaleoInstance kaleoInstance=doUpdateContext(workflowInstanceId,context,serviceContext);
+    KaleoInstance kaleoInstance=doUpdateContext(workflowInstanceId,workflowContext,serviceContext);
     KaleoInstanceToken kaleoInstanceToken=kaleoInstance.getRootKaleoInstanceToken(serviceContext);
-    ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,context,serviceContext);
+    ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
     _kaleoSignaler.signalExit(transitionName,executionContext);
-    return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,context);
+    return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,workflowContext);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
