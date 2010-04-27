@@ -1,0 +1,27 @@
+{
+  WorkflowInstance workflowInstance=WorkflowInstanceManagerUtil.startWorkflowInstance(companyId,defaultUserId,_workflowDefinition1.getName(),_workflowDefinition1.getVersion(),null,null);
+  Map<String,Serializable> workflowContext=workflowInstance.getWorkflowContext();
+  assertNotNull(workflowContext);
+  assertEquals(1,workflowContext.size());
+  assertEquals("success",workflowContext.get("javaNode11"));
+  String testKey="testKey";
+  String testValue1="testValue1";
+  String testValue2="testValue2";
+  Map<String,Serializable> updateContext=new HashMap<String,Serializable>();
+  updateContext.put(testKey,testValue1);
+  workflowInstance=WorkflowInstanceManagerUtil.updateWorkflowContext(companyId,workflowInstance.getWorkflowInstanceId(),updateContext);
+  workflowContext=workflowInstance.getWorkflowContext();
+  assertNotNull(workflowContext);
+  assertEquals(2,workflowContext.size());
+  assertEquals("success",workflowContext.get("javaNode11"));
+  assertEquals(testValue1,workflowContext.get(testKey));
+  updateContext=new HashMap<String,Serializable>();
+  updateContext.put(testKey,testValue2);
+  workflowInstance=WorkflowInstanceManagerUtil.updateWorkflowContext(companyId,workflowInstance.getWorkflowInstanceId(),updateContext);
+  workflowContext=workflowInstance.getWorkflowContext();
+  assertNotNull(workflowContext);
+  assertEquals(2,workflowContext.size());
+  assertEquals("success",workflowContext.get("javaNode11"));
+  assertEquals(testValue2,workflowContext.get(testKey));
+  WorkflowInstanceManagerUtil.deleteWorkflowInstance(companyId,workflowInstance.getWorkflowInstanceId());
+}

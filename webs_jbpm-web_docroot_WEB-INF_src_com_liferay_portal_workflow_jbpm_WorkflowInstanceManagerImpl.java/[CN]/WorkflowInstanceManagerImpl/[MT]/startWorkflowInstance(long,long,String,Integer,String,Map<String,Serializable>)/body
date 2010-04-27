@@ -3,10 +3,10 @@
   try {
     ProcessDefinition processDefinition=getProcessDefinition(jbpmContext,workflowDefinitionName,workflowDefinitionVersion);
     ProcessInstance processInstance=new ProcessInstance(processDefinition);
-    if (context != null) {
+    if (workflowContext != null) {
       ContextInstance contextInstance=processInstance.getContextInstance();
-      Map<String,Object> contextObjects=new HashMap<String,Object>(context);
-      contextInstance.addVariables(contextObjects);
+      Map<String,Object> variables=new HashMap<String,Object>(workflowContext);
+      contextInstance.addVariables(variables);
     }
     if (Validator.isNotNull(transitionName)) {
       processInstance.signal(transitionName);
