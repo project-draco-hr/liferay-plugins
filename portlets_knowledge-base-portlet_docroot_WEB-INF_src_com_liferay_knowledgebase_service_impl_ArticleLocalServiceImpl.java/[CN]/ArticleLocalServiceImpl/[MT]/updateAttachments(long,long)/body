@@ -1,0 +1,20 @@
+{
+  long folderId=counterLocalService.increment(Article.class.getName() + "#folder");
+  long attachmentsId=(folderId / 50) % 2;
+  String dirName="knowledgebase/cache/attachments/" + attachmentsId + StringPool.SLASH+ folderId;
+  if (((folderId / 50) > 1) && ((folderId % 50) == 0)) {
+    DLServiceUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/cache/attachments/" + attachmentsId);
+  }
+  DLServiceUtil.addDirectory(companyId,CompanyConstants.SYSTEM,dirName);
+  if (resourcePrimKey > 0) {
+    Article article=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
+    Date now=new Date();
+    ServiceContext serviceContext=new ServiceContext();
+    for (    String fileName : article.getAttachmentsFileNames()) {
+      String shortFileName=FileUtil.getShortFileName(fileName);
+      byte[] bytes=DLServiceUtil.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      DLServiceUtil.addFile(companyId,CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,dirName + StringPool.SLASH + shortFileName,0,StringPool.BLANK,now,serviceContext,bytes);
+    }
+  }
+  return dirName;
+}
