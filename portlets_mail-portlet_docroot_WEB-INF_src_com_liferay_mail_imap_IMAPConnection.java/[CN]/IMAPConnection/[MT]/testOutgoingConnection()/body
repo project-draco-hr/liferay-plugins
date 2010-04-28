@@ -1,5 +1,10 @@
 {
-  Transport transport=getTransport();
-  transport.isConnected();
-  transport.close();
+  try {
+    Transport transport=getTransport();
+    transport.isConnected();
+    transport.close();
+  }
+ catch (  MessagingException me) {
+    throw new MailException(MailException.ACCOUNT_OUTGOING_CONNECTION_FAILED,me);
+  }
 }

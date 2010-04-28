@@ -1,14 +1,19 @@
 {
   Transport transport=null;
-  Session session=getSession();
-  if (_outgoingSecure) {
-    transport=session.getTransport("smtps");
-  }
+  try {
+    Session session=getSession();
+    if (_outgoingSecure) {
+      transport=session.getTransport("smtps");
+    }
  else {
-    transport=session.getTransport("smtp");
+      transport=session.getTransport("smtp");
+    }
+    String transportKey=_login.concat(_TRANSPORT).concat(_incomingHostName);
+    transport.addConnectionListener(new ConnectionListener(transportKey));
+    transport.connect(_outgoingHostName,_outgoingPort,_login,_password);
+    return transport;
   }
-  String transportKey=_login.concat(_TRANSPORT).concat(_incomingHostName);
-  transport.addConnectionListener(new ConnectionListener(transportKey));
-  transport.connect(_outgoingHostName,_outgoingPort,_login,_password);
-  return transport;
+ catch (  MessagingException me) {
+    throw new MailException(MailException.ACCOUNT_OUTGOING_CONNECTION_FAILED,me);
+  }
 }
