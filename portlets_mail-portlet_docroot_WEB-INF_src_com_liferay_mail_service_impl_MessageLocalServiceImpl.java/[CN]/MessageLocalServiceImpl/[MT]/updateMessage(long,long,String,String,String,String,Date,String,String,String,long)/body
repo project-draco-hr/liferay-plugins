@@ -8,10 +8,10 @@
   message.setBcc(bcc);
   message.setSentDate(sentDate);
   message.setSubject(subject);
-  message.setPreview(body);
-  message.setBody(body);
+  message.setPreview(getPreview(body));
+  message.setBody(HtmlContentUtil.getInlineHtml(body));
   message.setFlags(flags);
-  message.setSize(size);
+  message.setSize(getMessageSize(messageId,body));
   message.setRemoteMessageId(remoteMessageId);
   messagePersistence.update(message,false);
   Indexer indexer=IndexerRegistryUtil.getIndexer(Message.class);

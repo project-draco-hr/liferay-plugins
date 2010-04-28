@@ -1,0 +1,17 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Message.class,PortletClassLoaderUtil.getClassLoader());
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("folderId",folderId));
+  dynamicQuery.add(RestrictionsFactoryUtil.gt("remoteMessageId",new Long(0)));
+  if (oldest) {
+    dynamicQuery.addOrder(OrderFactoryUtil.asc("sentDate"));
+  }
+ else {
+    dynamicQuery.addOrder(OrderFactoryUtil.desc("sentDate"));
+  }
+  List<Object> results=messagePersistence.findWithDynamicQuery(dynamicQuery,0,1);
+  if (results.size() > 0) {
+    List<Message> messages=toMessages(results);
+    return messages.get(0);
+  }
+  return null;
+}

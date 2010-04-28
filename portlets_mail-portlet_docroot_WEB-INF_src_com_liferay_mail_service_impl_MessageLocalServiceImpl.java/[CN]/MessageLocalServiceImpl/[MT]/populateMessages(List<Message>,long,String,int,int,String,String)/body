@@ -17,6 +17,8 @@
   int start=messagesPerPage * (pageNumber - 1);
   int end=messagesPerPage * pageNumber;
   List<Object> results=messagePersistence.findWithDynamicQuery(dynamicQuery,start,end);
-  messages=toMessages(results);
+  for (  Object result : results) {
+    messages.add((Message)result);
+  }
   return dynamicQueryCount(dynamicQuery);
 }

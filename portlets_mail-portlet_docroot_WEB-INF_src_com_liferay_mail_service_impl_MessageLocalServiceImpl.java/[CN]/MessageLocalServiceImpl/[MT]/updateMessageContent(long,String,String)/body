@@ -1,0 +1,10 @@
+{
+  Message message=messagePersistence.findByPrimaryKey(messageId);
+  message.setModifiedDate(new Date());
+  message.setPreview(getPreview(body));
+  message.setBody(HtmlContentUtil.getInlineHtml(body));
+  message.setFlags(flags);
+  message.setSize(getMessageSize(messageId,body));
+  messagePersistence.update(message,false);
+  return message;
+}
