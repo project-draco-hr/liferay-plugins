@@ -1,0 +1,24 @@
+{
+  javax.mail.Message[] messages=event.getMessages();
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=_imapUtil.openFolder((IMAPFolder)messages[0].getFolder());
+    Folder folder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
+    long[] remoteMessageIds=_imapUtil.getMessageUIDs(imapFolder,messages);
+    for (    long remoteMessageId : remoteMessageIds) {
+      Message message=MessageLocalServiceUtil.getMessage(folder.getFolderId(),remoteMessageId);
+      MessageLocalServiceUtil.deleteMessage(message.getMessageId());
+    }
+  }
+ catch (  Exception e) {
+    _log.error("Unable to delete messages via listener",e);
+  }
+ finally {
+    try {
+      _imapUtil.closeFolder(imapFolder,false);
+    }
+ catch (    MailException me) {
+      _log.error(me);
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  javax.mail.Message[] messages=event.getMessages();
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=_imapUtil.openFolder((IMAPFolder)messages[0].getFolder());
+    Folder folder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
+    _imapUtil.storeMessagesEnvelope(imapFolder,messages,folder.getFolderId());
+  }
+ catch (  Exception e) {
+    _log.error("Unable to download messages via listener",e);
+  }
+ finally {
+    try {
+      _imapUtil.closeFolder(imapFolder,false);
+    }
+ catch (    MailException me) {
+      _log.error(me);
+    }
+  }
+}
