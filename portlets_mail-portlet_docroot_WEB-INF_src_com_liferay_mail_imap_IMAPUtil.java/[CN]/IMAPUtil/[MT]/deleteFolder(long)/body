@@ -1,0 +1,17 @@
+{
+  try {
+    IMAPFolder folder=getFolder(folderId);
+    if (folder.exists()) {
+      folder.delete(true);
+      if (folder.exists()) {
+        throw new MailException(MailException.FOLDER_DENIED_BY_SERVER);
+      }
+    }
+ else {
+      throw new MailException(MailException.FOLDER_DOES_NOT_EXISTS);
+    }
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+}

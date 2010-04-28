@@ -1,0 +1,14 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(folderId);
+    javax.mail.Message[] messages=imapFolder.getMessagesByUID(remoteMessageIds);
+    storeMessagesContent(imapFolder,messages,folderId);
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}

@@ -1,0 +1,22 @@
+{
+  IMAPFolder sourceFolder=null;
+  IMAPFolder destinationFolder=null;
+  try {
+    sourceFolder=openFolder(sourceFolderId);
+    destinationFolder=openFolder(destinationFolderId);
+    sourceFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
+    destinationFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
+    List<javax.mail.Message> messages=getMessages(sourceFolder,messageIds,deleteMissingMessages);
+    for (    javax.mail.Message message : messages) {
+      destinationFolder.appendMessages(new javax.mail.Message[]{message});
+      message.setFlag(Flags.Flag.DELETED,true);
+    }
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(sourceFolder,true);
+    closeFolder(destinationFolder,false);
+  }
+}

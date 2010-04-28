@@ -1,0 +1,17 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(folderId);
+    javax.mail.Message message=getMessage(imapFolder,remoteMessageId);
+    if (message == null) {
+      throw new MailException(MailException.MESSAGE_NOT_FOUND_ON_SERVER);
+    }
+    return getMessagePart(message,contentPath).getInputStream();
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  int index=GetterUtil.getInteger(StringUtil.split(contentPath.substring(1),StringPool.PERIOD)[0]);
+  if (part.getContent() instanceof Multipart) {
+    String prefix=String.valueOf(index).concat(StringPool.PERIOD);
+    Multipart multipart=(Multipart)part.getContent();
+    for (int i=0; i < multipart.getCount(); i++) {
+      if (index == i) {
+        return getMessagePart(multipart.getBodyPart(i),contentPath.substring(prefix.length()));
+      }
+    }
+  }
+  return part;
+}

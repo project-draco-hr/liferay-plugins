@@ -1,0 +1,21 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(_account.getSentFolderId());
+    javax.mail.Message message=createMessage(personalName,sender,to,cc,bcc,subject,body,mailFiles);
+    Transport transport=_connection.getTransport();
+    transport.sendMessage(message,message.getAllRecipients());
+    transport.close();
+    imapFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
+    imapFolder.appendMessages(new javax.mail.Message[]{message});
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+catch (  UnsupportedEncodingException uee) {
+    throw new MailException(uee);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}

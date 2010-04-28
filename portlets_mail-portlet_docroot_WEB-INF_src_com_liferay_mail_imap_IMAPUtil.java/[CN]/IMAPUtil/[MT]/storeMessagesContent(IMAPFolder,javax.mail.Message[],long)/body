@@ -1,0 +1,26 @@
+{
+  FetchProfile fp=new FetchProfile();
+  fp.add(UIDFolder.FetchProfileItem.UID);
+  fp.add(UIDFolder.FetchProfileItem.CONTENT_INFO);
+  imapFolder.fetch(messages,fp);
+  for (int i=0; i < messages.length; i++) {
+    javax.mail.Message remoteMessage=messages[i];
+    String flags=extractFlags(remoteMessage);
+    long remoteMessageId=imapFolder.getUID(remoteMessage);
+    Message message=MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
+    List<MailFile> mailFiles=new ArrayList<MailFile>();
+    StringBuilder bodyPlain=new StringBuilder();
+    StringBuilder bodyHtml=new StringBuilder();
+    extractMessageParts(_user.getUserId(),bodyPlain,bodyHtml,StringPool.BLANK,remoteMessage,mailFiles);
+    if (bodyHtml.length() == 0) {
+      bodyHtml=bodyPlain;
+    }
+    if (flags.indexOf(MailConstants.FLAG_SEEN) == -1) {
+      remoteMessage.setFlag(Flags.Flag.SEEN,false);
+    }
+    for (    MailFile mailFile : mailFiles) {
+      AttachmentLocalServiceUtil.addAttachment(_user.getUserId(),message.getMessageId(),mailFile.getContentPath(),mailFile.getFileName(),mailFile.getSize(),mailFile.getFile());
+    }
+    MessageLocalServiceUtil.updateMessageContent(message.getMessageId(),bodyHtml.toString(),flags);
+  }
+}

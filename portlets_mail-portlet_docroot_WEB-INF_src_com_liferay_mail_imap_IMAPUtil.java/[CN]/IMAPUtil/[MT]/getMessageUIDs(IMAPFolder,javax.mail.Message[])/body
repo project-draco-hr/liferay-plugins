@@ -1,0 +1,16 @@
+{
+  try {
+    long messageUIDs[]=new long[messages.length];
+    FetchProfile fp=new FetchProfile();
+    fp.add(UIDFolder.FetchProfileItem.UID);
+    imapFolder.fetch(messages,fp);
+    for (int i=0; i < messages.length; i++) {
+      javax.mail.Message message=messages[i];
+      messageUIDs[i]=imapFolder.getUID(message);
+    }
+    return messageUIDs;
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+}

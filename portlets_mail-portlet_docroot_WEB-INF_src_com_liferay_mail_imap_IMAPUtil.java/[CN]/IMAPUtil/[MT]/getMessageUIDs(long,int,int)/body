@@ -1,0 +1,16 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(folderId);
+    int messageCount=imapFolder.getMessageCount();
+    int[] messageIndexes=getMessageIndexes(messageCount,pageNumber,messagesPerPage);
+    javax.mail.Message[] messages=imapFolder.getMessages(messageIndexes[0],messageIndexes[1]);
+    return getMessageUIDs(imapFolder,messages);
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}

@@ -1,0 +1,24 @@
+{
+  try {
+    IMAPFolder imapFolder=getFolder(folderId);
+    String newFullName=StringPool.BLANK;
+    if (Validator.isNotNull(_account.getFolderPrefix())) {
+      IMAPFolder defaultFolder=(IMAPFolder)_connection.getStore(true).getDefaultFolder();
+      newFullName=_account.getFolderPrefix() + defaultFolder.getSeparator() + newDisplayName;
+    }
+    if (imapFolder.exists()) {
+      if (imapFolder.renameTo(getFolder(newFullName))) {
+        return new String[]{imapFolder.getFullName(),imapFolder.getName()};
+      }
+ else {
+        throw new MailException(MailException.FOLDER_DENIED_BY_SERVER);
+      }
+    }
+ else {
+      throw new MailException(MailException.FOLDER_DOES_NOT_EXISTS);
+    }
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+}
