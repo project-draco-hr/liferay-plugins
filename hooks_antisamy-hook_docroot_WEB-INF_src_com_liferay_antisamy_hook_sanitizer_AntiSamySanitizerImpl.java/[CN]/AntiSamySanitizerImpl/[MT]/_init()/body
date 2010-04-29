@@ -1,0 +1,15 @@
+{
+  InputStream policyInputStream=getClass().getClassLoader().getResourceAsStream("sanitizer-configuration.xml");
+  if (policyInputStream == null) {
+    _log.error("Couldn't find the policy file sanitizer-configuration.xml, " + "AntiSamy filter is disabled");
+    _disabled=true;
+    return;
+  }
+  try {
+    _policy=Policy.getInstance(policyInputStream);
+  }
+ catch (  PolicyException e) {
+    _log.error("AntiSamy policy file had some problems, the filter is " + "disabled.",e);
+    _disabled=true;
+  }
+}

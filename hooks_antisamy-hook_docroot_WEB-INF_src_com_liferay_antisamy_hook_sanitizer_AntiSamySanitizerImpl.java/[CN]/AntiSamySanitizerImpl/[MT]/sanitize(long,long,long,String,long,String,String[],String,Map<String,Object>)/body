@@ -2,5 +2,26 @@
   if (_log.isDebugEnabled()) {
     _log.debug("Sanitizing " + className + "#"+ classPK);
   }
-  return s;
+  if (_disabled) {
+    return s;
+  }
+  if (Validator.isNull(contentType) || !contentType.equals(ContentTypes.TEXT_HTML)) {
+    return s;
+  }
+  try {
+    if (_policy == null) {
+      _init();
+      if (_disabled) {
+        return s;
+      }
+    }
+    AntiSamy as=new AntiSamy();
+    CleanResults cr=as.scan(s,_policy);
+    s=cr.getCleanHTML();
+    return s;
+  }
+ catch (  Exception e) {
+    _log.error("Error with sanitizing input, returning blank string",e);
+    return StringPool.BLANK;
+  }
 }
