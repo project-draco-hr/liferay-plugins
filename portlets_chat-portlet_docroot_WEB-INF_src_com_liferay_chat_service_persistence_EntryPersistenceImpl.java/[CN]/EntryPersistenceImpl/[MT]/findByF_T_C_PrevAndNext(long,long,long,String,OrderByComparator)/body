@@ -1,49 +1,12 @@
 {
   Entry entry=findByPrimaryKey(entryId);
-  int count=countByF_T_C(fromUserId,toUserId,content);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(5);
-    }
-    query.append(_SQL_SELECT_ENTRY_WHERE);
-    query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
-    query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
-    if (content == null) {
-      query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-    }
- else {
-      if (content.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
-      }
-    }
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(EntryModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(fromUserId);
-    qPos.add(toUserId);
-    if (content != null) {
-      qPos.add(content);
-    }
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,entry);
     Entry[] array=new EntryImpl[3];
-    array[0]=(Entry)objArray[0];
-    array[1]=(Entry)objArray[1];
-    array[2]=(Entry)objArray[2];
+    array[0]=getByF_T_C_PrevAndNext(session,entry,fromUserId,toUserId,content,orderByComparator,true);
+    array[1]=entry;
+    array[2]=getByF_T_C_PrevAndNext(session,entry,fromUserId,toUserId,content,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {
