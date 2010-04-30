@@ -1,6 +1,7 @@
 {
   resourceLocalService.deleteResource(article.getCompanyId(),Article.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,article.getResourcePrimKey());
   articlePersistence.removeByResourcePrimKey(article.getResourcePrimKey());
+  DLServiceUtil.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
   MBMessageLocalServiceUtil.deleteDiscussionMessages(Article.class.getName(),article.getResourcePrimKey());
   SocialActivityLocalServiceUtil.deleteActivities(Article.class.getName(),article.getResourcePrimKey());
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
