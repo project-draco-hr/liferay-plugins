@@ -1,16 +1,15 @@
 {
-  long folderId=counterLocalService.increment();
-  String dirName="knowledgebase/cache/attachments/" + folderId;
+  String dirName="knowledgebase/cache/attachments/" + counterLocalService.increment();
   DLServiceUtil.addDirectory(companyId,CompanyConstants.SYSTEM,dirName);
-  if (resourcePrimKey > 0) {
-    Article article=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
-    Date now=new Date();
-    ServiceContext serviceContext=new ServiceContext();
-    for (    String fileName : article.getAttachmentsFileNames()) {
-      String shortFileName=FileUtil.getShortFileName(fileName);
-      byte[] bytes=DLServiceUtil.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-      DLServiceUtil.addFile(companyId,CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,dirName + StringPool.SLASH + shortFileName,0,StringPool.BLANK,now,serviceContext,bytes);
-    }
+  if (resourcePrimKey <= 0) {
+    return dirName;
+  }
+  Article article=getLatestArticle(resourcePrimKey);
+  ServiceContext serviceContext=new ServiceContext();
+  for (  String fileName : article.getAttachmentsFileNames()) {
+    String shortFileName=FileUtil.getShortFileName(fileName);
+    byte[] bytes=DLServiceUtil.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    DLServiceUtil.addFile(companyId,CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,dirName + StringPool.SLASH + shortFileName,0,StringPool.BLANK,article.getModifiedDate(),serviceContext,bytes);
   }
   return dirName;
 }
