@@ -3,17 +3,17 @@
   Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(contextInstance.getVariables());
   Map<String,Object> inputObjects=new HashMap<String,Object>(workflowContext);
   inputObjects.put("workflowContext",workflowContext);
-  Long companyId=(Long)workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID);
+  Long companyId=GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
   TaskInstance taskInstance=executionContext.getTaskInstance();
   if (taskInstance != null) {
-    inputObjects.put(WorkflowConstants.CONTEXT_USER_ID,taskInstance.getActorId());
+    inputObjects.put(WorkflowConstants.CONTEXT_USER_ID,String.valueOf(taskInstance.getActorId()));
     inputObjects.put("assigneeClassName",User.class.getName());
-    inputObjects.put("assigneeClassPK",taskInstance.getActorId());
+    inputObjects.put("assigneeClassPK",String.valueOf(taskInstance.getActorId()));
     inputObjects.put("taskName",taskInstance.getName());
   }
  else   if (companyId != null) {
     User user=UserLocalServiceUtil.getDefaultUser(companyId);
-    inputObjects.put(WorkflowConstants.CONTEXT_USER_ID,user.getUserId());
+    inputObjects.put(WorkflowConstants.CONTEXT_USER_ID,String.valueOf(user.getUserId()));
   }
   ScriptingUtil.exec(null,inputObjects,language,script);
 }

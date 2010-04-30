@@ -1,13 +1,13 @@
 {
   ContextInstance contextInstance=executionContext.getContextInstance();
   Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(contextInstance.getVariables());
-  long companyId=(Long)workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID);
+  long companyId=GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_COMPANY_ID));
   if (userId == 0) {
     TaskInstance taskInstance=executionContext.getTaskInstance();
     if (taskInstance != null) {
       userId=getUserId(companyId,taskInstance.getActorId());
     }
   }
-  workflowContext.put(WorkflowConstants.CONTEXT_USER_ID,userId);
+  workflowContext.put(WorkflowConstants.CONTEXT_USER_ID,String.valueOf(userId));
   WorkflowStatusManagerUtil.updateStatus(WorkflowConstants.toStatus(status),workflowContext);
 }
