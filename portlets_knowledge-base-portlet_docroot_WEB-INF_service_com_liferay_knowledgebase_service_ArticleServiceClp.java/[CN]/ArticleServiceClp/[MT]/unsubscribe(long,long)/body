@@ -1,13 +1,13 @@
 {
-  Object paramObj0=ClpSerializer.translateInput(dynamicQuery);
-  if (dynamicQuery == null) {
-    paramObj0=new NullWrapper("com.liferay.portal.kernel.dao.orm.DynamicQuery");
-  }
-  Object returnObj=null;
+  Object paramObj0=new LongWrapper(groupId);
+  Object paramObj1=new LongWrapper(resourcePrimKey);
   try {
-    returnObj=_classLoaderProxy.invoke("dynamicQueryCount",new Object[]{paramObj0});
+    _classLoaderProxy.invoke("unsubscribe",new Object[]{paramObj0,paramObj1});
   }
  catch (  Throwable t) {
+    if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+      throw (com.liferay.portal.kernel.exception.PortalException)t;
+    }
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
       throw (com.liferay.portal.kernel.exception.SystemException)t;
     }
@@ -18,5 +18,4 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
-  return ((Long)returnObj).longValue();
 }
