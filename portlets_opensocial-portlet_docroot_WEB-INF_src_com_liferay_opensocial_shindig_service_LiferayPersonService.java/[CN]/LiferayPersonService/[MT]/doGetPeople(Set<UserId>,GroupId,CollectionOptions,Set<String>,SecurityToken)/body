@@ -1,0 +1,25 @@
+{
+  List<Person> people=new ArrayList<Person>();
+  for (  UserId userId : userIds) {
+    Person person=null;
+    String userIdString=userId.getUserId(securityToken);
+switch (groupId.getType()) {
+case all:
+case friends:
+case groupId:
+      long liferayUserId=GetterUtil.getLong(userIdString);
+    User owner=UserLocalServiceUtil.getUserById(liferayUserId);
+  List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+for (User friend : friends) {
+  person=getUserPerson(friend,fields,securityToken);
+  people.add(person);
+}
+break;
+case self:
+person=getUserPerson(userIdString,fields,securityToken);
+people.add(person);
+break;
+}
+}
+return new RestfulCollection<Person>(people,collectionOptions.getFirst(),people.size(),collectionOptions.getMax());
+}

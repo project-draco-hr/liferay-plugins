@@ -1,0 +1,16 @@
+{
+  Person person=null;
+  Group group=GroupLocalServiceUtil.getGroup(GetterUtil.getLong(groupId));
+  if (group.isCommunity()) {
+    Name name=new NameImpl(group.getName() + " (Community)");
+    person=new PersonImpl(groupId,name.getFormatted(),name);
+  }
+ else   if (group.isOrganization()) {
+    Organization organization=OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
+    Name name=new NameImpl(organization.getName() + " (Organization)");
+    person=new PersonImpl(groupId,name.getFormatted(),name);
+    person.setPhoneNumbers(getPhoneNumbers(Organization.class.getName(),organization.getOrganizationId()));
+  }
+  person.setGender(Gender.male);
+  return person;
+}

@@ -1,0 +1,18 @@
+{
+  String userIdString=userId.getUserId(securityToken);
+  Person person=null;
+  if (userIdString.startsWith("G-")) {
+    String groupId=userIdString.substring("G-".length());
+    person=getGroupPerson(groupId);
+  }
+ else {
+    person=getUserPerson(userIdString,fields,securityToken);
+  }
+  if (securityToken.getViewerId().equals(person.getId())) {
+    person.setIsViewer(true);
+  }
+  if (securityToken.getOwnerId().equals(person.getId())) {
+    person.setIsOwner(true);
+  }
+  return person;
+}
