@@ -27,11 +27,11 @@
     addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
   updateDisplayOrder(article,parentResourcePrimKey,priority);
-  addArticleAttachments(article,serviceContext.getCompanyId(),dirName);
   MBMessageLocalServiceUtil.addDiscussionMessage(userId,article.getUserName(),Article.class.getName(),resourcePrimKey,WorkflowConstants.ACTION_PUBLISH);
   SocialActivityLocalServiceUtil.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_ARTICLE,StringPool.BLANK,0);
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.reindex(article);
+  addArticleAttachments(article,dirName);
   notifySubscribers(article,false,serviceContext);
   return article;
 }
