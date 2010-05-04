@@ -1,12 +1,17 @@
 {
   PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-  if (!ArticlePermission.contains(permissionChecker,activity.getClassPK(),ActionKeys.VIEW)) {
+  Article article=ArticleLocalServiceUtil.getLatestArticle(activity.getClassPK());
+  if (!ArticlePermission.contains(permissionChecker,article,ActionKeys.VIEW)) {
     return null;
   }
   String link=StringPool.BLANK;
-  String layoutFullURL=PortalUtil.getLayoutFullURL(activity.getGroupId(),"1_WAR_knowledgebaseportlet");
-  if (Validator.isNotNull(layoutFullURL)) {
-    link=layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "admin/article/"+ activity.getClassPK();
+  long plid=PortalUtil.getPlidFromPortletId(article.getGroupId(),"1_WAR_knowledgebaseportlet");
+  if (plid != LayoutConstants.DEFAULT_PLID) {
+    String layoutFullURL=PortalUtil.getLayoutFullURL(LayoutLocalServiceUtil.getLayout(plid),themeDisplay);
+    String namespace=PortalUtil.getPortletNamespace("1_WAR_knowledgebaseportlet");
+    link=HttpUtil.setParameter(layoutFullURL,"p_p_id","1_WAR_knowledgebaseportlet");
+    link=HttpUtil.setParameter(link,namespace + "jspPage","/admin/view_article.jsp");
+    link=HttpUtil.setParameter(link,namespace + "resourcePrimKey",article.getResourcePrimKey());
   }
   String title=StringPool.BLANK;
   String groupName=StringPool.BLANK;
@@ -24,7 +29,6 @@
     pattern+="-in";
   }
   Object[] arguments=new Object[0];
-  Article article=ArticleLocalServiceUtil.getLatestArticle(activity.getClassPK());
   String text=HtmlUtil.escape(cleanContent(article.getTitle()));
   if (Validator.isNotNull(link)) {
     text=wrapLink(link,text);
