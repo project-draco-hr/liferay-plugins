@@ -1,6 +1,5 @@
 {
-  String layoutFullURL=serviceContext.getLayoutFullURL();
-  if (Validator.isNull(layoutFullURL)) {
+  if (Validator.isNull(serviceContext.getLayoutFullURL())) {
     return;
   }
   PortletPreferences preferences=ServiceContextUtil.getPortletPreferences(serviceContext);
@@ -34,7 +33,21 @@
   String fromAddress=preferences.getValue("email-from-address",PortletProps.get("admin.email.from.address"));
   fromName=StringUtil.replace(fromName,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
   fromAddress=StringUtil.replace(fromAddress,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
-  String articleURL=layoutFullURL + Portal.FRIENDLY_URL_SEPARATOR + "admin/article/"+ article.getResourcePrimKey();
+  String articleURL=null;
+  Layout layout=LayoutLocalServiceUtil.getLayout(serviceContext.getPlid());
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  if (layoutTypePortlet.hasPortletId("1_WAR_knowledgebaseportlet")) {
+    long scopeGroupId=PortalUtil.getScopeGroupId(layout,"1_WAR_knowledgebaseportlet");
+    if (scopeGroupId == article.getGroupId()) {
+      String namespace=PortalUtil.getPortletNamespace("1_WAR_knowledgebaseportlet");
+      articleURL=HttpUtil.setParameter(serviceContext.getLayoutFullURL(),"p_p_id","1_WAR_knowledgebaseportlet");
+      articleURL=HttpUtil.setParameter(articleURL,namespace + "jspPage","/admin/view_article.jsp");
+      articleURL=HttpUtil.setParameter(articleURL,namespace + "resourcePrimKey",article.getResourcePrimKey());
+    }
+  }
+  if (articleURL == null) {
+    articleURL=serviceContext.getLayoutFullURL();
+  }
   String subject=null;
   String body=null;
   if (!update) {
