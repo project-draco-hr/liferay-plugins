@@ -9,7 +9,8 @@
     Organization organization=OrganizationLocalServiceUtil.getOrganization(group.getClassPK());
     Name name=new NameImpl(organization.getName() + " (Organization)");
     person=new PersonImpl(groupId,name.getFormatted(),name);
-    person.setPhoneNumbers(getPhoneNumbers(Organization.class.getName(),organization.getOrganizationId()));
+    List<ListField> phoneNumbers=getPhoneNumbers(Organization.class.getName(),organization.getOrganizationId());
+    person.setPhoneNumbers(phoneNumbers);
   }
   person.setGender(Gender.male);
   return person;

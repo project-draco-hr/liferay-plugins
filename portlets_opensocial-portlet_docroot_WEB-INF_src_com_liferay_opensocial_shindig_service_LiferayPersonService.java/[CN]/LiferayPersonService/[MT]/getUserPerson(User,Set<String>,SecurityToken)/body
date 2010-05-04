@@ -6,7 +6,7 @@
   sb.append(PortalUtil.getPathFriendlyURLPublic());
   sb.append(user.getScreenName());
   person.setProfileUrl(sb.toString());
-  sb=new StringBundler();
+  sb.setIndex(0);
   sb.append(securityToken.getDomain());
   sb.append(PortalUtil.getPathImage());
   sb.append("/user_");
@@ -48,7 +48,8 @@
     person.setNickname(user.getScreenName());
   }
   if (fields.contains(Person.Field.PHONE_NUMBERS.toString())) {
-    person.setPhoneNumbers(getPhoneNumbers(Contact.class.getName(),user.getContactId()));
+    List<ListField> phoneNumbers=getPhoneNumbers(Contact.class.getName(),user.getContactId());
+    person.setPhoneNumbers(phoneNumbers);
   }
   if (fields.contains(Person.Field.UTC_OFFSET.toString())) {
     person.setUtcOffset(new Long(user.getTimeZone().getRawOffset()));
