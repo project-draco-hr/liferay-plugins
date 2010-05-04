@@ -1,10 +1,10 @@
 {
   IMAPFolder imapFolder=null;
   try {
-    imapFolder=openFolder(folderId);
+    imapFolder=openFolder(storedFolderId);
     imapFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    List<javax.mail.Message> messages=getMessages(imapFolder,messageIds,true);
-    for (    javax.mail.Message message : messages) {
+    List<Message> messages=getMessages(imapFolder,messageIds,true);
+    for (    Message message : messages) {
       message.setFlag(Flags.Flag.DELETED,true);
     }
   }

@@ -1,10 +1,9 @@
 {
   IMAPFolder imapFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    int messageCount=imapFolder.getMessageCount();
-    int[] messageIndexes=getMessageIndexes(messageCount,pageNumber,messagesPerPage);
-    javax.mail.Message[] messages=imapFolder.getMessages(messageIndexes[0],messageIndexes[1]);
+    imapFolder=openFolder(storedFolderId);
+    int[] messageIndexes=getMessageIndexes(imapFolder.getMessageCount(),pageNumber,messagesPerPage);
+    Message[] messages=imapFolder.getMessages(messageIndexes[0],messageIndexes[1]);
     return getMessageUIDs(imapFolder,messages);
   }
  catch (  MessagingException me) {

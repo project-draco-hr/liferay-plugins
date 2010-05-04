@@ -1,0 +1,54 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(storedFolderId);
+    com.liferay.mail.model.Folder storedFolder=FolderLocalServiceUtil.getFolder(storedFolderId);
+    int messageCount=imapFolder.getMessageCount();
+    FolderLocalServiceUtil.updateFolder(storedFolderId,storedFolder.getFullName(),storedFolder.getDisplayName(),messageCount);
+    if (messageCount == 0) {
+      return;
+    }
+    Message oldestMessage=getMessage(storedFolderId,imapFolder,true);
+    Message newestMessage=getMessage(storedFolderId,imapFolder,false);
+    Message messages[]=new Message[0];
+    if ((oldestMessage == null) && (newestMessage == null)) {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Downloading messages from folder " + imapFolder.getFullName() + " for the first time");
+      }
+      int startingMessageNumber=messageCount - PortletPropsValues.MESSAGES_SYNC_COUNT;
+      if (startingMessageNumber < 1) {
+        startingMessageNumber=1;
+      }
+      messages=imapFolder.getMessages(startingMessageNumber,messageCount);
+      storeEnvelopes(storedFolderId,imapFolder,messages);
+    }
+ else {
+      int newestMessageNumber=newestMessage.getMessageNumber();
+      if (newestMessageNumber != messageCount) {
+        if (_log.isDebugEnabled()) {
+          _log.debug("Downloading new messages from folder " + imapFolder.getFullName());
+        }
+        messages=imapFolder.getMessages(newestMessageNumber + 1,messageCount);
+        storeEnvelopes(storedFolderId,imapFolder,messages);
+      }
+      int oldestMessageNumber=oldestMessage.getMessageNumber();
+      if (oldestMessageNumber != 1) {
+        if (_log.isDebugEnabled()) {
+          _log.debug("Downloading old messages from folder " + imapFolder.getFullName());
+        }
+        int startingMessageNumber=oldestMessageNumber - PortletPropsValues.MESSAGES_SYNC_COUNT;
+        if (startingMessageNumber < 1) {
+          startingMessageNumber=1;
+        }
+        messages=imapFolder.getMessages(startingMessageNumber,oldestMessageNumber - 1);
+        storeEnvelopes(storedFolderId,imapFolder,messages);
+      }
+    }
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}

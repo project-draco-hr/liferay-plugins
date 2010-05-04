@@ -1,24 +1,10 @@
 {
   try {
-    Store store=_connection.getStore(true);
-    javax.mail.Folder rootFolder=store.getDefaultFolder();
-    List<javax.mail.Folder> allFolders=new ArrayList<javax.mail.Folder>();
-    javax.mail.Folder[] folders=rootFolder.list();
-    for (    javax.mail.Folder folder : folders) {
-      try {
-        int folderType=folder.getType();
-        if ((folderType & javax.mail.Folder.HOLDS_MESSAGES) != 0) {
-          allFolders.add(folder);
-        }
-        if ((folderType & javax.mail.Folder.HOLDS_FOLDERS) != 0) {
-          populateFolders(allFolders,folder.list());
-        }
-      }
- catch (      MessagingException me) {
-        _log.error("Skipping IMAP folder: " + me.getMessage());
-      }
-    }
-    return allFolders;
+    List<Folder> folders=new ArrayList<Folder>();
+    Store store=_imapConnection.getStore(true);
+    Folder folder=store.getDefaultFolder();
+    getFolders(folders,folder.list());
+    return folders;
   }
  catch (  MessagingException me) {
     throw new MailException(me);

@@ -1,14 +1,14 @@
 {
-  IMAPFolder sourceFolder=null;
-  IMAPFolder destinationFolder=null;
+  IMAPFolder sourceIMAPFolder=null;
+  IMAPFolder destinationIMAPFolder=null;
   try {
-    sourceFolder=openFolder(sourceFolderId);
-    destinationFolder=openFolder(destinationFolderId);
-    sourceFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    destinationFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    List<javax.mail.Message> messages=getMessages(sourceFolder,messageIds,deleteMissingMessages);
-    for (    javax.mail.Message message : messages) {
-      destinationFolder.appendMessages(new javax.mail.Message[]{message});
+    sourceIMAPFolder=openFolder(sourceStoredFolderId);
+    sourceIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
+    destinationIMAPFolder=openFolder(destinationStoredFolderId);
+    destinationIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
+    List<Message> messages=getMessages(sourceIMAPFolder,messageIds,deleteMissingMessages);
+    for (    Message message : messages) {
+      destinationIMAPFolder.appendMessages(new Message[]{message});
       message.setFlag(Flags.Flag.DELETED,true);
     }
   }
@@ -16,7 +16,7 @@
     throw new MailException(me);
   }
  finally {
-    closeFolder(sourceFolder,true);
-    closeFolder(destinationFolder,false);
+    closeFolder(sourceIMAPFolder,true);
+    closeFolder(destinationIMAPFolder,false);
   }
 }

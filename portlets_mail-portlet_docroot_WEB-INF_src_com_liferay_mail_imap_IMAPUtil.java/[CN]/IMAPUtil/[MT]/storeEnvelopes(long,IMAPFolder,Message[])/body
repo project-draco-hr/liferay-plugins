@@ -1,0 +1,32 @@
+{
+  StopWatch stopWatch=null;
+  if (_log.isDebugEnabled()) {
+    stopWatch=new StopWatch();
+    stopWatch.start();
+  }
+  try {
+    FetchProfile fetchProfile=new FetchProfile();
+    fetchProfile.add(UIDFolder.FetchProfileItem.UID);
+    fetchProfile.add(UIDFolder.FetchProfileItem.ENVELOPE);
+    imapFolder.fetch(messages,fetchProfile);
+    for (    Message message : messages) {
+      String sender=InternetAddressUtil.toString(message.getFrom());
+      String to=InternetAddressUtil.toString(message.getRecipients(RecipientType.TO));
+      String cc=InternetAddressUtil.toString(message.getRecipients(RecipientType.CC));
+      String bcc=InternetAddressUtil.toString(message.getRecipients(RecipientType.BCC));
+      Date sentDate=message.getSentDate();
+      String subject=message.getSubject();
+      long messageId=imapFolder.getUID(message);
+      MessageLocalServiceUtil.addMessage(_user.getUserId(),storedFolderId,sender,to,cc,bcc,sentDate,subject,null,StringPool.BLANK,messageId);
+    }
+    com.liferay.mail.model.Folder storedFolder=FolderLocalServiceUtil.getFolder(storedFolderId);
+    FolderLocalServiceUtil.updateFolder(storedFolderId,storedFolder.getFullName(),storedFolder.getDisplayName(),imapFolder.getMessageCount());
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+  if (_log.isDebugEnabled()) {
+    stopWatch.stop();
+    _log.debug("Downloaded " + messages.length + " messages from folder "+ imapFolder.getFullName()+ " completed in "+ stopWatch.getTime()+ " ms");
+  }
+}

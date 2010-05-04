@@ -1,17 +1,17 @@
 {
-  javax.mail.Message[] messages=event.getMessages();
+  Message[] messages=messageCountEvent.getMessages();
   IMAPFolder imapFolder=null;
   try {
     imapFolder=_imapUtil.openFolder((IMAPFolder)messages[0].getFolder());
-    Folder folder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
-    long[] remoteMessageIds=_imapUtil.getMessageUIDs(imapFolder,messages);
-    for (    long remoteMessageId : remoteMessageIds) {
-      Message message=MessageLocalServiceUtil.getMessage(folder.getFolderId(),remoteMessageId);
-      MessageLocalServiceUtil.deleteMessage(message.getMessageId());
+    Folder localFolder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
+    long[] messageIds=_imapUtil.getMessageUIDs(imapFolder,messages);
+    for (    long messageId : messageIds) {
+      com.liferay.mail.model.Message localMessage=MessageLocalServiceUtil.getMessage(localFolder.getFolderId(),messageId);
+      MessageLocalServiceUtil.deleteMessage(localMessage.getMessageId());
     }
   }
  catch (  Exception e) {
-    _log.error("Unable to delete messages via listener",e);
+    _log.error("Unable to delete messages",e);
   }
  finally {
     try {

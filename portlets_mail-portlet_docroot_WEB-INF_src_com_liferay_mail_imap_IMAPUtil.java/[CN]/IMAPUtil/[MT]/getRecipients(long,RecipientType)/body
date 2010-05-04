@@ -1,14 +1,14 @@
 {
   try {
-    Message message=MessageLocalServiceUtil.getMessage(messageId);
+    com.liferay.mail.model.Message storedMessage=MessageLocalServiceUtil.getMessage(storedMessageId);
     if (recipientType.equals(RecipientType.TO)) {
-      return InternetAddress.parse(message.getTo());
+      return InternetAddress.parse(storedMessage.getTo());
     }
  else     if (recipientType.equals(RecipientType.CC)) {
-      return InternetAddress.parse(message.getCc());
+      return InternetAddress.parse(storedMessage.getCc());
     }
  else     if (recipientType.equals(RecipientType.BCC)) {
-      return InternetAddress.parse(message.getBcc());
+      return InternetAddress.parse(storedMessage.getBcc());
     }
  else {
       throw new IllegalArgumentException("Invalid recipient type " + recipientType);

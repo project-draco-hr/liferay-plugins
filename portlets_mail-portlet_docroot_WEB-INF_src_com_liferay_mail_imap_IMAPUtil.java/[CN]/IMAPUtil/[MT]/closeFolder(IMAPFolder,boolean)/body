@@ -1,11 +1,12 @@
 {
   try {
-    if ((folder != null) && (folder.isOpen())) {
-      if (expunge) {
-        folder.expunge();
-      }
-      folder.close(expunge);
+    if ((imapFolder == null) || !imapFolder.isOpen()) {
+      return;
     }
+    if (expunge) {
+      imapFolder.expunge();
+    }
+    imapFolder.close(expunge);
   }
  catch (  MessagingException me) {
     throw new MailException(me);

@@ -1,25 +1,25 @@
 {
-  boolean incomingConnection=false;
-  boolean outgoingConnection=false;
+  boolean failedIncomingConnection=false;
   try {
     testIncomingConnection();
-    incomingConnection=true;
   }
  catch (  MailException me) {
+    failedIncomingConnection=true;
   }
+  boolean failedOutgoingConnection=false;
   try {
     testOutgoingConnection();
-    outgoingConnection=true;
   }
  catch (  MailException me) {
+    failedOutgoingConnection=true;
   }
-  if (!incomingConnection && !outgoingConnection) {
+  if (failedIncomingConnection || failedOutgoingConnection) {
     throw new MailException(MailException.ACCOUNT_CONNECTIONS_FAILED);
   }
- else   if (!incomingConnection) {
+ else   if (failedIncomingConnection) {
     throw new MailException(MailException.ACCOUNT_INCOMING_CONNECTION_FAILED);
   }
- else   if (!outgoingConnection) {
+ else   if (failedOutgoingConnection) {
     throw new MailException(MailException.ACCOUNT_OUTGOING_CONNECTION_FAILED);
   }
 }

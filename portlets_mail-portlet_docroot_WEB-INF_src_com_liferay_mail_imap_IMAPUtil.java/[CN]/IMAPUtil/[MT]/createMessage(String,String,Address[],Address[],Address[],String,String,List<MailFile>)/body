@@ -1,9 +1,9 @@
 {
-  javax.mail.Message message=new MimeMessage(_connection.getSession());
+  Message message=new MimeMessage(_imapConnection.getSession());
   message.setFrom(new InternetAddress(sender,personalName));
-  message.addRecipients(javax.mail.Message.RecipientType.TO,to);
-  message.addRecipients(javax.mail.Message.RecipientType.CC,cc);
-  message.addRecipients(javax.mail.Message.RecipientType.BCC,bcc);
+  message.addRecipients(Message.RecipientType.TO,to);
+  message.addRecipients(Message.RecipientType.CC,cc);
+  message.addRecipients(Message.RecipientType.BCC,bcc);
   message.setSentDate(new Date());
   message.setSubject(subject);
   MimeMultipart multipart=new MimeMultipart();
@@ -13,15 +13,14 @@
   if (mailFiles != null) {
     for (    MailFile mailFile : mailFiles) {
       File file=mailFile.getFile();
-      String fileName=mailFile.getFileName();
       if (!file.exists()) {
         continue;
       }
       DataSource dataSource=new FileDataSource(file);
-      BodyPart messageAttachmentPart=new MimeBodyPart();
-      messageAttachmentPart.setDataHandler(new DataHandler(dataSource));
-      messageAttachmentPart.setFileName(fileName);
-      multipart.addBodyPart(messageAttachmentPart);
+      BodyPart attachmentBodyPart=new MimeBodyPart();
+      attachmentBodyPart.setDataHandler(new DataHandler(dataSource));
+      attachmentBodyPart.setFileName(mailFile.getFileName());
+      multipart.addBodyPart(attachmentBodyPart);
     }
   }
   message.setContent(multipart);

@@ -2,18 +2,19 @@
   try {
     String fullName=displayName;
     if (Validator.isNotNull(_account.getFolderPrefix())) {
-      IMAPFolder defaultFolder=(IMAPFolder)_connection.getStore(true).getDefaultFolder();
-      fullName=_account.getFolderPrefix() + defaultFolder.getSeparator() + displayName;
+      Store store=_imapConnection.getStore(true);
+      IMAPFolder defaultIMAPFolder=(IMAPFolder)store.getDefaultFolder();
+      fullName=_account.getFolderPrefix() + defaultIMAPFolder.getSeparator() + displayName;
     }
-    IMAPFolder newFolder=getFolder(fullName);
-    if (newFolder.exists()) {
+    IMAPFolder imapFolder=getFolder(fullName);
+    if (imapFolder.exists()) {
       throw new MailException(MailException.FOLDER_ALREADY_EXISTS);
     }
  else {
-      if (newFolder.create(IMAPFolder.HOLDS_MESSAGES)) {
-        return new String[]{newFolder.getFullName(),newFolder.getName()};
+      if (imapFolder.create(IMAPFolder.HOLDS_MESSAGES)) {
+        return new String[]{imapFolder.getFullName(),imapFolder.getName()};
       }
-      throw new MailException(MailException.FOLDER_DENIED_BY_SERVER);
+      throw new MailException(MailException.FOLDER_CREATE_FAILED);
     }
   }
  catch (  MessagingException me) {

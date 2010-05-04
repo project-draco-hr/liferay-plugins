@@ -1,0 +1,16 @@
+{
+  for (  Folder folder : folders) {
+    try {
+      int folderType=folder.getType();
+      if ((folderType & Folder.HOLDS_MESSAGES) != 0) {
+        allFolders.add(folder);
+      }
+      if ((folderType & Folder.HOLDS_FOLDERS) != 0) {
+        getFolders(allFolders,folder.list());
+      }
+    }
+ catch (    MessagingException me) {
+      _log.error("Unable to get folder " + folder.getFullName(),me);
+    }
+  }
+}
