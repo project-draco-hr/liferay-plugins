@@ -54,5 +54,11 @@
   if (fields.contains(Person.Field.UTC_OFFSET.toString())) {
     person.setUtcOffset(new Long(user.getTimeZone().getRawOffset()));
   }
+  if (securityToken.getOwnerId().equals(person.getId())) {
+    person.setIsOwner(true);
+  }
+  if (securityToken.getViewerId().equals(person.getId())) {
+    person.setIsViewer(true);
+  }
   return person;
 }
