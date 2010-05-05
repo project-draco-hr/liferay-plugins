@@ -1,0 +1,15 @@
+{
+  try {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Removing message accounts for user " + user.getUserId());
+    }
+    List<Account> accounts=AccountLocalServiceUtil.getAccounts(user.getUserId());
+    for (    Account account : accounts) {
+      Mailbox mailbox=MailboxFactoryUtil.getMailbox(user.getUserId(),account.getAccountId());
+      mailbox.deleteAccount();
+    }
+  }
+ catch (  Exception e) {
+    _log.error("Unable to remove message accounts for user " + user.getUserId());
+  }
+}
