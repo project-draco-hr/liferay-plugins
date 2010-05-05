@@ -1,0 +1,22 @@
+{
+  Group group=themeDisplay.getScopeGroup();
+  String descriptiveName=HtmlUtil.escape(group.getDescriptiveName());
+  String name=descriptiveName;
+  String description=descriptiveName;
+  String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
+  String feedURL=layoutFullURL;
+  String entryURL=layoutFullURL;
+  boolean isDynamicPortlet=true;
+  LayoutTypePortlet layoutTypePortlet=themeDisplay.getLayoutTypePortlet();
+  if (layoutTypePortlet.hasPortletId("1_WAR_knowledgebaseportlet")) {
+    long scopeGroupId=PortalUtil.getScopeGroupId(themeDisplay.getLayout(),"1_WAR_knowledgebaseportlet");
+    if (group.getGroupId() == scopeGroupId) {
+      isDynamicPortlet=false;
+    }
+  }
+  if (isDynamicPortlet) {
+    feedURL=null;
+    entryURL=null;
+  }
+  return exportToRSS(name,description,type,version,displayStyle,feedURL,entryURL,filterGroupArticles(group,max),themeDisplay);
+}

@@ -1,0 +1,49 @@
+{
+  List<SyndEntry> syndEntries=new ArrayList<SyndEntry>();
+  for (  Article article : articles) {
+    String value=null;
+    if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
+      value=StringUtil.shorten(HtmlUtil.extractText(article.getContent()),200);
+    }
+ else     if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
+      value=StringPool.BLANK;
+    }
+ else {
+      value=StringUtil.replace(article.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + themeDisplay.getURLPortal() + "/","src=\"" + themeDisplay.getURLPortal() + "/"});
+    }
+    String author=null;
+    String userName=PortalUtil.getUserName(article.getUserId(),article.getUserName());
+    author=HtmlUtil.escape(userName);
+    String link=entryURL;
+    if (link != null) {
+      String namespace=PortalUtil.getPortletNamespace("1_WAR_knowledgebaseportlet");
+      link=HttpUtil.setParameter(link,"p_p_id","1_WAR_knowledgebaseportlet");
+      link=HttpUtil.setParameter(link,namespace + "jspPage","/kb/view_article.jsp");
+      link=HttpUtil.setParameter(link,namespace + "resourcePrimKey",article.getResourcePrimKey());
+    }
+    SyndContent syndContent=new SyndContentImpl();
+    syndContent.setType(RSSUtil.DEFAULT_ENTRY_TYPE);
+    syndContent.setValue(value);
+    SyndEntry syndEntry=new SyndEntryImpl();
+    syndEntry.setAuthor(author);
+    syndEntry.setDescription(syndContent);
+    syndEntry.setLink(link);
+    syndEntry.setPublishedDate(article.getCreateDate());
+    syndEntry.setTitle(article.getTitle());
+    syndEntry.setUpdatedDate(article.getModifiedDate());
+    syndEntry.setUri(syndEntry.getLink());
+    syndEntries.add(syndEntry);
+  }
+  SyndFeed syndFeed=new SyndFeedImpl();
+  syndFeed.setDescription(description);
+  syndFeed.setEntries(syndEntries);
+  syndFeed.setFeedType(RSSUtil.getFeedType(type,version));
+  syndFeed.setLink(feedURL);
+  syndFeed.setTitle(name);
+  try {
+    return RSSUtil.export(syndFeed);
+  }
+ catch (  FeedException fe) {
+    throw new SystemException(fe);
+  }
+}
