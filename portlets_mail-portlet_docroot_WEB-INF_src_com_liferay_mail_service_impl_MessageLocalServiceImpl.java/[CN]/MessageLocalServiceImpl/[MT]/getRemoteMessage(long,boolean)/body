@@ -8,10 +8,9 @@
  else {
     dynamicQuery.addOrder(OrderFactoryUtil.desc("remoteMessageId"));
   }
-  List<Object> results=messagePersistence.findWithDynamicQuery(dynamicQuery,0,1);
-  if (results.size() > 0) {
-    List<Message> messages=toMessages(results);
-    return messages.get(0);
+  List<Message> messages=messagePersistence.findWithDynamicQuery(dynamicQuery,0,1);
+  if (messages.isEmpty()) {
+    throw new NoSuchMessageException();
   }
-  return null;
+  return messages.get(0);
 }

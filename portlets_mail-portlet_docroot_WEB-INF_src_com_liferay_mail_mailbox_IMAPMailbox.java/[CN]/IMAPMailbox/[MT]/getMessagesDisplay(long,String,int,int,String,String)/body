@@ -1,5 +1,4 @@
 {
-  Folder folder=FolderLocalServiceUtil.getFolder(folderId);
   if (orderByField.equals(MailConstants.ORDER_BY_ADDRESS)) {
     if (account.getSentFolderId() == folderId) {
       orderByField="to";
@@ -9,16 +8,15 @@
     }
   }
  else   if (!orderByField.equals(MailConstants.ORDER_BY_SENT_DATE) && !orderByField.equals(MailConstants.ORDER_BY_SIZE) && !orderByField.equals(MailConstants.ORDER_BY_SUBJECT)) {
-    _log.error("unknown orderbyfield " + orderByField);
     orderByField=MailConstants.ORDER_BY_SENT_DATE;
   }
-  keywords=keywords.trim();
   List<Message> messages=new ArrayList<Message>();
   int messageCount=MessageLocalServiceUtil.populateMessages(messages,folderId,keywords,pageNumber,messagesPerPage,orderByField,orderByType);
   if (Validator.isNotNull(keywords)) {
     return new MessagesDisplay(messages,pageNumber,messagesPerPage,messageCount);
   }
  else {
+    Folder folder=FolderLocalServiceUtil.getFolder(folderId);
     return new MessagesDisplay(messages,pageNumber,messagesPerPage,folder.getRemoteMessageCount());
   }
 }

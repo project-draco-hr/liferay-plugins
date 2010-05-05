@@ -1,14 +1,12 @@
 {
-  IMAPUtil imapUtil=getIMAPUtil();
-  long[] remoteMessageIds=imapUtil.getMessageUIDs(folderId,pageNumber,messagesPerPage);
+  long[] remoteMessageIds=_imapUtil.getMessageUIDs(folderId,pageNumber,messagesPerPage);
   List<Long> missingRemoteMessageIds=new ArrayList<Long>();
   for (  long remoteMessageId : remoteMessageIds) {
     try {
       MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
     }
  catch (    NoSuchMessageException nsme) {
-      _log.debug("remoteMessageId not cached " + remoteMessageId);
-      missingRemoteMessageIds.add(new Long(remoteMessageId));
+      missingRemoteMessageIds.add(remoteMessageId);
     }
   }
   if (!missingRemoteMessageIds.isEmpty()) {

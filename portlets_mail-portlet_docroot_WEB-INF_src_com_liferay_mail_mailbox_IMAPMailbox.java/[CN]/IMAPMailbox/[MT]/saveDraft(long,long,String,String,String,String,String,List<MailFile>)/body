@@ -1,19 +1,21 @@
 {
   Account account=AccountLocalServiceUtil.getAccount(accountId);
-  String sender=user.getFullName().concat(" <").concat(account.getAddress()).concat(">");
-  String flags=MailConstants.FLAG_DRAFT + StringPool.COMMA;
-  long remoteMessageId=0;
-  Date sentDate=null;
-  InternetAddress[] parsedTo=parseAddresses(to);
-  InternetAddress[] parsedCc=parseAddresses(cc);
-  InternetAddress[] parsedBcc=parseAddresses(bcc);
-  if (parsedTo.length + parsedCc.length + parsedBcc.length == 0) {
+  StringBundler sb=new StringBundler();
+  sb.append(user.getFullName());
+  sb.append(" <");
+  sb.append(account.getAddress());
+  sb.append(StringPool.GREATER_THAN);
+  String sender=sb.toString();
+  Address[] toAddresses=parseAddresses(to);
+  Address[] ccAddresses=parseAddresses(cc);
+  Address[] bccAddresses=parseAddresses(bcc);
+  if ((toAddresses.length == 0) && (ccAddresses.length == 0) && (bccAddresses.length == 0)) {
     throw new MailException(MailException.MESSAGE_HAS_NO_RECIPIENTS);
   }
   if (messageId != 0) {
-    return MessageLocalServiceUtil.updateMessage(messageId,account.getDraftFolderId(),sender,InternetAddressUtil.toString(parsedTo),InternetAddressUtil.toString(parsedCc),InternetAddressUtil.toString(parsedBcc),sentDate,subject,body,flags,remoteMessageId);
+    return MessageLocalServiceUtil.updateMessage(messageId,account.getDraftFolderId(),sender,InternetAddressUtil.toString(toAddresses),InternetAddressUtil.toString(ccAddresses),InternetAddressUtil.toString(bccAddresses),null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
   }
  else {
-    return MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,sentDate,subject,body,flags,remoteMessageId);
+    return MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
   }
 }

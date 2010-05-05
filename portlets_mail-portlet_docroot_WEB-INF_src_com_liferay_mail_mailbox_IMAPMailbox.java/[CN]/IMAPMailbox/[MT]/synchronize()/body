@@ -1,35 +1,38 @@
 {
-  IMAPUtil imapUtil=getIMAPUtil();
-  _log.debug("Synchronizing account, updating folders");
-  List<javax.mail.Folder> imapFolders=imapUtil.getFolders();
+  if (_log.isDebugEnabled()) {
+    _log.debug("Synchronizing account");
+  }
+  List<javax.mail.Folder> imapFolders=_imapUtil.getFolders();
   long draftFolderId=account.getDraftFolderId();
   long inboxFolderId=account.getInboxFolderId();
   long sentFolderId=account.getSentFolderId();
   long trashFolderId=account.getTrashFolderId();
   for (  javax.mail.Folder imapFolder : imapFolders) {
-    Folder folder;
+    Folder folder=null;
     try {
       folder=FolderLocalServiceUtil.getFolder(account.getAccountId(),imapFolder.getFullName());
     }
- catch (    NoSuchFolderException fe) {
+ catch (    NoSuchFolderException nsfe) {
       folder=FolderLocalServiceUtil.addFolder(user.getUserId(),account.getAccountId(),imapFolder.getFullName(),imapFolder.getName(),0);
     }
     String folderName=imapFolder.getName().toLowerCase();
-    if ((inboxFolderId == 0) && (folderName.indexOf("inbox") != -1)) {
-      inboxFolderId=folder.getFolderId();
-    }
- else     if ((draftFolderId == 0) && (folderName.indexOf("draft") != -1)) {
+    if ((draftFolderId == 0) && folderName.contains("draft")) {
       draftFolderId=folder.getFolderId();
     }
- else     if ((sentFolderId == 0) && (folderName.indexOf("sent") != -1)) {
+ else     if ((inboxFolderId == 0) && folderName.contains("inbox")) {
+      inboxFolderId=folder.getFolderId();
+    }
+ else     if ((sentFolderId == 0) && folderName.contains("sent")) {
       sentFolderId=folder.getFolderId();
     }
- else     if ((trashFolderId == 0) && (folderName.indexOf("trash") != -1)) {
+ else     if ((trashFolderId == 0) && folderName.contains("trash")) {
       trashFolderId=folder.getFolderId();
     }
   }
-  AccountLocalServiceUtil.updateAccountFolders(account.getAccountId(),inboxFolderId,draftFolderId,sentFolderId,trashFolderId);
-  _log.debug("Synchronizing account, downloading new messages");
+  AccountLocalServiceUtil.updateFolders(account.getAccountId(),inboxFolderId,draftFolderId,sentFolderId,trashFolderId);
+  if (_log.isDebugEnabled()) {
+    _log.debug("Downloading new messages");
+  }
   List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
   for (  Folder folder : folders) {
     synchronizeFolder(folder.getFolderId());

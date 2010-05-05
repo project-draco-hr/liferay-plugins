@@ -1,4 +1,12 @@
 {
+  Account account=AccountLocalServiceUtil.getAccount(accountId);
+  Message message=MessageLocalServiceUtil.getMessage(messageId);
+  Address[] toAddresses=parseAddresses(message.getTo());
+  Address[] ccAddresses=parseAddresses(message.getCc());
+  Address[] bccAddresses=parseAddresses(message.getBcc());
+  if ((toAddresses.length == 0) && (ccAddresses.length == 0) && (bccAddresses.length == 0)) {
+    throw new MailException(MailException.MESSAGE_HAS_NO_RECIPIENTS);
+  }
   List<Attachment> attachments=AttachmentLocalServiceUtil.getAttachments(messageId);
   List<MailFile> mailFiles=new ArrayList<MailFile>();
   for (  Attachment attachment : attachments) {
@@ -6,11 +14,5 @@
     MailFile mailFile=new MailFile(file,attachment.getFileName(),attachment.getSize());
     mailFiles.add(mailFile);
   }
-  IMAPUtil imapUtil=getIMAPUtil();
-  Message message=MessageLocalServiceUtil.getMessage(messageId);
-  Address[] to=parseAddresses(message.getTo());
-  Address[] cc=parseAddresses(message.getCc());
-  Address[] bcc=parseAddresses(message.getBcc());
-  Account account=AccountLocalServiceUtil.getAccount(accountId);
-  imapUtil.sendMessage(account.getPersonalName(),account.getAddress(),to,cc,bcc,message.getSubject(),message.getBody(),mailFiles);
+  _imapUtil.sendMessage(account.getPersonalName(),account.getAddress(),toAddresses,ccAddresses,bccAddresses,message.getSubject(),message.getBody(),mailFiles);
 }

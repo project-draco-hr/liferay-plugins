@@ -5,7 +5,12 @@
     for (int i=0; i < internetAddresses.length; i++) {
       InternetAddress internetAddress=internetAddresses[i];
       if (!Validator.isEmailAddress(internetAddress.getAddress())) {
-        throw new MailException(MailException.MESSAGE_INVALID_ADDRESS,internetAddress.getPersonal().concat("<").concat(internetAddress.getAddress()).concat(">"));
+        StringBundler sb=new StringBundler(4);
+        sb.append(internetAddress.getPersonal());
+        sb.append(StringPool.LESS_THAN);
+        sb.append(internetAddress.getAddress());
+        sb.append(StringPool.GREATER_THAN);
+        throw new MailException(MailException.MESSAGE_INVALID_ADDRESS,sb.toString());
       }
     }
   }
