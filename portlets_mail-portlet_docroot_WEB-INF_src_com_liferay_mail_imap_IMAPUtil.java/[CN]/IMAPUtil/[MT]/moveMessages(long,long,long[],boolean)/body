@@ -2,14 +2,14 @@
   IMAPFolder sourceIMAPFolder=null;
   IMAPFolder destinationIMAPFolder=null;
   try {
-    sourceIMAPFolder=openFolder(sourceStoredFolderId);
+    sourceIMAPFolder=openFolder(sourceFolderId);
     sourceIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    destinationIMAPFolder=openFolder(destinationStoredFolderId);
+    destinationIMAPFolder=openFolder(destinationFolderId);
     destinationIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    List<Message> messages=getMessages(sourceIMAPFolder,messageIds,deleteMissingMessages);
-    for (    Message message : messages) {
-      destinationIMAPFolder.appendMessages(new Message[]{message});
-      message.setFlag(Flags.Flag.DELETED,true);
+    List<Message> jxMessages=getMessages(sourceIMAPFolder,messageIds,deleteMissingMessages);
+    for (    Message jxMessage : jxMessages) {
+      destinationIMAPFolder.appendMessages(new Message[]{jxMessage});
+      jxMessage.setFlag(Flags.Flag.DELETED,true);
     }
   }
  catch (  MessagingException me) {

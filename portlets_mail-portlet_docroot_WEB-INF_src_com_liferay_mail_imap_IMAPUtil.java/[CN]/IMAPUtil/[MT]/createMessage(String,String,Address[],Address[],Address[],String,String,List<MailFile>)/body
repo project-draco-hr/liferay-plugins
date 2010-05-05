@@ -1,11 +1,11 @@
 {
-  Message message=new MimeMessage(_imapConnection.getSession());
-  message.setFrom(new InternetAddress(sender,personalName));
-  message.addRecipients(Message.RecipientType.TO,to);
-  message.addRecipients(Message.RecipientType.CC,cc);
-  message.addRecipients(Message.RecipientType.BCC,bcc);
-  message.setSentDate(new Date());
-  message.setSubject(subject);
+  Message jxMessage=new MimeMessage(_imapConnection.getSession());
+  jxMessage.setFrom(new InternetAddress(sender,personalName));
+  jxMessage.addRecipients(Message.RecipientType.TO,to);
+  jxMessage.addRecipients(Message.RecipientType.CC,cc);
+  jxMessage.addRecipients(Message.RecipientType.BCC,bcc);
+  jxMessage.setSentDate(new Date());
+  jxMessage.setSubject(subject);
   MimeMultipart multipart=new MimeMultipart();
   BodyPart messageBodyPart=new MimeBodyPart();
   messageBodyPart.setContent(body,ContentTypes.TEXT_HTML_UTF8);
@@ -23,6 +23,6 @@
       multipart.addBodyPart(attachmentBodyPart);
     }
   }
-  message.setContent(multipart);
-  return message;
+  jxMessage.setContent(multipart);
+  return jxMessage;
 }

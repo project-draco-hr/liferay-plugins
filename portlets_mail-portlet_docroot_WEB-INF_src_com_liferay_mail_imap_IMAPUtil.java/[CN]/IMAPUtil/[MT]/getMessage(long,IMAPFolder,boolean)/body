@@ -1,18 +1,18 @@
 {
-  com.liferay.mail.model.Message storedMessage=null;
+  com.liferay.mail.model.Message message=null;
   try {
-    storedMessage=MessageLocalServiceUtil.getRemoteMessage(storedFolderId,oldest);
+    message=MessageLocalServiceUtil.getRemoteMessage(folderId,oldest);
   }
  catch (  NoSuchMessageException nsme) {
     return null;
   }
-  long messageId=storedMessage.getRemoteMessageId();
-  Message message=getMessage(imapFolder,messageId);
-  if (message == null) {
-    MessageLocalServiceUtil.deleteMessage(storedMessage);
-    return getMessage(storedFolderId,imapFolder,oldest);
+  long remoteMessageId=message.getRemoteMessageId();
+  Message jxMessage=getMessage(imapFolder,remoteMessageId);
+  if (jxMessage == null) {
+    MessageLocalServiceUtil.deleteMessage(message);
+    return getMessage(folderId,imapFolder,oldest);
   }
  else {
-    return message;
+    return jxMessage;
   }
 }

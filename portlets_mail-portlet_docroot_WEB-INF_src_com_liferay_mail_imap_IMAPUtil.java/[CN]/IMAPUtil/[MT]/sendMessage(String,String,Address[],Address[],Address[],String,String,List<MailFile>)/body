@@ -2,12 +2,12 @@
   IMAPFolder imapFolder=null;
   try {
     imapFolder=openFolder(_account.getSentFolderId());
-    Message message=createMessage(personalName,sender,to,cc,bcc,subject,body,mailFiles);
+    Message jxMessage=createMessage(personalName,sender,to,cc,bcc,subject,body,mailFiles);
     Transport transport=_imapConnection.getTransport();
-    transport.sendMessage(message,message.getAllRecipients());
+    transport.sendMessage(jxMessage,jxMessage.getAllRecipients());
     transport.close();
     imapFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account));
-    imapFolder.appendMessages(new Message[]{message});
+    imapFolder.appendMessages(new Message[]{jxMessage});
   }
  catch (  MessagingException me) {
     throw new MailException(me);

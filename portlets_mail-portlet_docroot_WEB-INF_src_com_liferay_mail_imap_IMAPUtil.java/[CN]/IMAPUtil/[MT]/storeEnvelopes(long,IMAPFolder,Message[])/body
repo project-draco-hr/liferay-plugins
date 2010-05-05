@@ -8,25 +8,25 @@
     FetchProfile fetchProfile=new FetchProfile();
     fetchProfile.add(UIDFolder.FetchProfileItem.UID);
     fetchProfile.add(UIDFolder.FetchProfileItem.ENVELOPE);
-    imapFolder.fetch(messages,fetchProfile);
-    for (    Message message : messages) {
-      String sender=InternetAddressUtil.toString(message.getFrom());
-      String to=InternetAddressUtil.toString(message.getRecipients(RecipientType.TO));
-      String cc=InternetAddressUtil.toString(message.getRecipients(RecipientType.CC));
-      String bcc=InternetAddressUtil.toString(message.getRecipients(RecipientType.BCC));
-      Date sentDate=message.getSentDate();
-      String subject=message.getSubject();
-      long messageId=imapFolder.getUID(message);
-      MessageLocalServiceUtil.addMessage(_user.getUserId(),storedFolderId,sender,to,cc,bcc,sentDate,subject,null,StringPool.BLANK,messageId);
+    imapFolder.fetch(jxMessages,fetchProfile);
+    for (    Message jxMessage : jxMessages) {
+      String sender=InternetAddressUtil.toString(jxMessage.getFrom());
+      String to=InternetAddressUtil.toString(jxMessage.getRecipients(RecipientType.TO));
+      String cc=InternetAddressUtil.toString(jxMessage.getRecipients(RecipientType.CC));
+      String bcc=InternetAddressUtil.toString(jxMessage.getRecipients(RecipientType.BCC));
+      Date sentDate=jxMessage.getSentDate();
+      String subject=jxMessage.getSubject();
+      long remoteMessageId=imapFolder.getUID(jxMessage);
+      MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,null,StringPool.BLANK,remoteMessageId);
     }
-    com.liferay.mail.model.Folder storedFolder=FolderLocalServiceUtil.getFolder(storedFolderId);
-    FolderLocalServiceUtil.updateFolder(storedFolderId,storedFolder.getFullName(),storedFolder.getDisplayName(),imapFolder.getMessageCount());
+    com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.getFolder(folderId);
+    FolderLocalServiceUtil.updateFolder(folderId,folder.getFullName(),folder.getDisplayName(),imapFolder.getMessageCount());
   }
  catch (  MessagingException me) {
     throw new MailException(me);
   }
   if (_log.isDebugEnabled()) {
     stopWatch.stop();
-    _log.debug("Downloaded " + messages.length + " messages from folder "+ imapFolder.getFullName()+ " completed in "+ stopWatch.getTime()+ " ms");
+    _log.debug("Downloaded " + jxMessages.length + " messages from folder "+ imapFolder.getFullName()+ " completed in "+ stopWatch.getTime()+ " ms");
   }
 }
