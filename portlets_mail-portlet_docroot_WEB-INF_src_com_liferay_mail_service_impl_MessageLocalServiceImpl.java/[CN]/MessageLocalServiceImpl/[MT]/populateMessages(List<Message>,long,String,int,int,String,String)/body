@@ -16,6 +16,9 @@
   }
   int start=messagesPerPage * (pageNumber - 1);
   int end=messagesPerPage * pageNumber;
-  messages.addAll(messagePersistence.findWithDynamicQuery(dynamicQuery,start,end));
+  List<Object> results=messagePersistence.findWithDynamicQuery(dynamicQuery,start,end);
+  for (  Object result : results) {
+    messages.add((Message)result);
+  }
   return (int)dynamicQueryCount(dynamicQuery);
 }
