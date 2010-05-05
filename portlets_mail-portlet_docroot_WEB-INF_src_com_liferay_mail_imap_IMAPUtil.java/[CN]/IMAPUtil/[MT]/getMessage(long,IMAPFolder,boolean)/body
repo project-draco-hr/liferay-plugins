@@ -1,9 +1,7 @@
 {
   com.liferay.mail.model.Message storedMessage=null;
-  try {
-    storedMessage=MessageLocalServiceUtil.getRemoteMessage(storedFolderId,oldest);
-  }
- catch (  NoSuchMessageException nsme) {
+  storedMessage=MessageLocalServiceUtil.getRemoteMessage(storedFolderId,oldest);
+  if (storedMessage == null) {
     return null;
   }
   long messageId=storedMessage.getRemoteMessageId();
