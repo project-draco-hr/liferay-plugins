@@ -1,33 +1,12 @@
 {
   Message message=findByPrimaryKey(messageId);
-  int count=countByFolderId(folderId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(3);
-    }
-    query.append(_SQL_SELECT_MESSAGE_WHERE);
-    query.append(_FINDER_COLUMN_FOLDERID_FOLDERID_2);
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(MessageModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(folderId);
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,message);
     Message[] array=new MessageImpl[3];
-    array[0]=(Message)objArray[0];
-    array[1]=(Message)objArray[1];
-    array[2]=(Message)objArray[2];
+    array[0]=getByFolderId_PrevAndNext(session,message,folderId,orderByComparator,true);
+    array[1]=message;
+    array[2]=getByFolderId_PrevAndNext(session,message,folderId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {
