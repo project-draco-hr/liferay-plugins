@@ -1,2 +1,37 @@
 {
+  IMAPUtil imapUtil=getIMAPUtil();
+  _log.debug("Synchronizing account, updating folders");
+  List<javax.mail.Folder> imapFolders=imapUtil.getFolders();
+  long draftFolderId=account.getDraftFolderId();
+  long inboxFolderId=account.getInboxFolderId();
+  long sentFolderId=account.getSentFolderId();
+  long trashFolderId=account.getTrashFolderId();
+  for (  javax.mail.Folder imapFolder : imapFolders) {
+    Folder folder;
+    try {
+      folder=FolderLocalServiceUtil.getFolder(account.getAccountId(),imapFolder.getFullName());
+    }
+ catch (    NoSuchFolderException fe) {
+      folder=FolderLocalServiceUtil.addFolder(user.getUserId(),account.getAccountId(),imapFolder.getFullName(),imapFolder.getName(),0);
+    }
+    String folderName=imapFolder.getName().toLowerCase();
+    if ((inboxFolderId == 0) && (folderName.indexOf("inbox") != -1)) {
+      inboxFolderId=folder.getFolderId();
+    }
+ else     if ((draftFolderId == 0) && (folderName.indexOf("draft") != -1)) {
+      draftFolderId=folder.getFolderId();
+    }
+ else     if ((sentFolderId == 0) && (folderName.indexOf("sent") != -1)) {
+      sentFolderId=folder.getFolderId();
+    }
+ else     if ((trashFolderId == 0) && (folderName.indexOf("trash") != -1)) {
+      trashFolderId=folder.getFolderId();
+    }
+  }
+  AccountLocalServiceUtil.updateAccountFolders(account.getAccountId(),inboxFolderId,draftFolderId,sentFolderId,trashFolderId);
+  _log.debug("Synchronizing account, downloading new messages");
+  List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
+  for (  Folder folder : folders) {
+    synchronizeFolder(folder.getFolderId());
+  }
 }

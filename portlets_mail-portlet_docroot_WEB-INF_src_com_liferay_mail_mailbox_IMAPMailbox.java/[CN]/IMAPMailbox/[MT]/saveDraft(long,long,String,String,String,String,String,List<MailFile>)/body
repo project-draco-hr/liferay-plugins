@@ -1,3 +1,19 @@
 {
-  return null;
+  Account account=AccountLocalServiceUtil.getAccount(accountId);
+  String sender=user.getFullName().concat(" <").concat(account.getAddress()).concat(">");
+  String flags=MailConstants.FLAG_DRAFT + StringPool.COMMA;
+  long remoteMessageId=0;
+  Date sentDate=null;
+  InternetAddress[] parsedTo=parseAddresses(to);
+  InternetAddress[] parsedCc=parseAddresses(cc);
+  InternetAddress[] parsedBcc=parseAddresses(bcc);
+  if (parsedTo.length + parsedCc.length + parsedBcc.length == 0) {
+    throw new MailException(MailException.MESSAGE_HAS_NO_RECIPIENTS);
+  }
+  if (messageId != 0) {
+    return MessageLocalServiceUtil.updateMessage(messageId,account.getDraftFolderId(),sender,InternetAddressUtil.toString(parsedTo),InternetAddressUtil.toString(parsedCc),InternetAddressUtil.toString(parsedBcc),sentDate,subject,body,flags,remoteMessageId);
+  }
+ else {
+    return MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,sentDate,subject,body,flags,remoteMessageId);
+  }
 }

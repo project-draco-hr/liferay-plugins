@@ -1,3 +1,12 @@
 {
-  return null;
+  Attachment attachment=AttachmentLocalServiceUtil.getAttachment(attachmentId);
+  Message message=MessageLocalServiceUtil.getMessage(attachment.getMessageId());
+  if (account.getDraftFolderId() == attachment.getFolderId()) {
+    return AttachmentLocalServiceUtil.getInputStream(attachmentId);
+  }
+ else {
+    IMAPUtil imapUtil=getIMAPUtil();
+    Folder folder=FolderLocalServiceUtil.getFolder(attachment.getFolderId());
+    return imapUtil.getAttachment(folder.getFolderId(),message.getRemoteMessageId(),attachment.getContentPath());
+  }
 }

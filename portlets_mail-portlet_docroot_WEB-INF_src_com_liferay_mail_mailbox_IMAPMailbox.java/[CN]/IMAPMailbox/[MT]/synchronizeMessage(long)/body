@@ -1,2 +1,13 @@
 {
+  Message message=MessageLocalServiceUtil.getMessage(messageId);
+  IMAPUtil imapUtil=getIMAPUtil();
+  long remoteMessageId=message.getRemoteMessageId();
+  if (remoteMessageId != 0) {
+    try {
+      imapUtil.storeMessages(message.getFolderId(),new long[]{message.getRemoteMessageId()});
+    }
+ catch (    IOException ioe) {
+      throw new MailException(ioe);
+    }
+  }
 }

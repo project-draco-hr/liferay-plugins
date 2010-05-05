@@ -1,2 +1,16 @@
 {
+  List<Attachment> attachments=AttachmentLocalServiceUtil.getAttachments(messageId);
+  List<MailFile> mailFiles=new ArrayList<MailFile>();
+  for (  Attachment attachment : attachments) {
+    File file=AttachmentLocalServiceUtil.getFile(attachment.getAttachmentId());
+    MailFile mailFile=new MailFile(file,attachment.getFileName(),attachment.getSize());
+    mailFiles.add(mailFile);
+  }
+  IMAPUtil imapUtil=getIMAPUtil();
+  Message message=MessageLocalServiceUtil.getMessage(messageId);
+  Address[] to=parseAddresses(message.getTo());
+  Address[] cc=parseAddresses(message.getCc());
+  Address[] bcc=parseAddresses(message.getBcc());
+  Account account=AccountLocalServiceUtil.getAccount(accountId);
+  imapUtil.sendMessage(account.getPersonalName(),account.getAddress(),to,cc,bcc,message.getSubject(),message.getBody(),mailFiles);
 }

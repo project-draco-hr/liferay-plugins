@@ -1,2 +1,11 @@
 {
+  IMAPUtil imapUtil=getIMAPUtil();
+  Folder folder=FolderLocalServiceUtil.getFolder(folderId);
+  if ((account.getDraftFolderId() != folderId) && (account.getTrashFolderId() != folderId)) {
+    Folder trashFolder=FolderLocalServiceUtil.getFolder(account.getTrashFolderId());
+    imapUtil.moveMessages(folder.getFolderId(),trashFolder.getFolderId(),messageIds,true);
+  }
+ else {
+    imapUtil.deleteMessages(folderId,messageIds);
+  }
 }
