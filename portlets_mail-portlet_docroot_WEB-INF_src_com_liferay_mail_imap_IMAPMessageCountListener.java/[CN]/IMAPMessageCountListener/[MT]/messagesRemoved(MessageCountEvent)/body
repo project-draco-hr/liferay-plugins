@@ -1,13 +1,13 @@
 {
-  Message[] messages=messageCountEvent.getMessages();
+  Message[] jxMessages=messageCountEvent.getMessages();
   IMAPFolder imapFolder=null;
   try {
-    imapFolder=_imapUtil.openFolder((IMAPFolder)messages[0].getFolder());
-    Folder localFolder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
-    long[] messageIds=_imapUtil.getMessageUIDs(imapFolder,messages);
-    for (    long messageId : messageIds) {
-      com.liferay.mail.model.Message localMessage=MessageLocalServiceUtil.getMessage(localFolder.getFolderId(),messageId);
-      MessageLocalServiceUtil.deleteMessage(localMessage.getMessageId());
+    imapFolder=_imapAccessor.openFolder((IMAPFolder)jxMessages[0].getFolder());
+    Folder folder=FolderLocalServiceUtil.getFolder(_account.getAccountId(),imapFolder.getFullName());
+    long[] remoteMessageIds=_imapAccessor.getMessageUIDs(imapFolder,jxMessages);
+    for (    long remoteMessageId : remoteMessageIds) {
+      com.liferay.mail.model.Message message=MessageLocalServiceUtil.getMessage(folder.getFolderId(),remoteMessageId);
+      MessageLocalServiceUtil.deleteMessage(message.getMessageId());
     }
   }
  catch (  Exception e) {
@@ -15,7 +15,7 @@
   }
  finally {
     try {
-      _imapUtil.closeFolder(imapFolder,false);
+      _imapAccessor.closeFolder(imapFolder,false);
     }
  catch (    MailException me) {
       _log.error(me);
