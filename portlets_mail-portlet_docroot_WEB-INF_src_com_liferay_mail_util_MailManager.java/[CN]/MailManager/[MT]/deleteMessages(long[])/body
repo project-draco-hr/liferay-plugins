@@ -1,0 +1,21 @@
+{
+  try {
+    if (messageIds.length > 0) {
+      return createJSONResult("failure","no-messages-selected");
+    }
+    Message message=MessageLocalServiceUtil.getMessage(messageIds[0]);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId());
+    mailbox.deleteMessages(message.getFolderId(),messageIds);
+    Account account=AccountLocalServiceUtil.getAccount(message.getAccountId());
+    if (account.getDraftFolderId() == message.getFolderId()) {
+      return createJSONResult("success","drafts-have-been-discarded");
+    }
+ else {
+      return createJSONResult("success","messages-have-been-deleted");
+    }
+  }
+ catch (  MailException me) {
+    _log.error(me);
+    return createJSONResult("failure","unable-to-delete-messages");
+  }
+}

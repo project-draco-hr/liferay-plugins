@@ -1,0 +1,23 @@
+{
+  try {
+    if (messageIds.length == 0) {
+      return createJSONResult("failure","no-messages-selected");
+    }
+    Folder folder=FolderLocalServiceUtil.getFolder(destinationFolderId);
+    Account account=AccountLocalServiceUtil.getAccount(folder.getAccountId());
+    if ((account.getDraftFolderId() == destinationFolderId) || (account.getSentFolderId() == destinationFolderId)) {
+      throw new MailException(MailException.FOLDER_INVALID_DESTINATION);
+    }
+    Message message=MessageLocalServiceUtil.getMessage(messageIds[0]);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId());
+    mailbox.moveMessages(destinationFolderId,messageIds);
+    return createJSONResult("success","messages-have-been-moved");
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.FOLDER_INVALID_DESTINATION) {
+      return createJSONResult("failure","cant-move-messages-to-this-folder");
+    }
+    _log.error(me);
+    return createJSONResult("failure","unable-to-move-messages");
+  }
+}

@@ -1,0 +1,22 @@
+{
+  String jspPage=resourceRequest.getParameter("jspPage");
+  if (jspPage.equals("/attachment.jsp")) {
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+    long attachmentId=ParamUtil.getLong(resourceRequest,"attachmentId");
+    try {
+      MailManager mailManager=MailManager.getInstance(request);
+      Attachment attachment=AttachmentLocalServiceUtil.getAttachment(attachmentId);
+      InputStream is=mailManager.getAttachment(attachmentId);
+      if (Validator.isNotNull(is)) {
+        String contentType=MimeTypesUtil.getContentType(attachment.getFileName());
+        PortletResponseUtil.sendFile(resourceResponse,attachment.getFileName(),is,contentType);
+      }
+    }
+ catch (    Exception e) {
+      _log.error(e.getMessage());
+    }
+  }
+ else {
+    super.serveResource(resourceRequest,resourceResponse);
+  }
+}

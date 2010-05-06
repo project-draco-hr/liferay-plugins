@@ -1,0 +1,11 @@
+{
+  try {
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),accountId);
+    mailbox.deleteAccount();
+    return createJSONResult("success","account-has-been-deleted");
+  }
+ catch (  MailException me) {
+    _log.error(me);
+    return createJSONResult("failure","unable-to-delete-account");
+  }
+}
