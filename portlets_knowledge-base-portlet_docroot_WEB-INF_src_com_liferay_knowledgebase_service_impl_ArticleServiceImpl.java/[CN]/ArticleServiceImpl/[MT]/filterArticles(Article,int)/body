@@ -1,13 +1,13 @@
 {
-  List<Article> articles=ListUtil.toList(new Article[]{article});
-  if (!ArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
-    articles.remove(article);
+  List<Article> articles=new ArrayList<Article>();
+  if (ArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
+    articles.add(article);
   }
   int index=-1;
   while ((index=index + 1) < articles.size()) {
     Article curArticle=articles.get(index);
-    List<Article> articles2=getGroupArticles(curArticle.getGroupId(),curArticle.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
-    articles.addAll(articles2);
+    List<Article> groupArticles=getGroupArticles(curArticle.getGroupId(),curArticle.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    articles.addAll(groupArticles);
   }
   Collections.sort(articles,new ArticleModifiedDateComparator());
   return ListUtil.subList(articles,0,max);

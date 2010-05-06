@@ -6,15 +6,8 @@
   String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
   String feedURL=layoutFullURL;
   String entryURL=layoutFullURL;
-  boolean isDynamicPortlet=true;
   LayoutTypePortlet layoutTypePortlet=themeDisplay.getLayoutTypePortlet();
-  if (layoutTypePortlet.hasPortletId("1_WAR_knowledgebaseportlet")) {
-    long scopeGroupId=PortalUtil.getScopeGroupId(themeDisplay.getLayout(),"1_WAR_knowledgebaseportlet");
-    if (group.getGroupId() == scopeGroupId) {
-      isDynamicPortlet=false;
-    }
-  }
-  if (isDynamicPortlet) {
+  if (!layoutTypePortlet.hasDefaultScopePortletId(group.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
     feedURL=null;
     entryURL=null;
   }

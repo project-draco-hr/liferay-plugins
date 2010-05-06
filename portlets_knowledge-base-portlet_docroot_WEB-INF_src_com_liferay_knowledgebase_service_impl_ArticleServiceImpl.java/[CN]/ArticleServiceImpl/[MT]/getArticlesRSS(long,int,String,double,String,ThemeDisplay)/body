@@ -6,19 +6,12 @@
   String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
   String feedURL=layoutFullURL;
   String entryURL=layoutFullURL;
-  String namespace=PortalUtil.getPortletNamespace("1_WAR_knowledgebaseportlet");
-  feedURL=HttpUtil.setParameter(feedURL,"p_p_id","1_WAR_knowledgebaseportlet");
+  String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
+  feedURL=HttpUtil.setParameter(feedURL,"p_p_id",PortletKeys.KNOWLEDGE_BASE_ADMIN);
   feedURL=HttpUtil.setParameter(feedURL,namespace + "jspPage","/admin/view_article.jsp");
   feedURL=HttpUtil.setParameter(feedURL,namespace + "resourcePrimKey",article.getResourcePrimKey());
-  boolean isDynamicPortlet=true;
   LayoutTypePortlet layoutTypePortlet=themeDisplay.getLayoutTypePortlet();
-  if (layoutTypePortlet.hasPortletId("1_WAR_knowledgebaseportlet")) {
-    long scopeGroupId=PortalUtil.getScopeGroupId(themeDisplay.getLayout(),"1_WAR_knowledgebaseportlet");
-    if (article.getGroupId() == scopeGroupId) {
-      isDynamicPortlet=false;
-    }
-  }
-  if (isDynamicPortlet) {
+  if (!layoutTypePortlet.hasDefaultScopePortletId(article.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
     feedURL=null;
     entryURL=null;
   }
