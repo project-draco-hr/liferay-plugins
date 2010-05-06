@@ -1,11 +1,11 @@
 {
   try {
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_userId,protocol);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),protocol);
     mailbox.addAccount(address,personalName,protocol,incomingHostName,incomingPort,incomingSecure,outgoingHostName,outgoingPort,outgoingSecure,login,unencryptedPassword,savePassword,signature,useSignature,folderPrefix,defaultSender);
-    return createJSONResult(true,"account-has-been-created");
+    return createJSONResult("success","account-has-been-created");
   }
  catch (  MailException me) {
-    _log.error(me);
-    return createJSONResult(false,"unable-to-add-account");
+    _log.error(me,me);
+    return createJSONResult("failure","unable-to-add-account");
   }
 }
