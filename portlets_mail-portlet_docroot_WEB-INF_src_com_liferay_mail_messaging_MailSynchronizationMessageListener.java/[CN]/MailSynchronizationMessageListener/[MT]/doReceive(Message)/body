@@ -1,0 +1,49 @@
+{
+  JSONObject jsonObj=(JSONObject)message.getPayload();
+  long userId=jsonObj.getLong("userId");
+  long accountId=jsonObj.getLong("accountId");
+  long folderId=jsonObj.getLong("folderId");
+  long messageId=jsonObj.getLong("messageId");
+  int pageNumber=jsonObj.getInt("pageNumber");
+  int messagesPerPage=jsonObj.getInt("messagesPerPage");
+  String password=jsonObj.getString("password");
+  if (_log.isDebugEnabled()) {
+    _log.debug("Starting synch for accountId " + accountId + " folderId "+ folderId+ " and messageId "+ messageId);
+  }
+  String key=AccountLock.getKey(userId,accountId,folderId,messageId);
+  try {
+    if (!password.equals(StringPool.BLANK) && AccountLock.acquireLock(key)) {
+      Mailbox mailbox=MailboxFactoryUtil.getMailbox(userId,accountId);
+      if (messageId != 0) {
+        mailbox.synchronizeMessage(messageId);
+      }
+ else       if (folderId != 0) {
+        if (pageNumber != 0) {
+          mailbox.synchronizePage(folderId,pageNumber,messagesPerPage);
+        }
+ else {
+          mailbox.synchronizeFolder(folderId);
+        }
+      }
+ else {
+        mailbox.synchronize();
+      }
+    }
+ else {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Unable to acquire synch lock for accountId " + accountId + " and folderId "+ folderId+ " and messageId "+ messageId);
+      }
+    }
+  }
+ catch (  NoSuchAccountException nsae) {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Skipping syncronization of accountId " + accountId);
+    }
+  }
+ finally {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Ending synch for accountId " + accountId + " folderId "+ folderId+ " and messageId "+ messageId);
+    }
+    AccountLock.releaseLock(key);
+  }
+}

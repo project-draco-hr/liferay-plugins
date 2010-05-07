@@ -1,0 +1,12 @@
+{
+  Account account=AccountLocalServiceUtil.getAccount(accountId);
+  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  jsonObj.put("userId",_user.getUserId());
+  jsonObj.put("accountId",accountId);
+  jsonObj.put("folderId",folderId);
+  jsonObj.put("messageId",messageId);
+  jsonObj.put("pageNumber",pageNumber);
+  jsonObj.put("messagesPerPage",messagesPerPage);
+  jsonObj.put("password",account.getPasswordDecrypted());
+  MessageBusUtil.sendMessage("liferay/mail_synchronization",jsonObj);
+}
