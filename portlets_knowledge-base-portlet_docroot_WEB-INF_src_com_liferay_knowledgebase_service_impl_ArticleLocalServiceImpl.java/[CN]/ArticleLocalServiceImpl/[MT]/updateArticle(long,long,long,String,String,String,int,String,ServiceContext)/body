@@ -1,7 +1,6 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Article oldArticle=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
-  Date now=new Date();
   validate(title,content);
   long articleId=counterLocalService.increment();
   Article article=articlePersistence.create(articleId);
@@ -11,7 +10,7 @@
   article.setUserId(user.getUserId());
   article.setUserName(user.getFullName());
   article.setCreateDate(oldArticle.getCreateDate());
-  article.setModifiedDate(now);
+  article.setModifiedDate(serviceContext.getModifiedDate(null));
   article.setParentResourcePrimKey(parentResourcePrimKey);
   article.setVersion(MathUtil.format(oldArticle.getVersion() + 0.1,1,1));
   article.setTitle(title);
