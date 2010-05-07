@@ -1,11 +1,23 @@
 {
+  long importId=CounterLocalServiceUtil.increment();
   Map<Long,Long> resourcePrimKeys=new HashMap<Long,Long>();
-  for (  Element articleEl : root.elements("article")) {
-    String path=articleEl.attributeValue("path");
-    if (!context.isPathNotProcessed(path)) {
-      continue;
+  Map<String,String> dirNames=new HashMap<String,String>();
+  try {
+    if (context.getBooleanParameter(_ARTICLE,"attachments")) {
+      DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+      importArticleAttachments(context,importId,dirNames,root);
     }
-    Article article=(Article)context.getZipEntryAsObject(path);
-    importArticle(context,resourcePrimKeys,articleEl,article);
+    for (    Element articleEl : root.elements("article")) {
+      String path=articleEl.attributeValue("path");
+      if (!context.isPathNotProcessed(path)) {
+        continue;
+      }
+      importArticle(context,resourcePrimKeys,dirNames,articleEl,(Article)context.getZipEntryAsObject(path));
+    }
+  }
+  finally {
+    if (context.getBooleanParameter(_ARTICLE,"attachments")) {
+      DLServiceUtil.deleteDirectory(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+    }
   }
 }

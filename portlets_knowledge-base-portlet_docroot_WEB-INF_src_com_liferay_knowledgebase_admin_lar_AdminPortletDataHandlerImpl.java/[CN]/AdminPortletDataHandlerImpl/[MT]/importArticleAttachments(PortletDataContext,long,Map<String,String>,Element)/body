@@ -1,0 +1,17 @@
+{
+  List<Element> articlesAttachmentsEl=root.elements("article-attachments");
+  for (  Element articleAttachmentsEl : articlesAttachmentsEl) {
+    String resourcePrimKey=articleAttachmentsEl.attributeValue("resource-prim-key");
+    String importPath="knowledgebase/temp/import/" + importId;
+    String dirName=importPath + StringPool.SLASH + resourcePrimKey;
+    DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+    for (    Element fileEl : articleAttachmentsEl.elements("file")) {
+      String shortFileName=fileEl.attributeValue("short-file-name");
+      String fileName=dirName + StringPool.SLASH + shortFileName;
+      byte[] bytes=context.getZipEntryAsByteArray(fileEl.attributeValue("path"));
+      ServiceContext serviceContext=new ServiceContext();
+      DLServiceUtil.addFile(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,bytes);
+    }
+    dirNames.put(resourcePrimKey,dirName);
+  }
+}

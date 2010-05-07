@@ -5,6 +5,10 @@
   for (  Element curArticleEl : articlesEl) {
     Article curArticle=(Article)context.getZipEntryAsObject(curArticleEl.attributeValue("path"));
     long userId=context.getUserId(curArticle.getUserUuid());
+    String curDirName=StringPool.BLANK;
+    if (articlesEl.indexOf(curArticleEl) == (articlesEl.size() - 1)) {
+      curDirName=dirName;
+    }
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setAddCommunityPermissions(true);
     serviceContext.setAddGuestPermissions(true);
@@ -12,10 +16,10 @@
     serviceContext.setModifiedDate(curArticle.getModifiedDate());
     serviceContext.setScopeGroupId(context.getGroupId());
     if (importedArticle == null) {
-      importedArticle=ArticleLocalServiceUtil.addArticle(uuid,userId,parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,dirName,serviceContext);
+      importedArticle=ArticleLocalServiceUtil.addArticle(uuid,userId,parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,curDirName,serviceContext);
     }
  else {
-      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,importedArticle.getResourcePrimKey(),parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,dirName,serviceContext);
+      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,importedArticle.getResourcePrimKey(),parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,curDirName,serviceContext);
     }
   }
   return importedArticle;

@@ -5,6 +5,9 @@
   context.addZipEntry(path,article);
   context.addPermissions(Article.class,article.getResourcePrimKey());
   exportArticleVersions(context,articleEl,article.getResourcePrimKey());
+  if (context.getBooleanParameter(_ARTICLE,"attachments")) {
+    exportArticleAttachments(context,root,article);
+  }
   if (context.getBooleanParameter(_ARTICLE,"comments")) {
     context.addComments(Article.class,article.getResourcePrimKey());
   }
