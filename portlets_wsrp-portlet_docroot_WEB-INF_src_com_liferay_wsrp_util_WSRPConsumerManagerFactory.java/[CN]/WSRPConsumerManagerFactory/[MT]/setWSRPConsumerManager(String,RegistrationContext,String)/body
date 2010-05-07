@@ -1,0 +1,21 @@
+{
+  Map<String,WSRPConsumerManager> wsrpConsumerManagersByUserToken=_wsrpConsumerManagersByUrl.get(url);
+  if (wsrpConsumerManagersByUserToken == null) {
+    wsrpConsumerManagersByUserToken=new ConcurrentHashMap<String,WSRPConsumerManager>();
+    _wsrpConsumerManagersByUrl.put(url,wsrpConsumerManagersByUserToken);
+  }
+  String userTokenKey=userToken;
+  if (Validator.isNull(userTokenKey)) {
+    userTokenKey=_DEFAULT_USER_TOKEN;
+  }
+  try {
+    WSRPConsumerManager wsrpConsumerManager=new WSRPConsumerManager(url,registrationContext,userToken);
+    if (wsrpConsumerManagersByUserToken.get(userTokenKey) == null) {
+      wsrpConsumerManagersByUserToken.put(userTokenKey,wsrpConsumerManager);
+    }
+  }
+ catch (  Exception e) {
+    destroyWSRPConsumerManager(url);
+    throw e;
+  }
+}
