@@ -1,0 +1,11 @@
+{
+  Map<Long,Long> resourcePrimKeys=new HashMap<Long,Long>();
+  for (  Element articleEl : root.elements("article")) {
+    String path=articleEl.attributeValue("path");
+    if (!context.isPathNotProcessed(path)) {
+      continue;
+    }
+    Article article=(Article)context.getZipEntryAsObject(path);
+    importArticle(context,resourcePrimKeys,article);
+  }
+}

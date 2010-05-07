@@ -1,0 +1,31 @@
+{
+  long userId=context.getUserId(article.getUserUuid());
+  long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,article.getParentResourcePrimKey());
+  int priority=article.getPriority();
+  String dirName=StringPool.BLANK;
+  int maxPriority=(int)ArticleLocalServiceUtil.getGroupArticlesCount(context.getGroupId(),parentResourcePrimKey);
+  if (priority > maxPriority) {
+    priority=maxPriority;
+  }
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setCreateDate(article.getCreateDate());
+  serviceContext.setModifiedDate(article.getModifiedDate());
+  serviceContext.setScopeGroupId(context.getGroupId());
+  Article importedArticle=null;
+  if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
+    Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),context.getGroupId());
+    if (existingArticle == null) {
+      importedArticle=ArticleLocalServiceUtil.addArticle(article.getUuid(),userId,parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
+    }
+ else {
+      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
+    }
+  }
+ else {
+    importedArticle=ArticleLocalServiceUtil.addArticle(null,userId,parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
+  }
+  resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+  context.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+}

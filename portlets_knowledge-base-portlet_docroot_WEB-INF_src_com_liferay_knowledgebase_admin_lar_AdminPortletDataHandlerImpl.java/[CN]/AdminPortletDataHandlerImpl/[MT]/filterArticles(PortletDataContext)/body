@@ -1,0 +1,20 @@
+{
+  List<Article> articles=new ArrayList<Article>();
+  List<Article> groupArticles=ArticleLocalServiceUtil.getGroupArticles(context.getGroupId(),0,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
+  for (  Article article : groupArticles) {
+    if (context.isWithinDateRange(article.getModifiedDate())) {
+      articles.add(article);
+    }
+  }
+  int index=-1;
+  while ((index=index + 1) < articles.size()) {
+    Article article=articles.get(index);
+    List<Article> curGroupArticles=ArticleLocalServiceUtil.getGroupArticles(article.getGroupId(),article.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
+    for (    Article curArticle : curGroupArticles) {
+      if (context.isWithinDateRange(curArticle.getModifiedDate())) {
+        articles.add(curArticle);
+      }
+    }
+  }
+  return articles;
+}

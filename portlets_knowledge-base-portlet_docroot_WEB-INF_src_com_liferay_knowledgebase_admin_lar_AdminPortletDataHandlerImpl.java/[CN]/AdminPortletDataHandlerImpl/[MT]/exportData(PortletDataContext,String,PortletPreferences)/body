@@ -1,0 +1,13 @@
+{
+  try {
+    context.addPermissions("com.liferay.knowledgebase.admin",context.getGroupId());
+    Document doc=SAXReaderUtil.createDocument();
+    Element root=doc.addElement("knowledge-base-admin-data");
+    root.addAttribute("group-id",String.valueOf(context.getGroupId()));
+    exportArticles(context,root);
+    return doc.formattedString();
+  }
+ catch (  Exception e) {
+    throw new PortletDataException(e);
+  }
+}
