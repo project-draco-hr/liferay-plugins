@@ -1,33 +1,12 @@
 {
   JIRAChangeGroup jiraChangeGroup=findByPrimaryKey(jiraChangeGroupId);
-  int count=countByJiraIssueId(jiraIssueId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(3);
-    }
-    query.append(_SQL_SELECT_JIRACHANGEGROUP_WHERE);
-    query.append(_FINDER_COLUMN_JIRAISSUEID_JIRAISSUEID_2);
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(JIRAChangeGroupModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(jiraIssueId);
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,jiraChangeGroup);
     JIRAChangeGroup[] array=new JIRAChangeGroupImpl[3];
-    array[0]=(JIRAChangeGroup)objArray[0];
-    array[1]=(JIRAChangeGroup)objArray[1];
-    array[2]=(JIRAChangeGroup)objArray[2];
+    array[0]=getByJiraIssueId_PrevAndNext(session,jiraChangeGroup,jiraIssueId,orderByComparator,true);
+    array[1]=jiraChangeGroup;
+    array[2]=getByJiraIssueId_PrevAndNext(session,jiraChangeGroup,jiraIssueId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {

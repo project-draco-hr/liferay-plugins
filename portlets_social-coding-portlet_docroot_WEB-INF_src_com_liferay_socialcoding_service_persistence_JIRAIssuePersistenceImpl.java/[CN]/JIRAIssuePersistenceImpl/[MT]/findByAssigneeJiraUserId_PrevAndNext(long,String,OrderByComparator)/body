@@ -1,45 +1,12 @@
 {
   JIRAIssue jiraIssue=findByPrimaryKey(jiraIssueId);
-  int count=countByAssigneeJiraUserId(assigneeJiraUserId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(3);
-    }
-    query.append(_SQL_SELECT_JIRAISSUE_WHERE);
-    if (assigneeJiraUserId == null) {
-      query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_1);
-    }
- else {
-      if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_2);
-      }
-    }
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    if (assigneeJiraUserId != null) {
-      qPos.add(assigneeJiraUserId);
-    }
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,jiraIssue);
     JIRAIssue[] array=new JIRAIssueImpl[3];
-    array[0]=(JIRAIssue)objArray[0];
-    array[1]=(JIRAIssue)objArray[1];
-    array[2]=(JIRAIssue)objArray[2];
+    array[0]=getByAssigneeJiraUserId_PrevAndNext(session,jiraIssue,assigneeJiraUserId,orderByComparator,true);
+    array[1]=jiraIssue;
+    array[2]=getByAssigneeJiraUserId_PrevAndNext(session,jiraIssue,assigneeJiraUserId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {

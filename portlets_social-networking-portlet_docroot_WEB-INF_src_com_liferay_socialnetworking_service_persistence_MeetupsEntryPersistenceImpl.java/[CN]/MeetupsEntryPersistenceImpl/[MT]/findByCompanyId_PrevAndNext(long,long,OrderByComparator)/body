@@ -1,33 +1,12 @@
 {
   MeetupsEntry meetupsEntry=findByPrimaryKey(meetupsEntryId);
-  int count=countByCompanyId(companyId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(3);
-    }
-    query.append(_SQL_SELECT_MEETUPSENTRY_WHERE);
-    query.append(_FINDER_COLUMN_COMPANYID_COMPANYID_2);
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(MeetupsEntryModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(companyId);
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,meetupsEntry);
     MeetupsEntry[] array=new MeetupsEntryImpl[3];
-    array[0]=(MeetupsEntry)objArray[0];
-    array[1]=(MeetupsEntry)objArray[1];
-    array[2]=(MeetupsEntry)objArray[2];
+    array[0]=getByCompanyId_PrevAndNext(session,meetupsEntry,companyId,orderByComparator,true);
+    array[1]=meetupsEntry;
+    array[2]=getByCompanyId_PrevAndNext(session,meetupsEntry,companyId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {

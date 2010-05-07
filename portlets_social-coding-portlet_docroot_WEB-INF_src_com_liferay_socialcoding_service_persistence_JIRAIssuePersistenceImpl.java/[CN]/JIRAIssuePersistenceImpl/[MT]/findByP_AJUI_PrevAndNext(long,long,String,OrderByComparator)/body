@@ -1,47 +1,12 @@
 {
   JIRAIssue jiraIssue=findByPrimaryKey(jiraIssueId);
-  int count=countByP_AJUI(projectId,assigneeJiraUserId);
   Session session=null;
   try {
     session=openSession();
-    StringBundler query=null;
-    if (orderByComparator != null) {
-      query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
-    }
- else {
-      query=new StringBundler(4);
-    }
-    query.append(_SQL_SELECT_JIRAISSUE_WHERE);
-    query.append(_FINDER_COLUMN_P_AJUI_PROJECTID_2);
-    if (assigneeJiraUserId == null) {
-      query.append(_FINDER_COLUMN_P_AJUI_ASSIGNEEJIRAUSERID_1);
-    }
- else {
-      if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_P_AJUI_ASSIGNEEJIRAUSERID_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_P_AJUI_ASSIGNEEJIRAUSERID_2);
-      }
-    }
-    if (orderByComparator != null) {
-      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-    }
- else {
-      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
-    }
-    String sql=query.toString();
-    Query q=session.createQuery(sql);
-    QueryPos qPos=QueryPos.getInstance(q);
-    qPos.add(projectId);
-    if (assigneeJiraUserId != null) {
-      qPos.add(assigneeJiraUserId);
-    }
-    Object[] objArray=QueryUtil.getPrevAndNext(q,count,orderByComparator,jiraIssue);
     JIRAIssue[] array=new JIRAIssueImpl[3];
-    array[0]=(JIRAIssue)objArray[0];
-    array[1]=(JIRAIssue)objArray[1];
-    array[2]=(JIRAIssue)objArray[2];
+    array[0]=getByP_AJUI_PrevAndNext(session,jiraIssue,projectId,assigneeJiraUserId,orderByComparator,true);
+    array[1]=jiraIssue;
+    array[2]=getByP_AJUI_PrevAndNext(session,jiraIssue,projectId,assigneeJiraUserId,orderByComparator,false);
     return array;
   }
  catch (  Exception e) {
