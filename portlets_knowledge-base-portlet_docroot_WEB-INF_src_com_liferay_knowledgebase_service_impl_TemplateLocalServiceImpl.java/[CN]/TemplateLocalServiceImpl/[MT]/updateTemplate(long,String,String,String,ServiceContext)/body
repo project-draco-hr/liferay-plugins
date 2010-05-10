@@ -6,5 +6,8 @@
   template.setContent(content);
   template.setDescription(description);
   templatePersistence.update(template,false);
+  if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
+    updateTemplateResources(template,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
   return template;
 }

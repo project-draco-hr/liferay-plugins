@@ -15,5 +15,11 @@
   template.setContent(content);
   template.setDescription(description);
   templatePersistence.update(template,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addTemplateResources(template,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addTemplateResources(template,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
   return template;
 }
