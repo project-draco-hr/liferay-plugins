@@ -1,20 +1,17 @@
 {
   long[] remoteMessageIds=_imapAccessor.getMessageUIDs(folderId,pageNumber,messagesPerPage);
-  List<Long> missingRemoteMessageIds=new ArrayList<Long>();
+  List<Long> missingRemoteMessageIdsList=new ArrayList<Long>();
   for (int i=0; i < remoteMessageIds.length; i++) {
     long remoteMessageId=remoteMessageIds[i];
     try {
       MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
     }
  catch (    NoSuchMessageException nsme) {
-      missingRemoteMessageIds.add(remoteMessageId);
+      missingRemoteMessageIdsList.add(remoteMessageId);
     }
   }
-  if (!missingRemoteMessageIds.isEmpty()) {
-    long[] tempRemoteMessageIds=new long[missingRemoteMessageIds.size()];
-    for (int i=0; i < missingRemoteMessageIds.size(); i++) {
-      tempRemoteMessageIds[i]=missingRemoteMessageIds.get(i);
-    }
-    _imapAccessor.storeEnvelopes(folderId,tempRemoteMessageIds);
+  if (!missingRemoteMessageIdsList.isEmpty()) {
+    long[] missingRemoteMessageIds=ArrayUtil.toArray(missingRemoteMessageIdsList.toArray(new Long[missingRemoteMessageIdsList.size()]));
+    _imapAccessor.storeEnvelopes(folderId,missingRemoteMessageIds);
   }
 }
