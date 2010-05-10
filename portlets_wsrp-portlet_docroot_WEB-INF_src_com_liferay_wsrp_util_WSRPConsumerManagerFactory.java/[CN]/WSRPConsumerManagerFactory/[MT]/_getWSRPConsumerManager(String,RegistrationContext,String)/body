@@ -1,11 +1,18 @@
 {
+  Map<String,WSRPConsumerManager> wsrpConsumerManagersByUserToken=_wsrpConsumerManagersByUrl.get(url);
+  if (wsrpConsumerManagersByUserToken == null) {
+    wsrpConsumerManagersByUserToken=new ConcurrentHashMap<String,WSRPConsumerManager>();
+    _wsrpConsumerManagersByUrl.put(url,wsrpConsumerManagersByUserToken);
+  }
   String userTokenKey=userToken;
   if (Validator.isNull(userTokenKey)) {
     userTokenKey=_DEFAULT_USER_TOKEN;
   }
-  Map<String,WSRPConsumerManager> wsrpConsumerManagersByUserToken=_wsrpConsumerManagersByUrl.get(url);
-  if (wsrpConsumerManagersByUserToken != null) {
-    return wsrpConsumerManagersByUserToken.get(userTokenKey);
+  WSRPConsumerManager wsrpConsumerManager=wsrpConsumerManagersByUserToken.get(userTokenKey);
+  if (wsrpConsumerManager != null) {
+    return wsrpConsumerManager;
   }
-  return new WSRPConsumerManager(url,registrationContext,userToken);
+  wsrpConsumerManager=new WSRPConsumerManager(url,registrationContext,userToken);
+  wsrpConsumerManagersByUserToken.put(userTokenKey,wsrpConsumerManager);
+  return wsrpConsumerManager;
 }
