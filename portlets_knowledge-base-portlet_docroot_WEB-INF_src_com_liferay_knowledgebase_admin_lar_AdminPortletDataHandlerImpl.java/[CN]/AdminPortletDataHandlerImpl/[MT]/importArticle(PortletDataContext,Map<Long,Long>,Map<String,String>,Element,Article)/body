@@ -3,7 +3,7 @@
   long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,article.getParentResourcePrimKey());
   int priority=article.getPriority();
   String dirName=MapUtil.getString(dirNames,String.valueOf(article.getResourcePrimKey()));
-  int maxPriority=(int)ArticleLocalServiceUtil.getGroupArticlesCount(context.getGroupId(),parentResourcePrimKey);
+  int maxPriority=ArticleLocalServiceUtil.getGroupArticlesCount(context.getGroupId(),parentResourcePrimKey);
   if (priority > maxPriority) {
     priority=maxPriority;
   }
@@ -28,7 +28,7 @@
   }
   resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   context.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
-  if (context.getBooleanParameter(_ARTICLE,"comments")) {
+  if (context.getBooleanParameter(_NAMESPACE,"comments")) {
     context.importComments(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey(),context.getGroupId());
   }
 }
