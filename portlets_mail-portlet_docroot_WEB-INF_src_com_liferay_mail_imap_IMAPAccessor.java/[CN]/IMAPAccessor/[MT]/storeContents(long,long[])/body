@@ -16,7 +16,12 @@
       List<MailFile> mailFiles=new ArrayList<MailFile>();
       getParts(_user.getUserId(),bodyPlain,bodyHtml,StringPool.BLANK,jxMessage,mailFiles);
       if (bodyHtml.length() == 0) {
-        bodyHtml=bodyPlain;
+        if (bodyPlain.length() == 0) {
+          bodyHtml.append("&nbsp;");
+        }
+ else {
+          bodyHtml=bodyPlain;
+        }
       }
       if (flags.indexOf(MailConstants.FLAG_SEEN) == -1) {
         jxMessage.setFlag(Flags.Flag.SEEN,false);

@@ -5,10 +5,8 @@
   MessagesDisplay messagesDisplay=getMessagesDisplay(folderId,messageNumber,1,orderByField,orderByType,keywords);
   List<Message> messages=messagesDisplay.getMessages();
   Message message=messages.get(0);
-  if (synchronize && Validator.isNull(message.getBody())) {
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId());
-    mailbox.synchronizeMessage(message.getMessageId());
-    return getMessageDisplay(folderId,keywords,messageNumber,orderByField,orderByType,synchronize);
+  if (Validator.isNull(message.getBody())) {
+    synchronizeMessage(message.getMessageId());
   }
   List<Attachment> attachments=AttachmentLocalServiceUtil.getAttachments(message.getMessageId());
   return new MessageDisplay(message,attachments,messagesDisplay.getMessageCount());
