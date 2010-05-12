@@ -1,0 +1,13 @@
+{
+  List<Template> templates=TemplateUtil.findByGroupId(context.getGroupId());
+  for (  Template template : templates) {
+    if (!context.isWithinDateRange(template.getModifiedDate())) {
+      continue;
+    }
+    String path=context.getPortletPath(PortletKeys.KNOWLEDGE_BASE_ADMIN) + "/templates/" + template.getTemplateId()+ ".xml";
+    if (!context.isPathNotProcessed(path)) {
+      continue;
+    }
+    exportTemplate(context,root,path,template);
+  }
+}

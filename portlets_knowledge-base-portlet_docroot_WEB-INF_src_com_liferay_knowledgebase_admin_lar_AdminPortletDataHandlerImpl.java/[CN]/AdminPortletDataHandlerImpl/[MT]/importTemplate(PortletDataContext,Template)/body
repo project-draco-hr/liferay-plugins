@@ -1,0 +1,23 @@
+{
+  long userId=context.getUserId(template.getUserUuid());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setCreateDate(template.getCreateDate());
+  serviceContext.setModifiedDate(template.getModifiedDate());
+  serviceContext.setScopeGroupId(context.getGroupId());
+  Template importedTemplate=null;
+  if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
+    Template existingTemplate=TemplateUtil.fetchByUUID_G(template.getUuid(),context.getGroupId());
+    if (existingTemplate == null) {
+      importedTemplate=TemplateLocalServiceUtil.addTemplate(template.getUuid(),userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
+    }
+ else {
+      importedTemplate=TemplateLocalServiceUtil.updateTemplate(existingTemplate.getTemplateId(),template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
+    }
+  }
+ else {
+    importedTemplate=TemplateLocalServiceUtil.addTemplate(null,userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
+  }
+  context.importPermissions(Template.class,template.getTemplateId(),importedTemplate.getTemplateId());
+}
