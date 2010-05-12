@@ -3,7 +3,7 @@
   Map<Long,Long> resourcePrimKeys=new HashMap<Long,Long>();
   Map<String,String> dirNames=new HashMap<String,String>();
   try {
-    if (context.getBooleanParameter(_NAMESPACE,"attachments")) {
+    if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
       DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
       importArticleAttachments(context,importId,dirNames,root);
     }
@@ -12,11 +12,12 @@
       if (!context.isPathNotProcessed(path)) {
         continue;
       }
-      importArticle(context,resourcePrimKeys,dirNames,articleEl,(Article)context.getZipEntryAsObject(path));
+      Article article=(Article)context.getZipEntryAsObject(path);
+      importArticle(context,resourcePrimKeys,dirNames,articleEl,article);
     }
   }
   finally {
-    if (context.getBooleanParameter(_NAMESPACE,"attachments")) {
+    if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
       DLServiceUtil.deleteDirectory(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
     }
   }
