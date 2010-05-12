@@ -9,7 +9,7 @@
       throw new MailException(MailException.FOLDER_INVALID_DESTINATION);
     }
     Message message=MessageLocalServiceUtil.getMessage(messageIds[0]);
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId());
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId(),_passwordRetriever.getPassword(message.getAccountId()));
     mailbox.moveMessages(folderId,messageIds);
     return createJSONResult("success","messages-have-been-moved");
   }

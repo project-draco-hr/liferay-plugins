@@ -4,7 +4,7 @@
       return createJSONResult("failure","no-messages-selected");
     }
     Message message=MessageLocalServiceUtil.getMessage(messageIds[0]);
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId());
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),message.getAccountId(),_passwordRetriever.getPassword(message.getAccountId()));
     mailbox.updateFlags(message.getFolderId(),messageIds,flag,value);
     return createJSONResult("success","messages-have-been-flagged");
   }

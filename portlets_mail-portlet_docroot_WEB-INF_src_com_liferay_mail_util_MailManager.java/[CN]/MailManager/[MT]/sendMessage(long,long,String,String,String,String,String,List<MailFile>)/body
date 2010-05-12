@@ -1,6 +1,6 @@
 {
   try {
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),accountId);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),accountId,_passwordRetriever.getPassword(accountId));
     Message message=mailbox.saveDraft(accountId,messageId,to,cc,bcc,subject,body,mailFiles);
     mailbox.sendMessage(accountId,message.getMessageId());
     return createJSONResult("success","sent-successfully");

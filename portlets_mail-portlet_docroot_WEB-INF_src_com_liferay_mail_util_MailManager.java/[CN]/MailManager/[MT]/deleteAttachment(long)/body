@@ -1,7 +1,7 @@
 {
   try {
     Attachment attachment=AttachmentLocalServiceUtil.getAttachment(attachmentId);
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),attachment.getAccountId());
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),attachment.getAccountId(),_passwordRetriever.getPassword(attachment.getAccountId()));
     mailbox.deleteAttachment(attachmentId);
     return createJSONResult("success","attachment-has-been-deleted");
   }

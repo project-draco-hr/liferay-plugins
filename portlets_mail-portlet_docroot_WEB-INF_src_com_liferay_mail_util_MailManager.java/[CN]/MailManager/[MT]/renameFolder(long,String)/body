@@ -1,7 +1,7 @@
 {
   Folder folder=FolderLocalServiceUtil.getFolder(folderId);
   try {
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),folder.getAccountId());
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),folder.getAccountId(),_passwordRetriever.getPassword(folder.getAccountId()));
     mailbox.renameFolder(folderId,displayName);
     return createJSONResult("success","folder-renamed-successfully");
   }

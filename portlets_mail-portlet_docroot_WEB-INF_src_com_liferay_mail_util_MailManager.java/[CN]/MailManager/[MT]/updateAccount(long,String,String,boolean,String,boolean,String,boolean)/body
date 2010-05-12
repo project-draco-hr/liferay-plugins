@@ -1,7 +1,19 @@
 {
   try {
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),accountId);
-    mailbox.updateAccount(accountId,personalName,unencryptedPassword,savePassword,signature,useSignature,folderPrefix,defaultSender);
+    if (savePassword) {
+      _passwordRetriever.removePassword(accountId);
+    }
+    if (Validator.isNull(password)) {
+      String oldPassword=_passwordRetriever.getPassword(accountId);
+      if (Validator.isNull(oldPassword)) {
+        throw new MailException("no password");
+      }
+ else {
+        password=oldPassword;
+      }
+    }
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),accountId,password);
+    mailbox.updateAccount(accountId,personalName,password,savePassword,signature,useSignature,folderPrefix,defaultSender);
     return createJSONResult("success","account-has-been-updated");
   }
  catch (  MailException me) {

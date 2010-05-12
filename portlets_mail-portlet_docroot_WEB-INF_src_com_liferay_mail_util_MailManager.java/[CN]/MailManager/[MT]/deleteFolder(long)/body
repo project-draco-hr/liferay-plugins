@@ -1,7 +1,7 @@
 {
   try {
     Folder folder=FolderLocalServiceUtil.getFolder(folderId);
-    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),folder.getAccountId());
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(_user.getUserId(),folder.getAccountId(),_passwordRetriever.getPassword(folder.getAccountId()));
     mailbox.deleteFolder(folderId);
     return createJSONResult("success","folder-has-been-deleted");
   }
