@@ -1,9 +1,19 @@
 {
+  StopWatch sw=new StopWatch();
+  if (_log.isDebugEnabled()) {
+    sw.start();
+  }
   try {
     Store store=getStore(false);
     store.close();
   }
  catch (  Exception e) {
     throw new MailException(MailException.ACCOUNT_INCOMING_CONNECTION_FAILED,e);
+  }
+ finally {
+    if (_log.isDebugEnabled()) {
+      sw.stop();
+      _log.debug("Test incoming connection completed in " + sw.getTime() + " ms");
+    }
   }
 }
