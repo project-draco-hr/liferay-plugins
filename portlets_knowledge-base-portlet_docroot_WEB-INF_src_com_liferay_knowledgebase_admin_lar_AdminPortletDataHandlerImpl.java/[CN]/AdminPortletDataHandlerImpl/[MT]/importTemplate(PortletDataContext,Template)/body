@@ -20,4 +20,7 @@
     importedTemplate=TemplateLocalServiceUtil.addTemplate(null,userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
   }
   context.importPermissions(Template.class,template.getTemplateId(),importedTemplate.getTemplateId());
+  if (context.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
+    context.importComments(Template.class,template.getTemplateId(),importedTemplate.getTemplateId(),context.getGroupId());
+  }
 }
