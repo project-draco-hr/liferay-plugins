@@ -1,35 +1,3 @@
 {
-  Object[] finderArgs=new Object[]{new Long(createDate),new Long(fromUserId),new Long(toUserId)};
-  List<Entry> list=(List<Entry>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_C_F_T,finderArgs,this);
-  if (list == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      StringBundler query=new StringBundler(5);
-      query.append(_SQL_SELECT_ENTRY_WHERE);
-      query.append(_FINDER_COLUMN_C_F_T_CREATEDATE_2);
-      query.append(_FINDER_COLUMN_C_F_T_FROMUSERID_2);
-      query.append(_FINDER_COLUMN_C_F_T_TOUSERID_2);
-      query.append(EntryModelImpl.ORDER_BY_JPQL);
-      String sql=query.toString();
-      Query q=session.createQuery(sql);
-      QueryPos qPos=QueryPos.getInstance(q);
-      qPos.add(createDate);
-      qPos.add(fromUserId);
-      qPos.add(toUserId);
-      list=q.list();
-    }
- catch (    Exception e) {
-      throw processException(e);
-    }
- finally {
-      if (list == null) {
-        list=new ArrayList<Entry>();
-      }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_C_F_T,finderArgs,list);
-      closeSession(session);
-    }
-  }
-  return list;
+  return findByC_F_T(createDate,fromUserId,toUserId,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
 }
