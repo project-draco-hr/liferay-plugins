@@ -1,0 +1,17 @@
+{
+  ExpandoTable expandoTable=null;
+  try {
+    expandoTable=ExpandoTableLocalServiceUtil.getTable(companyId,User.class.getName(),OPEN_SOCIAL_DATA);
+  }
+ catch (  NoSuchTableException nste) {
+    expandoTable=ExpandoTableLocalServiceUtil.addTable(companyId,User.class.getName(),OPEN_SOCIAL_DATA);
+  }
+  ExpandoColumn expandoColumn=null;
+  try {
+    expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
+  }
+ catch (  NoSuchColumnException nsce) {
+    expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+  }
+  return expandoColumn;
+}
