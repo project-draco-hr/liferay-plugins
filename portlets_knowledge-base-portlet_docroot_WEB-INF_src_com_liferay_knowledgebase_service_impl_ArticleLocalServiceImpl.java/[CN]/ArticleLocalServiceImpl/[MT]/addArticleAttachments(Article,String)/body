@@ -1,13 +1,13 @@
 {
   String articleDirName=article.getAttachmentsDirName();
-  DLServiceUtil.addDirectory(article.getCompanyId(),CompanyConstants.SYSTEM,articleDirName);
+  dlService.addDirectory(article.getCompanyId(),CompanyConstants.SYSTEM,articleDirName);
   if (Validator.isNull(dirName)) {
     return;
   }
-  String[] fileNames=DLServiceUtil.getFileNames(article.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+  String[] fileNames=dlService.getFileNames(article.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   for (  String fileName : fileNames) {
     String shortFileName=FileUtil.getShortFileName(fileName);
-    byte[] bytes=DLServiceUtil.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    byte[] bytes=dlService.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     addAttachment(article.getCompanyId(),articleDirName,shortFileName,bytes);
   }
 }

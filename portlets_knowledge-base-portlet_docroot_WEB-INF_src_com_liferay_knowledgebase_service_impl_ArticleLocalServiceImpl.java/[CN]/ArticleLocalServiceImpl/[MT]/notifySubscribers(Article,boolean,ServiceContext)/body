@@ -9,7 +9,7 @@
     long plid=PortletKeys.PREFS_PLID_SHARED;
     String portletId=PortletKeys.KNOWLEDGE_BASE_ADMIN;
     String defaultPreferences=null;
-    preferences=PortletPreferencesLocalServiceUtil.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
+    preferences=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
   }
   String emailArticleAddedEnabled=preferences.getValue("email-article-added-enabled",PortletProps.get("admin.email.article.added.enabled"));
   if (!update && !GetterUtil.getBoolean(emailArticleAddedEnabled)) {
@@ -19,8 +19,8 @@
   if (update && !GetterUtil.getBoolean(emailArticleUpdatedEnabled)) {
     return;
   }
-  Company company=CompanyLocalServiceUtil.getCompany(article.getCompanyId());
-  Group group=GroupLocalServiceUtil.getGroup(serviceContext.getScopeGroupId());
+  Company company=companyPersistence.findByPrimaryKey(article.getCompanyId());
+  Group group=groupPersistence.findByPrimaryKey(serviceContext.getScopeGroupId());
   User user=userPersistence.fetchByPrimaryKey(article.getUserId());
   String fullName=article.getUserName();
   String emailAddress=StringPool.BLANK;
@@ -34,7 +34,7 @@
   fromName=StringUtil.replace(fromName,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
   fromAddress=StringUtil.replace(fromAddress,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
   String articleURL=null;
-  Layout layout=LayoutLocalServiceUtil.getLayout(serviceContext.getPlid());
+  Layout layout=layoutLocalService.getLayout(serviceContext.getPlid());
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   if (layoutTypePortlet.hasDefaultScopePortletId(article.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
     String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
