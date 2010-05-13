@@ -1,13 +1,10 @@
 {
-  if (Validator.isNull(_request)) {
-    throw new IllegalStateException("Uninitialized retriever");
-  }
   Account account=AccountLocalServiceUtil.getAccount(accountId);
   if (account.isSavePassword()) {
     return account.getPasswordDecrypted();
   }
  else {
     HttpSession session=_request.getSession();
-    return (String)session.getAttribute(getPasswordKey(accountId));
+    return (String)session.getAttribute(encodeKey(accountId));
   }
 }
