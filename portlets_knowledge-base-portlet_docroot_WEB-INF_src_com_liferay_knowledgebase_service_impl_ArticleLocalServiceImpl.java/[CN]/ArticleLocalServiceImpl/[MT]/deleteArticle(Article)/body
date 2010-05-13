@@ -6,6 +6,11 @@
   socialActivityLocalService.deleteActivities(Article.class.getName(),article.getResourcePrimKey());
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.delete(article);
-  dlService.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
+  try {
+    dlService.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
+  }
+ catch (  NoSuchDirectoryException nsde) {
+    _log.error("No directory found for " + nsde.getMessage());
+  }
   subscriptionLocalService.deleteSubscriptions(article.getCompanyId(),Article.class.getName(),article.getResourcePrimKey());
 }

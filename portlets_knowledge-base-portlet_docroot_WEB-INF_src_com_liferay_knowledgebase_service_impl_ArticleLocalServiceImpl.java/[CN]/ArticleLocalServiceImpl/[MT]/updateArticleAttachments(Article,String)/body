@@ -2,6 +2,11 @@
   if (Validator.isNull(dirName)) {
     return;
   }
-  dlService.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
+  try {
+    dlService.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
+  }
+ catch (  NoSuchDirectoryException nsde) {
+    _log.error("No directory found for " + nsde.getMessage());
+  }
   addArticleAttachments(article,dirName);
 }
