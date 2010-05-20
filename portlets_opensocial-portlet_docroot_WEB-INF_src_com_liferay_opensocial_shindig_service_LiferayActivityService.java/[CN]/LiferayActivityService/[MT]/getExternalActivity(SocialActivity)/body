@@ -1,0 +1,50 @@
+{
+  Activity activity=new ActivityImpl(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
+  JSONObject extraData=new JSONObjectImpl(socialActivity.getExtraData());
+  if (extraData.has(Activity.Field.APP_ID.toString())) {
+    activity.setAppId(extraData.getString("appId"));
+  }
+  if (extraData.has(Activity.Field.BODY.toString())) {
+    activity.setBody(extraData.getString("body"));
+  }
+  if (extraData.has(Activity.Field.BODY_ID.toString())) {
+    activity.setBodyId(extraData.getString("bodyId"));
+  }
+  if (extraData.has(Activity.Field.EXTERNAL_ID.toString())) {
+    activity.setExternalId(extraData.getString("externalId"));
+  }
+  if (extraData.has(Activity.Field.MEDIA_ITEMS.toString())) {
+    activity.setMediaItems(getMediaItems(extraData.getJSONArray("mediaItems")));
+  }
+  if (extraData.has(Activity.Field.POSTED_TIME.toString())) {
+    activity.setPostedTime(extraData.getLong("postedTime"));
+  }
+  if (extraData.has(Activity.Field.PRIORITY.toString())) {
+    activity.setPriority(Float.parseFloat(extraData.getString("priority")));
+  }
+  if (extraData.has(Activity.Field.STREAM_FAVICON_URL.toString())) {
+    activity.setStreamFaviconUrl(extraData.getString("streamFaviconUrl"));
+  }
+  if (extraData.has(Activity.Field.STREAM_SOURCE_URL.toString())) {
+    activity.setStreamSourceUrl(extraData.getString("streamSourceUrl"));
+  }
+  if (extraData.has(Activity.Field.STREAM_TITLE.toString())) {
+    activity.setStreamTitle(extraData.getString("streamTitle"));
+  }
+  if (extraData.has(Activity.Field.STREAM_URL.toString())) {
+    activity.setStreamUrl(extraData.getString("streamUrl"));
+  }
+  if (extraData.has(Activity.Field.TEMPLATE_PARAMS.toString())) {
+    activity.setTemplateParams(getTemplateParams(extraData.getJSONArray("templateParams")));
+  }
+  if (extraData.has(Activity.Field.TITLE.toString())) {
+    activity.setTitle(extraData.getString("title"));
+  }
+  if (extraData.has(Activity.Field.TITLE_ID.toString())) {
+    activity.setTitleId(extraData.getString("titleId"));
+  }
+  if (extraData.has(Activity.Field.URL.toString())) {
+    activity.setUrl(extraData.getString("url"));
+  }
+  return activity;
+}

@@ -1,0 +1,10 @@
+{
+  List<Activity> activities=new ArrayList<Activity>();
+  ThemeDisplay themeDisplay=getThemeDisplay(securityToken);
+  for (  UserId userId : userIds) {
+    long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
+    List<Activity> personActivities=getActivities(themeDisplay,userIdLong);
+    activities.addAll(personActivities);
+  }
+  return new RestfulCollection<Activity>(activities,collectionsOptions.getFirst(),activities.size(),collectionsOptions.getMax());
+}

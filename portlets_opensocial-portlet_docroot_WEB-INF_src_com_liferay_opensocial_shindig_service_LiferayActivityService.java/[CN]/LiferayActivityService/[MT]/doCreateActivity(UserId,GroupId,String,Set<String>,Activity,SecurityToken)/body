@@ -1,0 +1,21 @@
+{
+  JSONObject extraData=new JSONObjectImpl();
+  extraData.put("appId",activity.getAppId());
+  extraData.put("body",activity.getBody());
+  extraData.put("bodyId",activity.getBodyId());
+  extraData.put("externalId",activity.getExternalId());
+  extraData.put("mediaItems",getMediaItems(activity.getMediaItems()));
+  extraData.put("postedTime",activity.getPostedTime());
+  extraData.put("priority",activity.getPriority());
+  extraData.put("streamFaviconUrl",activity.getStreamFaviconUrl());
+  extraData.put("streamSourceUrl",activity.getStreamSourceUrl());
+  extraData.put("streamTitle",activity.getStreamTitle());
+  extraData.put("streamUrl",activity.getStreamUrl());
+  extraData.put("templateParams",getTemplateParams(activity.getTemplateParams()));
+  extraData.put("title",activity.getTitle());
+  extraData.put("titleId",activity.getTitleId());
+  extraData.put("url",activity.getUrl());
+  long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
+  SocialActivityLocalServiceUtil.addActivity(userIdLong,0L,Activity.class.getName(),activity.getPostedTime().longValue(),activity.getAppId().hashCode(),extraData.toString(),0L);
+  return;
+}

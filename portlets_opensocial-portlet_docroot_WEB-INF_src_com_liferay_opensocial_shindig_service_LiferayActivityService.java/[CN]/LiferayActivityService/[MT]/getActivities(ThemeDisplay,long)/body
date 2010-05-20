@@ -1,0 +1,18 @@
+{
+  List<Activity> activities=new ArrayList<Activity>();
+  List<SocialActivity> socialActivities=SocialActivityLocalServiceUtil.getUserActivities(userId,0,20);
+  for (  SocialActivity socialActivity : socialActivities) {
+    Activity activity=null;
+    if (socialActivity.getClassName().equals(Activity.class.getName())) {
+      activity=getExternalActivity(socialActivity);
+    }
+ else {
+      activity=new ActivityImpl(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
+      SocialActivityFeedEntry socialActivityFeedEntry=SocialActivityInterpreterLocalServiceUtil.interpret(socialActivity,themeDisplay);
+      activity.setBody(socialActivityFeedEntry.getBody());
+      activity.setTitle(socialActivityFeedEntry.getTitle());
+    }
+    activities.add(activity);
+  }
+  return activities;
+}
