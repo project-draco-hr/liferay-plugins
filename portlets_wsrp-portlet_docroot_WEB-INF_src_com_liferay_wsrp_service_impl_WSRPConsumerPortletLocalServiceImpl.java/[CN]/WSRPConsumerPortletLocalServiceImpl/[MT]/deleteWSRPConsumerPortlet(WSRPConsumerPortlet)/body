@@ -1,7 +1,9 @@
 {
+  wsrpConsumerPortletPersistence.remove(wsrpConsumerPortlet);
   Message message=new Message();
   message.put("command","delete");
-  message.put("wsrpConsumerPortlet",Base64.objectToString(wsrpConsumerPortlet));
-  MessageBusUtil.sendMessage(_WSRP_REPOSITORY,message);
-  wsrpConsumerPortletPersistence.remove(wsrpConsumerPortlet);
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerPortlet.getWsrpConsumerId());
+  message.put("url",wsrpConsumer.getUrl());
+  message.put("wsrpConsumerPortletId",wsrpConsumerPortlet.getWsrpConsumerPortletId());
+  MessageBusUtil.sendMessage(DestinationNames.WSRP,message);
 }

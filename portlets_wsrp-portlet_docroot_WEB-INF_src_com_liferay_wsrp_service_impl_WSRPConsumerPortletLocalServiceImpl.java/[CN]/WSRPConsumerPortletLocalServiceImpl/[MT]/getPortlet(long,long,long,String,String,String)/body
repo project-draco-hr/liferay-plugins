@@ -1,0 +1,35 @@
+{
+  Portlet portlet=_portletsPool.get(wsrpConsumerPortletId);
+  if (portlet != null) {
+    return portlet;
+  }
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
+  WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
+  PortletDescription portletDescription=wsrpConsumerManager.getPortletDescription(portletHandle);
+  StringBuilder sb=new StringBuilder();
+  sb.append(ConsumerPortlet.PORTLET_NAME_PREFIX);
+  sb.append(companyId);
+  sb.append(StringPool.UNDERLINE);
+  sb.append(wsrpConsumerPortletId);
+  String portletId=PortalUtil.getJsSafePortletId(sb.toString());
+  portlet=PortletLocalServiceUtil.clonePortlet(companyId,_CONSUMER_PORTLET_ID);
+  portlet.setPortletId(portletId);
+  portlet.setTimestamp(System.currentTimeMillis());
+  PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.SERVLET_CONTEXT_NAME);
+  portlet.setPortletApp(portletApp);
+  portlet.setPortletName(portletId);
+  portlet.setDisplayName(portletId);
+  portlet.setPortletClass(ConsumerPortlet.class.getName());
+  Map<String,String> initParams=portlet.getInitParams();
+  initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_CONSUMER_PORTLET_NAME);
+  if (portletDescription != null) {
+    addPortletExtraInfo(portlet,portletApp,portletDescription,name);
+  }
+  _portletsPool.put(wsrpConsumerPortletId,portlet);
+  PortletBag portletBag=PortletBagPool.get(_CONSUMER_PORTLET_ID);
+  portletBag=(PortletBag)portletBag.clone();
+  portletBag.setPortletName(portletId);
+  portletBag.setPortletInstance(new ConsumerPortlet());
+  PortletBagPool.put(portletId,portletBag);
+  return portlet;
+}

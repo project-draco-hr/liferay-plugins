@@ -1,6 +1,7 @@
 {
   List<WSRPConsumerPortlet> wsrpConsumerPortlets=wsrpConsumerPortletPersistence.findAll();
   for (  WSRPConsumerPortlet wsrpConsumerPortlet : wsrpConsumerPortlets) {
-    destroyWSRPConsumerPortlet(wsrpConsumerPortlet);
+    WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerPortlet.getWsrpConsumerId());
+    destroyWSRPConsumerPortlet(wsrpConsumerPortlet.getWsrpConsumerPortletId(),wsrpConsumer.getUrl());
   }
 }

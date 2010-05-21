@@ -13,8 +13,12 @@
   wsrpConsumerPortletPersistence.update(wsrpConsumerPortlet,false);
   Message message=new Message();
   message.put("command","add");
-  message.put("wsrpConsumerPortlet",Base64.objectToString(wsrpConsumerPortlet));
+  message.put("companyId",wsrpConsumer.getCompanyId());
+  message.put("name",name);
+  message.put("portletHandle",portletHandle);
+  message.put("wsrpConsumerId",wsrpConsumerId);
+  message.put("wsrpConsumerPortletId",wsrpConsumerPortletId);
   message.put("userToken",userToken);
-  MessageBusUtil.sendMessage(_WSRP_REPOSITORY,message);
+  MessageBusUtil.sendMessage(DestinationNames.WSRP,message);
   return wsrpConsumerPortlet;
 }
