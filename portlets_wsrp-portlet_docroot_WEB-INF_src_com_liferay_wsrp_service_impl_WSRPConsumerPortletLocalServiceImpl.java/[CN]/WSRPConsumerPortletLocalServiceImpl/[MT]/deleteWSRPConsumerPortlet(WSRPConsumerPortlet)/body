@@ -1,4 +1,7 @@
 {
-  destroyWSRPConsumerPortlet(wsrpConsumerPortlet);
+  Message message=new Message();
+  message.put("command","delete");
+  message.put("wsrpConsumerPortlet",Base64.objectToString(wsrpConsumerPortlet));
+  MessageBusUtil.sendMessage(_WSRP_REPOSITORY,message);
   wsrpConsumerPortletPersistence.remove(wsrpConsumerPortlet);
 }

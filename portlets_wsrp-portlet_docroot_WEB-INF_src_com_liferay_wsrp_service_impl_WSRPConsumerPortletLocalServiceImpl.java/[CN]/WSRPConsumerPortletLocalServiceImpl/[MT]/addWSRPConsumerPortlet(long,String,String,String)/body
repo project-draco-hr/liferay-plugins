@@ -11,6 +11,10 @@
   wsrpConsumerPortlet.setName(name);
   wsrpConsumerPortlet.setPortletHandle(portletHandle);
   wsrpConsumerPortletPersistence.update(wsrpConsumerPortlet,false);
-  initWSRPConsumerPortlet(wsrpConsumerPortlet,userToken);
+  Message message=new Message();
+  message.put("command","add");
+  message.put("wsrpConsumerPortlet",Base64.objectToString(wsrpConsumerPortlet));
+  message.put("userToken",userToken);
+  MessageBusUtil.sendMessage(_WSRP_REPOSITORY,message);
   return wsrpConsumerPortlet;
 }
