@@ -5,8 +5,8 @@
     String userIdString=userId.getUserId(securityToken);
     GroupId.Type groupIdType=groupId.getType();
     if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {
-      long liferayUserId=GetterUtil.getLong(userIdString);
-      User owner=UserLocalServiceUtil.getUserById(liferayUserId);
+      long userIdLong=GetterUtil.getLong(userIdString);
+      User owner=UserLocalServiceUtil.getUserById(userIdLong);
       List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
       for (      User friend : friends) {
         person=getUserPerson(friend,fields,securityToken);
