@@ -1,0 +1,44 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  boolean autoplay=ParamUtil.getBoolean(actionRequest,"autoplay");
+  boolean enableEnhancedGenieMenu=ParamUtil.getBoolean(actionRequest,"enableEnhancedGenieMenu");
+  boolean enableFullscreen=ParamUtil.getBoolean(actionRequest,"enableFullscreen");
+  boolean enableKeyboardControls=ParamUtil.getBoolean(actionRequest,"enableKeyboardControls");
+  boolean enableRelatedVideos=ParamUtil.getBoolean(actionRequest,"enableRelatedVideos");
+  boolean enableSearch=ParamUtil.getBoolean(actionRequest,"enableSearch");
+  boolean hd=ParamUtil.getBoolean(actionRequest,"hd");
+  boolean loop=ParamUtil.getBoolean(actionRequest,"loop");
+  boolean showInfo=ParamUtil.getBoolean(actionRequest,"showInfo");
+  boolean showThickerBorder=ParamUtil.getBoolean(actionRequest,"showThickerBorder");
+  String annotations=ParamUtil.getString(actionRequest,"annotations");
+  String borderColor=ParamUtil.getString(actionRequest,"borderColor");
+  String height=ParamUtil.getString(actionRequest,"height");
+  String playerColor=ParamUtil.getString(actionRequest,"playerColor");
+  String startTime=ParamUtil.getString(actionRequest,"startTime");
+  String url=ParamUtil.getString(actionRequest,"url");
+  String width=ParamUtil.getString(actionRequest,"width");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  preferences.setValue("autoplay",String.valueOf(autoplay));
+  preferences.setValue("enableEnhancedGenieMenu",String.valueOf(enableEnhancedGenieMenu));
+  preferences.setValue("enableFullscreen",String.valueOf(enableFullscreen));
+  preferences.setValue("enableKeyboardControls",String.valueOf(enableKeyboardControls));
+  preferences.setValue("enableRelatedVideos",String.valueOf(enableRelatedVideos));
+  preferences.setValue("enableSearch",String.valueOf(enableSearch));
+  preferences.setValue("hd",String.valueOf(hd));
+  preferences.setValue("loop",String.valueOf(loop));
+  preferences.setValue("showInfo",String.valueOf(showInfo));
+  preferences.setValue("showThickerBorder",String.valueOf(showThickerBorder));
+  preferences.setValue("annotations",annotations);
+  preferences.setValue("borderColor",borderColor);
+  preferences.setValue("height",height);
+  preferences.setValue("playerColor",playerColor);
+  preferences.setValue("startTime",startTime);
+  preferences.setValue("url",url);
+  preferences.setValue("width",width);
+  preferences.store();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}
