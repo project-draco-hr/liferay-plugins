@@ -1,0 +1,16 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
+  int max=ParamUtil.getInteger(resourceRequest,"max",SearchContainer.DEFAULT_DELTA);
+  String type=ParamUtil.getString(resourceRequest,"type",RSSUtil.DEFAULT_TYPE);
+  double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.DEFAULT_VERSION);
+  String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
+  String rss=StringPool.BLANK;
+  if (resourcePrimKey <= 0) {
+    rss=ArticleServiceUtil.getGroupArticlesRSS(max,type,version,displayStyle,themeDisplay);
+  }
+ else {
+    rss=ArticleServiceUtil.getArticlesRSS(resourcePrimKey,max,type,version,displayStyle,themeDisplay);
+  }
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
+}
