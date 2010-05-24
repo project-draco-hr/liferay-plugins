@@ -1,0 +1,16 @@
+{
+  try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+    String dirName=ParamUtil.getString(actionRequest,"dirName");
+    dirName=ArticleServiceUtil.updateAttachments(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),resourcePrimKey,dirName);
+    String redirect=ParamUtil.getString(actionRequest,"redirect");
+    redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "dirName",dirName);
+    actionRequest.setAttribute(actionResponse.getNamespace() + "redirect",redirect);
+  }
+ catch (  Exception e) {
+    String redirect=ParamUtil.getString(actionRequest,"redirect");
+    actionResponse.sendRedirect(redirect);
+    throw e;
+  }
+}
