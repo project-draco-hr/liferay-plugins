@@ -3,6 +3,10 @@
   for (  Map.Entry<String,Object> entry : params.entrySet()) {
     String key=entry.getKey();
     Object value=entry.getValue();
+    if (key.equals("parentGroupId")) {
+      key="groupId";
+      value=runSQL(key,value);
+    }
     if (value instanceof Object[]) {
       Property property=PropertyFactoryUtil.forName(key);
       dynamicQuery.add(property.in((Object[])value));
