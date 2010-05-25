@@ -1,0 +1,20 @@
+{
+  AMSCheckout amsCheckout=(AMSCheckout)EntityCacheUtil.getResult(AMSCheckoutModelImpl.ENTITY_CACHE_ENABLED,AMSCheckoutImpl.class,amsCheckoutId,this);
+  if (amsCheckout == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      amsCheckout=(AMSCheckout)session.get(AMSCheckoutImpl.class,new Long(amsCheckoutId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (amsCheckout != null) {
+        cacheResult(amsCheckout);
+      }
+      closeSession(session);
+    }
+  }
+  return amsCheckout;
+}

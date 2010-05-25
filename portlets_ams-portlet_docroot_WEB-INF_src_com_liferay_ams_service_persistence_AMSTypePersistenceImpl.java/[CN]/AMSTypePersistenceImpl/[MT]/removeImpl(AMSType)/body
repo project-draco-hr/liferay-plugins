@@ -1,0 +1,24 @@
+{
+  amsType=toUnwrappedModel(amsType);
+  Session session=null;
+  try {
+    session=openSession();
+    if (amsType.isCachedModel() || BatchSessionUtil.isEnabled()) {
+      Object staleObject=session.get(AMSTypeImpl.class,amsType.getPrimaryKeyObj());
+      if (staleObject != null) {
+        session.evict(staleObject);
+      }
+    }
+    session.delete(amsType);
+    session.flush();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(AMSTypeModelImpl.ENTITY_CACHE_ENABLED,AMSTypeImpl.class,amsType.getPrimaryKey());
+  return amsType;
+}

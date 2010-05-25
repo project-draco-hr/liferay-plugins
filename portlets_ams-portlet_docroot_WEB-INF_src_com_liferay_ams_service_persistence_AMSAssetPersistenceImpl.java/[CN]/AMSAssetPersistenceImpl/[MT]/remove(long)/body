@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    AMSAsset amsAsset=(AMSAsset)session.get(AMSAssetImpl.class,new Long(amsAssetId));
+    if (amsAsset == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + amsAssetId);
+      }
+      throw new NoSuchAssetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + amsAssetId);
+    }
+    return remove(amsAsset);
+  }
+ catch (  NoSuchAssetException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
