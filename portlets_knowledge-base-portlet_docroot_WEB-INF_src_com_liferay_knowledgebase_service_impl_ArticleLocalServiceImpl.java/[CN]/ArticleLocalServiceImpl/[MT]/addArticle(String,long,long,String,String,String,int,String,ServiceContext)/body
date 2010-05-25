@@ -1,5 +1,6 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
   Date now=new Date();
   validate(title,content);
   long articleId=counterLocalService.increment();
@@ -7,7 +8,7 @@
   Article article=articlePersistence.create(articleId);
   article.setUuid(uuid);
   article.setResourcePrimKey(resourcePrimKey);
-  article.setGroupId(serviceContext.getScopeGroupId());
+  article.setGroupId(groupId);
   article.setCompanyId(user.getCompanyId());
   article.setUserId(user.getUserId());
   article.setUserName(user.getFullName());
@@ -28,7 +29,7 @@
     addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
   updateDisplayOrder(article,parentResourcePrimKey,priority);
-  mbMessageLocalService.addDiscussionMessage(userId,article.getUserName(),article.getGroupId(),Article.class.getName(),resourcePrimKey,WorkflowConstants.ACTION_PUBLISH);
+  mbMessageLocalService.addDiscussionMessage(userId,article.getUserName(),groupId,Article.class.getName(),resourcePrimKey,WorkflowConstants.ACTION_PUBLISH);
   socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_ARTICLE,StringPool.BLANK,0);
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.reindex(article);
