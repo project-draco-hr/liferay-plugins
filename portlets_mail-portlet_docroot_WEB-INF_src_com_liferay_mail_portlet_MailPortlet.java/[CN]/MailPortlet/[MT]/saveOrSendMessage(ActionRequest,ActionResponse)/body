@@ -1,0 +1,22 @@
+{
+  UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+  MailManager mailManager=MailManager.getInstance(request);
+  long draftMessageId=ParamUtil.getLong(uploadRequest,"draftMessageId");
+  long accountId=ParamUtil.getLong(uploadRequest,"accountId");
+  String to=ParamUtil.getString(uploadRequest,"to");
+  String cc=ParamUtil.getString(uploadRequest,"cc");
+  String bcc=ParamUtil.getString(uploadRequest,"bcc");
+  String subject=ParamUtil.getString(uploadRequest,"subject");
+  String body=ParamUtil.getString(uploadRequest,"body");
+  boolean sendMessage=ParamUtil.getBoolean(uploadRequest,"sendMessage");
+  int attachmentCount=ParamUtil.getInteger(uploadRequest,"attachmentCount");
+  List<MailFile> mailFiles=new ArrayList<MailFile>();
+  JSONObject jsonObj=null;
+  if (sendMessage) {
+    jsonObj=mailManager.sendMessage(accountId,draftMessageId,to,cc,bcc,subject,body,mailFiles);
+  }
+ else {
+    jsonObj=mailManager.saveDraft(accountId,draftMessageId,to,cc,bcc,subject,body,mailFiles);
+  }
+}
