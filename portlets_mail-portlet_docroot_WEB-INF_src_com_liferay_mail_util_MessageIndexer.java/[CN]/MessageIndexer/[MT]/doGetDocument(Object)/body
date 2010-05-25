@@ -9,12 +9,15 @@
   String body=HtmlUtil.extractText(message.getBody());
   long remoteMessageId=message.getRemoteMessageId();
   Date modifiedDate=message.getModifiedDate();
+  User user=UserLocalServiceUtil.getUser(userId);
   ExpandoBridge expandoBridge=message.getExpandoBridge();
   Document document=new DocumentImpl();
   document.addUID(PORTLET_ID,message.getMessageId());
   document.addModifiedDate(modifiedDate);
   document.addKeyword(Field.COMPANY_ID,companyId);
   document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
+  document.addKeyword(Field.GROUP_ID,user.getGroup().getGroupId());
+  document.addKeyword(Field.SCOPE_GROUP_ID,user.getGroup().getGroupId());
   document.addKeyword(Field.USER_ID,userId);
   document.addText(Field.TITLE,subject);
   document.addText(Field.CONTENT,body);
