@@ -1,9 +1,11 @@
 {
   long companyId=getCompanyId(securityToken);
   long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
-  for (  String field : fields) {
-    ExpandoColumn expandoColumn=getExpandoColumn(companyId,field);
-    ExpandoValueLocalServiceUtil.addValue(companyId,User.class.getName(),OPEN_SOCIAL_DATA,expandoColumn.getName(),userIdLong,values.get(field));
+  for (  Entry entry : values.entrySet()) {
+    String key=(String)entry.getKey();
+    String value=entry.getValue().toString();
+    ExpandoColumn expandoColumn=getExpandoColumn(companyId,key);
+    ExpandoValueLocalServiceUtil.addValue(companyId,User.class.getName(),OPEN_SOCIAL_DATA,expandoColumn.getName(),userIdLong,value);
   }
   return;
 }
