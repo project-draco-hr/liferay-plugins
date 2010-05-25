@@ -1,8 +1,11 @@
 {
   Article article=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
-  List<Article> articles=getGroupArticles(article.getGroupId(),article.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
-  for (  Article curArticle : articles) {
-    deleteArticle(curArticle.getResourcePrimKey());
+  Map<String,Object> params=new HashMap<String,Object>();
+  params.put("groupId",new Long(article.getGroupId()));
+  params.put("parentResourcePrimKey",new Long(article.getResourcePrimKey()));
+  List<Article> childArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
+  for (  Article childArticle : childArticles) {
+    deleteArticle(childArticle.getResourcePrimKey());
   }
   deleteArticle(article);
 }

@@ -3,7 +3,10 @@
   long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,article.getParentResourcePrimKey());
   int priority=article.getPriority();
   String dirName=MapUtil.getString(dirNames,String.valueOf(article.getResourcePrimKey()));
-  int maxPriority=ArticleLocalServiceUtil.getGroupArticlesCount(context.getGroupId(),parentResourcePrimKey);
+  Map<String,Object> params=new HashMap<String,Object>();
+  params.put("groupId",new Long(context.getGroupId()));
+  params.put("parentResourcePrimKey",new Long(parentResourcePrimKey));
+  int maxPriority=ArticleLocalServiceUtil.getArticlesCount(params,false);
   if (priority > maxPriority) {
     priority=maxPriority;
   }

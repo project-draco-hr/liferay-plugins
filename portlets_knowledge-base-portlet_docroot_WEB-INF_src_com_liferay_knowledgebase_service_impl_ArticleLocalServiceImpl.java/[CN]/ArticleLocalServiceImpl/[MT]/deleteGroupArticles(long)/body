@@ -1,6 +1,9 @@
 {
-  List<Article> articles=getGroupArticles(groupId,0,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
-  for (  Article article : articles) {
-    deleteArticle(article.getResourcePrimKey());
+  Map<String,Object> params=new HashMap<String,Object>();
+  params.put("groupId",new Long(groupId));
+  params.put("parentResourcePrimKey",new Long(ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY));
+  List<Article> rootArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
+  for (  Article rootArticle : rootArticles) {
+    deleteArticle(rootArticle.getResourcePrimKey());
   }
 }

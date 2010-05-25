@@ -6,8 +6,11 @@
   int index=-1;
   while ((index=index + 1) < articles.size()) {
     Article curArticle=articles.get(index);
-    List<Article> groupArticles=getGroupArticles(curArticle.getGroupId(),curArticle.getResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
-    articles.addAll(groupArticles);
+    Map<String,Object> params=new HashMap<String,Object>();
+    params.put("groupId",new Long(curArticle.getGroupId()));
+    params.put("parentResourcePrimKey",new Long(curArticle.getResourcePrimKey()));
+    List<Article> childArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    articles.addAll(childArticles);
   }
   Collections.sort(articles,new ArticleModifiedDateComparator());
   return ListUtil.subList(articles,0,max);

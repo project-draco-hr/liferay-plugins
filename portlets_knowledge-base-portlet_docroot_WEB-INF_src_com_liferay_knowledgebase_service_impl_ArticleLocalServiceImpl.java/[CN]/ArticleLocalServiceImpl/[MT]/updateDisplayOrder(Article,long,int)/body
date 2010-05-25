@@ -1,20 +1,24 @@
 {
-  List<Article> articles=ListUtil.copy(getGroupArticles(article.getGroupId(),article.getParentResourcePrimKey(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true)));
-  articles.remove(article);
-  articles.add(priority,article);
-  for (int i=0; i < articles.size(); i++) {
-    Article curArticle=articles.get(i);
-    long curParentResourcePrimKey=curArticle.getParentResourcePrimKey();
+  Map<String,Object> params=new HashMap<String,Object>();
+  params.put("groupId",new Long(article.getGroupId()));
+  params.put("parentResourcePrimKey",new Long(article.getParentResourcePrimKey()));
+  List<Article> siblingArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
+  siblingArticles=ListUtil.copy(siblingArticles);
+  siblingArticles.remove(article);
+  siblingArticles.add(priority,article);
+  for (int i=0; i < siblingArticles.size(); i++) {
+    Article siblingArticle=siblingArticles.get(i);
+    long curParentResourcePrimKey=siblingArticle.getParentResourcePrimKey();
     if (priority == i) {
       curParentResourcePrimKey=parentResourcePrimKey;
     }
-    List<Article> childrenArticles=articlePersistence.findByResourcePrimKey(curArticle.getResourcePrimKey());
-    for (    Article childrenArticle : childrenArticles) {
-      childrenArticle.setParentResourcePrimKey(curParentResourcePrimKey);
-      childrenArticle.setPriority(i);
-      articlePersistence.update(childrenArticle,false);
-      if (article.getArticleId() == childrenArticle.getArticleId()) {
-        article=childrenArticle;
+    List<Article> articles=articlePersistence.findByResourcePrimKey(siblingArticle.getResourcePrimKey());
+    for (    Article curArticle : articles) {
+      curArticle.setParentResourcePrimKey(curParentResourcePrimKey);
+      curArticle.setPriority(i);
+      articlePersistence.update(curArticle,false);
+      if (article.getArticleId() == curArticle.getArticleId()) {
+        article=curArticle;
       }
     }
   }
