@@ -1,9 +1,12 @@
 {
-  Object paramObj0=new LongWrapper(resourcePrimKey);
-  Object paramObj1=new IntegerWrapper(version);
+  Object paramObj0=ClpSerializer.translateInput(params);
+  if (params == null) {
+    paramObj0=new NullWrapper("java.util.Map");
+  }
+  Object paramObj1=new BooleanWrapper(allVersions);
   Object returnObj=null;
   try {
-    returnObj=_classLoaderProxy.invoke("getArticle",new Object[]{paramObj0,paramObj1});
+    returnObj=_classLoaderProxy.invoke("getArticlesCount",new Object[]{paramObj0,paramObj1});
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
@@ -16,5 +19,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
-  return (com.liferay.knowledgebase.model.Article)ClpSerializer.translateOutput(returnObj);
+  return ((Integer)returnObj).intValue();
 }
