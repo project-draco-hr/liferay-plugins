@@ -1,20 +1,20 @@
 {
   Map<String,Object> params=new HashMap<String,Object>();
-  params.put("groupId",new Long(article.getGroupId()));
-  params.put("parentResourcePrimKey",new Long(article.getParentResourcePrimKey()));
+  params.put("groupId",article.getGroupId());
+  params.put("parentResourcePrimKey",article.getParentResourcePrimKey());
   List<Article> siblingArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
   siblingArticles=ListUtil.copy(siblingArticles);
   siblingArticles.remove(article);
   siblingArticles.add(priority,article);
   for (int i=0; i < siblingArticles.size(); i++) {
     Article siblingArticle=siblingArticles.get(i);
-    long curParentResourcePrimKey=siblingArticle.getParentResourcePrimKey();
+    long siblingParentResourcePrimKey=siblingArticle.getParentResourcePrimKey();
     if (priority == i) {
-      curParentResourcePrimKey=parentResourcePrimKey;
+      siblingParentResourcePrimKey=parentResourcePrimKey;
     }
     List<Article> articles=articlePersistence.findByResourcePrimKey(siblingArticle.getResourcePrimKey());
     for (    Article curArticle : articles) {
-      curArticle.setParentResourcePrimKey(curParentResourcePrimKey);
+      curArticle.setParentResourcePrimKey(siblingParentResourcePrimKey);
       curArticle.setPriority(i);
       articlePersistence.update(curArticle,false);
       if (article.getArticleId() == curArticle.getArticleId()) {
