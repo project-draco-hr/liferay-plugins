@@ -1,0 +1,21 @@
+{
+  long userId=ParamUtil.getLong(actionRequest,"userId");
+  long groupId=ParamUtil.getLong(actionRequest,"groupId");
+  long roleId=ParamUtil.getLong(actionRequest,"roleId");
+  List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(userId,groupId);
+  Iterator<UserGroupRole> itr=userGroupRoles.iterator();
+  while (itr.hasNext()) {
+    UserGroupRole userGroupRole=itr.next();
+    Role role=userGroupRole.getRole();
+    if ((role.getType() != RoleConstants.TYPE_COMMUNITY) || (role.getName().equals(RoleConstants.COMMUNITY_MEMBER))) {
+      itr.remove();
+    }
+  }
+  long[] deleteRoleIds=new long[userGroupRoles.size()];
+  for (int i=0; i < userGroupRoles.size(); i++) {
+    UserGroupRole userGroupRole=userGroupRoles.get(i);
+    deleteRoleIds[i]=userGroupRole.getRoleId();
+  }
+  UserGroupRoleServiceUtil.deleteUserGroupRoles(userId,groupId,deleteRoleIds);
+  UserGroupRoleServiceUtil.addUserGroupRoles(userId,groupId,new long[]{roleId});
+}
