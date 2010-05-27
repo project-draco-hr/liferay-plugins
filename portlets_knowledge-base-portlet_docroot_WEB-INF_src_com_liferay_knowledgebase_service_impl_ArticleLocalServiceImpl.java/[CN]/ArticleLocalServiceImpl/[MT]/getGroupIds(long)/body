@@ -1,0 +1,23 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Group.class,"group",PortalClassLoaderUtil.getClassLoader());
+  Property groupIdProperty=PropertyFactoryUtil.forName("groupId");
+  Property classNameIdProperty=PropertyFactoryUtil.forName("classNameId");
+  Property parentGroupIdProperty=PropertyFactoryUtil.forName("parentGroupId");
+  Long classNameId=PortalUtil.getClassNameId(Layout.class);
+  Conjunction conjunction1=RestrictionsFactoryUtil.conjunction();
+  conjunction1.add(groupIdProperty.eq(parentGroupId));
+  conjunction1.add(classNameIdProperty.ne(classNameId));
+  Conjunction conjunction2=RestrictionsFactoryUtil.conjunction();
+  conjunction2.add(classNameIdProperty.eq(classNameId));
+  conjunction2.add(parentGroupIdProperty.eq(parentGroupId));
+  Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+  disjunction.add(conjunction1);
+  disjunction.add(conjunction2);
+  dynamicQuery.add(disjunction);
+  List<Group> groups=groupPersistence.findWithDynamicQuery(dynamicQuery);
+  Long[] groupIds=new Long[groups.size()];
+  for (int i=0; i < groups.size(); i++) {
+    groupIds[i]=groups.get(i).getGroupId();
+  }
+  return groupIds;
+}
