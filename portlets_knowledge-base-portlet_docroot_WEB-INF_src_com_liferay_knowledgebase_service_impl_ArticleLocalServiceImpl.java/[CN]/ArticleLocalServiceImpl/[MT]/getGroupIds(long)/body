@@ -3,7 +3,7 @@
   Property groupIdProperty=PropertyFactoryUtil.forName("groupId");
   Property classNameIdProperty=PropertyFactoryUtil.forName("classNameId");
   Property parentGroupIdProperty=PropertyFactoryUtil.forName("parentGroupId");
-  Long classNameId=PortalUtil.getClassNameId(Layout.class);
+  long classNameId=PortalUtil.getClassNameId(Layout.class);
   Conjunction conjunction1=RestrictionsFactoryUtil.conjunction();
   conjunction1.add(groupIdProperty.eq(parentGroupId));
   conjunction1.add(classNameIdProperty.ne(classNameId));
@@ -15,9 +15,5 @@
   disjunction.add(conjunction2);
   dynamicQuery.add(disjunction);
   List<Group> groups=groupPersistence.findWithDynamicQuery(dynamicQuery);
-  Long[] groupIds=new Long[groups.size()];
-  for (int i=0; i < groups.size(); i++) {
-    groupIds[i]=groups.get(i).getGroupId();
-  }
-  return groupIds;
+  return ArrayUtil.toArray(StringUtil.split(ListUtil.toString(groups,"groupId"),0L));
 }
