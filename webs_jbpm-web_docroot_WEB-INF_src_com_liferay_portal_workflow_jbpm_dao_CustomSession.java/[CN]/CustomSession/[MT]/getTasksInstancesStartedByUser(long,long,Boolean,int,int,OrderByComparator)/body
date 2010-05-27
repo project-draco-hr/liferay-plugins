@@ -1,0 +1,30 @@
+{
+  List<TaskInstance> taskInstances=new ArrayList<TaskInstance>();
+  try {
+    Criteria criteria=_session.createCriteria(TaskInstance.class);
+    criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    if (completed != null) {
+      if (completed.booleanValue()) {
+        criteria.add(Restrictions.isNotNull("end"));
+      }
+ else {
+        criteria.add(Restrictions.isNull("end"));
+      }
+    }
+    addOrder(criteria,orderByComparator);
+    List<TaskInstance> tasks=criteria.list();
+    for (    TaskInstance taskInstance : tasks) {
+      ContextInstance contextInstance=taskInstance.getProcessInstance().getContextInstance();
+      if (Validator.equals(Long.toString(userId),(String)contextInstance.getVariable("userId"))) {
+        taskInstances.add(taskInstance);
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new JbpmException(e);
+  }
+  if ((end != QueryUtil.ALL_POS) && (taskInstances.size() > end)) {
+    taskInstances=ListUtil.subList(taskInstances,start,end);
+  }
+  return taskInstances;
+}
