@@ -1,0 +1,13 @@
+{
+  long templateId=ParamUtil.getLong(actionRequest,"templateId");
+  String title=ParamUtil.getString(actionRequest,"title");
+  String content=ParamUtil.getString(actionRequest,"content");
+  String description=ParamUtil.getString(actionRequest,"description");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Template.class.getName(),actionRequest);
+  if (templateId <= 0) {
+    TemplateServiceUtil.addTemplate(title,content,description,serviceContext);
+  }
+ else {
+    TemplateServiceUtil.updateTemplate(templateId,title,content,description,serviceContext);
+  }
+}

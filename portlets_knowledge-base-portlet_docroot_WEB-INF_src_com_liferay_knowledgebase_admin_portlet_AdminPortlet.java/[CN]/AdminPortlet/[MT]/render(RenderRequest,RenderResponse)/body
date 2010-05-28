@@ -6,9 +6,15 @@
       article=ArticleServiceUtil.getLatestArticle(resourcePrimKey);
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
+    Template template=null;
+    long templateId=ParamUtil.getLong(renderRequest,"templateId");
+    if (templateId > 0) {
+      template=TemplateServiceUtil.getTemplate(templateId);
+    }
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_TEMPLATE,template);
   }
  catch (  Exception e) {
-    if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
+    if (e instanceof NoSuchArticleException || e instanceof NoSuchTemplateException || e instanceof PrincipalException) {
       SessionErrors.add(renderRequest,e.getClass().getName());
     }
  else {
