@@ -1,0 +1,16 @@
+{
+  String userName=getUserName(activity.getUserId(),themeDisplay);
+  String text=HtmlUtil.escape(cleanContent(content));
+  if (Validator.isNotNull(link)) {
+    text=wrapLink(link,text);
+  }
+  String groupName=StringPool.BLANK;
+  if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+    groupName=getGroupName(activity.getGroupId(),themeDisplay);
+  }
+  String pattern=key;
+  if (Validator.isNotNull(groupName)) {
+    pattern+="-in";
+  }
+  return themeDisplay.translate(pattern,new Object[]{userName,text,groupName});
+}

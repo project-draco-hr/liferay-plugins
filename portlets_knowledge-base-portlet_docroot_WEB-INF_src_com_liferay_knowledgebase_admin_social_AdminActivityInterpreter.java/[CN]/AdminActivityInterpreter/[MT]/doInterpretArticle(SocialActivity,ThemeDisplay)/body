@@ -1,0 +1,26 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  Article article=ArticleLocalServiceUtil.getLatestArticle(activity.getClassPK());
+  if (!ArticlePermission.contains(permissionChecker,article,ActionKeys.VIEW)) {
+    return null;
+  }
+  String link=StringPool.BLANK;
+  long plid=PortalUtil.getPlidFromPortletId(article.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN);
+  if (plid != LayoutConstants.DEFAULT_PLID) {
+    String layoutFullURL=PortalUtil.getLayoutFullURL(LayoutLocalServiceUtil.getLayout(plid),themeDisplay);
+    String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
+    link=HttpUtil.setParameter(layoutFullURL,"p_p_id",PortletKeys.KNOWLEDGE_BASE_ADMIN);
+    link=HttpUtil.setParameter(link,namespace + "jspPage","/admin/view_article.jsp");
+    link=HttpUtil.setParameter(link,namespace + "resourcePrimKey",article.getResourcePrimKey());
+  }
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_ARTICLE) {
+    key="activity-knowledge-base-admin-add-article";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_ARTICLE) {
+    key="activity-knowledge-base-admin-update-article";
+  }
+  String title=getTitle(activity,key,article.getTitle(),link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}
