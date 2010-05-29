@@ -1,0 +1,17 @@
+{
+  int count=countByCompleted_KDI(completed,kaleoDefinitionId);
+  List<KaleoInstance> list=findByCompleted_KDI(completed,kaleoDefinitionId,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("completed=");
+    msg.append(completed);
+    msg.append(", kaleoDefinitionId=");
+    msg.append(kaleoDefinitionId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchInstanceException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}
