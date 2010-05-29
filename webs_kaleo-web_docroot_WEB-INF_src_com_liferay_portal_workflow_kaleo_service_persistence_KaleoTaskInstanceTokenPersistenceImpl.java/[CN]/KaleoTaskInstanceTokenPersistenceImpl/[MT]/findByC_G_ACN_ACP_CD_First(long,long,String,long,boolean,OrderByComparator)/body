@@ -1,0 +1,22 @@
+{
+  List<KaleoTaskInstanceToken> list=findByC_G_ACN_ACP_CD(companyId,groupId,assigneeClassName,assigneeClassPK,completed,0,1,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(12);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("companyId=");
+    msg.append(companyId);
+    msg.append(", groupId=");
+    msg.append(groupId);
+    msg.append(", assigneeClassName=");
+    msg.append(assigneeClassName);
+    msg.append(", assigneeClassPK=");
+    msg.append(assigneeClassPK);
+    msg.append(", completed=");
+    msg.append(completed);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchTaskInstanceTokenException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

@@ -11,12 +11,13 @@
   for (  Element roleAssignmentElement : roleReceipientElements) {
     long roleId=GetterUtil.getLong(roleAssignmentElement.elementText("role-id"));
     String name=roleAssignmentElement.elementText("name");
+    String roleType=roleAssignmentElement.elementText("role-type");
     RoleRecipient roleRecipient=null;
     if (roleId > 0) {
-      roleRecipient=new RoleRecipient(roleId);
+      roleRecipient=new RoleRecipient(roleId,roleType);
     }
  else {
-      roleRecipient=new RoleRecipient(name);
+      roleRecipient=new RoleRecipient(name,roleType);
       boolean autoCreate=GetterUtil.getBoolean(roleAssignmentElement.elementText("auto-create"),true);
       roleRecipient.setAutoCreate(autoCreate);
     }

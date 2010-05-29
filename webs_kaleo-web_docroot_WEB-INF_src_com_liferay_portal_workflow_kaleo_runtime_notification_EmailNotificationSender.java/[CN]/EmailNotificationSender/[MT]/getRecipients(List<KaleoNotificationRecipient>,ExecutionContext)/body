@@ -1,0 +1,21 @@
+{
+  List<InternetAddress> internetAddresses=new ArrayList<InternetAddress>();
+  for (  KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
+    if (Validator.isNotNull(kaleoNotificationRecipient.getAddress())) {
+      InternetAddress internetAddress=new InternetAddress(kaleoNotificationRecipient.getAddress());
+      internetAddresses.add(internetAddress);
+    }
+ else {
+      String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
+      if (User.class.getName().equals(recipientClassName)) {
+        User user=UserLocalServiceUtil.getUser(kaleoNotificationRecipient.getRecipientClassPK());
+        InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
+        internetAddresses.add(internetAddress);
+      }
+ else {
+        getRoleRecipientAddresses(executionContext,internetAddresses,kaleoNotificationRecipient);
+      }
+    }
+  }
+  return internetAddresses.toArray(new InternetAddress[internetAddresses.size()]);
+}
