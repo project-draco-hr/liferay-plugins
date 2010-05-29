@@ -3,6 +3,7 @@
   if (kaleoTaskInstanceToken.isCompleted()) {
     throw new WorkflowException("Cannot complete an already completed task " + workflowTaskInstanceId + " for user "+ serviceContext.getUserId());
   }
+  serviceContext.setScopeGroupId(kaleoTaskInstanceToken.getGroupId());
   kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.completeKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),serviceContext);
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
   KaleoInstanceToken parentKaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoInstanceToken.getParentKaleoInstanceTokenId());

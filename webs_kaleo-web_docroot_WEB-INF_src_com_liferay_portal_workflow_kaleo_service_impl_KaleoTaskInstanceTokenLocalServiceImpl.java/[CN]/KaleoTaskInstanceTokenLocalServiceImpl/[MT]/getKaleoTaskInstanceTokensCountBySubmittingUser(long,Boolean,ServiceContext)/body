@@ -1,0 +1,7 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoTaskInstanceToken.class);
+  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  dynamicQuery.add(PropertyFactoryUtil.forName("workflowContext").like("\"userId\":" + userId));
+  addCompletedCriterion(dynamicQuery,completed);
+  return (int)dynamicQueryCount(dynamicQuery);
+}
