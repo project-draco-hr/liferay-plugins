@@ -3,10 +3,10 @@
   if (assignmentType.equals(AssignmentType.ROLE)) {
     kaleoTaskAssignment.setAssigneeClassName(Role.class.getName());
     RoleAssignment roleAssignment=(RoleAssignment)assignment;
-    int roleType=RoleRetrievalUtil.getRoleType(roleAssignment.getRoleType());
     Role role=null;
     if (Validator.isNotNull(roleAssignment.getRoleName())) {
-      role=RoleRetrievalUtil.getRole(roleAssignment.getRoleName(),roleType,roleAssignment.isAutoCreate(),roleLocalService,serviceContext);
+      int roleType=RoleRetrievalUtil.getRoleType(roleAssignment.getRoleType());
+      role=RoleRetrievalUtil.getRole(roleAssignment.getRoleName(),roleType,roleAssignment.isAutoCreate(),serviceContext);
     }
  else {
       role=roleLocalService.getRole(roleAssignment.getRoleId());
