@@ -1,0 +1,62 @@
+{
+  Object[] finderArgs=new Object[]{new Long(groupId),new Long(companyId),assigneeClassName,new Long(assigneeClassPK),Boolean.valueOf(completed),String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
+  List<KaleoTaskInstanceToken> list=(List<KaleoTaskInstanceToken>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_G_C_ACN_ACP_C,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      StringBundler query=null;
+      if (orderByComparator != null) {
+        query=new StringBundler(7 + (orderByComparator.getOrderByFields().length * 3));
+      }
+ else {
+        query=new StringBundler(7);
+      }
+      query.append(_SQL_SELECT_KALEOTASKINSTANCETOKEN_WHERE);
+      query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_GROUPID_2);
+      query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_COMPANYID_2);
+      if (assigneeClassName == null) {
+        query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_ASSIGNEECLASSNAME_1);
+      }
+ else {
+        if (assigneeClassName.equals(StringPool.BLANK)) {
+          query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_ASSIGNEECLASSNAME_3);
+        }
+ else {
+          query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_ASSIGNEECLASSNAME_2);
+        }
+      }
+      query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_ASSIGNEECLASSPK_2);
+      query.append(_FINDER_COLUMN_G_C_ACN_ACP_C_COMPLETED_2);
+      if (orderByComparator != null) {
+        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+      }
+ else {
+        query.append(KaleoTaskInstanceTokenModelImpl.ORDER_BY_JPQL);
+      }
+      String sql=query.toString();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(groupId);
+      qPos.add(companyId);
+      if (assigneeClassName != null) {
+        qPos.add(assigneeClassName);
+      }
+      qPos.add(assigneeClassPK);
+      qPos.add(completed);
+      list=(List<KaleoTaskInstanceToken>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        list=new ArrayList<KaleoTaskInstanceToken>();
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_G_C_ACN_ACP_C,finderArgs,list);
+      closeSession(session);
+    }
+  }
+  return list;
+}
