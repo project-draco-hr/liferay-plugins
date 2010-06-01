@@ -1,0 +1,18 @@
+{
+  if (User.class.getName().equals(assignment.getAssigneeClassName())) {
+    return true;
+  }
+  long roleId=assignment.getAssigneeClassPK();
+  Role role=RoleLocalServiceUtil.getRole(roleId);
+  int roleType=role.getType();
+  if (role.getType() == RoleConstants.TYPE_REGULAR) {
+    return true;
+  }
+  if (group.isCommunity() && (roleType == RoleConstants.TYPE_COMMUNITY)) {
+    return true;
+  }
+ else   if (group.isOrganization() && (roleType == RoleConstants.TYPE_ORGANIZATION)) {
+    return true;
+  }
+  return false;
+}

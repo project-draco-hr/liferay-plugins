@@ -8,7 +8,7 @@
     DueDateDuration dueDateDuration=new DueDateDuration(kaleoTask.getDueDateDuration(),DurationScale.parse(kaleoTask.getDueDateScale()));
     dueDate=_dueDateCalculator.getDueDate(new Date(),dueDateDuration);
   }
-  KaleoTaskAssignment kaleoTaskAssignment=kaleoTask.getDefaultKaleoTaskAssignment();
+  KaleoTaskAssignment kaleoTaskAssignment=_taskAssignmentSelector.getTaskAssignment(kaleoTask,executionContext);
   KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.addKaleoTaskInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),kaleoTask.getKaleoTaskId(),kaleoTask.getName(),kaleoTaskAssignment,dueDate,workflowContext,serviceContext);
   executionContext.setKaleoTaskInstanceToken(kaleoTaskInstanceToken);
   ActionExecutorUtil.executeKaleoActions(currentKaleoNode.getKaleoNodeId(),ExecutionType.ON_ASSIGNMENT,executionContext);

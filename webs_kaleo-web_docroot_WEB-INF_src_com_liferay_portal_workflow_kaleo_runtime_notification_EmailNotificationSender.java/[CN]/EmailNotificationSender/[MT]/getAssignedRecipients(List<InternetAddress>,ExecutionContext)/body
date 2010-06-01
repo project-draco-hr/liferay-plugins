@@ -1,0 +1,14 @@
+{
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  if (kaleoTaskInstanceToken == null) {
+    return;
+  }
+  if (User.class.getName().equals(kaleoTaskInstanceToken.getAssigneeClassName())) {
+    getUserEmailAddress(kaleoTaskInstanceToken.getAssigneeClassPK(),internetAddresses);
+  }
+ else {
+    long roleId=kaleoTaskInstanceToken.getAssigneeClassPK();
+    Role role=RoleLocalServiceUtil.getRole(roleId);
+    getRoleRecipientAddresses(role.getType(),roleId,internetAddresses,executionContext);
+  }
+}

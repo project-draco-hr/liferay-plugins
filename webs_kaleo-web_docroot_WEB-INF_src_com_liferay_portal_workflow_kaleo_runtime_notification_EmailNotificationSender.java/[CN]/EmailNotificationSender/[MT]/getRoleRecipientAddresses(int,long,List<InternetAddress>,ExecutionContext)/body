@@ -1,6 +1,6 @@
 {
-  if (kaleoNotificationRecipient.getRecipientRoleType() == RoleConstants.TYPE_REGULAR) {
-    List<User> users=UserLocalServiceUtil.getRoleUsers(kaleoNotificationRecipient.getRecipientClassPK());
+  if (roleType == RoleConstants.TYPE_REGULAR) {
+    List<User> users=UserLocalServiceUtil.getRoleUsers(roleId);
     for (    User user : users) {
       InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
       internetAddresses.add(internetAddress);
@@ -8,7 +8,7 @@
   }
  else {
     KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
-    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoNotificationRecipient.getRecipientClassPK());
+    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),roleId);
     for (    UserGroupRole userGroupRole : userGroupRoles) {
       User user=userGroupRole.getUser();
       InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());

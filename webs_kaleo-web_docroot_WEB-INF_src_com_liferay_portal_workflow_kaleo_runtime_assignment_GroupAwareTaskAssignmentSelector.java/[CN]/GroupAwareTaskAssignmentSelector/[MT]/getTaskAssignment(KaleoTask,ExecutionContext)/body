@@ -1,0 +1,18 @@
+{
+  KaleoInstanceToken instanceToken=executionContext.getKaleoInstanceToken();
+  long groupId=instanceToken.getGroupId();
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  KaleoTaskAssignment defaultTaskAssignment=task.getDefaultKaleoTaskAssignment();
+  if (isValidAssignment(defaultTaskAssignment,group)) {
+    return defaultTaskAssignment;
+  }
+ else {
+    List<KaleoTaskAssignment> taskAssignments=task.getKaleoTaskAssignments();
+    for (    KaleoTaskAssignment taskAssignment : taskAssignments) {
+      if (isValidAssignment(taskAssignment,group)) {
+        return taskAssignment;
+      }
+    }
+  }
+  throw new WorkflowException("Unable to select a valid assignment for task: " + task);
+}
