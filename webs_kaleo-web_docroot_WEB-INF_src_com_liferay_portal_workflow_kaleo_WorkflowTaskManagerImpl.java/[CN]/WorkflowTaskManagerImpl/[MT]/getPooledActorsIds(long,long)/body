@@ -6,8 +6,17 @@
     PrimitiveLongList pooledActors=new PrimitiveLongList();
     for (    KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
       long roleId=kaleoTaskAssignment.getAssigneeClassPK();
-      long[] userIds=UserLocalServiceUtil.getRoleUserIds(roleId);
-      pooledActors.addAll(userIds);
+      Role role=RoleLocalServiceUtil.getRole(roleId);
+      if ((role.getType() == RoleConstants.TYPE_COMMUNITY) || (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
+        List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),roleId);
+        for (        UserGroupRole userGroupRole : userGroupRoles) {
+          pooledActors.add(userGroupRole.getUserId());
+        }
+      }
+ else {
+        long[] userIds=UserLocalServiceUtil.getRoleUserIds(roleId);
+        pooledActors.addAll(userIds);
+      }
     }
     return pooledActors.getArray();
   }
