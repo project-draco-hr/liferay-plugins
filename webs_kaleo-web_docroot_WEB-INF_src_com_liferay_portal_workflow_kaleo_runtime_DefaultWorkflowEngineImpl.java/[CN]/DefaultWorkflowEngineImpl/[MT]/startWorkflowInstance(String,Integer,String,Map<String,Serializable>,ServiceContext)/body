@@ -4,6 +4,11 @@
     if (!kaleoDefinition.isActive()) {
       throw new WorkflowException("Inactive workflow definition with name " + workflowDefinitionName + " and version "+ workflowDefinitionVersion);
     }
+    Group group=GroupLocalServiceUtil.getGroup(serviceContext.getScopeGroupId());
+    if (group.isLayout()) {
+      group=GroupLocalServiceUtil.getGroup(group.getParentGroupId());
+      serviceContext.setScopeGroupId(group.getGroupId());
+    }
     KaleoInstance kaleoInstance=kaleoInstanceLocalService.addKaleoInstance(kaleoDefinition.getKaleoDefinitionId(),kaleoDefinition.getName(),kaleoDefinition.getVersion(),workflowContext,serviceContext);
     KaleoInstanceToken rootKaleoInstanceToken=kaleoInstance.getRootKaleoInstanceToken(workflowContext,serviceContext);
     kaleoLogLocalService.addWorkflowInstanceStartKaleoLog(rootKaleoInstanceToken,serviceContext);
