@@ -63,6 +63,18 @@
     }
     i=articleContentDiffs.indexOf("<img ",i + 4);
   }
+  String articleAttachments=null;
+  String[] fileNames=article.getAttachmentsFileNames();
+  StringBundler sb=new StringBundler(fileNames.length * 5);
+  for (  String fileName : fileNames) {
+    long kb=dlService.getFileSize(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    sb.append(FileUtil.getShortFileName(fileName));
+    sb.append(" (");
+    sb.append(TextFormatter.formatKB(kb,LocaleUtil.getDefault()));
+    sb.append("k)");
+    sb.append("<br />");
+  }
+  articleAttachments=sb.toString();
   String articleURL=null;
   Layout layout=layoutLocalService.getLayout(serviceContext.getPlid());
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
@@ -121,8 +133,8 @@
       }
     }
   }
-  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
-  body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
+  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
+  body=StringUtil.replace(body,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
   String mailId=StringPool.LESS_THAN + "knowledge_base.article." + article.getResourcePrimKey()+ StringPool.AT+ company.getMx()+ StringPool.GREATER_THAN;
   Message message=new Message();
   message.put("companyId",article.getCompanyId());
