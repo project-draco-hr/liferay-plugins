@@ -1,17 +1,17 @@
 {
-  if (User.class.getName().equals(assignment.getAssigneeClassName())) {
+  String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
+  if (assigneeClassName.equals(User.class.getName())) {
     return true;
   }
-  long roleId=assignment.getAssigneeClassPK();
+  long roleId=kaleoTaskAssignment.getAssigneeClassPK();
   Role role=RoleLocalServiceUtil.getRole(roleId);
-  int roleType=role.getType();
   if (role.getType() == RoleConstants.TYPE_REGULAR) {
     return true;
   }
-  if (group.isCommunity() && (roleType == RoleConstants.TYPE_COMMUNITY)) {
+ else   if (group.isCommunity() && (role.getType() == RoleConstants.TYPE_COMMUNITY)) {
     return true;
   }
- else   if (group.isOrganization() && (roleType == RoleConstants.TYPE_ORGANIZATION)) {
+ else   if (group.isOrganization() && (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
     return true;
   }
   return false;

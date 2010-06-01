@@ -3,12 +3,13 @@
   if (kaleoTaskInstanceToken == null) {
     return;
   }
-  if (User.class.getName().equals(kaleoTaskInstanceToken.getAssigneeClassName())) {
+  String assigneeClassName=kaleoTaskInstanceToken.getAssigneeClassName();
+  if (assigneeClassName.equals(User.class.getName())) {
     getUserEmailAddress(kaleoTaskInstanceToken.getAssigneeClassPK(),internetAddresses);
   }
  else {
     long roleId=kaleoTaskInstanceToken.getAssigneeClassPK();
     Role role=RoleLocalServiceUtil.getRole(roleId);
-    getRoleRecipientAddresses(role.getType(),roleId,internetAddresses,executionContext);
+    getRoleRecipientAddresses(roleId,role.getType(),internetAddresses,executionContext);
   }
 }
