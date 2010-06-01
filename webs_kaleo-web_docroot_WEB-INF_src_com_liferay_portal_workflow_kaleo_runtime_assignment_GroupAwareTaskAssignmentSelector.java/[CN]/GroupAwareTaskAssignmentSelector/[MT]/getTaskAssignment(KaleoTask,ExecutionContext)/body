@@ -2,6 +2,9 @@
   KaleoInstanceToken instanceToken=executionContext.getKaleoInstanceToken();
   long groupId=instanceToken.getGroupId();
   Group group=GroupLocalServiceUtil.getGroup(groupId);
+  if (group.isLayout()) {
+    group=GroupLocalServiceUtil.getGroup(group.getParentGroupId());
+  }
   KaleoTaskAssignment defaultTaskAssignment=task.getDefaultKaleoTaskAssignment();
   if (isValidAssignment(defaultTaskAssignment,group)) {
     return defaultTaskAssignment;
