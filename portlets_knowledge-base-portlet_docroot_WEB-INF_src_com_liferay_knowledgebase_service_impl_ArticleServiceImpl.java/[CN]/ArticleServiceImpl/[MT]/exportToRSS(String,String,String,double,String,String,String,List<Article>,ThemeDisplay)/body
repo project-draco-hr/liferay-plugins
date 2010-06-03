@@ -3,7 +3,10 @@
   for (  Article article : articles) {
     String value=null;
     if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_ABSTRACT)) {
-      value=StringUtil.shorten(HtmlUtil.extractText(article.getContent()),200);
+      value=HtmlUtil.extractText(article.getDescription());
+      if (Validator.isNull(value)) {
+        value=StringUtil.shorten(HtmlUtil.extractText(article.getContent()),200);
+      }
     }
  else     if (displayStyle.equals(RSSUtil.DISPLAY_STYLE_TITLE)) {
       value=StringPool.BLANK;
