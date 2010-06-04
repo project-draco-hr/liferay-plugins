@@ -1,7 +1,7 @@
 {
   long companyId=getCompanyId(securityToken);
   Map<String,Map<String,String>> peopleAppData=new HashMap<String,Map<String,String>>();
-  List<ExpandoColumn> expandoColumns=getExpandoColumns(companyId);
+  List<ExpandoColumn> expandoColumns=getExpandoColumns(companyId,appId);
   if (expandoColumns == null) {
     return null;
   }
@@ -16,7 +16,7 @@
     long userIdLong=GetterUtil.getLong(userIdString);
     Map<String,String> personAppData=new HashMap<String,String>();
     for (    String field : fields) {
-      String value=getExpandoValue(companyId,userIdLong,field);
+      String value=getExpandoValue(companyId,appId,userIdLong,field);
       personAppData.put(field,value);
     }
     peopleAppData.put(userIdString,personAppData);
