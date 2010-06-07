@@ -1,0 +1,24 @@
+{
+  if (searchByUserRoles == null) {
+    return;
+  }
+  if (!searchByUserRoles) {
+    criteria.add(Restrictions.eq("assigneeClassName",User.class.getName()));
+    criteria.add(Restrictions.eq("assigneeClassPK",serviceContext.getUserId()));
+    return;
+  }
+  List<Long> roleIds=RoleRetrievalUtil.getRoleIds(serviceContext);
+  List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(serviceContext.getUserId());
+  if (userGroupRoles.isEmpty()) {
+    criteria.add(Restrictions.eq("assigneeClassName",Role.class.getName()));
+    criteria.add(Restrictions.in("assigneeClassPK",roleIds.toArray(new Long[roleIds.size()])));
+  }
+ else {
+    Junction junction=Restrictions.disjunction();
+    junction.add(Restrictions.and(Restrictions.eq("assigneeClassName",Role.class.getName()),Restrictions.in("assigneeClassPK",roleIds.toArray(new Long[roleIds.size()]))));
+    for (    UserGroupRole userGroupRole : userGroupRoles) {
+      junction.add(Restrictions.and(Restrictions.eq("groupId",userGroupRole.getGroupId()),Restrictions.and(Restrictions.eq("assigneeClassName",Role.class.getName()),Restrictions.eq("assigneeClassPK",userGroupRole.getRoleId()))));
+    }
+    criteria.add(junction);
+  }
+}

@@ -37,6 +37,11 @@
     workflowLogImpl.setUserId(assigneeUserId);
     Session session=jbpmContext.getSession();
     session.save(workflowLogImpl);
+    CustomSession customSession=new CustomSession(jbpmContext);
+    TaskInstanceExtensionImpl taskInstanceExtension=customSession.findTaskInstanceExtension(taskInstance.getId());
+    taskInstanceExtension.setAssigneeClassName(User.class.getName());
+    taskInstanceExtension.setAssigneeClassPK(assigneeUserId);
+    session.update(taskInstanceExtension);
     return new WorkflowTaskImpl(taskInstance);
   }
  catch (  Exception e) {

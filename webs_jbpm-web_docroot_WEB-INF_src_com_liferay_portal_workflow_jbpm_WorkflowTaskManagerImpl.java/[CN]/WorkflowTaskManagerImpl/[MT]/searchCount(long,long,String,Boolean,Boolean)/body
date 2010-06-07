@@ -2,9 +2,10 @@
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     CustomSession customSession=new CustomSession(jbpmContext);
-    String[] actorIds=getActorIds(userId,searchByUserRoles);
-    String[] taskNames=CustomSQLUtil.keywords(keywords);
-    return customSession.searchCountTaskInstances(actorIds,searchByUserRoles,taskNames,completed);
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setCompanyId(companyId);
+    serviceContext.setUserId(userId);
+    return customSession.searchCountTaskInstances(keywords,keywords,null,null,completed,searchByUserRoles,false,serviceContext);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);

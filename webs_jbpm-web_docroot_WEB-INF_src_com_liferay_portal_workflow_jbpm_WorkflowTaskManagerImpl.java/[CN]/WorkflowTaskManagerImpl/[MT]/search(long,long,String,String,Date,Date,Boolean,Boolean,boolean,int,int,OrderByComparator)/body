@@ -2,8 +2,10 @@
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     CustomSession customSession=new CustomSession(jbpmContext);
-    String[] actorIds=getActorIds(userId,searchByUserRoles);
-    List<TaskInstance> taskInstances=customSession.searchTaskInstances(actorIds,searchByUserRoles,taskName,assetType,dueDateGT,dueDateLT,completed,andOperator,start,end,orderByComparator);
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setCompanyId(companyId);
+    serviceContext.setUserId(userId);
+    List<TaskInstance> taskInstances=customSession.searchTaskInstances(taskName,assetType,dueDateGT,dueDateLT,completed,searchByUserRoles,andOperator,start,end,orderByComparator,serviceContext);
     return toWorkflowTasks(taskInstances);
   }
  catch (  Exception e) {

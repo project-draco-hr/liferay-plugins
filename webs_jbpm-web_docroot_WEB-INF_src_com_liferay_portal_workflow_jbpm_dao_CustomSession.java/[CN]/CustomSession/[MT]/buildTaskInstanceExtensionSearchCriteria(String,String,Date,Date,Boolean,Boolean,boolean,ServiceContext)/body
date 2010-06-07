@@ -1,0 +1,43 @@
+{
+  Criteria criteria=_session.createCriteria(TaskInstanceExtensionImpl.class);
+  criteria.createAlias("taskInstance","taskInstance");
+  criteria.add(Restrictions.eq("companyId",serviceContext.getCompanyId()));
+  if (Validator.isNotNull(taskName) || Validator.isNotNull(assetType) || (dueDateGT != null)|| (dueDateLT != null)) {
+    Junction junction=null;
+    if (andOperator) {
+      junction=Restrictions.conjunction();
+    }
+ else {
+      junction=Restrictions.disjunction();
+    }
+    if (Validator.isNotNull(taskName)) {
+      String[] taskNameKeywords=StringUtil.split(taskName,StringPool.SPACE);
+      for (      String taskNameKeyword : taskNameKeywords) {
+        junction.add(Restrictions.like("taskInstance.name","%" + taskNameKeyword + "%"));
+      }
+    }
+    if (Validator.isNotNull(assetType)) {
+      String[] assetTypeKeywords=StringUtil.split(assetType,StringPool.SPACE);
+      for (      String assetTypeKeyword : assetTypeKeywords) {
+        junction.add(Restrictions.like("workflowContext","%\"entryType\":\"%" + assetTypeKeyword + "%\"%"));
+      }
+    }
+    if (dueDateGT != null) {
+      junction.add(Restrictions.ge("taskInstance.dueDate",dueDateGT));
+    }
+    if (dueDateLT != null) {
+      junction.add(Restrictions.lt("taskInstance.dueDate",dueDateGT));
+    }
+    criteria.add(junction);
+  }
+  addSearchByUserRolesCriterion(criteria,searchByUserRoles,serviceContext);
+  if (completed != null) {
+    if (completed.booleanValue()) {
+      criteria.add(Restrictions.isNotNull("taskInstance.end"));
+    }
+ else {
+      criteria.add(Restrictions.isNull("taskInstance.end"));
+    }
+  }
+  return criteria;
+}

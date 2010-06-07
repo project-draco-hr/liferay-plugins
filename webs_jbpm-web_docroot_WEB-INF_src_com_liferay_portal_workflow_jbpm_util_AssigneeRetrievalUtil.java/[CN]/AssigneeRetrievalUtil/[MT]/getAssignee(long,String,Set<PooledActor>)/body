@@ -1,0 +1,27 @@
+{
+  Assignee assignee=new Assignee();
+  if (pooledActors != null && !pooledActors.isEmpty()) {
+    assignee.setAssigneeClassName(Role.class.getName());
+    PooledActor pooledActor=pooledActors.iterator().next();
+    Role role=null;
+    if (Validator.isNumber(pooledActor.getActorId())) {
+      role=RoleLocalServiceUtil.getRole(GetterUtil.getLong(pooledActor.getActorId()));
+    }
+ else {
+      role=RoleLocalServiceUtil.getRole(companyId,pooledActor.getActorId());
+    }
+    assignee.setAssigneeClassPK(role.getClassPK());
+  }
+ else {
+    assignee.setAssigneeClassName(User.class.getName());
+    User user=null;
+    if (Validator.isEmailAddress(actorId)) {
+      user=UserLocalServiceUtil.getUserByEmailAddress(companyId,actorId);
+    }
+ else {
+      user=UserLocalServiceUtil.getUser(GetterUtil.getLong(actorId));
+    }
+    assignee.setAssigneeClassPK(user.getUserId());
+  }
+  return assignee;
+}
