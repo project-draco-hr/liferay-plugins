@@ -1,0 +1,24 @@
+{
+  try {
+    if (Validator.isNumber(actorId)) {
+      long roleId=GetterUtil.getLong(actorId);
+      if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(assigneeUserId,groupId,roleId)) {
+        return true;
+      }
+ else {
+        return RoleLocalServiceUtil.hasUserRole(assigneeUserId,roleId);
+      }
+    }
+ else {
+      if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(assigneeUserId,groupId,actorId)) {
+        return true;
+      }
+ else {
+        return RoleLocalServiceUtil.hasUserRole(assigneeUserId,companyId,actorId,true);
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}
