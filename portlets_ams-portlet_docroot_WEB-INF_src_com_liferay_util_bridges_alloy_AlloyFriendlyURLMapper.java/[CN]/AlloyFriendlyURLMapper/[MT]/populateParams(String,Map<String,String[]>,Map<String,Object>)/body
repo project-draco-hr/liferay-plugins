@@ -1,0 +1,13 @@
+{
+  HttpServletRequest request=(HttpServletRequest)requestContext.get("request");
+  String method=request.getMethod();
+  addParameter(parameterMap,"p_p_id",_PORTLET_ID);
+  addParameter(parameterMap,"p_p_lifecycle",getLifecycle(method));
+  addParameter(parameterMap,"p_p_mode",PortletMode.VIEW);
+  Map<String,String> routeParameters=router.urlToParameters(method + friendlyURLPath.substring(_MAPPING.length() + 1));
+  for (  Map.Entry<String,String> entry : routeParameters.entrySet()) {
+    String name=entry.getKey();
+    String value=entry.getValue();
+    addParameter(parameterMap,name,value);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  definition=toUnwrappedModel(definition);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,definition,merge);
+    definition.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,definition.getPrimaryKey(),definition);
+  return definition;
+}

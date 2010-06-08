@@ -1,0 +1,38 @@
+{
+  portletURL.addParameterIncludedInPath("p_p_id");
+  portletURL.addParameterIncludedInPath("p_p_lifecycle");
+  Map<String,String[]> portletURLParameters=portletURL.getParameterMap();
+  if (portletURLParameters.isEmpty()) {
+    return StringPool.SLASH.concat(_MAPPING);
+  }
+  Map<String,String[]> parameters=new HashMap<String,String[]>(portletURL.getParameterMap());
+  String lifecycle=portletURL.getLifecycle();
+  if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
+    parameters.put("method",new String[]{HttpMethods.POST});
+  }
+ else {
+    parameters.put("method",new String[]{HttpMethods.GET});
+  }
+  String url=null;
+  try {
+    url=router.parametersToUrl(parameters);
+  }
+ catch (  Exception e) {
+    return StringPool.SLASH.concat(_MAPPING);
+  }
+  Map<String,String[]> extraParameters=HttpUtil.parameterMapFromString(HttpUtil.getQueryString(url));
+  for (  String name : portletURLParameters.keySet()) {
+    if (!extraParameters.containsKey(name)) {
+      portletURL.addParameterIncludedInPath(name);
+    }
+  }
+  String friendlyURLPath=url;
+  int pos=friendlyURLPath.indexOf(StringPool.SLASH);
+  friendlyURLPath=friendlyURLPath.substring(pos);
+  friendlyURLPath=StringPool.SLASH.concat(_MAPPING).concat(friendlyURLPath);
+  pos=friendlyURLPath.indexOf(StringPool.QUESTION);
+  if (pos != -1) {
+    friendlyURLPath=friendlyURLPath.substring(0,pos);
+  }
+  return friendlyURLPath;
+}

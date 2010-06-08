@@ -1,0 +1,20 @@
+{
+  Definition definition=(Definition)EntityCacheUtil.getResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,definitionId,this);
+  if (definition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      definition=(Definition)session.get(DefinitionImpl.class,new Long(definitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (definition != null) {
+        cacheResult(definition);
+      }
+      closeSession(session);
+    }
+  }
+  return definition;
+}

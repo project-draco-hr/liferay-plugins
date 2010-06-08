@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Definition definition=(Definition)session.get(DefinitionImpl.class,new Long(definitionId));
+    if (definition == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + definitionId);
+      }
+      throw new NoSuchDefinitionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + definitionId);
+    }
+    return remove(definition);
+  }
+ catch (  NoSuchDefinitionException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

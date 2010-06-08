@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Type type=(Type)session.get(TypeImpl.class,new Long(typeId));
+    if (type == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + typeId);
+      }
+      throw new NoSuchTypeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + typeId);
+    }
+    return remove(type);
+  }
+ catch (  NoSuchTypeException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

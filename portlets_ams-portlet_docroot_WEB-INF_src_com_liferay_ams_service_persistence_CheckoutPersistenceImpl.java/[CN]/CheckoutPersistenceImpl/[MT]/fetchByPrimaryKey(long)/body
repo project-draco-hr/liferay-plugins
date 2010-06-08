@@ -1,0 +1,20 @@
+{
+  Checkout checkout=(Checkout)EntityCacheUtil.getResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,checkoutId,this);
+  if (checkout == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      checkout=(Checkout)session.get(CheckoutImpl.class,new Long(checkoutId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (checkout != null) {
+        cacheResult(checkout);
+      }
+      closeSession(session);
+    }
+  }
+  return checkout;
+}
