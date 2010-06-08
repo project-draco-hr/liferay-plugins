@@ -15,11 +15,12 @@
       processInstance.signal();
     }
     jbpmContext.save(processInstance);
-    Collection<TaskInstance> taskInstances=processInstance.getTaskMgmtInstance().getTaskInstances();
+    TaskMgmtInstance taskMgmtInstance=processInstance.getTaskMgmtInstance();
+    Collection<TaskInstance> taskInstances=taskMgmtInstance.getTaskInstances();
     if (taskInstances != null) {
       for (      TaskInstance taskInstance : taskInstances) {
         Assignee assignee=AssigneeRetrievalUtil.getAssignee(companyId,taskInstance.getActorId(),taskInstance.getPooledActors());
-        String context=WorkflowContextUtil.convert(workflowContext);
+        String context=WorkflowContextUtil.convertToJSON(workflowContext);
         TaskInstanceExtensionImpl taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignee.getAssigneeClassName(),assignee.getAssigneeClassPK(),context,taskInstance);
         jbpmContext.getSession().save(taskInstanceExtensionImpl);
       }

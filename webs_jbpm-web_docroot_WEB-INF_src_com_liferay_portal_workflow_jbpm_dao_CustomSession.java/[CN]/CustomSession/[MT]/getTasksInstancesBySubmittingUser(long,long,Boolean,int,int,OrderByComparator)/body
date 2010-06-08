@@ -12,10 +12,11 @@
       }
     }
     addOrder(criteria,orderByComparator);
-    List<TaskInstance> tasks=criteria.list();
-    for (    TaskInstance taskInstance : tasks) {
-      ContextInstance contextInstance=taskInstance.getProcessInstance().getContextInstance();
-      if (Validator.equals(Long.toString(userId),(String)contextInstance.getVariable("userId"))) {
+    for (    TaskInstance taskInstance : (List<TaskInstance>)criteria.list()) {
+      ProcessInstance processInstance=taskInstance.getProcessInstance();
+      ContextInstance contextInstance=processInstance.getContextInstance();
+      long taskInstanceUserId=GetterUtil.getLong((String)contextInstance.getVariable("userId"));
+      if (userId == taskInstanceUserId) {
         taskInstances.add(taskInstance);
       }
     }
