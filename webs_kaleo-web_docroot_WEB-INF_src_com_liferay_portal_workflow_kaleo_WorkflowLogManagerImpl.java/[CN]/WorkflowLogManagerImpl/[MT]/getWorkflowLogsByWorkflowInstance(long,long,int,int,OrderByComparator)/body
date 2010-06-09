@@ -1,3 +1,9 @@
 {
-  throw new UnsupportedOperationException();
+  try {
+    List<KaleoLog> kaleoLogs=KaleoLogLocalServiceUtil.getKaleoLogsByKaleoInstanceId(workflowInstanceId,start,end,orderByComparator);
+    return toWorkflowLogs(kaleoLogs);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
 }
