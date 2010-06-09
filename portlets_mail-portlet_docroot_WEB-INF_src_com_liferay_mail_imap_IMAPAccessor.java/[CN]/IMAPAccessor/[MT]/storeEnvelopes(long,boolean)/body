@@ -11,7 +11,13 @@
     Message oldestJxMessage=getMessage(folderId,imapFolder,true);
     Message newestJxMessage=getMessage(folderId,imapFolder,false);
     Message[] jxMessages=new Message[0];
-    if ((oldestJxMessage == null) && (newestJxMessage == null)) {
+    if (allMessages) {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Downloading all messages from folder " + imapFolder.getFullName());
+      }
+      jxMessages=imapFolder.getMessages();
+    }
+ else     if ((oldestJxMessage == null) && (newestJxMessage == null)) {
       if (_log.isDebugEnabled()) {
         _log.debug("Downloading messages from folder " + imapFolder.getFullName() + " for the first time");
       }
@@ -20,19 +26,17 @@
         startingMessageNumber=1;
       }
       jxMessages=imapFolder.getMessages(startingMessageNumber,messageCount);
-      storeEnvelopes(folderId,imapFolder,jxMessages);
     }
  else {
       int newestMessageNumber=newestJxMessage.getMessageNumber();
+      int oldestMessageNumber=oldestJxMessage.getMessageNumber();
       if (newestMessageNumber != messageCount) {
         if (_log.isDebugEnabled()) {
           _log.debug("Downloading new messages from folder " + imapFolder.getFullName());
         }
         jxMessages=imapFolder.getMessages(newestMessageNumber + 1,messageCount);
-        storeEnvelopes(folderId,imapFolder,jxMessages);
       }
-      int oldestMessageNumber=oldestJxMessage.getMessageNumber();
-      if (oldestMessageNumber != 1) {
+ else       if (oldestMessageNumber != 1) {
         if (_log.isDebugEnabled()) {
           _log.debug("Downloading old messages from folder " + imapFolder.getFullName());
         }
@@ -41,9 +45,9 @@
           startingMessageNumber=1;
         }
         jxMessages=imapFolder.getMessages(startingMessageNumber,oldestMessageNumber - 1);
-        storeEnvelopes(folderId,imapFolder,jxMessages);
       }
     }
+    storeEnvelopes(folderId,imapFolder,jxMessages);
   }
  catch (  MessagingException me) {
     throw new MailException(me);

@@ -17,7 +17,10 @@
       Date sentDate=jxMessage.getSentDate();
       String subject=jxMessage.getSubject();
       long remoteMessageId=imapFolder.getUID(jxMessage);
-      MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,StringPool.BLANK,remoteMessageId);
+      com.liferay.mail.model.Message message=MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
+      if (message == null) {
+        MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,StringPool.BLANK,remoteMessageId);
+      }
     }
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.getFolder(folderId);
     FolderLocalServiceUtil.updateFolder(folderId,folder.getFullName(),folder.getDisplayName(),imapFolder.getMessageCount());
