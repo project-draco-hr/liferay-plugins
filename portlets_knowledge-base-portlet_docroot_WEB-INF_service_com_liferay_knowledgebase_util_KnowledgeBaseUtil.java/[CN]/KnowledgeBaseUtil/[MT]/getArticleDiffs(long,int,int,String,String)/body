@@ -1,0 +1,14 @@
+{
+  if (sourceVersion == targetVersion) {
+    Article article=ArticleLocalServiceUtil.getArticle(resourcePrimKey,targetVersion);
+    Object object=BeanPropertiesUtil.getObject(article,parameter);
+    return String.valueOf(object);
+  }
+  Article sourceArticle=ArticleLocalServiceUtil.getArticle(resourcePrimKey,sourceVersion);
+  Article targetArticle=ArticleLocalServiceUtil.getArticle(resourcePrimKey,targetVersion);
+  Object sourceObject=BeanPropertiesUtil.getObject(sourceArticle,parameter);
+  Object targetObject=BeanPropertiesUtil.getObject(targetArticle,parameter);
+  String sourceHtml=String.valueOf(sourceObject);
+  String targetHtml=String.valueOf(targetObject);
+  return getDiffs(sourceHtml,targetHtml,portalURL);
+}
