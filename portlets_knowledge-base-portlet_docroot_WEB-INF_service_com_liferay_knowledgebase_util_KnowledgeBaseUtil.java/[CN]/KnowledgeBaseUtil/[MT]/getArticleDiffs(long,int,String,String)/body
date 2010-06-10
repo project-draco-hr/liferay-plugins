@@ -11,5 +11,9 @@
   }
   Article sourceArticle=ArticleLocalServiceUtil.getArticle(resourcePrimKey,sourceVersion);
   Article targetArticle=ArticleLocalServiceUtil.getArticle(resourcePrimKey,targetVersion);
-  return getDiffs(sourceArticle,targetArticle,parameter,portalURL);
+  Object sourceObject=BeanPropertiesUtil.getObject(sourceArticle,parameter);
+  Object targetObject=BeanPropertiesUtil.getObject(targetArticle,parameter);
+  String sourceHtml=String.valueOf(sourceObject);
+  String targetHtml=String.valueOf(targetObject);
+  return getDiffs(sourceHtml,targetHtml,portalURL);
 }
