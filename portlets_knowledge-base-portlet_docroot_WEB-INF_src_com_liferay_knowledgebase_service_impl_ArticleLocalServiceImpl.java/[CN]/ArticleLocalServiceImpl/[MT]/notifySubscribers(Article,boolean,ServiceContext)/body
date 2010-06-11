@@ -33,9 +33,20 @@
   String fromAddress=preferences.getValue("email-from-address",PortletProps.get("admin.email.from.address"));
   fromName=StringUtil.replace(fromName,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
   fromAddress=StringUtil.replace(fromAddress,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$PORTLET_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),portletName});
+  Map<String,String> articleDiffs=new HashMap<String,String>();
+  String[] parameters=new String[]{"content"};
+  for (  String parameter : parameters) {
+    String articleDiff=StringPool.BLANK;
+    try {
+      articleDiff=KnowledgeBaseUtil.getArticleDiff(article.getResourcePrimKey(),article.getVersion(),parameter,serviceContext.getPortalURL());
+    }
+ catch (    Exception e) {
+      _log.error("Unable to process diff for {resourcePrimKey=" + article.getResourcePrimKey() + ", version="+ article.getVersion()+ "}");
+    }
+    articleDiffs.put(parameter,articleDiff);
+  }
   String articleAttachments=getEmailArticleAttachments(article);
   String articleContent=getEmailArticleContent(article,serviceContext);
-  String articleContentDiffs=getEmailArticleContentDiffs(article,serviceContext);
   String articleURL=getEmailArticleURL(article,serviceContext);
   String subject=null;
   String body=null;
@@ -83,8 +94,8 @@
       }
     }
   }
-  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
-  body=StringUtil.replace(body,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFFS$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleContentDiffs,article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
+  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleDiffs.get("content"),article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
+  body=StringUtil.replace(body,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]"},new String[]{articleAttachments,articleContent,articleDiffs.get("content"),article.getTitle(),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL(),portletName});
   String mailId=StringPool.LESS_THAN + "knowledge_base.article." + article.getResourcePrimKey()+ StringPool.AT+ company.getMx()+ StringPool.GREATER_THAN;
   Message message=new Message();
   message.put("companyId",article.getCompanyId());
