@@ -1,0 +1,18 @@
+{
+  IMAPFolder imapFolder=null;
+  try {
+    imapFolder=openFolder(folderId);
+    int messageCount=imapFolder.getMessageCount();
+    Message jxMessage=getMessage(folderId,imapFolder,false);
+    if (messageCount == jxMessage.getMessageNumber()) {
+      return false;
+    }
+    return true;
+  }
+ catch (  MessagingException me) {
+    throw new MailException(me);
+  }
+ finally {
+    closeFolder(imapFolder,false);
+  }
+}
