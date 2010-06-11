@@ -1,0 +1,20 @@
+{
+  String newMessageTo=originalMessage.getSender();
+  String newMessageCc="";
+  if (replyAll) {
+    String to=originalMessage.getTo();
+    String cc=originalMessage.getCc();
+    if (to != null && !to.equals("")) {
+      newMessageCc=to;
+    }
+    if (cc != null && !cc.equals("")) {
+      if (!newMessageCc.equals("")) {
+        newMessageCc+=", ";
+      }
+      newMessageCc+=cc;
+    }
+  }
+  String newMessageSubject="Re: " + originalMessage.getSubject();
+  String newMessageBody=MessageUtil.createReplyMessage(originalMessage);
+  return compose(newMessageTo,newMessageCc,newMessageSubject,newMessageBody);
+}

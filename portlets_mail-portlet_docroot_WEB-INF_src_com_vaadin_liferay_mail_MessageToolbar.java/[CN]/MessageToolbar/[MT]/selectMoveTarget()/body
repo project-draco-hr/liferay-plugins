@@ -1,0 +1,61 @@
+{
+  List<Message> message=mainMailView.getSelectedMessages();
+  if (message.isEmpty()) {
+    Controller.get().showInfo(Lang.get("no-messages-selected"));
+    return;
+  }
+  Account account;
+  try {
+    account=MessageUtil.getAccountForMessage(message.get(0));
+  }
+ catch (  Exception e) {
+    Controller.get().showError(Lang.get("unable-to-move-messages"),e);
+    return;
+  }
+  VerticalLayout panelLayout=new VerticalLayout();
+  panelLayout.setMargin(false,true,true,false);
+  panelLayout.setSizeUndefined();
+  Panel p=new Panel(panelLayout);
+  p.setSizeUndefined();
+  final PopupView popupView=new PopupView("",p);
+  FolderTree destinationTree=new FolderTree(new FolderChangeListener(){
+    public void selectedFolderChanged(    Folder folder){
+      if (folder != null) {
+        popupView.setPopupVisible(false);
+        Controller controller=Controller.get();
+        try {
+          MessageUtil.moveMessagesTo(mainMailView.getSelectedMessages(),folder);
+          controller.showInfo(Lang.get("messages-have-been-moved"));
+        }
+ catch (        MailException me) {
+          if (me.getType() == MailException.FOLDER_INVALID_DESTINATION) {
+            controller.showError(Lang.get("cant-move-messages-to-this-folder"));
+          }
+        }
+catch (        PortalException e) {
+          controller.showError(Lang.get("unable-to-move-messages"),e);
+        }
+catch (        SystemException e) {
+          controller.showError(Lang.get("unable-to-move-messages"),e);
+        }
+      }
+    }
+  }
+,null);
+  p.addComponent(destinationTree);
+  popupView.setPopupVisible(true);
+  popupView.addListener(new PopupVisibilityListener(){
+    public void popupVisibilityChange(    PopupVisibilityEvent event){
+      if (!event.isPopupVisible()) {
+        removeComponent(event.getPopupView());
+      }
+    }
+  }
+);
+  List<Account> accounts=new ArrayList<Account>();
+  accounts.add(account);
+  final FolderContainer folderContainer=new FolderContainer(accounts);
+  destinationTree.setContainerDataSource(folderContainer);
+  destinationTree.expandItemsRecursively(destinationTree.rootItemIds().iterator().next());
+  addComponent(popupView,moveToIndex);
+}

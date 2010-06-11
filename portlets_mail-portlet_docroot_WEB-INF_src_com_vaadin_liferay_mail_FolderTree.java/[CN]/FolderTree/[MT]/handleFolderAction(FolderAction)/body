@@ -1,0 +1,44 @@
+{
+  final Folder folder=action.getFolder();
+  if (folder == null) {
+    return;
+  }
+  if ("rename-folder".equals(action.getCaption())) {
+    String title=Lang.get("rename-folder");
+    String message=Lang.get("please-enter-new-folder-name");
+    final ConfirmDialog confirm=new ConfirmDialog(Lang.get("confirm"),title,message);
+    final TextField newNameField=new TextField();
+    newNameField.setNullRepresentation("");
+    newNameField.setValue(folder.getDisplayName());
+    confirm.addExtraComponent(newNameField);
+    confirm.addConfirmButtonListener(new ClickListener(){
+      public void buttonClick(      ClickEvent event){
+        String newName=(String)newNameField.getValue();
+        if (newName != null && !"".equals(newName)) {
+          confirm.closeDialog();
+          renameFolder(folder.getFolderId(),newName);
+          synchronizeAccount(folder.getAccountId(),Controller.get());
+          refresh();
+        }
+ else {
+          Controller.get().showError(Lang.get("please-enter-new-folder-name"));
+        }
+      }
+    }
+);
+    Controller.get().getApplication().getMainWindow().addWindow(confirm);
+  }
+ else   if ("remove-folder".equals(action.getCaption())) {
+    final ConfirmDialog confirm=new ConfirmDialog(Lang.get("confirm"),Lang.get("delete"),Lang.get("are-you-sure-you-want-to-delete-this-folder"));
+    confirm.addConfirmButtonListener(new ClickListener(){
+      public void buttonClick(      ClickEvent event){
+        confirm.closeDialog();
+        deleteFolder(folder.getFolderId());
+        synchronizeAccount(folder.getAccountId(),Controller.get());
+        refresh();
+      }
+    }
+);
+    Controller.get().getApplication().getMainWindow().addWindow(confirm);
+  }
+}

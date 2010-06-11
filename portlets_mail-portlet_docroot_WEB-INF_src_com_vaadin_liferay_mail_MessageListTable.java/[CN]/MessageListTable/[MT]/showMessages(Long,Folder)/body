@@ -1,0 +1,35 @@
+{
+  boolean first=!(getContainerDataSource() instanceof MessageContainer);
+  try {
+    if (accountId == null || folder == null) {
+      setVisible(false);
+      return;
+    }
+ else {
+      setVisible(true);
+    }
+    setEnabled(true);
+    MessageContainer messageContainer=new MessageContainer(accountId,folder);
+    setContainerDataSource(messageContainer);
+    boolean sentFolder=AccountLocalServiceUtil.getAccount(accountId).getSentFolderId() == folder.getFolderId();
+    sentFolder=false;
+    if (sentFolder) {
+      setVisibleColumns(sentFolderVisibleColumns);
+    }
+ else {
+      setVisibleColumns(visibleColumns);
+    }
+    setColumnHeaders(getColumnNames(sentFolder));
+    setColumnExpandRatio("subject",1);
+    setRowHeaderMode(ROW_HEADER_MODE_ICON_ONLY);
+    setItemIconPropertyId("icon");
+    if (first) {
+      setSortContainerPropertyId("sentDate");
+      setSortAscending(false);
+    }
+  }
+ catch (  Exception e) {
+    setEnabled(false);
+    Controller.get().showError(Lang.get("unable-to-access-account"),e);
+  }
+}

@@ -1,0 +1,22 @@
+{
+  List<Account> accounts=new ArrayList<Account>();
+  try {
+    accounts=AccountLocalServiceUtil.getAccounts(Controller.get().getUser().getUserId());
+    folders.setAccounts(accounts);
+  }
+ catch (  SystemException e) {
+    Controller.get().showUnexpectedError(e);
+  }
+  for (  final Account account : accounts) {
+    try {
+      long messages=MessageLocalServiceUtil.getAccountUnreadMessagesCount(account.getAccountId());
+      if (messages > 0) {
+        show(account);
+        return;
+      }
+    }
+ catch (    SystemException e) {
+    }
+  }
+  show(accounts.get(0));
+}

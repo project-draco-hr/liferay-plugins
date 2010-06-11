@@ -1,0 +1,31 @@
+{
+  final Long accountId=action.getAccountId();
+  if (accountId == null) {
+    return;
+  }
+  if ("create-folder".equals(action.getCaption())) {
+    String title=Lang.get("create-folder");
+    String message=Lang.get("please-enter-new-folder-name");
+    final ConfirmDialog confirm=new ConfirmDialog(Lang.get("confirm"),title,message);
+    final TextField newNameField=new TextField();
+    newNameField.setNullRepresentation("");
+    newNameField.setValue("new folder");
+    confirm.addExtraComponent(newNameField);
+    confirm.addConfirmButtonListener(new ClickListener(){
+      public void buttonClick(      ClickEvent event){
+        String newName=(String)newNameField.getValue();
+        if (newName != null && !"".equals(newName)) {
+          confirm.closeDialog();
+          addFolder(accountId,newName);
+          synchronizeAccount(accountId,Controller.get());
+          refresh();
+        }
+ else {
+          Controller.get().showError(Lang.get("please-enter-new-folder-name"));
+        }
+      }
+    }
+);
+    Controller.get().getApplication().getMainWindow().addWindow(confirm);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  Button b=event.getButton();
+  Object data=b.getData();
+  if (data != null && data instanceof Attachment) {
+    final Attachment attachment=(Attachment)data;
+    StreamResource r=new StreamResource(new StreamSource(){
+      public InputStream getStream(){
+        try {
+          return AttachmentLocalServiceUtil.getInputStream(attachment.getAttachmentId());
+        }
+ catch (        PortalException e) {
+          Controller.get().showError(Lang.get("unable-to-fetch-attachment"),e);
+        }
+catch (        SystemException e) {
+          Controller.get().showError(Lang.get("unable-to-fetch-attachment"),e);
+        }
+        return null;
+      }
+    }
+,attachment.getFileName(),Controller.get().getApplication());
+    Controller.get().getApplication().getMainWindow().open(r,"_blank");
+  }
+}

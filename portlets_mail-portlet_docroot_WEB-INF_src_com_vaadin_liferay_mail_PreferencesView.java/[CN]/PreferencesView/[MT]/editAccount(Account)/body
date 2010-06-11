@@ -1,0 +1,11 @@
+{
+  String windowTitle=Lang.get(account == null ? "add-mail-account" : "edit-account");
+  final Window editorWindow=new Window(windowTitle);
+  editorWindow.setSizeUndefined();
+  editorWindow.center();
+  editorWindow.setModal(true);
+  AccountEditor.AccountEditorListener listener=new SaveAccountListener(editorWindow);
+  AccountEditor editor=new AccountEditor(account,controller,listener);
+  editorWindow.setContent(editor);
+  controller.getApplication().getMainWindow().addWindow(editorWindow);
+}

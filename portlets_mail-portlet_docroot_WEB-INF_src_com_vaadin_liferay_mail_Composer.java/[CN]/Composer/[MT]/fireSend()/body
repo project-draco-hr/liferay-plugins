@@ -1,0 +1,29 @@
+{
+  Message msg=null;
+  try {
+    msg=MessageUtil.saveOrSendMessage(getFrom(),getTo(),getCc(),getBcc(),getSubject(),getMessage(),getAttachments(),true,draftMessageId);
+    for (    ComposerListener listener : listeners) {
+      listener.messageSent(this,msg);
+    }
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.MESSAGE_HAS_NO_RECIPIENTS) {
+      getApplication().getMainWindow().showNotification(Lang.get("please-specify-at-least-one-recipient"),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+    }
+ else     if (me.getType() == MailException.MESSAGE_INVALID_ADDRESS) {
+      getApplication().getMainWindow().showNotification(Lang.get("please-make-sure-the-following-address-is-properly" + "-formatted",me.getValue()),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+    }
+ else {
+      getApplication().getMainWindow().showNotification(Lang.get("unable-to-send-message"),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+      return;
+    }
+  }
+catch (  PortalException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-send-message"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+catch (  SystemException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-send-message"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+}

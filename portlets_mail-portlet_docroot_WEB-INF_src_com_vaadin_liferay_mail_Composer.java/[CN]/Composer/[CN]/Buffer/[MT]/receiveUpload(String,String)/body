@@ -1,0 +1,22 @@
+{
+  fileName=filename;
+  mimeType=MIMEType;
+  if (file != null) {
+    file.delete();
+  }
+  try {
+    file=File.createTempFile("attachment",null);
+  }
+ catch (  final IOException e) {
+    getWindow().showNotification(Lang.get("unable-to-attach-files"),filename,Notification.TYPE_ERROR_MESSAGE);
+    _log.warn("Unable to attach files",e);
+  }
+  try {
+    return new FileOutputStream(file);
+  }
+ catch (  final FileNotFoundException e) {
+    getWindow().showNotification(Lang.get("unable-to-attach-files"),filename,Notification.TYPE_ERROR_MESSAGE);
+    _log.warn("Unable to attach files",e);
+  }
+  return null;
+}

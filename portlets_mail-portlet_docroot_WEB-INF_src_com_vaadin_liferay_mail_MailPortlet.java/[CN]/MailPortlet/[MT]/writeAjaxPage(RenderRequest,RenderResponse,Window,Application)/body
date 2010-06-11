@@ -1,0 +1,12 @@
+{
+  MailApplication mailApplication=(MailApplication)application;
+  if (mailApplication.getController().getUser() == null) {
+    writeNotLoggedInPageHtml(request,response,window);
+  }
+ else   if (PortletMode.VIEW.equals(request.getPortletMode()) && WindowState.NORMAL.equals(request.getWindowState())) {
+    mailApplication.writeViewPageHtml(request,response,window);
+  }
+ else {
+    super.writeAjaxPage(request,response,window,application);
+  }
+}

@@ -1,0 +1,26 @@
+{
+  final Message originalMessage=mainMailView.getSelectedMessage();
+  if (originalMessage == null) {
+    Controller.get().showInfo(Lang.get("no-messages-selected"));
+    return;
+  }
+  Composer composer=Controller.get().replyInComposer(originalMessage,toAll);
+  composer.addListener(new ComposerListener(){
+    public void messageDiscarded(    Composer composer){
+    }
+    public void messageSaved(    Composer composer,    Message message){
+    }
+    public void messageSent(    Composer composer,    Message message){
+      try {
+        MessageUtil.setAnswered(originalMessage,true);
+      }
+ catch (      PortalException e) {
+        Controller.get().showError(Lang.get("unable-to-flag-messages"),e);
+      }
+catch (      SystemException e) {
+        Controller.get().showError(Lang.get("unable-to-flag-messages"),e);
+      }
+    }
+  }
+);
+}

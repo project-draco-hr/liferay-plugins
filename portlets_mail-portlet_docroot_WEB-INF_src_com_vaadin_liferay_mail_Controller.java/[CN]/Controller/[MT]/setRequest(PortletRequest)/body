@@ -1,0 +1,15 @@
+{
+  user=null;
+  try {
+    user=PortalUtil.getUser(request);
+  }
+ catch (  PortalException e) {
+    _log.debug(e);
+  }
+catch (  SystemException e) {
+    _log.debug(e);
+  }
+  HttpServletRequest httpRequest=PortalUtil.getHttpServletRequest(request);
+  passwordRetriever=new PasswordRetriever(httpRequest);
+  mailMgr=new MailManager(user,passwordRetriever);
+}

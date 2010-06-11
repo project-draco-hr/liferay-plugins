@@ -1,0 +1,15 @@
+{
+  if (currentAccountId == null) {
+    return;
+  }
+  try {
+    Controller.get().getMailManager().synchronizeAccount(currentAccountId);
+    mainMailView.update();
+  }
+ catch (  SystemException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+  }
+catch (  PortalException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+  }
+}

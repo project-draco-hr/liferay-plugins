@@ -1,0 +1,45 @@
+{
+  messageList=msgList;
+  Controller.get().addListener(this);
+  setPageLength(10);
+  setStyleName("borderless");
+  setHeight("100.0%");
+  setWidth("100.0%");
+  setDragMode(TableDragMode.MULTIROW);
+  setImmediate(true);
+  setMultiSelect(true);
+  setSelectable(false);
+  addListener(new ItemClickListener(){
+    public void itemClick(    ItemClickEvent event){
+      Message id=(Message)event.getItemId();
+      if (event.isCtrlKey()) {
+        if (toggleSelected(id)) {
+          mostSelected=id;
+        }
+      }
+ else       if (event.isShiftKey()) {
+        if (mostSelected == null) {
+          mostSelected=id;
+        }
+        selectRange(mostSelected,id);
+        mostSelected=id;
+      }
+ else {
+        mostSelected=id;
+        HashSet<Object> selected=new HashSet<Object>();
+        selected.add(id);
+        setValue(selected);
+      }
+      messageList.showMessage(getSelectedMessage());
+    }
+  }
+);
+  setNullSelectionAllowed(true);
+  addListener(new Property.ValueChangeListener(){
+    public void valueChange(    com.vaadin.data.Property.ValueChangeEvent event){
+      messageList.showMessage(getSelectedMessage());
+    }
+  }
+);
+  addActionHandler(this);
+}

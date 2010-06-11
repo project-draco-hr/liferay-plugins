@@ -1,0 +1,21 @@
+{
+  Message msg=null;
+  try {
+    msg=MessageUtil.saveOrSendMessage(getFrom(),getTo(),getCc(),getBcc(),getSubject(),getMessage(),getAttachments(),false,draftMessageId);
+    for (    ComposerListener listener : listeners) {
+      listener.messageSaved(this,msg);
+    }
+  }
+ catch (  MailException me) {
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+    return;
+  }
+catch (  PortalException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+catch (  SystemException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+}

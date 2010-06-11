@@ -1,0 +1,34 @@
+{
+  final ComponentContainer previousView=mainWindow.getContent();
+  composer.setHeight("550px");
+  mainWindow.setContent(composer);
+  composer.addListener(new ComposerListener(){
+    public void messageDiscarded(    Composer composer){
+      if (returnUrl == null) {
+        mainWindow.setContent(previousView);
+      }
+ else {
+        composer.getWindow().open(new ExternalResource(returnUrl));
+      }
+    }
+    public void messageSaved(    Composer composer,    Message message){
+      if (returnUrl == null) {
+        mainWindow.setContent(previousView);
+      }
+      composer.getWindow().showNotification(Lang.get("your-message-was-saved"),Notification.TYPE_TRAY_NOTIFICATION);
+      if (returnUrl != null) {
+        composer.getWindow().open(new ExternalResource(returnUrl));
+      }
+    }
+    public void messageSent(    Composer composer,    Message message){
+      if (returnUrl == null) {
+        mainWindow.setContent(previousView);
+      }
+      composer.getWindow().showNotification(Lang.get("your-message-has-been-sent"),Lang.get("to") + ":</br>" + message.getTo()+ "<br/>"+ Lang.get("subject")+ ": "+ composer.getSubject()+ "<br/>"+ composer.getAttachments().size()+ " "+ Lang.get("attachments"),Notification.TYPE_TRAY_NOTIFICATION);
+      if (returnUrl != null) {
+        composer.getWindow().open(new ExternalResource(returnUrl));
+      }
+    }
+  }
+);
+}

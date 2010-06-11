@@ -1,0 +1,36 @@
+{
+  try {
+    accountPanel.removeAllComponents();
+    List<Account> accounts=controller.getAccountManager().getAccounts(controller.getUser());
+    if (accounts.size() > 0) {
+      GridLayout grid=new GridLayout(4,accounts.size());
+      grid.setSpacing(true);
+      for (      final Account account : accounts) {
+        grid.addComponent(new Label(account.getAddress()));
+        Button editButton=new Button(Lang.get("edit"));
+        editButton.setStyleName("small");
+        editButton.addListener(new ClickListener(){
+          public void buttonClick(          ClickEvent event){
+            editAccount(account);
+          }
+        }
+);
+        grid.addComponent(editButton);
+        Button deleteButton=new Button(Lang.get("delete"));
+        deleteButton.setStyleName("small");
+        deleteButton.addListener(new ClickListener(){
+          public void buttonClick(          ClickEvent event){
+            deleteAccount(account);
+            controller.showInfo(Lang.get("account-has-been-deleted"));
+          }
+        }
+);
+        grid.addComponent(deleteButton);
+      }
+      accountPanel.addComponent(grid);
+    }
+  }
+ catch (  SystemException e) {
+    controller.showUnexpectedError(e);
+  }
+}

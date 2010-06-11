@@ -1,0 +1,31 @@
+{
+  try {
+    if (account.isNew()) {
+      String resultKey=controller.getAccountManager().addAccount(account,controller);
+      if (resultKey == null) {
+        controller.showInfo(Lang.get("account-has-been-created"));
+      }
+ else {
+        controller.showError(Lang.get(resultKey));
+      }
+    }
+ else {
+      String resultKey=controller.getAccountManager().updateAccount(account,controller);
+      if (resultKey == null) {
+        controller.showInfo(Lang.get("account-has-been-updated"));
+      }
+ else {
+        controller.showError(Lang.get(resultKey));
+      }
+    }
+    synchronizeAccount(account);
+  }
+ catch (  SystemException e) {
+    controller.showError(Lang.get("unable-to-save-account"),e);
+  }
+catch (  PortalException e) {
+    controller.showError(Lang.get("unable-to-save-account"),e);
+  }
+  controller.getApplication().getMainWindow().removeWindow(editorWindow);
+  updateAccountList();
+}

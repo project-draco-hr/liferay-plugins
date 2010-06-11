@@ -1,0 +1,61 @@
+{
+  controller.setRequest(request);
+  if (summaryViewURL == null) {
+    PortletURL url=response.createRenderURL();
+    try {
+      url.setPortletMode(PortletMode.VIEW);
+      url.setWindowState(WindowState.NORMAL);
+      summaryViewURL=url.toString();
+    }
+ catch (    PortletModeException e) {
+      _log.debug(e);
+    }
+catch (    WindowStateException e) {
+      _log.debug(e);
+    }
+  }
+  if (!PortletMode.VIEW.equals(request.getPortletMode()) && !PortletMode.EDIT.equals(request.getPortletMode())) {
+    return;
+  }
+  portletTitle=PortalUtil.getPortletTitle(PortalUtil.getPortletId(request),controller.getUser());
+  controller.setPreferences(request.getPreferences());
+  if (PortletMode.VIEW.equals(request.getPortletMode()) && WindowState.MAXIMIZED.equals(request.getWindowState())) {
+    if (MODE_COMPOSE.equals(request.getParameter(PARAM_RENDER_MODE))) {
+      switchToCompose(new Composer(),summaryViewURL);
+    }
+ else     if (MODE_ACCOUNT.equals(request.getParameter(PARAM_RENDER_MODE))) {
+      String accountParam=request.getParameter(PARAM_ACCOUNT);
+      Account account=null;
+      try {
+        long id=Long.parseLong(accountParam);
+        account=AccountLocalServiceUtil.getAccount(id);
+      }
+ catch (      NumberFormatException e) {
+      }
+catch (      PortalException e) {
+        _log.warn("Could not get account",e);
+      }
+catch (      SystemException e) {
+        _log.warn("Could not get account",e);
+      }
+      if (account != null) {
+        mainMailView=new MainMailView();
+        mainMailView.setHeight("550px");
+        window.setContent(mainMailView);
+        mainMailView.show(account);
+      }
+ else {
+        window.open(new ExternalResource(summaryViewURL));
+      }
+    }
+ else {
+      mainMailView=new MainMailView();
+      window.setContent(mainMailView);
+      mainMailView.showFirstAccountWithUnreadMessages();
+      window.getContent().setHeight("550px");
+    }
+  }
+ else   if (PortletMode.EDIT.equals(request.getPortletMode())) {
+    window.setContent(new PreferencesView(controller));
+  }
+}

@@ -1,0 +1,15 @@
+{
+  List<Account> accounts=null;
+  try {
+    accounts=AccountLocalServiceUtil.getAccounts(Controller.get().getUser().getUserId());
+  }
+ catch (  SystemException e) {
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-access-account"),Notification.TYPE_ERROR_MESSAGE);
+    _log.warn("Unable to access account",e);
+    fireDiscard();
+  }
+  BeanItemContainer<Account> bi=new BeanItemContainer<Account>(accounts);
+  from.setContainerDataSource(bi);
+  from.setItemCaptionPropertyId(ACCOUNT_NAME_ID);
+  from.setValue(accounts.get(0));
+}

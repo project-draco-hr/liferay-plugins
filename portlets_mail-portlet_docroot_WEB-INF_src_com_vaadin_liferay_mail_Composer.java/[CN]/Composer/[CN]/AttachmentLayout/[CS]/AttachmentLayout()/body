@@ -1,0 +1,45 @@
+{
+  setStyleName("blue");
+  setSpacing(true);
+  setWidth("100.0%");
+  addComponent(upload);
+  progress.setPollingInterval(500);
+  progress.setWidth("100.0%");
+  upload.addListener(new Upload.StartedListener(){
+    public void uploadStarted(    StartedEvent event){
+      addComponent(progress);
+      setExpandRatio(progress,1.0f);
+      setComponentAlignment(progress,"middle center");
+      progress.setIndeterminate(false);
+    }
+  }
+);
+  upload.addListener(new Upload.ProgressListener(){
+    public void updateProgress(    long readBytes,    long contentLength){
+      float p=(float)readBytes / contentLength;
+      progress.setValue(p);
+    }
+  }
+);
+  upload.addListener(new Upload.FailedListener(){
+    public void uploadFailed(    FailedEvent event){
+      progress.setVisible(false);
+      getWindow().showNotification(Lang.get("unable-to-attach-files"),event.getFilename(),Notification.TYPE_ERROR_MESSAGE);
+    }
+  }
+);
+  upload.addListener(new Upload.FinishedListener(){
+    public void uploadFinished(    FinishedEvent event){
+      if (event.getLength() <= 0) {
+        getWindow().showNotification(Lang.get("unable-to-attach-files"),event.getFilename(),Notification.TYPE_ERROR_MESSAGE);
+        removeAttachment(AttachmentLayout.this);
+      }
+ else {
+        size=event.getLength();
+        filename=event.getFilename();
+        setAttachment(event.getFilename(),event.getLength(),event.getMIMEType(),buffer);
+      }
+    }
+  }
+);
+}

@@ -1,0 +1,17 @@
+{
+  List<ItemId> itemIds=accountFolders.get(accountId);
+  if (itemIds == null) {
+    itemIds=new ArrayList<ItemId>();
+    try {
+      List<Folder> folders=FolderLocalServiceUtil.getFolders(accountId);
+      for (      Folder folder : folders) {
+        itemIds.add(new ItemId(folder));
+      }
+    }
+ catch (    SystemException e) {
+      _log.debug(e);
+    }
+    accountFolders.put(accountId,itemIds);
+  }
+  return itemIds;
+}

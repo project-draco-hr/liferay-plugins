@@ -1,0 +1,26 @@
+{
+  int pageNumber=1 + messageIndex / PAGE_SIZE;
+  List<Message> messages=new ArrayList<Message>();
+  String orderByField="";
+  String orderByType="";
+  String keywords="";
+  if (folder != null) {
+    Mailbox mailbox=MessageUtil.getMailbox(accountId);
+    MessagesDisplay messagesDisplay=mailbox.getMessagesDisplay(folder.getFolderId(),keywords,pageNumber,PAGE_SIZE,orderByField,orderByType);
+    messages=messagesDisplay.getMessages();
+  }
+  int count=messages.size();
+  int expected=PAGE_SIZE;
+  if (count < (messageIndex + PAGE_SIZE)) {
+    expected=count - (pageNumber - 1) * PAGE_SIZE;
+  }
+  if (messages.size() != expected) {
+    _log.error("Expected " + expected + ", got "+ messages.size());
+  }
+  int index=(pageNumber - 1) * PAGE_SIZE;
+  for (  Message message : messages) {
+    List<Attachment> attachments=AttachmentLocalServiceUtil.getAttachments(message.getMessageId());
+    hasAttachments.put(message,attachments != null && !attachments.isEmpty());
+    addItemAt(index++,message);
+  }
+}

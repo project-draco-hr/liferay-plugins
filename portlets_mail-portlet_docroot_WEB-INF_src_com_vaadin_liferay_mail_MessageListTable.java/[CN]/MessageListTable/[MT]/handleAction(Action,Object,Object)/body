@@ -1,0 +1,27 @@
+{
+  if (!(action instanceof MessageAction)) {
+    return;
+  }
+  if (target == null) {
+    return;
+  }
+  MessageAction messageAction=(MessageAction)action;
+  String actionId=messageAction.getId();
+  try {
+    if (actionId.equals("mark-as-read")) {
+      MessageUtil.markMessageRead((Message)target,true);
+    }
+ else     if (actionId.equals("mark-as-unread")) {
+      MessageUtil.markMessageRead((Message)target,false);
+    }
+ else     if (actionId.equals("flag-as-important")) {
+      MessageUtil.flagMessageAsImportant((Message)target,true);
+    }
+ else     if (actionId.equals("clear-flag")) {
+      MessageUtil.flagMessageAsImportant((Message)target,false);
+    }
+  }
+ catch (  Exception e) {
+    Controller.get().showError(Lang.get("unable-to-flag-messages"),e);
+  }
+}

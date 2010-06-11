@@ -1,0 +1,17 @@
+{
+  if (messages == null || messages.isEmpty()) {
+    return;
+  }
+  Account account=AccountLocalServiceUtil.getAccount(folder.getAccountId());
+  if ((account.getDraftFolderId() == folder.getFolderId()) || (account.getSentFolderId() == folder.getFolderId())) {
+    throw new MailException(MailException.FOLDER_INVALID_DESTINATION);
+  }
+  long[] messageIds=new long[messages.size()];
+  for (int i=0; i < messages.size(); i++) {
+    messageIds[i]=messages.get(i).getMessageId();
+  }
+  Message message=messages.get(0);
+  Mailbox mailbox=getMailbox(message.getAccountId());
+  mailbox.moveMessages(folder.getFolderId(),messageIds);
+  Controller.get().notifyMessagesAddedOrRemovedListeners();
+}

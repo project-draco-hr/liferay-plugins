@@ -1,0 +1,13 @@
+{
+  Folder folder=getFolderContainer().getFolder(target);
+  Account account=getFolderContainer().getAccount(target);
+  ArrayList<Action> actions=new ArrayList<Action>();
+  if (account != null) {
+    actions.add(new AccountAction("create-folder",account.getAccountId()));
+  }
+  if (folder != null) {
+    actions.add(new FolderAction("rename-folder",folder));
+    actions.add(new FolderAction("remove-folder",folder));
+  }
+  return actions.toArray(new Action[0]);
+}

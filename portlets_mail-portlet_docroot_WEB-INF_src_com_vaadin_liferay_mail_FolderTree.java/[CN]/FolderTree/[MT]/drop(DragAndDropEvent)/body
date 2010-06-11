@@ -1,0 +1,35 @@
+{
+  DataBoundTransferable tr=(DataBoundTransferable)dropEvent.getTransferable();
+  Object itemId=tr.getItemId();
+  TreeTargetDetails details=(TreeTargetDetails)dropEvent.getTargetDetails();
+  if (rootItemIds().contains(details.getItemIdOver())) {
+    return;
+  }
+  Folder targetFolder=getFolderContainer().getFolder(details.getItemIdOver());
+  if (itemId instanceof Message) {
+    Message msg=(Message)itemId;
+    List<Message> messages=new ArrayList<Message>();
+    if (tr.getSourceComponent() instanceof MessageListTable) {
+      MessageListTable table=(MessageListTable)tr.getSourceComponent();
+      Collection<Message> value=(Collection)table.getValue();
+      messages.addAll(value);
+    }
+    if (messages.isEmpty()) {
+      messages.add(msg);
+    }
+    try {
+      MessageUtil.moveMessagesTo(messages,targetFolder);
+      Controller.get().showInfo(Lang.get("messages-have-been-moved"));
+    }
+ catch (    PortalException e) {
+      Controller.get().showError(Lang.get("unable-to-move-messages"),e);
+    }
+catch (    SystemException e) {
+      Controller.get().showError(Lang.get("unable-to-move-messages"),e);
+    }
+    if (folderChangedListener != null) {
+      Folder currentFolder=getFolderContainer().getFolder(getValue());
+      folderChangedListener.selectedFolderChanged(currentFolder);
+    }
+  }
+}

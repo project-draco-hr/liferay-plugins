@@ -1,0 +1,49 @@
+{
+  buildMainLayout();
+  setCompositionRoot(mainLayout);
+  mainLayout.setMargin(false);
+  fromLayout.setMargin(true);
+  from.setNullSelectionAllowed(false);
+  initAccounts();
+  innerLayout.setMargin(true);
+  innerLayout.setHeight("100.0%");
+  mainLayout.setExpandRatio(innerLayout,1.0f);
+  recipientsLayout.setMargin(false,false,true,false);
+  subjectLayout.setMargin(false);
+  subjectLayout.setSpacing(true);
+  subject.setInputPrompt(Lang.get("subject"));
+  subjectLayout.setExpandRatio(subject,1.0f);
+  innerLayout.setExpandRatio(messageLayout,1.0f);
+  bottomLayout.setMargin(true);
+  bottomLayout.setSpacing(true);
+  actionsLayout.setExpandRatio(cancel,1.0f);
+  actionsLayout.setComponentAlignment(cancel,"right");
+  actionsLayout.setSpacing(true);
+  actionsLayout.setMargin(true);
+  cancel.addListener(new Button.ClickListener(){
+    public void buttonClick(    ClickEvent event){
+      final ConfirmDialog confirm=new ConfirmDialog(Lang.get("confirm"),Lang.get("discard-draft"),Lang.get("are-you-sure-you-want-to-discard-draft"));
+      confirm.addConfirmButtonListener(new ClickListener(){
+        public void buttonClick(        ClickEvent event){
+          confirm.closeDialog();
+          fireDiscard();
+        }
+      }
+);
+      Controller.get().getApplication().getMainWindow().addWindow(confirm);
+    }
+  }
+);
+  save.addListener(new Button.ClickListener(){
+    public void buttonClick(    ClickEvent event){
+      fireSave();
+    }
+  }
+);
+  send.addListener(new Button.ClickListener(){
+    public void buttonClick(    ClickEvent event){
+      fireSend();
+    }
+  }
+);
+}

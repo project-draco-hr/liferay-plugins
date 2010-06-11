@@ -1,0 +1,31 @@
+{
+  if (Validator.isNotNull(date)) {
+    Calendar now=Calendar.getInstance();
+    Calendar date2=Calendar.getInstance();
+    date2.setTime(date);
+    DateFormat df=null;
+    if (now.get(Calendar.YEAR) == date2.get(Calendar.YEAR)) {
+      if ((now.get(Calendar.MONTH) == date2.get(Calendar.MONTH)) && (now.get(Calendar.DATE) == date2.get(Calendar.DATE))) {
+        df=DateFormat.getTimeInstance(DateFormat.SHORT,locale);
+        return df.format(date);
+      }
+ else {
+        df=DateFormat.getDateInstance(DateFormat.MEDIUM,locale);
+        try {
+          SimpleDateFormat sdf=(SimpleDateFormat)df;
+          sdf.applyPattern(sdf.toPattern().replaceAll("y",""));
+          sdf.applyPattern(sdf.toPattern().replaceAll(", ",""));
+          return sdf.format(date);
+        }
+ catch (        ClassCastException e) {
+          return df.format(date);
+        }
+      }
+    }
+ else {
+      df=DateFormat.getDateInstance(DateFormat.MEDIUM,locale);
+      return df.format(date);
+    }
+  }
+  return DATE_UNAVAILABLE;
+}

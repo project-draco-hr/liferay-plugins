@@ -1,0 +1,29 @@
+{
+  if (Validator.isNotNull(msg) && Validator.isNull(msg.getBody())) {
+    try {
+      Mailbox mailbox=MailboxFactoryUtil.getMailbox(Controller.get().getUser().getUserId(),msg.getAccountId(),Controller.get().getPasswordRetriever().getPassword(msg.getAccountId()));
+      mailbox.synchronizeMessage(msg.getMessageId());
+      msg=MessageLocalServiceUtil.getMessage(msg.getMessageId());
+    }
+ catch (    PortalException e) {
+      _log.debug(e,e);
+      Controller.get().showError(Lang.get("unable-to-connect-with-mail-server"),e);
+    }
+catch (    SystemException e) {
+      _log.debug(e,e);
+      Controller.get().showError(Lang.get("unable-to-connect-with-mail-server"),e);
+    }
+  }
+  messageView.showMessage(msg);
+  if (msg != null && !MessageUtil.isSeen(msg)) {
+    try {
+      MessageUtil.markMessageRead(msg,true);
+    }
+ catch (    PortalException e) {
+      Controller.get().showError(Lang.get("unable-to-flag-messages"),e);
+    }
+catch (    SystemException e) {
+      Controller.get().showError(Lang.get("unable-to-flag-messages"),e);
+    }
+  }
+}
