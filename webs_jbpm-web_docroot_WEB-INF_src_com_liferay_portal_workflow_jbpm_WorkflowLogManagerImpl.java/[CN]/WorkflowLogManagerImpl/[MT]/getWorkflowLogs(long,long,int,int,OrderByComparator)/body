@@ -1,20 +1,3 @@
 {
-  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
-  try {
-    Session session=jbpmContext.getSession();
-    Criteria criteria=session.createCriteria(WorkflowLogImpl.class);
-    criteria.add(Restrictions.eq("taskInstance.id",workflowTaskId));
-    List<WorkflowLog> workflowLogs=criteria.list();
-    Collections.sort(workflowLogs,orderByComparator);
-    if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
-      workflowLogs=ListUtil.subList(workflowLogs,start,end);
-    }
-    return workflowLogs;
-  }
- catch (  Exception e) {
-    throw new WorkflowException(e);
-  }
- finally {
-    jbpmContext.close();
-  }
+  return getWorkflowLogs(companyId,-1,workflowTaskId,start,end,orderByComparator);
 }

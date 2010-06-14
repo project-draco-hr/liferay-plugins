@@ -1,0 +1,22 @@
+{
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    Session session=jbpmContext.getSession();
+    Criteria criteria=session.createCriteria(WorkflowLogImpl.class);
+    addJoin(criteria,workflowInstanceId,workflowTaskId);
+    criteria.setProjection(Projections.rowCount());
+    List<Long> results=criteria.list();
+    if (results.isEmpty()) {
+      return 0;
+    }
+ else {
+      return (results.get(0)).intValue();
+    }
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
+}

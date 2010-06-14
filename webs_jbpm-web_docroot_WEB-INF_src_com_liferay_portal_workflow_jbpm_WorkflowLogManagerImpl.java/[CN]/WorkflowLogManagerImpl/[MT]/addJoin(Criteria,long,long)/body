@@ -1,0 +1,10 @@
+{
+  if (workflowInstanceId > 0) {
+    criteria.createAlias("taskInstance","tskInst");
+    criteria.createAlias("tskInst.processInstance","processInst");
+    criteria.add(Restrictions.eq("processInst.id",workflowInstanceId));
+  }
+ else {
+    criteria.add(Restrictions.eq("taskInstance.id",workflowTaskId));
+  }
+}
