@@ -7,9 +7,9 @@
     for (    Element fileEl : articleAttachmentsEl.elements("file")) {
       String shortFileName=fileEl.attributeValue("short-file-name");
       String fileName=dirName + StringPool.SLASH + shortFileName;
-      byte[] bytes=context.getZipEntryAsByteArray(fileEl.attributeValue("path"));
+      InputStream inputStream=context.getZipEntryAsInputStream(fileEl.attributeValue("path"));
       ServiceContext serviceContext=new ServiceContext();
-      DLServiceUtil.addFile(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,bytes);
+      DLLocalServiceUtil.addFile(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,true,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,inputStream);
     }
     dirNames.put(resourcePrimKey,dirName);
   }

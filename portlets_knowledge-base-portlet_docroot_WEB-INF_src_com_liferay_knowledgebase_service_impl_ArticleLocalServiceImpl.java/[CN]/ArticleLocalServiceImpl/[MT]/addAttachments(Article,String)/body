@@ -11,9 +11,9 @@
   }
   String[] fileNames=dlService.getFileNames(article.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   for (  String fileName : fileNames) {
-    byte[] bytes=dlService.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    InputStream inputStream=dlLocalService.getFileAsStream(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     try {
-      addAttachment(article.getCompanyId(),articleDirName,FileUtil.getShortFileName(fileName),bytes);
+      addAttachment(article.getCompanyId(),articleDirName,FileUtil.getShortFileName(fileName),inputStream);
     }
  catch (    DuplicateFileException dfe) {
       _log.error("File already exists for " + dfe.getMessage());
