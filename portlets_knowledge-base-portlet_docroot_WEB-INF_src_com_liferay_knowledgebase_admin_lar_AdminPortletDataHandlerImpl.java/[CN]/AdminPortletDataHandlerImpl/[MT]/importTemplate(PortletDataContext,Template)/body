@@ -5,10 +5,10 @@
   serviceContext.setAddGuestPermissions(true);
   serviceContext.setCreateDate(template.getCreateDate());
   serviceContext.setModifiedDate(template.getModifiedDate());
-  serviceContext.setScopeGroupId(context.getGroupId());
+  serviceContext.setScopeGroupId(context.getScopeGroupId());
   Template importedTemplate=null;
   if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
-    Template existingTemplate=TemplateUtil.fetchByUUID_G(template.getUuid(),context.getGroupId());
+    Template existingTemplate=TemplateUtil.fetchByUUID_G(template.getUuid(),context.getScopeGroupId());
     if (existingTemplate == null) {
       importedTemplate=TemplateLocalServiceUtil.addTemplate(template.getUuid(),userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
     }
@@ -21,6 +21,6 @@
   }
   context.importPermissions(Template.class,template.getTemplateId(),importedTemplate.getTemplateId());
   if (context.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
-    context.importComments(Template.class,template.getTemplateId(),importedTemplate.getTemplateId(),context.getGroupId());
+    context.importComments(Template.class,template.getTemplateId(),importedTemplate.getTemplateId(),context.getScopeGroupId());
   }
 }

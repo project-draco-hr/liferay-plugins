@@ -4,7 +4,7 @@
   int priority=article.getPriority();
   String dirName=MapUtil.getString(dirNames,String.valueOf(article.getResourcePrimKey()));
   Map<String,Object> params=new HashMap<String,Object>();
-  params.put("groupId",context.getGroupId());
+  params.put("groupId",context.getScopeGroupId());
   params.put("parentResourcePrimKey",parentResourcePrimKey);
   int maxPriority=ArticleLocalServiceUtil.getArticlesCount(params,false);
   if (priority > maxPriority) {
@@ -15,10 +15,10 @@
   serviceContext.setAddGuestPermissions(true);
   serviceContext.setCreateDate(article.getCreateDate());
   serviceContext.setModifiedDate(article.getModifiedDate());
-  serviceContext.setScopeGroupId(context.getGroupId());
+  serviceContext.setScopeGroupId(context.getScopeGroupId());
   Article importedArticle=null;
   if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
-    Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),context.getGroupId());
+    Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),context.getScopeGroupId());
     if (existingArticle == null) {
       importedArticle=importArticleVersions(context,article.getUuid(),parentResourcePrimKey,priority,dirName,articleEl);
     }
@@ -32,6 +32,6 @@
   resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   context.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"comments")) {
-    context.importComments(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey(),context.getGroupId());
+    context.importComments(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey(),context.getScopeGroupId());
   }
 }
