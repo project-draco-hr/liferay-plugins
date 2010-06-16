@@ -13,12 +13,9 @@
  else {
     parameters.put("method",new String[]{HttpMethods.GET});
   }
-  String url=null;
-  try {
-    url=router.parametersToUrl(parameters);
-  }
- catch (  Exception e) {
-    return StringPool.SLASH.concat(_MAPPING);
+  String url=router.parametersToUrl(parameters);
+  if (url == null) {
+    return null;
   }
   for (  String name : portletURLParameters.keySet()) {
     if (!parameters.containsKey(name)) {
