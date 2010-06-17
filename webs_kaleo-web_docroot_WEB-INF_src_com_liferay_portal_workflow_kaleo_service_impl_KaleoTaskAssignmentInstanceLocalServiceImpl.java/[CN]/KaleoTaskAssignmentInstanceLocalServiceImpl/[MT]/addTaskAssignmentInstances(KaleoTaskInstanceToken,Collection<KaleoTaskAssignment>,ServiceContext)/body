@@ -1,0 +1,19 @@
+{
+  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=new ArrayList<KaleoTaskAssignmentInstance>(kaleoTaskAssignments.size());
+  for (  KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
+    User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+    long kaleoTaskAssignmentInstanceId=counterLocalService.increment();
+    KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstancePersistence.create(kaleoTaskAssignmentInstanceId);
+    populateKaleoTaskAssignmentInstance(kaleoTaskAssignmentInstance,kaleoTaskInstanceToken,user);
+    kaleoTaskAssignmentInstance.setAssigneeClassName(kaleoTaskAssignment.getAssigneeClassName());
+    if ((kaleoTaskAssignment.getAssigneeClassPK() == 0) && User.class.getName().equals(kaleoTaskAssignment.getAssigneeClassName())) {
+      kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoTaskInstanceToken.getUserId());
+    }
+ else {
+      kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoTaskAssignment.getAssigneeClassPK());
+    }
+    kaleoTaskAssignmentInstancePersistence.update(kaleoTaskAssignmentInstance,false);
+    kaleoTaskAssignmentInstances.add(kaleoTaskAssignmentInstance);
+  }
+  return kaleoTaskAssignmentInstances;
+}

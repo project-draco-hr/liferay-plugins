@@ -1,20 +1,14 @@
 {
   KaleoInstanceToken parentKaleoInstanceToken=kaleoInstanceTokenPersistence.findByPrimaryKey(parentKaleoInstanceTokenId);
   User user=userPersistence.findByPrimaryKey(parentKaleoInstanceToken.getUserId());
-  Date now=new Date();
   long kaleoInstanceTokenId=counterLocalService.increment();
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.create(kaleoInstanceTokenId);
-  kaleoInstanceToken.setGroupId(serviceContext.getScopeGroupId());
-  kaleoInstanceToken.setCompanyId(user.getCompanyId());
-  kaleoInstanceToken.setUserId(user.getUserId());
-  kaleoInstanceToken.setUserName(user.getFullName());
-  kaleoInstanceToken.setCreateDate(now);
-  kaleoInstanceToken.setModifiedDate(now);
+  populateKaleoInstanceToken(kaleoInstanceToken,user,workflowContext);
+  kaleoInstanceToken.setGroupId(parentKaleoInstanceToken.getGroupId());
   kaleoInstanceToken.setKaleoDefinitionId(parentKaleoInstanceToken.getKaleoDefinitionId());
   kaleoInstanceToken.setKaleoInstanceId(parentKaleoInstanceToken.getKaleoInstanceId());
   kaleoInstanceToken.setParentKaleoInstanceTokenId(parentKaleoInstanceToken.getKaleoInstanceTokenId());
   setCurrentKaleoNode(kaleoInstanceToken,parentKaleoInstanceToken.getCurrentKaleoNodeId());
-  kaleoInstanceToken.setCompleted(false);
   kaleoInstanceTokenPersistence.update(kaleoInstanceToken,false);
   return kaleoInstanceToken;
 }

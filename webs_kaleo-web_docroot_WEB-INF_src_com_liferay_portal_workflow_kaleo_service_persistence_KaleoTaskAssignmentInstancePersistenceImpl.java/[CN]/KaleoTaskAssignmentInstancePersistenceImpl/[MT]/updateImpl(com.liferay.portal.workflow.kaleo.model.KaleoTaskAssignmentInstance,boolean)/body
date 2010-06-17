@@ -1,0 +1,18 @@
+{
+  kaleoTaskAssignmentInstance=toUnwrappedModel(kaleoTaskAssignmentInstance);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kaleoTaskAssignmentInstance,merge);
+    kaleoTaskAssignmentInstance.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KaleoTaskAssignmentInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentInstanceImpl.class,kaleoTaskAssignmentInstance.getPrimaryKey(),kaleoTaskAssignmentInstance);
+  return kaleoTaskAssignmentInstance;
+}

@@ -3,13 +3,16 @@
   if (kaleoTaskInstanceToken == null) {
     return;
   }
-  String assigneeClassName=kaleoTaskInstanceToken.getAssigneeClassName();
-  if (assigneeClassName.equals(User.class.getName())) {
-    getUserEmailAddress(kaleoTaskInstanceToken.getAssigneeClassPK(),internetAddresses);
-  }
+  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=kaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
+  for (  KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance : kaleoTaskAssignmentInstances) {
+    String assigneeClassName=kaleoTaskAssignmentInstance.getAssigneeClassName();
+    if (assigneeClassName.equals(User.class.getName())) {
+      getUserEmailAddress(kaleoTaskAssignmentInstance.getAssigneeClassPK(),internetAddresses);
+    }
  else {
-    long roleId=kaleoTaskInstanceToken.getAssigneeClassPK();
-    Role role=RoleLocalServiceUtil.getRole(roleId);
-    getRoleRecipientAddresses(roleId,role.getType(),internetAddresses,executionContext);
+      long roleId=kaleoTaskAssignmentInstance.getAssigneeClassPK();
+      Role role=RoleLocalServiceUtil.getRole(roleId);
+      getRoleRecipientAddresses(roleId,role.getType(),internetAddresses,executionContext);
+    }
   }
 }

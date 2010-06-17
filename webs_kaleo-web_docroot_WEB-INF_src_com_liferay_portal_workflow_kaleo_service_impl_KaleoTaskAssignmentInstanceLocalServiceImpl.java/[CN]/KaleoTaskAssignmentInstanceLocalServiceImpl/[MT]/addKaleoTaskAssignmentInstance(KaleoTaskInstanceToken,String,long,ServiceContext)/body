@@ -1,0 +1,10 @@
+{
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  long kaleoTaskAssignmentInstanceId=counterLocalService.increment();
+  KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstancePersistence.create(kaleoTaskAssignmentInstanceId);
+  populateKaleoTaskAssignmentInstance(kaleoTaskAssignmentInstance,kaleoTaskInstanceToken,user);
+  kaleoTaskAssignmentInstance.setAssigneeClassName(assigneeClassName);
+  kaleoTaskAssignmentInstance.setAssigneeClassPK(assigneeClassPK);
+  kaleoTaskAssignmentInstancePersistence.update(kaleoTaskAssignmentInstance,false);
+  return kaleoTaskAssignmentInstance;
+}

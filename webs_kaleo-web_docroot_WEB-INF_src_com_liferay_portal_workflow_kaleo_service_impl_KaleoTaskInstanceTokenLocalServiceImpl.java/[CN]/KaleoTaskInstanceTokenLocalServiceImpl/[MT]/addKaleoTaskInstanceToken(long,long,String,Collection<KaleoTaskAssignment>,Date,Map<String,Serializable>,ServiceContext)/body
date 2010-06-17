@@ -1,0 +1,31 @@
+{
+  KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.findByPrimaryKey(kaleoInstanceTokenId);
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  long kaleoTaskInstanceTokenId=counterLocalService.increment();
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenPersistence.create(kaleoTaskInstanceTokenId);
+  kaleoTaskInstanceToken.setGroupId(serviceContext.getScopeGroupId());
+  kaleoTaskInstanceToken.setCompanyId(user.getCompanyId());
+  kaleoTaskInstanceToken.setUserId(user.getUserId());
+  kaleoTaskInstanceToken.setUserName(user.getFullName());
+  kaleoTaskInstanceToken.setCreateDate(now);
+  kaleoTaskInstanceToken.setModifiedDate(now);
+  kaleoTaskInstanceToken.setDueDate(dueDate);
+  kaleoTaskInstanceToken.setKaleoDefinitionId(kaleoInstanceToken.getKaleoDefinitionId());
+  kaleoTaskInstanceToken.setKaleoInstanceId(kaleoInstanceToken.getKaleoInstanceId());
+  if (workflowContext != null) {
+    kaleoTaskInstanceToken.setClassName((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
+    if (workflowContext.containsKey(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)) {
+      kaleoTaskInstanceToken.setClassPK(Long.parseLong((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)));
+    }
+  }
+  KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),workflowContext,serviceContext);
+  kaleoTaskInstanceToken.setKaleoInstanceTokenId(childKaleoInstanceToken.getKaleoInstanceTokenId());
+  kaleoTaskInstanceToken.setKaleoTaskId(kaleoTaskId);
+  kaleoTaskInstanceToken.setKaleoTaskName(kaleoTaskName);
+  kaleoTaskAssignmentInstanceLocalService.addTaskAssignmentInstances(kaleoTaskInstanceToken,kaleoTaskAssignments,serviceContext);
+  kaleoTaskInstanceToken.setCompleted(false);
+  kaleoTaskInstanceToken.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
+  kaleoTaskInstanceTokenPersistence.update(kaleoTaskInstanceToken,false);
+  return kaleoTaskInstanceToken;
+}

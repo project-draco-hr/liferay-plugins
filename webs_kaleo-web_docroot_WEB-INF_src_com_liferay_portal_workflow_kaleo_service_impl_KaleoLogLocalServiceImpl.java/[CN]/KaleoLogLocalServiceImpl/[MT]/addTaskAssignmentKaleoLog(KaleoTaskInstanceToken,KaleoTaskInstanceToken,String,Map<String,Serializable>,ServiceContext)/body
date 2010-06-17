@@ -7,11 +7,19 @@
   kaleoLog.setKaleoNodeId(currentKaleoNode.getKaleoNodeId());
   kaleoLog.setKaleoNodeName(currentKaleoNode.getName());
   if (previousKaleoTaskInstanceToken != null) {
-    kaleoLog.setPreviousAssigneeClassName(previousKaleoTaskInstanceToken.getAssigneeClassName());
-    kaleoLog.setPreviousAssigneeClassPK(previousKaleoTaskInstanceToken.getAssigneeClassPK());
+    List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=previousKaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
+    if (kaleoTaskAssignmentInstances.size() == 1) {
+      KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstances.get(0);
+      kaleoLog.setPreviousAssigneeClassName(kaleoTaskAssignmentInstance.getAssigneeClassName());
+      kaleoLog.setPreviousAssigneeClassPK(kaleoTaskAssignmentInstance.getAssigneeClassPK());
+    }
   }
-  kaleoLog.setCurrentAssigneeClassName(newKaleoTaskInstanceToken.getAssigneeClassName());
-  kaleoLog.setCurrentAssigneeClassPK(newKaleoTaskInstanceToken.getAssigneeClassPK());
+  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=newKaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
+  if (!kaleoTaskAssignmentInstances.isEmpty()) {
+    KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstances.get(0);
+    kaleoLog.setCurrentAssigneeClassPK(kaleoTaskAssignmentInstance.getAssigneeClassPK());
+    kaleoLog.setCurrentAssigneeClassName(kaleoTaskAssignmentInstance.getAssigneeClassName());
+  }
   kaleoLog.setComment(comment);
   kaleoLog.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
   kaleoLogPersistence.update(kaleoLog,false);

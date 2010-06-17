@@ -1,0 +1,32 @@
+{
+  if (((taskNames == null) || (taskNames.length == 0)) && ((assetTypes == null) || (assetTypes.length == 0)) && (dueDateGT == null)&& (dueDateLT == null)) {
+    return StringPool.BLANK;
+  }
+  StringBundler sb=new StringBundler(5);
+  sb.append(" (");
+  boolean addAndOrOperator=false;
+  if ((taskNames != null) && (taskNames.length != 0)) {
+    sb.append("(Kaleo_KaleoTaskInstanceToken.kaleoTaskName LIKE ? [$AND_OR_NULL_CHECK$])");
+    addAndOrOperator=true;
+  }
+  if ((assetTypes != null) && (assetTypes.length != 0)) {
+    if (addAndOrOperator) {
+      sb.append(" [$AND_OR_CONNECTOR$] ");
+    }
+    sb.append("(Kaleo_KaleoTaskInstanceToken.kaleoTaskName LIKE ? [$AND_OR_NULL_CHECK$])");
+  }
+  if (dueDateGT != null) {
+    if (addAndOrOperator) {
+      sb.append(" [$AND_OR_CONNECTOR$] ");
+    }
+    sb.append("(Kaleo_KaleoTaskInstanceToken.dueDate >= ? [$AND_OR_NULL_CHECK$])");
+  }
+  if (dueDateLT != null) {
+    if (addAndOrOperator) {
+      sb.append(" [$AND_OR_CONNECTOR$] ");
+    }
+    sb.append("(Kaleo_KaleoTaskInstanceToken.dueDate <= ? [$AND_OR_NULL_CHECK$])");
+  }
+  sb.append(") AND ");
+  return sb.toString();
+}

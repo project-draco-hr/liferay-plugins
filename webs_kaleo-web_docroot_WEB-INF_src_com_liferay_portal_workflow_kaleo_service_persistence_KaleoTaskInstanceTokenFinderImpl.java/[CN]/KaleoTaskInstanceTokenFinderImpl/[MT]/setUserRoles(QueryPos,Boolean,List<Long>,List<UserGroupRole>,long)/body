@@ -1,0 +1,19 @@
+{
+  if ((searchByUserRoles == null) || (searchByUserRoles && ((roleIds == null) || roleIds.isEmpty()) && ((userGroupRoles == null) || userGroupRoles.isEmpty()))) {
+    return;
+  }
+  if (!searchByUserRoles) {
+    qPos.add(User.class.getName());
+    qPos.add(userId);
+  }
+ else {
+    qPos.add(Role.class.getName());
+    for (    Long roleId : roleIds) {
+      qPos.add(roleId);
+    }
+    for (    UserGroupRole userGroupRole : userGroupRoles) {
+      qPos.add(userGroupRole.getGroupId());
+      qPos.add(userGroupRole.getRoleId());
+    }
+  }
+}

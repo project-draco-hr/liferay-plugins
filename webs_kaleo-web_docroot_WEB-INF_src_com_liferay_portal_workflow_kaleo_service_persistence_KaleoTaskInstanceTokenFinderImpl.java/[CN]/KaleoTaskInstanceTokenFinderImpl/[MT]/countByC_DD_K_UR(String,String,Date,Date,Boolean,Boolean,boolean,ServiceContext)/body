@@ -1,0 +1,44 @@
+{
+  String[] taskNames=CustomSQLUtil.keywords(taskName,false);
+  String[] assetTypes=CustomSQLUtil.keywords(assetType,false);
+  Timestamp dueDateGT_TS=CalendarUtil.getTimestamp(dueDateGT);
+  Timestamp dueDateLT_TS=CalendarUtil.getTimestamp(dueDateLT);
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(COUNT_BY_C_DD_K_UR);
+    sql=StringUtil.replace(sql,"[$COMPLETION$]",getCompletion(completed));
+    sql=StringUtil.replace(sql,"[$SEARCH_CRITERIA$]",getSearchCriteria(taskNames,assetTypes,dueDateGT_TS,dueDateLT_TS));
+    sql=CustomSQLUtil.replaceKeywords(sql,"KaleoTaskInstanceToken.kaleoTaskName",StringPool.LIKE,false,taskNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"KaleoTaskInstanceToken.className",StringPool.LIKE,false,assetTypes);
+    List<Long> roleIds=null;
+    List<UserGroupRole> userGroupRoles=null;
+    if ((searchByUserRoles != null) && searchByUserRoles) {
+      roleIds=RoleRetrievalUtil.getRoleIds(serviceContext);
+      userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(serviceContext.getUserId());
+    }
+    sql=StringUtil.replace(sql,"[$USER_ROLES$]",getUserRoles(searchByUserRoles,roleIds,userGroupRoles));
+    sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
+    QueryPos qPos=QueryPos.getInstance(q);
+    setCompleted(qPos,completed);
+    setSearchCriteria(qPos,taskNames,assetTypes,dueDateGT_TS,dueDateLT_TS);
+    setUserRoles(qPos,searchByUserRoles,roleIds,userGroupRoles,serviceContext.getUserId());
+    qPos.add(serviceContext.getCompanyId());
+    Iterator<Long> itr=q.list().iterator();
+    if (itr.hasNext()) {
+      Long count=itr.next();
+      if (count != null) {
+        return count.intValue();
+      }
+    }
+    return 0;
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

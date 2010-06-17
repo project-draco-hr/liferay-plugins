@@ -5,15 +5,10 @@
     return kaleoInstanceTokenPersistence.findByPrimaryKey(rootKaleoInstanceTokenId);
   }
   User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
-  Date now=new Date();
   rootKaleoInstanceTokenId=counterLocalService.increment();
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.create(rootKaleoInstanceTokenId);
+  populateKaleoInstanceToken(kaleoInstanceToken,user,workflowContext);
   kaleoInstanceToken.setGroupId(serviceContext.getScopeGroupId());
-  kaleoInstanceToken.setCompanyId(user.getCompanyId());
-  kaleoInstanceToken.setUserId(user.getUserId());
-  kaleoInstanceToken.setUserName(user.getFullName());
-  kaleoInstanceToken.setCreateDate(now);
-  kaleoInstanceToken.setModifiedDate(now);
   kaleoInstanceToken.setKaleoDefinitionId(kaleoInstance.getKaleoDefinitionId());
   kaleoInstanceToken.setKaleoInstanceId(kaleoInstance.getKaleoInstanceId());
   kaleoInstanceToken.setParentKaleoInstanceTokenId(KaleoInstanceTokenImpl.DEFAULT_PARENT_KALEO_INSTANCE_TOKEN_ID);

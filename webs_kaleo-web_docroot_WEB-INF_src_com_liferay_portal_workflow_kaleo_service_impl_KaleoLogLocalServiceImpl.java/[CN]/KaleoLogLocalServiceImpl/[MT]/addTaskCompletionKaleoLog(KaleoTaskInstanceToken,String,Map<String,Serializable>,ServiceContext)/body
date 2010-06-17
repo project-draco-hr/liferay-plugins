@@ -6,8 +6,12 @@
   kaleoLog.setKaleoDefinitionId(currentKaleoNode.getKaleoDefinitionId());
   kaleoLog.setKaleoNodeId(currentKaleoNode.getKaleoNodeId());
   kaleoLog.setKaleoNodeName(currentKaleoNode.getName());
-  kaleoLog.setCurrentAssigneeClassPK(kaleoTaskInstanceToken.getAssigneeClassPK());
-  kaleoLog.setCurrentAssigneeClassName(kaleoTaskInstanceToken.getAssigneeClassName());
+  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=kaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
+  if (!kaleoTaskAssignmentInstances.isEmpty()) {
+    KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstances.get(0);
+    kaleoLog.setCurrentAssigneeClassPK(kaleoTaskAssignmentInstance.getAssigneeClassPK());
+    kaleoLog.setCurrentAssigneeClassName(kaleoTaskAssignmentInstance.getAssigneeClassName());
+  }
   kaleoLog.setComment(comment);
   kaleoLog.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
   kaleoLogPersistence.update(kaleoLog,false);

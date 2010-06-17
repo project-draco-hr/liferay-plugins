@@ -10,8 +10,8 @@
   }
   KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
   if (kaleoTaskInstanceToken != null) {
-    freeMarkerContext.put("assigneeClassName",kaleoTaskInstanceToken.getAssigneeClassName());
-    freeMarkerContext.put("assigneeClassPK",kaleoTaskInstanceToken.getAssigneeClassPK());
+    List<WorkflowTaskAssignee> workflowTaskAssignees=KaleoTaskAssignmentInstanceUtil.getWorkflowTaskAssignees(kaleoTaskInstanceToken);
+    freeMarkerContext.put("workflowTaskAssignees",workflowTaskAssignees);
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     freeMarkerContext.put("taskName",kaleoTask.getName());
     freeMarkerContext.put("userId",kaleoTaskInstanceToken.getUserId());

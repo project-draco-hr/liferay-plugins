@@ -1,0 +1,36 @@
+{
+  if ((searchByUserRoles == null) || (searchByUserRoles && ((roleIds == null) || roleIds.isEmpty()) && ((userGroupRoles == null) || userGroupRoles.isEmpty()))) {
+    return StringPool.BLANK;
+  }
+  StringBundler sb=null;
+  if (!searchByUserRoles) {
+    sb=new StringBundler(3);
+    sb.append("((Kaleo_KaleoTaskAssignmentInstance.assigneeClassName = ?) ");
+    sb.append("AND (Kaleo_KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
+  }
+ else {
+    sb=new StringBundler(roleIds.size() + userGroupRoles.size() * 2 + 1);
+    sb.append("((Kaleo_KaleoTaskAssignmentInstance.assigneeClassName = ?)");
+    sb.append(" AND (");
+    for (int i=0; i < roleIds.size(); i++) {
+      sb.append("(Kaleo_KaleoTaskAssignmentInstance.assigneeClassPK = ?)");
+      if ((i + 1) < roleIds.size()) {
+        sb.append(" OR ");
+      }
+    }
+    if (!roleIds.isEmpty() && !userGroupRoles.isEmpty()) {
+      sb.append(" OR ");
+    }
+    for (int i=0; i < userGroupRoles.size(); i++) {
+      sb.append("((Kaleo_KaleoTaskAssignmentInstance.groupId = ?)");
+      sb.append(" AND ");
+      sb.append("(Kaleo_KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
+      if ((i + 1) < userGroupRoles.size()) {
+        sb.append(" OR ");
+      }
+    }
+    sb.append("))");
+  }
+  sb.append(" AND ");
+  return sb.toString();
+}
