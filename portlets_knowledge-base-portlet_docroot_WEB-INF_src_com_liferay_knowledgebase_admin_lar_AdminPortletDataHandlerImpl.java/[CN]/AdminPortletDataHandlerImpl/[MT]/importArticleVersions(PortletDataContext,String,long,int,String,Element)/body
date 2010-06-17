@@ -1,12 +1,13 @@
 {
-  Element versionsEl=articleEl.element("versions");
-  List<Element> articlesEl=versionsEl.elements("article");
+  Element versionsElement=articleElement.element("versions");
+  List<Element> articleElements=versionsElement.elements("article");
   Article importedArticle=null;
-  for (  Element curArticleEl : articlesEl) {
-    Article curArticle=(Article)context.getZipEntryAsObject(curArticleEl.attributeValue("path"));
+  for (  Element curArticleElement : articleElements) {
+    Article curArticle=(Article)context.getZipEntryAsObject(curArticleElement.attributeValue("path"));
     long userId=context.getUserId(curArticle.getUserUuid());
     String curDirName=StringPool.BLANK;
-    if (articlesEl.indexOf(curArticleEl) == (articlesEl.size() - 1)) {
+    int index=articleElements.indexOf(curArticleElement);
+    if (index == (articleElements.size() - 1)) {
       curDirName=dirName;
     }
     ServiceContext serviceContext=new ServiceContext();

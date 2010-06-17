@@ -1,14 +1,14 @@
 {
   try {
     context.addPermissions("com.liferay.knowledgebase.admin",context.getScopeGroupId());
-    Document doc=SAXReaderUtil.createDocument();
-    Element root=doc.addElement("knowledge-base-admin-data");
-    root.addAttribute("group-id",String.valueOf(context.getScopeGroupId()));
-    exportArticles(context,root);
+    Document document=SAXReaderUtil.createDocument();
+    Element rootElement=document.addElement("knowledge-base-admin-data");
+    rootElement.addAttribute("group-id",String.valueOf(context.getScopeGroupId()));
+    exportArticles(context,rootElement);
     if (context.getBooleanParameter(_NAMESPACE,"templates")) {
-      exportTemplates(context,root);
+      exportTemplates(context,rootElement);
     }
-    return doc.formattedString();
+    return document.formattedString();
   }
  catch (  Exception e) {
     throw new PortletDataException(e);

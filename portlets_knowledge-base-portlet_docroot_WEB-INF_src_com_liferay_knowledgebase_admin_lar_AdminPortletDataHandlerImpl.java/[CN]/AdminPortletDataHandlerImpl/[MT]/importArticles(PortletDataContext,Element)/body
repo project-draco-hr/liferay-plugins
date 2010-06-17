@@ -5,15 +5,15 @@
   try {
     if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
       DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
-      importArticleAttachments(context,importId,dirNames,root);
+      importArticleAttachments(context,importId,dirNames,rootElement);
     }
-    for (    Element articleEl : root.elements("article")) {
-      String path=articleEl.attributeValue("path");
+    for (    Element articleElement : rootElement.elements("article")) {
+      String path=articleElement.attributeValue("path");
       if (!context.isPathNotProcessed(path)) {
         continue;
       }
       Article article=(Article)context.getZipEntryAsObject(path);
-      importArticle(context,resourcePrimKeys,dirNames,articleEl,article);
+      importArticle(context,resourcePrimKeys,dirNames,articleElement,article);
     }
   }
   finally {

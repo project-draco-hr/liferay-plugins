@@ -1,13 +1,14 @@
 {
-  List<Element> articlesAttachmentsEl=root.elements("article-attachments");
-  for (  Element articleAttachmentsEl : articlesAttachmentsEl) {
-    String resourcePrimKey=articleAttachmentsEl.attributeValue("resource-prim-key");
+  List<Element> articleAttachmentsElements=rootElement.elements("article-attachments");
+  for (  Element articleAttachmentsElement : articleAttachmentsElements) {
+    String resourcePrimKey=articleAttachmentsElement.attributeValue("resource-prim-key");
     String dirName="knowledgebase/temp/import/" + importId + StringPool.SLASH+ resourcePrimKey;
     DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,dirName);
-    for (    Element fileEl : articleAttachmentsEl.elements("file")) {
-      String shortFileName=fileEl.attributeValue("short-file-name");
+    List<Element> fileElements=articleAttachmentsElement.elements("file");
+    for (    Element fileElement : fileElements) {
+      String shortFileName=fileElement.attributeValue("short-file-name");
       String fileName=dirName + StringPool.SLASH + shortFileName;
-      InputStream inputStream=context.getZipEntryAsInputStream(fileEl.attributeValue("path"));
+      InputStream inputStream=context.getZipEntryAsInputStream(fileElement.attributeValue("path"));
       ServiceContext serviceContext=new ServiceContext();
       DLLocalServiceUtil.addFile(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,true,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,inputStream);
     }

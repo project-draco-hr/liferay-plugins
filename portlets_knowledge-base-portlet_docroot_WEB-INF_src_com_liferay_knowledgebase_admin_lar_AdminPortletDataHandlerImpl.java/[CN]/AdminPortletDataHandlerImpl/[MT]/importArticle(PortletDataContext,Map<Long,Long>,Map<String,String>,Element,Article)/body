@@ -20,14 +20,14 @@
   if (context.getDataStrategy().equals(PortletDataHandlerKeys.DATA_STRATEGY_MIRROR)) {
     Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),context.getScopeGroupId());
     if (existingArticle == null) {
-      importedArticle=importArticleVersions(context,article.getUuid(),parentResourcePrimKey,priority,dirName,articleEl);
+      importedArticle=importArticleVersions(context,article.getUuid(),parentResourcePrimKey,priority,dirName,articleElement);
     }
  else {
       importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
     }
   }
  else {
-    importedArticle=importArticleVersions(context,null,parentResourcePrimKey,priority,dirName,articleEl);
+    importedArticle=importArticleVersions(context,null,parentResourcePrimKey,priority,dirName,articleElement);
   }
   resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   context.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());

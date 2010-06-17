@@ -1,11 +1,11 @@
 {
-  Element versionsEl=articleEl.addElement("versions");
+  Element versionsElement=articleElement.addElement("versions");
   String rootPath=context.getPortletPath(PortletKeys.KNOWLEDGE_BASE_ADMIN) + "/articles/versions/" + resourcePrimKey;
   List<Article> articles=ArticleUtil.findByResourcePrimKey(resourcePrimKey,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticleModifiedDateComparator(true));
   for (  Article article : articles) {
     String path=rootPath + StringPool.SLASH + article.getArticleId()+ ".xml";
-    Element curArticleEl=versionsEl.addElement("article");
-    curArticleEl.addAttribute("path",path);
+    Element curArticleElement=versionsElement.addElement("article");
+    curArticleElement.addAttribute("path",path);
     context.addZipEntry(path,article);
   }
 }
