@@ -7,13 +7,13 @@
     BlobCrypter blobCrypter=new BasicBlobCrypter(securityTokenKeyFile);
     BlobCrypterSecurityToken blobCrypterSecurityToken=new BlobCrypterSecurityToken(blobCrypter,ContainerConfig.DEFAULT_CONTAINER,domain);
     blobCrypterSecurityToken.setAppUrl(appUrl);
-    blobCrypterSecurityToken.setModuleId(0);
+    blobCrypterSecurityToken.setModuleId(moduleId);
     blobCrypterSecurityToken.setOwnerId(ownerId);
     blobCrypterSecurityToken.setViewerId(String.valueOf(viewerId));
     securityToken=blobCrypterSecurityToken.encrypt();
   }
  else   if (securityTokenType.equals("insecure")) {
-    BasicSecurityToken basicSecurityToken=new BasicSecurityToken(ownerId,String.valueOf(viewerId),appId,domain,appUrl,"0",ContainerConfig.DEFAULT_CONTAINER,activeUrl);
+    BasicSecurityToken basicSecurityToken=new BasicSecurityToken(ownerId,String.valueOf(viewerId),appId,domain,appUrl,String.valueOf(moduleId),ContainerConfig.DEFAULT_CONTAINER,activeUrl);
     securityToken=_basicSecurityTokenDecoder.encodeToken(basicSecurityToken);
   }
   securityToken=HttpUtil.encodeURL(securityToken);
