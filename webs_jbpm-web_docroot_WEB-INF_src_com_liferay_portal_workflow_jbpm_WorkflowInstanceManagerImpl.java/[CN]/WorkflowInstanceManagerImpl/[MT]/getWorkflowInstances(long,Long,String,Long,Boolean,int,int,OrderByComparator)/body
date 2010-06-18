@@ -1,3 +1,14 @@
 {
-  return null;
+  JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
+  try {
+    CustomSession customSession=new CustomSession(jbpmContext);
+    List<ProcessInstance> processInstances=customSession.findProcessInstances(companyId,userId,assetClassName,assetClassPK,completed,start,end,orderByComparator);
+    return toWorkflowInstaces(processInstances);
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+ finally {
+    jbpmContext.close();
+  }
 }
