@@ -2,16 +2,17 @@
   if (searchByUserRoles == null) {
     return;
   }
+  Criteria assigneesCriteria=criteria.createCriteria("assignees");
   if (!searchByUserRoles) {
-    criteria.add(Restrictions.eq("assigneeClassName",User.class.getName()));
-    criteria.add(Restrictions.eq("assigneeClassPK",serviceContext.getUserId()));
+    assigneesCriteria.add(Restrictions.eq("assigneeClassName",User.class.getName()));
+    assigneesCriteria.add(Restrictions.eq("assigneeClassPK",serviceContext.getUserId()));
     return;
   }
   List<Long> roleIds=RoleRetrievalUtil.getRoleIds(serviceContext);
   List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(serviceContext.getUserId());
   if (userGroupRoles.isEmpty()) {
-    criteria.add(Restrictions.eq("assigneeClassName",Role.class.getName()));
-    criteria.add(Restrictions.in("assigneeClassPK",roleIds.toArray(new Long[roleIds.size()])));
+    assigneesCriteria.add(Restrictions.eq("assigneeClassName",Role.class.getName()));
+    assigneesCriteria.add(Restrictions.in("assigneeClassPK",roleIds.toArray(new Long[roleIds.size()])));
   }
  else {
     Junction junction=Restrictions.disjunction();
@@ -19,6 +20,6 @@
     for (    UserGroupRole userGroupRole : userGroupRoles) {
       junction.add(Restrictions.and(Restrictions.eq("groupId",userGroupRole.getGroupId()),Restrictions.and(Restrictions.eq("assigneeClassName",Role.class.getName()),Restrictions.eq("assigneeClassPK",userGroupRole.getRoleId()))));
     }
-    criteria.add(junction);
+    assigneesCriteria.add(junction);
   }
 }

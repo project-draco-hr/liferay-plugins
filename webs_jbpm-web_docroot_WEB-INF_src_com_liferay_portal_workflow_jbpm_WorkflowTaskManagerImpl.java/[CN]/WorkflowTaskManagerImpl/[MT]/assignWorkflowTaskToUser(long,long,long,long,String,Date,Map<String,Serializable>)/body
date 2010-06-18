@@ -34,8 +34,9 @@
     session.save(workflowLogImpl);
     CustomSession customSession=new CustomSession(jbpmContext);
     TaskInstanceExtensionImpl taskInstanceExtension=customSession.findTaskInstanceExtension(taskInstance.getId());
-    taskInstanceExtension.setAssigneeClassName(User.class.getName());
-    taskInstanceExtension.setAssigneeClassPK(assigneeUserId);
+    List<Assignee> assignees=taskInstanceExtension.getAssignees();
+    assignees.clear();
+    assignees.add(new Assignee(User.class.getName(),assigneeUserId));
     session.update(taskInstanceExtension);
     return new WorkflowTaskImpl(taskInstance);
   }

@@ -2,17 +2,6 @@
   ProcessInstance processInstance=taskInstance.getProcessInstance();
   ProcessDefinition processDefinition=processInstance.getProcessDefinition();
   Token token=taskInstance.getToken();
-  Set<PooledActor> pooledActors=taskInstance.getPooledActors();
-  if ((pooledActors != null) && !pooledActors.isEmpty()) {
-    PooledActor pooledActor=pooledActors.iterator().next();
-    setAssigneeRoleId(GetterUtil.getLong(pooledActor.getActorId()));
-  }
-  if (Validator.isEmailAddress(taskInstance.getActorId())) {
-    setAssigneeEmailAddress(taskInstance.getActorId());
-  }
- else {
-    setAssigneeUserId(GetterUtil.getLong(taskInstance.getActorId()));
-  }
   setAsynchronous(!taskInstance.isBlocking());
   setCompletionDate(taskInstance.getEnd());
   setCreateDate(taskInstance.getCreate());
@@ -24,5 +13,9 @@
   setWorkflowDefinitionName(processDefinition.getName());
   setWorkflowDefinitionVersion(processDefinition.getVersion());
   setWorkflowInstanceId(token.getId());
+  ContextInstance contextInstance=processInstance.getContextInstance();
+  long companyId=GetterUtil.getLong((String)contextInstance.getVariable("companyId"));
+  List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,taskInstance.getActorId(),taskInstance.getPooledActors());
+  setWorkflowTaskAssignees(toWorkflowTaskAssignees(assignees));
   setWorkflowTaskId(taskInstance.getId());
 }
