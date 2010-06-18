@@ -6,8 +6,13 @@
   String keywords="";
   if (folder != null) {
     Mailbox mailbox=MessageUtil.getMailbox(accountId);
-    MessagesDisplay messagesDisplay=mailbox.getMessagesDisplay(folder.getFolderId(),keywords,pageNumber,PAGE_SIZE,orderByField,orderByType);
-    messages=messagesDisplay.getMessages();
+    try {
+      MessagesDisplay messagesDisplay=mailbox.getMessagesDisplay(folder.getFolderId(),keywords,pageNumber,PAGE_SIZE,orderByField,orderByType);
+      messages=messagesDisplay.getMessages();
+    }
+ catch (    Exception e) {
+      _log.error("Failed loading messages from Mailbox");
+    }
   }
   int count=messages.size();
   int expected=PAGE_SIZE;

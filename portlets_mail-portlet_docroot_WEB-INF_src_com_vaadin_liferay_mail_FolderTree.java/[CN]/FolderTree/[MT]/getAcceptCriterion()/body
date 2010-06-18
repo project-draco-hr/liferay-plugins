@@ -1,5 +1,11 @@
 {
   TargetDetailIs isMiddle=new TargetDetailIs("detail","MIDDLE");
   SourceIs isFromMessageList=new SourceIs(messageList.getTable());
-  return new And(isFromMessageList,isMiddle);
+  List<TargetItemIs> rootItemCriterias=new ArrayList<TargetItemIs>();
+  for (  Object root : rootItemIds()) {
+    rootItemCriterias.add(new TargetItemIs(this,root));
+  }
+  Or or=new Or(rootItemCriterias.toArray(new TargetItemIs[rootItemCriterias.size()]));
+  Not notRootItem=new Not(or);
+  return new And(isMiddle,isFromMessageList,notRootItem);
 }

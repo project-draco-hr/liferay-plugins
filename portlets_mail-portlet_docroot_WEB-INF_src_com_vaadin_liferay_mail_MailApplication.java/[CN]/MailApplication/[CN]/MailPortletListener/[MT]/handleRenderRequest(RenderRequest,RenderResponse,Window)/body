@@ -17,7 +17,8 @@ catch (    WindowStateException e) {
   if (!PortletMode.VIEW.equals(request.getPortletMode()) && !PortletMode.EDIT.equals(request.getPortletMode())) {
     return;
   }
-  portletTitle=PortalUtil.getPortletTitle(PortalUtil.getPortletId(request),controller.getUser());
+  String pid=PortalUtil.getPortletId(request);
+  portletTitle=PortalUtil.getPortletTitle(pid,PortalUtil.getLocale(request));
   controller.setPreferences(request.getPreferences());
   if (PortletMode.VIEW.equals(request.getPortletMode()) && WindowState.MAXIMIZED.equals(request.getWindowState())) {
     if (MODE_COMPOSE.equals(request.getParameter(PARAM_RENDER_MODE))) {
@@ -26,9 +27,33 @@ catch (    WindowStateException e) {
  else     if (MODE_ACCOUNT.equals(request.getParameter(PARAM_RENDER_MODE))) {
       String accountParam=request.getParameter(PARAM_ACCOUNT);
       Account account=null;
+      boolean promptOpen=false;
+      VerticalLayout loading=new VerticalLayout();
+      loading.setHeight("550px");
+      window.setContent(loading);
       try {
         long id=Long.parseLong(accountParam);
         account=AccountLocalServiceUtil.getAccount(id);
+        if (!account.isSavePassword()) {
+          String password=Controller.get().getPasswordRetriever().getPassword(account.getAccountId());
+          if (password != null) {
+            try {
+              Controller.get().getMailManager().storePassword(account.getAccountId(),password);
+              Controller.get().getAccountManager().updateAccount(account,controller);
+              Controller.get().getMailManager().synchronizeAccount(account.getAccountId());
+            }
+ catch (            PortalException e1) {
+              Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+            }
+catch (            SystemException e1) {
+              Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+            }
+          }
+ else {
+            promptOpen=true;
+            showPasswordPrompt(account,window);
+          }
+        }
       }
  catch (      NumberFormatException e) {
       }
@@ -38,21 +63,56 @@ catch (      PortalException e) {
 catch (      SystemException e) {
         _log.warn("Could not get account",e);
       }
-      if (account != null) {
+      if (account != null && !promptOpen) {
         mainMailView=new MainMailView();
         mainMailView.setHeight("550px");
         window.setContent(mainMailView);
         mainMailView.show(account);
       }
- else {
+ else       if (!promptOpen) {
         window.open(new ExternalResource(summaryViewURL));
       }
     }
  else {
-      mainMailView=new MainMailView();
-      window.setContent(mainMailView);
-      mainMailView.showFirstAccountWithUnreadMessages();
-      window.getContent().setHeight("550px");
+      try {
+        Account account=AccountLocalServiceUtil.getAccounts(Controller.get().getUser().getUserId()).get(0);
+        boolean promptOpen=false;
+        VerticalLayout loading=new VerticalLayout();
+        loading.setHeight("550px");
+        window.setContent(loading);
+        if (!account.isSavePassword()) {
+          String password=Controller.get().getPasswordRetriever().getPassword(account.getAccountId());
+          if (password != null) {
+            try {
+              Controller.get().getMailManager().storePassword(account.getAccountId(),password);
+              Controller.get().getAccountManager().updateAccount(account,controller);
+              Controller.get().getMailManager().synchronizeAccount(account.getAccountId());
+            }
+ catch (            PortalException e1) {
+              Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+            }
+catch (            SystemException e1) {
+              Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+            }
+          }
+ else {
+            promptOpen=true;
+            showPasswordPrompt(account,window);
+          }
+        }
+        if (!promptOpen) {
+          mainMailView=new MainMailView();
+          mainMailView.setHeight("550px");
+          window.setContent(mainMailView);
+          mainMailView.show(account);
+        }
+      }
+ catch (      SystemException e) {
+        e.printStackTrace();
+      }
+catch (      PortalException e) {
+        e.printStackTrace();
+      }
     }
   }
  else   if (PortletMode.EDIT.equals(request.getPortletMode())) {

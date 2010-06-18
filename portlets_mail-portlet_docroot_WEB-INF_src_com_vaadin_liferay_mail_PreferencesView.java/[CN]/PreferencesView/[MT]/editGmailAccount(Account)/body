@@ -1,0 +1,12 @@
+{
+  String windowTitle=Lang.get(account == null ? "Add GMail Account" : "Edit GMail Account");
+  final Window editorWindow=new Window(windowTitle);
+  editorWindow.setSizeUndefined();
+  editorWindow.center();
+  editorWindow.setModal(true);
+  editorWindow.setResizable(false);
+  AccountEditor.AccountEditorListener listener=new SaveAccountListener(editorWindow);
+  AccountEditor editor=new GMailAccountEditor(account,controller,listener);
+  editorWindow.setContent(editor);
+  controller.getApplication().getMainWindow().addWindow(editorWindow);
+}

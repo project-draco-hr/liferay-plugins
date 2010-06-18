@@ -1,6 +1,8 @@
 {
   try {
-    controller.getMailManager().synchronizeAccount(account.getAccountId());
+    if (account.isSavePassword()) {
+      controller.getMailManager().synchronizeAccount(account.getAccountId());
+    }
   }
  catch (  SystemException e) {
     controller.showError(Lang.get("unable-to-synchronize-account"),e);
