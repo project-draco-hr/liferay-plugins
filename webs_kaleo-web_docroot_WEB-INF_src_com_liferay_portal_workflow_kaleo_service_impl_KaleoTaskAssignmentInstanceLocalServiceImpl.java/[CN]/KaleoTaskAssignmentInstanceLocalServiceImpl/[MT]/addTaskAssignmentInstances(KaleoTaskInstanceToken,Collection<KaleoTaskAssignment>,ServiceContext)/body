@@ -7,7 +7,8 @@
     populateKaleoTaskAssignmentInstance(kaleoTaskAssignmentInstance,kaleoTaskInstanceToken,user);
     kaleoTaskAssignmentInstance.setAssigneeClassName(kaleoTaskAssignment.getAssigneeClassName());
     if ((kaleoTaskAssignment.getAssigneeClassPK() == 0) && User.class.getName().equals(kaleoTaskAssignment.getAssigneeClassName())) {
-      kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoTaskInstanceToken.getUserId());
+      KaleoInstance kaleoInstance=kaleoInstanceLocalService.getKaleoInstance(kaleoTaskInstanceToken.getKaleoInstanceId());
+      kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoInstance.getUserId());
     }
  else {
       kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoTaskAssignment.getAssigneeClassPK());
