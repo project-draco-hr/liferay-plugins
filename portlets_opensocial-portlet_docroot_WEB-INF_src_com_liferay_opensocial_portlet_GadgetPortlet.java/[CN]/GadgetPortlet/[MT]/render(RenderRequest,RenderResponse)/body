@@ -1,15 +1,5 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
-    ExpandoTable expandoTable=null;
-    expandoTable=ExpandoTableLocalServiceUtil.getTable(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.OPEN_SOCIAL_DATA);
-    String columnName=ShindigUtil.USER_PREFS.concat(renderResponse.getNamespace());
-    try {
-      ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
-    }
- catch (    NoSuchColumnException nsce) {
-      ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
-    }
     Gadget gadget=getGadget();
     renderRequest.setAttribute(WebKeys.GADGET,gadget);
     super.render(renderRequest,renderResponse);

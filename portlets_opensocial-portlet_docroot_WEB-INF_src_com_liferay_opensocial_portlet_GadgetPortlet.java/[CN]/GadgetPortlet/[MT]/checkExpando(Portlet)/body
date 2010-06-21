@@ -1,0 +1,11 @@
+{
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(portlet.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial());
+  String namespace=PortalUtil.getPortletNamespace(portlet.getPortletId());
+  String columnName=ShindigUtil.getColumnUserPrefs(namespace);
+  try {
+    ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
+  }
+ catch (  NoSuchColumnException nsce) {
+    ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+  }
+}
