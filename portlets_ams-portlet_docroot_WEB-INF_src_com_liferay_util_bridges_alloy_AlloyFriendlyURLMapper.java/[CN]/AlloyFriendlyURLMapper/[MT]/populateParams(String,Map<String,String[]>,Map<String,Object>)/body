@@ -1,20 +1,20 @@
 {
   HttpServletRequest request=(HttpServletRequest)requestContext.get("request");
   String method=request.getMethod();
-  addParameter(parameterMap,"p_p_id",_PORTLET_ID);
-  addParameter(parameterMap,"p_p_lifecycle",getLifecycle(method));
-  addParameter(parameterMap,"p_p_mode",PortletMode.VIEW);
-  String url=method + friendlyURLPath.substring(_MAPPING.length() + 1);
-  Map<String,String> routeParameters=router.urlToParameters(url);
+  friendlyURLPath=method + friendlyURLPath.substring(getMapping().length() + 1);
+  Map<String,String> routeParameters=router.urlToParameters(friendlyURLPath);
   if (routeParameters == null) {
     if (_log.isWarnEnabled()) {
-      _log.warn("No route could be found to match URL " + url);
+      _log.warn("No route could be found to match URL " + friendlyURLPath);
     }
     return;
   }
-  for (  Map.Entry<String,String> entry : routeParameters.entrySet()) {
-    String name=entry.getKey();
-    String value=entry.getValue();
-    addParameter(parameterMap,name,value);
+  String portletId=getPortletId(routeParameters);
+  if (portletId == null) {
+    return;
   }
+  String namespace=PortalUtil.getPortletNamespace(portletId);
+  addParameter(namespace,parameterMap,"p_p_id",portletId);
+  addParameter(parameterMap,"p_p_lifecycle",getLifecycle(method));
+  populateParams(parameterMap,namespace,routeParameters);
 }
