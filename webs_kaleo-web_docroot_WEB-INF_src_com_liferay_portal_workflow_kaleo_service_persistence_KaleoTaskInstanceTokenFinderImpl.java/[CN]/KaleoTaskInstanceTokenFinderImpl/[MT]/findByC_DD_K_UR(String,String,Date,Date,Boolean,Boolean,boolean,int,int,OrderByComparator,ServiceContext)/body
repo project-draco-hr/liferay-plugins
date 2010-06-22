@@ -1,6 +1,12 @@
 {
-  String[] taskNames=CustomSQLUtil.keywords(taskName,false);
-  String[] assetTypes=CustomSQLUtil.keywords(assetType,false);
+  String[] taskNames=null;
+  if (Validator.isNotNull(taskName)) {
+    taskNames=CustomSQLUtil.keywords(taskName,false);
+  }
+  String[] assetTypes=null;
+  if (Validator.isNotNull(assetType)) {
+    assetTypes=CustomSQLUtil.keywords(assetType,false);
+  }
   Timestamp dueDateGT_TS=CalendarUtil.getTimestamp(dueDateGT);
   Timestamp dueDateLT_TS=CalendarUtil.getTimestamp(dueDateLT);
   Session session=null;
@@ -9,8 +15,14 @@
     String sql=CustomSQLUtil.get(FIND_BY_C_DD_K_UR);
     sql=StringUtil.replace(sql,"[$COMPLETION$]",getCompletion(completed));
     sql=StringUtil.replace(sql,"[$SEARCH_CRITERIA$]",getSearchCriteria(taskNames,assetTypes,dueDateGT_TS,dueDateLT_TS));
-    sql=CustomSQLUtil.replaceKeywords(sql,"Kaleo_KaleoTaskInstanceToken.kaleoTaskName",StringPool.LIKE,false,taskNames);
-    sql=CustomSQLUtil.replaceKeywords(sql,"Kaleo_KaleoTaskInstanceToken.className",StringPool.LIKE,false,assetTypes);
+    if (taskNames != null) {
+      boolean last=((assetType == null) && (dueDateGT_TS == null) && (dueDateLT_TS == null));
+      sql=CustomSQLUtil.replaceKeywords(sql,"Kaleo_KaleoTaskInstanceToken.kaleoTaskName",StringPool.LIKE,last,taskNames);
+    }
+    if (assetTypes != null) {
+      boolean last=((dueDateGT_TS == null) && (dueDateLT_TS == null));
+      sql=CustomSQLUtil.replaceKeywords(sql,"Kaleo_KaleoTaskInstanceToken.className",StringPool.LIKE,last,assetTypes);
+    }
     List<Long> roleIds=null;
     List<UserGroupRole> userGroupRoles=null;
     if ((searchByUserRoles != null) && searchByUserRoles) {
