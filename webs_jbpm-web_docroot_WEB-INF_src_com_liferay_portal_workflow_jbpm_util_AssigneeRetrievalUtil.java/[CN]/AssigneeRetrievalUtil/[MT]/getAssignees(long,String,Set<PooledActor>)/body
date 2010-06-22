@@ -9,7 +9,9 @@
         role=RoleLocalServiceUtil.getRole(GetterUtil.getLong(pooledActor.getActorId()));
       }
  else {
-        role=RoleLocalServiceUtil.getRole(companyId,pooledActor.getActorId());
+        ServiceContext serviceContext=new ServiceContext();
+        serviceContext.setCompanyId(companyId);
+        role=RoleRetrievalUtil.getRole(pooledActor.getActorId(),true,serviceContext);
       }
       assignees.add(new Assignee(Role.class.getName(),role.getRoleId()));
     }
