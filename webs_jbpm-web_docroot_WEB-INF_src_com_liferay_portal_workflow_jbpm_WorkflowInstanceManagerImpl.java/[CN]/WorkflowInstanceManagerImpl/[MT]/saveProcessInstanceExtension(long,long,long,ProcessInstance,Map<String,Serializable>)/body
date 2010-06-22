@@ -3,7 +3,8 @@
   String className=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME);
   long classPK=GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
   ProcessInstanceExtensionImpl processInstanceExtensionImpl=new ProcessInstanceExtensionImpl(companyId,groupId,userId,className,classPK,processInstance);
-  jbpmContext.getSession().save(processInstanceExtensionImpl);
+  Session session=jbpmContext.getSession();
+  session.save(processInstanceExtensionImpl);
   TaskMgmtInstance taskMgmtInstance=processInstance.getTaskMgmtInstance();
   Collection<TaskInstance> taskInstances=taskMgmtInstance.getTaskInstances();
   if (taskInstances != null) {
@@ -11,7 +12,7 @@
       List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,taskInstance.getActorId(),taskInstance.getPooledActors());
       String context=WorkflowContextUtil.convertToJSON(workflowContext);
       TaskInstanceExtensionImpl taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignees,context,taskInstance);
-      jbpmContext.getSession().save(taskInstanceExtensionImpl);
+      session.save(taskInstanceExtensionImpl);
     }
   }
 }
