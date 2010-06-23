@@ -1,15 +1,15 @@
 {
-  Portlet portlet=_portletsPool.get(gadget.getGadgetId());
+  Portlet portlet=_portletsPool.get(gadgetId);
   if (portlet != null) {
     return portlet;
   }
   StringBuilder sb=new StringBuilder();
   sb.append(GadgetPortlet.PORTLET_NAME_PREFIX);
-  sb.append(gadget.getCompanyId());
+  sb.append(companyId);
   sb.append(StringPool.UNDERLINE);
-  sb.append(gadget.getGadgetId());
+  sb.append(gadgetId);
   String portletId=PortalUtil.getJsSafePortletId(sb.toString());
-  portlet=PortletLocalServiceUtil.clonePortlet(gadget.getCompanyId(),_GADGET_PORTLET_ID);
+  portlet=PortletLocalServiceUtil.clonePortlet(companyId,_GADGET_PORTLET_ID);
   portlet.setPortletId(portletId);
   portlet.setTimestamp(System.currentTimeMillis());
   PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.SERVLET_CONTEXT_NAME);
@@ -19,8 +19,8 @@
   portlet.setPortletClass(GadgetPortlet.class.getName());
   Map<String,String> initParams=portlet.getInitParams();
   initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_GADGET_PORTLET_NAME);
-  addPortletExtraInfo(portlet,portletApp,gadget.getName());
-  _portletsPool.put(gadget.getGadgetId(),portlet);
+  addPortletExtraInfo(portlet,portletApp,name);
+  _portletsPool.put(gadgetId,portlet);
   PortletBag portletBag=PortletBagPool.get(_GADGET_PORTLET_ID);
   portletBag=(PortletBag)portletBag.clone();
   portletBag.setPortletName(portletId);
