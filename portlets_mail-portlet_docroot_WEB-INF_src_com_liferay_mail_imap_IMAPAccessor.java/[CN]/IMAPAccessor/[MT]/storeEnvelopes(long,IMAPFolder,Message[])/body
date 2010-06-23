@@ -8,6 +8,7 @@
     FetchProfile fetchProfile=new FetchProfile();
     fetchProfile.add(UIDFolder.FetchProfileItem.UID);
     fetchProfile.add(UIDFolder.FetchProfileItem.ENVELOPE);
+    fetchProfile.add(UIDFolder.FetchProfileItem.FLAGS);
     imapFolder.fetch(jxMessages,fetchProfile);
     for (    Message jxMessage : jxMessages) {
       String sender=InternetAddressUtil.toString(jxMessage.getFrom());
@@ -16,12 +17,13 @@
       String bcc=InternetAddressUtil.toString(jxMessage.getRecipients(RecipientType.BCC));
       Date sentDate=jxMessage.getSentDate();
       String subject=jxMessage.getSubject();
+      String flags=getFlags(jxMessage);
       long remoteMessageId=imapFolder.getUID(jxMessage);
       try {
         com.liferay.mail.model.Message message=MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
       }
  catch (      NoSuchMessageException nsme) {
-        MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,StringPool.BLANK,remoteMessageId);
+        MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,flags,remoteMessageId);
       }
     }
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.getFolder(folderId);
