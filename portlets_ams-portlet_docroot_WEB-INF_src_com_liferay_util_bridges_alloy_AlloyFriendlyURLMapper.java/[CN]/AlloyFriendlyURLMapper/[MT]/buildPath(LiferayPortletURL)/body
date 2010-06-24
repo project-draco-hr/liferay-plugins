@@ -1,7 +1,7 @@
 {
   Map<String,String> routeParameters=new HashMap<String,String>();
-  buildRouteParameters(portletURL,routeParameters);
-  String lifecycle=portletURL.getLifecycle();
+  buildRouteParameters(liferayPortletURL,routeParameters);
+  String lifecycle=liferayPortletURL.getLifecycle();
   if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
     routeParameters.put("method",HttpMethods.POST);
   }
@@ -12,7 +12,7 @@
   if (friendlyURLPath == null) {
     return null;
   }
-  addParametersIncludedInPath(portletURL,routeParameters);
+  addParametersIncludedInPath(liferayPortletURL,routeParameters);
   int pos=friendlyURLPath.indexOf(StringPool.SLASH);
   friendlyURLPath=friendlyURLPath.substring(pos);
   friendlyURLPath=StringPool.SLASH.concat(getMapping()).concat(friendlyURLPath);
