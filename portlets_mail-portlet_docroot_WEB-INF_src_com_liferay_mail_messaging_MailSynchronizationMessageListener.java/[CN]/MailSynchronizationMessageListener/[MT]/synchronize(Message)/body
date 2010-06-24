@@ -9,9 +9,8 @@
   if (_log.isDebugEnabled()) {
     _log.debug("Starting synch for accountId " + accountId + " folderId "+ folderId+ " and messageId "+ messageId);
   }
-  String key=AccountLock.getKey(userId,accountId,folderId,messageId);
   try {
-    if (!password.equals(StringPool.BLANK) && AccountLock.acquireLock(key)) {
+    if (!password.equals(StringPool.BLANK)) {
       Mailbox mailbox=MailboxFactoryUtil.getMailbox(userId,accountId,password);
       if (messageId != 0) {
         mailbox.synchronizeMessage(messageId);
@@ -38,11 +37,5 @@
     if (_log.isDebugEnabled()) {
       _log.debug("Skipping syncronization of accountId " + accountId);
     }
-  }
- finally {
-    if (_log.isDebugEnabled()) {
-      _log.debug("Ending synch for accountId " + accountId + " folderId "+ folderId+ " and messageId "+ messageId);
-    }
-    AccountLock.releaseLock(key);
   }
 }

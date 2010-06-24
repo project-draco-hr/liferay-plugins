@@ -4,7 +4,15 @@
   }
   updateFolders();
   List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
-  for (  Folder folder : folders) {
-    _imapAccessor.storeEnvelopes(folder.getFolderId(),true);
+  String key=AccountLock.getKey(user.getUserId(),account.getAccountId());
+  if (AccountLock.acquireLock(key)) {
+    try {
+      for (      Folder folder : folders) {
+        _imapAccessor.storeEnvelopes(folder.getFolderId(),true);
+      }
+    }
+  finally {
+      AccountLock.releaseLock(key);
+    }
   }
 }
