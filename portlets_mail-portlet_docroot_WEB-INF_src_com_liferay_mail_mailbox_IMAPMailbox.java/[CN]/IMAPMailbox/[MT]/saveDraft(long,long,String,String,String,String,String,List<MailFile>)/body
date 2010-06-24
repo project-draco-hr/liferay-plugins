@@ -12,10 +12,15 @@
   if ((toAddresses.length == 0) && (ccAddresses.length == 0) && (bccAddresses.length == 0)) {
     throw new MailException(MailException.MESSAGE_HAS_NO_RECIPIENTS);
   }
+  Message message=null;
   if (messageId != 0) {
-    return MessageLocalServiceUtil.updateMessage(messageId,account.getDraftFolderId(),sender,InternetAddressUtil.toString(toAddresses),InternetAddressUtil.toString(ccAddresses),InternetAddressUtil.toString(bccAddresses),null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
+    message=MessageLocalServiceUtil.updateMessage(messageId,account.getDraftFolderId(),sender,InternetAddressUtil.toString(toAddresses),InternetAddressUtil.toString(ccAddresses),InternetAddressUtil.toString(bccAddresses),null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
   }
  else {
-    return MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
+    message=MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
   }
+  for (  MailFile mailFile : mailFiles) {
+    AttachmentLocalServiceUtil.addAttachment(user.getUserId(),message.getMessageId(),null,mailFile.getFileName(),mailFile.getSize(),mailFile.getFile());
+  }
+  return message;
 }
