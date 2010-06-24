@@ -19,6 +19,9 @@
  else {
     message=MessageLocalServiceUtil.addMessage(user.getUserId(),account.getDraftFolderId(),sender,to,cc,bcc,null,subject,body,String.valueOf(MailConstants.FLAG_DRAFT),0);
   }
+  if (mailFiles == null) {
+    return message;
+  }
   for (  MailFile mailFile : mailFiles) {
     AttachmentLocalServiceUtil.addAttachment(user.getUserId(),message.getMessageId(),null,mailFile.getFileName(),mailFile.getSize(),mailFile.getFile());
   }
