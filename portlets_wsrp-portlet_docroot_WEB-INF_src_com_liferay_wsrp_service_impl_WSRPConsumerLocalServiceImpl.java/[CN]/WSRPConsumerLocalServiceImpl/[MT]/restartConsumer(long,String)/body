@@ -1,0 +1,25 @@
+{
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
+  try {
+    WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
+    RegistrationContext registrationContext=wsrpConsumer.getRegistrationContext();
+    wsrpConsumerManager.updateServiceDescription(registrationContext);
+    List<WSRPConsumerPortlet> portlets=wsrpConsumerPortletLocalService.getWSRPConsumerPortlets(wsrpConsumerId);
+    for (    WSRPConsumerPortlet portlet : portlets) {
+      long companyId=portlet.getCompanyId();
+      long wsrpConsumerPortletId=portlet.getWsrpConsumerPortletId();
+      String name=portlet.getName();
+      String portletHandle=portlet.getPortletHandle();
+      wsrpConsumerPortletLocalService.initWSRPConsumerPortlet(companyId,wsrpConsumerId,wsrpConsumerPortletId,name,portletHandle,userToken);
+    }
+  }
+ catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}
