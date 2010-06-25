@@ -17,13 +17,7 @@
     String author=null;
     String userName=PortalUtil.getUserName(article.getUserId(),article.getUserName());
     author=HtmlUtil.escape(userName);
-    String link=entryURL;
-    if (link != null) {
-      String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
-      link=HttpUtil.setParameter(link,"p_p_id",PortletKeys.KNOWLEDGE_BASE_ADMIN);
-      link=HttpUtil.setParameter(link,namespace + "jspPage","/kb/view_article.jsp");
-      link=HttpUtil.setParameter(link,namespace + "resourcePrimKey",article.getResourcePrimKey());
-    }
+    String link=KnowledgeBaseUtil.getArticleURL(portletId,article.getResourcePrimKey(),layoutFullURL,isMaximized);
     SyndContent syndContent=new SyndContentImpl();
     syndContent.setType(RSSUtil.DEFAULT_ENTRY_TYPE);
     syndContent.setValue(value);

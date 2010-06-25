@@ -1,0 +1,10 @@
+{
+  Article article=articleLocalService.getLatestArticle(resourcePrimKey);
+  String title=HtmlUtil.escape(article.getTitle());
+  String name=title;
+  String description=title;
+  String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
+  String feedURL=KnowledgeBaseUtil.getArticleURL(portletId,resourcePrimKey,layoutFullURL,isMaximized);
+  List<Article> articles=filterArticles(article,max);
+  return exportToRSS(portletId,name,description,type,version,displayStyle,isMaximized,layoutFullURL,feedURL,articles,themeDisplay);
+}
