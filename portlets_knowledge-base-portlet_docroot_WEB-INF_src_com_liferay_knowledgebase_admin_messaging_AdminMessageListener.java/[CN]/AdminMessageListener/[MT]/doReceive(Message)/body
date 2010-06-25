@@ -18,7 +18,7 @@
   List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),resourcePrimKey);
   sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey);
-  while (article.getParentResourcePrimKey() > 0) {
+  while (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
     article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey());
     subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),article.getResourcePrimKey());
     sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);

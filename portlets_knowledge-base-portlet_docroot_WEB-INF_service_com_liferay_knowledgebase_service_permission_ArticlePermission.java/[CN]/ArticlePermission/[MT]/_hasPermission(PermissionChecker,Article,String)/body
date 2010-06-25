@@ -2,7 +2,7 @@
   if (permissionChecker.hasOwnerPermission(article.getCompanyId(),Article.class.getName(),article.getResourcePrimKey(),article.getUserId(),actionId) || permissionChecker.hasPermission(article.getGroupId(),Article.class.getName(),article.getResourcePrimKey(),actionId)) {
     return true;
   }
-  if (article.getParentResourcePrimKey() > 0) {
+  if (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
     article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey());
     return _hasPermission(permissionChecker,article,actionId);
   }
