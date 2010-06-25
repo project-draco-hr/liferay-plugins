@@ -7,11 +7,10 @@
   String link=StringPool.BLANK;
   long plid=PortalUtil.getPlidFromPortletId(article.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN);
   if (plid != LayoutConstants.DEFAULT_PLID) {
-    String layoutFullURL=PortalUtil.getLayoutFullURL(LayoutLocalServiceUtil.getLayout(plid),themeDisplay);
-    String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
-    link=HttpUtil.setParameter(layoutFullURL,"p_p_id",PortletKeys.KNOWLEDGE_BASE_ADMIN);
-    link=HttpUtil.setParameter(link,namespace + "jspPage","/admin/view_article.jsp");
-    link=HttpUtil.setParameter(link,namespace + "resourcePrimKey",article.getResourcePrimKey());
+    if (PortletPermissionUtil.contains(permissionChecker,plid,PortletKeys.KNOWLEDGE_BASE_ADMIN,ActionKeys.VIEW)) {
+      String layoutFullURL=PortalUtil.getLayoutFullURL(LayoutLocalServiceUtil.getLayout(plid),themeDisplay);
+      link=KnowledgeBaseUtil.getArticleURL(PortletKeys.KNOWLEDGE_BASE_ADMIN,article.getResourcePrimKey(),layoutFullURL,false);
+    }
   }
   String key=StringPool.BLANK;
   if (activity.getType() == AdminActivityKeys.ADD_ARTICLE) {
