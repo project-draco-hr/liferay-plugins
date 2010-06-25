@@ -22,7 +22,15 @@
   getMarkup.setRuntimeContext(runtimeContext);
   getMarkup.setUserContext(userContext);
   WSRP_v2_Markup_PortType markupService=getMarkupService(portletRequest,wsrpConsumerManager,wsrpConsumer);
-  MarkupResponse markupResponse=markupService.getMarkup(getMarkup);
+  MarkupResponse markupResponse=null;
+  try {
+    markupResponse=markupService.getMarkup(getMarkup);
+  }
+ catch (  InvalidCookieFault icf) {
+    InitCookie initCookie=new InitCookie();
+    markupService.initCookie(initCookie);
+    markupResponse=markupService.getMarkup(getMarkup);
+  }
   processMarkupResponse(portletRequest,portletResponse,markupResponse);
   return markupResponse;
 }
