@@ -1,5 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
-  ArticleServiceUtil.subscribe(themeDisplay.getScopeGroupId(),resourcePrimKey);
+  if (resourcePrimKey <= 0) {
+    ArticleServiceUtil.subscribe(themeDisplay.getScopeGroupId());
+  }
+ else {
+    ArticleServiceUtil.subscribeArticle(resourcePrimKey);
+  }
 }
