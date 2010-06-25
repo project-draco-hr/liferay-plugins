@@ -32,6 +32,7 @@
   String fromAddress=preferences.getValue("email-from-address",PortletProps.get("admin.email.from.address"));
   fromName=StringUtil.replace(fromName,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName()});
   fromAddress=StringUtil.replace(fromAddress,new String[]{"[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]"},new String[]{emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName()});
+  String articleContent=StringUtil.replace(article.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   Map<String,String> articleDiffs=new HashMap<String,String>();
   String[] parameters=new String[]{"content","title"};
   for (  String parameter : parameters) {
@@ -44,8 +45,6 @@
     }
     articleDiffs.put(parameter,articleDiff);
   }
-  String articleContent=getEmailArticleContent(article,serviceContext);
-  String articleURL=getEmailArticleURL(article,serviceContext);
   String subject=null;
   String body=null;
   if (!update) {
@@ -92,14 +91,15 @@
       }
     }
   }
-  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
-  body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_URL$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),articleURL,emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
+  subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
+  body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
   String mailId=StringPool.LESS_THAN + "knowledge_base.article." + article.getResourcePrimKey()+ StringPool.AT+ company.getMx()+ StringPool.GREATER_THAN;
   Message message=new Message();
   message.put("companyId",article.getCompanyId());
   message.put("groupId",article.getGroupId());
   message.put("userId",article.getUserId());
   message.put("resourcePrimKey",article.getResourcePrimKey());
+  message.put("portalURL",serviceContext.getPortalURL());
   message.put("fromName",fromName);
   message.put("fromAddress",fromAddress);
   message.put("subject",subject);

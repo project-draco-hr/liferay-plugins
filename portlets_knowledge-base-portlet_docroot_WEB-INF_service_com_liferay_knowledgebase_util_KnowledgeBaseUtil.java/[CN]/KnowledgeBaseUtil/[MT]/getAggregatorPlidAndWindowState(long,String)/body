@@ -1,0 +1,27 @@
+{
+  Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey);
+  long parentGroupId=PortalUtil.getParentGroupId(article.getGroupId());
+  long plid=PortalUtil.getPlidFromPortletId(parentGroupId,portletId);
+  WindowState windowState=WindowState.NORMAL;
+  if (plid == LayoutConstants.DEFAULT_PLID) {
+    return new Object[]{plid,windowState};
+  }
+  Object[] arguments=new Object[]{LayoutLocalServiceUtil.getLayout(plid),portletId,StringPool.BLANK};
+  PortletPreferences jxPreferences=(PortletPreferences)PortalClassInvoker.invoke("com.liferay.portlet.PortletPreferencesFactoryUtil","getPortletSetup",arguments);
+  String articleWindowState=jxPreferences.getValue("article-window-state",WindowState.MAXIMIZED.toString());
+  String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
+  long[] resourcePrimKeys=GetterUtil.getLongValues(jxPreferences.getValues("resource-prim-keys",new String[0]));
+  long[] scopeGroupIds=GetterUtil.getLongValues(jxPreferences.getValues("scope-group-ids",new String[0]));
+  boolean hasResourcePrimKey=ArrayUtil.contains(resourcePrimKeys,resourcePrimKey);
+  boolean hasScopeGroup=ArrayUtil.contains(scopeGroupIds,article.getGroupId());
+  if (articleWindowState.equals(WindowState.MAXIMIZED.toString())) {
+    windowState=WindowState.MAXIMIZED;
+  }
+  if ((selectionMethod.equals("parent-group")) || (selectionMethod.equals("articles") && hasResourcePrimKey) || (selectionMethod.equals("scope-groups") && hasScopeGroup)) {
+    return new Object[]{plid,windowState};
+  }
+  if (selectionMethod.equals("articles")) {
+    return new Object[]{plid,windowState};
+  }
+  return new Object[]{LayoutConstants.DEFAULT_PLID,WindowState.NORMAL};
+}

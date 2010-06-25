@@ -1,0 +1,19 @@
+{
+  String pluginId=PortletConstants.getRootPortletId(portletId);
+  String namespace=PortalUtil.getPortletNamespace(portletId);
+  String jspPage=null;
+  if (pluginId.equals(PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
+    jspPage="/admin/view_article.jsp";
+  }
+ else   if (pluginId.equals(PortletKeys.KNOWLEDGE_BASE_AGGREGATOR)) {
+    jspPage="/aggregator/view_article.jsp";
+  }
+  String articleURL=layoutFullURL;
+  if (isMaximized) {
+    articleURL=HttpUtil.setParameter(articleURL,"p_p_state",WindowState.MAXIMIZED.toString());
+  }
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_id",portletId);
+  articleURL=HttpUtil.setParameter(articleURL,namespace + "jspPage",jspPage);
+  articleURL=HttpUtil.setParameter(articleURL,namespace + "resourcePrimKey",resourcePrimKey);
+  return articleURL;
+}

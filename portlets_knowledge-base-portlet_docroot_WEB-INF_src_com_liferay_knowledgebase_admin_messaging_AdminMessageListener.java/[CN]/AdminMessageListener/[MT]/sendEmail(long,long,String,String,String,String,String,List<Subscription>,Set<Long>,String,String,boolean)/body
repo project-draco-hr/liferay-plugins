@@ -43,14 +43,22 @@
       PrincipalThreadLocal.setName(null);
       PermissionThreadLocal.setPermissionChecker(null);
     }
+    String portletId=ExpandoValueLocalServiceUtil.getData(user.getCompanyId(),Subscription.class.getName(),"KB","portletId",subscription.getSubscriptionId(),PortletKeys.KNOWLEDGE_BASE_ADMIN);
+    String articleURL=KnowledgeBaseUtil.getArticleURL(resourcePrimKey,portletId,portalURL);
+    if (Validator.isNull(articleURL)) {
+      if (_log.isInfoEnabled()) {
+        _log.info("Portlet " + portletId + " does not exist or does "+ "not contain article "+ resourcePrimKey);
+      }
+      continue;
+    }
     String categoryTitle=LanguageUtil.get(user.getLocale(),"category.kb");
     String portletName=PortalUtil.getPortletTitle(PortletKeys.KNOWLEDGE_BASE_ADMIN,user.getLocale());
     String curFromName=StringUtil.replace(fromName,new String[]{"[$CATEGORY_TITLE$]","[$PORTLET_NAME$]"},new String[]{categoryTitle,portletName});
     String curFromAddress=StringUtil.replace(fromAddress,new String[]{"[$CATEGORY_TITLE$]","[$PORTLET_NAME$]"},new String[]{categoryTitle,portletName});
     String articleAttachments=getEmailArticleAttachments(user,article);
     String articleVersion=LanguageUtil.format(user.getLocale(),"version-x",String.valueOf(article.getVersion()),false);
-    String curSubject=StringUtil.replace(subject,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_VERSION$]","[$CATEGORY_TITLE$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{articleAttachments,articleVersion,categoryTitle,portletName,user.getEmailAddress(),user.getFullName()});
-    String curBody=StringUtil.replace(body,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_VERSION$]","[$CATEGORY_TITLE$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{articleAttachments,articleVersion,categoryTitle,portletName,user.getEmailAddress(),user.getFullName()});
+    String curSubject=StringUtil.replace(subject,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_URL$]","[$ARTICLE_VERSION$]","[$CATEGORY_TITLE$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{articleAttachments,articleURL,articleVersion,categoryTitle,portletName,user.getEmailAddress(),user.getFullName()});
+    String curBody=StringUtil.replace(body,new String[]{"[$ARTICLE_ATTACHMENTS$]","[$ARTICLE_URL$]","[$ARTICLE_VERSION$]","[$CATEGORY_TITLE$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{articleAttachments,articleURL,articleVersion,categoryTitle,portletName,user.getEmailAddress(),user.getFullName()});
     try {
       InternetAddress from=new InternetAddress(curFromAddress,curFromName);
       InternetAddress to=new InternetAddress(user.getEmailAddress(),user.getFullName());
