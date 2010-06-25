@@ -7,7 +7,7 @@
       }
     }
   }
-  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article1",PortletClassLoaderUtil.getClassLoader());
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article1",getClass().getClassLoader());
   for (  Map.Entry<String,Object> entry : params.entrySet()) {
     String key=entry.getKey();
     Object value=entry.getValue();
@@ -27,7 +27,7 @@
   if (allVersions) {
     return dynamicQuery;
   }
-  DynamicQuery subselectDynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article2",PortletClassLoaderUtil.getClassLoader());
+  DynamicQuery subselectDynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article2",getClass().getClassLoader());
   Property versionProperty=PropertyFactoryUtil.forName("version");
   subselectDynamicQuery.setProjection(versionProperty.max());
   Property resourcePrimKeyProperty1=PropertyFactoryUtil.forName("article1.resourcePrimKey");
