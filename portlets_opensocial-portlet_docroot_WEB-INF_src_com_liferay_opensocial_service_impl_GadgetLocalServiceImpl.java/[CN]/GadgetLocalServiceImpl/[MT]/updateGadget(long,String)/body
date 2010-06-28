@@ -8,10 +8,16 @@
   try {
     Portlet portlet=getPortlet(gadget);
     portlet.setPortletInfo(new PortletInfo(name,name,name,name));
-    PortletInstanceFactoryUtil.updatePortletConfig(portlet);
-    return gadget;
+    PortletConfigFactoryUtil.update(portlet);
   }
- catch (  Exception e) {
-    throw new PortalException(e);
+ catch (  PortalException pe) {
+    throw pe;
   }
+catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e) {
+    throw new SystemException(e);
+  }
+  return gadget;
 }
