@@ -22,7 +22,7 @@
       if (_log.isInfoEnabled()) {
         _log.info("Subscription " + subscription.getSubscriptionId() + " is stale and will be deleted");
       }
-      SubscriptionLocalServiceUtil.deleteSubscription(subscription.getSubscriptionId());
+      ArticleLocalServiceUtil.unsubscribeArticle(subscription);
       continue;
     }
     if (!user.isActive()) {
@@ -47,7 +47,8 @@
     String articleURL=KnowledgeBaseUtil.getArticleURL(portletId,resourcePrimKey,portalURL);
     if (Validator.isNull(articleURL)) {
       if (_log.isInfoEnabled()) {
-        _log.info("Portlet " + portletId + " does not exist or does "+ "not contain article "+ resourcePrimKey);
+        _log.info("Portlet " + portletId + " does not exist or does "+ "not contain article "+ resourcePrimKey+ " - "+ "this subscription will be deleted");
+        ArticleLocalServiceUtil.unsubscribeArticle(subscription);
       }
       continue;
     }
