@@ -1,0 +1,58 @@
+{
+  String pluginId=PortletConstants.getRootPortletId(portletId);
+  if (!pluginId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+    return null;
+  }
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  Group group=layout.getGroup();
+  Object[] arguments=new Object[]{layout,portletId,StringPool.BLANK};
+  PortletPreferences jxPreferences=(PortletPreferences)PortalClassInvoker.invoke("com.liferay.portlet.PortletPreferencesFactoryUtil","getPortletSetup",arguments);
+  String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
+  long[] resourcePrimKeys=GetterUtil.getLongValues(jxPreferences.getValues("resource-prim-keys",new String[0]));
+  long[] scopeGroupIds=GetterUtil.getLongValues(jxPreferences.getValues("scope-group-ids",new String[0]));
+  boolean allArticles=GetterUtil.getBoolean(jxPreferences.getValue("all-articles",null),true);
+  String orderByColumn=jxPreferences.getValue("order-by-column","modified-date");
+  boolean orderByAscending=GetterUtil.getBoolean(jxPreferences.getValue("order-by-ascending",null));
+  OrderByComparator orderByComparator=null;
+  if (orderByColumn.equals("create-date")) {
+    orderByComparator=new ArticleCreateDateComparator(orderByAscending);
+  }
+ else   if (orderByColumn.equals("modified-date")) {
+    orderByComparator=new ArticleModifiedDateComparator(orderByAscending);
+  }
+  int delta=SearchContainer.DEFAULT_DELTA;
+  int lastIntervalStart=0;
+  boolean listNotExhausted=true;
+  while (listNotExhausted) {
+    List<Article> articles=new ArrayList<Article>();
+    if (selectionMethod.equals("articles")) {
+      articles=getArticles(resourcePrimKeys,lastIntervalStart,lastIntervalStart + delta,false);
+    }
+ else     if (selectionMethod.equals("parent-group")) {
+      Map<String,Object> params=new HashMap<String,Object>();
+      params.put("parentGroupId",group.getGroupId());
+      if (!allArticles) {
+        params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
+      }
+      articles=ArticleLocalServiceUtil.getArticles(params,false,lastIntervalStart,lastIntervalStart + delta,orderByComparator);
+    }
+ else     if (selectionMethod.equals("scope-groups")) {
+      Map<String,Object> params=new HashMap<String,Object>();
+      params.put("groupId",ArrayUtil.toArray(scopeGroupIds));
+      if (!allArticles) {
+        params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
+      }
+      articles=ArticleLocalServiceUtil.getArticles(params,false,lastIntervalStart,lastIntervalStart + delta,orderByComparator);
+    }
+    Iterator<Article> itr=articles.iterator();
+    lastIntervalStart+=delta;
+    listNotExhausted=(articles.size() == delta);
+    while (itr.hasNext()) {
+      Article article=itr.next();
+      if (ArticlePermission.contains(permissionChecker,article,ActionKeys.VIEW)) {
+        return article;
+      }
+    }
+  }
+  return null;
+}
