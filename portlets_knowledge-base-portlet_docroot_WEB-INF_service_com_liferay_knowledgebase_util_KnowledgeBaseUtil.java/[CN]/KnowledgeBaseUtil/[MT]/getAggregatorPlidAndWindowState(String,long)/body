@@ -6,8 +6,8 @@
   if (plid == LayoutConstants.DEFAULT_PLID) {
     return new Object[]{plid,windowState};
   }
-  Object[] arguments=new Object[]{LayoutLocalServiceUtil.getLayout(plid),portletId,StringPool.BLANK};
-  PortletPreferences jxPreferences=(PortletPreferences)PortalClassInvoker.invoke("com.liferay.portlet.PortletPreferencesFactoryUtil","getPortletSetup",arguments);
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  PortletPreferences jxPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
   String articleWindowState=jxPreferences.getValue("article-window-state",WindowState.MAXIMIZED.toString());
   if (articleWindowState.equals(WindowState.MAXIMIZED.toString())) {
     windowState=WindowState.MAXIMIZED;
