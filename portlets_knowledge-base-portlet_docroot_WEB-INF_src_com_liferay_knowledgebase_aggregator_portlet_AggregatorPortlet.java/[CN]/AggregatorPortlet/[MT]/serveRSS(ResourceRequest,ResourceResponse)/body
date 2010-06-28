@@ -1,6 +1,4 @@
 {
-  PortletPreferences preferences=resourceRequest.getPreferences();
-  String articleWindowState=preferences.getValue("article-window-state",WindowState.MAXIMIZED.toString());
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
   int max=ParamUtil.getInteger(resourceRequest,"max",SearchContainer.DEFAULT_DELTA);
@@ -8,6 +6,6 @@
   double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.DEFAULT_VERSION);
   String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
   String portletId=PortalUtil.getPortletId(resourceRequest);
-  String rss=ArticleServiceUtil.getArticlesRSS(portletId,resourcePrimKey,max,type,version,displayStyle,articleWindowState.equals(WindowState.MAXIMIZED.toString()),themeDisplay);
+  String rss=ArticleServiceUtil.getArticlesRSS(portletId,resourcePrimKey,max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
   PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
 }
