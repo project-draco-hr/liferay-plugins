@@ -4,12 +4,15 @@
     Session session=jbpmContext.getSession();
     Criteria criteria=session.createCriteria(WorkflowLogImpl.class);
     addJoin(criteria,workflowTaskId,workflowInstanceId);
-    List<WorkflowLog> workflowLogs=criteria.list();
-    Collections.sort(workflowLogs,orderByComparator);
-    if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
-      workflowLogs=ListUtil.subList(workflowLogs,start,end);
+    addLogTypesJunction(criteria,logTypes);
+    criteria.setProjection(Projections.rowCount());
+    List<Long> results=criteria.list();
+    if (results.isEmpty()) {
+      return 0;
     }
-    return workflowLogs;
+ else {
+      return (results.get(0)).intValue();
+    }
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
