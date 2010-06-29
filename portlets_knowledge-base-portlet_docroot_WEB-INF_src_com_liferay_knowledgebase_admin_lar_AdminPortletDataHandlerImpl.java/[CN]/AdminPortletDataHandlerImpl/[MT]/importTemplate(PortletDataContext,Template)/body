@@ -10,14 +10,15 @@
   if (context.isDataStrategyMirror()) {
     Template existingTemplate=TemplateUtil.fetchByUUID_G(template.getUuid(),context.getScopeGroupId());
     if (existingTemplate == null) {
-      importedTemplate=TemplateLocalServiceUtil.addTemplate(template.getUuid(),userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
+      serviceContext.setUuid(template.getUuid());
+      importedTemplate=TemplateLocalServiceUtil.addTemplate(userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
     }
  else {
       importedTemplate=TemplateLocalServiceUtil.updateTemplate(existingTemplate.getTemplateId(),template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
     }
   }
  else {
-    importedTemplate=TemplateLocalServiceUtil.addTemplate(null,userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
+    importedTemplate=TemplateLocalServiceUtil.addTemplate(userId,template.getTitle(),template.getContent(),template.getDescription(),serviceContext);
   }
   context.importPermissions(Template.class,template.getTemplateId(),importedTemplate.getTemplateId());
   if (context.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
