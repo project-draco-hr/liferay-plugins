@@ -2,7 +2,7 @@
   Attachment attachment=AttachmentLocalServiceUtil.getAttachment(attachmentId);
   Message message=MessageLocalServiceUtil.getMessage(attachment.getMessageId());
   if (account.getDraftFolderId() == attachment.getFolderId()) {
-    return AttachmentLocalServiceUtil.getInputStream(attachmentId);
+    return FileUtil.getBytes(AttachmentLocalServiceUtil.getInputStream(attachmentId));
   }
  else {
     return _imapAccessor.getAttachment(attachment.getFolderId(),message.getRemoteMessageId(),attachment.getContentPath());
