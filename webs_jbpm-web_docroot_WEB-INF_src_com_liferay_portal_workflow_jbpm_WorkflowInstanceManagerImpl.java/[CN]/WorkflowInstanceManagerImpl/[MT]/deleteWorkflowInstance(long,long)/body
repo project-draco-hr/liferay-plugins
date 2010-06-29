@@ -7,6 +7,8 @@
       if (token.isRoot()) {
         CustomSession customSession=new CustomSession(jbpmContext);
         ProcessInstance processInstance=token.getProcessInstance();
+        customSession.deleteProcessInstanceExtension(processInstance.getId());
+        customSession.deleteTaskInstanceExtensions(processInstance.getId());
         customSession.deleteWorkflowLogs(processInstance.getId());
         graphSession.deleteProcessInstance(processInstance);
       }
