@@ -8,15 +8,14 @@
     if ((pooledActors == null) || pooledActors.isEmpty()) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " has not been assigned to a role");
     }
-    PooledActor pooledActor=pooledActors.iterator().next();
     ProcessInstance processInstance=taskInstance.getProcessInstance();
     ContextInstance contextInstance=processInstance.getContextInstance();
     long groupId=GetterUtil.getLong((String)contextInstance.getVariable("groupId"));
-    String actorId=pooledActor.getActorId();
-    if (!hasRole(companyId,groupId,actorId,assigneeUserId)) {
+    if (!hasRole(companyId,groupId,pooledActors,assigneeUserId)) {
       throw new WorkflowException("Workflow task " + workflowTaskId + " cannot be assigned to user "+ assigneeUserId);
     }
     taskInstance.setActorId(String.valueOf(assigneeUserId));
+    taskInstance.setPooledActors(new HashSet<PooledActor>());
     taskInstance.addComment(comment);
     setDueDate(taskInstance,dueDate);
     if (context != null) {
