@@ -2,7 +2,11 @@
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     Token token=jbpmContext.loadToken(workflowInstanceId);
-    Set<Transition> transitions=token.getAvailableTransitions();
+    Node node=token.getNode();
+    Set<Transition> transitions=Collections.EMPTY_SET;
+    if (node.getNodeType() != NodeType.Task) {
+      transitions=token.getAvailableTransitions();
+    }
     List<String> transitionNames=new ArrayList<String>(transitions.size());
     for (    Transition transition : transitions) {
       transitionNames.add(transition.getName());
