@@ -1,3 +1,9 @@
 {
-  return "/admin/configuration.jsp";
+  ServletContext servletContext=(ServletContext)renderRequest.getAttribute(WebKeys.CTX);
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String portletResource=ParamUtil.getString(renderRequest,"portletResource");
+  Portlet selPortlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),portletResource);
+  PortletConfig selPortletConfig=PortletConfigFactoryUtil.create(selPortlet,servletContext);
+  String jspPath=selPortletConfig.getInitParameter("jsp-path");
+  return jspPath + "configuration.jsp";
 }

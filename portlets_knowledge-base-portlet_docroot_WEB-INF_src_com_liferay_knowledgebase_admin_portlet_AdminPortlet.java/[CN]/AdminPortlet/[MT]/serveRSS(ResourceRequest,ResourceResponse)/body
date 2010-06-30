@@ -5,12 +5,13 @@
   String type=ParamUtil.getString(resourceRequest,"type",RSSUtil.DEFAULT_TYPE);
   double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.DEFAULT_VERSION);
   String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_FULL_CONTENT);
+  String portletId=PortalUtil.getPortletId(resourceRequest);
   String rss=StringPool.BLANK;
   if (resourcePrimKey <= 0) {
-    rss=ArticleServiceUtil.getGroupArticlesRSS(PortletKeys.KNOWLEDGE_BASE_ADMIN,max,type,version,displayStyle,false,themeDisplay);
+    rss=ArticleServiceUtil.getGroupArticlesRSS(portletId,max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
   }
  else {
-    rss=ArticleServiceUtil.getArticlesRSS(PortletKeys.KNOWLEDGE_BASE_ADMIN,resourcePrimKey,max,type,version,displayStyle,false,themeDisplay);
+    rss=ArticleServiceUtil.getArticlesRSS(portletId,resourcePrimKey,max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
   }
   PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
 }
