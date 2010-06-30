@@ -1,9 +1,5 @@
 {
   wsrpConsumerPortletPersistence.remove(wsrpConsumerPortlet);
-  Message message=new Message();
-  message.put("command","delete");
   WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerPortlet.getWsrpConsumerId());
-  message.put("url",wsrpConsumer.getUrl());
-  message.put("wsrpConsumerPortletId",wsrpConsumerPortlet.getWsrpConsumerPortletId());
-  MessageBusUtil.sendMessage(DestinationNames.WSRP,message);
+  wsrpConsumerPortletLocalService.destroyWSRPConsumerPortlet(wsrpConsumerPortlet.getWsrpConsumerPortletId(),wsrpConsumer.getUrl());
 }
