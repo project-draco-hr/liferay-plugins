@@ -6,10 +6,10 @@
     try {
       MailManager mailManager=MailManager.getInstance(request);
       Attachment attachment=AttachmentLocalServiceUtil.getAttachment(attachmentId);
-      byte[] bytes=mailManager.getAttachment(attachmentId);
-      if (bytes != null) {
+      InputStream is=mailManager.getAttachment(attachmentId);
+      if (Validator.isNotNull(is)) {
         String contentType=MimeTypesUtil.getContentType(attachment.getFileName());
-        PortletResponseUtil.sendFile(resourceRequest,resourceResponse,attachment.getFileName(),bytes,contentType);
+        PortletResponseUtil.sendFile(resourceRequest,resourceResponse,attachment.getFileName(),is,contentType);
       }
     }
  catch (    Exception e) {
