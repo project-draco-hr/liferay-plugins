@@ -1,0 +1,14 @@
+{
+  long[] scopeGroupIds=(long[])searchContext.getAttribute("KNOWLEDGE_BASE_SCOPE_GROUP_IDS");
+  if (scopeGroupIds == null) {
+    return;
+  }
+  BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create();
+  for (  long scopeGroupId : scopeGroupIds) {
+    booleanQuery.addExactTerm(Field.SCOPE_GROUP_ID,scopeGroupId);
+  }
+  if (scopeGroupIds.length == 0) {
+    booleanQuery.addExactTerm(Field.SCOPE_GROUP_ID,new Long(0));
+  }
+  contextQuery.add(booleanQuery,BooleanClauseOccur.MUST);
+}
