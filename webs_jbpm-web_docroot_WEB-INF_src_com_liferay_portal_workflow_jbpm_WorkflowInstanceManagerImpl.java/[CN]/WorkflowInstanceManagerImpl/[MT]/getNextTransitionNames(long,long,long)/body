@@ -3,8 +3,9 @@
   try {
     Token token=jbpmContext.loadToken(workflowInstanceId);
     Node node=token.getNode();
+    NodeType nodeType=node.getNodeType();
     Set<Transition> transitions=Collections.EMPTY_SET;
-    if (node.getNodeType() != NodeType.Task) {
+    if (nodeType.equals(NodeType.Task)) {
       transitions=token.getAvailableTransitions();
     }
     List<String> transitionNames=new ArrayList<String>(transitions.size());
