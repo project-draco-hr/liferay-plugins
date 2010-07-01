@@ -1,0 +1,9 @@
+{
+  long companyId=PortalUtil.getCompanyId(portletRequest);
+  String portletId=ParamUtil.getString(portletRequest,"portletResource");
+  Portlet portlet=PortletLocalServiceUtil.getPortletById(companyId,portletId);
+  Gadget gadget=ShindigUtil.getGadget(portlet.getPortletName());
+  GadgetSpec gadgetSpec=ShindigUtil.getGadgetSpec(gadget);
+  List<UserPref> userPrefs=gadgetSpec.getUserPrefs();
+  return userPrefs;
+}

@@ -1,0 +1,14 @@
+{
+  List<UserPref> userPrefs=getUserPrefs(actionRequest);
+  JSONObject jsonUserPrefs=JSONFactoryUtil.createJSONObject();
+  for (  UserPref userPref : userPrefs) {
+    String name=userPref.getName();
+    String value=ParamUtil.getString(actionRequest,name);
+    jsonUserPrefs.put(name,value);
+  }
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String namespace=ShindigUtil.getPortletResourceNamespace(actionRequest,themeDisplay);
+  String columnName=ShindigUtil.getColumnUserPrefs(namespace);
+  ExpandoValueServiceUtil.addValue(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial(),columnName,themeDisplay.getUserId(),jsonUserPrefs.toString());
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
+}
