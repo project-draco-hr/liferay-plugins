@@ -1,0 +1,25 @@
+{
+  Boolean searchByUserRoles=kaleoTaskInstanceTokenQuery.isSearchByUserRoles();
+  if (searchByUserRoles == null) {
+    return;
+  }
+  if (searchByUserRoles) {
+    qPos.add(Role.class.getName());
+    List<Long> roleIds=RoleRetrievalUtil.getRoleIds(kaleoTaskInstanceTokenQuery.getServiceContext());
+    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
+    if (roleIds.isEmpty() && userGroupRoles.isEmpty()) {
+      return;
+    }
+    for (    Long roleId : roleIds) {
+      qPos.add(roleId);
+    }
+    for (    UserGroupRole userGroupRole : userGroupRoles) {
+      qPos.add(userGroupRole.getGroupId());
+      qPos.add(userGroupRole.getRoleId());
+    }
+  }
+ else {
+    qPos.add(User.class.getName());
+    qPos.add(kaleoTaskInstanceTokenQuery.getUserId());
+  }
+}

@@ -1,0 +1,22 @@
+{
+  String assetType=kaleoTaskInstanceTokenQuery.getAssetType();
+  if (assetType == null) {
+    return StringPool.BLANK;
+  }
+  String[] assetTypes=CustomSQLUtil.keywords(assetType,false);
+  if ((assetTypes == null) || (assetTypes.length == 0)) {
+    return StringPool.BLANK;
+  }
+  StringBundler sb=new StringBundler(assetTypes.length * 2 + 1);
+  sb.append("[$AND_OR_CONNECTOR$] (");
+  for (int i=0; i < assetTypes.length; i++) {
+    sb.append("(Kaleo_KaleoTaskInstanceToken.className LIKE ?)");
+    if ((i + 1) < assetTypes.length) {
+      sb.append(" OR ");
+    }
+ else {
+      sb.append(")");
+    }
+  }
+  return sb.toString();
+}

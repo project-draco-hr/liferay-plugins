@@ -9,13 +9,13 @@
   kaleoInstance.setUserName(user.getFullName());
   kaleoInstance.setCreateDate(now);
   kaleoInstance.setModifiedDate(now);
-  kaleoInstance.setClassName((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
-  if (workflowContext.containsKey(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)) {
-    kaleoInstance.setClassPK(Long.parseLong((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)));
-  }
   kaleoInstance.setKaleoDefinitionId(kaleoDefinitionId);
   kaleoInstance.setKaleoDefinitionName(kaleoDefinitionName);
   kaleoInstance.setKaleoDefinitionVersion(kaleoDefinitionVersion);
+  kaleoInstance.setClassName((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME));
+  if (workflowContext.containsKey(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)) {
+    kaleoInstance.setClassPK(GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK)));
+  }
   kaleoInstance.setCompleted(false);
   kaleoInstance.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
   kaleoInstancePersistence.update(kaleoInstance,false);

@@ -1,0 +1,14 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    SQLQuery q=buildKaleoTaskInstanceTokenQuerySQL(kaleoTaskInstanceTokenQuery,false,session);
+    return (List<KaleoTaskInstanceToken>)QueryUtil.list(q,getDialect(),kaleoTaskInstanceTokenQuery.getStart(),kaleoTaskInstanceTokenQuery.getEnd());
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
