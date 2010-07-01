@@ -2,7 +2,11 @@
   JbpmContext jbpmContext=_jbpmConfiguration.createJbpmContext();
   try {
     CustomSession customSession=new CustomSession(jbpmContext);
-    return customSession.countTaskInstances(-1,workflowInstanceId,null,false,completed);
+    String[] actorIds=null;
+    if (userId > 0) {
+      actorIds=new String[]{String.valueOf(userId)};
+    }
+    return customSession.countTaskInstances(-1,workflowInstanceId,actorIds,false,completed);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
