@@ -6,16 +6,20 @@
  else {
     sql=CustomSQLUtil.get(FIND_BY_C_KTAI);
   }
-  sql=CustomSQLUtil.appendCriteria(sql,getAssetType(kaleoTaskInstanceTokenQuery));
   sql=CustomSQLUtil.appendCriteria(sql,getAssigneeClassName(kaleoTaskInstanceTokenQuery));
   sql=CustomSQLUtil.appendCriteria(sql,getAssigneeClassPK(kaleoTaskInstanceTokenQuery));
   sql=CustomSQLUtil.appendCriteria(sql,getCompleted(kaleoTaskInstanceTokenQuery));
-  sql=CustomSQLUtil.appendCriteria(sql,getDueDateGT(kaleoTaskInstanceTokenQuery));
-  sql=CustomSQLUtil.appendCriteria(sql,getDueDateLT(kaleoTaskInstanceTokenQuery));
   sql=CustomSQLUtil.appendCriteria(sql,getRoleIds(kaleoTaskInstanceTokenQuery));
   sql=CustomSQLUtil.appendCriteria(sql,getSearchByUserRoles(kaleoTaskInstanceTokenQuery));
-  sql=CustomSQLUtil.appendCriteria(sql,getTaskName(kaleoTaskInstanceTokenQuery));
-  sql=CustomSQLUtil.replaceAndOperator(sql,kaleoTaskInstanceTokenQuery.isAndOperator());
+  if (appendSearchCriteria(kaleoTaskInstanceTokenQuery)) {
+    sql=CustomSQLUtil.appendCriteria(sql," AND (");
+    sql=CustomSQLUtil.appendCriteria(sql,getAssetType(kaleoTaskInstanceTokenQuery));
+    sql=CustomSQLUtil.appendCriteria(sql,getDueDateGT(kaleoTaskInstanceTokenQuery,(kaleoTaskInstanceTokenQuery.getAssetType() == null)));
+    sql=CustomSQLUtil.appendCriteria(sql,getDueDateLT(kaleoTaskInstanceTokenQuery,((kaleoTaskInstanceTokenQuery.getAssetType() == null) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null))));
+    sql=CustomSQLUtil.appendCriteria(sql,getTaskName(kaleoTaskInstanceTokenQuery,((kaleoTaskInstanceTokenQuery.getAssetType() == null) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null) && (kaleoTaskInstanceTokenQuery.getDueDateLT() == null))));
+    sql=CustomSQLUtil.appendCriteria(sql,")");
+    sql=CustomSQLUtil.replaceAndOperator(sql,kaleoTaskInstanceTokenQuery.isAndOperator());
+  }
   sql=CustomSQLUtil.replaceOrderBy(sql,kaleoTaskInstanceTokenQuery.getOrderByComparator());
   SQLQuery q=session.createSQLQuery(sql);
   if (count) {
@@ -26,13 +30,14 @@
   }
   QueryPos qPos=QueryPos.getInstance(q);
   qPos.add(kaleoTaskInstanceTokenQuery.getCompanyId());
-  setAssetType(qPos,kaleoTaskInstanceTokenQuery);
   setAssigneeClassName(qPos,kaleoTaskInstanceTokenQuery);
   setAssigneeClassPK(qPos,kaleoTaskInstanceTokenQuery);
   setCompleted(qPos,kaleoTaskInstanceTokenQuery);
+  setRoleIds(qPos,kaleoTaskInstanceTokenQuery);
+  setSearchByUserRoles(qPos,kaleoTaskInstanceTokenQuery);
+  setAssetType(qPos,kaleoTaskInstanceTokenQuery);
   setDueDateGT(qPos,kaleoTaskInstanceTokenQuery);
   setDueDateLT(qPos,kaleoTaskInstanceTokenQuery);
-  setRoleIds(qPos,kaleoTaskInstanceTokenQuery);
   setTaskName(qPos,kaleoTaskInstanceTokenQuery);
   return q;
 }
