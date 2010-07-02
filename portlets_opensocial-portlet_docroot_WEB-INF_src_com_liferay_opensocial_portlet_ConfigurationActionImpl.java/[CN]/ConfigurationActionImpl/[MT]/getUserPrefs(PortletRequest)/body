@@ -1,9 +1,8 @@
 {
-  long companyId=PortalUtil.getCompanyId(portletRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String portletId=ParamUtil.getString(portletRequest,"portletResource");
-  Portlet portlet=PortletLocalServiceUtil.getPortletById(companyId,portletId);
+  Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),portletId);
   Gadget gadget=ShindigUtil.getGadget(portlet.getPortletName());
   GadgetSpec gadgetSpec=ShindigUtil.getGadgetSpec(gadget);
-  List<UserPref> userPrefs=gadgetSpec.getUserPrefs();
-  return userPrefs;
+  return gadgetSpec.getUserPrefs();
 }
