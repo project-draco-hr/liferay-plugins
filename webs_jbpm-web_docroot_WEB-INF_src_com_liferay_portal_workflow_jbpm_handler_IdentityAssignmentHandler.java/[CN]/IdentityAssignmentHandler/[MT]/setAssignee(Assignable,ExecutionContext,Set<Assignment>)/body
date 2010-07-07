@@ -1,0 +1,36 @@
+{
+  ProcessInstance processInstance=executionContext.getProcessInstance();
+  ContextInstance contextInstance=processInstance.getContextInstance();
+  long companyId=GetterUtil.getLong((String)contextInstance.getVariable(WorkflowConstants.CONTEXT_COMPANY_ID));
+  List<String> roleIds=new ArrayList<String>();
+  for (  Assignment assignment : assignments) {
+    AssignmentType assignmentType=assignment.getAssignmentType();
+    if (assignmentType.equals(AssignmentType.ROLE)) {
+      RoleAssignment roleAssignment=(RoleAssignment)assignment;
+      int roleType=RoleRetrievalUtil.getRoleType(roleAssignment.getRoleType());
+      ServiceContext serviceContext=new ServiceContext();
+      serviceContext.setCompanyId(companyId);
+      Role role=RoleRetrievalUtil.getRole(roleAssignment.getRoleName(),roleType,roleAssignment.isAutoCreate(),serviceContext);
+      roleIds.add(Long.toString(role.getRoleId()));
+    }
+ else     if (assignmentType.equals(AssignmentType.USER)) {
+      UserAssignment userAssignment=(UserAssignment)assignment;
+      User user=null;
+      if (userAssignment.getUserId() > 0) {
+        user=UserLocalServiceUtil.getUser(userAssignment.getUserId());
+      }
+ else       if (Validator.isNotNull(userAssignment.getEmailAddress())) {
+        user=UserLocalServiceUtil.getUserByEmailAddress(companyId,userAssignment.getEmailAddress());
+      }
+ else       if (Validator.isNotNull(userAssignment.getScreenName())) {
+        user=UserLocalServiceUtil.getUserByScreenName(companyId,userAssignment.getScreenName());
+      }
+ else {
+        long userId=GetterUtil.getLong((String)contextInstance.getVariable(WorkflowConstants.CONTEXT_USER_ID));
+        user=UserLocalServiceUtil.getUser(userId);
+      }
+      assignable.setActorId(Long.toString(user.getUserId()));
+    }
+  }
+  assignable.setPooledActors(roleIds.toArray(new String[0]));
+}

@@ -1,39 +1,28 @@
 {
-  if (type.equals("user")) {
-    if (Validator.isNull(id)) {
-      User user=UserLocalServiceUtil.getUserByEmailAddress(GetterUtil.getLong(companyId),name);
-      assignable.setActorId(String.valueOf(user.getUserId()));
-    }
+  Set<Assignment> assignments=new HashSet<Assignment>();
+  if (roles != null) {
+    for (    Map<String,String> role : roles) {
+      long roleId=GetterUtil.getLong(role.get("role-id"));
+      String roleType=role.get("role-type");
+      String roleName=role.get("role-name");
+      RoleAssignment roleAssignment=null;
+      if (Validator.isNotNull(roleName)) {
+        boolean autoCreate=GetterUtil.getBoolean(role.get("auto-create"),true);
+        roleAssignment=new RoleAssignment(roleName,roleType);
+        roleAssignment.setAutoCreate(autoCreate);
+      }
  else {
-      assignable.setActorId(type);
+        roleAssignment=new RoleAssignment(roleId,roleType);
+      }
+      assignments.add(roleAssignment);
     }
   }
- else   if (type.equals("community")) {
-    if (Validator.isNull(id)) {
-      Group group=GroupLocalServiceUtil.getGroup(GetterUtil.getLong(companyId),name);
-      id=String.valueOf(group.getGroupId());
-    }
-    long[] userIds=UserLocalServiceUtil.getGroupUserIds(GetterUtil.getLong(id));
-    String[] actorIds=new String[userIds.length];
-    for (int i=0; i < userIds.length; i++) {
-      actorIds[i]=String.valueOf(userIds[i]);
-    }
-    assignable.setPooledActors(actorIds);
+  if (user != null) {
+    long userId=GetterUtil.getLong(user.get("user-id"));
+    String screenName=user.get("screen-name");
+    String emailAddress=user.get("email-address");
+    UserAssignment userAssignment=new UserAssignment(userId,screenName,emailAddress);
+    assignments.add(userAssignment);
   }
- else   if (type.equals("role")) {
-    if (Validator.isNull(id)) {
-      Role role=RoleLocalServiceUtil.getRole(GetterUtil.getLong(companyId),name);
-      id=String.valueOf(role.getRoleId());
-    }
-    long[] userIds=UserLocalServiceUtil.getRoleUserIds(GetterUtil.getLong(id));
-    String[] actorIds=new String[userIds.length];
-    for (int i=0; i < userIds.length; i++) {
-      actorIds[i]=String.valueOf(userIds[i]);
-    }
-    assignable.setPooledActors(actorIds);
-  }
- else {
-    assignable.setActorId(null);
-    assignable.setPooledActors((String[])null);
-  }
+  setAssignee(assignable,executionContext,assignments);
 }

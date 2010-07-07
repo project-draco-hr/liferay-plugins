@@ -15,7 +15,8 @@
   setWorkflowInstanceId(token.getId());
   ContextInstance contextInstance=processInstance.getContextInstance();
   long companyId=GetterUtil.getLong((String)contextInstance.getVariable("companyId"));
-  List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,taskInstance.getActorId(),taskInstance.getPooledActors());
+  long groupId=GetterUtil.getLong((String)contextInstance.getVariable("groupId"));
+  List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,groupId,taskInstance.getActorId(),taskInstance.getPooledActors());
   setWorkflowTaskAssignees(toWorkflowTaskAssignees(assignees));
   setWorkflowTaskId(taskInstance.getId());
 }
