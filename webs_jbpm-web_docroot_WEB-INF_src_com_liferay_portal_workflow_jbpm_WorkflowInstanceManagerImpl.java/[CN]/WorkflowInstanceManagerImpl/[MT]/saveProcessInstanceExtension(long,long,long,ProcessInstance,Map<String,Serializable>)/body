@@ -10,8 +10,8 @@
   if (taskInstances != null) {
     for (    TaskInstance taskInstance : taskInstances) {
       List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,groupId,taskInstance.getActorId(),taskInstance.getPooledActors());
-      String context=WorkflowContextUtil.convertToJSON(workflowContext);
-      TaskInstanceExtensionImpl taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignees,context,taskInstance);
+      String workflowContextJSON=WorkflowContextUtil.convertToJSON(workflowContext);
+      TaskInstanceExtensionImpl taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignees,workflowContextJSON,taskInstance);
       session.save(taskInstanceExtensionImpl);
     }
   }

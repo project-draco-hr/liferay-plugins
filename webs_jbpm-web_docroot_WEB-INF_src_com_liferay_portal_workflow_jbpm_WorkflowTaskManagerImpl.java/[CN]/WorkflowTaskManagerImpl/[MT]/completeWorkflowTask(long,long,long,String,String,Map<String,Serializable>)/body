@@ -38,12 +38,12 @@
     TaskMgmtInstance taskMgmtInstance=taskInstance.getTaskMgmtInstance();
     Collection<TaskInstance> taskInstances=taskMgmtInstance.getTaskInstances();
     CustomSession customSession=new CustomSession(jbpmContext);
-    for (    TaskInstance tskInstance : taskInstances) {
-      TaskInstanceExtensionImpl taskInstanceExtensionImpl=customSession.findTaskInstanceExtension(tskInstance.getId());
+    for (    TaskInstance taskInstance : taskInstances) {
+      TaskInstanceExtensionImpl taskInstanceExtensionImpl=customSession.findTaskInstanceExtension(taskInstance.getId());
       if (taskInstanceExtensionImpl == null) {
-        List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,groupId,tskInstance.getActorId(),tskInstance.getPooledActors());
-        String context=WorkflowContextUtil.convertToJSON(workflowContext);
-        taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignees,context,tskInstance);
+        List<Assignee> assignees=AssigneeRetrievalUtil.getAssignees(companyId,groupId,taskInstance.getActorId(),taskInstance.getPooledActors());
+        String workflowContextJSON=WorkflowContextUtil.convertToJSON(workflowContext);
+        taskInstanceExtensionImpl=new TaskInstanceExtensionImpl(companyId,groupId,userId,assignees,workflowContextJSON,taskInstance);
         session.save(taskInstanceExtensionImpl);
       }
     }

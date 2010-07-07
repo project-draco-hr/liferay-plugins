@@ -28,7 +28,8 @@
     ProcessInstance processInstance=taskInstance.getProcessInstance();
     ContextInstance contextInstance=processInstance.getContextInstance();
     long groupId=GetterUtil.getLong((String)contextInstance.getVariable("groupId"));
-    assignees.add(new Assignee(companyId,groupId,User.class.getName(),assigneeUserId));
+    Assignee assignee=new Assignee(companyId,groupId,User.class.getName(),assigneeUserId);
+    assignees.add(assignee);
     session.update(taskInstanceExtension);
     return new WorkflowTaskImpl(taskInstance);
   }

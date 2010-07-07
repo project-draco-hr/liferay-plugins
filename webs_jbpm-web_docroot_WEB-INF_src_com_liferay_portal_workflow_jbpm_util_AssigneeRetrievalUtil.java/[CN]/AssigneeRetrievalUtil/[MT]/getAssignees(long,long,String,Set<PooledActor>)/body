@@ -11,7 +11,8 @@
         serviceContext.setCompanyId(companyId);
         role=RoleRetrievalUtil.getRole(pooledActor.getActorId(),RoleConstants.TYPE_REGULAR,true,serviceContext);
       }
-      assignees.add(new Assignee(companyId,groupId,Role.class.getName(),role.getRoleId()));
+      Assignee assignee=new Assignee(companyId,groupId,Role.class.getName(),role.getRoleId());
+      assignees.add(assignee);
     }
   }
  else {
@@ -22,7 +23,8 @@
  else {
       user=UserLocalServiceUtil.getUser(GetterUtil.getLong(actorId));
     }
-    assignees.add(new Assignee(companyId,groupId,User.class.getName(),user.getUserId()));
+    Assignee assignee=new Assignee(companyId,groupId,User.class.getName(),user.getUserId());
+    assignees.add(assignee);
   }
   return assignees;
 }
