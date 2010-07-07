@@ -4,16 +4,6 @@
     TaskMgmtSession taskMgmtSession=jbpmContext.getTaskMgmtSession();
     TaskInstance taskInstance=taskMgmtSession.loadTaskInstance(workflowTaskId);
     String oldActorId=taskInstance.getActorId();
-    Set<PooledActor> pooledActors=taskInstance.getPooledActors();
-    if ((pooledActors == null) || pooledActors.isEmpty()) {
-      throw new WorkflowException("Workflow task " + workflowTaskId + " has not been assigned to a role");
-    }
-    ProcessInstance processInstance=taskInstance.getProcessInstance();
-    ContextInstance contextInstance=processInstance.getContextInstance();
-    long groupId=GetterUtil.getLong((String)contextInstance.getVariable("groupId"));
-    if (!hasRole(companyId,groupId,pooledActors,assigneeUserId)) {
-      throw new WorkflowException("Workflow task " + workflowTaskId + " cannot be assigned to user "+ assigneeUserId);
-    }
     taskInstance.setActorId(String.valueOf(assigneeUserId));
     taskInstance.setPooledActors(new HashSet<PooledActor>());
     taskInstance.addComment(comment);
@@ -35,6 +25,9 @@
     TaskInstanceExtensionImpl taskInstanceExtension=customSession.findTaskInstanceExtension(taskInstance.getId());
     List<Assignee> assignees=taskInstanceExtension.getAssignees();
     assignees.clear();
+    ProcessInstance processInstance=taskInstance.getProcessInstance();
+    ContextInstance contextInstance=processInstance.getContextInstance();
+    long groupId=GetterUtil.getLong((String)contextInstance.getVariable("groupId"));
     assignees.add(new Assignee(companyId,groupId,User.class.getName(),assigneeUserId));
     session.update(taskInstanceExtension);
     return new WorkflowTaskImpl(taskInstance);
