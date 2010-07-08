@@ -1,5 +1,5 @@
 {
-  String className="com.liferay.portlet.login.action.ViewAction";
+  String className="com.liferay.portlet.login.action.LoginAction";
   PortletConfig portletConfig=getPortletConfig();
   NoRedirectActionResponse noRedirectActionResponse=new NoRedirectActionResponse(actionResponse);
   try {
@@ -16,8 +16,7 @@
     actionResponse.setRenderParameter("rememberMe",rememberMe);
   }
  else {
-    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    String redirect=themeDisplay.getPathMain() + "/portal/login?cmd=already-registered&login=" + login+ "&password="+ password;
+    String redirect=PortalUtil.getPathMain() + "/portal/login?login=" + login+ "&password="+ password+ "&rememberMe="+ rememberMe;
     actionResponse.sendRedirect(redirect);
   }
 }
