@@ -1,0 +1,23 @@
+{
+  Date now=new Date();
+  validate(name);
+  Gadget gadget=gadgetPersistence.findByPrimaryKey(gadgetId);
+  gadget.setModifiedDate(now);
+  gadget.setName(name);
+  gadgetPersistence.update(gadget,false);
+  try {
+    Portlet portlet=getPortlet(companyId,gadgetId,name);
+    portlet.setPortletInfo(new PortletInfo(name,name,name,name));
+    PortletConfigFactoryUtil.update(portlet);
+  }
+ catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  SystemException se) {
+    throw se;
+  }
+catch (  Exception e) {
+    throw new SystemException(e);
+  }
+  return gadget;
+}
