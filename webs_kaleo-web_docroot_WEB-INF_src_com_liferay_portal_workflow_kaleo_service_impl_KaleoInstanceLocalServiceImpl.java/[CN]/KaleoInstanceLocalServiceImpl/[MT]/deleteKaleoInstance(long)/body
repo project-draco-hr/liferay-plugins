@@ -1,5 +1,10 @@
 {
-  kaleoInstancePersistence.remove(kaleoInstanceId);
+  try {
+    kaleoInstancePersistence.remove(kaleoInstanceId);
+  }
+ catch (  NoSuchInstanceException e) {
+    return;
+  }
   kaleoInstanceTokenLocalService.deleteKaleoInstanceKaleoInstanceTokens(kaleoInstanceId);
   kaleoLogLocalService.deleteKaleoInstanceKaleoLogs(kaleoInstanceId);
   kaleoTaskInstanceTokenLocalService.deleteKaleoInstanceKaleoTaskInstanceTokens(kaleoInstanceId);
