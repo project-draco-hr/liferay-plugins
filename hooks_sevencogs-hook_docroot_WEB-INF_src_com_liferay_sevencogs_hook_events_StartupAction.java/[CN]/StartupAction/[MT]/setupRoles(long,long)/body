@@ -1,10 +1,15 @@
 {
-  Role publisherRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Publisher",null,"Publishers are responsible for approving content.",RoleConstants.TYPE_REGULAR);
+  try {
+    RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Portal Content Reviewer",null,"Portal Content Reviewer are responsible for approving " + "content.",RoleConstants.TYPE_REGULAR);
+  }
+ catch (  DuplicateRoleException dre) {
+  }
+  Role publisherRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Publisher",null,"Publishers are responsible for publishing content.",RoleConstants.TYPE_REGULAR);
   setRolePermissions(publisherRole,PortletKeys.JOURNAL,new String[]{ActionKeys.ACCESS_IN_CONTROL_PANEL});
-  setRolePermissions(publisherRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE,ActionKeys.EXPIRE});
+  setRolePermissions(publisherRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE});
   setRolePermissions(publisherRole,JournalArticle.class.getName(),new String[]{ActionKeys.ADD_DISCUSSION,ActionKeys.DELETE,ActionKeys.EXPIRE,ActionKeys.PERMISSIONS,ActionKeys.UPDATE,ActionKeys.VIEW});
   Role writerRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Writer",null,"Writers are responsible for creating content.",RoleConstants.TYPE_REGULAR);
   setRolePermissions(writerRole,PortletKeys.JOURNAL,new String[]{ActionKeys.ACCESS_IN_CONTROL_PANEL});
-  setRolePermissions(writerRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE,ActionKeys.MANAGE_STAGING});
+  setRolePermissions(writerRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE});
   setRolePermissions(writerRole,JournalArticle.class.getName(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});
 }
