@@ -4,5 +4,16 @@
     Controller.get().showInfo(Lang.get("no-messages-selected"));
     return;
   }
+  try {
+    message=MessageUtil.getFullMessage(message,true);
+  }
+ catch (  SystemException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+    return;
+  }
+catch (  PortalException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+    return;
+  }
   Controller.get().forwardInComposer(message);
 }

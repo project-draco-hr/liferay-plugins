@@ -28,15 +28,17 @@
         mostSelected=id;
         HashSet<Object> selected=new HashSet<Object>();
         selected.add(id);
-        setValue(selected);
+        if (!selected.equals(getValue())) {
+          setValue(selected);
+        }
       }
       messageList.showMessage(getSelectedMessage());
     }
   }
 );
   setNullSelectionAllowed(true);
-  addListener(new Property.ValueChangeListener(){
-    public void valueChange(    com.vaadin.data.Property.ValueChangeEvent event){
+  addListener(new ValueChangeListener(){
+    public void valueChange(    Property.ValueChangeEvent event){
       messageList.showMessage(getSelectedMessage());
     }
   }

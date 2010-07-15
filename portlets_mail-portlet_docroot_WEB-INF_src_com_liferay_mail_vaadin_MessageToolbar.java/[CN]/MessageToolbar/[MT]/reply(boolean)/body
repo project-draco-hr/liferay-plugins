@@ -1,9 +1,21 @@
 {
-  final Message originalMessage=mainMailView.getSelectedMessage();
-  if (originalMessage == null) {
+  Message selectedMessage=mainMailView.getSelectedMessage();
+  if (selectedMessage == null) {
     Controller.get().showInfo(Lang.get("no-messages-selected"));
     return;
   }
+  try {
+    selectedMessage=MessageUtil.getFullMessage(selectedMessage,true);
+  }
+ catch (  SystemException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+    return;
+  }
+catch (  PortalException e) {
+    Controller.get().showError(Lang.get("unable-to-synchronize-account"),e);
+    return;
+  }
+  final Message originalMessage=selectedMessage;
   Composer composer=Controller.get().replyInComposer(originalMessage,toAll);
   composer.addListener(new ComposerListener(){
     public void messageDiscarded(    Composer composer){
