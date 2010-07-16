@@ -4,6 +4,8 @@
     deleteOrganizations(companyId,organization.getOrganizationId());
   }
   if (parentOrganizationId > 0) {
+    long[] userIds=UserLocalServiceUtil.getOrganizationUserIds(parentOrganizationId);
+    UserLocalServiceUtil.unsetOrganizationUsers(parentOrganizationId,userIds);
     OrganizationLocalServiceUtil.deleteOrganization(parentOrganizationId);
   }
 }
