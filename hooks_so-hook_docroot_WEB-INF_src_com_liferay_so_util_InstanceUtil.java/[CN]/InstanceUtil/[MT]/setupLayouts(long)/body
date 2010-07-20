@@ -4,7 +4,14 @@
   long defaultUserId=UserLocalServiceUtil.getDefaultUserId(layout.getCompanyId());
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   layoutTypePortlet.setLayoutTemplateId(0,"1_column",false);
-  layoutTypePortlet.removePortletId(defaultUserId,"47");
+  if (layoutTypePortlet.hasPortletId("47")) {
+    layoutTypePortlet.removePortletId(defaultUserId,"47");
+  }
+  if (!layoutTypePortlet.hasPortletId(PortletKeys.LOGIN)) {
+    LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
+    List<String> columns=layoutTemplate.getColumns();
+    layoutTypePortlet.setPortletIds(columns.get(0),PortletKeys.LOGIN);
+  }
   LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
   LayoutLocalServiceUtil.updateFriendlyURL(layout.getPlid(),"/login");
   LayoutSetLocalServiceUtil.updateLookAndFeel(layout.getGroupId(),false,"so_WAR_sotheme","01","",false);

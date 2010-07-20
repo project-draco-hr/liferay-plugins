@@ -1,14 +1,11 @@
 {
   try {
     PortletPreferencesThreadLocal.setStrict(false);
-    setupRuntime(companyId);
+    InstanceUtil.initRuntime(companyId);
     if (isFirstRun(companyId)) {
       return;
     }
-    setupCompany(companyId);
-    setupPermissions(companyId);
-    setupLayouts(companyId);
-    setupUsers(companyId);
+    InstanceUtil.initInstance(companyId);
   }
   finally {
     PortletPreferencesThreadLocal.setStrict(true);
