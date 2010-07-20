@@ -1,0 +1,22 @@
+{
+  Map<String,Object> params=new HashMap<String,Object>();
+  params.put("groupId",groupId);
+  params.put("parentResourcePrimKey",ArrayUtil.toArray(parentResourcePrimKeys));
+  List<Article> articles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
+  if (articles.isEmpty()) {
+    return;
+  }
+  Map<Long,TreeNode<Article>> nodeMap=new HashMap<Long,TreeNode<Article>>();
+  for (  TreeNode<Article> node : nodes) {
+    Article article=node.getValue();
+    nodeMap.put(article.getResourcePrimKey(),node);
+  }
+  List<TreeNode<Article>> childNodes=new ArrayList<TreeNode<Article>>();
+  for (  Article article : articles) {
+    TreeNode<Article> node=nodeMap.get(article.getParentResourcePrimKey());
+    TreeNode<Article> childNode=node.addChildNode(article);
+    childNodes.add(childNode);
+  }
+  long[] resourcePrimKeys=StringUtil.split(ListUtil.toString(articles,"resourcePrimKey"),0L);
+  populateLatestArticleTree(childNodes,groupId,resourcePrimKeys);
+}
