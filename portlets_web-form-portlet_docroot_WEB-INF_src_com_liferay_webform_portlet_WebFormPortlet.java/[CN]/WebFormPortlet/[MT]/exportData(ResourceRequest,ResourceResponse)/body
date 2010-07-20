@@ -1,5 +1,6 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String languageId=themeDisplay.getLanguageId();
   PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest);
   String databaseTableName=preferences.getValue("databaseTableName",StringPool.BLANK);
   String title=preferences.getValue("title","no-title");
@@ -7,12 +8,13 @@
   List<String> fieldLabels=new ArrayList<String>();
   for (int i=1; true; i++) {
     String fieldLabel=preferences.getValue("fieldLabel" + i,StringPool.BLANK);
+    String localizedfieldLabel=LocalizationUtil.getPreferencesValue(preferences,"fieldLabel" + i,languageId);
     if (Validator.isNull(fieldLabel)) {
       break;
     }
     fieldLabels.add(fieldLabel);
     sb.append("\"");
-    sb.append(fieldLabel.replaceAll("\"","\\\""));
+    sb.append(localizedfieldLabel.replaceAll("\"","\\\""));
     sb.append("\";");
   }
   sb.deleteCharAt(sb.length() - 1);

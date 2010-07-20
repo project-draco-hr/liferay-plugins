@@ -1,8 +1,5 @@
 {
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
-  if (!cmd.equals(Constants.UPDATE)) {
-    return;
-  }
   String title=ParamUtil.getString(actionRequest,"title");
   String description=ParamUtil.getString(actionRequest,"description");
   boolean requireCaptcha=ParamUtil.getBoolean(actionRequest,"requireCaptcha");
@@ -60,26 +57,37 @@ catch (    FileNotFoundException fnfe) {
   preferences.setValue("fileName",fileName);
   if (updateFields) {
     int i=1;
+    Locale defaultLocale=LocaleUtil.getDefault();
+    String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
     String databaseTableName=WebFormUtil.getNewDatabaseTableName(portletResource);
     preferences.setValue("databaseTableName",databaseTableName);
     int[] formFieldsIndexes=StringUtil.split(ParamUtil.getString(actionRequest,"formFieldsIndexes"),0);
     for (    int formFieldsIndex : formFieldsIndexes) {
-      String fieldLabel=ParamUtil.getString(actionRequest,"fieldLabel" + formFieldsIndex);
-      if (Validator.isNull(fieldLabel)) {
+      Map<Locale,String> fieldLabelMap=LocalizationUtil.getLocalizationMap(actionRequest,"fieldLabel" + formFieldsIndex);
+      if (Validator.isNull(fieldLabelMap.get(defaultLocale))) {
         continue;
       }
       String fieldType=ParamUtil.getString(actionRequest,"fieldType" + formFieldsIndex);
       boolean fieldOptional=ParamUtil.getBoolean(actionRequest,"fieldOptional" + formFieldsIndex);
-      String fieldOptions=ParamUtil.getString(actionRequest,"fieldOptions" + formFieldsIndex);
+      Map<Locale,String> fieldOptionsMap=LocalizationUtil.getLocalizationMap(actionRequest,"fieldOptions" + formFieldsIndex);
       String fieldValidationScript=ParamUtil.getString(actionRequest,"fieldValidationScript" + formFieldsIndex);
       String fieldValidationErrorMessage=ParamUtil.getString(actionRequest,"fieldValidationErrorMessage" + formFieldsIndex);
       if ((Validator.isNotNull(fieldValidationScript) ^ (Validator.isNotNull(fieldValidationErrorMessage)))) {
         SessionErrors.add(actionRequest,"invalidValidationDefinition" + i);
       }
-      preferences.setValue("fieldLabel" + i,fieldLabel);
+      for (      Locale locale : fieldLabelMap.keySet()) {
+        String languageId=LocaleUtil.toLanguageId(locale);
+        String fieldLabelValue=fieldLabelMap.get(locale);
+        String fieldOptionsValue=fieldOptionsMap.get(locale);
+        if (Validator.isNotNull(fieldLabelValue)) {
+          LocalizationUtil.setPreferencesValue(preferences,"fieldLabel" + i,languageId,fieldLabelValue);
+        }
+        if (Validator.isNotNull(fieldOptionsValue)) {
+          LocalizationUtil.setPreferencesValue(preferences,"fieldOptions" + i,languageId,fieldOptionsValue);
+        }
+      }
       preferences.setValue("fieldType" + i,fieldType);
       preferences.setValue("fieldOptional" + i,String.valueOf(fieldOptional));
-      preferences.setValue("fieldOptions" + i,fieldOptions);
       preferences.setValue("fieldValidationScript" + i,fieldValidationScript);
       preferences.setValue("fieldValidationErrorMessage" + i,fieldValidationErrorMessage);
       i++;
@@ -87,16 +95,20 @@ catch (    FileNotFoundException fnfe) {
     if (!SessionErrors.isEmpty(actionRequest)) {
       return;
     }
-    String fieldLabel=preferences.getValue("fieldLabel" + i,StringPool.BLANK);
+    String fieldLabel=LocalizationUtil.getPreferencesValue(preferences,"fieldLabel" + i,defaultLanguageId);
     while (Validator.isNotNull(fieldLabel)) {
-      preferences.setValue("fieldLabel" + i,StringPool.BLANK);
+      Map<Locale,String> fieldLabelMap=LocalizationUtil.getLocalizationMap(actionRequest,"fieldLabel" + i);
+      for (      Locale locale : fieldLabelMap.keySet()) {
+        String languageId=LocaleUtil.toLanguageId(locale);
+        LocalizationUtil.setPreferencesValue(preferences,"fieldLabel" + i,languageId,StringPool.BLANK);
+        LocalizationUtil.setPreferencesValue(preferences,"fieldOptions" + i,languageId,StringPool.BLANK);
+      }
       preferences.setValue("fieldType" + i,StringPool.BLANK);
       preferences.setValue("fieldOptional" + i,StringPool.BLANK);
-      preferences.setValue("fieldOptions" + i,StringPool.BLANK);
       preferences.setValue("fieldValidationScript" + i,StringPool.BLANK);
       preferences.setValue("fieldValidationErrorMessage" + i,StringPool.BLANK);
       i++;
-      fieldLabel=preferences.getValue("fieldLabel" + i,StringPool.BLANK);
+      fieldLabel=LocalizationUtil.getPreferencesValue(preferences,"fieldLabel" + i,defaultLanguageId);
     }
   }
   if (SessionErrors.isEmpty(actionRequest)) {
