@@ -1,7 +1,8 @@
 {
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
-  String title=ParamUtil.getString(actionRequest,"title");
-  String description=ParamUtil.getString(actionRequest,"description");
+  Locale defaultLocale=LocaleUtil.getDefault();
+  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
+  String title=ParamUtil.getString(actionRequest,"title" + StringPool.UNDERLINE + defaultLanguageId);
   boolean requireCaptcha=ParamUtil.getBoolean(actionRequest,"requireCaptcha");
   String successURL=ParamUtil.getString(actionRequest,"successURL");
   boolean sendAsEmail=ParamUtil.getBoolean(actionRequest,"sendAsEmail");
@@ -45,8 +46,8 @@ catch (    FileNotFoundException fnfe) {
   if (!SessionErrors.isEmpty(actionRequest)) {
     return;
   }
-  preferences.setValue("title",title);
-  preferences.setValue("description",description);
+  LocalizationUtil.setLocalizedPreferencesValues(actionRequest,preferences,"title");
+  LocalizationUtil.setLocalizedPreferencesValues(actionRequest,preferences,"description");
   preferences.setValue("requireCaptcha",String.valueOf(requireCaptcha));
   preferences.setValue("successURL",successURL);
   preferences.setValue("sendAsEmail",String.valueOf(sendAsEmail));
@@ -57,8 +58,6 @@ catch (    FileNotFoundException fnfe) {
   preferences.setValue("fileName",fileName);
   if (updateFields) {
     int i=1;
-    Locale defaultLocale=LocaleUtil.getDefault();
-    String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
     String databaseTableName=WebFormUtil.getNewDatabaseTableName(portletResource);
     preferences.setValue("databaseTableName",databaseTableName);
     int[] formFieldsIndexes=StringUtil.split(ParamUtil.getString(actionRequest,"formFieldsIndexes"),0);
