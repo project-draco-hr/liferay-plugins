@@ -11,10 +11,10 @@
     }
     StringBundler sb=new StringBundler();
     sb.append("AND ((");
-    sb.append("Kaleo_KaleoTaskAssignmentInstance.assigneeClassName = ");
-    sb.append("?) AND (");
+    sb.append("KaleoTaskAssignmentInstance.assigneeClassName = ?) ");
+    sb.append("AND (");
     for (int i=0; i < roleIds.size(); i++) {
-      sb.append("(Kaleo_KaleoTaskAssignmentInstance.assigneeClassPK = ?)");
+      sb.append("(KaleoTaskAssignmentInstance.assigneeClassPK = ?)");
       if ((i + 1) < roleIds.size()) {
         sb.append(" OR ");
       }
@@ -23,9 +23,8 @@
       sb.append(" OR ");
     }
     for (int i=0; i < userGroupRoles.size(); i++) {
-      sb.append("((Kaleo_KaleoTaskAssignmentInstance.groupId = ?) ");
-      sb.append("AND (Kaleo_KaleoTaskAssignmentInstance.");
-      sb.append("assigneeClassPK = ?))");
+      sb.append("((KaleoTaskAssignmentInstance.groupId = ?) AND ");
+      sb.append("(KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
       if ((i + 1) < userGroupRoles.size()) {
         sb.append(" OR ");
       }
@@ -35,10 +34,9 @@
   }
  else {
     StringBundler sb=new StringBundler(4);
-    sb.append("AND (");
-    sb.append("(Kaleo_KaleoTaskAssignmentInstance.assigneeClassName ");
-    sb.append("= ?) AND (Kaleo_KaleoTaskAssignmentInstance.");
-    sb.append("assigneeClassPK = ?))");
+    sb.append("AND ((");
+    sb.append("KaleoTaskAssignmentInstance.assigneeClassName = ?) ");
+    sb.append("AND (KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
     return sb.toString();
   }
 }
