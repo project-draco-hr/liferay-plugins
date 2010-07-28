@@ -4,9 +4,8 @@
   Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),portletDisplay.getId());
   Gadget gadget=getGadget();
   GadgetSpec gadgetSpec=ShindigUtil.getGadgetSpec(gadget);
-  Map<String,UserPref> userPrefs=gadgetSpec.getUserPrefs();
   String urlConfiguration=portletDisplay.getURLConfiguration();
-  if ((userPrefs != null) && !userPrefs.isEmpty()) {
+  if (hasUserPrefs(gadgetSpec)) {
     portlet.setConfigurationActionClass(ConfigurationActionImpl.class.getName());
     urlConfiguration=urlConfiguration.replaceAll("edit_permissions","edit_configuration");
   }
@@ -16,4 +15,6 @@
   }
   portletDisplay.setURLConfiguration(urlConfiguration);
   renderRequest.setAttribute(WebKeys.GADGET,gadget);
+  String view=getView(renderRequest,gadgetSpec);
+  renderRequest.setAttribute(WebKeys.VIEW,view);
 }
