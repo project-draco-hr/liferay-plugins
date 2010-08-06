@@ -1,7 +1,10 @@
 {
-  MethodHandler methodHandler=new MethodHandler(_deleteFooMethodKey3,foo);
+  Object paramObj0=ClpSerializer.translateInput(foo);
+  if (foo == null) {
+    paramObj0=new NullWrapper("com.liferay.sampleservicebuilder.model.Foo");
+  }
   try {
-    _classLoaderProxy.invoke(methodHandler);
+    _classLoaderProxy.invoke("deleteFoo",new Object[]{paramObj0});
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {

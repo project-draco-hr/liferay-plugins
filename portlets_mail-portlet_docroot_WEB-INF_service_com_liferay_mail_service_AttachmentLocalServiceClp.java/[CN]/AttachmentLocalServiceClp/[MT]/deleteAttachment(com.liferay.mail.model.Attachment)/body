@@ -1,7 +1,10 @@
 {
-  MethodHandler methodHandler=new MethodHandler(_deleteAttachmentMethodKey3,attachment);
+  Object paramObj0=ClpSerializer.translateInput(attachment);
+  if (attachment == null) {
+    paramObj0=new NullWrapper("com.liferay.mail.model.Attachment");
+  }
   try {
-    _classLoaderProxy.invoke(methodHandler);
+    _classLoaderProxy.invoke("deleteAttachment",new Object[]{paramObj0});
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
