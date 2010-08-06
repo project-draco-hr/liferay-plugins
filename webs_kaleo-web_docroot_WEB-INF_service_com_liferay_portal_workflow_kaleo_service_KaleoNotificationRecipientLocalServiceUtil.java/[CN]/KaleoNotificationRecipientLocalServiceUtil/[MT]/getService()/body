@@ -2,8 +2,8 @@
   if (_service == null) {
     Object obj=PortletBeanLocatorUtil.locate(ClpSerializer.SERVLET_CONTEXT_NAME,KaleoNotificationRecipientLocalService.class.getName());
     ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.SERVLET_CONTEXT_NAME,"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,KaleoNotificationRecipientLocalService.class.getName(),portletClassLoader);
-    _service=new KaleoNotificationRecipientLocalServiceClp(classLoaderProxy);
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(obj,portletClassLoader);
+    _service=new KaleoNotificationRecipientLocalServiceClp(KaleoNotificationRecipientLocalService.class.getName(),classLoaderProxy);
     ClpSerializer.setClassLoader(portletClassLoader);
   }
   return _service;
