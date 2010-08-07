@@ -3,14 +3,7 @@
   try {
     session=openSession();
     SQLQuery q=buildKaleoTaskInstanceTokenQuerySQL(kaleoTaskInstanceTokenQuery,false,session);
-    List<KaleoTaskInstanceToken> tokens=new ArrayList<KaleoTaskInstanceToken>();
-    Iterator<Long> itr=(Iterator<Long>)QueryUtil.iterate(q,getDialect(),kaleoTaskInstanceTokenQuery.getStart(),kaleoTaskInstanceTokenQuery.getEnd());
-    while (itr.hasNext()) {
-      long kaleoTaskInstanceTokenId=itr.next();
-      KaleoTaskInstanceToken token=KaleoTaskInstanceTokenUtil.findByPrimaryKey(kaleoTaskInstanceTokenId);
-      tokens.add(token);
-    }
-    return tokens;
+    return (List<KaleoTaskInstanceToken>)QueryUtil.list(q,getDialect(),kaleoTaskInstanceTokenQuery.getStart(),kaleoTaskInstanceTokenQuery.getEnd());
   }
  catch (  Exception e) {
     throw new SystemException(e);
