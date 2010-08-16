@@ -7,10 +7,6 @@
   long inboxFolderId=account.getInboxFolderId();
   long sentFolderId=account.getSentFolderId();
   long trashFolderId=account.getTrashFolderId();
-  String[] draftFolderNames=PortletPropsValues.DRAFT_FOLDER_NAMES;
-  String[] inboxFolderNames=PortletPropsValues.INBOX_FOLDER_NAMES;
-  String[] sentFolderNames=PortletPropsValues.SENT_FOLDER_NAMES;
-  String[] trashFolderNames=PortletPropsValues.TRASH_FOLDER_NAMES;
   for (  javax.mail.Folder jxFolder : jxFolders) {
     Folder folder=null;
     try {
@@ -19,31 +15,19 @@
  catch (    NoSuchFolderException nsfe) {
       folder=FolderLocalServiceUtil.addFolder(user.getUserId(),account.getAccountId(),jxFolder.getFullName(),jxFolder.getName(),0);
     }
-    String folderName=jxFolder.getName();
-    if ((draftFolderId == 0) && findFolderName(folderName,draftFolderNames)) {
+    String folderName=jxFolder.getName().toLowerCase();
+    if ((draftFolderId == 0) && folderName.contains("draft")) {
       draftFolderId=folder.getFolderId();
     }
- else     if ((inboxFolderId == 0) && findFolderName(folderName,inboxFolderNames)) {
+ else     if ((inboxFolderId == 0) && folderName.contains("inbox")) {
       inboxFolderId=folder.getFolderId();
     }
- else     if ((sentFolderId == 0) && findFolderName(folderName,sentFolderNames)) {
+ else     if ((sentFolderId == 0) && folderName.contains("sent")) {
       sentFolderId=folder.getFolderId();
     }
- else     if ((trashFolderId == 0) && findFolderName(folderName,trashFolderNames)) {
+ else     if ((trashFolderId == 0) && folderName.contains("trash")) {
       trashFolderId=folder.getFolderId();
     }
-  }
-  if (draftFolderId == 0) {
-    _log.error("draft folder id is not updated properly please refer to" + " your mail server setttings and set your draft forlder" + " name in portlet.properties");
-  }
-  if (inboxFolderId == 0) {
-    _log.error("inbox folder id is not updated properly please refer to" + " your mail server setttings and set your inbox folder" + " name in portlet.properties");
-  }
-  if (sentFolderId == 0) {
-    _log.error("sent folder id is not updated properly please refer to" + " your mail server setttings and set your sent folder" + " name in portlet.properties");
-  }
-  if (trashFolderId == 0) {
-    _log.error("trash folder id is not updated properly please refer to" + " your mail server setttings and set your trash folder" + " name in portlet.properties");
   }
   AccountLocalServiceUtil.updateFolders(account.getAccountId(),inboxFolderId,draftFolderId,sentFolderId,trashFolderId);
 }
