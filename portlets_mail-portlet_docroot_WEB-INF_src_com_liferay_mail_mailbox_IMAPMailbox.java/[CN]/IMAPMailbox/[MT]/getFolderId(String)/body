@@ -1,0 +1,17 @@
+{
+  Locale[] locales=LanguageUtil.getAvailableLocales();
+  String[] names=new String[locales.length];
+  for (int i=0; i < locales.length; i++) {
+    names[i]=LanguageUtil.get(locales[i],type).toLowerCase();
+  }
+  List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
+  for (  Folder folder : folders) {
+    String folderName=folder.getDisplayName().toLowerCase();
+    for (    String name : names) {
+      if (folderName.contains(name)) {
+        return folder.getFolderId();
+      }
+    }
+  }
+  return 0;
+}
