@@ -2,6 +2,11 @@
   try {
     Thread.sleep(4000);
     WSRPConsumerPortletLocalServiceUtil.initWSRPConsumerPortlets();
+    PortletApp portletApp=(PortletApp)_servletContext.getAttribute(PortletServlet.PORTLET_APP);
+    List<Portlet> portlets=portletApp.getPortlets();
+    for (    Portlet portlet : portlets) {
+      portlet.setReady(true);
+    }
   }
  catch (  InterruptedException ie) {
   }
