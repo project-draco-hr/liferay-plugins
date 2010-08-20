@@ -6,13 +6,19 @@
     Article curArticle=(Article)context.getZipEntryAsObject(curArticleElement.attributeValue("path"));
     long userId=context.getUserId(curArticle.getUserUuid());
     String curDirName=StringPool.BLANK;
+    long[] curAssetCategoryIds=null;
+    String[] curAssetTagNames=null;
     int index=articleElements.indexOf(curArticleElement);
     if (index == (articleElements.size() - 1)) {
       curDirName=dirName;
+      curAssetCategoryIds=assetCategoryIds;
+      curAssetTagNames=assetTagNames;
     }
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setAddCommunityPermissions(true);
     serviceContext.setAddGuestPermissions(true);
+    serviceContext.setAssetCategoryIds(curAssetCategoryIds);
+    serviceContext.setAssetTagNames(curAssetTagNames);
     serviceContext.setCreateDate(curArticle.getCreateDate());
     serviceContext.setModifiedDate(curArticle.getModifiedDate());
     serviceContext.setScopeGroupId(context.getScopeGroupId());
