@@ -1,0 +1,18 @@
+{
+  userThread=toUnwrappedModel(userThread);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,userThread,merge);
+    userThread.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThread.getPrimaryKey(),userThread);
+  return userThread;
+}

@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.privatemessaging.model.UserThread")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<UserThread>> listenersList=new ArrayList<ModelListener<UserThread>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<UserThread>)InstanceFactory.newInstance(listenerClassName));
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}
