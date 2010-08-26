@@ -1,0 +1,18 @@
+{
+  List<UserThread> list=findByU_R_D(userId,read,deleted,0,1,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(8);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("userId=");
+    msg.append(userId);
+    msg.append(", read=");
+    msg.append(read);
+    msg.append(", deleted=");
+    msg.append(deleted);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchUserThreadException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

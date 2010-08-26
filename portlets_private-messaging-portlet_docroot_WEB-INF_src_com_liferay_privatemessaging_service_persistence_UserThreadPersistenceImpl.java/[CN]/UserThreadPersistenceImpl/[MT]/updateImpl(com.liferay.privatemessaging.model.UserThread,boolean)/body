@@ -1,5 +1,7 @@
 {
   userThread=toUnwrappedModel(userThread);
+  boolean isNew=userThread.isNew();
+  UserThreadModelImpl userThreadModelImpl=(UserThreadModelImpl)userThread;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThread.getPrimaryKey(),userThread);
+  if (!isNew && ((userThread.getUserId() != userThreadModelImpl.getOriginalUserId()) || (userThread.getMbThreadId() != userThreadModelImpl.getOriginalMbThreadId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_M,new Object[]{new Long(userThreadModelImpl.getOriginalUserId()),new Long(userThreadModelImpl.getOriginalMbThreadId())});
+  }
+  if (isNew || ((userThread.getUserId() != userThreadModelImpl.getOriginalUserId()) || (userThread.getMbThreadId() != userThreadModelImpl.getOriginalMbThreadId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_M,new Object[]{new Long(userThread.getUserId()),new Long(userThread.getMbThreadId())},userThread);
+  }
   return userThread;
 }
