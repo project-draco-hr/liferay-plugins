@@ -25,6 +25,14 @@
   while (listNotExhausted) {
     List<Article> articles=new ArrayList<Article>();
     if (selectionMethod.equals("articles")) {
+      List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,0,null);
+      if (assetEntries != null) {
+        long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+        List<Long> classPKsList=Arrays.asList(ArrayUtil.toArray(classPKs));
+        List<Long> resourcePrimKeysList=Arrays.asList(ArrayUtil.toArray(resourcePrimKeys));
+        resourcePrimKeysList.retainAll(classPKsList);
+        resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysList),0L);
+      }
       articles=getArticles(resourcePrimKeys,lastIntervalStart,lastIntervalStart + delta,false);
     }
  else     if (selectionMethod.equals("parent-group")) {
