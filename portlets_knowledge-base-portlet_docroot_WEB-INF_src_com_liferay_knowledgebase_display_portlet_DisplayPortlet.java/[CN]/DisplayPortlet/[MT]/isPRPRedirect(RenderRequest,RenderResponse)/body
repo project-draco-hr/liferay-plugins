@@ -3,16 +3,23 @@
     HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
     HttpSession session=request.getSession();
     ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    long assetCategoryId=ParamUtil.getLong(renderRequest,"categoryId");
-    String assetTagName=ParamUtil.getString(renderRequest,"tag");
-    if ((assetCategoryId <= 0) && Validator.isNull(assetTagName)) {
+    long categoryId=ParamUtil.getLong(renderRequest,"categoryId");
+    String tag=ParamUtil.getString(renderRequest,"tag");
+    if ((categoryId <= 0) && Validator.isNull(tag)) {
+      session.removeAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE);
+      session.removeAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID);
+      session.removeAttribute(WebKeys.KNOWLEDGE_BASE_TAG);
       return false;
     }
-    Article displayArticle=(Article)session.getAttribute(WebKeys.KNOWLEDGE_BASE_DISPLAY_ARTICLE);
+    Article oldArticle=(Article)session.getAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE);
+    long oldCategoryId=GetterUtil.getLong((Long)session.getAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID));
+    String oldTag=GetterUtil.getString((String)session.getAttribute(WebKeys.KNOWLEDGE_BASE_TAG));
     String portletId=PortalUtil.getPortletId(renderRequest);
-    Article article=KnowledgeBaseUtil.getDisplayArticle(themeDisplay.getPlid(),portletId,assetCategoryId,assetTagName,themeDisplay.getPermissionChecker());
-    session.setAttribute(WebKeys.KNOWLEDGE_BASE_DISPLAY_ARTICLE,article);
-    if ((article == null) || !article.equals(displayArticle)) {
+    Article article=KnowledgeBaseUtil.getDisplayArticle(themeDisplay.getPlid(),portletId,categoryId,tag,themeDisplay.getPermissionChecker());
+    session.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
+    session.setAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID,categoryId);
+    session.setAttribute(WebKeys.KNOWLEDGE_BASE_TAG,tag);
+    if ((article == null) || !article.equals(oldArticle) || (categoryId != oldCategoryId)|| !tag.equals(oldTag)) {
       return true;
     }
     return false;
