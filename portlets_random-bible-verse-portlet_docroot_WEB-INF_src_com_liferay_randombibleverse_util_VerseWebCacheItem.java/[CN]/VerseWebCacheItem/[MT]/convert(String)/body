@@ -1,10 +1,15 @@
 {
-  Verse verse=null;
-  if (_language.equalsIgnoreCase("fi")) {
-    verse=getUskonkirjat(verse);
-  }
+  try {
+    Verse verse=null;
+    if (_language.equalsIgnoreCase("fi")) {
+      verse=getUskonkirjat(verse);
+    }
  else {
-    verse=getBiblegateway(verse);
+      verse=getBiblegateway(verse);
+    }
+    return verse;
   }
-  return verse;
+ catch (  Exception e) {
+    throw new WebCacheException(_location + " " + _versionId+ " "+ e.toString());
+  }
 }

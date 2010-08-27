@@ -1,27 +1,26 @@
 {
-  try {
-    String url="http://raamattu.uskonkirjat.net/servlet/biblesite.Bible?" + "formname=search&formrnd=1225797093590&search=&rng=0&ref=" + HttpUtil.encodeURL(_location) + "&ctx=0&submit2=Lue&mod1=FinPR&mod2=&mod3=";
-    String text=HttpUtil.URLtoString(url);
-    int x=text.indexOf("<div class=\"text\">");
-    x=text.indexOf(">",x + 1);
-    int y=text.lastIndexOf("</div>");
-    text=text.substring(x + 1,y);
-    text=HtmlUtil.stripHtml(text).trim();
-    text=StringUtil.replace(text,"&nbsp;","");
-    text=StringUtil.replace(text,"(","");
-    text=StringUtil.replace(text,")","");
-    text=StringUtil.replace(text,":","");
-    text=text.replaceAll("\\d+","");
-    text=StringUtil.replace(text,"\n","");
-    while (text.indexOf("  ") != -1) {
-      text=StringUtil.replace(text,"  "," ");
-    }
-    text=StringUtil.replace(text,"\"","&quot;");
-    text=text.trim();
-    verse=new Verse(_location,text);
+  StringBundler sb=new StringBundler();
+  sb.append("http://raamattu.uskonkirjat.net/servlet/biblesite.Bible?");
+  sb.append("ctx=0&formname=search&formrnd=1225797093590&mod1=FinPR");
+  sb.append("&mod2=&mod3=&ref=");
+  sb.append(HttpUtil.encodeURL(_location));
+  sb.append("&rng=0&search=&submit2=Lue");
+  String text=HttpUtil.URLtoString(sb.toString());
+  int x=text.indexOf("<div class=\"text\">");
+  x=text.indexOf(">",x + 1);
+  int y=text.lastIndexOf("</div>");
+  text=text.substring(x + 1,y);
+  text=HtmlUtil.stripHtml(text).trim();
+  text=StringUtil.replace(text,"&nbsp;","");
+  text=StringUtil.replace(text,"(","");
+  text=StringUtil.replace(text,")","");
+  text=StringUtil.replace(text,":","");
+  text=text.replaceAll("\\d+","");
+  text=StringUtil.replace(text,"\n","");
+  while (text.indexOf("  ") != -1) {
+    text=StringUtil.replace(text,"  "," ");
   }
- catch (  Exception e) {
-    throw new WebCacheException(_location + " " + _versionId+ " "+ e.toString());
-  }
-  return verse;
+  text=StringUtil.replace(text,"\"","&quot;");
+  text=text.trim();
+  return new Verse(_location,text);
 }
