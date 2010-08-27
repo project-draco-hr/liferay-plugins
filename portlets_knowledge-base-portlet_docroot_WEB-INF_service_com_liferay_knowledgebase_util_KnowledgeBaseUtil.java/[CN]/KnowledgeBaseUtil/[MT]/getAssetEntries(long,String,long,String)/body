@@ -9,6 +9,12 @@
   String assetEntryQueryName=jxPreferences.getValue("asset-entry-query-name","asset-categories");
   long[] assetCategoryIds=GetterUtil.getLongValues(jxPreferences.getValues("asset-category-ids",new String[0]));
   String[] assetTagNames=jxPreferences.getValues("asset-tag-names",new String[0]);
+  if (selectionMethod.equals("articles")) {
+    if ((assetCategoryId <= 0) && Validator.isNull(assetTagName)) {
+      return null;
+    }
+    assetEntryQueryName=StringPool.BLANK;
+  }
   long[] allAssetCategoryIds=new long[0];
   long[] anyAssetCategoryIds=new long[0];
   long[] notAllAssetCategoryIds=new long[0];

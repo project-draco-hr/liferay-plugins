@@ -28,10 +28,10 @@
       List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
       if (assetEntries != null) {
         long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
-        List<Long> classPKsList=Arrays.asList(ArrayUtil.toArray(classPKs));
-        List<Long> resourcePrimKeysList=Arrays.asList(ArrayUtil.toArray(resourcePrimKeys));
-        resourcePrimKeysList.retainAll(classPKsList);
-        resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysList),0L);
+        Set<Long> classPKsSet=SetUtil.fromArray(classPKs);
+        Set<Long> resourcePrimKeysSet=SetUtil.fromArray(resourcePrimKeys);
+        resourcePrimKeysSet.retainAll(classPKsSet);
+        resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysSet),0L);
       }
       articles=getArticles(resourcePrimKeys,lastIntervalStart,lastIntervalStart + delta,false);
     }
