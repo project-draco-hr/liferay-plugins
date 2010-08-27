@@ -1,0 +1,23 @@
+{
+  try {
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(renderRequest);
+    HttpSession session=request.getSession();
+    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    long assetCategoryId=ParamUtil.getLong(renderRequest,"categoryId");
+    String assetTagName=ParamUtil.getString(renderRequest,"tag");
+    if ((assetCategoryId <= 0) && Validator.isNull(assetTagName)) {
+      return false;
+    }
+    Article displayArticle=(Article)session.getAttribute(WebKeys.KNOWLEDGE_BASE_DISPLAY_ARTICLE);
+    String portletId=PortalUtil.getPortletId(renderRequest);
+    Article article=KnowledgeBaseUtil.getDisplayArticle(themeDisplay.getPlid(),portletId,assetCategoryId,assetTagName,themeDisplay.getPermissionChecker());
+    session.setAttribute(WebKeys.KNOWLEDGE_BASE_DISPLAY_ARTICLE,article);
+    if ((article == null) || !article.equals(displayArticle)) {
+      return true;
+    }
+    return false;
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
