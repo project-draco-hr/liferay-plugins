@@ -1,0 +1,13 @@
+{
+  try {
+    AttributeType attributeType=_schemaManager.lookupAttributeTypeRegistry(attributeId);
+    LdapSyntax ldapSyntax=attributeType.getSyntax();
+    return !ldapSyntax.isHumanReadable();
+  }
+ catch (  Exception e) {
+    if (StringTools.isEmpty(attributeId)) {
+      return false;
+    }
+    return attributeId.endsWith(";binary");
+  }
+}
