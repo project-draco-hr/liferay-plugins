@@ -1,0 +1,10 @@
+{
+  List<UserThread> userThreads=userThreadPersistence.findByUserId(userId);
+  for (  UserThread userThread : userThreads) {
+    List<MBMessage> mbMessages=MBMessageLocalServiceUtil.getThreadMessages(userThread.getMbThreadId(),WorkflowConstants.STATUS_ANY);
+    for (    MBMessage mbMessage : mbMessages) {
+      MBMessageLocalServiceUtil.deleteMBMessage(mbMessage.getMessageId());
+    }
+    userThreadPersistence.remove(userThread.getUserThreadId());
+  }
+}
