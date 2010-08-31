@@ -8,5 +8,8 @@
   if ((stopWatch.getTime() / Time.SECOND) > getTimeLimit(internalSearchRequest)) {
     throw new SearchTimeLimitException();
   }
-  internalResponses.add(internalSearchResponseEntry);
+  ExprNode exprNode=internalSearchRequest.getFilter();
+  if (isMatch(exprNode,directory)) {
+    internalResponses.add(internalSearchResponseEntry);
+  }
 }

@@ -5,20 +5,7 @@
     Directory directory=ldapHandlerContext.getDirectory();
     directory=directory.findBase(internalSearchRequest.getBase());
     if (directory != null) {
-      SearchScope searchScope=internalSearchRequest.getScope();
-      StopWatch stopWatch=new StopWatch();
-      stopWatch.start();
-      if (searchScope.equals(SearchScope.OBJECT)) {
-        addObjectEntry(internalSearchRequest,internalResponses,ldapHandlerContext,directory,stopWatch);
-      }
- else       if (searchScope.equals(SearchScope.ONELEVEL)) {
-        for (        Directory curDirectory : directory.getDirectories()) {
-          addObjectEntry(internalSearchRequest,internalResponses,ldapHandlerContext,curDirectory,stopWatch);
-        }
-      }
- else       if (searchScope.equals(SearchScope.SUBTREE)) {
-        addSubtreeEntries(internalSearchRequest,internalResponses,ldapHandlerContext,directory,stopWatch);
-      }
+      addEntries(internalSearchRequest,internalResponses,ldapHandlerContext,directory);
     }
     internalResponses.add(getInternalResponse(internalRequest));
   }
