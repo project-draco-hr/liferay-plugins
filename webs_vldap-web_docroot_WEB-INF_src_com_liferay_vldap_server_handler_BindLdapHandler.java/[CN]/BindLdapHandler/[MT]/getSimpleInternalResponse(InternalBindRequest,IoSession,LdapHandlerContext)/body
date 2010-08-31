@@ -1,0 +1,17 @@
+{
+  DN name=internalBindRequest.getName();
+  Company company=setCompany(ldapHandlerContext,name);
+  String screenName=GetterUtil.getString(DNUtil.getValue(name,"screenName"));
+  if (Validator.isNull(screenName)) {
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.INVALID_CREDENTIALS);
+  }
+  String password=new String(internalBindRequest.getCredentials());
+  Map<String,String[]> headerMap=new HashMap<String,String[]>();
+  Map<String,String[]> parameterMap=new HashMap<String,String[]>();
+  int authResult=UserLocalServiceUtil.authenticateByScreenName(company.getCompanyId(),screenName,password,headerMap,parameterMap);
+  if (authResult != Authenticator.SUCCESS) {
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.AUTH_METHOD_NOT_SUPPORTED);
+  }
+  setUser(ldapHandlerContext,name);
+  return getInternalResponse(internalBindRequest,ResultCodeEnum.SUCCESS);
+}

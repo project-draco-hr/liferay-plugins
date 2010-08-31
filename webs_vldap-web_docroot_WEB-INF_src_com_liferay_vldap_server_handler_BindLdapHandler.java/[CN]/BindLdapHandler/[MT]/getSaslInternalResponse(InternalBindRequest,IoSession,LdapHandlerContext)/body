@@ -1,0 +1,40 @@
+{
+  if (internalBindRequest.getCredentials() == null) {
+    internalBindRequest.setCredentials(StringTools.EMPTY_BYTES);
+  }
+  SaslServer saslServer=ldapHandlerContext.getSaslServer();
+  try {
+    if (saslServer == null) {
+synchronized (ldapHandlerContext) {
+        saslServer=ldapHandlerContext.getSaslServer();
+        if (saslServer == null) {
+          SaslCallbackHandler saslCallbackHandler=new SaslCallbackHandler();
+          ldapHandlerContext.setSaslCallbackHandler(saslCallbackHandler);
+          saslServer=Sasl.createSaslServer(_DIGEST_MD5,"ldap","localhost",null,saslCallbackHandler);
+          ldapHandlerContext.setSaslServer(saslServer);
+        }
+      }
+    }
+    byte[] challenge=saslServer.evaluateResponse(internalBindRequest.getCredentials());
+    InternalBindResponse internalBindResponse=(InternalBindResponse)internalBindRequest.getResultResponse();
+    internalBindResponse.setServerSaslCreds(challenge);
+  }
+ catch (  SaslException sasle) {
+    _log.error(sasle,sasle);
+    ldapHandlerContext.setSaslCallbackHandler(null);
+    ldapHandlerContext.setSaslServer(null);
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.INVALID_CREDENTIALS);
+  }
+  if (saslServer.isComplete()) {
+    SaslCallbackHandler saslCallbackHandler=ldapHandlerContext.getSaslCallbackHandler();
+    ldapHandlerContext.setSaslCallbackHandler(null);
+    ldapHandlerContext.setSaslServer(null);
+    DN name=saslCallbackHandler.getName();
+    setCompany(ldapHandlerContext,name);
+    setUser(ldapHandlerContext,name);
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.SUCCESS);
+  }
+ else {
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.SASL_BIND_IN_PROGRESS);
+  }
+}

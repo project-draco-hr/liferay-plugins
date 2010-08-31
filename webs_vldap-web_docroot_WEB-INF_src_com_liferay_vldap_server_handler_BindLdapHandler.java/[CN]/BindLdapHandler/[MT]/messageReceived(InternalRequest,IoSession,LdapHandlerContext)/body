@@ -1,0 +1,17 @@
+{
+  InternalResponse internalResponse=null;
+  InternalBindRequest internalBindRequest=(InternalBindRequest)internalRequest;
+  String saslMechanism=GetterUtil.getString(internalBindRequest.getSaslMechanism());
+  if (saslMechanism.equals(_DIGEST_MD5)) {
+    internalResponse=getSaslInternalResponse(internalBindRequest,ioSession,ldapHandlerContext);
+  }
+ else   if (internalBindRequest.isSimple()) {
+    internalResponse=getSimpleInternalResponse(internalBindRequest,ioSession,ldapHandlerContext);
+  }
+ else {
+    internalResponse=getUnsupportedInternalResponse(internalBindRequest);
+  }
+  List<InternalResponse> internalResponses=new ArrayList<InternalResponse>();
+  internalResponses.add(internalResponse);
+  return internalResponses;
+}

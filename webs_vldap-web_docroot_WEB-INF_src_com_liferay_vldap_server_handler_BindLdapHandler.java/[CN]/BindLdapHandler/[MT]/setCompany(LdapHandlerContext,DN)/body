@@ -1,0 +1,13 @@
+{
+  String webId=GetterUtil.getString(DNUtil.getValue(name,"webId"));
+  Company company=null;
+  try {
+    company=CompanyLocalServiceUtil.getCompanyByWebId(webId);
+  }
+ catch (  NoSuchCompanyException nsce) {
+    long companyId=PortalUtil.getDefaultCompanyId();
+    company=CompanyLocalServiceUtil.getCompany(companyId);
+  }
+  ldapHandlerContext.setCompany(company);
+  return company;
+}
