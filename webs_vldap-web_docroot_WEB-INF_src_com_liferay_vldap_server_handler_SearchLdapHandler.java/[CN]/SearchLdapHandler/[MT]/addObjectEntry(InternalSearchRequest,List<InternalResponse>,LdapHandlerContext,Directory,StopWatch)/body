@@ -1,0 +1,12 @@
+{
+  InternalSearchResponseEntry internalSearchResponseEntry=new SearchResponseEntryImpl(internalSearchRequest.getMessageId());
+  Entry entry=directory.toEntry(ldapHandlerContext.getSchemaManager(),internalSearchRequest.getAttributes());
+  internalSearchResponseEntry.setEntry(entry);
+  if (internalResponses.size() > getSizeLimit(internalSearchRequest)) {
+    throw new SearchSizeLimitException();
+  }
+  if ((stopWatch.getTime() / Time.SECOND) > getTimeLimit(internalSearchRequest)) {
+    throw new SearchTimeLimitException();
+  }
+  internalResponses.add(internalSearchResponseEntry);
+}

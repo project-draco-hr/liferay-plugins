@@ -1,5 +1,8 @@
 {
   DN name=internalBindRequest.getName();
+  if (Validator.isNull(name.getName())) {
+    return getInternalResponse(internalBindRequest,ResultCodeEnum.SUCCESS);
+  }
   Company company=setCompany(ldapHandlerContext,name);
   String screenName=GetterUtil.getString(DNUtil.getValue(name,"screenName"));
   if (Validator.isNull(screenName)) {

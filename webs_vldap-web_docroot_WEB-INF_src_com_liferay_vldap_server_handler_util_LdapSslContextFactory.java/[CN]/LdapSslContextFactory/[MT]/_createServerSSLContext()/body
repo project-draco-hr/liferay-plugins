@@ -3,6 +3,9 @@
   InputStream inputStream=null;
   try {
     File file=new File(PortletPropsValues.SSL_KEYSTORE_FILE_NAME);
+    if (!file.exists()) {
+      throw new IOException(file.toString() + " does not exist");
+    }
     inputStream=new FileInputStream(file);
     keyStore.load(inputStream,PortletPropsValues.SSL_KEYSTORE_PASSWORD);
   }

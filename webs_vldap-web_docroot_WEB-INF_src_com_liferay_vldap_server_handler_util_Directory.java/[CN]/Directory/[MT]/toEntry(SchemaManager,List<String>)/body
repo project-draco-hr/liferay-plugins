@@ -1,0 +1,23 @@
+{
+  ServerEntry serverEntry=new DefaultServerEntry();
+  serverEntry.setDn(_name);
+  boolean wildcardAttributes=requestAttributes.contains(StringPool.STAR);
+  AttributeTypeRegistry attributeTypeRegistry=schemaManager.getAttributeTypeRegistry();
+  for (  Attribute attribute : _attributes) {
+    if (!wildcardAttributes && !requestAttributes.contains(attribute.getAttributeId())) {
+      continue;
+    }
+    AttributeType attributeType=attribute.getAttributeType(attributeTypeRegistry);
+    String value=attribute.getValue();
+    serverEntry.add(attributeType,value);
+  }
+  if (requestAttributes.contains("hassubordinates")) {
+    Attribute subordinatesAttribute=new Attribute();
+    subordinatesAttribute.setAttributeId("hassubordinates");
+    subordinatesAttribute.setValue("true");
+    AttributeType attributeType=subordinatesAttribute.getAttributeType(attributeTypeRegistry);
+    String value=subordinatesAttribute.getValue();
+    serverEntry.add(attributeType,value);
+  }
+  return serverEntry;
+}

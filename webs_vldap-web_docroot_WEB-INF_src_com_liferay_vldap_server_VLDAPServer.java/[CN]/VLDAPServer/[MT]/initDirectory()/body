@@ -1,3 +1,29 @@
 {
-  _directory=new Directory();
+  Directory rootDirectory=new Directory(StringPool.BLANK);
+  rootDirectory.addAttribute("namingcontexts","ou=Liferay,o=Portal");
+  rootDirectory.addAttribute("objectclass","extensibleObject");
+  rootDirectory.addAttribute("objectclass","top");
+  rootDirectory.addAttribute("supportedfeatures",OIDConstants.ALL_OPERATIONAL_ATTRIBUTES);
+  rootDirectory.addAttribute("supportedldapversion","3");
+  rootDirectory.addAttribute("supportedsaslmechanisms",BindLdapHandler.DIGEST_MD5);
+  rootDirectory.addAttribute("vendorname","Liferay, Inc.");
+  rootDirectory.addAttribute("vendorversion",ReleaseInfo.getVersion());
+  Directory topDirectory=new Directory("ou=Liferay,o=Portal");
+  topDirectory.addAttribute("objectclass","organizationalUnit");
+  topDirectory.addAttribute("objectclass","top");
+  topDirectory.addAttribute("ou","Liferay");
+  Directory communitiesDirectory=new Directory("ou=Communities,ou=Liferay,o=Portal");
+  communitiesDirectory.addAttribute("objectclass","organizationalUnit");
+  communitiesDirectory.addAttribute("objectclass","top");
+  communitiesDirectory.addAttribute("ou","Communities");
+  communitiesDirectory.addAttribute("ou","Liferay");
+  Directory rolesDirectory=new Directory("ou=Roles,ou=Liferay,o=Portal");
+  rolesDirectory.addAttribute("objectclass","organizationalUnit");
+  rolesDirectory.addAttribute("objectclass","top");
+  rolesDirectory.addAttribute("ou","Liferay");
+  rolesDirectory.addAttribute("ou","Roles");
+  rootDirectory.addDirectory(topDirectory);
+  topDirectory.addDirectory(communitiesDirectory);
+  topDirectory.addDirectory(rolesDirectory);
+  _directory=rootDirectory;
 }
