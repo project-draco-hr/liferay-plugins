@@ -1,7 +1,7 @@
 {
-  InternalResponse internalResponse=null;
   InternalBindRequest internalBindRequest=(InternalBindRequest)internalRequest;
   String saslMechanism=GetterUtil.getString(internalBindRequest.getSaslMechanism());
+  InternalResponse internalResponse=null;
   if (saslMechanism.equals(_DIGEST_MD5)) {
     internalResponse=getSaslInternalResponse(internalBindRequest,ioSession,ldapHandlerContext);
   }
@@ -11,7 +11,5 @@
  else {
     internalResponse=getUnsupportedInternalResponse(internalBindRequest);
   }
-  List<InternalResponse> internalResponses=new ArrayList<InternalResponse>();
-  internalResponses.add(internalResponse);
-  return internalResponses;
+  return toList(internalResponse);
 }

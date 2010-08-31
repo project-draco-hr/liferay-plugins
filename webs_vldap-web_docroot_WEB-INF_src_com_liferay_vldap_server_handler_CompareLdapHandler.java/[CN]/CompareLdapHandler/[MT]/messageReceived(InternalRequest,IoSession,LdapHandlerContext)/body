@@ -1,0 +1,14 @@
+{
+  InternalCompareRequest internalCompareRequest=(InternalCompareRequest)internalRequest;
+  String attributeId=internalCompareRequest.getAttributeId();
+  Value<?> value=internalCompareRequest.getAssertionValue();
+  Directory directory=ldapHandlerContext.getDirectory();
+  directory.findBase(internalCompareRequest.getName());
+  if (directory != null) {
+    Attribute attribute=directory.getAttribute(attributeId,value.getString());
+    if (attribute != null) {
+      return toList(getInternalResponse(internalRequest,ResultCodeEnum.COMPARE_TRUE));
+    }
+  }
+  return toList(getInternalResponse(internalRequest,ResultCodeEnum.COMPARE_FALSE));
+}

@@ -1,0 +1,13 @@
+{
+  LdapHandlerContext ldapHandlerContext=(LdapHandlerContext)ioSession.getAttribute(LdapHandlerContext.class.getName());
+  if (ldapHandlerContext == null) {
+synchronized (ioSession) {
+      if (ldapHandlerContext == null) {
+        ldapHandlerContext=new LdapHandlerContext();
+        ldapHandlerContext.setDirectory(_directory);
+        ioSession.setAttribute(LdapHandlerContext.class.getName(),ldapHandlerContext);
+      }
+    }
+  }
+  return ldapHandlerContext;
+}
