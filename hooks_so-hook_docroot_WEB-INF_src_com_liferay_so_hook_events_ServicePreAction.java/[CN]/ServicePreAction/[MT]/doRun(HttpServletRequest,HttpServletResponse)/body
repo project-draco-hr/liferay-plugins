@@ -1,6 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String currentURL=PortalUtil.getCurrentURL(request);
+  if (Validator.isNotNull(themeDisplay.getI18nLanguageId())) {
+    int x=currentURL.indexOf(StringPool.SLASH,1);
+    currentURL=currentURL.substring(x);
+  }
   if (isDisplayURL(themeDisplay,currentURL)) {
     long groupId=ParamUtil.getLong(request,"groupId");
     String redirect=getRedirect(themeDisplay,groupId);
