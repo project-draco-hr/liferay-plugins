@@ -10,7 +10,7 @@
         query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
       }
  else {
-        query=new StringBundler(4);
+        query=new StringBundler(5);
       }
       query.append(_SQL_SELECT_USERTHREAD_WHERE);
       query.append(_FINDER_COLUMN_U_R_D_USERID_2);
@@ -18,6 +18,9 @@
       query.append(_FINDER_COLUMN_U_R_D_DELETED_2);
       if (orderByComparator != null) {
         appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+      }
+ else {
+        query.append(UserThreadModelImpl.ORDER_BY_JPQL);
       }
       String sql=query.toString();
       Query q=session.createQuery(sql);
