@@ -1,7 +1,8 @@
 {
-  MethodHandler methodHandler=new MethodHandler(_markUserThreadAsReadMethodKey25,userId,mbThreadId);
+  Object returnObj=null;
+  MethodHandler methodHandler=new MethodHandler(_getUserThreadMethodKey19,userId,mbThreadId);
   try {
-    _classLoaderProxy.invoke(methodHandler);
+    returnObj=_classLoaderProxy.invoke(methodHandler);
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -17,4 +18,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
+  return (com.liferay.privatemessaging.model.UserThread)ClpSerializer.translateOutput(returnObj);
 }
