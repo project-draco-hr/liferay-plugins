@@ -1,10 +1,11 @@
 {
   UserThread userThread=UserThreadLocalServiceUtil.getUserThread(userId,mbThreadId);
-  MBMessage topMbMessage=MBMessageLocalServiceUtil.getMBMessage(userThread.getTopMBMessageId());
+  MBMessage topMBMessage=MBMessageLocalServiceUtil.getMBMessage(userThread.getTopMBMessageId());
   List<MBMessage> mbMessages=MBMessageLocalServiceUtil.getThreadMessages(mbThreadId,WorkflowConstants.STATUS_ANY,new MessageCreateDateComparator(ascending));
   List<MBMessage> filteredMBMessages=new ArrayList<MBMessage>();
   for (  MBMessage mbMessage : mbMessages) {
-    if (DateUtil.compareTo(topMbMessage.getCreateDate(),mbMessage.getCreateDate()) <= 0) {
+    int compareTo=DateUtil.compareTo(topMBMessage.getCreateDate(),mbMessage.getCreateDate());
+    if (compareTo <= 0) {
       filteredMBMessages.add(mbMessage);
     }
  else {
