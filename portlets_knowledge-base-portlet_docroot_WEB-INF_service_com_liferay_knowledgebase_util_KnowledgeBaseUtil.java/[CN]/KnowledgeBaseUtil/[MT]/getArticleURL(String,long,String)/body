@@ -1,5 +1,11 @@
 {
-  Object[] plidAndWindowState=getPlidAndWindowState(portletId,resourcePrimKey,portalURL);
+  String pluginId=PortletConstants.getRootPortletId(portletId);
+  if (pluginId.equals(PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
+    Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey);
+    String layoutFullURL=PortalUtil.getControlPanelFullURL(article.getGroupId(),PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
+    return getArticleURL(portletId,resourcePrimKey,layoutFullURL,false);
+  }
+  Object[] plidAndWindowState=getPlidAndWindowState(portletId,pluginId,resourcePrimKey,portalURL);
   long plid=(Long)plidAndWindowState[0];
   WindowState windowState=(WindowState)plidAndWindowState[1];
   if (plid == LayoutConstants.DEFAULT_PLID) {
