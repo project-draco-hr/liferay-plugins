@@ -7,6 +7,10 @@
       }
     }
   }
+  Integer status=(Integer)params.get("status");
+  if ((status != null) && (status == WorkflowConstants.STATUS_ANY)) {
+    params.remove("status");
+  }
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,"article1",getClass().getClassLoader());
   for (  Map.Entry<String,Object> entry : params.entrySet()) {
     String key=entry.getKey();
@@ -33,7 +37,6 @@
   Property resourcePrimKeyProperty1=PropertyFactoryUtil.forName("article1.resourcePrimKey");
   Property resourcePrimKeyProperty2=PropertyFactoryUtil.forName("article2.resourcePrimKey");
   subselectDynamicQuery.add(resourcePrimKeyProperty1.eqProperty(resourcePrimKeyProperty2));
-  Integer status=(Integer)params.get("status");
   if ((status != null) && (status != WorkflowConstants.STATUS_ANY)) {
     Property property=PropertyFactoryUtil.forName("status");
     subselectDynamicQuery.add(property.eq(status));
