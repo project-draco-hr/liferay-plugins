@@ -17,9 +17,9 @@
   }
   List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),resourcePrimKey);
   sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
-  Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey);
+  Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
   while (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
-    article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey());
+    article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),article.getResourcePrimKey());
     sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   }

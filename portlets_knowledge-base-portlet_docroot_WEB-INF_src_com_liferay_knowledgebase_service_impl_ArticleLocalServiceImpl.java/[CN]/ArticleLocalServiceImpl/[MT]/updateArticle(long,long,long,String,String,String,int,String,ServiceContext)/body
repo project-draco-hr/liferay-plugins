@@ -1,9 +1,18 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Article oldArticle=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
+  int version=oldArticle.getVersion();
+  int status=WorkflowConstants.STATUS_DRAFT;
   validate(title,content);
-  long articleId=counterLocalService.increment();
-  Article article=articlePersistence.create(articleId);
+  Article article=oldArticle;
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+    long articleId=counterLocalService.increment();
+    article=articlePersistence.create(articleId);
+    version=version + 1;
+  }
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_PENDING) {
+    status=WorkflowConstants.STATUS_PENDING;
+  }
   article.setResourcePrimKey(oldArticle.getResourcePrimKey());
   article.setGroupId(oldArticle.getGroupId());
   article.setCompanyId(oldArticle.getCompanyId());
@@ -12,21 +21,18 @@
   article.setCreateDate(oldArticle.getCreateDate());
   article.setModifiedDate(serviceContext.getModifiedDate(null));
   article.setParentResourcePrimKey(parentResourcePrimKey);
-  article.setVersion(oldArticle.getVersion() + 1);
+  article.setVersion(version);
   article.setTitle(title);
   article.setContent(content);
   article.setDescription(description);
   article.setPriority(priority);
+  article.setStatus(status);
   articlePersistence.update(article,false);
   if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
     updateArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
-  updateDisplayOrder(article,parentResourcePrimKey,priority);
   updateAsset(userId,article,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
-  socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_ARTICLE,StringPool.BLANK,0);
-  Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
-  indexer.reindex(article);
-  updateAttachments(article,dirName);
-  notifySubscribers(article,true,serviceContext);
+  updateAttachments(article,oldArticle.getStatus(),dirName);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),article.getGroupId(),userId,Article.class.getName(),resourcePrimKey,article,serviceContext);
   return article;
 }

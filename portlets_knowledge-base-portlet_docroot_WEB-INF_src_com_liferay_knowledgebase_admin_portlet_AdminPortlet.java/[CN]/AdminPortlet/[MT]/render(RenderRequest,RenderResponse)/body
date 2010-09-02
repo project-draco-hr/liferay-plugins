@@ -3,7 +3,7 @@
     Article article=null;
     long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
     if (resourcePrimKey > 0) {
-      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey);
+      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,getStatus(renderRequest));
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
     Template template=null;
@@ -12,6 +12,7 @@
       template=TemplateServiceUtil.getTemplate(templateId);
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_TEMPLATE,template);
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,getStatus(renderRequest));
   }
  catch (  Exception e) {
     if (e instanceof NoSuchArticleException || e instanceof NoSuchTemplateException || e instanceof PrincipalException) {

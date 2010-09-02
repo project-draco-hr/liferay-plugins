@@ -8,10 +8,10 @@
   String portletId=PortalUtil.getPortletId(resourceRequest);
   String rss=StringPool.BLANK;
   if (resourcePrimKey <= 0) {
-    rss=ArticleServiceUtil.getGroupArticlesRSS(portletId,max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
+    rss=ArticleServiceUtil.getGroupArticlesRSS(portletId,getStatus(resourceRequest),max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
   }
  else {
-    rss=ArticleServiceUtil.getArticlesRSS(portletId,resourcePrimKey,max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
+    rss=ArticleServiceUtil.getArticlesRSS(portletId,resourcePrimKey,getStatus(resourceRequest),max,type,version,displayStyle,isServeRSSMaximized(resourceRequest),themeDisplay);
   }
   PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,rss.getBytes(StringPool.UTF8),ContentTypes.TEXT_XML_UTF8);
 }

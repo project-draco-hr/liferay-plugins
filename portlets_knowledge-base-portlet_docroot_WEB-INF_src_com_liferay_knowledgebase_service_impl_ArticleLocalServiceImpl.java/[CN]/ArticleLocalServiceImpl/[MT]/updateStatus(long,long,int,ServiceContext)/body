@@ -1,0 +1,41 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  article.setModifiedDate(serviceContext.getModifiedDate(now));
+  article.setStatus(status);
+  article.setStatusByUserId(user.getUserId());
+  article.setStatusByUserName(user.getFullName());
+  article.setStatusDate(serviceContext.getModifiedDate(now));
+  articlePersistence.update(article,false);
+  if (status != WorkflowConstants.STATUS_APPROVED) {
+    return article;
+  }
+  updateDisplayOrder(article,article.getParentResourcePrimKey(),article.getPriority());
+  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+    AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
+    updateAsset(userId,article,assetEntry.getCategoryIds(),assetEntry.getTagNames());
+    assetEntryLocalService.deleteEntry(Article.class.getName(),article.getPrimaryKey());
+  }
+  assetEntryLocalService.updateVisible(Article.class.getName(),resourcePrimKey,true);
+  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+    socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_ARTICLE,StringPool.BLANK,0);
+  }
+ else {
+    socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_ARTICLE,StringPool.BLANK,0);
+  }
+  Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
+  indexer.reindex(article);
+  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+    deleteAttachments(article,article.getResourcePrimKey());
+    addAttachments(article,ArticleConstants.DIR_NAME_PREFIX + article.getPrimaryKey());
+    deleteAttachments(article,article.getPrimaryKey());
+  }
+  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+    notifySubscribers(article,true,serviceContext);
+  }
+ else {
+    notifySubscribers(article,false,serviceContext);
+  }
+  return article;
+}

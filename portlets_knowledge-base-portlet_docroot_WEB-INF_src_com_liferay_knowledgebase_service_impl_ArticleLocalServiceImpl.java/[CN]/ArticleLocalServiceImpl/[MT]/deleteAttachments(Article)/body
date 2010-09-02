@@ -1,8 +1,6 @@
 {
-  try {
-    dlService.deleteDirectory(article.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,article.getAttachmentsDirName());
-  }
- catch (  NoSuchDirectoryException nsde) {
-    _log.error("No directory found for " + nsde.getMessage());
+  deleteAttachments(article,article.getResourcePrimKey());
+  if (article.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+    deleteAttachments(article,article.getPrimaryKey());
   }
 }

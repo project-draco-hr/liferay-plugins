@@ -1,7 +1,12 @@
 {
+  Article oldArticle=articlePersistence.findByResourcePrimKey_First(article.getResourcePrimKey(),new ArticleVersionComparator(true));
+  if ((article.getVersion() != ArticleConstants.DEFAULT_VERSION) && (article.getPriority() == oldArticle.getPriority()) && (article.getParentResourcePrimKey() == oldArticle.getParentResourcePrimKey())) {
+    return article;
+  }
   Map<String,Object> params=new HashMap<String,Object>();
   params.put("groupId",article.getGroupId());
   params.put("parentResourcePrimKey",article.getParentResourcePrimKey());
+  params.put("status",WorkflowConstants.STATUS_APPROVED);
   List<Article> siblingArticles=getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
   siblingArticles=ListUtil.copy(siblingArticles);
   siblingArticles.remove(article);

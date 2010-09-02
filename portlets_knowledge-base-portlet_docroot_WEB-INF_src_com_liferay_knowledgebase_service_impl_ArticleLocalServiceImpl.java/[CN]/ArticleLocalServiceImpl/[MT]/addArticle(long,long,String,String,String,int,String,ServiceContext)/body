@@ -20,6 +20,7 @@
   article.setContent(content);
   article.setDescription(description);
   article.setPriority(priority);
+  article.setStatus(WorkflowConstants.STATUS_DRAFT);
   articlePersistence.update(article,false);
   if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
     addArticleResources(article,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
@@ -27,13 +28,9 @@
  else {
     addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }
-  updateDisplayOrder(article,parentResourcePrimKey,priority);
   updateAsset(userId,article,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   mbMessageLocalService.addDiscussionMessage(userId,article.getUserName(),groupId,Article.class.getName(),resourcePrimKey,WorkflowConstants.ACTION_PUBLISH);
-  socialActivityLocalService.addActivity(userId,groupId,Article.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_ARTICLE,StringPool.BLANK,0);
-  Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
-  indexer.reindex(article);
   addAttachments(article,dirName);
-  notifySubscribers(article,false,serviceContext);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),groupId,userId,Article.class.getName(),resourcePrimKey,article,serviceContext);
   return article;
 }

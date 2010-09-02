@@ -1,0 +1,15 @@
+{
+  if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
+    if (Validator.isNull(dirName)) {
+      dirName=ArticleConstants.DIR_NAME_PREFIX + article.getResourcePrimKey();
+    }
+    addAttachments(article,dirName);
+  }
+ else {
+    if (Validator.isNull(dirName)) {
+      return;
+    }
+    deleteAttachments(article,article.getClassPK());
+    addAttachments(article,dirName);
+  }
+}

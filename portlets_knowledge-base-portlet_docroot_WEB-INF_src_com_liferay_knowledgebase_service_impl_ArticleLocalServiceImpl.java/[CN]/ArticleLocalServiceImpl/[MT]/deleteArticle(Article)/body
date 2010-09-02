@@ -1,11 +1,12 @@
 {
   resourceLocalService.deleteResource(article.getCompanyId(),Article.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,article.getResourcePrimKey());
   articlePersistence.removeByResourcePrimKey(article.getResourcePrimKey());
-  assetEntryLocalService.deleteEntry(Article.class.getName(),article.getResourcePrimKey());
+  deleteAssets(article);
   mbMessageLocalService.deleteDiscussionMessages(Article.class.getName(),article.getResourcePrimKey());
   socialActivityLocalService.deleteActivities(Article.class.getName(),article.getResourcePrimKey());
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.delete(article);
   deleteAttachments(article);
   deleteSubscriptions(article);
+  workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(article.getCompanyId(),article.getGroupId(),Article.class.getName(),article.getResourcePrimKey());
 }
