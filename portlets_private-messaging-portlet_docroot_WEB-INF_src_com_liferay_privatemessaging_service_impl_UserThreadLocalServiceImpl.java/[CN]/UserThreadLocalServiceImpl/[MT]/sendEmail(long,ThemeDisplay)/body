@@ -1,0 +1,31 @@
+{
+  MBMessage mbMessage=MBMessageLocalServiceUtil.getMBMessage(mbMessageId);
+  String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
+  if (Validator.isNull(layoutFullURL)) {
+    return;
+  }
+  User sender=UserLocalServiceUtil.getUser(mbMessage.getUserId());
+  Company company=CompanyLocalServiceUtil.getCompany(sender.getCompanyId());
+  InternetAddress notificationFrom=new InternetAddress(company.getEmailAddress());
+  String notificationSubject=StringUtil.read(PrivateMessagingPortlet.class.getResourceAsStream("dependencies/notification_message_subject.tmpl"));
+  String notificationBody=StringUtil.read(PrivateMessagingPortlet.class.getResourceAsStream("dependencies/notification_message_body.tmpl"));
+  notificationSubject=StringUtil.replace(notificationSubject,new String[]{"[$COMPANY_NAME$]","[$FROM_NAME$]"},new String[]{company.getName(),sender.getFullName()});
+  String threadURL=layoutFullURL + "/-/private_messaging/thread/" + mbMessage.getThreadId();
+  long portraitId=sender.getPortraitId();
+  String tokenId=ImageServletTokenUtil.getToken(sender.getPortraitId());
+  String portraitURL=themeDisplay.getPortalURL() + themeDisplay.getPathImage() + "/user_"+ (sender.isFemale() ? "female" : "male")+ "_portrait?img_id="+ portraitId+ "&t="+ tokenId;
+  notificationBody=StringUtil.replace(notificationBody,new String[]{"[$COMPANY_NAME$]","[$SUBJECT$]","[$BODY$]","[$FROM_NAME$]","[$FROM_PROFILE_URL$]","[$FROM_AVATAR$]","[$THREAD_URL$]"},new String[]{company.getName(),mbMessage.getSubject(),mbMessage.getBody(),sender.getFullName(),sender.getDisplayURL(themeDisplay),portraitURL,threadURL});
+  boolean htmlFormat=true;
+  List<UserThread> userThreads=UserThreadLocalServiceUtil.getMBThreadUserThreads(mbMessage.getThreadId());
+  for (  UserThread userThread : userThreads) {
+    if (userThread.getUserId() == mbMessage.getUserId()) {
+      continue;
+    }
+    User recipient=UserLocalServiceUtil.getUser(userThread.getUserId());
+    Format dateFormatDateTime=FastDateFormatFactoryUtil.getSimpleDateFormat("MMMMM d 'at' h:mm a",recipient.getLocale(),recipient.getTimeZone());
+    notificationBody=StringUtil.replace(notificationBody,"[$SENT_DATE$]",dateFormatDateTime.format(mbMessage.getCreateDate()));
+    InternetAddress notificationTo=new InternetAddress(recipient.getEmailAddress());
+    MailMessage notificationMessage=new MailMessage(notificationFrom,notificationTo,notificationSubject,notificationBody,htmlFormat);
+    MailServiceUtil.sendEmail(notificationMessage);
+  }
+}
