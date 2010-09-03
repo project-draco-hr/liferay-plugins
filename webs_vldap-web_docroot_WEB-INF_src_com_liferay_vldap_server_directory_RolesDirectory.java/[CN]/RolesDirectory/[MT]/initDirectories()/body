@@ -1,0 +1,33 @@
+{
+  List<Role> roles=Collections.EMPTY_LIST;
+  if (_user != null) {
+    roles=RoleLocalServiceUtil.getUserRoles(_user.getUserId());
+    List<UserGroupRole> userGroupRoles=Collections.EMPTY_LIST;
+    Directory parentDirectory=getParentDirectory();
+    parentDirectory=parentDirectory.getParentDirectory();
+    parentDirectory=parentDirectory.getParentDirectory();
+    if (parentDirectory instanceof CommunityDirectory) {
+      CommunityDirectory communityDirectory=(CommunityDirectory)parentDirectory;
+      Group group=communityDirectory.getGroup();
+      userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(_user.getUserId(),group.getGroupId());
+    }
+ else     if (parentDirectory instanceof OrganizationDirectory) {
+      OrganizationDirectory organizationDirectory=(OrganizationDirectory)parentDirectory;
+      Organization organization=organizationDirectory.getOrganization();
+      Group group=organization.getGroup();
+      userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(_user.getUserId(),group.getGroupId());
+    }
+    for (    UserGroupRole userGroupRole : userGroupRoles) {
+      Role role=userGroupRole.getRole();
+      roles.add(role);
+    }
+  }
+ else   if (_company != null) {
+    roles=RoleLocalServiceUtil.search(_company.getCompanyId(),null,null,new Integer[]{RoleConstants.TYPE_REGULAR},0,PortletPropsValues.SEARCH_MAX_SIZE,null);
+  }
+  for (  Role role : roles) {
+    Directory roleDirectory=new RoleDirectory(role,this);
+    _directories.add(roleDirectory);
+  }
+  return _directories;
+}

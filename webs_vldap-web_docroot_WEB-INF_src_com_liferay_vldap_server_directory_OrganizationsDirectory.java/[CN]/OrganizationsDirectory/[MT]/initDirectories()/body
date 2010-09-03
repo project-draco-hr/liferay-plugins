@@ -1,0 +1,14 @@
+{
+  List<Organization> organizations=Collections.EMPTY_LIST;
+  if (_user != null) {
+    organizations=OrganizationLocalServiceUtil.getUserOrganizations(_user.getUserId());
+  }
+ else   if (_company != null) {
+    organizations=OrganizationLocalServiceUtil.search(_company.getCompanyId(),OrganizationConstants.ANY_PARENT_ORGANIZATION_ID,null,null,null,null,null,0,PortletPropsValues.SEARCH_MAX_SIZE,null);
+  }
+  for (  Organization organization : organizations) {
+    Directory organizationDirectory=new OrganizationDirectory(organization,this);
+    _directories.add(organizationDirectory);
+  }
+  return _directories;
+}

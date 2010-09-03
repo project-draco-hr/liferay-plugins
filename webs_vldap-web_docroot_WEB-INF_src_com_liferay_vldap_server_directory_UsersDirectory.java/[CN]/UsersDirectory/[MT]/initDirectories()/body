@@ -1,0 +1,23 @@
+{
+  List<User> users=Collections.EMPTY_LIST;
+  if (_group != null) {
+    users=UserLocalServiceUtil.getGroupUsers(_group.getGroupId());
+  }
+ else   if (_organization != null) {
+    users=UserLocalServiceUtil.getOrganizationUsers(_organization.getOrganizationId());
+  }
+ else   if (_role != null) {
+    users=UserLocalServiceUtil.getRoleUsers(_role.getRoleId());
+  }
+ else   if (_company != null) {
+    users=UserLocalServiceUtil.getCompanyUsers(_company.getCompanyId(),0,PortletPropsValues.SEARCH_MAX_SIZE);
+  }
+  for (  User user : users) {
+    if (user.isDefaultUser()) {
+      continue;
+    }
+    Directory userDirectory=new UserDirectory(user,this);
+    _directories.add(userDirectory);
+  }
+  return _directories;
+}
