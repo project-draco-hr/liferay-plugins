@@ -2,7 +2,7 @@
   InternalCompareRequest internalCompareRequest=(InternalCompareRequest)internalRequest;
   String attributeId=internalCompareRequest.getAttributeId();
   Value<?> value=internalCompareRequest.getAssertionValue();
-  Directory directory=ldapHandlerContext.getDirectory();
+  Directory directory=new RootDirectory(internalRequest);
   directory.findBase(internalCompareRequest.getName());
   if (directory != null) {
     Attribute attribute=directory.getAttribute(attributeId,value.getString());

@@ -1,0 +1,22 @@
+{
+  if (exprNode.isLeaf()) {
+    if (exprNode instanceof EqualityNode<?>) {
+      EqualityNode<?> equalityNode=(EqualityNode<?>)exprNode;
+      String attributeId=equalityNode.getAttribute();
+      String value=equalityNode.getValue().getString();
+      if (attributeId.equals("cn")) {
+        return value;
+      }
+    }
+  }
+ else {
+    BranchNode branchNode=(BranchNode)exprNode;
+    for (    ExprNode childBranchNode : branchNode.getChildren()) {
+      String screenName=getScreenName(childBranchNode);
+      if (screenName != null) {
+        return screenName;
+      }
+    }
+  }
+  return null;
+}

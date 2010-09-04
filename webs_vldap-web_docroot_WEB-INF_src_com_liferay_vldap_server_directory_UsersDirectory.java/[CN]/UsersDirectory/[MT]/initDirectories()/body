@@ -1,17 +1,32 @@
 {
-  List<User> users=Collections.EMPTY_LIST;
+  long companyId=0;
+  String firstName=null;
+  String middleName=null;
+  String lastName=null;
+  String screenName=getScreenName();
+  String emailAddress=null;
+  Boolean active=Boolean.TRUE;
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  boolean andSearch=true;
+  int start=0;
+  int end=PortletPropsValues.SEARCH_MAX_SIZE;
+  OrderByComparator orderByComparator=new UserScreenNameComparator();
   if (_group != null) {
-    users=UserLocalServiceUtil.getGroupUsers(_group.getGroupId());
+    companyId=_group.getCompanyId();
+    params.put("usersGroups",_group.getGroupId());
   }
  else   if (_organization != null) {
-    users=UserLocalServiceUtil.getOrganizationUsers(_organization.getOrganizationId());
+    companyId=_organization.getCompanyId();
+    params.put("usersOrgs",_organization.getOrganizationId());
   }
  else   if (_role != null) {
-    users=UserLocalServiceUtil.getRoleUsers(_role.getRoleId());
+    companyId=_role.getCompanyId();
+    params.put("usersRoles",_role.getRoleId());
   }
  else   if (_company != null) {
-    users=UserLocalServiceUtil.getCompanyUsers(_company.getCompanyId(),0,PortletPropsValues.SEARCH_MAX_SIZE);
+    companyId=_company.getCompanyId();
   }
+  List<User> users=UserLocalServiceUtil.search(companyId,firstName,middleName,lastName,screenName,emailAddress,active,params,andSearch,start,end,orderByComparator);
   for (  User user : users) {
     if (user.isDefaultUser()) {
       continue;

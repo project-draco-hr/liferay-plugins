@@ -2,7 +2,7 @@
   InternalSearchRequest internalSearchRequest=(InternalSearchRequest)internalRequest;
   List<InternalResponse> internalResponses=new ArrayList<InternalResponse>();
   try {
-    Directory directory=ldapHandlerContext.getDirectory();
+    Directory directory=new RootDirectory(internalRequest);
     directory=directory.findBase(internalSearchRequest.getBase());
     if (directory != null) {
       addEntries(internalSearchRequest,internalResponses,ldapHandlerContext,directory);
