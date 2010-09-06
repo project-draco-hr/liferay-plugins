@@ -4,5 +4,11 @@
     return;
   }
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
-  ArticleLocalServiceUtil.unsubscribeArticle(themeDisplay.getCompanyId(),themeDisplay.getUserId(),resourcePrimKey);
+  String portletId=PortalUtil.getPortletId(actionRequest);
+  if (resourcePrimKey <= 0) {
+    ArticleLocalServiceUtil.unsubscribe(themeDisplay.getCompanyId(),themeDisplay.getUserId(),themeDisplay.getScopeGroupId(),portletId);
+  }
+ else {
+    ArticleServiceUtil.unsubscribeArticle(themeDisplay.getCompanyId(),resourcePrimKey);
+  }
 }

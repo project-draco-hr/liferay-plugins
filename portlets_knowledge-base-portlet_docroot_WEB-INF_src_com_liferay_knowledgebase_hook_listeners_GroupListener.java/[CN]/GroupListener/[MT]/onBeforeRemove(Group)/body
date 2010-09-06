@@ -1,6 +1,10 @@
 {
   try {
-    SubscriptionLocalServiceUtil.deleteSubscriptions(group.getCompanyId(),Article.class.getName(),group.getGroupId());
+    List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(group.getCompanyId(),Article.class.getName(),group.getGroupId());
+    for (    Subscription subscription : subscriptions) {
+      SubscriptionLocalServiceUtil.deleteSubscription(subscription);
+      ExpandoValueLocalServiceUtil.deleteValue(group.getCompanyId(),Article.class.getName(),"KB","portletIds",subscription.getSubscriptionId());
+    }
   }
  catch (  Exception e) {
     throw new ModelListenerException(e);

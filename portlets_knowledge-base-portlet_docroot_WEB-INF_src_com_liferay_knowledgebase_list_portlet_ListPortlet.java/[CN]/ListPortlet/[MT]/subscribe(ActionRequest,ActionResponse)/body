@@ -5,5 +5,10 @@
   }
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   String portletId=PortalUtil.getPortletId(actionRequest);
-  ArticleLocalServiceUtil.subscribeArticle(portletId,themeDisplay.getUserId(),resourcePrimKey);
+  if (resourcePrimKey <= 0) {
+    ArticleLocalServiceUtil.subscribe(themeDisplay.getCompanyId(),themeDisplay.getUserId(),themeDisplay.getScopeGroupId(),portletId);
+  }
+ else {
+    ArticleServiceUtil.subscribeArticle(portletId,resourcePrimKey);
+  }
 }

@@ -1,0 +1,16 @@
+{
+  Subscription subscription=null;
+  try {
+    subscription=subscriptionLocalService.getSubscription(companyId,userId,Article.class.getName(),groupId);
+  }
+ catch (  NoSuchSubscriptionException nsse) {
+    subscription=subscriptionLocalService.addSubscription(userId,Article.class.getName(),groupId);
+  }
+  ExpandoValue expandoValue=expandoValueLocalService.getValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId());
+  String[] portletIds=new String[]{portletId};
+  if (expandoValue != null) {
+    portletIds=ArrayUtil.append(portletIds,expandoValue.getStringArray());
+    expandoValueLocalService.deleteValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId());
+  }
+  expandoValueLocalService.addValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId(),portletIds);
+}

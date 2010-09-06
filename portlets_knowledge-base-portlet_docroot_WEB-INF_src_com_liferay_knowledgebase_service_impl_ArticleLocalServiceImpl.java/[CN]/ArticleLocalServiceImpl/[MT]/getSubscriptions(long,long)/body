@@ -1,0 +1,10 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Subscription.class,"subscription",PortalClassLoaderUtil.getClassLoader());
+  Property userIdProperty=PropertyFactoryUtil.forName("userId");
+  dynamicQuery.add(userIdProperty.eq(userId));
+  Property classNameIdProperty=PropertyFactoryUtil.forName("classNameId");
+  dynamicQuery.add(classNameIdProperty.eq(PortalUtil.getClassNameId(Article.class)));
+  Property classPKProperty=PropertyFactoryUtil.forName("classPK");
+  dynamicQuery.add(classPKProperty.ne(groupId));
+  return subscriptionPersistence.findWithDynamicQuery(dynamicQuery);
+}

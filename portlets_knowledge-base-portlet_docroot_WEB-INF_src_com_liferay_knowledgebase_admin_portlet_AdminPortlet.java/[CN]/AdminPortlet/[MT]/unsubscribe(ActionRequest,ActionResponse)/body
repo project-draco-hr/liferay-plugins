@@ -1,8 +1,9 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+  String portletId=PortalUtil.getPortletId(actionRequest);
   if (resourcePrimKey <= 0) {
-    ArticleServiceUtil.unsubscribe(themeDisplay.getScopeGroupId());
+    ArticleServiceUtil.unsubscribe(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),portletId);
   }
  else {
     ArticleServiceUtil.unsubscribeArticle(themeDisplay.getCompanyId(),resourcePrimKey);
