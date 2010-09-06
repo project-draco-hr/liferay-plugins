@@ -6,8 +6,15 @@
   }
   Layout layout=LayoutLocalServiceUtil.getLayout(plid);
   PortletPreferences jxPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
+  WindowState windowState=WindowState.NORMAL;
+  if (checkWindowState) {
+    String articleWindowState=jxPreferences.getValue("article-window-state",WindowState.MAXIMIZED.toString());
+    if (articleWindowState.equals(WindowState.MAXIMIZED.toString())) {
+      windowState=WindowState.MAXIMIZED;
+    }
+  }
   if (hasArticle(article,jxPreferences)) {
-    return new Object[]{plid,WindowState.NORMAL};
+    return new Object[]{plid,windowState};
   }
   return new Object[]{LayoutConstants.DEFAULT_PLID,WindowState.NORMAL};
 }

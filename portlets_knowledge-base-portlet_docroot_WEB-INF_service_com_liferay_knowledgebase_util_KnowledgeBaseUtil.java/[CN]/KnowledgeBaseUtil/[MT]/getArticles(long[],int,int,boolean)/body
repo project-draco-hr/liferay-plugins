@@ -7,8 +7,9 @@
   for (int i=start; (i < end) && (i < resourcePrimKeys.length); i++) {
     selResourcePrimKeys.add(resourcePrimKeys[i]);
   }
+  resourcePrimKeys=StringUtil.split(StringUtil.merge(selResourcePrimKeys),0L);
   Map<String,Object> params=new HashMap<String,Object>();
-  params.put("resourcePrimKey",selResourcePrimKeys.toArray(new Long[selResourcePrimKeys.size()]));
+  params.put("resourcePrimKey",ArrayUtil.toArray(resourcePrimKeys));
   params.put("status",WorkflowConstants.STATUS_APPROVED);
   List<Article> unsortedArticles=null;
   if (checkPermission) {
@@ -19,7 +20,7 @@
   }
   unsortedArticles=ListUtil.copy(unsortedArticles);
   List<Article> articles=new ArrayList<Article>();
-  for (  Long resourcePrimKey : selResourcePrimKeys) {
+  for (  long resourcePrimKey : resourcePrimKeys) {
     for (int i=0; i < unsortedArticles.size(); i++) {
       Article article=unsortedArticles.get(i);
       if (article.getResourcePrimKey() == resourcePrimKey) {
