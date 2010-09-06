@@ -1,10 +1,8 @@
 {
   String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
   long[] resourcePrimKeys=GetterUtil.getLongValues(jxPreferences.getValues("resource-prim-keys",new String[0]));
-  long[] scopeGroupIds=GetterUtil.getLongValues(jxPreferences.getValues("scope-group-ids",new String[0]));
   boolean hasResourcePrimKey=ArrayUtil.contains(resourcePrimKeys,article.getResourcePrimKey());
-  boolean hasScopeGroup=ArrayUtil.contains(scopeGroupIds,article.getGroupId());
-  if ((selectionMethod.equals("parent-group")) || (selectionMethod.equals("articles") && hasResourcePrimKey) || (selectionMethod.equals("scope-groups") && hasScopeGroup)) {
+  if ((selectionMethod.equals("parent-group")) || (selectionMethod.equals("articles") && hasResourcePrimKey)) {
     return true;
   }
   if (selectionMethod.equals("articles")) {

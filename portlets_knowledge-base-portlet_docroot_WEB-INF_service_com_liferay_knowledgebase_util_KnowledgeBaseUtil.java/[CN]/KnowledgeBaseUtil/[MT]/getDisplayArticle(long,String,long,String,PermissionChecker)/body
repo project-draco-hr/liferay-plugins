@@ -8,7 +8,6 @@
   PortletPreferences jxPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
   String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
   long[] resourcePrimKeys=GetterUtil.getLongValues(jxPreferences.getValues("resource-prim-keys",new String[0]));
-  long[] scopeGroupIds=GetterUtil.getLongValues(jxPreferences.getValues("scope-group-ids",new String[0]));
   boolean allArticles=GetterUtil.getBoolean(jxPreferences.getValue("all-articles",null),true);
   String orderByColumn=jxPreferences.getValue("order-by-column","modified-date");
   boolean orderByAscending=GetterUtil.getBoolean(jxPreferences.getValue("order-by-ascending",null));
@@ -38,20 +37,6 @@
  else     if (selectionMethod.equals("parent-group")) {
       Map<String,Object> params=new HashMap<String,Object>();
       params.put("parentGroupId",group.getGroupId());
-      params.put("status",WorkflowConstants.STATUS_APPROVED);
-      if (!allArticles) {
-        params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
-      }
-      List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
-      if (assetEntries != null) {
-        long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
-        params.put("resourcePrimKey",ArrayUtil.toArray(classPKs));
-      }
-      articles=ArticleLocalServiceUtil.getArticles(params,false,lastIntervalStart,lastIntervalStart + delta,orderByComparator);
-    }
- else     if (selectionMethod.equals("scope-groups")) {
-      Map<String,Object> params=new HashMap<String,Object>();
-      params.put("groupId",ArrayUtil.toArray(scopeGroupIds));
       params.put("status",WorkflowConstants.STATUS_APPROVED);
       if (!allArticles) {
         params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
