@@ -1,0 +1,11 @@
+{
+  long groupId=ParamUtil.getLong(request,"groupId");
+  if (groupId > 0) {
+    Group group=GroupLocalServiceUtil.getGroup(groupId);
+    if (group.isUser()) {
+      return getUserRedirect(themeDisplay,group.getClassPK());
+    }
+    return getGroupRedirect(themeDisplay,group.getGroupId());
+  }
+  return null;
+}
