@@ -2,7 +2,7 @@
   Layout layout=LayoutLocalServiceUtil.getLayout(plid);
   Group group=layout.getGroup();
   PortletPreferences jxPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
-  String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
+  String selectionMethod=jxPreferences.getValue("selection-method","group");
   boolean assetEntryQueryContains=GetterUtil.getBoolean(jxPreferences.getValue("asset-entry-query-contains",null),true);
   boolean assetEntryQueryAndOperator=GetterUtil.getBoolean(jxPreferences.getValue("asset-entry-query-and-operator",null));
   String assetEntryQueryName=jxPreferences.getValue("asset-entry-query-name","asset-categories");
@@ -67,14 +67,13 @@
     long[] assetTagIds=AssetTagLocalServiceUtil.getTagIds(group.getGroupId(),new String[]{assetTagName});
     allAssetTagIds=ArrayUtil.append(allAssetTagIds,assetTagIds);
   }
-  long[] groupIds=ArticleLocalServiceUtil.getGroupIds(group.getGroupId());
   AssetEntryQuery assetEntryQuery=new AssetEntryQuery();
   assetEntryQuery.setAllCategoryIds(allAssetCategoryIds);
   assetEntryQuery.setAllTagIds(allAssetTagIds);
   assetEntryQuery.setAnyCategoryIds(anyAssetCategoryIds);
   assetEntryQuery.setAnyTagIds(anyAssetTagIds);
   assetEntryQuery.setClassName(Article.class.getName());
-  assetEntryQuery.setGroupIds(groupIds);
+  assetEntryQuery.setGroupIds(new long[]{group.getGroupId()});
   assetEntryQuery.setNotAllCategoryIds(notAllAssetCategoryIds);
   assetEntryQuery.setNotAllTagIds(notAllAssetTagIds);
   assetEntryQuery.setNotAnyCategoryIds(notAnyAssetCategoryIds);

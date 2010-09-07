@@ -6,7 +6,7 @@
   Layout layout=LayoutLocalServiceUtil.getLayout(plid);
   Group group=layout.getGroup();
   PortletPreferences jxPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
-  String selectionMethod=jxPreferences.getValue("selection-method","parent-group");
+  String selectionMethod=jxPreferences.getValue("selection-method","group");
   long[] resourcePrimKeys=GetterUtil.getLongValues(jxPreferences.getValues("resource-prim-keys",null));
   boolean allArticles=GetterUtil.getBoolean(jxPreferences.getValue("all-articles",null),true);
   String orderByColumn=jxPreferences.getValue("order-by-column","modified-date");
@@ -34,9 +34,9 @@
       }
       articles=getArticles(resourcePrimKeys,lastIntervalStart,lastIntervalStart + delta,false);
     }
- else     if (selectionMethod.equals("parent-group")) {
+ else     if (selectionMethod.equals("group")) {
       Map<String,Object> params=new HashMap<String,Object>();
-      params.put("parentGroupId",group.getGroupId());
+      params.put("groupId",group.getGroupId());
       params.put("status",WorkflowConstants.STATUS_APPROVED);
       if (!allArticles) {
         params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
