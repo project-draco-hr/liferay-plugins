@@ -1,0 +1,20 @@
+{
+  comment=toUnwrappedModel(comment);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,comment);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  CommentModelImpl commentModelImpl=(CommentModelImpl)comment;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{commentModelImpl.getOriginalUuid(),new Long(commentModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C,new Object[]{new Long(commentModelImpl.getOriginalUserId()),new Long(commentModelImpl.getOriginalClassNameId()),new Long(commentModelImpl.getOriginalClassPK())});
+  EntityCacheUtil.removeResult(CommentModelImpl.ENTITY_CACHE_ENABLED,CommentImpl.class,comment.getPrimaryKey());
+  return comment;
+}

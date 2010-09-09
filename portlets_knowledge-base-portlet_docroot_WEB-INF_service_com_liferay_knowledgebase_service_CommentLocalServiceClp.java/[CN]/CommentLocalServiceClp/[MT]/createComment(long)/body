@@ -1,0 +1,16 @@
+{
+  Object returnObj=null;
+  MethodHandler methodHandler=new MethodHandler(_createCommentMethodKey1,commentId);
+  try {
+    returnObj=_classLoaderProxy.invoke(methodHandler);
+  }
+ catch (  Throwable t) {
+    if (t instanceof RuntimeException) {
+      throw (RuntimeException)t;
+    }
+ else {
+      throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
+    }
+  }
+  return (com.liferay.knowledgebase.model.Comment)ClpSerializer.translateOutput(returnObj);
+}
