@@ -1,0 +1,11 @@
+{
+  List<Element> commentElements=rootElement.elements(name);
+  for (  Element commentElement : commentElements) {
+    String path=commentElement.attributeValue("path");
+    if (!context.isPathNotProcessed(path)) {
+      continue;
+    }
+    Comment comment=(Comment)context.getZipEntryAsObject(path);
+    importComment(context,classPKs,comment);
+  }
+}

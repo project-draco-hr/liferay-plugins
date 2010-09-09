@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  long commentId=ParamUtil.getLong(actionRequest,"commentId");
+  long classNameId=ParamUtil.getLong(actionRequest,"classNameId");
+  long classPK=ParamUtil.getLong(actionRequest,"classPK");
+  String content=ParamUtil.getString(actionRequest,"content");
+  boolean helpful=ParamUtil.getBoolean(actionRequest,"helpful");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Article.class.getName(),actionRequest);
+  if (commentId <= 0) {
+    CommentLocalServiceUtil.addComment(themeDisplay.getUserId(),classNameId,classPK,content,helpful,serviceContext);
+  }
+ else {
+    CommentLocalServiceUtil.updateComment(commentId,classNameId,classPK,content,helpful,serviceContext);
+  }
+}

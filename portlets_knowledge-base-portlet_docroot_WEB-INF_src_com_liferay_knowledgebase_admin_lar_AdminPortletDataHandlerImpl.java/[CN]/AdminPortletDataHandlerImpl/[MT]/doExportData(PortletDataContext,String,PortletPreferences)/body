@@ -4,8 +4,14 @@
   Element rootElement=document.addElement("knowledge-base-admin-data");
   rootElement.addAttribute("group-id",String.valueOf(context.getScopeGroupId()));
   exportArticles(context,rootElement);
+  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"comments")) {
+    exportComments(context,Article.class,"article-comment",rootElement);
+  }
   if (context.getBooleanParameter(_NAMESPACE,"templates")) {
     exportTemplates(context,rootElement);
+  }
+  if (context.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
+    exportComments(context,Template.class,"template-comment",rootElement);
   }
   return document.formattedString();
 }

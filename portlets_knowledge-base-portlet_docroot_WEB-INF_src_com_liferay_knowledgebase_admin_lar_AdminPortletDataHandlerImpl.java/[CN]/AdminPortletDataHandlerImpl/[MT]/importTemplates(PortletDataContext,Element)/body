@@ -1,10 +1,12 @@
 {
+  Map<Long,Long> templateIds=new HashMap<Long,Long>();
   for (  Element templateElement : rootElement.elements("template")) {
     String path=templateElement.attributeValue("path");
     if (!context.isPathNotProcessed(path)) {
       continue;
     }
     Template template=(Template)context.getZipEntryAsObject(path);
-    importTemplate(context,template);
+    importTemplate(context,templateIds,template);
   }
+  importComments(context,"template-comment",templateIds,rootElement);
 }

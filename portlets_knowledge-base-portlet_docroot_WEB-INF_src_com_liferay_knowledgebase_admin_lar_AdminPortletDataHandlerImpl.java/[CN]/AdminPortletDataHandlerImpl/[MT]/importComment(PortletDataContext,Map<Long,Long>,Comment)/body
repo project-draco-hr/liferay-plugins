@@ -1,0 +1,21 @@
+{
+  long userId=context.getUserId(comment.getUserUuid());
+  long classPK=MapUtil.getLong(classPKs,comment.getClassPK());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCreateDate(comment.getCreateDate());
+  serviceContext.setModifiedDate(comment.getModifiedDate());
+  serviceContext.setScopeGroupId(context.getScopeGroupId());
+  if (context.isDataStrategyMirror()) {
+    Comment existingComment=CommentUtil.fetchByUUID_G(comment.getUuid(),context.getScopeGroupId());
+    if (existingComment == null) {
+      serviceContext.setUuid(comment.getUuid());
+      CommentLocalServiceUtil.addComment(userId,comment.getClassNameId(),classPK,comment.getContent(),comment.getHelpful(),serviceContext);
+    }
+ else {
+      CommentLocalServiceUtil.updateComment(existingComment.getCommentId(),comment.getClassNameId(),classPK,comment.getContent(),comment.getHelpful(),serviceContext);
+    }
+  }
+ else {
+    CommentLocalServiceUtil.addComment(userId,comment.getClassNameId(),classPK,comment.getContent(),comment.getHelpful(),serviceContext);
+  }
+}
