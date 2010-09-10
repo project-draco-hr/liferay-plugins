@@ -22,7 +22,7 @@
       if (_log.isInfoEnabled()) {
         _log.info("Subscription " + subscription.getSubscriptionId() + " is stale and will be deleted");
       }
-      ArticleLocalServiceUtil.unsubscribeArticle(subscription);
+      ArticleLocalServiceUtil.unsubscribeAllPortlets(subscription.getCompanyId(),subscription.getSubscriptionId());
       continue;
     }
     if (!user.isActive()) {
@@ -52,7 +52,7 @@
       }
       if (_log.isInfoEnabled()) {
         _log.info("Portlet " + portletId + " does not exist or does "+ "not contain article "+ resourcePrimKey);
-        ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),userId,subscription.getClassPK(),portletId);
+        ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),userId,portletId,subscription.getClassPK());
       }
     }
     if (Validator.isNull(articleURL)) {

@@ -2,8 +2,7 @@
   try {
     List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(group.getCompanyId(),Article.class.getName(),group.getGroupId());
     for (    Subscription subscription : subscriptions) {
-      SubscriptionLocalServiceUtil.deleteSubscription(subscription);
-      ExpandoValueLocalServiceUtil.deleteValue(group.getCompanyId(),Article.class.getName(),"KB","portletIds",subscription.getSubscriptionId());
+      ArticleLocalServiceUtil.unsubscribeAllPortlets(subscription.getCompanyId(),subscription.getSubscriptionId());
     }
   }
  catch (  Exception e) {
