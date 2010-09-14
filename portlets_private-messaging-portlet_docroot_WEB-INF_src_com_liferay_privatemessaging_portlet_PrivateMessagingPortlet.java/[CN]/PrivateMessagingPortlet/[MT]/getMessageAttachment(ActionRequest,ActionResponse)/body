@@ -1,0 +1,21 @@
+{
+  try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    long messageId=ParamUtil.getLong(actionRequest,"messageId");
+    String fileName=ParamUtil.getString(actionRequest,"attachment");
+    MBMessage message=MBMessageLocalServiceUtil.getMessage(messageId);
+    if (!PrivateMessagingUtil.isUserPartOfThread(themeDisplay.getUserId(),message.getThreadId())) {
+      throw new PrincipalException();
+    }
+    String path=message.getAttachmentsDir() + "/" + fileName;
+    InputStream is=DLLocalServiceUtil.getFileAsStream(message.getCompanyId(),CompanyConstants.SYSTEM,path);
+    int contentLength=(int)DLServiceUtil.getFileSize(message.getCompanyId(),CompanyConstants.SYSTEM,path);
+    String contentType=MimeTypesUtil.getContentType(fileName);
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
+    ServletResponseUtil.sendFile(request,response,fileName,is,contentLength,contentType);
+  }
+ catch (  Exception e) {
+    PortalUtil.sendError(e,actionRequest,actionResponse);
+  }
+}
