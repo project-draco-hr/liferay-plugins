@@ -8,12 +8,12 @@
       throw new PrincipalException();
     }
     String path=message.getAttachmentsDir() + "/" + fileName;
-    InputStream is=DLLocalServiceUtil.getFileAsStream(message.getCompanyId(),CompanyConstants.SYSTEM,path);
+    InputStream inputStream=DLLocalServiceUtil.getFileAsStream(message.getCompanyId(),CompanyConstants.SYSTEM,path);
     int contentLength=(int)DLServiceUtil.getFileSize(message.getCompanyId(),CompanyConstants.SYSTEM,path);
     String contentType=MimeTypesUtil.getContentType(fileName);
     HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
     HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
-    ServletResponseUtil.sendFile(request,response,fileName,is,contentLength,contentType);
+    ServletResponseUtil.sendFile(request,response,fileName,inputStream,contentLength,contentType);
   }
  catch (  Exception e) {
     PortalUtil.sendError(e,actionRequest,actionResponse);
