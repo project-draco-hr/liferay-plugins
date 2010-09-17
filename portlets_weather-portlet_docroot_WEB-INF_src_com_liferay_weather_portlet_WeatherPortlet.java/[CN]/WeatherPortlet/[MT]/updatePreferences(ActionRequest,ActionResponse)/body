@@ -6,15 +6,8 @@
   PortletPreferences preferences=actionRequest.getPreferences();
   String[] zips=StringUtil.split(ParamUtil.getString(actionRequest,"zips"),"\n");
   boolean fahrenheit=ParamUtil.get(actionRequest,"fahrenheit",true);
-  PortletMode portletMode=actionResponse.getPortletMode();
-  if (portletMode.equals(LiferayPortletMode.EDIT_GUEST)) {
-    preferences.setValues("guest-zips",zips);
-    preferences.setValue("guest-fahrenheit",String.valueOf(fahrenheit));
-  }
- else {
-    preferences.setValues("zips",zips);
-    preferences.setValue("fahrenheit",String.valueOf(fahrenheit));
-  }
+  preferences.setValues("zips",zips);
+  preferences.setValue("fahrenheit",String.valueOf(fahrenheit));
   try {
     preferences.store();
   }
