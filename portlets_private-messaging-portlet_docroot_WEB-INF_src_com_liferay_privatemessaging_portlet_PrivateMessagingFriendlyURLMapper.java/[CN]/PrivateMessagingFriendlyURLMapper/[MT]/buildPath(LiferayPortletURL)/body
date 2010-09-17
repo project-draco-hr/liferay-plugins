@@ -1,0 +1,16 @@
+{
+  String friendlyURLPath=null;
+  String mbThreadId=GetterUtil.getString(portletURL.getParameter("mbThreadId"));
+  if (!mbThreadId.equals(StringPool.BLANK)) {
+    friendlyURLPath="/private_messaging/thread/" + mbThreadId;
+  }
+  if (Validator.isNotNull(friendlyURLPath)) {
+    WindowState windowState=portletURL.getWindowState();
+    if ((windowState != null) && windowState.equals(WindowState.MAXIMIZED)) {
+      friendlyURLPath+=StringPool.SLASH + windowState;
+    }
+    portletURL.addParameterIncludedInPath("p_p_id");
+    portletURL.addParameterIncludedInPath("mbThreadId");
+  }
+  return friendlyURLPath;
+}
