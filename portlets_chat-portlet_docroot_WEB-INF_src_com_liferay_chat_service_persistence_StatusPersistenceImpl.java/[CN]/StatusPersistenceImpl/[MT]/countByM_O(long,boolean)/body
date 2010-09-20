@@ -2,14 +2,14 @@
   Object[] finderArgs=new Object[]{modifiedDate,online};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_M_O,finderArgs,this);
   if (count == null) {
+    StringBundler query=new StringBundler(3);
+    query.append(_SQL_COUNT_STATUS_WHERE);
+    query.append(_FINDER_COLUMN_M_O_MODIFIEDDATE_2);
+    query.append(_FINDER_COLUMN_M_O_ONLINE_2);
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(3);
-      query.append(_SQL_COUNT_STATUS_WHERE);
-      query.append(_FINDER_COLUMN_M_O_MODIFIEDDATE_2);
-      query.append(_FINDER_COLUMN_M_O_ONLINE_2);
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(modifiedDate);

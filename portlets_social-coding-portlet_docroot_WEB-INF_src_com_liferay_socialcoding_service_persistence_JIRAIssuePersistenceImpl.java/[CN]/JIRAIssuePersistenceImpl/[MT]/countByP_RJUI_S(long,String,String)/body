@@ -2,35 +2,35 @@
   Object[] finderArgs=new Object[]{projectId,reporterJiraUserId,status};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_P_RJUI_S,finderArgs,this);
   if (count == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_COUNT_JIRAISSUE_WHERE);
+    query.append(_FINDER_COLUMN_P_RJUI_S_PROJECTID_2);
+    if (reporterJiraUserId == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_1);
+    }
+ else {
+      if (reporterJiraUserId.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_2);
+      }
+    }
+    if (status == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_1);
+    }
+ else {
+      if (status.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_2);
+      }
+    }
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(4);
-      query.append(_SQL_COUNT_JIRAISSUE_WHERE);
-      query.append(_FINDER_COLUMN_P_RJUI_S_PROJECTID_2);
-      if (reporterJiraUserId == null) {
-        query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_1);
-      }
- else {
-        if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_2);
-        }
-      }
-      if (status == null) {
-        query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_1);
-      }
- else {
-        if (status.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_2);
-        }
-      }
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);

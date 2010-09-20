@@ -2,36 +2,36 @@
   Object[] finderArgs=new Object[]{projectId,reporterJiraUserId,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
   List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_P_RJUI,finderArgs,this);
   if (list == null) {
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(4);
+    }
+    query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+    query.append(_FINDER_COLUMN_P_RJUI_PROJECTID_2);
+    if (reporterJiraUserId == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_1);
+    }
+ else {
+      if (reporterJiraUserId.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
+      }
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=null;
-      if (orderByComparator != null) {
-        query=new StringBundler(4 + (orderByComparator.getOrderByFields().length * 3));
-      }
- else {
-        query=new StringBundler(4);
-      }
-      query.append(_SQL_SELECT_JIRAISSUE_WHERE);
-      query.append(_FINDER_COLUMN_P_RJUI_PROJECTID_2);
-      if (reporterJiraUserId == null) {
-        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_1);
-      }
- else {
-        if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
-        }
-      }
-      if (orderByComparator != null) {
-        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-      }
- else {
-        query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
-      }
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);

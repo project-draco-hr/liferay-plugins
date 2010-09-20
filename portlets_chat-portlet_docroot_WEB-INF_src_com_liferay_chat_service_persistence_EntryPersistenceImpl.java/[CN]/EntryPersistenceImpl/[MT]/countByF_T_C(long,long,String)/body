@@ -2,25 +2,25 @@
   Object[] finderArgs=new Object[]{fromUserId,toUserId,content};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_F_T_C,finderArgs,this);
   if (count == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_COUNT_ENTRY_WHERE);
+    query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
+    query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
+    if (content == null) {
+      query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
+    }
+ else {
+      if (content.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
+      }
+    }
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(4);
-      query.append(_SQL_COUNT_ENTRY_WHERE);
-      query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
-      query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
-      if (content == null) {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-      }
- else {
-        if (content.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
-        }
-      }
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(fromUserId);

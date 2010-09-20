@@ -2,37 +2,37 @@
   Object[] finderArgs=new Object[]{fromUserId,toUserId,content,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
   List<Entry> list=(List<Entry>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_F_T_C,finderArgs,this);
   if (list == null) {
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(5);
+    }
+    query.append(_SQL_SELECT_ENTRY_WHERE);
+    query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
+    query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
+    if (content == null) {
+      query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
+    }
+ else {
+      if (content.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
+      }
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(EntryModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=null;
-      if (orderByComparator != null) {
-        query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
-      }
- else {
-        query=new StringBundler(5);
-      }
-      query.append(_SQL_SELECT_ENTRY_WHERE);
-      query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
-      query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
-      if (content == null) {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
-      }
- else {
-        if (content.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
-        }
-      }
-      if (orderByComparator != null) {
-        appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
-      }
- else {
-        query.append(EntryModelImpl.ORDER_BY_JPQL);
-      }
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(fromUserId);

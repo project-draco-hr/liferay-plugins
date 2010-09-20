@@ -2,24 +2,24 @@
   Object[] finderArgs=new Object[]{projectId,reporterJiraUserId};
   Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_P_RJUI,finderArgs,this);
   if (count == null) {
+    StringBundler query=new StringBundler(3);
+    query.append(_SQL_COUNT_JIRAISSUE_WHERE);
+    query.append(_FINDER_COLUMN_P_RJUI_PROJECTID_2);
+    if (reporterJiraUserId == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_1);
+    }
+ else {
+      if (reporterJiraUserId.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
+      }
+    }
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(3);
-      query.append(_SQL_COUNT_JIRAISSUE_WHERE);
-      query.append(_FINDER_COLUMN_P_RJUI_PROJECTID_2);
-      if (reporterJiraUserId == null) {
-        query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_1);
-      }
- else {
-        if (reporterJiraUserId.equals(StringPool.BLANK)) {
-          query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
-        }
- else {
-          query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
-        }
-      }
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);

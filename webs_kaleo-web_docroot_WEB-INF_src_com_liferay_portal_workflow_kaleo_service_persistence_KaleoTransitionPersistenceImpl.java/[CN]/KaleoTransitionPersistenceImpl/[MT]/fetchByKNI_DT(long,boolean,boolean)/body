@@ -5,15 +5,15 @@
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_KNI_DT,finderArgs,this);
   }
   if (result == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_SELECT_KALEOTRANSITION_WHERE);
+    query.append(_FINDER_COLUMN_KNI_DT_KALEONODEID_2);
+    query.append(_FINDER_COLUMN_KNI_DT_DEFAULTTRANSITION_2);
+    query.append(KaleoTransitionModelImpl.ORDER_BY_JPQL);
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(4);
-      query.append(_SQL_SELECT_KALEOTRANSITION_WHERE);
-      query.append(_FINDER_COLUMN_KNI_DT_KALEONODEID_2);
-      query.append(_FINDER_COLUMN_KNI_DT_DEFAULTTRANSITION_2);
-      query.append(KaleoTransitionModelImpl.ORDER_BY_JPQL);
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(kaleoNodeId);

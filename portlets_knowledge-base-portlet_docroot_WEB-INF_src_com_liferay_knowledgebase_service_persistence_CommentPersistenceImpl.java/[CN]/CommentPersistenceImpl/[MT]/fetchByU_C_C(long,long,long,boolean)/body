@@ -5,16 +5,16 @@
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_C_C,finderArgs,this);
   }
   if (result == null) {
+    StringBundler query=new StringBundler(5);
+    query.append(_SQL_SELECT_COMMENT_WHERE);
+    query.append(_FINDER_COLUMN_U_C_C_USERID_2);
+    query.append(_FINDER_COLUMN_U_C_C_CLASSNAMEID_2);
+    query.append(_FINDER_COLUMN_U_C_C_CLASSPK_2);
+    query.append(CommentModelImpl.ORDER_BY_JPQL);
+    String sql=query.toString();
     Session session=null;
     try {
       session=openSession();
-      StringBundler query=new StringBundler(5);
-      query.append(_SQL_SELECT_COMMENT_WHERE);
-      query.append(_FINDER_COLUMN_U_C_C_USERID_2);
-      query.append(_FINDER_COLUMN_U_C_C_CLASSNAMEID_2);
-      query.append(_FINDER_COLUMN_U_C_C_CLASSPK_2);
-      query.append(CommentModelImpl.ORDER_BY_JPQL);
-      String sql=query.toString();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(userId);
