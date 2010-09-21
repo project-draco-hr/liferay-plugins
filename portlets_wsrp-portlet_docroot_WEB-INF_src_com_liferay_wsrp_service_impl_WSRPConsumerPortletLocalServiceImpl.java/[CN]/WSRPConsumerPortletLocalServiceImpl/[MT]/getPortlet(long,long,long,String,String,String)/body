@@ -15,12 +15,11 @@
   portlet=PortletLocalServiceUtil.clonePortlet(companyId,_CONSUMER_PORTLET_ID);
   portlet.setPortletId(portletId);
   portlet.setTimestamp(System.currentTimeMillis());
-  Class<ConsumerPortlet> consumerPortletImpl=getConsumerPortletImpl(portlet);
   PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.SERVLET_CONTEXT_NAME);
   portlet.setPortletApp(portletApp);
   portlet.setPortletName(portletId);
   portlet.setDisplayName(portletId);
-  portlet.setPortletClass(consumerPortletImpl.getName());
+  portlet.setPortletClass(ConsumerPortlet.class.getName());
   Map<String,String> initParams=portlet.getInitParams();
   initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_CONSUMER_PORTLET_NAME);
   if (portletDescription != null) {
@@ -30,7 +29,7 @@
   PortletBag portletBag=PortletBagPool.get(_CONSUMER_PORTLET_ID);
   portletBag=(PortletBag)portletBag.clone();
   portletBag.setPortletName(portletId);
-  portletBag.setPortletInstance(consumerPortletImpl.newInstance());
+  portletBag.setPortletInstance(new ConsumerPortlet());
   PortletBagPool.put(portletId,portletBag);
   return portlet;
 }
