@@ -12,9 +12,9 @@
   serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
   MBMessage mbMessage=MBMessageLocalServiceUtil.addMessage(userId,user.getScreenName(),groupId,categoryId,mbThreadId,parentMBMessageId,subject,body,files,anonymous,priority,allowPingbacks,serviceContext);
   if (mbThreadId == 0) {
-    for (    long recipientUserId : recipientUserIds) {
-      if (recipientUserId != userId) {
-        addUserThread(recipientUserId,mbMessage.getThreadId(),mbMessage.getMessageId(),false,false);
+    for (    User recipient : recipients) {
+      if (recipient.getUserId() != userId) {
+        addUserThread(recipient.getUserId(),mbMessage.getThreadId(),mbMessage.getMessageId(),false,false);
       }
     }
     addUserThread(userId,mbMessage.getThreadId(),mbMessage.getMessageId(),true,false);

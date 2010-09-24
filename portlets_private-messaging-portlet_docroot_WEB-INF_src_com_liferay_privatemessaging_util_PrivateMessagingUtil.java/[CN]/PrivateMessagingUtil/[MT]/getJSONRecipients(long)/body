@@ -1,0 +1,30 @@
+{
+  Set<User> users=new HashSet<User>();
+  String autocompleteRecipientType=PortletProps.get("autocomplete.recipient.type");
+  if (autocompleteRecipientType.equals("all")) {
+    users.addAll(UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS,QueryUtil.ALL_POS));
+  }
+ else   if (autocompleteRecipientType.equals("community")) {
+    List<Group> groups=GroupLocalServiceUtil.getUserGroups(userId,true);
+    for (    Group group : groups) {
+      users.addAll(UserLocalServiceUtil.getGroupUsers(group.getGroupId()));
+    }
+  }
+ else {
+    users.addAll(UserLocalServiceUtil.getSocialUsers(userId,SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new UserFirstNameComparator(true)));
+  }
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  for (  User user : users) {
+    if (user.isDefaultUser() || (userId == user.getUserId())) {
+      continue;
+    }
+    StringBuilder sb=new StringBuilder();
+    sb.append(user.getFullName());
+    sb.append(CharPool.SPACE);
+    sb.append(CharPool.LESS_THAN);
+    sb.append(user.getScreenName());
+    sb.append(CharPool.GREATER_THAN);
+    jsonArray.put(sb.toString());
+  }
+  return jsonArray;
+}

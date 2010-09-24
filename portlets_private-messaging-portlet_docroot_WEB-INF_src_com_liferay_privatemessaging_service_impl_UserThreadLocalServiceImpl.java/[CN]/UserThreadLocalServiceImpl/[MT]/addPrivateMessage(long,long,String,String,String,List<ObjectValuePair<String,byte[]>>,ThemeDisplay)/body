@@ -6,6 +6,6 @@
     parentMBMessageId=lastMBMessage.getMessageId();
     subject=lastMBMessage.getSubject();
   }
-  long[] recipientUserIds=GetterUtil.getLongValues(StringUtil.split(to));
-  return addPrivateMessage(userId,mbThreadId,parentMBMessageId,recipientUserIds,subject,body,files,themeDisplay);
+  List<User> recipients=parseRecipients(userId,to);
+  return addPrivateMessage(userId,mbThreadId,parentMBMessageId,recipients,subject,body,files,themeDisplay);
 }
