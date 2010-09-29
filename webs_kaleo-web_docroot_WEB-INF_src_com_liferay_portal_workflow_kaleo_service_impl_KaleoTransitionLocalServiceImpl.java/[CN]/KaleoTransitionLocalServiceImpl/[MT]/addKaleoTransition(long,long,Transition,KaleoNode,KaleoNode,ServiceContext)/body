@@ -17,5 +17,9 @@
   kaleoTransition.setTargetKaleoNodeName(targetKaleoNode.getName());
   kaleoTransition.setDefaultTransition(transition.isDefault());
   kaleoTransitionPersistence.update(kaleoTransition,false);
+  Condition condition=transition.getCondition();
+  if (condition != null) {
+    kaleoConditionLocalService.addKaleoCondition(condition,KaleoTransition.class.getName(),kaleoTransitionId,serviceContext);
+  }
   return kaleoTransition;
 }

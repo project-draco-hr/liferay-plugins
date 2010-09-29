@@ -1,7 +1,7 @@
 {
   Map<String,Serializable> workflowContext=executionContext.getWorkflowContext();
   ServiceContext serviceContext=executionContext.getServiceContext();
-  List<KaleoTransition> kaleoTransitions=currentKaleoNode.getKaleoTransitions();
+  List<KaleoTransition> kaleoTransitions=_transitionSelector.selectTransitions(currentKaleoNode,executionContext);
   Map<String,KaleoInstanceToken> childKaleoInstanceTokens=new HashMap<String,KaleoInstanceToken>();
   for (  KaleoTransition kaleoTransition : kaleoTransitions) {
     KaleoInstanceToken parentKaleoInstanceToken=executionContext.getKaleoInstanceToken();

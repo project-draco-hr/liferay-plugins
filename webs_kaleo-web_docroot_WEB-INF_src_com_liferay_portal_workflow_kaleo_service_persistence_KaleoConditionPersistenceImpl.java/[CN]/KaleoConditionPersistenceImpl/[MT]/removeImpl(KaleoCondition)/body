@@ -1,0 +1,19 @@
+{
+  kaleoCondition=toUnwrappedModel(kaleoCondition);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,kaleoCondition);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  KaleoConditionModelImpl kaleoConditionModelImpl=(KaleoConditionModelImpl)kaleoCondition;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEOCN_PK,new Object[]{kaleoConditionModelImpl.getOriginalKaleoClassName(),new Long(kaleoConditionModelImpl.getOriginalKaleoClassPK())});
+  EntityCacheUtil.removeResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,KaleoConditionImpl.class,kaleoCondition.getPrimaryKey());
+  return kaleoCondition;
+}

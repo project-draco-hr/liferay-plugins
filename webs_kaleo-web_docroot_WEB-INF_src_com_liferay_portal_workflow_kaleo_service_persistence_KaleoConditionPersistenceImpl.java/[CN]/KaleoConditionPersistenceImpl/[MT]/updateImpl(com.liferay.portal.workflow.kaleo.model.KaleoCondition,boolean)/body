@@ -1,0 +1,26 @@
+{
+  kaleoCondition=toUnwrappedModel(kaleoCondition);
+  boolean isNew=kaleoCondition.isNew();
+  KaleoConditionModelImpl kaleoConditionModelImpl=(KaleoConditionModelImpl)kaleoCondition;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kaleoCondition,merge);
+    kaleoCondition.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,KaleoConditionImpl.class,kaleoCondition.getPrimaryKey(),kaleoCondition);
+  if (!isNew && (!Validator.equals(kaleoCondition.getKaleoClassName(),kaleoConditionModelImpl.getOriginalKaleoClassName()) || (kaleoCondition.getKaleoClassPK() != kaleoConditionModelImpl.getOriginalKaleoClassPK()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEOCN_PK,new Object[]{kaleoConditionModelImpl.getOriginalKaleoClassName(),new Long(kaleoConditionModelImpl.getOriginalKaleoClassPK())});
+  }
+  if (isNew || (!Validator.equals(kaleoCondition.getKaleoClassName(),kaleoConditionModelImpl.getOriginalKaleoClassName()) || (kaleoCondition.getKaleoClassPK() != kaleoConditionModelImpl.getOriginalKaleoClassPK()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEOCN_PK,new Object[]{kaleoCondition.getKaleoClassName(),new Long(kaleoCondition.getKaleoClassPK())},kaleoCondition);
+  }
+  return kaleoCondition;
+}
