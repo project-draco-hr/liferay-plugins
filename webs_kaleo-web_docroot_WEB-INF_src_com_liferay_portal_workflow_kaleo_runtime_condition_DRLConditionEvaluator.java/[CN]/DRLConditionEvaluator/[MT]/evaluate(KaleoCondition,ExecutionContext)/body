@@ -1,0 +1,14 @@
+{
+  List<Fact<?>> facts=RulesContextBuilder.buildRulesContext(executionContext);
+  RulesResourceRetriever rulesResourceRetriever=new RulesResourceRetriever(new StringResourceRetriever(kaleoCondition.getScript()));
+  Query resultsQuery=Query.createStandardQuery();
+  Map<String,?> ruleResults=RulesEngineUtil.execute(rulesResourceRetriever,facts,resultsQuery,PortalClassLoaderUtil.getClassLoader());
+  Boolean conditionValue=(Boolean)ruleResults.get(RETURN_PARAMETER_NAME);
+  if (conditionValue == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Conditional script did not return value: " + conditionValue + ": "+ kaleoCondition.getScript());
+    }
+    return false;
+  }
+  return conditionValue;
+}
