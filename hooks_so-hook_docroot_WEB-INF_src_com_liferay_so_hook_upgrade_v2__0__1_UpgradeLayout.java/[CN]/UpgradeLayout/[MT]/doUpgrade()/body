@@ -1,7 +1,8 @@
 {
   List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  Group group : groups) {
-    if (!group.isCommunity() || group.getName().equals(GroupConstants.CONTROL_PANEL) || group.getName().equals(GroupConstants.GUEST)) {
+    String name=group.getName();
+    if (!group.isCommunity() || name.equals(GroupConstants.CONTROL_PANEL) || name.equals(GroupConstants.GUEST)) {
       continue;
     }
     long userId=PortalUtil.getValidUserId(group.getCompanyId(),group.getCreatorUserId());
