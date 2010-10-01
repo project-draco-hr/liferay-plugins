@@ -1,0 +1,19 @@
+{
+  List<KaleoTransition> kaleoTransitions=kaleoNode.getKaleoTransitions();
+  List<KaleoTransition> selectedKaleoTransitions=new ArrayList<KaleoTransition>(kaleoTransitions.size());
+  for (  KaleoTransition kaleoTransition : kaleoTransitions) {
+    KaleoCondition kaleoCondition=kaleoTransition.getKaleoCondition();
+    if (kaleoCondition == null) {
+      selectedKaleoTransitions.add(kaleoTransition);
+      continue;
+    }
+    boolean conditionalValue=_conditionEvaluator.evaluate(kaleoCondition,executionContext);
+    if (conditionalValue) {
+      selectedKaleoTransitions.add(kaleoTransition);
+    }
+  }
+  if (selectedKaleoTransitions.isEmpty()) {
+    selectedKaleoTransitions.add(kaleoNode.getDefaultKaleoTransition());
+  }
+  return selectedKaleoTransitions;
+}

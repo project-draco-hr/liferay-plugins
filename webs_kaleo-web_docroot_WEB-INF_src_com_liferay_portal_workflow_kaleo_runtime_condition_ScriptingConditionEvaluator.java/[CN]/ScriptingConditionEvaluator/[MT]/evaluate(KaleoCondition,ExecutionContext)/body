@@ -1,12 +1,12 @@
 {
   Map<String,Object> inputObjects=ScriptingContextBuilder.buildScriptingContext(executionContext);
-  Map<String,Object> returnResults=ScriptingUtil.eval(null,inputObjects,CONDITION_RETURN_PARAMTERS,kaleoCondition.getScriptLanguage(),kaleoCondition.getScript());
-  Boolean conditionValue=(Boolean)returnResults.get(RETURN_PARAMETER_NAME);
-  if (conditionValue == null) {
-    if (_log.isWarnEnabled()) {
-      _log.warn("Conditional script did not return value: " + conditionValue + ": "+ kaleoCondition.getScript());
-    }
-    return false;
+  Map<String,Object> results=ScriptingUtil.eval(null,inputObjects,_outputNames,kaleoCondition.getScriptLanguage(),kaleoCondition.getScript());
+  Boolean returnValue=(Boolean)results.get(_RETURN_VALUE);
+  if (returnValue != null) {
+    return returnValue;
   }
-  return conditionValue;
+  if (_log.isWarnEnabled()) {
+    _log.warn("Conditional did not return value for script " + kaleoCondition.getScript());
+  }
+  return false;
 }

@@ -1,0 +1,14 @@
+{
+  List<KaleoTransition> kaleoTransitions=kaleoNode.getKaleoTransitions();
+  for (  KaleoTransition kaleoTransition : kaleoTransitions) {
+    KaleoCondition kaleoCondition=kaleoTransition.getKaleoCondition();
+    if (kaleoCondition == null) {
+      continue;
+    }
+    boolean conditionalValue=_conditionEvaluator.evaluate(kaleoCondition,executionContext);
+    if (conditionalValue) {
+      return kaleoTransition;
+    }
+  }
+  return kaleoNode.getDefaultKaleoTransition();
+}

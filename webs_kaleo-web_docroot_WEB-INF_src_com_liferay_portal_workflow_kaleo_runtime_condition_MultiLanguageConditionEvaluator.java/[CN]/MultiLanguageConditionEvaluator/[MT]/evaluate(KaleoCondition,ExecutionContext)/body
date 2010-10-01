@@ -1,9 +1,8 @@
 {
-  String scriptLanguage=kaleoCondition.getScriptLanguage();
-  ScriptLanguage language=ScriptLanguage.parse(scriptLanguage);
-  ConditionEvaluator conditionEvaluator=_conditionEvaluators.get(language);
+  ScriptLanguage scriptLanguage=ScriptLanguage.parse(kaleoCondition.getScriptLanguage());
+  ConditionEvaluator conditionEvaluator=_conditionEvaluators.get(scriptLanguage);
   if (conditionEvaluator == null) {
-    throw new IllegalArgumentException("Language not supported for condition: " + scriptLanguage);
+    throw new IllegalArgumentException("No condition evaluator found for script language " + scriptLanguage);
   }
   return conditionEvaluator.evaluate(kaleoCondition,executionContext);
 }
