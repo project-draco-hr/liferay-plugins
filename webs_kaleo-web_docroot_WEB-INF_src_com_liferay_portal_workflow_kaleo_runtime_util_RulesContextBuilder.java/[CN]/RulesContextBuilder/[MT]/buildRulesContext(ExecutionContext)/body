@@ -5,8 +5,7 @@
     KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
     workflowContext=WorkflowContextUtil.convert(kaleoInstance.getWorkflowContext());
   }
-  int factInitializeSize=workflowContext.size() + 4;
-  List<Fact<?>> facts=new ArrayList<Fact<?>>(factInitializeSize);
+  List<Fact<?>> facts=new ArrayList<Fact<?>>(workflowContext.size() + 4);
   facts.add(new Fact<Map<String,Serializable>>("workflowContext",workflowContext));
   KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
   if (kaleoTaskInstanceToken != null) {
@@ -18,7 +17,7 @@
   }
  else {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
-    facts.add(new Fact<Long>("userId",kaleoTaskInstanceToken.getUserId()));
+    facts.add(new Fact<Long>("userId",kaleoInstanceToken.getUserId()));
   }
   return facts;
 }
