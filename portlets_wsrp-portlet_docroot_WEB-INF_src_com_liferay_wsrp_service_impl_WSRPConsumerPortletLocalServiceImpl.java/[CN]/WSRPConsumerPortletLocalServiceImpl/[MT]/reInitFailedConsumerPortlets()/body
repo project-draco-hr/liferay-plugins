@@ -1,0 +1,13 @@
+{
+  for (  _WSRPConsumerInitParameters wsrpInitParamters : _failedConsumerPortlets.values()) {
+    try {
+      initWSRPConsumerPortlet(wsrpInitParamters.getCompanyId(),wsrpInitParamters.getWsrpConsumerId(),wsrpInitParamters.getWsrpConsumerPortletId(),wsrpInitParamters.getName(),wsrpInitParamters.getPortletHandle(),wsrpInitParamters.getUserToken());
+      _failedConsumerPortlets.remove(wsrpInitParamters.getWsrpConsumerPortletId());
+    }
+ catch (    Exception e) {
+      if (_log.isErrorEnabled()) {
+        _log.error("Unable to initialize portlet with id: " + wsrpInitParamters.getWsrpConsumerPortletId(),e);
+      }
+    }
+  }
+}

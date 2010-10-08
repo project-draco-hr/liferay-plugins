@@ -1,15 +1,25 @@
 {
+  boolean initializationFailed=false;
   try {
     Portlet portlet=getPortlet(companyId,wsrpConsumerId,wsrpConsumerPortletId,name,portletHandle,userToken);
     PortletLocalServiceUtil.deployRemotePortlet(portlet,_WSRP_CATEGORY);
   }
  catch (  PortalException pe) {
+    initializationFailed=true;
     throw pe;
   }
 catch (  SystemException se) {
+    initializationFailed=true;
     throw se;
   }
 catch (  Exception e) {
+    initializationFailed=true;
     throw new SystemException(e);
+  }
+ finally {
+    if (initializationFailed) {
+      _WSRPConsumerInitParameters consumerInitParameters=new _WSRPConsumerInitParameters(companyId,wsrpConsumerId,wsrpConsumerPortletId,name,portletHandle,userToken);
+      _failedConsumerPortlets.put(wsrpConsumerPortletId,consumerInitParameters);
+    }
   }
 }
