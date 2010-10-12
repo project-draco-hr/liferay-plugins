@@ -1,0 +1,18 @@
+{
+  AnnouncementsEntry announcementEntry=null;
+  try {
+    announcementEntry=super.addEntry(plid,classNameId,classPK,title,content,url,type,displayDateMonth,displayDateDay,displayDateYear,displayDateHour,displayDateMinute,expirationDateMonth,expirationDateDay,expirationDateYear,expirationDateHour,expirationDateMinute,priority,alert);
+  }
+ catch (  PrincipalException pe) {
+    String className=PortalUtil.getClassName(classNameId);
+    if (className.equals(Group.class.getName())) {
+      PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+      PortletPermissionUtil.check(permissionChecker,plid,PortletKeys.ANNOUNCEMENTS,ActionKeys.ADD_ENTRY);
+      announcementEntry=AnnouncementsEntryLocalServiceUtil.addEntry(permissionChecker.getUserId(),classNameId,classPK,title,content,url,type,displayDateMonth,displayDateDay,displayDateYear,displayDateHour,displayDateMinute,expirationDateMonth,expirationDateDay,expirationDateYear,expirationDateHour,expirationDateMinute,priority,alert);
+    }
+ else {
+      throw pe;
+    }
+  }
+  return announcementEntry;
+}
