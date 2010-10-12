@@ -1,5 +1,11 @@
 {
   foo=toUnwrappedModel(foo);
+  boolean isNew=foo.isNew();
+  FooModelImpl fooModelImpl=(FooModelImpl)foo;
+  if (Validator.isNull(foo.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    foo.setUuid(uuid);
+  }
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +20,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey(),foo);
+  if (!isNew && (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{fooModelImpl.getOriginalUuid(),new Long(fooModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{foo.getUuid(),new Long(foo.getGroupId())},foo);
+  }
   return foo;
 }
