@@ -1,5 +1,6 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long fooId=ParamUtil.getLong(actionRequest,"fooId");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Foo.class.getName(),actionRequest);
   String field1=ParamUtil.getString(actionRequest,"field1");
   boolean field2=ParamUtil.getBoolean(actionRequest,"field2");
   int field3=ParamUtil.getInteger(actionRequest,"field3");
@@ -14,5 +15,10 @@
     dateHour+=12;
   }
   Date field4=PortalUtil.getDate(dateMonth,dateDay,dateYear,dateHour,dateMinute,new PortalException());
-  FooLocalServiceUtil.addFoo(themeDisplay.getUserId(),field1,field2,field3,field4,field5);
+  if (fooId <= 0) {
+    FooLocalServiceUtil.addFoo(field1,field2,field3,field4,field5,serviceContext);
+  }
+ else {
+    FooLocalServiceUtil.updateFoo(fooId,field1,field2,field3,field4,field5,serviceContext);
+  }
 }
