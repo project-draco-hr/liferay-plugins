@@ -45,7 +45,18 @@
     for (    Event event : events) {
       QName qName=wsrpConsumerManager.getEventQName(event.getName());
       event.setName(qName);
-      stateAwareResponse.setEvent(qName,event);
+      EventPayload payload=event.getPayload();
+      NamedString[] namedStrings=payload.getNamedStringArray();
+      if (namedStrings == null) {
+        continue;
+      }
+      KeyValuePair[] payloadKvps=new KeyValuePair[namedStrings.length];
+      for (int i=0; i < namedStrings.length; i++) {
+        payloadKvps[i]=new KeyValuePair();
+        payloadKvps[i].setKey(namedStrings[i].getName());
+        payloadKvps[i].setValue(namedStrings[i].getValue());
+      }
+      stateAwareResponse.setEvent(qName,payloadKvps);
     }
   }
 }

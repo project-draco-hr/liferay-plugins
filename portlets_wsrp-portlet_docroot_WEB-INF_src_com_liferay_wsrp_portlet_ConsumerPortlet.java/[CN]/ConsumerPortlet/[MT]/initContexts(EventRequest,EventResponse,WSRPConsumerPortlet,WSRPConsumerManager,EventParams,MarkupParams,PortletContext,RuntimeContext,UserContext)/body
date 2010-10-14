@@ -2,6 +2,16 @@
   initContexts(eventRequest,eventResponse,wsrpConsumerPortlet,wsrpConsumerManager,markupParams,portletContext,runtimeContext,userContext);
   eventParams.setPortletStateChange(StateChange.cloneBeforeWrite);
   javax.portlet.Event jxEvent=eventRequest.getEvent();
-  Event event=(Event)jxEvent.getValue();
+  KeyValuePair[] payloadKvps=(KeyValuePair[])jxEvent.getValue();
+  NamedString[] namedStrings=new NamedString[payloadKvps.length];
+  for (int i=0; i < namedStrings.length; i++) {
+    namedStrings[i]=new NamedString();
+    namedStrings[i].setName(payloadKvps[i].getKey());
+    namedStrings[i].setName(payloadKvps[i].getValue());
+  }
+  EventPayload eventPayload=new EventPayload();
+  eventPayload.setNamedStringArray(namedStrings);
+  Event event=new Event();
+  event.setPayload(eventPayload);
   eventParams.setEvents(new Event[]{event});
 }
