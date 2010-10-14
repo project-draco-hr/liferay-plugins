@@ -1,8 +1,11 @@
 {
   List<KaleoTransition> kaleoTransitions=kaleoNode.getKaleoTransitions();
   for (  KaleoTransition kaleoTransition : kaleoTransitions) {
-    KaleoCondition kaleoCondition=kaleoTransition.getKaleoCondition();
-    if (kaleoCondition == null) {
+    KaleoCondition kaleoCondition=null;
+    try {
+      kaleoCondition=kaleoTransition.getKaleoCondition();
+    }
+ catch (    NoSuchConditionException nsce) {
       continue;
     }
     boolean conditionalValue=_conditionEvaluator.evaluate(kaleoCondition,executionContext);

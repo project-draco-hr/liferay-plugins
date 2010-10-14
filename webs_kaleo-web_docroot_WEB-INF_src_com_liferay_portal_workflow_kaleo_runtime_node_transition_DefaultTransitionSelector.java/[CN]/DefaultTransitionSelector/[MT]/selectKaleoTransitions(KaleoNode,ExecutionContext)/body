@@ -2,8 +2,11 @@
   List<KaleoTransition> kaleoTransitions=kaleoNode.getKaleoTransitions();
   List<KaleoTransition> selectedKaleoTransitions=new ArrayList<KaleoTransition>(kaleoTransitions.size());
   for (  KaleoTransition kaleoTransition : kaleoTransitions) {
-    KaleoCondition kaleoCondition=kaleoTransition.getKaleoCondition();
-    if (kaleoCondition == null) {
+    KaleoCondition kaleoCondition=null;
+    try {
+      kaleoCondition=kaleoTransition.getKaleoCondition();
+    }
+ catch (    NoSuchConditionException nsce) {
       selectedKaleoTransitions.add(kaleoTransition);
       continue;
     }
