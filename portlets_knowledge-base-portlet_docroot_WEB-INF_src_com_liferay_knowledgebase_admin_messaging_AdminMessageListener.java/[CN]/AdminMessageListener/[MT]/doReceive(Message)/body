@@ -16,15 +16,15 @@
     _log.info("Sending notifications for {mailId=" + mailId + ", resourcePrimKey="+ resourcePrimKey+ "}");
   }
   List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),resourcePrimKey);
-  sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+  sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
   while (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
     article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),article.getResourcePrimKey());
-    sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+    sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   }
   subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),groupId);
-  sendEmail(userId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+  sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   if (_log.isInfoEnabled()) {
     _log.info("Finished sending notifications");
   }
