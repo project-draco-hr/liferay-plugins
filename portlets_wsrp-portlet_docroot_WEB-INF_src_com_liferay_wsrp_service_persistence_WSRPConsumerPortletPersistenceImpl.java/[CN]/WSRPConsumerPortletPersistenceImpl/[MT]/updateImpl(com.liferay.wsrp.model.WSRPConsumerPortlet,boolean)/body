@@ -2,6 +2,10 @@
   wsrpConsumerPortlet=toUnwrappedModel(wsrpConsumerPortlet);
   boolean isNew=wsrpConsumerPortlet.isNew();
   WSRPConsumerPortletModelImpl wsrpConsumerPortletModelImpl=(WSRPConsumerPortletModelImpl)wsrpConsumerPortlet;
+  if (Validator.isNull(wsrpConsumerPortlet.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    wsrpConsumerPortlet.setUuid(uuid);
+  }
   Session session=null;
   try {
     session=openSession();

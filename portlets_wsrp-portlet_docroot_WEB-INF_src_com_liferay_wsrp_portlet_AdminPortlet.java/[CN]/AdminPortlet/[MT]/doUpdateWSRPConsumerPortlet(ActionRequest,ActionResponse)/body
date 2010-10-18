@@ -5,7 +5,8 @@
   String portletHandle=ParamUtil.getString(actionRequest,"portletHandle");
   String userToken=WSRPConsumerManager.getUserToken(actionRequest);
   if (wsrpConsumerPortletId <= 0) {
-    WSRPConsumerPortletLocalServiceUtil.addWSRPConsumerPortlet(wsrpConsumerId,name,portletHandle,userToken);
+    ServiceContext serviceContext=ServiceContextFactory.getInstance(WSRPConsumerPortlet.class.getName(),actionRequest);
+    WSRPConsumerPortletLocalServiceUtil.addWSRPConsumerPortlet(wsrpConsumerId,name,portletHandle,userToken,serviceContext);
   }
  else {
     WSRPConsumerPortletLocalServiceUtil.updateWSRPConsumerPortlet(wsrpConsumerPortletId,name);

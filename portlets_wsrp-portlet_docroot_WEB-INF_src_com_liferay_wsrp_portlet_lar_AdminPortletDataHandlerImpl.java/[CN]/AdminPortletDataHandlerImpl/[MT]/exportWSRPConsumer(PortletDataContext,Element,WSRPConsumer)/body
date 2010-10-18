@@ -1,0 +1,16 @@
+{
+  String path=getWSRPConsumerPath(context,wsrpConsumer);
+  if (!context.isPathNotProcessed(path)) {
+    return;
+  }
+  Element consumerElement=consumersElement.addElement("wsrp-consumer");
+  consumerElement.addAttribute("path",path);
+  context.addZipEntry(path,wsrpConsumer);
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumer-portlets")) {
+    List<WSRPConsumerPortlet> consumerPortlets=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlets(wsrpConsumer.getWsrpConsumerId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    Element consumerPortletsElement=consumerElement.addElement("wsrp-consumer-portlets");
+    for (    WSRPConsumerPortlet consumerPortlet : consumerPortlets) {
+      exportWSRPConsumerPortlet(context,consumerPortletsElement,consumerPortlet);
+    }
+  }
+}

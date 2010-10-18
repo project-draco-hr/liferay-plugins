@@ -1,0 +1,16 @@
+{
+  long companyId=context.getCompanyId();
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-producers")) {
+    List<WSRPProducer> wsrpProducers=WSRPProducerLocalServiceUtil.getWSRPProducers(companyId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    WSRPProducer wsrpProducer : wsrpProducers) {
+      WSRPProducerLocalServiceUtil.deleteWSRPProducer(wsrpProducer);
+    }
+  }
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumers")) {
+    List<WSRPConsumer> wsrpConsumers=WSRPConsumerLocalServiceUtil.getWSRPConsumers(companyId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    WSRPConsumer wsrpConsumer : wsrpConsumers) {
+      WSRPConsumerLocalServiceUtil.deleteWSRPConsumer(wsrpConsumer);
+    }
+  }
+  return null;
+}

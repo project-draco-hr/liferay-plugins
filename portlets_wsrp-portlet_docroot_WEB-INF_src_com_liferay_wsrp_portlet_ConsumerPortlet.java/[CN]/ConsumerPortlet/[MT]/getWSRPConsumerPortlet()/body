@@ -1,7 +1,8 @@
 {
   String portletName=getPortletConfig().getPortletName();
   int pos=portletName.indexOf(StringPool.UNDERLINE,PORTLET_NAME_PREFIX.length());
-  long wsrpConsumerPortletId=GetterUtil.getLong(portletName.substring(pos + 1));
-  WSRPConsumerPortlet wsrpConsumerPortlet=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletId);
+  String safeUUID=portletName.substring(pos + 1);
+  String uuid=PortalUUIDUtil.fromSafeUuid(safeUUID);
+  WSRPConsumerPortlet wsrpConsumerPortlet=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(uuid);
   return wsrpConsumerPortlet;
 }

@@ -5,7 +5,8 @@
   String version=ParamUtil.getString(actionRequest,"version");
   String portletIds=ParamUtil.getString(actionRequest,"portletIds");
   if (wsrpProducerId <= 0) {
-    WSRPProducerLocalServiceUtil.addWSRPProducer(themeDisplay.getUserId(),name,version,portletIds);
+    ServiceContext serviceContext=ServiceContextFactory.getInstance(WSRPProducer.class.getName(),actionRequest);
+    WSRPProducerLocalServiceUtil.addWSRPProducer(themeDisplay.getUserId(),name,version,portletIds,serviceContext);
   }
  else {
     WSRPProducerLocalServiceUtil.updateWSRPProducer(wsrpProducerId,name,version,portletIds);

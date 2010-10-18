@@ -6,7 +6,8 @@
   String url=ParamUtil.getString(actionRequest,"url");
   String userToken=WSRPConsumerManager.getUserToken(actionRequest);
   if (wsrpConsumerId <= 0) {
-    WSRPConsumerLocalServiceUtil.addWSRPConsumer(themeDisplay.getCompanyId(),adminPortletId,name,url,userToken);
+    ServiceContext serviceContext=ServiceContextFactory.getInstance(WSRPConsumer.class.getName(),actionRequest);
+    WSRPConsumerLocalServiceUtil.addWSRPConsumer(themeDisplay.getCompanyId(),adminPortletId,name,url,userToken,serviceContext);
   }
  else {
     WSRPConsumerLocalServiceUtil.updateWSRPConsumer(wsrpConsumerId,adminPortletId,name,url,userToken);

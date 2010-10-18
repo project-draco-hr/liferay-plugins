@@ -1,0 +1,19 @@
+{
+  Document document=SAXReaderUtil.createDocument();
+  Element rootElement=document.addElement("wsrp-data");
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-producers")) {
+    Element producersElement=rootElement.addElement("wsrp-producers");
+    List<WSRPProducer> producers=WSRPProducerLocalServiceUtil.getWSRPProducers(context.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    WSRPProducer producer : producers) {
+      exportWSRPProducer(context,producersElement,producer);
+    }
+  }
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumers")) {
+    Element consumersElement=rootElement.addElement("wsrp-consumers");
+    List<WSRPConsumer> consumers=WSRPConsumerLocalServiceUtil.getWSRPConsumers(context.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    WSRPConsumer consumer : consumers) {
+      exportWSRPConsumer(context,consumersElement,consumer);
+    }
+  }
+  return document.formattedString();
+}

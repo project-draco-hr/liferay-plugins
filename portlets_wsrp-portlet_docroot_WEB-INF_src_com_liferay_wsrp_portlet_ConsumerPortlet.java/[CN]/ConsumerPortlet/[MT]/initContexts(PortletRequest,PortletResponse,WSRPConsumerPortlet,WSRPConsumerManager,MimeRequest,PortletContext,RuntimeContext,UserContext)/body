@@ -90,11 +90,20 @@
   personName.setMiddle(user.getMiddleName());
   personName.setNickname(user.getScreenName());
   com.liferay.portal.model.Contact liferayContact=user.getContact();
-  ListType listType=ListTypeServiceUtil.getListType(liferayContact.getPrefixId());
+  ListType listType=null;
+  try {
+    listType=ListTypeServiceUtil.getListType(liferayContact.getPrefixId());
+  }
+ catch (  PortalException e) {
+  }
   if (listType != null) {
     personName.setPrefix(listType.getName());
   }
-  listType=ListTypeServiceUtil.getListType(liferayContact.getSuffixId());
+  try {
+    listType=ListTypeServiceUtil.getListType(liferayContact.getSuffixId());
+  }
+ catch (  PortalException e) {
+  }
   if (listType != null) {
     personName.setSuffix(listType.getName());
   }

@@ -1,5 +1,9 @@
 {
   wsrpConsumer=toUnwrappedModel(wsrpConsumer);
+  if (Validator.isNull(wsrpConsumer.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    wsrpConsumer.setUuid(uuid);
+  }
   Session session=null;
   try {
     session=openSession();

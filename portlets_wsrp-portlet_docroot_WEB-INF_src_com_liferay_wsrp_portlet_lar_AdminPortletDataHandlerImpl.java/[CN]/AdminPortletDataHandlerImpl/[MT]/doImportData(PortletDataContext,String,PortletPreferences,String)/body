@@ -1,0 +1,38 @@
+{
+  Document document=SAXReaderUtil.read(data);
+  Element rootElement=document.getRootElement();
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-producers")) {
+    Element wsrpProducersElement=rootElement.element("wsrp-producers");
+    for (    Element wsrpProducerElement : wsrpProducersElement.elements("wsrp-producer")) {
+      String wsrpProducerPath=wsrpProducerElement.attributeValue("path");
+      if (!context.isPathNotProcessed(wsrpProducerPath)) {
+        continue;
+      }
+      WSRPProducer wsrpProducer=(WSRPProducer)context.getZipEntryAsObject(wsrpProducerPath);
+      importWSRPProducer(context,wsrpProducer);
+    }
+  }
+  if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumers")) {
+    Element wsrpConsumersElement=rootElement.element("wsrp-consumers");
+    for (    Element wsrpConsumerElement : wsrpConsumersElement.elements("wsrp-consumer")) {
+      String wsrpConsumerPath=wsrpConsumerElement.attributeValue("path");
+      if (!context.isPathNotProcessed(wsrpConsumerPath)) {
+        continue;
+      }
+      WSRPConsumer wsrpConsumer=(WSRPConsumer)context.getZipEntryAsObject(wsrpConsumerPath);
+      WSRPConsumer returnedWSRPConsumer=importWSRPConsumer(context,wsrpConsumer);
+      if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumer-portlets")) {
+        Element wsrpConsumerPortletsElement=wsrpConsumerElement.element("wsrp-consumer-portlets");
+        for (        Element wsrpConsumerPortletElement : wsrpConsumerPortletsElement.elements("wsrp-consumer-portlet")) {
+          String wsrpConsumerPortletPath=wsrpConsumerPortletElement.attributeValue("path");
+          if (!context.isPathNotProcessed(wsrpConsumerPortletPath)) {
+            continue;
+          }
+          WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)context.getZipEntryAsObject(wsrpConsumerPortletPath);
+          importWSRPConsumerPortlet(returnedWSRPConsumer,wsrpConsumerPortlet);
+        }
+      }
+    }
+  }
+  return null;
+}
