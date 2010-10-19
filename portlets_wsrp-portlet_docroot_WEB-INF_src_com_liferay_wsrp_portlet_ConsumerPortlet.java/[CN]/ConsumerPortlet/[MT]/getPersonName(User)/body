@@ -1,0 +1,21 @@
+{
+  PersonName personName=new PersonName();
+  personName.setFamily(user.getLastName());
+  personName.setGiven(user.getFirstName());
+  personName.setMiddle(user.getMiddleName());
+  personName.setNickname(user.getScreenName());
+  com.liferay.portal.model.Contact contact=user.getContact();
+  try {
+    ListType listType=ListTypeServiceUtil.getListType(contact.getPrefixId());
+    personName.setPrefix(listType.getName());
+  }
+ catch (  Exception e) {
+  }
+  try {
+    ListType listType=ListTypeServiceUtil.getListType(contact.getSuffixId());
+    personName.setSuffix(listType.getName());
+  }
+ catch (  Exception e) {
+  }
+  return personName;
+}
