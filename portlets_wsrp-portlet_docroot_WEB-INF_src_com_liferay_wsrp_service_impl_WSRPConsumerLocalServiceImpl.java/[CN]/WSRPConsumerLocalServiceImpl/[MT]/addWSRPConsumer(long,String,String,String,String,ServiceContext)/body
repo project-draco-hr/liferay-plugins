@@ -4,12 +4,7 @@
   validate(name);
   long wsrpConsumerId=CounterLocalServiceUtil.increment();
   WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.create(wsrpConsumerId);
-  if (serviceContext != null) {
-    String uuid=serviceContext.getUuid();
-    if (Validator.isNotNull(uuid)) {
-      wsrpConsumer.setUuid(uuid);
-    }
-  }
+  wsrpConsumer.setUuid(serviceContext.getUuid());
   wsrpConsumer.setCompanyId(companyId);
   wsrpConsumer.setCreateDate(now);
   wsrpConsumer.setModifiedDate(now);

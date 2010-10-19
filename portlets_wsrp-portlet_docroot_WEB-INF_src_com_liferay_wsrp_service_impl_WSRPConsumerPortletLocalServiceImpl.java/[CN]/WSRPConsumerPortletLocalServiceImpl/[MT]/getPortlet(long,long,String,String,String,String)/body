@@ -1,5 +1,5 @@
 {
-  Portlet portlet=_portletsPool.get(uuid);
+  Portlet portlet=_portletsPool.get(wsrpConsumerPortletUuid);
   if (portlet != null) {
     return portlet;
   }
@@ -10,7 +10,7 @@
   sb.append(ConsumerPortlet.PORTLET_NAME_PREFIX);
   sb.append(companyId);
   sb.append(StringPool.UNDERLINE);
-  sb.append(PortalUUIDUtil.toSafeUuid(uuid));
+  sb.append(wsrpConsumerPortletUuid);
   String portletId=PortalUtil.getJsSafePortletId(sb.toString());
   portlet=PortletLocalServiceUtil.clonePortlet(companyId,_CONSUMER_PORTLET_ID);
   portlet.setPortletId(portletId);
@@ -24,7 +24,7 @@
   if (portletDescription != null) {
     addPortletExtraInfo(portlet,portletApp,portletDescription,name);
   }
-  _portletsPool.put(uuid,portlet);
+  _portletsPool.put(wsrpConsumerPortletUuid,portlet);
   PortletBag portletBag=PortletBagPool.get(_CONSUMER_PORTLET_ID);
   portletBag=(PortletBag)portletBag.clone();
   portletBag.setPortletName(portletId);

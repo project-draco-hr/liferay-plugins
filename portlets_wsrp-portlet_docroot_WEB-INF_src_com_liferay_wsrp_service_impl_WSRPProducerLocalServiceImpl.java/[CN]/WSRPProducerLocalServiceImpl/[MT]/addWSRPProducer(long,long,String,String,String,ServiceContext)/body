@@ -5,6 +5,7 @@
   validate(name);
   long wsrpProducerId=CounterLocalServiceUtil.increment();
   WSRPProducer wsrpProducer=wsrpProducerPersistence.create(wsrpProducerId);
+  wsrpProducer.setUuid(serviceContext.getUuid());
   wsrpProducer.setGroupId(groupId);
   wsrpProducer.setCompanyId(user.getCompanyId());
   wsrpProducer.setCreateDate(now);
@@ -12,12 +13,6 @@
   wsrpProducer.setName(name);
   wsrpProducer.setVersion(version);
   wsrpProducer.setPortletIds(portletIds);
-  if (serviceContext != null) {
-    String uuid=serviceContext.getUuid();
-    if (Validator.isNotNull(uuid)) {
-      wsrpProducer.setUuid(uuid);
-    }
-  }
   wsrpProducerPersistence.update(wsrpProducer,false);
   return wsrpProducer;
 }

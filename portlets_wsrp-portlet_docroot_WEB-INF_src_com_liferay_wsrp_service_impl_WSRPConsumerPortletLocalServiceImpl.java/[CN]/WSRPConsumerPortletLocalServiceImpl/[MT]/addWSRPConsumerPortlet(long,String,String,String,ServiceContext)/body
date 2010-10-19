@@ -4,20 +4,14 @@
   validate(name,portletHandle);
   long wsrpConsumerPortletId=CounterLocalServiceUtil.increment();
   WSRPConsumerPortlet wsrpConsumerPortlet=wsrpConsumerPortletPersistence.create(wsrpConsumerPortletId);
+  wsrpConsumerPortlet.setUuid(serviceContext.getUuid());
   wsrpConsumerPortlet.setCompanyId(wsrpConsumer.getCompanyId());
   wsrpConsumerPortlet.setCreateDate(now);
   wsrpConsumerPortlet.setModifiedDate(now);
   wsrpConsumerPortlet.setWsrpConsumerId(wsrpConsumerId);
   wsrpConsumerPortlet.setName(name);
   wsrpConsumerPortlet.setPortletHandle(portletHandle);
-  if (serviceContext != null) {
-    String uuid=serviceContext.getUuid();
-    if (Validator.isNotNull(uuid)) {
-      wsrpConsumerPortlet.setUuid(uuid);
-    }
-  }
   wsrpConsumerPortletPersistence.update(wsrpConsumerPortlet,false);
-  String wsrpConsumerUuid=wsrpConsumerPortlet.getUuid();
-  wsrpConsumerPortletLocalService.initWSRPConsumerPortlet(wsrpConsumer.getCompanyId(),wsrpConsumerId,wsrpConsumerPortletId,wsrpConsumerUuid,name,portletHandle,userToken);
+  wsrpConsumerPortletLocalService.initWSRPConsumerPortlet(wsrpConsumer.getCompanyId(),wsrpConsumerId,wsrpConsumerPortletId,wsrpConsumerPortlet.getUuid(),name,portletHandle,userToken);
   return wsrpConsumerPortlet;
 }
