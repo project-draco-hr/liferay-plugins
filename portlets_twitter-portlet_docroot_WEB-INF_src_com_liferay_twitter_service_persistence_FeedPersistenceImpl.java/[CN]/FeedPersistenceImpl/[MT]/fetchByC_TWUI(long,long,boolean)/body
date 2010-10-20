@@ -1,0 +1,53 @@
+{
+  Object[] finderArgs=new Object[]{companyId,twitterUserId};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_TWUI,finderArgs,this);
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(3);
+    query.append(_SQL_SELECT_FEED_WHERE);
+    query.append(_FINDER_COLUMN_C_TWUI_COMPANYID_2);
+    query.append(_FINDER_COLUMN_C_TWUI_TWITTERUSERID_2);
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(companyId);
+      qPos.add(twitterUserId);
+      List<Feed> list=q.list();
+      result=list;
+      Feed feed=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_TWUI,finderArgs,list);
+      }
+ else {
+        feed=list.get(0);
+        cacheResult(feed);
+        if ((feed.getCompanyId() != companyId) || (feed.getTwitterUserId() != twitterUserId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_TWUI,finderArgs,feed);
+        }
+      }
+      return feed;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_TWUI,finderArgs,new ArrayList<Feed>());
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (Feed)result;
+    }
+  }
+}

@@ -1,10 +1,11 @@
 {
+  long companyId=user.getCompanyId();
   String twitterScreenName=user.getContact().getTwitterSn();
   Date now=new Date();
   if (Validator.isNull(twitterScreenName)) {
     throw new FeedTwitterScreenNameException();
   }
-  Feed feed=feedPersistence.fetchByTwitterScreenName(twitterScreenName);
+  Feed feed=feedPersistence.fetchByC_TSN(companyId,twitterScreenName);
   JSONArray jsonArray=null;
   if (feed == null) {
     jsonArray=getUserTimelineJSONArray(twitterScreenName,0);
