@@ -4,7 +4,7 @@
   Map<String,String> dirNames=new HashMap<String,String>();
   try {
     if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
-      DLServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+      DLLocalServiceUtil.addDirectory(context.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
       importArticleAttachments(context,importId,dirNames,rootElement);
     }
     for (    Element articleElement : rootElement.elements("article")) {
@@ -19,7 +19,7 @@
   }
   finally {
     if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
-      DLServiceUtil.deleteDirectory(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+      DLLocalServiceUtil.deleteDirectory(context.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
     }
   }
 }

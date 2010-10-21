@@ -1,6 +1,6 @@
 {
   try {
-    dlService.addDirectory(article.getCompanyId(),CompanyConstants.SYSTEM,article.getAttachmentsDirName());
+    dlLocalService.addDirectory(article.getCompanyId(),CompanyConstants.SYSTEM,article.getAttachmentsDirName());
   }
  catch (  DuplicateDirectoryException dde) {
     _log.error("Directory already exists for " + dde.getMessage());
@@ -8,7 +8,7 @@
   if (Validator.isNull(dirName)) {
     return;
   }
-  String[] fileNames=dlService.getFileNames(article.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+  String[] fileNames=dlLocalService.getFileNames(article.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   for (  String fileName : fileNames) {
     InputStream inputStream=dlLocalService.getFileAsStream(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     try {
