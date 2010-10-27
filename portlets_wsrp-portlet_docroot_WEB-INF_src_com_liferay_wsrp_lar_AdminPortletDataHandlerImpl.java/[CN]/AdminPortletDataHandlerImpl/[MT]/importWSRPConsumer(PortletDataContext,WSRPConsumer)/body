@@ -1,5 +1,17 @@
 {
-  ServiceContext serviceContext=new ServiceContext();
-  serviceContext.setUuid(wsrpConsumer.getUuid());
-  return WSRPConsumerLocalServiceUtil.addWSRPConsumer(context.getCompanyId(),null,wsrpConsumer.getName(),wsrpConsumer.getUrl(),null,serviceContext);
+  String wsrpConsumerUuid=wsrpConsumer.getUuid();
+  WSRPConsumer wsrpConsumerToMerge=null;
+  try {
+    wsrpConsumerToMerge=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumerUuid);
+    wsrpConsumerToMerge.setName(wsrpConsumer.getName());
+    wsrpConsumerToMerge.setUrl(wsrpConsumer.getUrl());
+    wsrpConsumerToMerge.setWsdl(wsrpConsumer.getWsdl());
+    wsrpConsumerToMerge=WSRPConsumerLocalServiceUtil.updateWSRPConsumer(wsrpConsumerToMerge,false);
+  }
+ catch (  NoSuchConsumerException e) {
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setUuid(wsrpConsumer.getUuid());
+    wsrpConsumerToMerge=WSRPConsumerLocalServiceUtil.addWSRPConsumer(context.getCompanyId(),null,wsrpConsumer.getName(),wsrpConsumer.getUrl(),null,serviceContext);
+  }
+  return wsrpConsumerToMerge;
 }

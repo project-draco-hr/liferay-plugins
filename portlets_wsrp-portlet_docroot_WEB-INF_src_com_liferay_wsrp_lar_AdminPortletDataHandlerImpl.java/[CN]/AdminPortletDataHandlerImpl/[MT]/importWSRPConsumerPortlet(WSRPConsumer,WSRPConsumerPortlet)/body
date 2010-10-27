@@ -1,5 +1,16 @@
 {
-  ServiceContext serviceContext=new ServiceContext();
-  serviceContext.setUuid(wsrpConsumerPortlet.getUuid());
-  WSRPConsumerPortletLocalServiceUtil.addWSRPConsumerPortlet(wsrpConsumer.getUuid(),wsrpConsumerPortlet.getName(),wsrpConsumerPortlet.getPortletHandle(),null,serviceContext);
+  String wsrpConsumerPortletUuid=wsrpConsumerPortlet.getUuid();
+  WSRPConsumerPortlet wsrpConsumerPortletToMerge=null;
+  try {
+    wsrpConsumerPortletToMerge=WSRPConsumerPortletLocalServiceUtil.getWSRPConsumerPortlet(wsrpConsumerPortletUuid);
+    wsrpConsumerPortletToMerge.setWsrpConsumerId(wsrpConsumer.getWsrpConsumerId());
+    wsrpConsumerPortletToMerge.setName(wsrpConsumerPortlet.getName());
+    wsrpConsumerPortletToMerge.setPortletHandle(wsrpConsumerPortlet.getPortletHandle());
+    WSRPConsumerPortletLocalServiceUtil.updateWSRPConsumerPortlet(wsrpConsumerPortletToMerge,false);
+  }
+ catch (  NoSuchConsumerPortletException e) {
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setUuid(wsrpConsumerPortlet.getUuid());
+    WSRPConsumerPortletLocalServiceUtil.addWSRPConsumerPortlet(wsrpConsumer.getUuid(),wsrpConsumerPortlet.getName(),wsrpConsumerPortlet.getPortletHandle(),null,serviceContext);
+  }
 }
