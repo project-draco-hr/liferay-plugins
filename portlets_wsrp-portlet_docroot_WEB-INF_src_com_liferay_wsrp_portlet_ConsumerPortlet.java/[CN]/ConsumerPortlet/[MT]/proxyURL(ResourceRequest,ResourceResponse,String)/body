@@ -18,8 +18,17 @@
     resourceResponse.setContentLength(contentLength);
   }
   String contentType=response.getContentType();
+  String charSet=StringPool.UTF8;
   if (Validator.isNotNull(contentType)) {
     resourceResponse.setContentType(contentType);
+    int x=contentType.indexOf("charset=");
+    if (x >= 0) {
+      charSet=contentType.substring(x + 8).trim();
+    }
+  }
+  if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite")) {
+    String content=rewriteURLs(resourceResponse,new String(bytes,charSet));
+    PortletResponseUtil.write(resourceResponse,content);
   }
   PortletResponseUtil.write(resourceResponse,bytes);
 }
