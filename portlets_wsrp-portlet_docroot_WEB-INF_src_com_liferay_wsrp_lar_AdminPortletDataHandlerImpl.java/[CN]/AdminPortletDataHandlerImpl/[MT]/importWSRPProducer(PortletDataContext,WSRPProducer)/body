@@ -1,16 +1,14 @@
 {
-  String wsrpProducerUuid=wsrpProducer.getUuid();
-  WSRPProducer wsrpProducerToMerge=null;
   try {
-    wsrpProducerToMerge=WSRPProducerLocalServiceUtil.getWSRPProducer(wsrpProducerUuid);
-    wsrpProducerToMerge.setName(wsrpProducer.getName());
-    wsrpProducerToMerge.setPortletIds(wsrpProducer.getPortletIds());
-    wsrpProducerToMerge.setVersion(wsrpProducer.getVersion());
-    WSRPProducerLocalServiceUtil.updateWSRPProducer(wsrpProducerToMerge,false);
+    WSRPProducer importedWSRPProducer=WSRPProducerLocalServiceUtil.getWSRPProducer(wsrpProducer.getUuid());
+    importedWSRPProducer.setName(wsrpProducer.getName());
+    importedWSRPProducer.setVersion(wsrpProducer.getVersion());
+    importedWSRPProducer.setPortletIds(wsrpProducer.getPortletIds());
+    WSRPProducerLocalServiceUtil.updateWSRPProducer(importedWSRPProducer,false);
   }
  catch (  NoSuchProducerException e) {
     ServiceContext serviceContext=new ServiceContext();
-    serviceContext.setUuid(wsrpProducerUuid);
+    serviceContext.setUuid(wsrpProducer.getUuid());
     WSRPProducerLocalServiceUtil.addWSRPProducer(context.getUserId(null),wsrpProducer.getName(),wsrpProducer.getVersion(),wsrpProducer.getPortletIds(),serviceContext);
   }
 }
