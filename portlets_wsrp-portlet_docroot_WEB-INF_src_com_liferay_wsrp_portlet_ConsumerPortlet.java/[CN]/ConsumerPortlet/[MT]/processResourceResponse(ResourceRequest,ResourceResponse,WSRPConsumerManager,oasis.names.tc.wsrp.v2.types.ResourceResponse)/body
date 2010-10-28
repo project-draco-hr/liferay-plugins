@@ -9,15 +9,11 @@
     portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
   }
   ResourceContext resourceContext=wsrpResourceResponse.getResourceContext();
-  String charSet=StringPool.UTF8;
   String contentType=resourceContext.getMimeType();
   if (Validator.isNotNull(contentType)) {
     resourceResponse.setContentType(contentType);
-    int x=contentType.indexOf("charset=");
-    if (x >= 0) {
-      charSet=contentType.substring(x + 8).trim();
-    }
   }
+  String charSet=getCharSet(contentType);
   String itemString=resourceContext.getItemString();
   byte[] itemBinary=resourceContext.getItemBinary();
   if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite") || resourceContext.getRequiresRewriting()) {
