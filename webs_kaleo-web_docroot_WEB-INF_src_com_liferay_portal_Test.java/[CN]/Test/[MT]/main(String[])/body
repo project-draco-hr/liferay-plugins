@@ -1,0 +1,22 @@
+{
+  try {
+    String expectedCategory=null;
+    boolean returnValue;
+    Map<String,Serializable> workflowContext=new HashMap<String,Serializable>();
+    String className=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME);
+    long classPK=GetterUtil.getLong((String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK));
+    AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(className,classPK);
+    Iterator categoriesIter=entry.getCategories().iterator();
+    while (categoriesIter.hasNext()) {
+      AssetCategory category=(AssetCategory)categoriesIter.next();
+      if (category.getName().equals(expectedCategory)) {
+        returnValue=true;
+        return;
+      }
+    }
+    returnValue=false;
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
