@@ -45,10 +45,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<KaleoTaskAssignment>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_ACN_KTI,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_ACN_KTI,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_ACN_KTI,finderArgs,list);
+      }
       closeSession(session);
     }
   }

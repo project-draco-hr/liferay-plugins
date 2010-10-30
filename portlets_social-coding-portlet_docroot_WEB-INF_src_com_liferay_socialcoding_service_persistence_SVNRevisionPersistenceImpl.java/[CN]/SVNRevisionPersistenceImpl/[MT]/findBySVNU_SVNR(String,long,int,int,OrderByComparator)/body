@@ -45,10 +45,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<SVNRevision>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_SVNU_SVNR,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_SVNU_SVNR,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_SVNU_SVNR,finderArgs,list);
+      }
       closeSession(session);
     }
   }

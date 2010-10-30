@@ -31,10 +31,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<UserThread>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_MBTHREADID,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MBTHREADID,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MBTHREADID,finderArgs,list);
+      }
       closeSession(session);
     }
   }

@@ -31,10 +31,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<KaleoTaskAssignment>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_KALEOTASKID,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_KALEOTASKID,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_KALEOTASKID,finderArgs,list);
+      }
       closeSession(session);
     }
   }

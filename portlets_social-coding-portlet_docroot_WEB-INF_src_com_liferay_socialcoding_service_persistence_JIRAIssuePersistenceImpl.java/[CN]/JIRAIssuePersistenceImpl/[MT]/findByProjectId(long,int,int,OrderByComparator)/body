@@ -31,10 +31,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<JIRAIssue>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_PROJECTID,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_PROJECTID,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_PROJECTID,finderArgs,list);
+      }
       closeSession(session);
     }
   }

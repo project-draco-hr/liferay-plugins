@@ -31,10 +31,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<Message>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_FOLDERID,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_FOLDERID,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_FOLDERID,finderArgs,list);
+      }
       closeSession(session);
     }
   }

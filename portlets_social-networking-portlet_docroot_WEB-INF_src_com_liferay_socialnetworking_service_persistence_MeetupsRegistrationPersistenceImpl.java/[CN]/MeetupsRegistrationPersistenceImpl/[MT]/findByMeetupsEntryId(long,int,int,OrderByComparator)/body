@@ -31,10 +31,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<MeetupsRegistration>();
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs);
       }
-      cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,list);
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_MEETUPSENTRYID,finderArgs,list);
+      }
       closeSession(session);
     }
   }

@@ -23,10 +23,12 @@
     }
  finally {
       if (list == null) {
-        list=new ArrayList<com.liferay.portal.workflow.kaleo.model.KaleoAction>();
+        FinderCacheUtil.removeResult(FINDER_PATH_GET_KALEOACTIONS,finderArgs);
       }
-      kaleoActionPersistence.cacheResult(list);
-      FinderCacheUtil.putResult(FINDER_PATH_GET_KALEOACTIONS,finderArgs,list);
+ else {
+        kaleoActionPersistence.cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_GET_KALEOACTIONS,finderArgs,list);
+      }
       closeSession(session);
     }
   }
