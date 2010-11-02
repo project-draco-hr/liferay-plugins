@@ -16,7 +16,7 @@
   ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_EMAIL_ADDRESS,user.getEmailAddress());
   ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_SCREEN_NAME,user.getScreenName());
   ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_USER_ID,String.valueOf(user.getUserId()));
-  ConsumerRequestExtensionsHolder.addClientAttributes(clientAttributes);
+  ConsumerRequestExtensionsHelper.addClientAttributes(clientAttributes);
   clientData.setExtensions(ExtensionUtil.getExtensions(clientAttributes));
   mimeRequest.setClientData(clientData);
   List<Locale> locales=Collections.list(portletRequest.getLocales());
@@ -75,7 +75,7 @@
     runtimeContext.setTemplates(templates);
   }
   UserProfile userProfile=getUserProfile(user);
-  ConsumerRequestExtensionsHolder.addUserProfileAttributes(userProfile,user);
+  ConsumerRequestExtensionsHelper.addUserProfileAttributes(userProfile,user);
   userContext.setProfile(userProfile);
   userContext.setUserContextKey(String.valueOf(user.getUserId()));
 }
