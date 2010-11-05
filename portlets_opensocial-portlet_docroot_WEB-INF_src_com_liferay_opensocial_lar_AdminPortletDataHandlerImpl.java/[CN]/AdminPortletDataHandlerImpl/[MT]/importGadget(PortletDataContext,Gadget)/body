@@ -1,0 +1,14 @@
+{
+  Gadget importedGadget;
+  try {
+    importedGadget=GadgetLocalServiceUtil.getGadget(gadget.getUuid());
+    importedGadget.setName(gadget.getName());
+    importedGadget.setUrl(gadget.getUrl());
+    GadgetLocalServiceUtil.updateGadget(importedGadget,false);
+  }
+ catch (  NoSuchGadgetException nsge) {
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setUuid(gadget.getUuid());
+    GadgetLocalServiceUtil.addGadget(context.getCompanyId(),gadget.getName(),gadget.getUrl(),serviceContext);
+  }
+}

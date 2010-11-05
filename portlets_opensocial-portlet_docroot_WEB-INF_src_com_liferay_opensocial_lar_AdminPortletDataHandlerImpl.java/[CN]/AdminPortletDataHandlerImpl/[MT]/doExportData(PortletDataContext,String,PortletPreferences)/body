@@ -1,0 +1,9 @@
+{
+  Document document=SAXReaderUtil.createDocument();
+  Element rootElement=document.addElement("opensocial-data");
+  List<Gadget> gadgets=GadgetLocalServiceUtil.getGadgets(context.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Gadget gadget : gadgets) {
+    exportGadget(context,rootElement,gadget);
+  }
+  return document.formattedString();
+}

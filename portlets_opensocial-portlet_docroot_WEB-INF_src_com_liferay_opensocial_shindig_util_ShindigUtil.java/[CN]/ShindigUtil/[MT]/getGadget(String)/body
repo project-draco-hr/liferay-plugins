@@ -1,6 +1,7 @@
 {
   int pos=portletName.indexOf(StringPool.UNDERLINE,GadgetPortlet.PORTLET_NAME_PREFIX.length());
-  long gadgetId=GetterUtil.getLong(portletName.substring(pos + 1));
-  com.liferay.opensocial.model.Gadget gadget=GadgetLocalServiceUtil.getGadget(gadgetId);
+  String gadgetUuid=GetterUtil.getString(portletName.substring(pos + 1));
+  gadgetUuid=PortalUUIDUtil.fromSafeUuid(gadgetUuid);
+  com.liferay.opensocial.model.Gadget gadget=GadgetLocalServiceUtil.getGadget(gadgetUuid);
   return gadget;
 }

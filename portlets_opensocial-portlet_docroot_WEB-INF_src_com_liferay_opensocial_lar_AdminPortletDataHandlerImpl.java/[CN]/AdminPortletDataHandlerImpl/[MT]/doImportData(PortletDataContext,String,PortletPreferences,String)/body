@@ -1,0 +1,13 @@
+{
+  Document document=SAXReaderUtil.read(data);
+  Element gadgetsElement=document.getRootElement();
+  for (  Element gadgetElement : gadgetsElement.elements("gadget")) {
+    String gadgetPath=gadgetElement.attributeValue("path");
+    if (!context.isPathNotProcessed(gadgetPath)) {
+      continue;
+    }
+    Gadget gadget=(Gadget)context.getZipEntryAsObject(gadgetPath);
+    importGadget(context,gadget);
+  }
+  return null;
+}
