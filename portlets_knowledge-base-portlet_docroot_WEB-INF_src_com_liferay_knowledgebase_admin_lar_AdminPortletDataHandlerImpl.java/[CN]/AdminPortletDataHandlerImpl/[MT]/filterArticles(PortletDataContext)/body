@@ -1,12 +1,12 @@
 {
   List<Article> articles=new ArrayList<Article>();
   Map<String,Object> params=new HashMap<String,Object>();
-  params.put("groupId",context.getScopeGroupId());
+  params.put("groupId",portletDataContext.getScopeGroupId());
   params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
   params.put("status",WorkflowConstants.STATUS_APPROVED);
   List<Article> rootArticles=ArticleLocalServiceUtil.getArticles(params,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
   for (  Article rootArticle : rootArticles) {
-    if (context.isWithinDateRange(rootArticle.getModifiedDate())) {
+    if (portletDataContext.isWithinDateRange(rootArticle.getModifiedDate())) {
       articles.add(rootArticle);
     }
   }
@@ -19,7 +19,7 @@
     curParams.put("status",WorkflowConstants.STATUS_APPROVED);
     List<Article> childArticles=ArticleLocalServiceUtil.getArticles(curParams,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
     for (    Article childArticle : childArticles) {
-      if (context.isWithinDateRange(childArticle.getModifiedDate())) {
+      if (portletDataContext.isWithinDateRange(childArticle.getModifiedDate())) {
         articles.add(childArticle);
       }
     }

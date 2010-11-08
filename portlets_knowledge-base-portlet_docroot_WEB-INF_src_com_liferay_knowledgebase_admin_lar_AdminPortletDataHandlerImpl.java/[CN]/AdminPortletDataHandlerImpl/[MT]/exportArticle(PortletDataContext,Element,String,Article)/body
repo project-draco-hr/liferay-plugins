@@ -2,19 +2,19 @@
   Element articleElement=rootElement.addElement("article");
   articleElement.addAttribute("path",path);
   article.setUserUuid(article.getUserUuid());
-  context.addZipEntry(path,article);
-  context.addPermissions(Article.class,article.getResourcePrimKey());
-  exportArticleVersions(context,articleElement,article.getResourcePrimKey());
-  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
-    exportArticleAttachments(context,rootElement,article);
+  portletDataContext.addZipEntry(path,article);
+  portletDataContext.addPermissions(Article.class,article.getResourcePrimKey());
+  exportArticleVersions(portletDataContext,articleElement,article.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"attachments")) {
+    exportArticleAttachments(portletDataContext,rootElement,article);
   }
-  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"categories")) {
-    context.addAssetCategories(Article.class,article.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"categories")) {
+    portletDataContext.addAssetCategories(Article.class,article.getResourcePrimKey());
   }
-  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"tags")) {
-    context.addAssetTags(Article.class,article.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"tags")) {
+    portletDataContext.addAssetTags(Article.class,article.getResourcePrimKey());
   }
-  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"ratings")) {
-    context.addRatingsEntries(Article.class,article.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"ratings")) {
+    portletDataContext.addRatingsEntries(Article.class,article.getResourcePrimKey());
   }
 }

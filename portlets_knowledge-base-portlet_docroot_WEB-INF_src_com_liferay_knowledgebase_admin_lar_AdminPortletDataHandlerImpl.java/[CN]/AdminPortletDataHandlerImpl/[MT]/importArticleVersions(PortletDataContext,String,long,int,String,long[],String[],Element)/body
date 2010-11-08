@@ -3,8 +3,8 @@
   List<Element> articleElements=versionsElement.elements("article");
   Article importedArticle=null;
   for (  Element curArticleElement : articleElements) {
-    Article curArticle=(Article)context.getZipEntryAsObject(curArticleElement.attributeValue("path"));
-    long userId=context.getUserId(curArticle.getUserUuid());
+    Article curArticle=(Article)portletDataContext.getZipEntryAsObject(curArticleElement.attributeValue("path"));
+    long userId=portletDataContext.getUserId(curArticle.getUserUuid());
     String curDirName=StringPool.BLANK;
     long[] curAssetCategoryIds=null;
     String[] curAssetTagNames=null;
@@ -21,7 +21,7 @@
     serviceContext.setAssetTagNames(curAssetTagNames);
     serviceContext.setCreateDate(curArticle.getCreateDate());
     serviceContext.setModifiedDate(curArticle.getModifiedDate());
-    serviceContext.setScopeGroupId(context.getScopeGroupId());
+    serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
     if (importedArticle == null) {
       serviceContext.setUuid(uuid);
       importedArticle=ArticleLocalServiceUtil.addArticle(userId,parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,curDirName,serviceContext);

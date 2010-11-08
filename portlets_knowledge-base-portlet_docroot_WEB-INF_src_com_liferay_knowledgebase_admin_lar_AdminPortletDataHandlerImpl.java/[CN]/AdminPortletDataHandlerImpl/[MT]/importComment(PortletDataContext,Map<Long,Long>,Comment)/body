@@ -1,12 +1,12 @@
 {
-  long userId=context.getUserId(comment.getUserUuid());
+  long userId=portletDataContext.getUserId(comment.getUserUuid());
   long classPK=MapUtil.getLong(classPKs,comment.getClassPK());
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setCreateDate(comment.getCreateDate());
   serviceContext.setModifiedDate(comment.getModifiedDate());
-  serviceContext.setScopeGroupId(context.getScopeGroupId());
-  if (context.isDataStrategyMirror()) {
-    Comment existingComment=CommentUtil.fetchByUUID_G(comment.getUuid(),context.getScopeGroupId());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  if (portletDataContext.isDataStrategyMirror()) {
+    Comment existingComment=CommentUtil.fetchByUUID_G(comment.getUuid(),portletDataContext.getScopeGroupId());
     if (existingComment == null) {
       serviceContext.setUuid(comment.getUuid());
       CommentLocalServiceUtil.addComment(userId,comment.getClassNameId(),classPK,comment.getContent(),comment.getHelpful(),serviceContext);

@@ -2,11 +2,11 @@
   Map<Long,Long> templateIds=new HashMap<Long,Long>();
   for (  Element templateElement : rootElement.elements("template")) {
     String path=templateElement.attributeValue("path");
-    if (!context.isPathNotProcessed(path)) {
+    if (!portletDataContext.isPathNotProcessed(path)) {
       continue;
     }
-    Template template=(Template)context.getZipEntryAsObject(path);
-    importTemplate(context,templateIds,template);
+    Template template=(Template)portletDataContext.getZipEntryAsObject(path);
+    importTemplate(portletDataContext,templateIds,template);
   }
-  importComments(context,"template-comment",templateIds,rootElement);
+  importComments(portletDataContext,"template-comment",templateIds,rootElement);
 }

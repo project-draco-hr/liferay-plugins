@@ -1,7 +1,7 @@
 {
   Element articleAttachmentsElement=rootElement.addElement("article-attachments");
   articleAttachmentsElement.addAttribute("resource-prim-key",String.valueOf(article.getResourcePrimKey()));
-  String rootPath=context.getPortletPath(PortletKeys.KNOWLEDGE_BASE_ADMIN) + "/articles/attachments/" + article.getResourcePrimKey();
+  String rootPath=getPortletPath(portletDataContext) + "/articles/attachments/" + article.getResourcePrimKey();
   for (  String fileName : article.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
     String path=rootPath + StringPool.SLASH + shortFileName;
@@ -9,6 +9,6 @@
     Element fileElement=articleAttachmentsElement.addElement("file");
     fileElement.addAttribute("path",path);
     fileElement.addAttribute("short-file-name",shortFileName);
-    context.addZipEntry(path,inputStream);
+    portletDataContext.addZipEntry(path,inputStream);
   }
 }

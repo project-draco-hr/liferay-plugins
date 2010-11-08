@@ -1,14 +1,14 @@
 {
   long classNameId=PortalUtil.getClassNameId(classObj);
-  List<Comment> comments=CommentUtil.findByG_C(context.getScopeGroupId(),classNameId);
+  List<Comment> comments=CommentUtil.findByG_C(portletDataContext.getScopeGroupId(),classNameId);
   for (  Comment comment : comments) {
-    if (!context.isWithinDateRange(comment.getModifiedDate())) {
+    if (!portletDataContext.isWithinDateRange(comment.getModifiedDate())) {
       return;
     }
-    String path=context.getPortletPath(PortletKeys.KNOWLEDGE_BASE_ADMIN) + "/comments/" + comment.getCommentId()+ ".xml";
-    if (!context.isPathNotProcessed(path)) {
+    String path=getPortletPath(portletDataContext) + "/comments/" + comment.getCommentId()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
       continue;
     }
-    exportComment(context,rootElement,name,path,comment);
+    exportComment(portletDataContext,rootElement,name,path,comment);
   }
 }

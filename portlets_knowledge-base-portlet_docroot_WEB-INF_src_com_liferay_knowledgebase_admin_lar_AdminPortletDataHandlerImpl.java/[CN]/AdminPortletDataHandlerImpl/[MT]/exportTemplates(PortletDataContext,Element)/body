@@ -1,13 +1,13 @@
 {
-  List<Template> templates=TemplateUtil.findByGroupId(context.getScopeGroupId());
+  List<Template> templates=TemplateUtil.findByGroupId(portletDataContext.getScopeGroupId());
   for (  Template template : templates) {
-    if (!context.isWithinDateRange(template.getModifiedDate())) {
+    if (!portletDataContext.isWithinDateRange(template.getModifiedDate())) {
       continue;
     }
-    String path=context.getPortletPath(PortletKeys.KNOWLEDGE_BASE_ADMIN) + "/templates/" + template.getTemplateId()+ ".xml";
-    if (!context.isPathNotProcessed(path)) {
+    String path=getPortletPath(portletDataContext) + "/templates/" + template.getTemplateId()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
       continue;
     }
-    exportTemplate(context,rootElement,path,template);
+    exportTemplate(portletDataContext,rootElement,path,template);
   }
 }

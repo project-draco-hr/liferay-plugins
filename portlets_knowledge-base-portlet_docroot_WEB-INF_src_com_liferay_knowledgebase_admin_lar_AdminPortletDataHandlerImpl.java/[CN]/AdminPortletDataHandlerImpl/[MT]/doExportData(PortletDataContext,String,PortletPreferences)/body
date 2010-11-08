@@ -1,17 +1,17 @@
 {
-  context.addPermissions("com.liferay.knowledgebase.admin",context.getScopeGroupId());
+  portletDataContext.addPermissions("com.liferay.knowledgebase.admin",portletDataContext.getScopeGroupId());
   Document document=SAXReaderUtil.createDocument();
   Element rootElement=document.addElement("knowledge-base-admin-data");
-  rootElement.addAttribute("group-id",String.valueOf(context.getScopeGroupId()));
-  exportArticles(context,rootElement);
-  if (context.getBooleanParameter(_NAMESPACE_ARTICLE,"comments")) {
-    exportComments(context,Article.class,"article-comment",rootElement);
+  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
+  exportArticles(portletDataContext,rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"comments")) {
+    exportComments(portletDataContext,Article.class,"article-comment",rootElement);
   }
-  if (context.getBooleanParameter(_NAMESPACE,"templates")) {
-    exportTemplates(context,rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"templates")) {
+    exportTemplates(portletDataContext,rootElement);
   }
-  if (context.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
-    exportComments(context,Template.class,"template-comment",rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
+    exportComments(portletDataContext,Template.class,"template-comment",rootElement);
   }
   return document.formattedString();
 }

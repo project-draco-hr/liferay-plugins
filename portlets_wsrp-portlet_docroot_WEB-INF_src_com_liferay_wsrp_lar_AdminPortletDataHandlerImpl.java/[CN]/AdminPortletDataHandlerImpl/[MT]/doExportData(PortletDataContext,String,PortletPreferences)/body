@@ -1,18 +1,18 @@
 {
   Document document=SAXReaderUtil.createDocument();
   Element rootElement=document.addElement("wsrp-data");
-  if (context.getBooleanParameter(_NAMESPACE,"wsrp-producers")) {
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"wsrp-producers")) {
     Element wsrpProducersElement=rootElement.addElement("wsrp-producers");
-    List<WSRPProducer> wsrpProducers=WSRPProducerLocalServiceUtil.getWSRPProducers(context.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    List<WSRPProducer> wsrpProducers=WSRPProducerLocalServiceUtil.getWSRPProducers(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     for (    WSRPProducer wsrpProducer : wsrpProducers) {
-      exportWSRPProducer(context,wsrpProducersElement,wsrpProducer);
+      exportWSRPProducer(portletDataContext,wsrpProducersElement,wsrpProducer);
     }
   }
-  if (context.getBooleanParameter(_NAMESPACE,"wsrp-consumers")) {
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"wsrp-consumers")) {
     Element wsrpConsumersElement=rootElement.addElement("wsrp-consumers");
-    List<WSRPConsumer> wsrpConsumers=WSRPConsumerLocalServiceUtil.getWSRPConsumers(context.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    List<WSRPConsumer> wsrpConsumers=WSRPConsumerLocalServiceUtil.getWSRPConsumers(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     for (    WSRPConsumer wsrpConsumer : wsrpConsumers) {
-      exportWSRPConsumer(context,wsrpConsumersElement,wsrpConsumer);
+      exportWSRPConsumer(portletDataContext,wsrpConsumersElement,wsrpConsumer);
     }
   }
   return document.formattedString();
