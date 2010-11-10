@@ -36,7 +36,10 @@
   mimeRequest.setValidNewWindowStates(windowStates);
   NavigationalContext navigationalContext=new NavigationalContext();
   String navigationalState=portletRequest.getParameter("wsrp-navigationalState");
-  navigationalContext.setOpaqueValue(navigationalState);
+  if (Validator.isNotNull(navigationalState)) {
+    navigationalState=new String(Base64.decode(Base64.fromURLSafe(navigationalState)),StringPool.UTF8);
+    navigationalContext.setOpaqueValue(navigationalState);
+  }
   Map<String,String[]> publicParameterMap=portletRequest.getPublicParameterMap();
   List<NamedString> publicValues=new ArrayList<NamedString>();
   for (  Map.Entry<String,String[]> entry : publicParameterMap.entrySet()) {

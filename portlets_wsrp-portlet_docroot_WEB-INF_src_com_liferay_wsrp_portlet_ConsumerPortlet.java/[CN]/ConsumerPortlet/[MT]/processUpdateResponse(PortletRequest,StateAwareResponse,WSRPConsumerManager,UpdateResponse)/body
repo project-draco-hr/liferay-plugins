@@ -7,7 +7,9 @@
   NavigationalContext navigationalContext=updateResponse.getNavigationalContext();
   if (navigationalContext != null) {
     String opaqueValue=navigationalContext.getOpaqueValue();
-    if (opaqueValue != null) {
+    if (Validator.isNotNull(opaqueValue)) {
+      byte[] opaqueValueBytes=opaqueValue.getBytes(StringPool.UTF8);
+      opaqueValue=Base64.toURLSafe(Base64.encode(opaqueValueBytes));
       stateAwareResponse.setRenderParameter("wsrp-navigationalState",opaqueValue);
     }
     NamedString[] publicValues=navigationalContext.getPublicValues();
