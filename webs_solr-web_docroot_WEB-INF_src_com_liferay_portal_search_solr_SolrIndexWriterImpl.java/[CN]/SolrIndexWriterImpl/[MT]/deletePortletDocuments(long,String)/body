@@ -1,6 +1,18 @@
 {
   try {
-    _solrServer.deleteByQuery(Field.PORTLET_ID + StringPool.COLON + portletId);
+    StringBundler sb=new StringBundler();
+    if (companyId > 0) {
+      sb.append(StringPool.PLUS);
+      sb.append(Field.COMPANY_ID);
+      sb.append(StringPool.COLON);
+      sb.append(companyId);
+      sb.append(StringPool.SPACE);
+    }
+    sb.append(StringPool.PLUS);
+    sb.append(Field.PORTLET_ID);
+    sb.append(StringPool.COLON);
+    sb.append(portletId);
+    _solrServer.deleteByQuery(sb.toString());
     if (_commit) {
       _solrServer.commit();
     }
