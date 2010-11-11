@@ -1,5 +1,7 @@
 {
   gadget=toUnwrappedModel(gadget);
+  boolean isNew=gadget.isNew();
+  GadgetModelImpl gadgetModelImpl=(GadgetModelImpl)gadget;
   if (Validator.isNull(gadget.getUuid())) {
     String uuid=PortalUUIDUtil.generate();
     gadget.setUuid(uuid);
@@ -18,5 +20,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadget.getPrimaryKey(),gadget);
+  if (!isNew && ((gadget.getCompanyId() != gadgetModelImpl.getOriginalCompanyId()) || !Validator.equals(gadget.getUrl(),gadgetModelImpl.getOriginalUrl()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U,new Object[]{new Long(gadgetModelImpl.getOriginalCompanyId()),gadgetModelImpl.getOriginalUrl()});
+  }
+  if (isNew || ((gadget.getCompanyId() != gadgetModelImpl.getOriginalCompanyId()) || !Validator.equals(gadget.getUrl(),gadgetModelImpl.getOriginalUrl()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,new Object[]{new Long(gadget.getCompanyId()),gadget.getUrl()},gadget);
+  }
   return gadget;
 }

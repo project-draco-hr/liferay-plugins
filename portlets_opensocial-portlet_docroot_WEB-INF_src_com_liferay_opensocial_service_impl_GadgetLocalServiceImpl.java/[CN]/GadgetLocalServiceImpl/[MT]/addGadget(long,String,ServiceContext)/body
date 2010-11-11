@@ -7,21 +7,17 @@
   gadget.setCompanyId(companyId);
   gadget.setCreateDate(now);
   gadget.setModifiedDate(now);
-  gadget.setUrl(url);
   GadgetSpec gadgetSpec=null;
   try {
     gadgetSpec=ShindigUtil.getGadgetSpec(gadget);
   }
- catch (  ProcessingException pe) {
-    throw new GadgetURLException(pe);
-  }
-catch (  Exception e) {
-    throw new SystemException(e);
+ catch (  Exception e) {
+    throw new GadgetURLException(e);
   }
   ModulePrefs modulePrefs=gadgetSpec.getModulePrefs();
-  String name=modulePrefs.getTitle();
-  gadget.setName(name);
+  gadget.setName(modulePrefs.getTitle());
+  gadget.setUrl(url);
   gadgetPersistence.update(gadget,false);
-  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,name);
+  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,gadget.getName());
   return gadget;
 }
