@@ -2,6 +2,9 @@
   String portletId=getPortletId(portletContext);
   if (navigationalContext != null) {
     String opaqueValue=navigationalContext.getOpaqueValue();
+    if (Validator.isNotNull(opaqueValue)) {
+      opaqueValue=new String(Base64.decode(Base64.fromURLSafe(opaqueValue)),StringPool.UTF8);
+    }
     Map<String,String[]> parameterMap=HttpUtil.parameterMapFromString(opaqueValue);
     if (parameterMap.containsKey(_STRUTS_ACTION_PORTLET_CONFIGURATION)) {
       portletId=PortletKeys.PORTLET_CONFIGURATION;
