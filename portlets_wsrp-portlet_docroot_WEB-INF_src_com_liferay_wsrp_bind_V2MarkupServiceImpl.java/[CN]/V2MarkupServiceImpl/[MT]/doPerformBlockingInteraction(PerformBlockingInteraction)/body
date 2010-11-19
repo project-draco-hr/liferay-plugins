@@ -3,18 +3,17 @@
   Http.Options httpOptions=new Http.Options();
   addHeaders(performBlockingInteraction.getMarkupParams(),httpOptions);
   httpOptions.setLocation(getURL(performBlockingInteraction,wsrpProducer));
-  PortletContext portletContext=performBlockingInteraction.getPortletContext();
   RuntimeContext runtimeContext=performBlockingInteraction.getRuntimeContext();
-  String remoteNamespace=runtimeContext.getNamespacePrefix();
+  PortletContext portletContext=performBlockingInteraction.getPortletContext();
   InteractionParams interactionParams=performBlockingInteraction.getInteractionParams();
   MarkupParams markupParams=performBlockingInteraction.getMarkupParams();
   NavigationalContext navigationalContext=markupParams.getNavigationalContext();
-  String liferayNamespace=PortalUtil.getPortletNamespace(getPortletId(portletContext,navigationalContext));
+  String namespace=PortalUtil.getPortletNamespace(getPortletId(portletContext,navigationalContext));
   NamedString[] formParameters=interactionParams.getFormParameters();
   if (formParameters != null) {
     for (    NamedString formParameter : formParameters) {
-      String name=formParameter.getName().replace(remoteNamespace,StringPool.BLANK);
-      httpOptions.addPart(liferayNamespace + name,formParameter.getValue());
+      String name=StringUtil.replace(formParameter.getName(),runtimeContext.getNamespacePrefix(),StringPool.BLANK);
+      httpOptions.addPart(namespace + name,formParameter.getValue());
     }
   }
   httpOptions.setFollowRedirects(false);
