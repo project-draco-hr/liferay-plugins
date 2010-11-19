@@ -1,0 +1,18 @@
+{
+  OAuthConsumer oAuthConsumer=findByPrimaryKey(oauthConsumerId);
+  Session session=null;
+  try {
+    session=openSession();
+    OAuthConsumer[] array=new OAuthConsumerImpl[3];
+    array[0]=getByGadgetId_PrevAndNext(session,oAuthConsumer,gadgetId,orderByComparator,true);
+    array[1]=oAuthConsumer;
+    array[2]=getByGadgetId_PrevAndNext(session,oAuthConsumer,gadgetId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

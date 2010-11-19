@@ -1,0 +1,20 @@
+{
+  OAuthConsumer oAuthConsumer=(OAuthConsumer)EntityCacheUtil.getResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,oauthConsumerId,this);
+  if (oAuthConsumer == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      oAuthConsumer=(OAuthConsumer)session.get(OAuthConsumerImpl.class,new Long(oauthConsumerId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (oAuthConsumer != null) {
+        cacheResult(oAuthConsumer);
+      }
+      closeSession(session);
+    }
+  }
+  return oAuthConsumer;
+}
