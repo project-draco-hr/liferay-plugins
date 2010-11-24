@@ -1,0 +1,17 @@
+{
+  if (hasData(newTableName)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Not renaming " + oldTableName + " to "+ newTableName+ " because "+ newTableName+ " has data");
+    }
+    return;
+  }
+  if (!hasData(oldTableName)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Not renaming " + oldTableName + " to "+ newTableName+ " because "+ oldTableName+ " has no data");
+    }
+    return;
+  }
+  UpgradeTable upgradeTable=UpgradeTableFactoryUtil.getUpgradeTable(oldTableName,tableColumns);
+  upgradeTable.setCreateSQL(tableSqlCreate);
+  upgradeTable.updateTable();
+}
