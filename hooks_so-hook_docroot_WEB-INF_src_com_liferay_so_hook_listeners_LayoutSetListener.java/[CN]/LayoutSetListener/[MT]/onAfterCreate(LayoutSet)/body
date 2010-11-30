@@ -5,7 +5,13 @@
     }
     Group group=GroupLocalServiceUtil.getGroup(layoutSet.getGroupId());
     String name=group.getName();
-    if (group.isUser()) {
+    if (name.equals(GroupConstants.GUEST)) {
+      return;
+    }
+    if (group.isCommunity()) {
+      addCommunityLayouts(group);
+    }
+ else     if (group.isUser()) {
       addUserLayouts(group);
     }
   }
