@@ -1,14 +1,14 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  JSONObject userPrefsJsonObject=JSONFactoryUtil.createJSONObject();
+  JSONObject userPrefsJSONObject=JSONFactoryUtil.createJSONObject();
   Map<String,UserPref> userPrefs=getUserPrefs(actionRequest);
   for (  UserPref userPref : userPrefs.values()) {
     String name=userPref.getName();
     String value=ParamUtil.getString(actionRequest,name);
-    userPrefsJsonObject.put(name,value);
+    userPrefsJSONObject.put(name,value);
   }
   String namespace=ShindigUtil.getPortletResourceNamespace(actionRequest,themeDisplay);
   String columnName=ShindigUtil.getColumnUserPrefs(namespace);
-  ExpandoValueServiceUtil.addValue(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial(),columnName,themeDisplay.getUserId(),userPrefsJsonObject.toString());
+  ExpandoValueServiceUtil.addValue(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial(),columnName,themeDisplay.getUserId(),userPrefsJSONObject.toString());
   SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
 }

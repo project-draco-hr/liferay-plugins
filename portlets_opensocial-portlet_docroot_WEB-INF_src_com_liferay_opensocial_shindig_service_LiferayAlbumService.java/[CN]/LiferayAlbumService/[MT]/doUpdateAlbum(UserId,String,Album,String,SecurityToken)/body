@@ -1,7 +1,8 @@
 {
   long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
-  User owner=UserLocalServiceUtil.getUserById(userIdLong);
-  long groupIdLong=owner.getGroup().getGroupId();
+  User user=UserLocalServiceUtil.getUserById(userIdLong);
+  Group group=user.getGroup();
+  long groupIdLong=group.getGroupId();
   DLFolder dlFolder=DLAppLocalServiceUtil.getFolder(GetterUtil.getLong(albumId));
   dlFolder.setDescription(album.getDescription());
   dlFolder.setName(album.getTitle());
@@ -9,5 +10,10 @@
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
   serviceContext.setScopeGroupId(groupIdLong);
-  DLAppLocalServiceUtil.updateFolder(dlFolder.getFolderId(),dlFolder.getParentFolderId(),dlFolder.getName(),dlFolder.getDescription(),serviceContext);
+  if (albumId == null) {
+    DLAppLocalServiceUtil.addFolder(userIdLong,groupIdLong,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,album.getTitle(),album.getDescription(),serviceContext);
+  }
+ else {
+    DLAppLocalServiceUtil.updateFolder(dlFolder.getFolderId(),dlFolder.getParentFolderId(),dlFolder.getName(),dlFolder.getDescription(),serviceContext);
+  }
 }

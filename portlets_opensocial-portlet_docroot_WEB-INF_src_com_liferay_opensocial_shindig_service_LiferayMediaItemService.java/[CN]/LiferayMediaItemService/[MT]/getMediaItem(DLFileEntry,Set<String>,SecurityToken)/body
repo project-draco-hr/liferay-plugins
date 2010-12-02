@@ -1,55 +1,26 @@
 {
   MediaItem mediaItem=new MediaItemImpl();
-  mediaItem.setAlbumId(Long.toString(dlFileEntry.getFolderId()));
-  mediaItem.setCreated(dlFileEntry.getCreateDate().toString());
+  mediaItem.setAlbumId(String.valueOf(dlFileEntry.getFolderId()));
+  mediaItem.setCreated(String.valueOf(dlFileEntry.getCreateDate()));
   mediaItem.setDescription(dlFileEntry.getDescription());
-  mediaItem.setId(Long.toString(dlFileEntry.getFileEntryId()));
-  mediaItem.setLastUpdated(dlFileEntry.getModifiedDate().toString());
+  mediaItem.setId(String.valueOf(dlFileEntry.getFileEntryId()));
+  mediaItem.setLastUpdated(String.valueOf(dlFileEntry.getModifiedDate()));
   mediaItem.setMimeType(MimeTypesUtil.getContentType(dlFileEntry.getExtension()));
-  mediaItem.setNumViews(Long.toString(dlFileEntry.getReadCount()));
+  mediaItem.setNumViews(String.valueOf(dlFileEntry.getReadCount()));
   mediaItem.setTitle(dlFileEntry.getTitle());
   mediaItem.setType(getMediaItemType(dlFileEntry));
   mediaItem.setUrl(getDLFileEntryURL(dlFileEntry,securityToken));
-  JSONObject extraDataJSON=null;
+  JSONObject extraSettingsJSONObject=null;
   try {
-    extraDataJSON=JSONFactoryUtil.createJSONObject(dlFileEntry.getExtraSettings());
+    extraSettingsJSONObject=JSONFactoryUtil.createJSONObject(dlFileEntry.getExtraSettings());
   }
- catch (  JSONException e) {
+ catch (  JSONException jsone) {
   }
-  if (extraDataJSON != null) {
-    if (extraDataJSON.has(MediaItem.Field.DURATION.toString())) {
-      mediaItem.setDuration(extraDataJSON.getString("DURATION"));
+  if (extraSettingsJSONObject != null) {
+    if (extraSettingsJSONObject.has(MediaItem.Field.DURATION.toString())) {
+      mediaItem.setDuration(extraSettingsJSONObject.getString("DURATION"));
     }
-    if (extraDataJSON.has(MediaItem.Field.FILE_SIZE.toString())) {
-      mediaItem.setFileSize(extraDataJSON.getString("fileSize"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.LANGUAGE.toString())) {
-      mediaItem.setLanguage(extraDataJSON.getString("language"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.LOCATION.toString())) {
-      mediaItem.setLocation(getAddress(extraDataJSON.getJSONObject("location")));
-    }
-    if (extraDataJSON.has(MediaItem.Field.NUM_COMMENTS.toString())) {
-      mediaItem.setNumComments(extraDataJSON.getString("numComments"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.NUM_VOTES.toString())) {
-      mediaItem.setNumVotes(extraDataJSON.getString("numVotes"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.RATING.toString())) {
-      mediaItem.setRating(extraDataJSON.getString("rating"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.START_TIME.toString())) {
-      mediaItem.setStartTime(extraDataJSON.getString("startTime"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.TAGGED_PEOPLE.toString())) {
-      mediaItem.setTaggedPeople(extraDataJSON.getString("taggedPeople"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.TAGS.toString())) {
-      mediaItem.setTags(extraDataJSON.getString("tags"));
-    }
-    if (extraDataJSON.has(MediaItem.Field.THUMBNAIL_URL.toString())) {
-      mediaItem.setThumbnailUrl(extraDataJSON.getString("thumbnailUrl"));
-    }
+    SerializerUtil.copyProperties(extraSettingsJSONObject,mediaItem,_MEDIA_ITEM_FIELDS);
   }
   return mediaItem;
 }

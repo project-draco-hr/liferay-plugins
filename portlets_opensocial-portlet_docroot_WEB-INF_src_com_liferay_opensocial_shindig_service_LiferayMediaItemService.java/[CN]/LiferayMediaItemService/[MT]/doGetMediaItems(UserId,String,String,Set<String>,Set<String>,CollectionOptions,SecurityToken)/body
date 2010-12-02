@@ -1,18 +1,19 @@
 {
-  long albumIdLong=GetterUtil.getLong(albumId);
   long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
-  User owner=UserLocalServiceUtil.getUserById(userIdLong);
-  long groupIdLong=owner.getGroup().getGroupId();
+  User user=UserLocalServiceUtil.getUserById(userIdLong);
+  Group group=user.getGroup();
+  long groupIdLong=group.getGroupId();
+  long albumIdLong=GetterUtil.getLong(albumId);
   List<DLFileEntry> dLFileEntries=DLAppLocalServiceUtil.getFileEntries(groupIdLong,albumIdLong);
   List<MediaItem> mediaItems=new ArrayList<MediaItem>();
   for (  DLFileEntry dlFileEntry : dLFileEntries) {
     MediaItem.Type mediaItemType=getMediaItemType(dlFileEntry);
-    if (mediaItemType != null) {
-      MediaItem mediaItem=new MediaItemImpl();
-      mediaItem=getMediaItem(dlFileEntry,fields,securityToken);
-      if (mediaItemIds.contains(mediaItem.getId())) {
-        mediaItems.add(mediaItem);
-      }
+    if (mediaItemType == null) {
+      continue;
+    }
+    MediaItem mediaItem=getMediaItem(dlFileEntry,fields,securityToken);
+    if (mediaItemIds.contains(mediaItem.getId())) {
+      mediaItems.add(mediaItem);
     }
   }
   return new RestfulCollection<MediaItem>(mediaItems,collectionOptions.getFirst(),mediaItems.size(),collectionOptions.getMax());
