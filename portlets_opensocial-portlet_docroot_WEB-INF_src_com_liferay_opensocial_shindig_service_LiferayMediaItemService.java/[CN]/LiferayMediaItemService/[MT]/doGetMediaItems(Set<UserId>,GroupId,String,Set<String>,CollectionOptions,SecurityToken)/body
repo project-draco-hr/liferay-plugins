@@ -1,0 +1,26 @@
+{
+  List<MediaItem> mediaItems=new ArrayList<MediaItem>();
+  for (  UserId userId : userIds) {
+    long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
+    User owner=UserLocalServiceUtil.getUserById(userIdLong);
+    List<DLFileEntry> dlFileEntries=new ArrayList<DLFileEntry>();
+    GroupId.Type groupIdType=groupId.getType();
+    if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {
+      List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+      for (      User friend : friends) {
+        List<DLFileEntry> friendDLFileEntries=DLAppLocalServiceUtil.getGroupFileEntries(friend.getGroup().getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
+        dlFileEntries.addAll(friendDLFileEntries);
+      }
+    }
+ else     if (groupIdType.equals(GroupId.Type.self)) {
+      dlFileEntries=DLAppLocalServiceUtil.getGroupFileEntries(owner.getGroup().getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
+    }
+    for (    DLFileEntry dlFileEntry : dlFileEntries) {
+      MediaItem.Type mediaItemType=getMediaItemType(dlFileEntry);
+      if (mediaItemType != null) {
+        mediaItems.add(getMediaItem(dlFileEntry,fields,securityToken));
+      }
+    }
+  }
+  return new RestfulCollection<MediaItem>(mediaItems,collectionOptions.getFirst(),mediaItems.size(),collectionOptions.getMax());
+}

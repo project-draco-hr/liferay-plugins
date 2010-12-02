@@ -1,0 +1,15 @@
+{
+  long albumIdLong=GetterUtil.getLong(albumId);
+  long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
+  User owner=UserLocalServiceUtil.getUserById(userIdLong);
+  long groupIdLong=owner.getGroup().getGroupId();
+  List<DLFileEntry> dLFileEntries=DLAppLocalServiceUtil.getFileEntries(groupIdLong,albumIdLong);
+  List<MediaItem> mediaItems=new ArrayList<MediaItem>();
+  for (  DLFileEntry dlFileEntry : dLFileEntries) {
+    MediaItem.Type mediaItemType=getMediaItemType(dlFileEntry);
+    if (mediaItemType != null) {
+      mediaItems.add(getMediaItem(dlFileEntry,fields,securityToken));
+    }
+  }
+  return new RestfulCollection<MediaItem>(mediaItems,collectionOptions.getFirst(),mediaItems.size(),collectionOptions.getMax());
+}

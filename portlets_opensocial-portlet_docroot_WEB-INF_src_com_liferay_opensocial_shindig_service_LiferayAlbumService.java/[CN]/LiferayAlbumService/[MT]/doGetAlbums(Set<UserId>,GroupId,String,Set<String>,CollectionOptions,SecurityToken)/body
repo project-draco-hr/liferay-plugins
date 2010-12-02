@@ -1,0 +1,29 @@
+{
+  List<Album> albums=new ArrayList<Album>();
+  for (  UserId userId : userIds) {
+    String userIdString=userId.getUserId(securityToken);
+    long userIdLong=GetterUtil.getLong(userIdString);
+    User owner=UserLocalServiceUtil.getUserById(userIdLong);
+    List<DLFolder> dlFolders=new ArrayList<DLFolder>();
+    GroupId.Type groupIdType=groupId.getType();
+    if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {
+      List<User> friends=UserLocalServiceUtil.getSocialUsers(owner.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+      for (      User friend : friends) {
+        List<DLFolder> friendDLFolders=DLAppLocalServiceUtil.getFolders(friend.getGroup().getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+        dlFolders.addAll(friendDLFolders);
+      }
+    }
+ else     if (groupIdType.equals(GroupId.Type.self)) {
+      dlFolders=DLAppLocalServiceUtil.getFolders(owner.getGroup().getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+    }
+    for (    DLFolder dlFolder : dlFolders) {
+      Album album=new AlbumImpl();
+      album.setDescription(dlFolder.getDescription());
+      album.setId(Long.toString(dlFolder.getFolderId()));
+      album.setOwnerId(Long.toString(dlFolder.getUserId()));
+      album.setTitle(dlFolder.getName());
+      albums.add(album);
+    }
+  }
+  return new RestfulCollection<Album>(albums,collectionOptions.getFirst(),albums.size(),collectionOptions.getMax());
+}
