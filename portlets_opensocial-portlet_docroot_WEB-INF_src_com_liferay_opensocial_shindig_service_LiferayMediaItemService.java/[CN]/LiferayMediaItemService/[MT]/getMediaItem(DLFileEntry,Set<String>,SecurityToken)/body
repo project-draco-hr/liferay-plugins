@@ -20,6 +20,10 @@
     if (extraSettingsJSONObject.has(MediaItem.Field.DURATION.toString())) {
       mediaItem.setDuration(extraSettingsJSONObject.getString("DURATION"));
     }
+    if (extraSettingsJSONObject.has(MediaItem.Field.LOCATION.toString())) {
+      Address address=getAddress(extraSettingsJSONObject.getJSONObject("location"));
+      mediaItem.setLocation(address);
+    }
     SerializerUtil.copyProperties(extraSettingsJSONObject,mediaItem,_MEDIA_ITEM_FIELDS);
   }
   return mediaItem;

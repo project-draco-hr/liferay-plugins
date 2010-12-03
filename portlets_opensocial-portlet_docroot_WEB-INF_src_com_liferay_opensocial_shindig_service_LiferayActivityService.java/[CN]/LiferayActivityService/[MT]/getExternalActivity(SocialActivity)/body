@@ -1,50 +1,6 @@
 {
   Activity activity=new ActivityImpl(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(socialActivity.getExtraData());
-  if (extraDataJSONObject.has(Activity.Field.APP_ID.toString())) {
-    activity.setAppId(extraDataJSONObject.getString("appId"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.BODY.toString())) {
-    activity.setBody(extraDataJSONObject.getString("body"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.BODY_ID.toString())) {
-    activity.setBodyId(extraDataJSONObject.getString("bodyId"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.EXTERNAL_ID.toString())) {
-    activity.setExternalId(extraDataJSONObject.getString("externalId"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.MEDIA_ITEMS.toString())) {
-    activity.setMediaItems(getMediaItems(extraDataJSONObject.getJSONArray("mediaItems")));
-  }
-  if (extraDataJSONObject.has(Activity.Field.POSTED_TIME.toString())) {
-    activity.setPostedTime(extraDataJSONObject.getLong("postedTime"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.PRIORITY.toString())) {
-    activity.setPriority(Float.parseFloat(extraDataJSONObject.getString("priority")));
-  }
-  if (extraDataJSONObject.has(Activity.Field.STREAM_FAVICON_URL.toString())) {
-    activity.setStreamFaviconUrl(extraDataJSONObject.getString("streamFaviconUrl"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.STREAM_SOURCE_URL.toString())) {
-    activity.setStreamSourceUrl(extraDataJSONObject.getString("streamSourceUrl"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.STREAM_TITLE.toString())) {
-    activity.setStreamTitle(extraDataJSONObject.getString("streamTitle"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.STREAM_URL.toString())) {
-    activity.setStreamUrl(extraDataJSONObject.getString("streamUrl"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.TEMPLATE_PARAMS.toString())) {
-    activity.setTemplateParams(getTemplateParams(extraDataJSONObject.getJSONArray("templateParams")));
-  }
-  if (extraDataJSONObject.has(Activity.Field.TITLE.toString())) {
-    activity.setTitle(extraDataJSONObject.getString("title"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.TITLE_ID.toString())) {
-    activity.setTitleId(extraDataJSONObject.getString("titleId"));
-  }
-  if (extraDataJSONObject.has(Activity.Field.URL.toString())) {
-    activity.setUrl(extraDataJSONObject.getString("url"));
-  }
+  SerializerUtil.copyProperties(extraDataJSONObject,activity,_ACTIVITY_FIELDS);
   return activity;
 }

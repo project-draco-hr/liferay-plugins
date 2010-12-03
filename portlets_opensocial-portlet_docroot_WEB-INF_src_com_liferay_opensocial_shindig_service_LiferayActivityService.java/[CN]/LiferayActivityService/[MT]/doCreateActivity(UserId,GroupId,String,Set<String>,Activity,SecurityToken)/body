@@ -1,20 +1,6 @@
 {
   long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
-  extraDataJSONObject.put("appId",activity.getAppId());
-  extraDataJSONObject.put("body",activity.getBody());
-  extraDataJSONObject.put("bodyId",activity.getBodyId());
-  extraDataJSONObject.put("externalId",activity.getExternalId());
-  extraDataJSONObject.put("mediaItems",getMediaItems(activity.getMediaItems()));
-  extraDataJSONObject.put("postedTime",activity.getPostedTime());
-  extraDataJSONObject.put("priority",activity.getPriority());
-  extraDataJSONObject.put("streamFaviconUrl",activity.getStreamFaviconUrl());
-  extraDataJSONObject.put("streamSourceUrl",activity.getStreamSourceUrl());
-  extraDataJSONObject.put("streamTitle",activity.getStreamTitle());
-  extraDataJSONObject.put("streamUrl",activity.getStreamUrl());
-  extraDataJSONObject.put("templateParams",getTemplateParams(activity.getTemplateParams()));
-  extraDataJSONObject.put("title",activity.getTitle());
-  extraDataJSONObject.put("titleId",activity.getTitleId());
-  extraDataJSONObject.put("url",activity.getUrl());
+  SerializerUtil.copyProperties(activity,extraDataJSONObject,_ACTIVITY_FIELDS);
   SocialActivityLocalServiceUtil.addActivity(userIdLong,0L,Activity.class.getName(),activity.getPostedTime().longValue(),activity.getAppId().hashCode(),extraDataJSONObject.toString(),0L);
 }
