@@ -1,6 +1,6 @@
 {
+  Filter filter=new Filter(name);
   String prefix=PortletPropsKeys.SITE_TEMPLATE_PORTLETS;
-  Filter filter=new Filter(layout.getFriendlyURL());
   if (group.isUser()) {
     prefix=PortletPropsKeys.USER_LAYOUT_PORTLETS;
   }
@@ -15,10 +15,12 @@
     }
     layoutTypePortlet.setPortletIds(column,portlets);
   }
-  if (!layoutTypePortlet.hasPortletId("1_WAR_soportlet")) {
-    return;
+  LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+  List<String> portletIds=layoutTypePortlet.getPortletIds();
+  for (  String portletId : portletIds) {
+    addResources(layout,portletId);
+    if (portletId.equals("1_WAR_wysiwygportlet")) {
+      updatePortletTitle(layout,"1_WAR_wysiwygportlet","Welcome");
+    }
   }
-  PortletPreferences portletSetup=PortletPreferencesFactoryUtil.getLayoutPortletSetup(layout,"1_WAR_soportlet");
-  portletSetup.setValue("portlet-setup-show-borders",String.valueOf(Boolean.TRUE));
-  portletSetup.store();
 }

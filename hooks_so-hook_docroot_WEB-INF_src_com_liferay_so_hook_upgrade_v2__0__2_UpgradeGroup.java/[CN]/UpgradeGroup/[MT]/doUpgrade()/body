@@ -1,0 +1,19 @@
+{
+  List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    List<Layout> layouts=null;
+    try {
+      layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),group.hasPrivateLayouts());
+    }
+ catch (    Exception e) {
+      continue;
+    }
+    for (    Layout layout : layouts) {
+      if (layout.getFriendlyURL().equals("/home")) {
+        continue;
+      }
+      updatePortlets(group,layout);
+      updateLayouts(group);
+    }
+  }
+}
