@@ -1,15 +1,10 @@
 {
   List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  Group group : groups) {
-    List<Layout> layouts=null;
-    try {
-      layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),group.hasPrivateLayouts());
-    }
- catch (    Exception e) {
-      continue;
-    }
+    List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),group.hasPrivateLayouts());
     for (    Layout layout : layouts) {
-      if (layout.getFriendlyURL().equals("/home")) {
+      String friendlyURL=layout.getFriendlyURL();
+      if (friendlyURL.equals("/home")) {
         continue;
       }
       updatePortlets(group,layout);

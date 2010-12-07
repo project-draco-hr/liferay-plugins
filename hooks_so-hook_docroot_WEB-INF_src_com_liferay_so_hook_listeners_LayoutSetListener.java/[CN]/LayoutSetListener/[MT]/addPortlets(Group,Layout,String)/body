@@ -1,14 +1,14 @@
 {
-  Filter filter=new Filter(name);
-  String prefix=PortletPropsKeys.SITE_TEMPLATE_PORTLETS;
-  if (group.isUser()) {
-    prefix=PortletPropsKeys.USER_LAYOUT_PORTLETS;
-  }
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
   List<String> columns=layoutTemplate.getColumns();
   for (  String column : columns) {
-    String[] portletIds=PortletProps.getArray(prefix + column,filter);
+    String keyPrefix=PortletPropsKeys.SITE_PROTOTYPE_PORTLETS;
+    if (group.isUser()) {
+      keyPrefix=PortletPropsKeys.USER_LAYOUT_PORTLETS;
+    }
+    Filter filter=new Filter(name);
+    String[] portletIds=PortletProps.getArray(keyPrefix + column,filter);
     String portlets=StringPool.BLANK;
     for (    String portletId : portletIds) {
       portlets=StringUtil.add(portlets,portletId);

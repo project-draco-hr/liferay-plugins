@@ -5,10 +5,11 @@
     try {
       layout=LayoutLocalServiceUtil.getLayout(group.getGroupId(),group.hasPrivateLayouts(),1);
     }
- catch (    Exception e) {
+ catch (    NoSuchLayoutException nsle) {
       continue;
     }
-    if (!layout.getFriendlyURL().equals("/home")) {
+    String friendlyURL=layout.getFriendlyURL();
+    if (!friendlyURL.equals("/home")) {
       continue;
     }
     updatePortlets(group,layout);
