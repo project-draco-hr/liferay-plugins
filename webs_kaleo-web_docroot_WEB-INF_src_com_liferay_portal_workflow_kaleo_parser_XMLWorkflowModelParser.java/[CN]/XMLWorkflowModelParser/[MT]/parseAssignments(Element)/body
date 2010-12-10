@@ -3,6 +3,17 @@
     return Collections.EMPTY_SET;
   }
   Set<Assignment> assignments=new HashSet<Assignment>();
+  Element resourceActionsElement=assignmentsElement.element("resource-actions");
+  if (resourceActionsElement != null) {
+    List<Element> resourceActionElements=resourceActionsElement.elements("resource-action");
+    for (    Element resourceActionElement : resourceActionElements) {
+      String actionId=resourceActionElement.getTextTrim();
+      if (Validator.isNotNull(actionId)) {
+        ResourceActionAssignment resourceActionAssignment=new ResourceActionAssignment(actionId);
+        assignments.add(resourceActionAssignment);
+      }
+    }
+  }
   Element rolesElement=assignmentsElement.element("roles");
   if (rolesElement != null) {
     List<Element> roleAssignmentElements=rolesElement.elements("role");

@@ -1,6 +1,14 @@
 {
   List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=new ArrayList<KaleoTaskAssignmentInstance>(kaleoTaskAssignments.size());
   for (  KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
+    String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
+    if (assigneeClassName.equals(ResourceAction.class.getName())) {
+      String entryClassName=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME);
+      String entryClassPK=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK);
+      String assigneeActionId=kaleoTaskAssignment.getAssigneeActionId();
+      setResourceAssignees(entryClassName,entryClassPK,assigneeActionId,kaleoTaskInstanceToken,serviceContext);
+      continue;
+    }
     User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
     Date now=new Date();
     long kaleoTaskAssignmentInstanceId=counterLocalService.increment();
@@ -16,7 +24,6 @@
     kaleoTaskAssignmentInstance.setKaleoTaskInstanceTokenId(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
     kaleoTaskAssignmentInstance.setKaleoTaskId(kaleoTaskInstanceToken.getKaleoTaskId());
     kaleoTaskAssignmentInstance.setKaleoTaskName(kaleoTaskInstanceToken.getKaleoTaskName());
-    String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
     kaleoTaskAssignmentInstance.setAssigneeClassName(assigneeClassName);
     if ((kaleoTaskAssignment.getAssigneeClassPK() == 0) && assigneeClassName.equals(User.class.getName())) {
       KaleoInstance kaleoInstance=kaleoInstanceLocalService.getKaleoInstance(kaleoTaskInstanceToken.getKaleoInstanceId());
