@@ -3,10 +3,10 @@
   for (  KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
     String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
     if (assigneeClassName.equals(ResourceAction.class.getName())) {
-      String entryClassName=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME);
-      String entryClassPK=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK);
+      String className=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_NAME);
+      String classPK=(String)workflowContext.get(WorkflowConstants.CONTEXT_ENTRY_CLASS_PK);
       String assigneeActionId=kaleoTaskAssignment.getAssigneeActionId();
-      setResourceAssignees(entryClassName,entryClassPK,assigneeActionId,kaleoTaskInstanceToken,serviceContext);
+      setResourceAssignees(kaleoTaskInstanceToken,className,classPK,assigneeActionId,serviceContext);
       continue;
     }
     User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
