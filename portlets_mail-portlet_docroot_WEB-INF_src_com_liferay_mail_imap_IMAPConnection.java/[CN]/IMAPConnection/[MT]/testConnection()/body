@@ -1,20 +1,20 @@
 {
-  boolean failedIncomingConnection=false;
   MailException mailException=null;
+  boolean failedIncomingConnection=false;
   try {
     testIncomingConnection();
   }
  catch (  MailException me) {
-    failedIncomingConnection=true;
     mailException=me;
+    failedIncomingConnection=true;
   }
   boolean failedOutgoingConnection=false;
   try {
     testOutgoingConnection();
   }
  catch (  MailException me) {
-    failedOutgoingConnection=true;
     mailException=me;
+    failedOutgoingConnection=true;
   }
   if (failedIncomingConnection && failedOutgoingConnection) {
     throw new MailException(MailException.ACCOUNT_CONNECTIONS_FAILED,mailException);
