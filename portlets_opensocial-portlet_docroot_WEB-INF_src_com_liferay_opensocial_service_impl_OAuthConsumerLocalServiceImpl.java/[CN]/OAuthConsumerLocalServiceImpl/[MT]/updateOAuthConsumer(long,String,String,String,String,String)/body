@@ -1,0 +1,13 @@
+{
+  OAuthConsumer oAuthConsumer=oAuthConsumerPersistence.findByPrimaryKey(oAuthConsumerId);
+  if (keyType.equals(Constants.RSA_PRIVATE)) {
+    consumerSecret=ShindigUtil.convertFromOpenSsl(consumerSecret);
+  }
+  oAuthConsumer.setConsumerKey(consumerKey);
+  oAuthConsumer.setConsumerSecret(consumerSecret);
+  oAuthConsumer.setKeyType(keyType);
+  oAuthConsumer.setCallbackUrl(callbackUrl);
+  oAuthConsumer.setKeyName(keyName);
+  oAuthConsumerPersistence.update(oAuthConsumer,false);
+  return oAuthConsumer;
+}

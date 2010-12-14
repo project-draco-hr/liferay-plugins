@@ -1,0 +1,20 @@
+{
+  User user=UserLocalServiceUtil.getUser(userId);
+  Date now=new Date();
+  long oAuthTokenId=counterLocalService.increment();
+  OAuthToken oAuthToken=oAuthTokenPersistence.create(oAuthTokenId);
+  oAuthToken.setCompanyId(user.getCompanyId());
+  oAuthToken.setCreateDate(now);
+  oAuthToken.setModifiedDate(now);
+  oAuthToken.setUserId(userId);
+  oAuthToken.setGadgetId(gadgetId);
+  oAuthToken.setModuleId(moduleId);
+  oAuthToken.setServiceName(serviceName);
+  oAuthToken.setTokenName(tokenName);
+  oAuthToken.setAccessToken(accessToken);
+  oAuthToken.setTokenSecret(tokenSecret);
+  oAuthToken.setSessionHandle(sessionHandle);
+  oAuthToken.setTokenExpireMillis(tokenExpireMillis);
+  oAuthTokenPersistence.update(oAuthToken,false);
+  return oAuthToken;
+}
