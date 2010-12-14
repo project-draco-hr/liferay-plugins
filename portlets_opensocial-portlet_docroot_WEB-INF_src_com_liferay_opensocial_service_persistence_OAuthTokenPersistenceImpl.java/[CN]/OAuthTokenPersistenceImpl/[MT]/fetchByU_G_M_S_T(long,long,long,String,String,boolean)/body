@@ -1,0 +1,83 @@
+{
+  Object[] finderArgs=new Object[]{userId,gadgetId,moduleId,serviceName,tokenName};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,finderArgs,this);
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(6);
+    query.append(_SQL_SELECT_OAUTHTOKEN_WHERE);
+    query.append(_FINDER_COLUMN_U_G_M_S_T_USERID_2);
+    query.append(_FINDER_COLUMN_U_G_M_S_T_GADGETID_2);
+    query.append(_FINDER_COLUMN_U_G_M_S_T_MODULEID_2);
+    if (serviceName == null) {
+      query.append(_FINDER_COLUMN_U_G_M_S_T_SERVICENAME_1);
+    }
+ else {
+      if (serviceName.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_U_G_M_S_T_SERVICENAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_U_G_M_S_T_SERVICENAME_2);
+      }
+    }
+    if (tokenName == null) {
+      query.append(_FINDER_COLUMN_U_G_M_S_T_TOKENNAME_1);
+    }
+ else {
+      if (tokenName.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_U_G_M_S_T_TOKENNAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_U_G_M_S_T_TOKENNAME_2);
+      }
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      qPos.add(gadgetId);
+      qPos.add(moduleId);
+      if (serviceName != null) {
+        qPos.add(serviceName);
+      }
+      if (tokenName != null) {
+        qPos.add(tokenName);
+      }
+      List<OAuthToken> list=q.list();
+      result=list;
+      OAuthToken oAuthToken=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,finderArgs,list);
+      }
+ else {
+        oAuthToken=list.get(0);
+        cacheResult(oAuthToken);
+        if ((oAuthToken.getUserId() != userId) || (oAuthToken.getGadgetId() != gadgetId) || (oAuthToken.getModuleId() != moduleId)|| (oAuthToken.getServiceName() == null)|| !oAuthToken.getServiceName().equals(serviceName)|| (oAuthToken.getTokenName() == null)|| !oAuthToken.getTokenName().equals(tokenName)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,finderArgs,oAuthToken);
+        }
+      }
+      return oAuthToken;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,finderArgs);
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (OAuthToken)result;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  oAuthToken=toUnwrappedModel(oAuthToken);
+  boolean isNew=oAuthToken.isNew();
+  OAuthTokenModelImpl oAuthTokenModelImpl=(OAuthTokenModelImpl)oAuthToken;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,oAuthToken,merge);
+    oAuthToken.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oAuthToken.getPrimaryKey(),oAuthToken);
+  if (!isNew && ((oAuthToken.getUserId() != oAuthTokenModelImpl.getOriginalUserId()) || (oAuthToken.getGadgetId() != oAuthTokenModelImpl.getOriginalGadgetId()) || (oAuthToken.getModuleId() != oAuthTokenModelImpl.getOriginalModuleId())|| !Validator.equals(oAuthToken.getServiceName(),oAuthTokenModelImpl.getOriginalServiceName())|| !Validator.equals(oAuthToken.getTokenName(),oAuthTokenModelImpl.getOriginalTokenName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,new Object[]{new Long(oAuthTokenModelImpl.getOriginalUserId()),new Long(oAuthTokenModelImpl.getOriginalGadgetId()),new Long(oAuthTokenModelImpl.getOriginalModuleId()),oAuthTokenModelImpl.getOriginalServiceName(),oAuthTokenModelImpl.getOriginalTokenName()});
+  }
+  if (isNew || ((oAuthToken.getUserId() != oAuthTokenModelImpl.getOriginalUserId()) || (oAuthToken.getGadgetId() != oAuthTokenModelImpl.getOriginalGadgetId()) || (oAuthToken.getModuleId() != oAuthTokenModelImpl.getOriginalModuleId())|| !Validator.equals(oAuthToken.getServiceName(),oAuthTokenModelImpl.getOriginalServiceName())|| !Validator.equals(oAuthToken.getTokenName(),oAuthTokenModelImpl.getOriginalTokenName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,new Object[]{new Long(oAuthToken.getUserId()),new Long(oAuthToken.getGadgetId()),new Long(oAuthToken.getModuleId()),oAuthToken.getServiceName(),oAuthToken.getTokenName()},oAuthToken);
+  }
+  return oAuthToken;
+}

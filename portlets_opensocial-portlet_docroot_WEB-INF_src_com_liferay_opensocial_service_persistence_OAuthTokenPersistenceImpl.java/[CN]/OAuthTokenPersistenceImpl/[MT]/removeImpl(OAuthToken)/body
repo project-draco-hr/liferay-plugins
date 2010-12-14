@@ -1,0 +1,19 @@
+{
+  oAuthToken=toUnwrappedModel(oAuthToken);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,oAuthToken);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  OAuthTokenModelImpl oAuthTokenModelImpl=(OAuthTokenModelImpl)oAuthToken;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_M_S_T,new Object[]{new Long(oAuthTokenModelImpl.getOriginalUserId()),new Long(oAuthTokenModelImpl.getOriginalGadgetId()),new Long(oAuthTokenModelImpl.getOriginalModuleId()),oAuthTokenModelImpl.getOriginalServiceName(),oAuthTokenModelImpl.getOriginalTokenName()});
+  EntityCacheUtil.removeResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oAuthToken.getPrimaryKey());
+  return oAuthToken;
+}

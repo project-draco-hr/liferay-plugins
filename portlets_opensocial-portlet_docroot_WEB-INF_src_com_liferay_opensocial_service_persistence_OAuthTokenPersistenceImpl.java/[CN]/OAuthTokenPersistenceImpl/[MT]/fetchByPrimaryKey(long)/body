@@ -1,0 +1,20 @@
+{
+  OAuthToken oAuthToken=(OAuthToken)EntityCacheUtil.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oauthTokenId,this);
+  if (oAuthToken == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      oAuthToken=(OAuthToken)session.get(OAuthTokenImpl.class,new Long(oauthTokenId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (oAuthToken != null) {
+        cacheResult(oAuthToken);
+      }
+      closeSession(session);
+    }
+  }
+  return oAuthToken;
+}
