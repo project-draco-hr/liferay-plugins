@@ -1,9 +1,10 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  PortletURL addAssetURL=null;
-  if (AdminPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),ActionKeys.ADD_ARTICLE)) {
-    addAssetURL=liferayPortletResponse.createRenderURL(PortletKeys.KNOWLEDGE_BASE_ADMIN);
-    addAssetURL.setParameter("jspPage","/admin/edit_article.jsp");
+  HttpServletRequest request=liferayPortletRequest.getHttpServletRequest();
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!AdminPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),ActionKeys.ADD_ARTICLE)) {
+    return null;
   }
-  return addAssetURL;
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,PortletKeys.KNOWLEDGE_BASE_ADMIN,getControlPanelPlid(themeDisplay),PortletRequest.RENDER_PHASE);
+  portletURL.setParameter("jspPage","/admin/edit_article.jsp");
+  return portletURL;
 }
