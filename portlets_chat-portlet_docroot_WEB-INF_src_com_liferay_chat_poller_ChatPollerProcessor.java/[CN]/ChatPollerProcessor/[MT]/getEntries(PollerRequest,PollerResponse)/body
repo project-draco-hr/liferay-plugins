@@ -14,9 +14,14 @@
     entryJSON.put("createDate",entry.getCreateDate());
     entryJSON.put("fromUserId",entry.getFromUserId());
     if (entry.getFromUserId() != pollerRequest.getUserId()) {
-      User fromUser=UserLocalServiceUtil.getUserById(entry.getFromUserId());
-      entryJSON.put("fromFullName",fromUser.getFullName());
-      entryJSON.put("fromPortraitId",fromUser.getPortraitId());
+      try {
+        User fromUser=UserLocalServiceUtil.getUserById(entry.getFromUserId());
+        entryJSON.put("fromFullName",fromUser.getFullName());
+        entryJSON.put("fromPortraitId",fromUser.getPortraitId());
+      }
+ catch (      NoSuchUserException nsue) {
+        continue;
+      }
     }
     entryJSON.put("toUserId",entry.getToUserId());
     entryJSON.put("content",HtmlUtil.escape(entry.getContent()));
