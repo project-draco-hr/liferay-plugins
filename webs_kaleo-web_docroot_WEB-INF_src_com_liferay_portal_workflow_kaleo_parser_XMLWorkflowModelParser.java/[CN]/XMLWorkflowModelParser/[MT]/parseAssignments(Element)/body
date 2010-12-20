@@ -33,6 +33,13 @@
       assignments.add(roleAssignment);
     }
   }
+  List<Element> scriptedAssignmentElements=assignmentsElement.elements("scripted-assignment");
+  for (  Element scriptedAssignmentElement : scriptedAssignmentElements) {
+    String script=scriptedAssignmentElement.elementText("script");
+    String scriptLanguage=scriptedAssignmentElement.elementText("script-language");
+    ScriptAssignment scriptAssignment=new ScriptAssignment(script,scriptLanguage);
+    assignments.add(scriptAssignment);
+  }
   List<Element> userAssignmentElements=assignmentsElement.elements("user");
   for (  Element userAssignmentElement : userAssignmentElements) {
     long userId=GetterUtil.getLong(userAssignmentElement.elementText("user-id"));

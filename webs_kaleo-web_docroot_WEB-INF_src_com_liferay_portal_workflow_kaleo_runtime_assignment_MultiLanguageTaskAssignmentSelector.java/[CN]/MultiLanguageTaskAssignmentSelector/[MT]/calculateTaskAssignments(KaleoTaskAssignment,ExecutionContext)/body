@@ -1,0 +1,15 @@
+{
+  String assigneeClassName=configuredKaleoTaskAssignment.getAssigneeClassName();
+  TaskAssignmentSelector assignmentEvaluator=null;
+  if (assigneeClassName.equals(ResourceAction.class.getName())) {
+    assignmentEvaluator=_taskAssignmentSelectors.get(assigneeClassName);
+  }
+ else {
+    String scriptLanguage=configuredKaleoTaskAssignment.getAssigneeScriptLanguage();
+    assignmentEvaluator=_taskAssignmentSelectors.get(scriptLanguage);
+  }
+  if (assignmentEvaluator == null) {
+    throw new IllegalArgumentException("No assignment evaluator found for " + configuredKaleoTaskAssignment.toXmlString());
+  }
+  return assignmentEvaluator.calculateTaskAssignments(configuredKaleoTaskAssignment,executionContext);
+}

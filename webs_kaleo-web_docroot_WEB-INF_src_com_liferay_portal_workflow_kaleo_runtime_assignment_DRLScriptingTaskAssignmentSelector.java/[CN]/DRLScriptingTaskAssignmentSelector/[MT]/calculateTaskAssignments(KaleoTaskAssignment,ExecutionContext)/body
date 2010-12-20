@@ -1,0 +1,8 @@
+{
+  List<Fact<?>> facts=RulesContextBuilder.buildRulesContext(executionContext);
+  String script=configuredKaleoTaskAssignment.getAssigneeScript();
+  RulesResourceRetriever rulesResourceRetriever=new RulesResourceRetriever(new StringResourceRetriever(script));
+  Query query=Query.createStandardQuery();
+  Map<String,?> results=RulesEngineUtil.execute(rulesResourceRetriever,facts,query,PortalClassLoaderUtil.getClassLoader());
+  return getKaleoTaskAssignments(results);
+}
