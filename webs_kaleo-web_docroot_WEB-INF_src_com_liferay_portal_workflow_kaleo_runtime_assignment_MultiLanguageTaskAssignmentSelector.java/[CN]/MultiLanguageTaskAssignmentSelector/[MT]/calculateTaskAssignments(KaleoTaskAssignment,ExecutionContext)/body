@@ -1,15 +1,15 @@
 {
-  String assigneeClassName=configuredKaleoTaskAssignment.getAssigneeClassName();
-  TaskAssignmentSelector assignmentEvaluator=null;
+  String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
+  TaskAssignmentSelector taskAssignmentSelector=null;
   if (assigneeClassName.equals(ResourceAction.class.getName())) {
-    assignmentEvaluator=_taskAssignmentSelectors.get(assigneeClassName);
+    taskAssignmentSelector=_taskAssignmentSelectors.get(assigneeClassName);
   }
  else {
-    String scriptLanguage=configuredKaleoTaskAssignment.getAssigneeScriptLanguage();
-    assignmentEvaluator=_taskAssignmentSelectors.get(scriptLanguage);
+    String assigneeScriptLanguage=kaleoTaskAssignment.getAssigneeScriptLanguage();
+    taskAssignmentSelector=_taskAssignmentSelectors.get(assigneeScriptLanguage);
   }
-  if (assignmentEvaluator == null) {
-    throw new IllegalArgumentException("No assignment evaluator found for " + configuredKaleoTaskAssignment.toXmlString());
+  if (taskAssignmentSelector == null) {
+    throw new IllegalArgumentException("No task assignment selector found for " + kaleoTaskAssignment.toXmlString());
   }
-  return assignmentEvaluator.calculateTaskAssignments(configuredKaleoTaskAssignment,executionContext);
+  return taskAssignmentSelector.calculateTaskAssignments(kaleoTaskAssignment,executionContext);
 }

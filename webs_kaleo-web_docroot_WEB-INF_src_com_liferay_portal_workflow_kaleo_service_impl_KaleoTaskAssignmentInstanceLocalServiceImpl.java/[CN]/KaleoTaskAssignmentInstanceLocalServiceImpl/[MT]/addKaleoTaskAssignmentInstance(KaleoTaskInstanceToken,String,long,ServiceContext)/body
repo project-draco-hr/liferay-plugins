@@ -15,14 +15,14 @@
   kaleoTaskAssignmentInstance.setKaleoTaskId(kaleoTaskInstanceToken.getKaleoTaskId());
   kaleoTaskAssignmentInstance.setKaleoTaskName(kaleoTaskInstanceToken.getKaleoTaskName());
   kaleoTaskAssignmentInstance.setAssigneeClassName(assigneeClassName);
-  kaleoTaskAssignmentInstance.setCompleted(false);
   if ((assigneeClassPK == 0) && assigneeClassName.equals(User.class.getName())) {
-    KaleoInstance kaleoInstance=kaleoInstanceLocalService.getKaleoInstance(kaleoTaskInstanceToken.getKaleoInstanceId());
+    KaleoInstance kaleoInstance=kaleoInstancePersistence.findByPrimaryKey(kaleoTaskInstanceToken.getKaleoInstanceId());
     kaleoTaskAssignmentInstance.setAssigneeClassPK(kaleoInstance.getUserId());
   }
  else {
     kaleoTaskAssignmentInstance.setAssigneeClassPK(assigneeClassPK);
   }
+  kaleoTaskAssignmentInstance.setCompleted(false);
   kaleoTaskAssignmentInstancePersistence.update(kaleoTaskAssignmentInstance,false);
   return kaleoTaskAssignmentInstance;
 }
