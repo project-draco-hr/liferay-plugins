@@ -9,10 +9,6 @@
     portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
   }
   ResourceContext resourceContext=wsrpResourceResponse.getResourceContext();
-  String contentType=resourceContext.getMimeType();
-  if (Validator.isNotNull(contentType)) {
-    resourceResponse.setContentType(contentType);
-  }
   NamedString[] clientAttributes=resourceContext.getClientAttributes();
   if (clientAttributes != null) {
     for (    NamedString clientAttribute : clientAttributes) {
@@ -23,6 +19,10 @@
         break;
       }
     }
+  }
+  String contentType=resourceContext.getMimeType();
+  if (Validator.isNotNull(contentType)) {
+    resourceResponse.setContentType(contentType);
   }
   String charSet=getCharSet(contentType);
   String itemString=resourceContext.getItemString();
