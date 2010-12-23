@@ -21,6 +21,10 @@
   if (Validator.isNotNull(contentType)) {
     resourceResponse.setContentType(contentType);
   }
+  String contentDisposition=response.getHeader(HttpHeaders.CONTENT_DISPOSITION);
+  if (Validator.isNotNull(contentDisposition)) {
+    resourceResponse.setProperty(HttpHeaders.CONTENT_DISPOSITION,contentDisposition);
+  }
   String charSet=getCharSet(contentType);
   if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite")) {
     String content=rewriteURLs(resourceResponse,new String(bytes,charSet));

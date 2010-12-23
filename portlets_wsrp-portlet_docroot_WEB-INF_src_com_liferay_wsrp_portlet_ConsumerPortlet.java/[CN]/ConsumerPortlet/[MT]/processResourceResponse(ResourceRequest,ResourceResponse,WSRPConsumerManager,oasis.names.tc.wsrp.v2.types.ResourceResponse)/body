@@ -13,6 +13,17 @@
   if (Validator.isNotNull(contentType)) {
     resourceResponse.setContentType(contentType);
   }
+  NamedString[] clientAttributes=resourceContext.getClientAttributes();
+  if (clientAttributes != null) {
+    for (    NamedString clientAttribute : clientAttributes) {
+      String name=clientAttribute.getName();
+      String value=clientAttribute.getValue();
+      if (name.equalsIgnoreCase(HttpHeaders.CONTENT_DISPOSITION)) {
+        resourceResponse.setProperty(HttpHeaders.CONTENT_DISPOSITION,value);
+        break;
+      }
+    }
+  }
   String charSet=getCharSet(contentType);
   String itemString=resourceContext.getItemString();
   byte[] itemBinary=resourceContext.getItemBinary();
