@@ -1,0 +1,28 @@
+{
+  PrincipalThreadLocal.setName(user.getUserId());
+  PermissionChecker permissionChecker=null;
+  try {
+    permissionChecker=PermissionCheckerFactoryUtil.create(user,true);
+    PermissionThreadLocal.setPermissionChecker(permissionChecker);
+    if (!ArticlePermission.contains(permissionChecker,_article.getResourcePrimKey(),ActionKeys.VIEW)) {
+      return false;
+    }
+  }
+  finally {
+    PrincipalThreadLocal.setName(null);
+    PermissionThreadLocal.setPermissionChecker(null);
+  }
+  String[] portletIds=ExpandoValueLocalServiceUtil.getData(user.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId(),new String[0]);
+  for (  String portletId : portletIds) {
+    String articleURL=KnowledgeBaseUtil.getArticleURL(portletId,_article.getResourcePrimKey(),_portalURL);
+    if (Validator.isNotNull(articleURL)) {
+      context.put("articleURL",articleURL);
+      return true;
+    }
+    if (_log.isInfoEnabled()) {
+      _log.info("Portlet " + portletId + " does not exist or does "+ "not contain article "+ _article.getResourcePrimKey());
+    }
+    ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),userId,portletId,subscription.getClassPK());
+  }
+  return false;
+}

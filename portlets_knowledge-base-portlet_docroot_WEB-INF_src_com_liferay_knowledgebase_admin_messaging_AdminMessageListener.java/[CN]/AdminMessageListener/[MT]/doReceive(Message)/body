@@ -11,20 +11,26 @@
   String replyToAddress=message.getString("replyToAddress");
   String mailId=message.getString("mailId");
   boolean htmlFormat=message.getBoolean("htmlFormat");
-  Set<Long> sent=new HashSet<Long>();
   if (_log.isInfoEnabled()) {
     _log.info("Sending notifications for {mailId=" + mailId + ", resourcePrimKey="+ resourcePrimKey+ "}");
   }
-  List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),resourcePrimKey);
-  sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  SubscriptionSender subscriptionSender=new AdminSubscriptionSender(article,portalURL);
+  subscriptionSender.setCompanyId(companyId);
+  subscriptionSender.setUserId(userId);
+  subscriptionSender.setGroupId(groupId);
+  subscriptionSender.setFrom(fromName,fromAddress);
+  subscriptionSender.setSubject(subject);
+  subscriptionSender.setBody(body);
+  subscriptionSender.setReplyToAddress(replyToAddress);
+  subscriptionSender.setMailId(mailId);
+  subscriptionSender.setHtmlFormat(htmlFormat);
+  subscriptionSender.notifyPersistedSubscribers(Article.class.getName(),groupId);
+  subscriptionSender.notifyPersistedSubscribers(Article.class.getName(),resourcePrimKey);
   while (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
     article=ArticleLocalServiceUtil.getLatestArticle(article.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
-    subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),article.getResourcePrimKey());
-    sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
+    subscriptionSender.notifyPersistedSubscribers(Article.class.getName(),article.getResourcePrimKey());
   }
-  subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(companyId,Article.class.getName(),groupId);
-  sendEmail(userId,groupId,resourcePrimKey,portalURL,fromName,fromAddress,subject,body,subscriptions,sent,replyToAddress,mailId,htmlFormat);
   if (_log.isInfoEnabled()) {
     _log.info("Finished sending notifications");
   }
