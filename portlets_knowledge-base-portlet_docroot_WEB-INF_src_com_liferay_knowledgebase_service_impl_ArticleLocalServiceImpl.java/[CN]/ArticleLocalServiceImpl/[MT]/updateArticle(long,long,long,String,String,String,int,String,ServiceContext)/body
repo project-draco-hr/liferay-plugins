@@ -26,8 +26,13 @@
   article.setContent(content);
   article.setDescription(description);
   article.setPriority(priority);
+  article.setLatest(ArticleConstants.LATEST_VERSION);
   article.setStatus(status);
   articlePersistence.update(article,false);
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+    oldArticle.setLatest(ArticleConstants.LATEST_APPROVED);
+    articlePersistence.update(oldArticle,false);
+  }
   if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
     updateArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
   }

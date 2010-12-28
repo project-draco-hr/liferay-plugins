@@ -11,6 +11,11 @@
   if (status != WorkflowConstants.STATUS_APPROVED) {
     return article;
   }
+  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+    Article oldArticle=articlePersistence.findByR_V(resourcePrimKey,article.getVersion() - 1);
+    oldArticle.setLatest(ArticleConstants.ARCHIVED);
+    articlePersistence.update(oldArticle,false);
+  }
   updateDisplayOrder(article,article.getParentResourcePrimKey(),article.getPriority());
   if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
     AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
