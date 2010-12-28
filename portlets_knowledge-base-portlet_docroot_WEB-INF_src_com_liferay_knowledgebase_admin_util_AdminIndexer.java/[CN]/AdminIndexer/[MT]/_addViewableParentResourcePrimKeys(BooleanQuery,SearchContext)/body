@@ -1,0 +1,10 @@
+{
+  BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create();
+  for (  long groupId : searchContext.getGroupIds()) {
+    long[] viewableParentResourcePrimKeys=ArticleServiceUtil.getViewableParentResourcePrimKeys(groupId,WorkflowConstants.STATUS_APPROVED);
+    for (    long parentResourcePrimKey : viewableParentResourcePrimKeys) {
+      booleanQuery.addExactTerm(_PARENT_RESOURCE_PRIM_KEY,parentResourcePrimKey);
+    }
+  }
+  contextQuery.add(booleanQuery,BooleanClauseOccur.MUST);
+}
