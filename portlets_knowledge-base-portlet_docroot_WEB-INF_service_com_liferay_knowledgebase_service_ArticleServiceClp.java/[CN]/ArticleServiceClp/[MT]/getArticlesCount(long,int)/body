@@ -1,10 +1,13 @@
 {
   Object returnObj=null;
-  MethodHandler methodHandler=new MethodHandler(_getArticlesMethodKey23,ClpSerializer.translateInput(resourcePrimKeys),status,start,end,ClpSerializer.translateInput(orderByComparator));
+  MethodHandler methodHandler=new MethodHandler(_getArticlesCountMethodKey7,resourcePrimKey,status);
   try {
     returnObj=_classLoaderProxy.invoke(methodHandler);
   }
  catch (  Throwable t) {
+    if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+      throw (com.liferay.portal.kernel.exception.PortalException)t;
+    }
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
       throw (com.liferay.portal.kernel.exception.SystemException)t;
     }
@@ -15,5 +18,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
-  return (java.util.List<com.liferay.knowledgebase.model.Article>)ClpSerializer.translateOutput(returnObj);
+  return ((Integer)returnObj).intValue();
 }
