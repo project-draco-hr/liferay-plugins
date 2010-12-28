@@ -1,0 +1,16 @@
+{
+  long[] viewableResourcePrimKeys=new long[]{parentResourcePrimKey};
+  long[] parentResourcePrimKeys=new long[]{parentResourcePrimKey};
+  while (parentResourcePrimKeys.length > 0) {
+    List<Article> articles=null;
+    if (status == WorkflowConstants.STATUS_ANY) {
+      articles=articlePersistence.filterFindByG_P_L(groupId,parentResourcePrimKeys,new int[]{ArticleConstants.LATEST_VERSION});
+    }
+ else {
+      articles=articlePersistence.filterFindByG_P_L_S(groupId,parentResourcePrimKeys,ArticleConstants.LATEST_ANY,status);
+    }
+    parentResourcePrimKeys=StringUtil.split(ListUtil.toString(articles,"resourcePrimKey"),0L);
+    viewableResourcePrimKeys=ArrayUtil.append(viewableResourcePrimKeys,parentResourcePrimKeys);
+  }
+  return viewableResourcePrimKeys;
+}

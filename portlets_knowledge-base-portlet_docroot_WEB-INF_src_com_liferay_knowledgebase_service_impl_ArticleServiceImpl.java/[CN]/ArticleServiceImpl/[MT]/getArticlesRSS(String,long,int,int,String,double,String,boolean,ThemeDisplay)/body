@@ -5,6 +5,10 @@
   String description=title;
   String layoutFullURL=PortalUtil.getLayoutFullURL(themeDisplay);
   String feedURL=KnowledgeBaseUtil.getArticleURL(portletId,resourcePrimKey,layoutFullURL,maximized);
-  List<Article> articles=filterArticles(article,status,max);
+  List<Article> articles=Collections.emptyList();
+  if (ArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
+    long[] resourcePrimKeys=getViewableResourcePrimKeys(article.getGroupId(),resourcePrimKey,status);
+    articles=getArticles(article.getGroupId(),resourcePrimKeys,status,null,0,max,new ArticleModifiedDateComparator());
+  }
   return exportToRSS(portletId,name,description,type,version,displayStyle,maximized,layoutFullURL,feedURL,articles,themeDisplay);
 }

@@ -1,0 +1,9 @@
+{
+  if (!ArticlePermission.contains(getPermissionChecker(),parentResourcePrimKey,ActionKeys.VIEW)) {
+    return Collections.emptyList();
+  }
+  if (status == WorkflowConstants.STATUS_ANY) {
+    return articlePersistence.filterFindByG_P_L(groupId,parentResourcePrimKey,ArticleConstants.LATEST_VERSION,start,end,orderByComparator);
+  }
+  return articlePersistence.filterFindByG_P_L_S(groupId,new long[]{parentResourcePrimKey},ArticleConstants.LATEST_ANY,status,start,end,orderByComparator);
+}

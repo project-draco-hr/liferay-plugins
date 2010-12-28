@@ -18,45 +18,33 @@
  else   if (orderByColumn.equals("modified-date")) {
     orderByComparator=new ArticleModifiedDateComparator(orderByAscending);
   }
-  int delta=SearchContainer.DEFAULT_DELTA;
-  int lastIntervalStart=0;
-  boolean listNotExhausted=true;
-  while (listNotExhausted) {
-    List<Article> articles=new ArrayList<Article>();
-    if (selectionMethod.equals("articles")) {
-      List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
-      if (assetEntries != null) {
-        long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
-        Set<Long> classPKsSet=SetUtil.fromArray(classPKs);
-        Set<Long> resourcePrimKeysSet=SetUtil.fromArray(resourcePrimKeys);
-        resourcePrimKeysSet.retainAll(classPKsSet);
-        resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysSet),0L);
-      }
-      articles=getArticles(resourcePrimKeys,lastIntervalStart,lastIntervalStart + delta,false);
+  List<Article> articles=new ArrayList<Article>();
+  if (selectionMethod.equals("articles")) {
+    List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
+    if (assetEntries != null) {
+      long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+      Set<Long> classPKsSet=SetUtil.fromArray(classPKs);
+      Set<Long> resourcePrimKeysSet=SetUtil.fromArray(resourcePrimKeys);
+      resourcePrimKeysSet.retainAll(classPKsSet);
+      resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysSet),0L);
     }
- else     if (selectionMethod.equals("group")) {
-      Map<String,Object> params=new HashMap<String,Object>();
-      params.put("groupId",group.getGroupId());
-      params.put("status",WorkflowConstants.STATUS_APPROVED);
-      if (!allArticles) {
-        params.put("parentResourcePrimKey",ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
-      }
-      List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
-      if (assetEntries != null) {
-        long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
-        params.put("resourcePrimKey",ArrayUtil.toArray(classPKs));
-      }
-      articles=ArticleLocalServiceUtil.getArticles(params,false,lastIntervalStart,lastIntervalStart + delta,orderByComparator);
+    articles=getArticles(group.getGroupId(),resourcePrimKeys,0,1,true);
+  }
+ else   if (selectionMethod.equals("group")) {
+    List<AssetEntry> assetEntries=getAssetEntries(plid,portletId,assetCategoryId,assetTagName);
+    if (assetEntries != null) {
+      long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+      articles=ArticleServiceUtil.getArticles(group.getGroupId(),classPKs,WorkflowConstants.STATUS_APPROVED,null,0,1,orderByComparator);
     }
-    Iterator<Article> itr=articles.iterator();
-    lastIntervalStart+=delta;
-    listNotExhausted=(articles.size() == delta);
-    while (itr.hasNext()) {
-      Article article=itr.next();
-      if (ArticlePermission.contains(permissionChecker,article,ActionKeys.VIEW)) {
-        return article;
-      }
+ else     if (!allArticles) {
+      articles=ArticleServiceUtil.getSiblingArticles(group.getGroupId(),ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,WorkflowConstants.STATUS_APPROVED,0,1,orderByComparator);
+    }
+ else {
+      articles=ArticleServiceUtil.getGroupArticles(group.getGroupId(),WorkflowConstants.STATUS_APPROVED,null,0,1,orderByComparator);
     }
   }
-  return null;
+  if (articles.isEmpty()) {
+    return null;
+  }
+  return articles.get(0);
 }

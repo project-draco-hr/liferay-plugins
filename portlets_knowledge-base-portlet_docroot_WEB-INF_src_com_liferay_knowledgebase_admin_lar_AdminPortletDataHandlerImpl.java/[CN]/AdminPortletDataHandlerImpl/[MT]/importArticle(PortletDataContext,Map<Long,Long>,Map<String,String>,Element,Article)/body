@@ -3,11 +3,7 @@
   long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,article.getParentResourcePrimKey());
   int priority=article.getPriority();
   String dirName=MapUtil.getString(dirNames,String.valueOf(article.getResourcePrimKey()));
-  Map<String,Object> params=new HashMap<String,Object>();
-  params.put("groupId",portletDataContext.getScopeGroupId());
-  params.put("parentResourcePrimKey",parentResourcePrimKey);
-  params.put("status",WorkflowConstants.STATUS_APPROVED);
-  int maxPriority=ArticleLocalServiceUtil.getArticlesCount(params,false);
+  int maxPriority=ArticleLocalServiceUtil.getSiblingArticlesCount(portletDataContext.getScopeGroupId(),parentResourcePrimKey,WorkflowConstants.STATUS_APPROVED);
   if (priority > maxPriority) {
     priority=maxPriority;
   }
