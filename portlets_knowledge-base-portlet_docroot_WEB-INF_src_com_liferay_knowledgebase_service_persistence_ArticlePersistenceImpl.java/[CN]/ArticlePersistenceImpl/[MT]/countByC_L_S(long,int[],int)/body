@@ -1,0 +1,57 @@
+{
+  Object[] finderArgs=new Object[]{companyId,StringUtil.merge(latests),status};
+  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_C_L_S,finderArgs,this);
+  if (count == null) {
+    StringBundler query=new StringBundler();
+    query.append(_SQL_COUNT_ARTICLE_WHERE);
+    boolean conjunctionable=false;
+    if (conjunctionable) {
+      query.append(WHERE_AND);
+    }
+    query.append(_FINDER_COLUMN_C_L_S_COMPANYID_5);
+    conjunctionable=true;
+    if ((latests == null) || (latests.length > 0)) {
+      if (conjunctionable) {
+        query.append(WHERE_AND);
+      }
+      query.append(StringPool.OPEN_PARENTHESIS);
+      for (int i=0; i < latests.length; i++) {
+        query.append(_FINDER_COLUMN_C_L_S_LATEST_5);
+        if ((i + 1) < latests.length) {
+          query.append(WHERE_OR);
+        }
+      }
+      query.append(StringPool.CLOSE_PARENTHESIS);
+      conjunctionable=true;
+    }
+    if (conjunctionable) {
+      query.append(WHERE_AND);
+    }
+    query.append(_FINDER_COLUMN_C_L_S_STATUS_5);
+    conjunctionable=true;
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(companyId);
+      if (latests != null) {
+        qPos.add(latests);
+      }
+      qPos.add(status);
+      count=(Long)q.uniqueResult();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (count == null) {
+        count=Long.valueOf(0);
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_L_S,finderArgs,count);
+      closeSession(session);
+    }
+  }
+  return count.intValue();
+}
