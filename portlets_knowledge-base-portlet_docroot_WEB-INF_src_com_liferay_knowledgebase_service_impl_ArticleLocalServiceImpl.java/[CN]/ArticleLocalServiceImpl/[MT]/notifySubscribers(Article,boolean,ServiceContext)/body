@@ -93,21 +93,13 @@
   }
   subject=StringUtil.replace(subject,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
   body=StringUtil.replace(body,new String[]{"[$ARTICLE_CONTENT$]","[$ARTICLE_CONTENT_DIFF$]","[$ARTICLE_TITLE$]","[$ARTICLE_TITLE_DIFF$]","[$ARTICLE_USER_ADDRESS$]","[$ARTICLE_USER_NAME$]","[$COMPANY_ID$]","[$COMPANY_MX$]","[$COMPANY_NAME$]","[$COMMUNITY_NAME$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]"},new String[]{articleContent,articleDiffs.get("content"),article.getTitle(),articleDiffs.get("title"),emailAddress,fullName,String.valueOf(company.getCompanyId()),company.getMx(),company.getName(),group.getName(),fromAddress,fromName,serviceContext.getPortalURL()});
-  StringBundler sb=new StringBundler(6);
-  sb.append(StringPool.LESS_THAN);
-  sb.append("knowledge_base.article.");
-  sb.append(article.getResourcePrimKey());
-  sb.append(StringPool.AT);
-  sb.append(company.getMx());
-  sb.append(StringPool.GREATER_THAN);
-  String mailId=sb.toString();
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(article,serviceContext.getPortalURL());
   subscriptionSender.setBody(body);
   subscriptionSender.setCompanyId(article.getCompanyId());
   subscriptionSender.setFrom(fromAddress,fromName);
   subscriptionSender.setGroupId(article.getGroupId());
   subscriptionSender.setHtmlFormat(true);
-  subscriptionSender.setMailId(mailId);
+  subscriptionSender.setMailId(StringPool.LESS_THAN + "knowledge_base.article." + article.getResourcePrimKey()+ StringPool.AT+ company.getMx()+ StringPool.GREATER_THAN);
   subscriptionSender.setReplyToAddress(fromAddress);
   subscriptionSender.setSubject(subject);
   subscriptionSender.setUserId(article.getUserId());
