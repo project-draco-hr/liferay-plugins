@@ -1,61 +1,15 @@
 {
-  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
-  Locale defaultLocale=LocaleUtil.getDefault();
-  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
-  String title=ParamUtil.getString(actionRequest,"title" + StringPool.UNDERLINE + defaultLanguageId);
-  boolean requireCaptcha=ParamUtil.getBoolean(actionRequest,"requireCaptcha");
-  String successURL=ParamUtil.getString(actionRequest,"successURL");
-  boolean sendAsEmail=ParamUtil.getBoolean(actionRequest,"sendAsEmail");
-  String subject=ParamUtil.getString(actionRequest,"subject");
-  String emailAddress=ParamUtil.getString(actionRequest,"emailAddress");
-  boolean saveToDatabase=ParamUtil.getBoolean(actionRequest,"saveToDatabase");
-  boolean saveToFile=ParamUtil.getBoolean(actionRequest,"saveToFile");
-  String fileName=ParamUtil.getString(actionRequest,"fileName");
-  boolean updateFields=ParamUtil.getBoolean(actionRequest,"updateFields");
-  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
-  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
-  if (Validator.isNull(title)) {
-    SessionErrors.add(actionRequest,"titleRequired");
-  }
-  if (Validator.isNull(subject)) {
-    SessionErrors.add(actionRequest,"subjectRequired");
-  }
-  if (!sendAsEmail && !saveToDatabase && !saveToFile) {
-    SessionErrors.add(actionRequest,"handlingRequired");
-  }
-  if (sendAsEmail) {
-    if (Validator.isNull(emailAddress)) {
-      SessionErrors.add(actionRequest,"emailAddressRequired");
-    }
- else     if (!Validator.isEmailAddress(emailAddress)) {
-      SessionErrors.add(actionRequest,"emailAddressInvalid");
-    }
-  }
-  if (saveToFile) {
-    try {
-      FileOutputStream fos=new FileOutputStream(fileName,true);
-      fos.close();
-    }
- catch (    SecurityException es) {
-      SessionErrors.add(actionRequest,"fileNameInvalid");
-    }
-catch (    FileNotFoundException fnfe) {
-      SessionErrors.add(actionRequest,"fileNameInvalid");
-    }
-  }
+  validateFields(actionRequest);
   if (!SessionErrors.isEmpty(actionRequest)) {
     return;
   }
+  Locale defaultLocale=LocaleUtil.getDefault();
+  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
+  boolean updateFields=ParamUtil.getBoolean(actionRequest,"updateFields");
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
   LocalizationUtil.setLocalizedPreferencesValues(actionRequest,preferences,"title");
   LocalizationUtil.setLocalizedPreferencesValues(actionRequest,preferences,"description");
-  preferences.setValue("requireCaptcha",String.valueOf(requireCaptcha));
-  preferences.setValue("successURL",successURL);
-  preferences.setValue("sendAsEmail",String.valueOf(sendAsEmail));
-  preferences.setValue("subject",subject);
-  preferences.setValue("emailAddress",emailAddress);
-  preferences.setValue("saveToDatabase",String.valueOf(saveToDatabase));
-  preferences.setValue("saveToFile",String.valueOf(saveToFile));
-  preferences.setValue("fileName",fileName);
   if (updateFields) {
     int i=1;
     String databaseTableName=WebFormUtil.getNewDatabaseTableName(portletResource);
@@ -112,6 +66,6 @@ catch (    FileNotFoundException fnfe) {
   }
   if (SessionErrors.isEmpty(actionRequest)) {
     preferences.store();
-    SessionMessages.add(actionRequest,portletConfig.getPortletName() + ".doConfigure");
   }
+  super.processAction(portletConfig,actionRequest,actionResponse);
 }

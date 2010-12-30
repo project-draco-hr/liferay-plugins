@@ -1,0 +1,40 @@
+{
+  Locale defaultLocale=LocaleUtil.getDefault();
+  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
+  String title=ParamUtil.getString(actionRequest,"title" + StringPool.UNDERLINE + defaultLanguageId);
+  boolean sendAsEmail=GetterUtil.getBoolean(getParameter(actionRequest,"sendAsEmail"));
+  String subject=getParameter(actionRequest,"subject");
+  boolean saveToDatabase=GetterUtil.getBoolean(getParameter(actionRequest,"saveToDatabase"));
+  boolean saveToFile=GetterUtil.getBoolean(getParameter(actionRequest,"saveToFile"));
+  if (Validator.isNull(title)) {
+    SessionErrors.add(actionRequest,"titleRequired");
+  }
+  if (Validator.isNull(subject)) {
+    SessionErrors.add(actionRequest,"subjectRequired");
+  }
+  if (!sendAsEmail && !saveToDatabase && !saveToFile) {
+    SessionErrors.add(actionRequest,"handlingRequired");
+  }
+  if (sendAsEmail) {
+    String emailAddress=getParameter(actionRequest,"emailAddress");
+    if (Validator.isNull(emailAddress)) {
+      SessionErrors.add(actionRequest,"emailAddressRequired");
+    }
+ else     if (!Validator.isEmailAddress(emailAddress)) {
+      SessionErrors.add(actionRequest,"emailAddressInvalid");
+    }
+  }
+  if (saveToFile) {
+    String fileName=getParameter(actionRequest,"fileName");
+    try {
+      FileOutputStream fos=new FileOutputStream(fileName,true);
+      fos.close();
+    }
+ catch (    SecurityException es) {
+      SessionErrors.add(actionRequest,"fileNameInvalid");
+    }
+catch (    FileNotFoundException fnfe) {
+      SessionErrors.add(actionRequest,"fileNameInvalid");
+    }
+  }
+}
