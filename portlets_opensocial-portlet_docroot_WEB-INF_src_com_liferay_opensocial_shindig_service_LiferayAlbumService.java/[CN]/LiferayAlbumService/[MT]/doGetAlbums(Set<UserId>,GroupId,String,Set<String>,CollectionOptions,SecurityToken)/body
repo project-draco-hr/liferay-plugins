@@ -4,26 +4,26 @@
     String userIdString=userId.getUserId(securityToken);
     long userIdLong=GetterUtil.getLong(userIdString);
     User user=UserLocalServiceUtil.getUserById(userIdLong);
-    List<DLFolder> dlFolders=new ArrayList<DLFolder>();
+    List<Folder> folders=new ArrayList<Folder>();
     GroupId.Type groupIdType=groupId.getType();
     if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {
       List<User> socialUsers=UserLocalServiceUtil.getSocialUsers(user.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
       for (      User socialUser : socialUsers) {
         Group group=socialUser.getGroup();
-        List<DLFolder> friendDLFolders=DLAppLocalServiceUtil.getFolders(group.getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-        dlFolders.addAll(friendDLFolders);
+        List<Folder> friendFolders=DLAppLocalServiceUtil.getFolders(group.getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+        folders.addAll(friendFolders);
       }
     }
  else     if (groupIdType.equals(GroupId.Type.self)) {
       Group group=user.getGroup();
-      dlFolders=DLAppLocalServiceUtil.getFolders(group.getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+      folders=DLAppLocalServiceUtil.getFolders(group.getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
-    for (    DLFolder dlFolder : dlFolders) {
+    for (    Folder folder : folders) {
       Album album=new AlbumImpl();
-      album.setDescription(dlFolder.getDescription());
-      album.setId(Long.toString(dlFolder.getFolderId()));
-      album.setOwnerId(Long.toString(dlFolder.getUserId()));
-      album.setTitle(dlFolder.getName());
+      album.setDescription(folder.getDescription());
+      album.setId(Long.toString(folder.getFolderId()));
+      album.setOwnerId(Long.toString(folder.getUserId()));
+      album.setTitle(folder.getName());
       albums.add(album);
     }
   }

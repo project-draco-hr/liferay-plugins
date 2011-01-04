@@ -3,26 +3,26 @@
   for (  UserId userId : userIds) {
     long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
     User user=UserLocalServiceUtil.getUserById(userIdLong);
-    List<DLFileEntry> dlFileEntries=new ArrayList<DLFileEntry>();
+    List<FileEntry> fileEntries=new ArrayList<FileEntry>();
     GroupId.Type groupIdType=groupId.getType();
     if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {
       List<User> socialUsers=UserLocalServiceUtil.getSocialUsers(user.getUserId(),SocialRelationConstants.TYPE_BI_FRIEND,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
       for (      User socialUser : socialUsers) {
         Group group=socialUser.getGroup();
-        List<DLFileEntry> friendDLFileEntries=DLAppLocalServiceUtil.getGroupFileEntries(group.getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
-        dlFileEntries.addAll(friendDLFileEntries);
+        List<FileEntry> friendFileEntries=DLAppLocalServiceUtil.getGroupFileEntries(group.getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
+        fileEntries.addAll(friendFileEntries);
       }
     }
  else     if (groupIdType.equals(GroupId.Type.self)) {
       Group group=user.getGroup();
-      dlFileEntries=DLAppLocalServiceUtil.getGroupFileEntries(group.getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
+      fileEntries=DLAppLocalServiceUtil.getGroupFileEntries(group.getGroupId(),collectionOptions.getFirst(),collectionOptions.getMax());
     }
-    for (    DLFileEntry dlFileEntry : dlFileEntries) {
-      MediaItem.Type mediaItemType=getMediaItemType(dlFileEntry);
+    for (    FileEntry fileEntry : fileEntries) {
+      MediaItem.Type mediaItemType=getMediaItemType(fileEntry);
       if (mediaItemType == null) {
         continue;
       }
-      MediaItem mediaItem=getMediaItem(dlFileEntry,fields,securityToken);
+      MediaItem mediaItem=getMediaItem(fileEntry,fields,securityToken);
       mediaItems.add(mediaItem);
     }
   }

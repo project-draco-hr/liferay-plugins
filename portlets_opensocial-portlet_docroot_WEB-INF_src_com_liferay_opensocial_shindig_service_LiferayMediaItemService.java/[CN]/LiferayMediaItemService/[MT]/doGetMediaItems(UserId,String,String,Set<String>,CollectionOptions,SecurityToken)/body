@@ -4,14 +4,14 @@
   Group group=user.getGroup();
   long groupIdLong=group.getGroupId();
   long albumIdLong=GetterUtil.getLong(albumId);
-  List<DLFileEntry> dLFileEntries=DLAppLocalServiceUtil.getFileEntries(groupIdLong,albumIdLong);
+  List<FileEntry> fileEntries=DLAppLocalServiceUtil.getFileEntries(groupIdLong,albumIdLong);
   List<MediaItem> mediaItems=new ArrayList<MediaItem>();
-  for (  DLFileEntry dlFileEntry : dLFileEntries) {
-    MediaItem.Type mediaItemType=getMediaItemType(dlFileEntry);
+  for (  FileEntry fileEntry : fileEntries) {
+    MediaItem.Type mediaItemType=getMediaItemType(fileEntry);
     if (mediaItemType == null) {
       continue;
     }
-    MediaItem mediaItem=getMediaItem(dlFileEntry,fields,securityToken);
+    MediaItem mediaItem=getMediaItem(fileEntry,fields,securityToken);
     mediaItems.add(mediaItem);
   }
   return new RestfulCollection<MediaItem>(mediaItems,collectionOptions.getFirst(),mediaItems.size(),collectionOptions.getMax());
