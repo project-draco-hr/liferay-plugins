@@ -3,25 +3,10 @@
   try {
     PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user,true);
     PermissionThreadLocal.setPermissionChecker(permissionChecker);
-    if (!ArticlePermission.contains(permissionChecker,_article,ActionKeys.VIEW)) {
-      return false;
-    }
+    return ArticlePermission.contains(permissionChecker,_article,ActionKeys.VIEW);
   }
   finally {
     PrincipalThreadLocal.setName(null);
     PermissionThreadLocal.setPermissionChecker(null);
   }
-  String[] portletIds=ExpandoValueLocalServiceUtil.getData(user.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId(),new String[0]);
-  for (  String portletId : portletIds) {
-    String articleURL=KnowledgeBaseUtil.getArticleURL(portletId,_article.getResourcePrimKey(),_portalURL);
-    if (Validator.isNotNull(articleURL)) {
-      setContextAttribute("[$ARTICLE_URL$]",articleURL);
-      return true;
-    }
-    if (_log.isInfoEnabled()) {
-      _log.info("Portlet " + portletId + " does not exist or does "+ "not contain "+ _article.getResourcePrimKey());
-    }
-    ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),userId,portletId,subscription.getClassPK());
-  }
-  return false;
 }

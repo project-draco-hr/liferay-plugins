@@ -1,0 +1,10 @@
+{
+  String[] portletPrimKeys=ExpandoValueLocalServiceUtil.getData(_subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",_subscription.getSubscriptionId(),new String[0]);
+  for (  String portletPrimKey : portletPrimKeys) {
+    String articleURL=KnowledgeBaseUtil.getArticleURL(ArticleConstants.getPortletId(portletPrimKey),_article.getResourcePrimKey(),_portalURL);
+    if (Validator.isNotNull(articleURL)) {
+      return articleURL;
+    }
+  }
+  return _portalURL;
+}
