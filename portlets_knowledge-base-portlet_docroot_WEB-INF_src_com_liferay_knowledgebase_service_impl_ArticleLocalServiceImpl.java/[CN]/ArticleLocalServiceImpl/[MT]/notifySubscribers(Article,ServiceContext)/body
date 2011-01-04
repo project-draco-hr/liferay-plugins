@@ -11,16 +11,14 @@
     String defaultPreferences=null;
     preferences=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
   }
-  String emailArticleAddedEnabled=preferences.getValue("email-article-added-enabled",PortletProps.get("admin.email.article.added.enabled"));
-  if (!update && !GetterUtil.getBoolean(emailArticleAddedEnabled)) {
+  if (serviceContext.isCommandAdd() && !KnowledgeBaseUtil.getEmailArticleAddedEnabled(preferences)) {
     return;
   }
-  String emailArticleUpdatedEnabled=preferences.getValue("email-article-updated-enabled",PortletProps.get("admin.email.article.updated.enabled"));
-  if (update && !GetterUtil.getBoolean(emailArticleUpdatedEnabled)) {
+  if (serviceContext.isCommandUpdate() && !KnowledgeBaseUtil.getEmailArticleUpdatedEnabled(preferences)) {
     return;
   }
-  String fromName=preferences.getValue("email-from-name",PortletProps.get("admin.email.from.name"));
-  String fromAddress=preferences.getValue("email-from-address",PortletProps.get("admin.email.from.address"));
+  String fromName=KnowledgeBaseUtil.getEmailFromName(preferences);
+  String fromAddress=KnowledgeBaseUtil.getEmailFromAddress(preferences);
   String articleContent=StringUtil.replace(article.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   Map<String,String> articleDiffs=new HashMap<String,String>();
   String[] parameters=new String[]{"content","title"};
@@ -36,49 +34,13 @@
   }
   String subject=null;
   String body=null;
-  if (!update) {
-    subject=preferences.getValue("email-article-added-subject",null);
-    if (subject == null) {
-      String name=PortletProps.get("admin.email.article.added.subject");
-      try {
-        subject=StringUtil.read(getClass().getClassLoader(),name);
-      }
- catch (      IOException ioe) {
-        _log.error(ioe,ioe);
-      }
-    }
-    body=preferences.getValue("email-article-added-body",null);
-    if (body == null) {
-      String name=PortletProps.get("admin.email.article.added.body");
-      try {
-        body=StringUtil.read(getClass().getClassLoader(),name);
-      }
- catch (      IOException ioe) {
-        _log.error(ioe,ioe);
-      }
-    }
+  if (serviceContext.isCommandAdd()) {
+    subject=KnowledgeBaseUtil.getEmailArticleAddedSubject(preferences);
+    body=KnowledgeBaseUtil.getEmailArticleUpdatedBody(preferences);
   }
  else {
-    subject=preferences.getValue("email-article-updated-subject",null);
-    if (subject == null) {
-      String name=PortletProps.get("admin.email.article.updated.subject");
-      try {
-        subject=StringUtil.read(getClass().getClassLoader(),name);
-      }
- catch (      IOException ioe) {
-        _log.error(ioe,ioe);
-      }
-    }
-    body=preferences.getValue("email-article-updated-body",null);
-    if (body == null) {
-      String name=PortletProps.get("admin.email.article.updated.body");
-      try {
-        body=StringUtil.read(getClass().getClassLoader(),name);
-      }
- catch (      IOException ioe) {
-        _log.error(ioe,ioe);
-      }
-    }
+    subject=KnowledgeBaseUtil.getEmailArticleUpdatedSubject(preferences);
+    body=KnowledgeBaseUtil.getEmailArticleUpdatedBody(preferences);
   }
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(article,serviceContext.getPortalURL());
   subscriptionSender.setBody(body);
