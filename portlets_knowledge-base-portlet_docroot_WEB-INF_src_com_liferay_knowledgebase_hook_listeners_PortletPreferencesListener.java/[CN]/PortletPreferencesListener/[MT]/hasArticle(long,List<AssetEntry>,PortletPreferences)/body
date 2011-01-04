@@ -1,0 +1,31 @@
+{
+  Map<String,Object> preferencesMap=KnowledgeBaseUtil.getPreferencesMap(preferences);
+  String selectionMethod=(String)preferencesMap.get("selectionMethod");
+  long[] resourcePrimKeys=ArrayUtil.toArray((Long[])preferencesMap.get("resourcePrimKeys"));
+  if (selectionMethod.equals("articles")) {
+    if (assetEntries != null) {
+      long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+      Set<Long> classPKsSet=SetUtil.fromArray(classPKs);
+      Set<Long> resourcePrimKeysSet=SetUtil.fromArray(resourcePrimKeys);
+      resourcePrimKeysSet.retainAll(classPKsSet);
+      resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeysSet),0L);
+    }
+    while (resourcePrimKey != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+      if (ArrayUtil.contains(resourcePrimKeys,resourcePrimKey)) {
+        return true;
+      }
+      Article article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+      resourcePrimKey=article.getParentResourcePrimKey();
+    }
+  }
+ else   if (selectionMethod.equals("group")) {
+    if (assetEntries == null) {
+      return true;
+    }
+    long[] classPKs=StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+    if (ArrayUtil.contains(classPKs,resourcePrimKey)) {
+      return true;
+    }
+  }
+  return false;
+}

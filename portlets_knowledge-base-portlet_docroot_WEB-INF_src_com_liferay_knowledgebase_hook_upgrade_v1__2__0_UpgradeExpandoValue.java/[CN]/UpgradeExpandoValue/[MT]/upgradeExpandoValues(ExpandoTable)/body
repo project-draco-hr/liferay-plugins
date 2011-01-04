@@ -1,0 +1,35 @@
+{
+  ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),"portletPrimKeys",ExpandoColumnConstants.STRING_ARRAY);
+  List<ExpandoValue> expandoValues=ExpandoValueLocalServiceUtil.getColumnValues(expandoTable.getCompanyId(),Subscription.class.getName(),"KB","portletIds",QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  ExpandoValue expandoValue : expandoValues) {
+    Subscription subscription=null;
+    try {
+      subscription=SubscriptionLocalServiceUtil.getSubscription(expandoValue.getClassPK());
+    }
+ catch (    NoSuchSubscriptionException nsse) {
+      continue;
+    }
+    long groupId=0;
+    try {
+      Article article=ArticleLocalServiceUtil.getLatestArticle(subscription.getClassPK(),WorkflowConstants.STATUS_ANY);
+      groupId=article.getGroupId();
+    }
+ catch (    NoSuchArticleException nsae) {
+      groupId=subscription.getClassPK();
+    }
+    String[] portletIds=ExpandoValueLocalServiceUtil.getData(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletIds",subscription.getSubscriptionId(),new String[0]);
+    String[] portletPrimKeys=new String[0];
+    for (int i=0; i < portletIds.length; i++) {
+      String portletId=portletIds[i];
+      long plid=PortalUtil.getPlidFromPortletId(groupId,portletId);
+      if (plid == LayoutConstants.DEFAULT_PLID) {
+        Group controlPanelGroup=GroupLocalServiceUtil.getGroup(subscription.getCompanyId(),GroupConstants.CONTROL_PANEL);
+        plid=LayoutLocalServiceUtil.getDefaultPlid(controlPanelGroup.getGroupId(),true);
+      }
+      String portletPrimKey=ArticleConstants.getPortletPrimKey(plid,portletId);
+      portletPrimKeys=ArrayUtil.append(portletPrimKeys,portletPrimKey);
+    }
+    ExpandoValueLocalServiceUtil.addValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",subscription.getSubscriptionId(),portletPrimKeys);
+  }
+  ExpandoColumnLocalServiceUtil.deleteColumn(expandoTable.getTableId(),"portletIds");
+}

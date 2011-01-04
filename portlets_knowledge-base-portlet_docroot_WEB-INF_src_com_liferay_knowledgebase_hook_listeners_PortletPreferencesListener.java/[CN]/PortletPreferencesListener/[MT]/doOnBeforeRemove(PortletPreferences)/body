@@ -1,0 +1,17 @@
+{
+  String rootPortletId=PortletConstants.getRootPortletId(preferences.getPortletId());
+  if (!rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_AGGREGATOR) && !rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY) && !rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_LIST)&& !rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SEARCH)) {
+    return;
+  }
+  Layout layout=LayoutLocalServiceUtil.getLayout(preferences.getPlid());
+  List<ExpandoValue> expandoValues=ArticleLocalServiceUtil.getExpandoValues(layout.getCompanyId(),preferences.getPlid(),preferences.getPortletId());
+  for (  ExpandoValue expandoValue : expandoValues) {
+    String[] portletPrimKeys=expandoValue.getStringArray();
+    String portletPrimKey=ArticleConstants.getPortletPrimKey(preferences.getPlid(),preferences.getPortletId());
+    if (!ArrayUtil.contains(portletPrimKeys,portletPrimKey)) {
+      continue;
+    }
+    Subscription subscription=SubscriptionLocalServiceUtil.getSubscription(expandoValue.getClassPK());
+    ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),subscription.getUserId(),preferences.getPlid(),preferences.getPortletId(),subscription.getClassPK());
+  }
+}
