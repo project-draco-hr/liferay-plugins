@@ -1,7 +1,7 @@
 {
   boolean deleteFolder=true;
-  List<DLFileEntry> fileEntries=DLAppLocalServiceUtil.getFileEntries(groupId,rootFolderId);
-  for (  DLFileEntry fileEntry : fileEntries) {
+  List<FileEntry> fileEntries=DLAppLocalServiceUtil.getFileEntries(groupId,rootFolderId);
+  for (  FileEntry fileEntry : fileEntries) {
     ServiceContext serviceContext=new ServiceContext();
     try {
       DLAppLocalServiceUtil.moveFileEntry(fileEntry.getUserId(),fileEntry.getFileEntryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,serviceContext);
@@ -10,8 +10,8 @@
       deleteFolder=false;
     }
   }
-  List<DLFolder> folders=DLAppLocalServiceUtil.getFolders(groupId,rootFolderId);
-  for (  DLFolder folder : folders) {
+  List<Folder> folders=DLAppLocalServiceUtil.getFolders(groupId,rootFolderId);
+  for (  Folder folder : folders) {
     ServiceContext serviceContext=new ServiceContext();
     try {
       DLAppLocalServiceUtil.updateFolder(folder.getFolderId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,folder.getName(),folder.getDescription(),serviceContext);
