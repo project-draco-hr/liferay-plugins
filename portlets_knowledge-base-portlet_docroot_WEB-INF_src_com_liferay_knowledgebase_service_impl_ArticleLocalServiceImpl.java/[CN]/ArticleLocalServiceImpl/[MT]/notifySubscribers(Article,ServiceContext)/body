@@ -11,14 +11,14 @@
     String defaultPreferences=null;
     preferences=portletPreferencesLocalService.getPreferences(article.getCompanyId(),ownerId,ownerType,plid,portletId,defaultPreferences);
   }
-  if (serviceContext.isCommandAdd() && !KnowledgeBaseUtil.getEmailArticleAddedEnabled(preferences)) {
+  if (serviceContext.isCommandAdd() && !AdminUtil.getEmailArticleAddedEnabled(preferences)) {
     return;
   }
-  if (serviceContext.isCommandUpdate() && !KnowledgeBaseUtil.getEmailArticleUpdatedEnabled(preferences)) {
+  if (serviceContext.isCommandUpdate() && !AdminUtil.getEmailArticleUpdatedEnabled(preferences)) {
     return;
   }
-  String fromName=KnowledgeBaseUtil.getEmailFromName(preferences);
-  String fromAddress=KnowledgeBaseUtil.getEmailFromAddress(preferences);
+  String fromName=AdminUtil.getEmailFromName(preferences);
+  String fromAddress=AdminUtil.getEmailFromAddress(preferences);
   String articleContent=StringUtil.replace(article.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   Map<String,String> articleDiffs=new HashMap<String,String>();
   String[] parameters=new String[]{"content","title"};
@@ -35,12 +35,12 @@
   String subject=null;
   String body=null;
   if (serviceContext.isCommandAdd()) {
-    subject=KnowledgeBaseUtil.getEmailArticleAddedSubject(preferences);
-    body=KnowledgeBaseUtil.getEmailArticleUpdatedBody(preferences);
+    subject=AdminUtil.getEmailArticleAddedSubject(preferences);
+    body=AdminUtil.getEmailArticleUpdatedBody(preferences);
   }
  else {
-    subject=KnowledgeBaseUtil.getEmailArticleUpdatedSubject(preferences);
-    body=KnowledgeBaseUtil.getEmailArticleUpdatedBody(preferences);
+    subject=AdminUtil.getEmailArticleUpdatedSubject(preferences);
+    body=AdminUtil.getEmailArticleUpdatedBody(preferences);
   }
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(article,serviceContext.getPortalURL());
   subscriptionSender.setBody(body);
