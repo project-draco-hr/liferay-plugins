@@ -10,21 +10,5 @@
   mediaItem.setTitle(fileEntry.getTitle());
   mediaItem.setType(getMediaItemType(fileEntry));
   mediaItem.setUrl(getFileEntryURL(fileEntry,securityToken));
-  JSONObject extraSettingsJSONObject=null;
-  try {
-    extraSettingsJSONObject=JSONFactoryUtil.createJSONObject(fileEntry.getExtraSettings());
-  }
- catch (  JSONException jsone) {
-  }
-  if (extraSettingsJSONObject != null) {
-    if (extraSettingsJSONObject.has(MediaItem.Field.DURATION.toString())) {
-      mediaItem.setDuration(extraSettingsJSONObject.getString("DURATION"));
-    }
-    if (extraSettingsJSONObject.has(MediaItem.Field.LOCATION.toString())) {
-      Address address=getAddress(extraSettingsJSONObject.getJSONObject("location"));
-      mediaItem.setLocation(address);
-    }
-    SerializerUtil.copyProperties(extraSettingsJSONObject,mediaItem,_MEDIA_ITEM_FIELDS);
-  }
   return mediaItem;
 }
