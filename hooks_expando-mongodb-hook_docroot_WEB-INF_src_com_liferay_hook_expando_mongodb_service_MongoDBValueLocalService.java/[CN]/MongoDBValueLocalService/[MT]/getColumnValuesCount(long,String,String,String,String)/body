@@ -1,0 +1,22 @@
+{
+  ExpandoColumn column=ExpandoColumnLocalServiceUtil.getColumn(companyId,className,name,columnName);
+  DBCollection collection=MongoDBUtil.getCollection(companyId,className,name);
+  DBCursor cursor=null;
+  if (Validator.isNotNull(data)) {
+    BasicDBObject query=new BasicDBObject();
+    ExpandoValue value=new MongoExpandoValue();
+    value.setColumnId(column.getColumnId());
+    value.setData(data);
+    try {
+      query.put(columnName,getData(column,value));
+    }
+ catch (    PortalException e) {
+      throw new SystemException(e);
+    }
+    cursor=collection.find(query);
+  }
+ else {
+    cursor=collection.find();
+  }
+  return cursor.count();
+}

@@ -1,0 +1,9 @@
+{
+  DB db=MongoDBUtil.getDB(companyId);
+  if (Validator.isNotNull(username) && Validator.isNotNull(password)) {
+    boolean authenticated=db.authenticate(username,password.toCharArray());
+    if (!authenticated) {
+      throw new SystemException("Authentication Failed! Check the db log for details.");
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  ExpandoTable table=ExpandoTableLocalServiceUtil.getTable(tableId);
+  DBCollection collection=MongoDBUtil.getCollection(table);
+  ExpandoValue value=new MongoExpandoValue();
+  value.setCompanyId(table.getCompanyId());
+  value.setTableId(tableId);
+  value.setRowId(classPK);
+  value.setClassNameId(classNameId);
+  value.setClassPK(classPK);
+  BasicDBObject dbObject=new BasicDBObject();
+  dbObject.put("companyId",table.getCompanyId());
+  dbObject.put("tableId",tableId);
+  dbObject.put("rowId",classPK);
+  dbObject.put("classNameId",classNameId);
+  dbObject.put("classPK",classPK);
+  BasicDBObject result=(BasicDBObject)collection.findOne(dbObject);
+  if (result == null) {
+    long valueId=CounterLocalServiceUtil.increment();
+    value.setValueId(valueId);
+    value.setNew(true);
+    dbObject.put("valueId",valueId);
+    putColumnData(dbObject,columns,data,value);
+    collection.insert(dbObject);
+  }
+ else {
+    value.setValueId(result.getLong("valueId"));
+    value.setNew(false);
+    BasicDBObject values=new BasicDBObject();
+    putColumnData(values,columns,data,value);
+    BasicDBObject action=new BasicDBObject();
+    action.put(MongoDB.OPS.SET,values);
+    collection.update(result,action);
+  }
+}

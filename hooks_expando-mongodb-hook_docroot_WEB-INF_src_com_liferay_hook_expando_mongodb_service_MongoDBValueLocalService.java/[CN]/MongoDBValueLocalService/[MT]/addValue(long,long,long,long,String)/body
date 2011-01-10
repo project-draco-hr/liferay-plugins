@@ -1,0 +1,36 @@
+{
+  ExpandoTable table=ExpandoTableLocalServiceUtil.getTable(tableId);
+  ExpandoColumn column=ExpandoColumnLocalServiceUtil.getColumn(columnId);
+  DBCollection collection=MongoDBUtil.getCollection(table);
+  ExpandoValue value=new MongoExpandoValue();
+  value.setCompanyId(table.getCompanyId());
+  value.setTableId(tableId);
+  value.setColumnId(columnId);
+  value.setRowId(classPK);
+  value.setClassNameId(classNameId);
+  value.setClassPK(classPK);
+  value.setData(data);
+  BasicDBObject query=new BasicDBObject();
+  query.put("companyId",table.getCompanyId());
+  query.put("tableId",tableId);
+  query.put("rowId",classPK);
+  query.put("classNameId",classNameId);
+  query.put("classPK",classPK);
+  BasicDBObject result=(BasicDBObject)collection.findOne(query);
+  if (result == null) {
+    long valueId=CounterLocalServiceUtil.increment();
+    value.setValueId(valueId);
+    value.setNew(true);
+    query.put("valueId",valueId);
+    query.put(column.getName(),getData(column,value));
+    collection.insert(query);
+  }
+ else {
+    value.setValueId(result.getLong("valueId"));
+    Object dataObject=getData(column,value);
+    BasicDBObject action=new BasicDBObject();
+    action.put(MongoDB.OPS.SET,new BasicDBObject(column.getName(),dataObject));
+    collection.update(result,action);
+  }
+  return value;
+}

@@ -1,0 +1,18 @@
+{
+  DBCollection collection=MongoDBUtil.getCollection(table);
+  DBCursor cursor=collection.find(new BasicDBObject());
+  if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
+    cursor.limit(start);
+    cursor.limit(end - start);
+  }
+  List<ExpandoRow> results=new ArrayList<ExpandoRow>();
+  for (  DBObject dbObject : cursor.toArray()) {
+    MongoExpandoRow row=new MongoExpandoRow();
+    row.setRowId((Long)dbObject.get("rowId"));
+    row.setCompanyId(table.getCompanyId());
+    row.setTableId(table.getTableId());
+    row.setClassPK((Long)dbObject.get("classPK"));
+    results.add(row);
+  }
+  return results;
+}

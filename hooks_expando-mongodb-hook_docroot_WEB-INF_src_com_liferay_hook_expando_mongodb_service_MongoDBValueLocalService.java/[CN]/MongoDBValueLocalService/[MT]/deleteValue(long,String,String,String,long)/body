@@ -1,0 +1,20 @@
+{
+  ExpandoTable table=null;
+  try {
+    table=ExpandoTableLocalServiceUtil.getTable(companyId,className,name);
+  }
+ catch (  PortalException e) {
+    throw new SystemException(e);
+  }
+  DBCollection collection=MongoDBUtil.getCollection(table);
+  BasicDBObject objectData=new BasicDBObject();
+  objectData.put(columnName,null);
+  BasicDBObject query=new BasicDBObject();
+  query.put("companyId",table.getCompanyId());
+  query.put("tableId",table.getTableId());
+  query.put("rowId",classPK);
+  query.put("classNameId",table.getClassNameId());
+  query.put("classPK",classPK);
+  BasicDBObject action=new BasicDBObject(MongoDB.OPS.SET,objectData);
+  collection.update(query,action);
+}
