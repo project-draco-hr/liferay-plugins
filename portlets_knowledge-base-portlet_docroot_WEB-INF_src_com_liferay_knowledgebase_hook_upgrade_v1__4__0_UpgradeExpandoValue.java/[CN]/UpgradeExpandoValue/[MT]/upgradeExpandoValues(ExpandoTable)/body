@@ -1,0 +1,21 @@
+{
+  List<ExpandoValue> expandoValues=ExpandoValueLocalServiceUtil.getColumnValues(expandoTable.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  ExpandoValue expandoValue : expandoValues) {
+    Subscription subscription=null;
+    try {
+      subscription=SubscriptionLocalServiceUtil.getSubscription(expandoValue.getClassPK());
+    }
+ catch (    NoSuchSubscriptionException nsse) {
+      continue;
+    }
+    try {
+      ArticleLocalServiceUtil.getLatestArticle(subscription.getClassPK(),WorkflowConstants.STATUS_ANY);
+    }
+ catch (    NoSuchArticleException nsae) {
+      continue;
+    }
+    String[] portletPrimKeys=expandoValue.getStringArray();
+    ExpandoValueLocalServiceUtil.deleteValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",subscription.getSubscriptionId());
+    ExpandoValueLocalServiceUtil.addValue(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",subscription.getSubscriptionId(),portletPrimKeys[0]);
+  }
+}

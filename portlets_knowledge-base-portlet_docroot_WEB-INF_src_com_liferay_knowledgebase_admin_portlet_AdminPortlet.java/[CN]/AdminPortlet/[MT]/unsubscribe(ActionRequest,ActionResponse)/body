@@ -1,11 +1,5 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   String portletId=PortalUtil.getPortletId(actionRequest);
-  if (resourcePrimKey <= 0) {
-    ArticleServiceUtil.unsubscribe(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getPlid(),portletId);
-  }
- else {
-    ArticleServiceUtil.unsubscribeArticle(themeDisplay.getCompanyId(),themeDisplay.getPlid(),portletId,resourcePrimKey);
-  }
+  ArticleServiceUtil.unsubscribe(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),themeDisplay.getPlid(),portletId,themeDisplay.getScopeGroupId());
 }
