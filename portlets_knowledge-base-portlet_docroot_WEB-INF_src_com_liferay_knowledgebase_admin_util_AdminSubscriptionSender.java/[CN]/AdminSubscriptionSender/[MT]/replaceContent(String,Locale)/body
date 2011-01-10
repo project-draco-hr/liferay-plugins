@@ -8,9 +8,9 @@
     return super.replaceContent(content,locale);
   }
   String[] portletPrimKeys=ExpandoValueLocalServiceUtil.getData(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",subscription.getSubscriptionId(),new String[0]);
-  String portletId=ArticleConstants.getPortletId(portletPrimKeys[0]);
-  String articleURL=KnowledgeBaseUtil.getArticleURL(portletId,_article.getResourcePrimKey(),_portalURL);
-  String portletTitle=PortalUtil.getPortletTitle(portletId,locale);
+  String portletPrimKeyPortletId=ArticleConstants.getPortletId(portletPrimKeys[0]);
+  String articleURL=KnowledgeBaseUtil.getArticleURL(portletPrimKeyPortletId,_article.getResourcePrimKey(),_portalURL);
+  String portletTitle=PortalUtil.getPortletTitle(portletPrimKeyPortletId,locale);
   content=StringUtil.replace(content,new String[]{"[$ARTICLE_URL$]","[$PORTLET_NAME$]"},new String[]{articleURL,portletTitle});
   return super.replaceContent(content,locale);
 }
