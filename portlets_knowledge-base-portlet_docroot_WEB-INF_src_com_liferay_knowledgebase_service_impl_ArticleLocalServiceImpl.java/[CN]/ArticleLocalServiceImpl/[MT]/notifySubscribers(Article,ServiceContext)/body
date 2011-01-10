@@ -20,17 +20,10 @@
   String fromName=AdminUtil.getEmailFromName(preferences);
   String fromAddress=AdminUtil.getEmailFromAddress(preferences);
   String articleContent=StringUtil.replace(article.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
-  Map<String,String> articleDiffs=new HashMap<String,String>();
-  String[] parameters=new String[]{"content","title"};
-  for (  String parameter : parameters) {
-    String articleDiff=StringPool.BLANK;
-    try {
-      articleDiff=KnowledgeBaseUtil.getArticleDiff(article.getResourcePrimKey(),article.getVersion(),parameter,serviceContext.getPortalURL());
-    }
- catch (    Exception e) {
-      _log.error("Unable to process diff for {resourcePrimKey=" + article.getResourcePrimKey() + ", version="+ article.getVersion()+ "}");
-    }
-    articleDiffs.put(parameter,articleDiff);
+  Map<String,String> articleDiffs=getEmailArticleDiffs(article);
+  for (  String key : articleDiffs.keySet()) {
+    String value=StringUtil.replace(articleDiffs.get(key),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
+    articleDiffs.put(key,value);
   }
   String subject=null;
   String body=null;

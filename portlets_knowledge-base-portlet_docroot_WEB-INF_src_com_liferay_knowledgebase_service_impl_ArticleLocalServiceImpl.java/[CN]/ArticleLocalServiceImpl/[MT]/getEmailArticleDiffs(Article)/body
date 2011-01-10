@@ -1,0 +1,14 @@
+{
+  Map<String,String> emailArticleDiffs=new HashMap<String,String>();
+  for (  String param : new String[]{"content","title"}) {
+    String value=BeanPropertiesUtil.getString(article,param);
+    try {
+      value=AdminUtil.getArticleDiff(article.getResourcePrimKey(),article.getVersion() - 1,article.getVersion(),param);
+    }
+ catch (    Exception e) {
+      _log.error(e,e);
+    }
+    emailArticleDiffs.put(param,value);
+  }
+  return emailArticleDiffs;
+}
