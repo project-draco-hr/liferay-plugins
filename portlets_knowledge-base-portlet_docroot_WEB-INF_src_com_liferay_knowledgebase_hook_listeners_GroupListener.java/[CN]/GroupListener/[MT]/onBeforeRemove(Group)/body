@@ -1,9 +1,6 @@
 {
   try {
-    List<Subscription> subscriptions=SubscriptionLocalServiceUtil.getSubscriptions(group.getCompanyId(),Article.class.getName(),group.getGroupId());
-    for (    Subscription subscription : subscriptions) {
-      ArticleLocalServiceUtil.unsubscribeAllPortlets(subscription.getCompanyId(),subscription.getSubscriptionId());
-    }
+    doOnBeforeRemove(group);
   }
  catch (  Exception e) {
     throw new ModelListenerException(e);
