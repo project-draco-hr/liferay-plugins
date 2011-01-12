@@ -3,8 +3,7 @@
   String markupServiceKey=getSessionKey(WebKeys.MARKUP_SERVICE,portletRequest,wsrpConsumer);
   TransientValue<WSRP_v2_Markup_PortType> markupServiceTransientValue=(TransientValue<WSRP_v2_Markup_PortType>)portletSession.getAttribute(markupServiceKey,PortletSession.APPLICATION_SCOPE);
   if ((markupServiceTransientValue == null) || (markupServiceTransientValue.isNull())) {
-    String userToken=WSRPConsumerManager.getUserToken(portletRequest);
-    WSRP_v2_Markup_PortType markupService=wsrpConsumerManager.getMarkupService(userToken);
+    WSRP_v2_Markup_PortType markupService=wsrpConsumerManager.getMarkupService();
     markupServiceTransientValue=new TransientValue<WSRP_v2_Markup_PortType>(markupService);
     ServiceDescription serviceDescription=wsrpConsumerManager.getServiceDescription();
     String cookieKey=getSessionKey(WebKeys.COOKIE,portletRequest,wsrpConsumer);
@@ -16,7 +15,7 @@
         InitCookie initCookie=new InitCookie();
         initCookie.setRegistrationContext(wsrpConsumer.getRegistrationContext());
         markupService.initCookie(initCookie);
-        cookie=SimpleHTTPSender.getCurrentCookie();
+        cookie=WSRPHTTPSender.getCurrentCookie();
         portletSession.setAttribute(cookieKey,cookie,PortletSession.APPLICATION_SCOPE);
       }
     }

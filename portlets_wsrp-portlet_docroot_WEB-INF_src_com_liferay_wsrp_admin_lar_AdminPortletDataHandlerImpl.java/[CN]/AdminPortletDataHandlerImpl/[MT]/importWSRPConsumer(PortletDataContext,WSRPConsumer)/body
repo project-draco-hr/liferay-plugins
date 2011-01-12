@@ -2,6 +2,7 @@
   WSRPConsumer importedWSRPConsumer=null;
   try {
     importedWSRPConsumer=WSRPConsumerLocalServiceUtil.getWSRPConsumer(wsrpConsumer.getUuid());
+    importedWSRPConsumer.setForwardCookies(wsrpConsumer.getForwardCookies());
     importedWSRPConsumer.setName(wsrpConsumer.getName());
     importedWSRPConsumer.setUrl(wsrpConsumer.getUrl());
     importedWSRPConsumer.setWsdl(wsrpConsumer.getWsdl());
@@ -10,7 +11,7 @@
  catch (  NoSuchConsumerException nsce) {
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setUuid(wsrpConsumer.getUuid());
-    importedWSRPConsumer=WSRPConsumerLocalServiceUtil.addWSRPConsumer(portletDataContext.getCompanyId(),null,wsrpConsumer.getName(),wsrpConsumer.getUrl(),null,serviceContext);
+    importedWSRPConsumer=WSRPConsumerLocalServiceUtil.addWSRPConsumer(portletDataContext.getCompanyId(),null,wsrpConsumer.getForwardCookies(),wsrpConsumer.getName(),wsrpConsumer.getUrl(),null,serviceContext);
   }
   return importedWSRPConsumer;
 }

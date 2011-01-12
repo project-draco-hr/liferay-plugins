@@ -1,0 +1,33 @@
+{
+  HttpServletRequest request=getCurrentRequest();
+  if (request == null) {
+    super.invoke(ctx);
+    return;
+  }
+  Object cookiesObject=ctx.getProperty(HTTPConstants.HEADER_COOKIE);
+  String[] cookiesArray=new String[0];
+  if (cookiesObject instanceof String[]) {
+    cookiesArray=(String[])cookiesObject;
+  }
+ else   if (cookiesObject instanceof String) {
+    cookiesArray=new String[]{(String)cookiesObject};
+  }
+  Map<String,String> cookiesMap=new HashMap<String,String>();
+  for (  String cookie : cookiesArray) {
+    String name=cookie.substring(0,cookie.indexOf(StringPool.EQUAL));
+    cookiesMap.put(name.toLowerCase(),cookie);
+  }
+  for (  String forwardCookie : _forwardCookies) {
+    String value=CookieUtil.get(request,forwardCookie);
+    if (Validator.isNotNull(value)) {
+      StringBundler sb=new StringBundler(forwardCookie);
+      sb.append(StringPool.EQUAL);
+      sb.append(value);
+      cookiesMap.put(forwardCookie,sb.toString());
+    }
+  }
+  cookiesObject=cookiesMap.values().toArray(new String[0]);
+  ctx.setProperty(HTTPConstants.HEADER_COOKIE,cookiesObject);
+  super.invoke(ctx);
+  _registerCurrentCookie(ctx);
+}
