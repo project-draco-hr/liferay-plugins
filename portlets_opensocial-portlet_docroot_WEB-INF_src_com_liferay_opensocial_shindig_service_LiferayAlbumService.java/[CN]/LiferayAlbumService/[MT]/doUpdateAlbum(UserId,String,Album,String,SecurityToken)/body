@@ -7,16 +7,11 @@
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
   serviceContext.setScopeGroupId(groupIdLong);
-  Map<String,Serializable> expandoBridgeAttributes=new LinkedHashMap<String,Serializable>();
-  SerializerUtil.copyProperties(album,expandoBridgeAttributes,_ALBUM_FIELDS);
-  serviceContext.setExpandoBridgeAttributes(expandoBridgeAttributes);
-  ExpandoBridge expandoBridge=ExpandoBridgeFactoryUtil.getExpandoBridge(user.getCompanyId(),Folder.class.toString());
-  addAttributes(album,expandoBridge);
   if (albumId == null) {
-    DLAppServiceUtil.addFolder(groupIdLong,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,album.getTitle(),album.getDescription(),serviceContext);
+    DLAppLocalServiceUtil.addFolder(userIdLong,groupIdLong,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,album.getTitle(),album.getDescription(),serviceContext);
   }
  else {
     Folder folder=DLAppLocalServiceUtil.getFolder(GetterUtil.getLong(albumId));
-    DLAppServiceUtil.updateFolder(folder.getFolderId(),folder.getParentFolderId(),album.getTitle(),album.getDescription(),serviceContext);
+    DLAppLocalServiceUtil.updateFolder(folder.getFolderId(),folder.getParentFolderId(),album.getTitle(),album.getDescription(),serviceContext);
   }
 }

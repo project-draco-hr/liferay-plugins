@@ -1,8 +1,7 @@
 {
   List<Album> albums=new ArrayList<Album>();
   for (  String albumId : albumIds) {
-    Folder folder=DLAppServiceUtil.getFolder(GetterUtil.getLong(albumId));
-    Album album=getAlbum(folder,fields,securityToken);
+    Album album=doGetAlbum(userId,appId,fields,albumId,securityToken);
     albums.add(album);
   }
   return new RestfulCollection<Album>(albums,collectionOptions.getFirst(),albums.size(),collectionOptions.getMax());
