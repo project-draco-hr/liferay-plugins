@@ -1,20 +1,19 @@
 {
-  KaleoInstanceToken kaleoInstanceToken=newKaleoTaskInstanceToken.getKaleoInstanceToken();
+  KaleoInstanceToken kaleoInstanceToken=kaleoTaskInstanceToken.getKaleoInstanceToken();
   KaleoLog kaleoLog=createKaleoLog(kaleoInstanceToken,LogType.TASK_ASSIGNMENT,serviceContext);
-  kaleoLog.setKaleoTaskInstanceTokenId(newKaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
+  kaleoLog.setKaleoTaskInstanceTokenId(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
   KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
   kaleoLog.setKaleoDefinitionId(currentKaleoNode.getKaleoDefinitionId());
   kaleoLog.setKaleoNodeId(currentKaleoNode.getKaleoNodeId());
   kaleoLog.setKaleoNodeName(currentKaleoNode.getName());
-  if (previousKaleoTaskInstanceToken != null) {
-    List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=previousKaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
-    if (kaleoTaskAssignmentInstances.size() == 1) {
-      KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstances.get(0);
+  if (previousKaleoTaskAssignmentInstances != null) {
+    if (previousKaleoTaskAssignmentInstances.size() == 1) {
+      KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=previousKaleoTaskAssignmentInstances.get(0);
       kaleoLog.setPreviousAssigneeClassName(kaleoTaskAssignmentInstance.getAssigneeClassName());
       kaleoLog.setPreviousAssigneeClassPK(kaleoTaskAssignmentInstance.getAssigneeClassPK());
     }
   }
-  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=newKaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
+  List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=kaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
   if (!kaleoTaskAssignmentInstances.isEmpty()) {
     KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=kaleoTaskAssignmentInstances.get(0);
     kaleoLog.setCurrentAssigneeClassName(kaleoTaskAssignmentInstance.getAssigneeClassName());
