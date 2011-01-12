@@ -1,0 +1,34 @@
+{
+  if (recipientsElement == null) {
+    return;
+  }
+  List<Element> addressRecipientElements=recipientsElement.elements("address");
+  for (  Element addressRecipientElement : addressRecipientElements) {
+    AddressRecipient addressRecipient=new AddressRecipient(addressRecipientElement.getText());
+    notification.addRecipients(addressRecipient);
+  }
+  List<Element> roleReceipientElements=recipientsElement.elements("role");
+  for (  Element roleAssignmentElement : roleReceipientElements) {
+    long roleId=GetterUtil.getLong(roleAssignmentElement.elementText("role-id"));
+    String roleType=roleAssignmentElement.elementText("role-type");
+    String name=roleAssignmentElement.elementText("name");
+    RoleRecipient roleRecipient=null;
+    if (roleId > 0) {
+      roleRecipient=new RoleRecipient(roleId,roleType);
+    }
+ else {
+      roleRecipient=new RoleRecipient(name,roleType);
+      boolean autoCreate=GetterUtil.getBoolean(roleAssignmentElement.elementText("auto-create"),true);
+      roleRecipient.setAutoCreate(autoCreate);
+    }
+    notification.addRecipients(roleRecipient);
+  }
+  List<Element> userRecipientElements=recipientsElement.elements("user");
+  for (  Element userRecipientElement : userRecipientElements) {
+    long userId=GetterUtil.getLong(userRecipientElement.elementText("user-id"));
+    String screenName=userRecipientElement.elementText("screen-name");
+    String emailAddress=userRecipientElement.elementText("email-address");
+    UserRecipient userRecipient=new UserRecipient(userId,screenName,emailAddress);
+    notification.addRecipients(userRecipient);
+  }
+}

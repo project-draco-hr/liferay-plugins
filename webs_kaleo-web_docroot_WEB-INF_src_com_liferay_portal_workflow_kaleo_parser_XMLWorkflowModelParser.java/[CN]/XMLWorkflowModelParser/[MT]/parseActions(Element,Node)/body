@@ -1,0 +1,36 @@
+{
+  if (actionsElement == null) {
+    return;
+  }
+  Set<Action> actions=new HashSet<Action>();
+  List<Element> actionElements=actionsElement.elements("action");
+  for (  Element actionElement : actionElements) {
+    String name=actionElement.elementText("name");
+    String description=actionElement.elementText("description");
+    String executionType=actionElement.elementText("execution-type");
+    String script=actionElement.elementText("script");
+    String language=actionElement.elementText("script-language");
+    int priority=GetterUtil.getInteger(actionElement.elementText("priority"));
+    Action action=new Action(name,description,executionType,script,language,priority);
+    actions.add(action);
+  }
+  node.setActions(actions);
+  Set<Notification> notifications=new HashSet<Notification>();
+  List<Element> notificationElements=actionsElement.elements("notification");
+  for (  Element notificationElement : notificationElements) {
+    String name=notificationElement.elementText("name");
+    String description=notificationElement.elementText("description");
+    String executionType=notificationElement.elementText("execution-type");
+    String template=notificationElement.elementText("template");
+    String templateLanguage=notificationElement.elementText("template-language");
+    Notification notification=new Notification(name,description,executionType,template,templateLanguage);
+    List<Element> notificationTypeElements=notificationElement.elements("notification-type");
+    for (    Element notificationTypeElement : notificationTypeElements) {
+      notification.addNotificationType(notificationTypeElement.getText());
+    }
+    Element recipientsElement=notificationElement.element("recipients");
+    parseRecipients(recipientsElement,notification);
+    notifications.add(notification);
+  }
+  node.setNotifications(notifications);
+}
