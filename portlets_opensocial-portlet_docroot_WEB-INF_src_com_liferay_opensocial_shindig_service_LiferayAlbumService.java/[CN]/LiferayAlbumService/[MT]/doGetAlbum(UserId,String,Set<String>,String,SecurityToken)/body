@@ -1,10 +1,5 @@
 {
   long albumIdLong=GetterUtil.getLong(albumId);
-  Folder folder=DLAppLocalServiceUtil.getFolder(albumIdLong);
-  Album album=new AlbumImpl();
-  album.setDescription(folder.getDescription());
-  album.setId(String.valueOf(folder.getFolderId()));
-  album.setOwnerId(String.valueOf(folder.getUserId()));
-  album.setTitle(folder.getName());
-  return album;
+  Folder folder=DLAppServiceUtil.getFolder(albumIdLong);
+  return getAlbum(folder,fields,securityToken);
 }

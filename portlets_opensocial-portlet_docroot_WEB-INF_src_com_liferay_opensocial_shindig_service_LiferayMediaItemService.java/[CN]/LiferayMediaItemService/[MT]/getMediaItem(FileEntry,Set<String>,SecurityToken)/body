@@ -10,5 +10,19 @@
   mediaItem.setTitle(fileEntry.getTitle());
   mediaItem.setType(getMediaItemType(fileEntry));
   mediaItem.setUrl(getFileEntryURL(fileEntry,securityToken));
+  Map<String,Serializable> attributes=fileEntry.getLatestFileVersion().getAttributes();
+  if (attributes.containsKey("location")) {
+    JSONObject addressJSONObject=null;
+    try {
+      addressJSONObject=JSONFactoryUtil.createJSONObject((String)attributes.get("location"));
+    }
+ catch (    Exception e) {
+    }
+    if (addressJSONObject != null) {
+      Address address=getAddress(addressJSONObject);
+      mediaItem.setLocation(address);
+    }
+  }
+  SerializerUtil.copyProperties(attributes,mediaItem,_MEDIA_ITEM_FIELDS);
   return mediaItem;
 }
