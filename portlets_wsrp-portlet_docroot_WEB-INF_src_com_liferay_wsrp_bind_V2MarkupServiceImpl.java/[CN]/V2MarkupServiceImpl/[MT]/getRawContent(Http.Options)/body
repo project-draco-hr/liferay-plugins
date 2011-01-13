@@ -1,28 +1,30 @@
 {
-  HttpServletRequest request=ServletUtil.getRequest();
+  Map<String,Cookie> cookiesMap=new HashMap<String,Cookie>();
   HttpSession session=ServletUtil.getSession();
   Cookie[] sessionCookies=(Cookie[])session.getAttribute(WebKeys.COOKIES);
-  Map<String,Cookie> cookiesMap=new HashMap<String,Cookie>();
   if (sessionCookies != null) {
     for (    Cookie cookie : sessionCookies) {
       cookiesMap.put(cookie.getName(),cookie);
     }
   }
+  HttpServletRequest request=ServletUtil.getRequest();
   Cookie[] forwardCookies=request.getCookies();
   if (forwardCookies != null) {
     for (    Cookie cookie : forwardCookies) {
-      if (!cookie.getName().equalsIgnoreCase("cookie_support") || !cookie.getName().equalsIgnoreCase("guest_language_id") || !cookie.getName().equalsIgnoreCase("jsessionid")) {
-        cookiesMap.put(cookie.getName(),cookie);
+      String cookieName=cookie.getName();
+      if (!cookieName.equalsIgnoreCase("cookie_support") || !cookieName.equalsIgnoreCase("guest_language_id") || !cookieName.equalsIgnoreCase("jsessionid")) {
+        cookiesMap.put(cookieName,cookie);
       }
     }
   }
-  if (cookiesMap.size() > 0) {
-    httpOptions.setCookies(cookiesMap.values().toArray(new Cookie[0]));
+  if (!cookiesMap.isEmpty()) {
+    Collection<Cookie> cookiesCollection=cookiesMap.values();
+    httpOptions.setCookies(cookiesCollection.toArray(new Cookie[0]));
   }
   String rawContent=HttpUtil.URLtoString(httpOptions);
-  Cookie[] cookiesArray=HttpUtil.getCookies();
-  if (cookiesArray != null) {
-    session.setAttribute(WebKeys.COOKIES,cookiesArray);
+  Cookie[] cookies=HttpUtil.getCookies();
+  if (cookies != null) {
+    session.setAttribute(WebKeys.COOKIES,cookies);
   }
   return rawContent;
 }

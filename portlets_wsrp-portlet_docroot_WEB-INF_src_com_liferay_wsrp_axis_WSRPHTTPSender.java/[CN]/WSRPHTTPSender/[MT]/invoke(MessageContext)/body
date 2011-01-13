@@ -1,33 +1,32 @@
 {
   HttpServletRequest request=getCurrentRequest();
   if (request == null) {
-    super.invoke(ctx);
+    super.invoke(messageContext);
     return;
   }
-  Object cookiesObject=ctx.getProperty(HTTPConstants.HEADER_COOKIE);
-  String[] cookiesArray=new String[0];
+  Map<String,String> cookiesMap=new HashMap<String,String>();
+  Object cookiesObject=messageContext.getProperty(HTTPConstants.HEADER_COOKIE);
+  String[] cookies=new String[0];
   if (cookiesObject instanceof String[]) {
-    cookiesArray=(String[])cookiesObject;
+    cookies=(String[])cookiesObject;
   }
  else   if (cookiesObject instanceof String) {
-    cookiesArray=new String[]{(String)cookiesObject};
+    cookies=new String[]{(String)cookiesObject};
   }
-  Map<String,String> cookiesMap=new HashMap<String,String>();
-  for (  String cookie : cookiesArray) {
+  for (  String cookie : cookies) {
     String name=cookie.substring(0,cookie.indexOf(StringPool.EQUAL));
     cookiesMap.put(name.toLowerCase(),cookie);
   }
   for (  String forwardCookie : _forwardCookies) {
     String value=CookieUtil.get(request,forwardCookie);
-    if (Validator.isNotNull(value)) {
-      StringBundler sb=new StringBundler(forwardCookie);
-      sb.append(StringPool.EQUAL);
-      sb.append(value);
-      cookiesMap.put(forwardCookie,sb.toString());
+    if (Validator.isNull(value)) {
+      continue;
     }
+    cookiesMap.put(forwardCookie,forwardCookie.concat(StringPool.EQUAL).concat(value));
   }
-  cookiesObject=cookiesMap.values().toArray(new String[0]);
-  ctx.setProperty(HTTPConstants.HEADER_COOKIE,cookiesObject);
-  super.invoke(ctx);
-  _registerCurrentCookie(ctx);
+  Collection<String> cookiesCollection=cookiesMap.values();
+  cookiesObject=cookiesCollection.toArray(new String[0]);
+  messageContext.setProperty(HTTPConstants.HEADER_COOKIE,cookiesObject);
+  super.invoke(messageContext);
+  _registerCurrentCookie(messageContext);
 }
