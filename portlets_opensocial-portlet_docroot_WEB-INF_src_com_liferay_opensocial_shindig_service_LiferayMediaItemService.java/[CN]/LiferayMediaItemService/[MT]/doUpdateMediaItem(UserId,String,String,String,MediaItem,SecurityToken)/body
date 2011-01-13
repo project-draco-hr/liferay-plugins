@@ -7,23 +7,24 @@
   options.setLocation(mediaItem.getUrl());
   byte[] byteArray=HttpUtil.URLtoByteArray(options);
   String fileName=getFileName(mediaItem,options);
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setScopeGroupId(groupIdLong);
+  Map<String,Serializable> expandoBridgeAttributes=new LinkedHashMap<String,Serializable>();
+  SerializerUtil.copyProperties(mediaItem,expandoBridgeAttributes,_MEDIA_ITEM_FIELDS);
+  serviceContext.setExpandoBridgeAttributes(expandoBridgeAttributes);
+  ExpandoBridge expandoBridge=ExpandoBridgeFactoryUtil.getExpandoBridge(user.getCompanyId(),DLFileEntry.class.getName());
+  addAttributes(mediaItem,expandoBridge);
   if (mediaItemId == null) {
     long albumIdLong=GetterUtil.getLong(albumId);
-    ServiceContext serviceContext=new ServiceContext();
-    serviceContext.setAddCommunityPermissions(true);
-    serviceContext.setAddGuestPermissions(true);
-    serviceContext.setScopeGroupId(groupIdLong);
-    DLAppLocalServiceUtil.addFileEntry(userIdLong,groupIdLong,albumIdLong,fileName,mediaItem.getDescription(),StringPool.BLANK,byteArray,serviceContext);
+    DLAppServiceUtil.addFileEntry(groupIdLong,albumIdLong,fileName,mediaItem.getDescription(),StringPool.BLANK,byteArray,serviceContext);
   }
  else {
     long mediaItemIdLong=GetterUtil.getLong(mediaItemId);
     FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(mediaItemIdLong);
-    ServiceContext serviceContext=new ServiceContext();
-    serviceContext.setAddCommunityPermissions(true);
-    serviceContext.setAddGuestPermissions(true);
     serviceContext.setCreateDate(fileEntry.getCreateDate());
     serviceContext.setModifiedDate(fileEntry.getModifiedDate());
-    serviceContext.setScopeGroupId(groupIdLong);
-    DLAppLocalServiceUtil.updateFileEntry(userIdLong,fileEntry.getFileEntryId(),fileName,mediaItem.getTitle(),mediaItem.getDescription(),StringPool.BLANK,false,byteArray,serviceContext);
+    DLAppServiceUtil.updateFileEntry(fileEntry.getFileEntryId(),fileName,mediaItem.getTitle(),mediaItem.getDescription(),StringPool.BLANK,false,byteArray,serviceContext);
   }
 }

@@ -1,0 +1,14 @@
+{
+  String fieldName=field.toString();
+  Object value=BeanPropertiesUtil.getObject(bean,fieldName);
+  if (Validator.isNotNull(value)) {
+    if (fieldName.equals("location")) {
+      JSONObject addressJSONObject=JSONFactoryUtil.createJSONObject();
+      SerializerUtil.copyProperties(value,addressJSONObject,_ADDRESS_FIELDS);
+      map.put(fieldName,addressJSONObject.toString());
+    }
+ else {
+      map.put(fieldName,(String)value);
+    }
+  }
+}

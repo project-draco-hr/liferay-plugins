@@ -1,0 +1,22 @@
+{
+  String fieldName=field.toString();
+  if (map.containsKey(fieldName)) {
+    String value=(String)map.get(fieldName);
+    if (fieldName.equals("location")) {
+      JSONObject addressJSONObject=null;
+      try {
+        addressJSONObject=JSONFactoryUtil.createJSONObject(value);
+      }
+ catch (      Exception e) {
+      }
+      if (addressJSONObject != null) {
+        Address address=new AddressImpl();
+        SerializerUtil.copyProperties(addressJSONObject,address,_ADDRESS_FIELDS);
+        BeanPropertiesUtil.setProperty(bean,fieldName,address);
+      }
+    }
+ else {
+      BeanPropertiesUtil.setProperty(bean,fieldName,value);
+    }
+  }
+}

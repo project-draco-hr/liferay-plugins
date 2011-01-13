@@ -10,5 +10,7 @@
   mediaItem.setTitle(fileEntry.getTitle());
   mediaItem.setType(getMediaItemType(fileEntry));
   mediaItem.setUrl(getFileEntryURL(fileEntry,securityToken));
+  Map<String,Serializable> attributes=fileEntry.getLatestFileVersion().getAttributes();
+  SerializerUtil.copyProperties(attributes,mediaItem,_MEDIA_ITEM_FIELDS);
   return mediaItem;
 }
