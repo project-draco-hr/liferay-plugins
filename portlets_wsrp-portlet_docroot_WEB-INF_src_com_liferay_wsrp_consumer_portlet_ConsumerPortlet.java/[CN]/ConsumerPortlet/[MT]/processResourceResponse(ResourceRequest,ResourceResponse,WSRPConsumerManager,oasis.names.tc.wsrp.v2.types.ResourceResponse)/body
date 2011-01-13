@@ -27,7 +27,11 @@
   String charSet=getCharSet(contentType);
   String itemString=resourceContext.getItemString();
   byte[] itemBinary=resourceContext.getItemBinary();
-  if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite") || resourceContext.getRequiresRewriting()) {
+  Boolean requiresRewriting=resourceContext.getRequiresRewriting();
+  if (requiresRewriting == null) {
+    requiresRewriting=Boolean.FALSE;
+  }
+  if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite") || requiresRewriting) {
     if (itemBinary != null) {
       itemString=new String(itemBinary,charSet);
     }
