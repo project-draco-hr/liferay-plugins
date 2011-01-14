@@ -1,0 +1,25 @@
+{
+  List<String> urls=new ArrayList<String>();
+  String issuer=ParamUtil.getString(request,"entityId");
+  String ssoSessionId=CookieUtil.get(request,WebKeys.SSOSESSIONID);
+  List<String> sps=SessionManagerUtil.getActiveSPs(ssoSessionId);
+  for (  String spIssuer : sps) {
+    if (issuer.equals(spIssuer)) {
+      continue;
+    }
+    String keepaliveURL=SAMLMetadataUtil.getKeepaliveURL(user.getCompanyId(),spIssuer);
+    if (Validator.isNotNull(keepaliveURL)) {
+      urls.add(keepaliveURL);
+    }
+  }
+  request.setAttribute(WebKeys.KEEPALIVE_URL_LIST,urls);
+  response.setHeader(HttpHeaders.CACHE_CONTROL,HttpHeaders.CACHE_CONTROL_NO_CACHE_NO_STORE_VALUE);
+  response.setHeader(HttpHeaders.PRAGMA,HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE);
+  response.setContentType(ContentTypes.TEXT_JAVASCRIPT);
+  try {
+    request.getRequestDispatcher("/html/portal/saml/keepalive.jsp").include(request,response);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+}

@@ -1,0 +1,69 @@
+{
+  long companyId=user.getCompanyId();
+  String authnRequestID=context.getInboundSAMLMessageId();
+  String acsURL=context.getPeerEntityEndpoint().getLocation();
+  DateTime authnIssueInstant=context.getInboundSAMLMessageIssueInstant();
+  String spEntityId=context.getInboundMessageIssuer();
+  String issuerName=context.getOutboundMessageIssuer();
+  int clockSkew=SAMLMetadataUtil.getClockSkew(companyId,spEntityId);
+  int assertionLifetime=SAMLMetadataUtil.getAssertionLifetime(companyId,spEntityId);
+  DateTime issueInstant=new DateTime();
+  DateTime notBefore=new DateTime().minusMillis(clockSkew);
+  DateTime notOnOrAfter=new DateTime().plusMillis(clockSkew).plusSeconds(assertionLifetime);
+  Issuer issuer=OpenSAMLUtil.buildIssuer(issuerName);
+  NameIDResolver nameIDResolver=NameIDResolverFactory.getNameIDResolver(companyId,spEntityId);
+  NameID nameID=nameIDResolver.resolve(user);
+  SubjectConfirmationData subjectConfirmationData=OpenSAMLUtil.buildSubjectConfirmationData();
+  subjectConfirmationData.setRecipient(acsURL);
+  subjectConfirmationData.setNotBefore(notBefore);
+  subjectConfirmationData.setNotOnOrAfter(notOnOrAfter);
+  SubjectConfirmation subjectConfirmation=OpenSAMLUtil.buildSubjectConfirmation();
+  subjectConfirmation.setSubjectConfirmationData(subjectConfirmationData);
+  subjectConfirmation.setMethod(SubjectConfirmation.METHOD_BEARER);
+  Subject subject=OpenSAMLUtil.buildSubject(nameID);
+  subject.getSubjectConfirmations().add(subjectConfirmation);
+  Audience audience=OpenSAMLUtil.buildAudience();
+  audience.setAudienceURI(acsURL);
+  AudienceRestriction audienceRestriction=OpenSAMLUtil.buildAudienceRestriction();
+  audienceRestriction.getAudiences().add(audience);
+  Conditions conditions=OpenSAMLUtil.buildConditions();
+  conditions.getAudienceRestrictions().add(audienceRestriction);
+  conditions.setNotBefore(notBefore);
+  conditions.setNotOnOrAfter(notOnOrAfter);
+  AuthnContextClassRef authnContextClassRef=OpenSAMLUtil.buildAuthnContextClassRef();
+  authnContextClassRef.setAuthnContextClassRef(AuthnContext.PASSWORD_AUTHN_CTX);
+  AuthnContext authnContext=OpenSAMLUtil.buildAuthnContext();
+  authnContext.setAuthnContextClassRef(authnContextClassRef);
+  AuthnStatement authnStatement=OpenSAMLUtil.buildAuthnStatement();
+  authnStatement.setAuthnInstant(authnIssueInstant);
+  authnStatement.setAuthnContext(authnContext);
+  Assertion assertion=OpenSAMLUtil.buildAssertion();
+  assertion.setIssueInstant(issueInstant);
+  assertion.setIssuer(OpenSAMLUtil.buildIssuer(issuerName));
+  assertion.setSubject(subject);
+  assertion.setConditions(conditions);
+  assertion.getAuthnStatements().add(authnStatement);
+  if (SAMLMetadataUtil.isAttributesIncludeEnabled(companyId,spEntityId)) {
+    AttributeStatement attributeStatement=OpenSAMLUtil.buildAttributeStatement();
+    AttributeResolver attributeResolver=AttributeResolverFactory.getAttributeResolver(companyId,spEntityId);
+    List<Attribute> attributes=attributeResolver.resolve(user);
+    attributeStatement.getAttributes().addAll(attributes);
+    assertion.getAttributeStatements().add(attributeStatement);
+  }
+  try {
+    OpenSAMLUtil.signObject(assertion,context.getOuboundSAMLMessageSigningCredential());
+  }
+ catch (  Exception e) {
+    throw new PortalException(e);
+  }
+  StatusCode statusCode=OpenSAMLUtil.buildStatusCode(StatusCode.SUCCESS_URI);
+  Status status=OpenSAMLUtil.buildStatus(statusCode);
+  Response response=OpenSAMLUtil.buildResponse();
+  response.setIssueInstant(issueInstant);
+  response.setStatus(status);
+  response.setInResponseTo(authnRequestID);
+  response.getAssertions().add(assertion);
+  response.setIssuer(issuer);
+  response.setDestination(acsURL);
+  return response;
+}

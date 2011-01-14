@@ -1,0 +1,13 @@
+{
+  List<Attribute> attributes=new ArrayList<Attribute>();
+  JSONObject jsonUser=UserJSONSerializer.toJSONObject(user);
+  for (  String name : getAttributeNames()) {
+    String value=jsonUser.getString(name);
+    Attribute attribute=OpenSAMLUtil.buildAttribute();
+    XMLObject attributeValue=OpenSAMLUtil.buildAttributeValue(value);
+    attribute.setName(name);
+    attribute.getAttributeValues().add(attributeValue);
+    attributes.add(attribute);
+  }
+  return attributes;
+}

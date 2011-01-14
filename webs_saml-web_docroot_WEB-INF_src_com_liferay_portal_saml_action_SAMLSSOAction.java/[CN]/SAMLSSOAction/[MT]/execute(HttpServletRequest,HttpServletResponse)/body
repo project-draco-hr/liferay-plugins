@@ -1,0 +1,11 @@
+{
+  long companyId=PortalUtil.getCompanyId(request);
+  boolean enabled=GetterUtil.getBoolean(PrefsPropsUtil.getString(companyId,PropsKeys.SAML_IDP_ENABLED));
+  if (enabled) {
+    SAMLUtil.processAuthnRequest(request,response);
+  }
+ else {
+    return "/portal/status";
+  }
+  return null;
+}

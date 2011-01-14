@@ -1,0 +1,18 @@
+{
+  NameIDResolver resolver=_nameIDResolvers.get(companyId + "," + issuer);
+  if (resolver == null) {
+    Thread currentThread=Thread.currentThread();
+    ClassLoader classLoader=currentThread.getContextClassLoader();
+    try {
+      String key=PropsKeys.SAML_SP_METADATA_NAMEID_RESOLVER + "[" + issuer+ "]";
+      String className=PrefsPropsUtil.getString(companyId,key);
+      resolver=(NameIDResolver)classLoader.loadClass(className).newInstance();
+      resolver.setIssuer(issuer);
+      _nameIDResolvers.put(companyId + "," + issuer,resolver);
+    }
+ catch (    Exception e) {
+      _log.error(e,e);
+    }
+  }
+  return resolver;
+}

@@ -1,0 +1,14 @@
+{
+  long spSessionId=counterLocalService.increment(SPSession.class.getName());
+  SPSession spSession=spSessionPersistence.create(spSessionId);
+  long companyId=serviceContext.getCompanyId();
+  long userId=serviceContext.getUserId();
+  Date now=new Date();
+  spSession.setCompanyId(companyId);
+  spSession.setCreateDate(now);
+  spSession.setIssuer(issuer);
+  spSession.setUserId(userId);
+  spSession.setSsoSessionId(ssoSessionId);
+  spSessionPersistence.update(spSession,false);
+  return spSession;
+}

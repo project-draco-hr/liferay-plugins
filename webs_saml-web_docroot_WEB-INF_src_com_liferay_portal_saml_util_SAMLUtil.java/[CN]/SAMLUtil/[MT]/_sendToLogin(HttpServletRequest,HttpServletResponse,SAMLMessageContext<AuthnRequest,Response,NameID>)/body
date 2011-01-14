@@ -1,0 +1,13 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  HttpSession session=request.getSession();
+  SSORequestContext ssoRequestContext=new SSORequestContext(context.getInboundMessageIssuer(),context.getRelayState(),context.getInboundSAMLMessage());
+  session.setAttribute(WebKeys.SSO_REQUEST_CONTEXT,ssoRequestContext);
+  String signInUrl=themeDisplay.getPathMain() + "/portal/login?redirect=" + PortalUtil.getCurrentURL(request);
+  try {
+    response.sendRedirect(signInUrl);
+  }
+ catch (  IOException e) {
+    throw new SystemException(e);
+  }
+}

@@ -1,0 +1,17 @@
+{
+  String keystoreKeyAlias=_getProperty(companyId,PropsKeys.SAML_SP_METADATA_CREDENTIAL_CERTIFICATE_ALIAS + "[" + entityId+ "]");
+  if (Validator.isNull(keystoreKeyAlias)) {
+    return null;
+  }
+  PublicKey publicKey=null;
+  PrivateKey privateKey=null;
+  try {
+    KeyStore keystore=getKeyStore(companyId);
+    Certificate cert=keystore.getCertificate(keystoreKeyAlias);
+    publicKey=cert.getPublicKey();
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+  return OpenSAMLUtil.getCredential(publicKey,privateKey);
+}

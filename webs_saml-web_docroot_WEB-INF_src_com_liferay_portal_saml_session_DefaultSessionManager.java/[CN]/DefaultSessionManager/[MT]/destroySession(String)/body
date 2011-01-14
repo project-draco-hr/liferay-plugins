@@ -1,0 +1,8 @@
+{
+  SSOSession ssoSession=SSOSessionLocalServiceUtil.getSSOSession(sessionId);
+  List<SPSession> spSessions=SPSessionLocalServiceUtil.findBySSOSessionId(ssoSession.getSsoSessionId());
+  for (  SPSession spSession : spSessions) {
+    SPSessionLocalServiceUtil.deleteSPSession(spSession);
+  }
+  SSOSessionLocalServiceUtil.deleteSSOSession(ssoSession);
+}
