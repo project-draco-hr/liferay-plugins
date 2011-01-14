@@ -1,0 +1,39 @@
+{
+  HttpServletRequest request=(HttpServletRequest)servletRequest;
+  HttpServletResponse response=(HttpServletResponse)servletResponse;
+  HttpSession session=request.getSession(true);
+  SPSession spSession=sessionManager.findBySessionId(session.getId());
+  if (spSession != null && spSession.isValid()) {
+    request.setAttribute(WebKeys.SP_SESSION,spSession);
+    chain.doFilter(servletRequest,servletResponse);
+    return;
+  }
+ else   if (spSession != null && !spSession.isValid()) {
+    sessionManager.invalidate(spSession);
+  }
+  String authnRequestId=OpenSAMLUtil.generateIdentifier();
+  DateTime issueInstant=new DateTime();
+  Issuer issuer=OpenSAMLUtil.buildIssuer(PropsValues.SAML_SP_ENTITY_ID);
+  AuthnRequest authnRequest=OpenSAMLUtil.buildAuthnRequest();
+  authnRequest.setDestination(PropsValues.SAML_IDP_SSO_URL);
+  authnRequest.setID(authnRequestId);
+  authnRequest.setIssueInstant(issueInstant);
+  authnRequest.setIssuer(issuer);
+  authnRequest.setAssertionConsumerServiceURL(HttpRequestUtil.getACSURL(request));
+  authnRequest.setIsPassive(PropsValues.SAML_SP_AUTHN_REQUEST_PASSIVE);
+  authnRequest.setForceAuthn(Boolean.FALSE);
+  Endpoint endpoint=OpenSAMLUtil.buildEndpoint(SAMLConstants.SAML2_REDIRECT_BINDING_URI,PropsValues.SAML_IDP_SSO_URL);
+  SAMLMessageContext<SAMLObject,AuthnRequest,NameID> context=new BasicSAMLMessageContext<SAMLObject,AuthnRequest,NameID>();
+  context.setPeerEntityEndpoint(endpoint);
+  context.setOutboundSAMLMessage(authnRequest);
+  context.setOutboundMessageTransport(new HttpServletResponseAdapter(response,request.isSecure()));
+  context.setRelayState(HttpRequestUtil.getCurrentURL(request));
+  session.setAttribute(WebKeys.SAML_AUTHN_REQUEST_ID,authnRequestId);
+  HTTPRedirectDeflateEncoder encoder=new HTTPRedirectDeflateEncoder();
+  try {
+    encoder.encode(context);
+  }
+ catch (  MessageEncodingException me) {
+    throw new ServletException(me);
+  }
+}

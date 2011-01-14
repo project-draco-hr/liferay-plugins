@@ -1,0 +1,9 @@
+{
+  HttpSession session=request.getSession();
+  SPSession spSession=sessionManager.findBySessionId(session.getId());
+  if (spSession != null) {
+    sessionManager.invalidate(spSession);
+  }
+  session.invalidate();
+  response.sendRedirect(request.getContextPath());
+}

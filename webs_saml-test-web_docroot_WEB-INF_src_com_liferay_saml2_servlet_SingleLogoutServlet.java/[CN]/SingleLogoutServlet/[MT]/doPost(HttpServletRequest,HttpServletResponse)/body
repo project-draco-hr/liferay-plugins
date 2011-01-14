@@ -1,0 +1,59 @@
+{
+  HTTPInTransport in=new HttpServletRequestAdapter(request);
+  HTTPOutTransport out=new HttpServletResponseAdapter(response,request.isSecure());
+  System.out.println("URI: " + request.getRequestURI());
+  Endpoint endpoint=OpenSAMLUtil.buildEndpoint(SAMLConstants.SAML2_SOAP11_BINDING_URI,HttpRequestUtil.getCurrentURL(request));
+  SAMLMessageContext<SAMLObject,SAMLObject,NameID> context=new BasicSAMLMessageContext<SAMLObject,SAMLObject,NameID>();
+  context.setInboundMessageTransport(in);
+  context.setOutboundMessageTransport(out);
+  context.setPeerEntityEndpoint(endpoint);
+  try {
+    Credential credential=CredentialUtil.getCredential(PropsValues.SAML_SP_CREDENTIAL_ALIAS,PropsValues.SAML_SP_CREDENTIAL_PASSWORD);
+    context.setOutboundSAMLMessageSigningCredential(credential);
+  }
+ catch (  Exception e1) {
+    e1.printStackTrace();
+    throw new ServletException(e1);
+  }
+  SAMLMessageDecoder decoder=getSAMLMessageDecoder(request);
+  try {
+    decoder.decode(context);
+  }
+ catch (  MessageDecodingException e) {
+    e.printStackTrace();
+  }
+catch (  SecurityException e) {
+    e.printStackTrace();
+  }
+  SAMLObject samlMessage=context.getInboundSAMLMessage();
+  try {
+    System.out.println("Inbound SAML message:\n" + OpenSAMLUtil.marshallSAMLObject(samlMessage));
+  }
+ catch (  MarshallingException e1) {
+    e1.printStackTrace();
+  }
+  try {
+    if (samlMessage instanceof LogoutRequest) {
+      handleLogoutRequest(context);
+    }
+ else     if (samlMessage instanceof LogoutResponse) {
+    }
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    throw new ServletException(e);
+  }
+  try {
+    System.out.println("Outbound SAML message:\n" + OpenSAMLUtil.marshallSAMLObject(context.getOutboundSAMLMessage()));
+  }
+ catch (  MarshallingException e1) {
+    e1.printStackTrace();
+  }
+  HTTPSOAP11Encoder encoder=new HTTPSOAP11Encoder();
+  try {
+    encoder.encode(context);
+  }
+ catch (  MessageEncodingException e) {
+    e.printStackTrace();
+  }
+}

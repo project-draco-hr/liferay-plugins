@@ -1,0 +1,37 @@
+{
+  LogoutRequest logoutRequest=(LogoutRequest)context.getInboundSAMLMessage();
+  System.out.println("Logout request for: " + logoutRequest.getNameID().getValue());
+  if (!logoutRequest.isSigned()) {
+    throw new Exception("SOAP binding for LogoutRequest requires SAML message to be signed");
+  }
+  Credential credential=CredentialUtil.getCredential(PropsValues.SAML_IDP_CREDENTIAL_ALIAS,PropsValues.SAML_IDP_CREDENTIAL_PASSWORD);
+  try {
+    OpenSAMLUtil.validateSignature(logoutRequest,credential);
+  }
+ catch (  ValidationException e) {
+    throw new Exception("Signature validaton failed: " + e.getMessage());
+  }
+  String statusCodeURI=null;
+  SPSession spSession=sessionManager.findByNameID(logoutRequest.getNameID().getValue());
+  if (spSession != null) {
+    System.out.println("Logging out session " + spSession.getSessionId());
+    sessionManager.invalidate(spSession);
+    statusCodeURI=StatusCode.SUCCESS_URI;
+  }
+ else {
+    statusCodeURI=StatusCode.UNKNOWN_PRINCIPAL_URI;
+  }
+  LogoutResponse logoutResponse=OpenSAMLUtil.buildLogoutResponse();
+  String id=OpenSAMLUtil.generateIdentifier();
+  DateTime issueInstant=new DateTime();
+  Issuer issuer=OpenSAMLUtil.buildIssuer(PropsValues.SAML_SP_ENTITY_ID);
+  StatusCode statusCode=OpenSAMLUtil.buildStatusCode(statusCodeURI);
+  Status status=OpenSAMLUtil.buildStatus(statusCode);
+  logoutResponse.setID(id);
+  logoutResponse.setInResponseTo(logoutRequest.getID());
+  logoutResponse.setIssueInstant(issueInstant);
+  logoutResponse.setIssuer(issuer);
+  logoutResponse.setStatus(status);
+  OpenSAMLUtil.signObject(logoutResponse,context.getOuboundSAMLMessageSigningCredential());
+  context.setOutboundSAMLMessage(logoutResponse);
+}
