@@ -10,12 +10,8 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
+  serviceContext.setExpandoBridgeAttributes(SerializerUtil.toExpandoAttributes(mediaItem,_MEDIA_ITEM_FIELDS,user.getCompanyId(),DLFileEntry.class.getName()));
   serviceContext.setScopeGroupId(groupIdLong);
-  Map<String,Serializable> expandoBridgeAttributes=new LinkedHashMap<String,Serializable>();
-  SerializerUtil.copyProperties(mediaItem,expandoBridgeAttributes,_MEDIA_ITEM_FIELDS);
-  serviceContext.setExpandoBridgeAttributes(expandoBridgeAttributes);
-  ExpandoBridge expandoBridge=ExpandoBridgeFactoryUtil.getExpandoBridge(user.getCompanyId(),DLFileEntry.class.getName());
-  addAttributes(mediaItem,expandoBridge);
   if (mediaItemId == null) {
     long albumIdLong=GetterUtil.getLong(albumId);
     DLAppServiceUtil.addFileEntry(groupIdLong,albumIdLong,fileName,mediaItem.getDescription(),StringPool.BLANK,byteArray,serviceContext);

@@ -7,11 +7,11 @@
   List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(groupIdLong,albumIdLong);
   List<MediaItem> mediaItems=new ArrayList<MediaItem>();
   for (  FileEntry fileEntry : fileEntries) {
-    MediaItem.Type mediaItemType=getMediaItemType(fileEntry);
+    MediaItem.Type mediaItemType=toMediaItemType(fileEntry.getExtension());
     if (mediaItemType == null) {
       continue;
     }
-    MediaItem mediaItem=getMediaItem(fileEntry,fields,securityToken);
+    MediaItem mediaItem=toMediaItem(fileEntry,fields,securityToken);
     if (mediaItemIds.contains(mediaItem.getId())) {
       mediaItems.add(mediaItem);
     }

@@ -6,12 +6,8 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
+  serviceContext.setExpandoBridgeAttributes(SerializerUtil.toExpandoAttributes(album,_ALBUM_FIELDS,user.getCompanyId(),DLFolder.class.getName()));
   serviceContext.setScopeGroupId(groupIdLong);
-  Map<String,Serializable> expandoBridgeAttributes=new LinkedHashMap<String,Serializable>();
-  SerializerUtil.copyProperties(album,expandoBridgeAttributes,_ALBUM_FIELDS);
-  serviceContext.setExpandoBridgeAttributes(expandoBridgeAttributes);
-  ExpandoBridge expandoBridge=ExpandoBridgeFactoryUtil.getExpandoBridge(user.getCompanyId(),DLFolder.class.getName());
-  addAttributes(album,expandoBridge);
   if (albumId == null) {
     DLAppServiceUtil.addFolder(groupIdLong,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,album.getTitle(),album.getDescription(),serviceContext);
   }
