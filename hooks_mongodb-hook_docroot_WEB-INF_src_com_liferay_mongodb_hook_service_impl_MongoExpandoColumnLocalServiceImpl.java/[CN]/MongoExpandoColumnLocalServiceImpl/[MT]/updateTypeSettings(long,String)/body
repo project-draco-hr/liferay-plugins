@@ -1,0 +1,11 @@
+{
+  ExpandoColumn expandoColumn=super.updateTypeSettings(columnId,typeSettings);
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(expandoColumn.getTableId());
+  UnicodeProperties typeSettingsProperties=expandoColumn.getTypeSettingsProperties();
+  boolean indexable=GetterUtil.getBoolean(typeSettingsProperties.getProperty(ExpandoBridgeIndexer.INDEXABLE));
+  if (indexable) {
+    DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+    dbCollection.createIndex(new BasicDBObject(expandoColumn.getName(),1));
+  }
+  return expandoColumn;
+}

@@ -1,0 +1,32 @@
+{
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(tableId);
+  ExpandoValue expandoValue=ExpandoValueUtil.create(0);
+  expandoValue.setCompanyId(expandoTable.getCompanyId());
+  expandoValue.setTableId(tableId);
+  expandoValue.setRowId(classPK);
+  expandoValue.setClassNameId(classNameId);
+  expandoValue.setClassPK(classPK);
+  DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+  DBObject queryDBObject=new BasicDBObject();
+  queryDBObject.put("companyId",expandoTable.getCompanyId());
+  queryDBObject.put("tableId",tableId);
+  queryDBObject.put("rowId",classPK);
+  queryDBObject.put("classNameId",classNameId);
+  queryDBObject.put("classPK",classPK);
+  BasicDBObject expandoValueDBObject=(BasicDBObject)dbCollection.findOne(queryDBObject);
+  if (expandoValueDBObject != null) {
+    expandoValue.setValueId(expandoValueDBObject.getLong("valueId"));
+    DBObject operatorDBObject=new BasicDBObject();
+    DBObject updateExpandoValueDBObject=new BasicDBObject();
+    updateExpandoValueDBObject(updateExpandoValueDBObject,expandoColumns,data,expandoValue);
+    operatorDBObject.put(MongoOperator.SET,updateExpandoValueDBObject);
+    dbCollection.update(expandoValueDBObject,operatorDBObject);
+  }
+ else {
+    long valueId=CounterLocalServiceUtil.increment();
+    expandoValue.setValueId(valueId);
+    queryDBObject.put("valueId",valueId);
+    updateExpandoValueDBObject(queryDBObject,expandoColumns,data,expandoValue);
+    dbCollection.insert(queryDBObject);
+  }
+}

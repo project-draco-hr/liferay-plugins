@@ -1,0 +1,8 @@
+{
+  ExpandoColumn expandoColumn=super.updateColumn(columnId,name,type,defaultData);
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(expandoColumn.getTableId());
+  DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+  DBObject operatorDBObject=new BasicDBObject(MongoOperator.RENAME,new BasicDBObject(expandoColumn.getName(),name));
+  dbCollection.update(new BasicDBObject(),operatorDBObject);
+  return expandoColumn;
+}

@@ -1,0 +1,22 @@
+{
+  try {
+    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(companyId,classNameId,tableName,columnName);
+    DBCollection dbCollection=MongoDBUtil.getCollection(companyId,classNameId,tableName);
+    DBCursor dbCursor=null;
+    if (Validator.isNotNull(data)) {
+      DBObject queryDBObject=new BasicDBObject();
+      ExpandoValue expandoValue=ExpandoValueUtil.create(0);
+      expandoValue.setColumnId(expandoColumn.getColumnId());
+      expandoValue.setData(data);
+      queryDBObject.put(columnName,getData(expandoColumn,expandoValue));
+      dbCursor=dbCollection.find(queryDBObject);
+    }
+ else {
+      dbCursor=dbCollection.find();
+    }
+    return dbCursor.count();
+  }
+ catch (  PortalException pe) {
+    throw new SystemException(pe);
+  }
+}

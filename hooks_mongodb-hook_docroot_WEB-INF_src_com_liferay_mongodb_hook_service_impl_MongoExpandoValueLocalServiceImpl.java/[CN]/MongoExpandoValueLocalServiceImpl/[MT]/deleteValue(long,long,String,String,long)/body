@@ -1,0 +1,14 @@
+{
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(companyId,classNameId,tableName);
+  DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+  DBObject queryDBObject=new BasicDBObject();
+  queryDBObject.put("companyId",expandoTable.getCompanyId());
+  queryDBObject.put("tableId",expandoTable.getTableId());
+  queryDBObject.put("rowId",classPK);
+  queryDBObject.put("classNameId",expandoTable.getClassNameId());
+  queryDBObject.put("classPK",classPK);
+  DBObject valueDBObject=new BasicDBObject();
+  valueDBObject.put(columnName,null);
+  DBObject operatorDBObject=new BasicDBObject(MongoOperator.SET,valueDBObject);
+  dbCollection.update(queryDBObject,operatorDBObject);
+}

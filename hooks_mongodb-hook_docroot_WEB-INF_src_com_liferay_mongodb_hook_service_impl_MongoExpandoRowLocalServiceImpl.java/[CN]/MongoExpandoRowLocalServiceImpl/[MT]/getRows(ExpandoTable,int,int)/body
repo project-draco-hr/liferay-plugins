@@ -1,0 +1,14 @@
+{
+  DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+  DBCursor dbCursor=dbCollection.find(new BasicDBObject());
+  if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
+    dbCursor.limit(start);
+    dbCursor.limit(end - start);
+  }
+  List<ExpandoRow> expandoRows=new ArrayList<ExpandoRow>();
+  for (  DBObject expandoRowDBObject : dbCursor.toArray()) {
+    ExpandoRow expandoRow=toExpandoRow(expandoRowDBObject,expandoTable);
+    expandoRows.add(expandoRow);
+  }
+  return expandoRows;
+}

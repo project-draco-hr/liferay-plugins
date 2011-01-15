@@ -1,0 +1,18 @@
+{
+  try {
+    ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(companyId,classNameId,tableName);
+    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
+    DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+    DBObject queryDBObject=new BasicDBObject();
+    queryDBObject.put("companyId",expandoTable.getCompanyId());
+    queryDBObject.put("tableId",expandoTable.getTableId());
+    queryDBObject.put("rowId",classPK);
+    queryDBObject.put("classNameId",expandoTable.getClassNameId());
+    queryDBObject.put("classPK",classPK);
+    BasicDBObject expandoValueDBObject=(BasicDBObject)dbCollection.findOne(queryDBObject);
+    return toExpandoValue(expandoValueDBObject,expandoColumn);
+  }
+ catch (  PortalException pe) {
+    throw new SystemException(pe);
+  }
+}

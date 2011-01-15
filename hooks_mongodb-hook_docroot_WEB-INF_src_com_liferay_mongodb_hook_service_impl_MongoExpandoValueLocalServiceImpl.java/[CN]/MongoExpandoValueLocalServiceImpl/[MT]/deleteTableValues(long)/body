@@ -1,0 +1,16 @@
+{
+  try {
+    ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(tableId);
+    DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
+    DBObject valueDBObject=new BasicDBObject();
+    List<ExpandoColumn> expandoColumns=ExpandoColumnLocalServiceUtil.getColumns(tableId);
+    for (    ExpandoColumn expandoColumn : expandoColumns) {
+      valueDBObject.put(expandoColumn.getName(),null);
+    }
+    DBObject operatorDBObject=new BasicDBObject(MongoOperator.SET,valueDBObject);
+    dbCollection.update(new BasicDBObject(),operatorDBObject,false,true);
+  }
+ catch (  PortalException pe) {
+    throw new SystemException(pe);
+  }
+}

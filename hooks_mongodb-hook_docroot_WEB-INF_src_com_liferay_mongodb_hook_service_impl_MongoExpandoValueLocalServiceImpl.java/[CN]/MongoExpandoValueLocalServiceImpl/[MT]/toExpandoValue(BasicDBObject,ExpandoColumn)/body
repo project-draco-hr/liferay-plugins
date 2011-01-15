@@ -1,0 +1,67 @@
+{
+  ExpandoValue expandoValue=ExpandoValueUtil.create(0);
+  expandoValue.setCompanyId(expandoValueDBObject.getLong("companyId"));
+  expandoValue.setTableId(expandoValueDBObject.getLong("tableId"));
+  expandoValue.setColumnId(expandoColumn.getColumnId());
+  expandoValue.setRowId(expandoValueDBObject.getLong("rowId"));
+  expandoValue.setClassNameId(expandoValueDBObject.getLong("classNameId"));
+  expandoValue.setClassPK(expandoValueDBObject.getLong("classPK"));
+  int type=expandoColumn.getType();
+  if (type == ExpandoColumnConstants.BOOLEAN) {
+    expandoValue.setBoolean((Boolean)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.BOOLEAN_ARRAY) {
+    List<Boolean> list=(List<Boolean>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setBooleanArray(ArrayUtil.toArray(list.toArray(new Boolean[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.DATE) {
+    expandoValue.setDate((Date)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.DATE_ARRAY) {
+    List<Date> list=(List<Date>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setDateArray(list.toArray(new Date[list.size()]));
+  }
+ else   if (type == ExpandoColumnConstants.DOUBLE) {
+    expandoValue.setDouble((Double)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.DOUBLE_ARRAY) {
+    List<Double> list=(List<Double>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setDoubleArray(ArrayUtil.toArray(list.toArray(new Double[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.FLOAT) {
+    expandoValue.setFloat((Float)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.FLOAT_ARRAY) {
+    List<Float> list=(List<Float>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setFloatArray(ArrayUtil.toArray(list.toArray(new Float[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.INTEGER) {
+    expandoValue.setInteger((Integer)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.INTEGER_ARRAY) {
+    List<Integer> list=(List<Integer>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setIntegerArray(ArrayUtil.toArray(list.toArray(new Integer[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.LONG) {
+    expandoValue.setLong((Long)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.LONG_ARRAY) {
+    List<Long> list=(List<Long>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setLongArray(ArrayUtil.toArray(list.toArray(new Long[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.SHORT) {
+    expandoValue.setShort((Short)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+ else   if (type == ExpandoColumnConstants.SHORT_ARRAY) {
+    List<Short> list=(List<Short>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setShortArray(ArrayUtil.toArray(list.toArray(new Short[list.size()])));
+  }
+ else   if (type == ExpandoColumnConstants.STRING_ARRAY) {
+    List<String> list=(List<String>)expandoValueDBObject.get(expandoColumn.getName());
+    expandoValue.setStringArray(list.toArray(new String[list.size()]));
+  }
+ else {
+    expandoValue.setString((String)expandoValueDBObject.get(expandoColumn.getName()));
+  }
+  return expandoValue;
+}

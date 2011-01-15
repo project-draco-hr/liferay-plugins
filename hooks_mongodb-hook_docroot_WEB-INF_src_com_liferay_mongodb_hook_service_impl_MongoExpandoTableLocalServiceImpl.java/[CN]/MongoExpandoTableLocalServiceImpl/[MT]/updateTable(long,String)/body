@@ -1,0 +1,18 @@
+{
+  ExpandoTable expandoTable=super.getTable(tableId);
+  DB db=MongoDBUtil.getDB(expandoTable.getCompanyId());
+  String collectionName=MongoDBUtil.getCollectionName(expandoTable.getClassName(),expandoTable.getName());
+  String newCollectionName=MongoDBUtil.getCollectionName(expandoTable.getClassName(),name);
+  if (db.collectionExists(newCollectionName)) {
+    throw new DuplicateTableNameException(name);
+  }
+  expandoTable=super.updateTable(tableId,name);
+  if (db.collectionExists(collectionName)) {
+    DBCollection dbCollection=db.getCollection(collectionName);
+    dbCollection.rename(newCollectionName);
+  }
+ else {
+    db.createCollection(newCollectionName,null);
+  }
+  return expandoTable;
+}
