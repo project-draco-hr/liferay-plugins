@@ -1,9 +1,9 @@
 {
   resourceLocalService.deleteResource(article.getCompanyId(),Article.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,article.getResourcePrimKey());
   articlePersistence.removeByResourcePrimKey(article.getResourcePrimKey());
+  commentLocalService.deleteComments(Article.class.getName(),article.getResourcePrimKey());
   deleteAssets(article);
   socialActivityLocalService.deleteActivities(Article.class.getName(),article.getResourcePrimKey());
-  commentLocalService.deleteComments(Article.class.getName(),article.getResourcePrimKey());
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.delete(article);
   deleteAttachments(article);
