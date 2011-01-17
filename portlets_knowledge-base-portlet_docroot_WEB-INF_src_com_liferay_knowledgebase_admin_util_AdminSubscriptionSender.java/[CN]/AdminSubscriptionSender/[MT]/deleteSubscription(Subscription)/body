@@ -1,8 +1,8 @@
 {
-  String[] portletPrimKeys=ExpandoValueLocalServiceUtil.getData(subscription.getCompanyId(),Subscription.class.getName(),"KB","portletPrimKeys",subscription.getSubscriptionId(),new String[0]);
-  for (  String portletPrimKey : portletPrimKeys) {
-    long portletPrimKeyPlid=ArticleConstants.getPlid(portletPrimKey);
-    String portletPrimKeyPortletId=ArticleConstants.getPortletId(portletPrimKey);
-    ArticleLocalServiceUtil.unsubscribe(subscription.getCompanyId(),subscription.getUserId(),portletPrimKeyPlid,portletPrimKeyPortletId,subscription.getClassPK());
+  if (subscription.getClassPK() == _article.getResourcePrimKey()) {
+    ArticleLocalServiceUtil.unsubscribeArticle(subscription.getUserId(),_article.getResourcePrimKey());
+  }
+  if (subscription.getClassPK() == _article.getGroupId()) {
+    ArticleLocalServiceUtil.unsubscribeGroupArticles(subscription.getUserId(),_article.getGroupId());
   }
 }

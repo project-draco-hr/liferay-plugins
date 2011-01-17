@@ -1,0 +1,13 @@
+{
+  String cmd=ParamUtil.getString(request,NAMESPACE + Constants.CMD);
+  String redirect=null;
+  if (cmd.equals(Constants.FIND_ARTICLE)) {
+    redirect=getArticleURL(request);
+  }
+ else   if (hasStalePortletAuthenticationToken(request)) {
+    redirect=setPortletAuthenticationToken(request);
+  }
+  if (Validator.isNotNull(redirect)) {
+    response.sendRedirect(redirect);
+  }
+}

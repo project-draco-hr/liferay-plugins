@@ -1,0 +1,22 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!PropsValues.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED) {
+    return false;
+  }
+  if (!themeDisplay.isLifecycleRender()) {
+    return false;
+  }
+  String portletId=PortalUtil.getPortletId(request);
+  if ((portletId != null) && !portletId.equals(_PORTLET_ID)) {
+    return false;
+  }
+  String request_p_p_auth=ParamUtil.getString(request,"p_p_auth");
+  if (Validator.isNull(request_p_p_auth)) {
+    return false;
+  }
+  String actual_p_p_auth=AuthTokenUtil.getToken(request,themeDisplay.getPlid(),_PORTLET_ID);
+  if (request_p_p_auth.equals(actual_p_p_auth)) {
+    return false;
+  }
+  return true;
+}

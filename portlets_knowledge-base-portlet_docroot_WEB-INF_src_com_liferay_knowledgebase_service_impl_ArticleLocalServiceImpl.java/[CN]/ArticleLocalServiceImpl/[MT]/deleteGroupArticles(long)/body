@@ -3,4 +3,9 @@
   for (  Article article : articles) {
     deleteArticle(article.getResourcePrimKey());
   }
+  Group group=groupLocalService.getGroup(groupId);
+  List<Subscription> subscriptions=subscriptionLocalService.getSubscriptions(group.getCompanyId(),Article.class.getName(),groupId);
+  for (  Subscription subscription : subscriptions) {
+    unsubscribeGroupArticles(subscription.getUserId(),groupId);
+  }
 }

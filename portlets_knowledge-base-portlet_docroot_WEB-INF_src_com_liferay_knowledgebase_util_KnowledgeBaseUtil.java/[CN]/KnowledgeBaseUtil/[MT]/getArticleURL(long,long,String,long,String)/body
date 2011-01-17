@@ -1,0 +1,37 @@
+{
+  if (!isValidPortletId(portletId)) {
+    return StringPool.BLANK;
+  }
+  if (portletId.equals(PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
+    return AdminUtil.getArticleURL(groupId,resourcePrimKey);
+  }
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
+  Map<String,String> preferencesMap=initPortletPreferencesMap(portletId,preferences);
+  String p_p_state=null;
+  String jspPage=null;
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
+  if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_AGGREGATOR)) {
+    p_p_state=preferencesMap.get("articleWindowState");
+    jspPage="/aggregator/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+    p_p_state=WindowState.NORMAL.toString();
+    jspPage="/display/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_LIST)) {
+    p_p_state=preferencesMap.get("articleWindowState");
+    jspPage="/list/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SEARCH)) {
+    p_p_state=WindowState.MAXIMIZED.toString();
+    jspPage="/search/view_article.jsp";
+  }
+  String articleURL=portalURL + PortalUtil.getLayoutActualURL(layout);
+  String namespace=PortalUtil.getPortletNamespace(portletId);
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_id",portletId);
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_state",p_p_state);
+  articleURL=HttpUtil.setParameter(articleURL,namespace + "jspPage",jspPage);
+  articleURL=HttpUtil.setParameter(articleURL,namespace + "resourcePrimKey",resourcePrimKey);
+  return articleURL;
+}

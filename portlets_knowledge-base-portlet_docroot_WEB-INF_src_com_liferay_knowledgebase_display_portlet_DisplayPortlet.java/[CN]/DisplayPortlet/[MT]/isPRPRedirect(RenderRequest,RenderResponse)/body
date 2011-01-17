@@ -1,27 +1,10 @@
 {
   try {
     PortletSession portletSession=renderRequest.getPortletSession();
-    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    long categoryId=ParamUtil.getLong(renderRequest,"categoryId");
-    String tag=ParamUtil.getString(renderRequest,"tag");
-    if ((categoryId <= 0) && Validator.isNull(tag)) {
-      portletSession.removeAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE);
-      portletSession.removeAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID);
-      portletSession.removeAttribute(WebKeys.KNOWLEDGE_BASE_TAG);
-      return false;
-    }
+    Article newArticle=getArticle(renderRequest);
     Article oldArticle=(Article)portletSession.getAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE);
-    long oldCategoryId=GetterUtil.getLong((Long)portletSession.getAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID));
-    String oldTag=GetterUtil.getString((String)portletSession.getAttribute(WebKeys.KNOWLEDGE_BASE_TAG));
-    String portletId=PortalUtil.getPortletId(renderRequest);
-    Article article=KnowledgeBaseUtil.getDisplayArticle(themeDisplay.getPlid(),portletId,categoryId,tag,themeDisplay.getPermissionChecker());
-    portletSession.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
-    portletSession.setAttribute(WebKeys.KNOWLEDGE_BASE_CATEGORY_ID,categoryId);
-    portletSession.setAttribute(WebKeys.KNOWLEDGE_BASE_TAG,tag);
-    if ((article == null) || !article.equals(oldArticle) || (categoryId != oldCategoryId)|| !tag.equals(oldTag)) {
-      return true;
-    }
-    return false;
+    portletSession.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,newArticle);
+    return !Validator.equals(newArticle,oldArticle);
   }
  catch (  Exception e) {
     throw new PortletException(e);

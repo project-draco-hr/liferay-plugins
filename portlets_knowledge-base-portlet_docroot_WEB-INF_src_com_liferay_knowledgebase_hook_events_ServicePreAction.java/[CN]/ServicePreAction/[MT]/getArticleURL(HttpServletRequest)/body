@@ -1,0 +1,20 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(request,NAMESPACE + "resourcePrimKey");
+  if (resourcePrimKey <= 0) {
+    return null;
+  }
+  String controlPanelURL=getControlPanelURL(resourcePrimKey,themeDisplay);
+  if (Validator.isNotNull(controlPanelURL)) {
+    return controlPanelURL;
+  }
+  boolean[] privateLayouts={false,true};
+  for (  boolean privateLayout : privateLayouts) {
+    List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(),privateLayout,LayoutConstants.TYPE_PORTLET);
+    String articleURL=getArticleURL(resourcePrimKey,themeDisplay.getPortalURL(),layouts);
+    if (Validator.isNotNull(articleURL)) {
+      return articleURL;
+    }
+  }
+  return getDisplayPortletURL(request);
+}

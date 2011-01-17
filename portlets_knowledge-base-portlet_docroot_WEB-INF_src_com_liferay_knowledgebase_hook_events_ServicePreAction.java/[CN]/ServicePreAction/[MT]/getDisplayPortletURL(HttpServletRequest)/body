@@ -1,0 +1,11 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(request,NAMESPACE + "resourcePrimKey");
+  long plid=LayoutLocalServiceUtil.getDefaultPlid(themeDisplay.getScopeGroupId());
+  String articleURL=KnowledgeBaseUtil.getArticleURL(themeDisplay.getScopeGroupId(),plid,_PORTLET_ID,resourcePrimKey,themeDisplay.getPortalURL());
+  if (PropsValues.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED) {
+    articleURL=HttpUtil.setParameter(articleURL,"p_p_auth",AuthTokenUtil.getToken(request,plid,_PORTLET_ID));
+  }
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_state",WindowState.MAXIMIZED.toString());
+  return articleURL;
+}

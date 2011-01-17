@@ -1,4 +1,6 @@
 {
+  String contextName=PrincipalThreadLocal.getName();
+  PermissionChecker contextPermissionChecker=PermissionThreadLocal.getPermissionChecker();
   PrincipalThreadLocal.setName(user.getUserId());
   try {
     PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user,true);
@@ -6,7 +8,7 @@
     return ArticlePermission.contains(permissionChecker,_article,ActionKeys.VIEW);
   }
   finally {
-    PrincipalThreadLocal.setName(null);
-    PermissionThreadLocal.setPermissionChecker(null);
+    PrincipalThreadLocal.setName(contextName);
+    PermissionThreadLocal.setPermissionChecker(contextPermissionChecker);
   }
 }

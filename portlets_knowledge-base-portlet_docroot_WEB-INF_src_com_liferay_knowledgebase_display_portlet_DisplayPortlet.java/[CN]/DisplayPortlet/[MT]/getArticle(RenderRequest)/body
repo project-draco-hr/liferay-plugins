@@ -1,0 +1,13 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long categoryId=ParamUtil.getLong(renderRequest,"categoryId");
+  String tag=ParamUtil.getString(renderRequest,"tag");
+  String portletId=PortalUtil.getPortletId(renderRequest);
+  PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
+  Map<String,Object> preferencesArticlesMap=KnowledgeBaseUtil.getPortletPreferencesArticlesMap(themeDisplay.getScopeGroupId(),portletId,categoryId,tag,0,1,portletDisplay.getPortletSetup());
+  List<Article> articles=(List<Article>)preferencesArticlesMap.get("articles");
+  if (articles.isEmpty()) {
+    return null;
+  }
+  return articles.get(0);
+}
