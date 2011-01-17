@@ -1,6 +1,9 @@
 {
   try {
-    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(columnId);
+    ExpandoColumn expandoColumn=ExpandoColumnUtil.fetchByPrimaryKey(columnId);
+    if (expandoColumn == null) {
+      return;
+    }
     ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(expandoColumn.getTableId());
     DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
     DBObject operatorDBObject=new BasicDBObject(MongoOperator.SET,new BasicDBObject(expandoColumn.getName(),null));

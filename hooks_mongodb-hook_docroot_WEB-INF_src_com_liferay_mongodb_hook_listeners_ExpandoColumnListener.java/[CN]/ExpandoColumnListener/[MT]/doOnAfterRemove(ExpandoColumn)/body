@@ -1,7 +1,12 @@
 {
   ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(expandoColumn.getTableId());
   DBCollection dbCollection=MongoDBUtil.getCollection(expandoTable);
-  dbCollection.dropIndex(expandoColumn.getName());
+  for (  DBObject indexDBObject : dbCollection.getIndexInfo()) {
+    DBObject keyDBObject=(DBObject)indexDBObject.get("key");
+    if (keyDBObject.containsField(expandoColumn.getName())) {
+      dbCollection.dropIndex(keyDBObject);
+    }
+  }
   DBObject quueryDBObject=new BasicDBObject();
   DBObject operatorDBObject=new BasicDBObject(MongoOperator.UNSET,new BasicDBObject(expandoColumn.getName(),1));
   dbCollection.update(quueryDBObject,operatorDBObject,false,true);
