@@ -1,9 +1,6 @@
 {
   if (!isValidPortletId(portletId)) {
-    return new HashMap<String,Object>();
-  }
-  if (portletId.equals(PortletKeys.KNOWLEDGE_BASE_ADMIN)) {
-    return new HashMap<String,Object>();
+    return Collections.emptyMap();
   }
   Map<String,String> preferencesMap=initPortletPreferencesMap(portletId,preferences);
   String selectionMethod=preferencesMap.get("selectionMethod");
@@ -41,7 +38,7 @@
       resourcePrimKeys=StringUtil.split(StringUtil.merge(list),0L);
     }
     articles=ArticleServiceUtil.getArticles(groupId,resourcePrimKeys,WorkflowConstants.STATUS_APPROVED,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
-    articles=sortArticles(resourcePrimKeys,articles);
+    articles=sortPortletPreferencesArticles(resourcePrimKeys,articles);
     count=articles.size();
     if ((start != QueryUtil.ALL_POS) && (end != QueryUtil.ALL_POS)) {
       articles=ListUtil.subList(articles,start,end);

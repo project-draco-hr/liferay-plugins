@@ -2,11 +2,11 @@
   Article article=articleLocalService.getLatestArticle(resourcePrimKey,status);
   String name=HtmlUtil.escape(article.getTitle());
   String description=HtmlUtil.escape(article.getTitle());
-  String feedURL=KnowledgeBaseUtil.getArticleURL(themeDisplay.getScopeGroupId(),themeDisplay.getPlid(),portletId,resourcePrimKey,themeDisplay.getPortalURL());
+  String feedURL=KnowledgeBaseUtil.getArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL());
   List<Article> articles=Collections.emptyList();
   if (ArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
     long[] resourcePrimKeys=getViewableResourcePrimKeys(article.getGroupId(),resourcePrimKey,status);
     articles=getArticles(article.getGroupId(),resourcePrimKeys,status,null,0,rssDelta,new ArticleModifiedDateComparator());
   }
-  return exportToRSS(portletId,rssDisplayStyle,rssFormat,name,description,feedURL,articles,themeDisplay);
+  return exportToRSS(rssDisplayStyle,rssFormat,name,description,feedURL,articles,themeDisplay);
 }

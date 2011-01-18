@@ -1,0 +1,23 @@
+{
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(),privateLayout,LayoutConstants.TYPE_PORTLET);
+  if (themeDisplay.getLayout().isTypePortlet()) {
+    layouts=ListUtil.copy(layouts);
+    layouts.remove(themeDisplay.getLayout());
+    layouts.add(0,themeDisplay.getLayout());
+  }
+  String[] rootPortletIds=PortletKeys.KNOWLEDGE_BASE_PORTLETS;
+  for (  Layout layout : layouts) {
+    LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+    List<Portlet> portlets=layoutTypePortlet.getAllPortlets();
+    for (    Portlet portlet : portlets) {
+      String rootPortletId=PortletConstants.getRootPortletId(portlet.getPortletId());
+      if (!ArrayUtil.contains(rootPortletIds,rootPortletId)) {
+        continue;
+      }
+      if (KnowledgeBaseUtil.hasPortletPreferencesArticle(layout.getPlid(),portlet.getPortletId(),resourcePrimKey)) {
+        return getArticleURL(layout.getPlid(),portlet.getPortletId(),resourcePrimKey,themeDisplay.getPortalURL());
+      }
+    }
+  }
+  return null;
+}
