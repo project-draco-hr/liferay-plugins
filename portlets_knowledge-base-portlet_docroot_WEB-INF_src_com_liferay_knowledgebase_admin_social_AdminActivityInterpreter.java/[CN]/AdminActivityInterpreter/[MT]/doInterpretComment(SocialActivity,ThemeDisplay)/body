@@ -1,0 +1,37 @@
+{
+  Comment comment=CommentLocalServiceUtil.getComment(activity.getClassPK());
+  Article article=null;
+  Template template=null;
+  String className=comment.getClassName();
+  if (className.equals(Article.class.getName())) {
+    article=ArticleLocalServiceUtil.getLatestArticle(comment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+  }
+ else   if (className.equals(Template.class.getName())) {
+    template=TemplateLocalServiceUtil.getTemplate(comment.getClassPK());
+  }
+  String link=StringPool.BLANK;
+  if (article != null) {
+    long plid=LayoutLocalServiceUtil.getDefaultPlid(article.getGroupId());
+    link=KnowledgeBaseUtil.getArticleURL(plid,comment.getClassPK(),themeDisplay.getPortalURL());
+  }
+ else   if (template != null) {
+    link=getTemplateURL(template.getGroupId(),template.getTemplateId(),themeDisplay);
+  }
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_COMMENT) {
+    key="activity-knowledge-base-admin-add-comment";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_COMMENT) {
+    key="activity-knowledge-base-admin-update-comment";
+  }
+  String content=StringPool.BLANK;
+  if (article != null) {
+    content=article.getTitle();
+  }
+ else   if (template != null) {
+    content=template.getTitle();
+  }
+  String title=getTitle(activity,key,content,link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}
