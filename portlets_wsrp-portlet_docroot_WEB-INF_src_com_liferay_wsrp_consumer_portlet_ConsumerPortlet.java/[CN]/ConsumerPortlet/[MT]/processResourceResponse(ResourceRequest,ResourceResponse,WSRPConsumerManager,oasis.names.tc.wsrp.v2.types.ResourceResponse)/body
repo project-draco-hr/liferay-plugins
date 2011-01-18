@@ -20,29 +20,5 @@
       }
     }
   }
-  String contentType=resourceContext.getMimeType();
-  if (Validator.isNotNull(contentType)) {
-    resourceResponse.setContentType(contentType);
-  }
-  String charSet=getCharSet(contentType);
-  String itemString=resourceContext.getItemString();
-  byte[] itemBinary=resourceContext.getItemBinary();
-  Boolean requiresRewriting=resourceContext.getRequiresRewriting();
-  if (requiresRewriting == null) {
-    requiresRewriting=Boolean.FALSE;
-  }
-  if (ParamUtil.getBoolean(resourceRequest,"wsrp-requiresRewrite") || requiresRewriting) {
-    if (itemBinary != null) {
-      itemString=new String(itemBinary,charSet);
-    }
-    itemString=rewriteURLs(resourceResponse,itemString);
-  }
-  if (Validator.isNotNull(itemString)) {
-    resourceResponse.setContentLength(itemString.length());
-    PortletResponseUtil.write(resourceResponse,itemString);
-  }
- else   if (itemBinary != null) {
-    resourceResponse.setContentLength(itemBinary.length);
-    PortletResponseUtil.write(resourceResponse,itemBinary);
-  }
+  processMimeResponse(resourceRequest,resourceResponse,resourceContext,true);
 }

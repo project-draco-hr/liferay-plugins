@@ -1,0 +1,33 @@
+{
+  String contentType=mimeResponse.getMimeType();
+  if (Validator.isNotNull(contentType)) {
+    jxMimeResponse.setContentType(contentType);
+  }
+  String charSet=getCharSet(contentType);
+  String itemString=mimeResponse.getItemString();
+  byte[] itemBinary=mimeResponse.getItemBinary();
+  Boolean requiresRewriting=mimeResponse.getRequiresRewriting();
+  if (requiresRewriting == null) {
+    requiresRewriting=Boolean.FALSE;
+  }
+  if (ParamUtil.getBoolean(portletRequest,"wsrp-requiresRewrite") || requiresRewriting) {
+    if (itemBinary != null) {
+      itemString=new String(itemBinary,charSet);
+    }
+    itemString=rewriteURLs(jxMimeResponse,itemString);
+  }
+  if (Validator.isNotNull(itemString)) {
+    if (resource) {
+      ResourceResponse resourceResponse=(ResourceResponse)jxMimeResponse;
+      resourceResponse.setContentLength(itemString.length());
+    }
+    PortletResponseUtil.write(jxMimeResponse,itemString);
+  }
+ else   if (itemBinary != null) {
+    if (resource) {
+      ResourceResponse resourceResponse=(ResourceResponse)jxMimeResponse;
+      resourceResponse.setContentLength(itemBinary.length);
+    }
+    PortletResponseUtil.write(jxMimeResponse,itemBinary);
+  }
+}
