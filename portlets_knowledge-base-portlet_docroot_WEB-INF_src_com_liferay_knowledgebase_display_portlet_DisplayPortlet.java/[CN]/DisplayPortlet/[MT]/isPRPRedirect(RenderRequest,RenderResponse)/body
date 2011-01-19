@@ -1,5 +1,11 @@
 {
   try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    LayoutTypePortlet layoutTypePortlet=themeDisplay.getLayoutTypePortlet();
+    PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
+    if (!layoutTypePortlet.hasPortletId(portletDisplay.getId())) {
+      return false;
+    }
     PortletSession portletSession=renderRequest.getPortletSession();
     Article newArticle=getArticle(renderRequest);
     Article oldArticle=(Article)portletSession.getAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE);

@@ -1,12 +1,23 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   long resourcePrimKey=ParamUtil.getLong(request,NAMESPACE + "resourcePrimKey");
-  if (resourcePrimKey <= 0) {
-    return null;
+  Article article=null;
+  try {
+    article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   }
-  String articleURL=getArticleURL(false,resourcePrimKey,themeDisplay);
-  if (articleURL == null) {
-    articleURL=getArticleURL(true,resourcePrimKey,themeDisplay);
+ catch (  NoSuchArticleException nsae) {
+    return getDisplayPortletURL(resourcePrimKey,request);
+  }
+  boolean viewPermission=ArticlePermission.contains(themeDisplay.getPermissionChecker(),article,ActionKeys.VIEW);
+  if (!viewPermission) {
+    return getDisplayPortletURL(resourcePrimKey,request);
+  }
+  String articleURL=null;
+  if (article.getGroupId() == themeDisplay.getScopeGroupId()) {
+    articleURL=getArticleURL(false,resourcePrimKey,themeDisplay);
+    if (articleURL == null) {
+      articleURL=getArticleURL(true,resourcePrimKey,themeDisplay);
+    }
   }
   if (articleURL == null) {
     articleURL=getAdminPortletURL(resourcePrimKey,themeDisplay);
