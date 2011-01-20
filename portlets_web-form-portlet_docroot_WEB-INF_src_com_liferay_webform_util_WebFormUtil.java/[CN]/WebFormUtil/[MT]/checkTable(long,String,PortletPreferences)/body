@@ -7,8 +7,11 @@
     expandoTable=addTable(companyId,tableName);
     int i=1;
     String fieldLabel=preferences.getValue("fieldLabel" + i,StringPool.BLANK);
+    String fieldType=preferences.getValue("fieldType" + i,StringPool.BLANK);
     while ((i == 1) || (Validator.isNotNull(fieldLabel))) {
-      ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),fieldLabel,ExpandoColumnConstants.STRING);
+      if (!PARAGRAPH_FIELD_TYPE.equalsIgnoreCase(fieldType)) {
+        ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),fieldLabel,ExpandoColumnConstants.STRING);
+      }
       i++;
       fieldLabel=preferences.getValue("fieldLabel" + i,StringPool.BLANK);
     }
