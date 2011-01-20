@@ -1,13 +1,25 @@
 {
-  String cmd=ParamUtil.getString(request,NAMESPACE + Constants.CMD);
-  String redirect=null;
-  if (cmd.equals(Constants.FIND_ARTICLE)) {
-    redirect=getArticleURL(request);
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  String portletAddDefaultResourceCheckEnabled=PropsUtil.get(PropsKeys.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED);
+  if (!GetterUtil.getBoolean(portletAddDefaultResourceCheckEnabled)) {
+    return;
   }
- else   if (hasStalePortletAuthenticationToken(request)) {
-    redirect=setPortletAuthenticationToken(request);
+  if (!themeDisplay.isLifecycleRender()) {
+    return;
   }
-  if (Validator.isNotNull(redirect)) {
-    response.sendRedirect(redirect);
+  String portletId=PortalUtil.getPortletId(request);
+  String displayPortletId=PortletKeys.KNOWLEDGE_BASE_DISPLAY + PortletConstants.INSTANCE_SEPARATOR + "0000";
+  if ((portletId != null) && !portletId.equals(displayPortletId)) {
+    return;
   }
+  String request_p_p_auth=ParamUtil.getString(request,"p_p_auth");
+  if (Validator.isNull(request_p_p_auth)) {
+    return;
+  }
+  String actual_p_p_auth=AuthTokenUtil.getToken(request,themeDisplay.getPlid(),portletId);
+  if (request_p_p_auth.equals(actual_p_p_auth)) {
+    return;
+  }
+  String redirect=HttpUtil.setParameter(themeDisplay.getURLCurrent(),"p_p_auth",actual_p_p_auth);
+  response.sendRedirect(redirect);
 }

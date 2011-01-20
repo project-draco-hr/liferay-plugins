@@ -1,0 +1,13 @@
+{
+  Article article=null;
+  try {
+    article=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  }
+ catch (  NoSuchArticleException nsae) {
+    return null;
+  }
+  if (!ArticlePermission.contains(themeDisplay.getPermissionChecker(),article,ActionKeys.VIEW)) {
+    return null;
+  }
+  return article;
+}
