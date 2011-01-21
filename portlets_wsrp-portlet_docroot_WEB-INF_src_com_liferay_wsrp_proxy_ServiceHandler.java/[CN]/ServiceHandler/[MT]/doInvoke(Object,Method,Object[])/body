@@ -1,5 +1,6 @@
 {
-  ClassLoader classLoader=Thread.currentThread().getContextClassLoader();
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
   String methodName=method.getName();
   URL bindingURL=(URL)args[0];
   int x=methodName.indexOf("_v2_") + 4;
@@ -13,7 +14,7 @@
   sb.append(StringPool.UNDERLINE);
   sb.append(serviceName);
   sb.append("_Binding_SOAPStub");
-  Class<?> clazz=classLoader.loadClass(sb.toString());
+  Class<?> clazz=contextClassLoader.loadClass(sb.toString());
   args=new Object[]{bindingURL,getService()};
   Object stub=ConstructorUtils.invokeConstructor(clazz,args);
   sb=new StringBundler(5);
@@ -27,19 +28,17 @@
   if (_v2) {
     return stub;
   }
- else {
-    sb=new StringBundler(4);
-    sb.append(_OASIS_PACKAGE);
-    sb.append("v2.intf.WSRP_v2_");
-    sb.append(serviceName);
-    sb.append("_PortType");
-    Class<?> proxyInterface=classLoader.loadClass(sb.toString());
-    sb=new StringBundler(3);
-    sb.append(_WSRP_PROXY_PACKAGE);
-    sb.append(serviceName);
-    sb.append("ServiceHandler");
-    clazz=classLoader.loadClass(sb.toString());
-    InvocationHandler invocationHandler=(InvocationHandler)ConstructorUtils.invokeConstructor(clazz,stub);
-    return Proxy.newProxyInstance(ServiceHandler.class.getClassLoader(),new Class[]{proxyInterface},invocationHandler);
-  }
+  sb.setIndex(0);
+  sb.append(_OASIS_PACKAGE);
+  sb.append("v2.intf.WSRP_v2_");
+  sb.append(serviceName);
+  sb.append("_PortType");
+  Class<?> proxyInterface=contextClassLoader.loadClass(sb.toString());
+  sb.setIndex(0);
+  sb.append(_WSRP_PROXY_PACKAGE);
+  sb.append(serviceName);
+  sb.append("ServiceHandler");
+  clazz=contextClassLoader.loadClass(sb.toString());
+  InvocationHandler invocationHandler=(InvocationHandler)ConstructorUtils.invokeConstructor(clazz,stub);
+  return Proxy.newProxyInstance(ServiceHandler.class.getClassLoader(),new Class[]{proxyInterface},invocationHandler);
 }
