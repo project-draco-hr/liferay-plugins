@@ -5,8 +5,7 @@
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setCompanyId(companyId);
     serviceContext.setUserId(userId);
-    List<TaskInstance> taskInstances=customSession.searchTaskInstances(keywords,keywords,null,null,null,completed,searchByUserRoles,false,start,end,orderByComparator,serviceContext);
-    return toWorkflowTasks(taskInstances);
+    return customSession.searchCountTaskInstances(taskName,assetType,assetPrimaryKey,dueDateGT,dueDateLT,completed,searchByUserRoles,andOperator,serviceContext);
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
