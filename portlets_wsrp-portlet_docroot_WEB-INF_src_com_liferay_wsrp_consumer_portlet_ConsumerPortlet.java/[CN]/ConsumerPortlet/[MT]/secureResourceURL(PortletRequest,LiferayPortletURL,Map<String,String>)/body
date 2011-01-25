@@ -6,10 +6,10 @@
   StringBundler sb=new StringBundler(4);
   sb.append(resourceID);
   sb.append(url);
-  sb.append(PortletPropsValues.SECURE_RESOURCE_SALT);
+  sb.append(PortletPropsValues.SECURE_RESOURCE_URLS_SALT);
   if (themeDisplay.isSignedIn()) {
     sb.append(AuthTokenUtil.getToken(request));
   }
-  String wsrpAuth=encodeWSRPAuth(sb.toString());
+  String wsrpAuth=encodeWSRPAuth(portletRequest,sb.toString());
   parameterMap.put("wsrp-auth",wsrpAuth);
 }

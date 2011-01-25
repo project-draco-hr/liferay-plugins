@@ -6,8 +6,6 @@
     String url=rewriteMatcher.group(2);
     String extensionURL1=rewriteMatcher.group(3);
     String extensionURL2=rewriteMatcher.group(4);
-    String replacement=null;
-    String rewrittenUrl=null;
     Map<String,String> parameterMap=new HashMap<String,String>();
     if (Validator.isNotNull(namespace)) {
       rewriteMatcher.appendReplacement(sb,portletResponse.getNamespace());
@@ -22,21 +20,21 @@
         }
         parameterMap.put(name,HttpUtil.decodeURL(value));
       }
-      rewrittenUrl=rewriteURL(portletRequest,portletResponse,parameterMap);
-      rewriteMatcher.appendReplacement(sb,rewrittenUrl);
+      String rewrittenURL=rewriteURL(portletRequest,portletResponse,parameterMap);
+      rewriteMatcher.appendReplacement(sb,rewrittenURL);
     }
  else     if (Validator.isNotNull(extensionURL1)) {
       parameterMap.put("wsrp-urlType","render");
       parameterMap.put("wsrp-windowState","wsrp:normal");
-      rewrittenUrl=rewriteURL(portletRequest,portletResponse,parameterMap);
-      replacement="location.href = '" + rewrittenUrl + "'";
+      String rewrittenURL=rewriteURL(portletRequest,portletResponse,parameterMap);
+      String replacement="location.href = '" + rewrittenURL + "'";
       rewriteMatcher.appendReplacement(sb,replacement);
     }
  else     if (Validator.isNotNull(extensionURL2)) {
       parameterMap.put("wsrp-urlType","render");
       parameterMap.put("wsrp-windowState","wsrp:normal");
-      rewrittenUrl=rewriteURL(portletRequest,portletResponse,parameterMap);
-      replacement="href=\"" + rewrittenUrl + "\"";
+      String rewrittenURL=rewriteURL(portletRequest,portletResponse,parameterMap);
+      String replacement="href=\"" + rewrittenURL + "\"";
       rewriteMatcher.appendReplacement(sb,replacement);
     }
   }
