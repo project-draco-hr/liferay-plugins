@@ -3,10 +3,10 @@
   if (!(solrRequest instanceof UpdateRequest)) {
     throw new IllegalStateException("This SolrServer should be used only to update requests");
   }
-  for (  SolrServerWrapper solrServerWrapper : _solrServerWrappers) {
+  List<SolrServerWrapper> solrServerWrappers=_solrServerFactory.getLiveServers();
+  for (  SolrServerWrapper solrServerWrapper : solrServerWrappers) {
     try {
-      SolrServer server=solrServerWrapper.getServer();
-      response=server.request(solrRequest);
+      response=solrServerWrapper.request(solrRequest);
     }
  catch (    Exception e) {
       _log.error("Could not send request to server " + solrServerWrapper.getId(),e);
