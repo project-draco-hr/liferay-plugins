@@ -6,6 +6,9 @@
   String consumerKey=ParamUtil.getString(actionRequest,"consumerKey");
   String consumerSecret=ParamUtil.getString(actionRequest,"consumerSecret");
   String keyType=ParamUtil.getString(actionRequest,"keyType");
+  if (keyType.equals(OAuthConsumerConstants.KEY_TYPE_RSA_PRIVATE)) {
+    consumerSecret=StringPool.BLANK;
+  }
   if (oAuthConsumerId <= 0) {
     OAuthConsumerLocalServiceUtil.addOAuthConsumer(themeDisplay.getCompanyId(),gadgetId,serviceName,consumerKey,consumerSecret,keyType,StringPool.BLANK,StringPool.BLANK);
   }
