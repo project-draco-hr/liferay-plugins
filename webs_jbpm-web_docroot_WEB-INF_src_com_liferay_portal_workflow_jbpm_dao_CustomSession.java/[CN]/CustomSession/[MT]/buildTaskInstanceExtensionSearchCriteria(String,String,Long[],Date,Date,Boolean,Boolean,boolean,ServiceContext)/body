@@ -22,8 +22,10 @@
         junction.add(Restrictions.like("workflowContext","%\"entryType\":\"%" + assetTypeKeyword + "%\"%"));
       }
     }
-    if (Validator.isNotNull(assetPrimaryKey)) {
-      junction.add(Restrictions.like("workflowContext","%\"entryClassPK\":\"%" + assetPrimaryKey + "%\"%"));
+    if (Validator.isNotNull(assetPrimaryKeys)) {
+      for (      Long assetPrimaryKey : assetPrimaryKeys) {
+        junction.add(Restrictions.like("workflowContext","%\"entryClassPK\":\"%" + assetPrimaryKey + "%\"%"));
+      }
     }
     if (dueDateGT != null) {
       junction.add(Restrictions.ge("taskInstance.dueDate",dueDateGT));
