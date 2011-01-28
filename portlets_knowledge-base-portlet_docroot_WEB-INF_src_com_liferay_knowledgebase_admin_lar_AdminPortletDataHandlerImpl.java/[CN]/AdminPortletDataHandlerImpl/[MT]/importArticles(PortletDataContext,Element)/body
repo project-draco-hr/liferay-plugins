@@ -7,13 +7,15 @@
       DLLocalServiceUtil.addDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
       importArticleAttachments(portletDataContext,importId,dirNames,rootElement);
     }
-    for (    Element articleElement : rootElement.elements("article")) {
+    List<Element> articleElements=rootElement.elements("article");
+    for (int i=0; i < articleElements.size(); i++) {
+      Element articleElement=articleElements.get(i);
       String path=articleElement.attributeValue("path");
       if (!portletDataContext.isPathNotProcessed(path)) {
         continue;
       }
       Article article=(Article)portletDataContext.getZipEntryAsObject(path);
-      importArticle(portletDataContext,resourcePrimKeys,dirNames,articleElement,article);
+      importArticle(portletDataContext,i + 1,resourcePrimKeys,dirNames,articleElement,article);
     }
     importComments(portletDataContext,"article-comment",resourcePrimKeys,rootElement);
   }

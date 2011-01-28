@@ -1,0 +1,24 @@
+{
+  Article nextArticle=getNextArticle(groupId,parentResourcePrimKey,humanPriority);
+  if (nextArticle == null) {
+    List<Article> articles=ArticleLocalServiceUtil.getSiblingArticles(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY,0,1,new ArticlePriorityComparator());
+    if (articles.isEmpty()) {
+      return MINIMUM_INCREMENT_SIZE;
+    }
+    Article article=articles.get(0);
+    return article.getPriority() + MINIMUM_INCREMENT_SIZE;
+  }
+  if (nextArticle.getResourcePrimKey() == resourcePrimKey) {
+    return nextArticle.getPriority();
+  }
+  Article prevArticle=getPrevArticle(groupId,parentResourcePrimKey,nextArticle.getResourcePrimKey(),nextArticle.getPriority());
+  if (prevArticle == null) {
+    return nextArticle.getPriority() / 2;
+  }
+  if (nextArticle.getPriority() == (prevArticle.getPriority() + 1)) {
+    return nextArticle.getPriority();
+  }
+  long prevPriority=prevArticle.getPriority();
+  long nextPriority=nextArticle.getPriority();
+  return prevPriority + (nextPriority - prevPriority) / 2;
+}

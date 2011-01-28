@@ -1,0 +1,39 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getConnection();
+    StringBundler sb=new StringBundler(5);
+    sb.append("select articleId, groupId, parentResourcePrimKey from ");
+    sb.append("KB_Article where latest = ");
+    sb.append(_LATEST_VERSION);
+    sb.append(" order by groupId asc, parentResourcePrimKey asc, ");
+    sb.append("priority asc");
+    ps=con.prepareStatement(sb.toString());
+    rs=ps.executeQuery();
+    long groupId=0;
+    long parentResourcePrimKey=0;
+    long priority=0;
+    while (rs.next()) {
+      long curArticleId=rs.getLong("articleId");
+      long curGroupId=rs.getLong("groupId");
+      long curParentResourcePrimKey=rs.getLong("parentResourcePrimKey");
+      priority=priority + _MINIMUM_INCREMENT_SIZE;
+      if ((curGroupId != groupId) || (curParentResourcePrimKey != parentResourcePrimKey)) {
+        groupId=curGroupId;
+        parentResourcePrimKey=curParentResourcePrimKey;
+        priority=_MINIMUM_INCREMENT_SIZE;
+      }
+      sb=new StringBundler(4);
+      sb.append("update KB_Article set priority = ");
+      sb.append(priority);
+      sb.append(" where articleId = ");
+      sb.append(curArticleId);
+      runSQL(sb.toString());
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+}

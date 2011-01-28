@@ -1,0 +1,21 @@
+{
+  int count=articlePersistence.countByNotR_G_P_P_L(resourcePrimKey,groupId,parentResourcePrimKey,priority,ArticleConstants.LATEST_VERSION);
+  if (count == 0) {
+    return priority;
+  }
+  List<Article> articles=getSiblingArticles(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator(true));
+  long newPriority=0;
+  long value=0;
+  for (  Article article : articles) {
+    value=value + PriorityHelperUtil.MINIMUM_INCREMENT_SIZE;
+    if (article.getPriority() == priority) {
+      newPriority=value;
+      value=value + PriorityHelperUtil.MINIMUM_INCREMENT_SIZE;
+    }
+    if (article.getResourcePrimKey() != resourcePrimKey) {
+      article.setPriority(value);
+      articlePersistence.update(article,false);
+    }
+  }
+  return newPriority;
+}

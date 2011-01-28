@@ -1,0 +1,44 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Article oldArticle=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
+  int version=oldArticle.getVersion();
+  int status=WorkflowConstants.STATUS_DRAFT;
+  priority=getPriority(oldArticle.getGroupId(),resourcePrimKey,parentResourcePrimKey,priority);
+  validate(title,content);
+  Article article=oldArticle;
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+    long articleId=counterLocalService.increment();
+    article=articlePersistence.create(articleId);
+    version=version + 1;
+  }
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_PENDING) {
+    status=WorkflowConstants.STATUS_PENDING;
+  }
+  article.setResourcePrimKey(oldArticle.getResourcePrimKey());
+  article.setGroupId(oldArticle.getGroupId());
+  article.setCompanyId(oldArticle.getCompanyId());
+  article.setUserId(user.getUserId());
+  article.setUserName(user.getFullName());
+  article.setCreateDate(oldArticle.getCreateDate());
+  article.setModifiedDate(serviceContext.getModifiedDate(null));
+  article.setParentResourcePrimKey(parentResourcePrimKey);
+  article.setVersion(version);
+  article.setTitle(title);
+  article.setContent(content);
+  article.setDescription(description);
+  article.setPriority(priority);
+  article.setLatest(ArticleConstants.LATEST_VERSION);
+  article.setStatus(status);
+  articlePersistence.update(article,false);
+  if (oldArticle.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+    oldArticle.setLatest(ArticleConstants.LATEST_APPROVED);
+    articlePersistence.update(oldArticle,false);
+  }
+  if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
+    updateArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  updateAsset(userId,article,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
+  updateAttachments(article,oldArticle.getStatus(),dirName);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),article.getGroupId(),userId,Article.class.getName(),resourcePrimKey,article,serviceContext);
+  return article;
+}

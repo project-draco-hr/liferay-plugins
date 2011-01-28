@@ -1,0 +1,40 @@
+{
+  long userId=portletDataContext.getUserId(article.getUserUuid());
+  long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,article.getParentResourcePrimKey());
+  String dirName=MapUtil.getString(dirNames,String.valueOf(article.getResourcePrimKey()));
+  long[] assetCategoryIds=null;
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"categories")) {
+    assetCategoryIds=portletDataContext.getAssetCategoryIds(Article.class,article.getResourcePrimKey());
+  }
+  String[] assetTagNames=null;
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"tags")) {
+    assetTagNames=portletDataContext.getAssetTagNames(Article.class,article.getResourcePrimKey());
+  }
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setAssetCategoryIds(assetCategoryIds);
+  serviceContext.setAssetTagNames(assetTagNames);
+  serviceContext.setCreateDate(article.getCreateDate());
+  serviceContext.setModifiedDate(article.getModifiedDate());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  Article importedArticle=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingArticle == null) {
+      importedArticle=importArticleVersions(portletDataContext,article.getUuid(),parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,articleElement);
+    }
+ else {
+      long priority=PriorityHelperUtil.getPriority(existingArticle.getGroupId(),existingArticle.getResourcePrimKey(),parentResourcePrimKey,humanPriority);
+      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
+    }
+  }
+ else {
+    importedArticle=importArticleVersions(portletDataContext,null,parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,articleElement);
+  }
+  resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+  portletDataContext.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"ratings")) {
+    portletDataContext.importRatingsEntries(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+  }
+}

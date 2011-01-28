@@ -1,0 +1,35 @@
+{
+  Element versionsElement=articleElement.element("versions");
+  List<Element> articleElements=versionsElement.elements("article");
+  Article importedArticle=null;
+  long priority=PriorityHelperUtil.getPriority(portletDataContext.getScopeGroupId(),0,parentResourcePrimKey,0);
+  for (  Element curArticleElement : articleElements) {
+    Article curArticle=(Article)portletDataContext.getZipEntryAsObject(curArticleElement.attributeValue("path"));
+    long userId=portletDataContext.getUserId(curArticle.getUserUuid());
+    String curDirName=StringPool.BLANK;
+    long[] curAssetCategoryIds=null;
+    String[] curAssetTagNames=null;
+    int index=articleElements.indexOf(curArticleElement);
+    if (index == (articleElements.size() - 1)) {
+      curDirName=dirName;
+      curAssetCategoryIds=assetCategoryIds;
+      curAssetTagNames=assetTagNames;
+    }
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setAddCommunityPermissions(true);
+    serviceContext.setAddGuestPermissions(true);
+    serviceContext.setAssetCategoryIds(curAssetCategoryIds);
+    serviceContext.setAssetTagNames(curAssetTagNames);
+    serviceContext.setCreateDate(curArticle.getCreateDate());
+    serviceContext.setModifiedDate(curArticle.getModifiedDate());
+    serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+    if (importedArticle == null) {
+      serviceContext.setUuid(uuid);
+      importedArticle=ArticleLocalServiceUtil.addArticle(userId,parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,curDirName,serviceContext);
+    }
+ else {
+      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,importedArticle.getResourcePrimKey(),parentResourcePrimKey,curArticle.getTitle(),curArticle.getContent(),curArticle.getDescription(),priority,curDirName,serviceContext);
+    }
+  }
+  return importedArticle;
+}
