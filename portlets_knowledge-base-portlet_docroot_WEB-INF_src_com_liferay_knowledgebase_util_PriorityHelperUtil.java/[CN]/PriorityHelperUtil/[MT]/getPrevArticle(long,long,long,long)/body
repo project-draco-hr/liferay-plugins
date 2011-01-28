@@ -2,12 +2,12 @@
   int count=ArticleLocalServiceUtil.getSiblingArticlesCount(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
   int start=0;
   int end=count;
-  while ((end - start) > 100) {
+  while ((end - start) > INTERVAL_SIZE) {
     int mid=(end - start) / 2;
     List<Article> articles=ArticleLocalServiceUtil.getSiblingArticles(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY,mid - 1,mid,new ArticlePriorityComparator(true));
     Article article=articles.get(0);
     if (article.getPriority() < nextPriority) {
-      start=mid + 1;
+      start=mid;
     }
  else {
       end=mid;

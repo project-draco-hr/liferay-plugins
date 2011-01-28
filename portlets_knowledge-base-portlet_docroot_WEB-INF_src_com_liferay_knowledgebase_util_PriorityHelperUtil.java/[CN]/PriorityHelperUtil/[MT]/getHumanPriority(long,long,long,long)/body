@@ -2,15 +2,15 @@
   if (resourcePrimKey <= 0) {
     return getMaxHumanPriority(groupId,parentResourcePrimKey,null);
   }
+  int count=ArticleServiceUtil.getSiblingArticlesCount(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
   int start=0;
-  int end=ArticleServiceUtil.getSiblingArticlesCount(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
-  ;
-  while ((end - start) > 100) {
+  int end=count;
+  while ((end - start) > INTERVAL_SIZE) {
     int mid=(end - start) / 2;
     List<Article> articles=ArticleServiceUtil.getSiblingArticles(groupId,parentResourcePrimKey,WorkflowConstants.STATUS_ANY,mid - 1,mid,new ArticlePriorityComparator(true));
     Article article=articles.get(0);
     if (article.getPriority() < priority) {
-      start=mid + 1;
+      start=mid;
     }
  else {
       end=mid;
