@@ -1,13 +1,12 @@
 {
   OAuthConsumer oAuthConsumer=new OAuthConsumerImpl();
-  oAuthConsumer.setServiceName(_DEFAULT_SERVICE_NAME);
   oAuthConsumer.setConsumerKey(_DEFAULT_CONSUMER_KEY);
+  oAuthConsumer.setServiceName(_DEFAULT_SERVICE_NAME);
   String consumerSecret=null;
-  String path=PropsUtil.get(PropsKeys.LIFERAY_HOME).concat(_SIGNING_KEY_FILE_PATH);
-  signingKeyFile=signingKeyFile.replaceAll(StringPool.QUOTE,StringPool.BLANK);
-  signingKeyFile=path.concat(signingKeyFile);
+  String path=PropsUtil.get(PropsKeys.LIFERAY_HOME).concat(_KEY_DIR).concat(keyFileName);
+  path=path.replaceAll(StringPool.QUOTE,StringPool.BLANK);
   try {
-    consumerSecret=FileUtil.read(signingKeyFile);
+    consumerSecret=FileUtil.read(keyFileName);
   }
  catch (  Exception e) {
   }
@@ -17,7 +16,7 @@
         FileUtil.mkdirs(path);
       }
       if (_log.isWarnEnabled()) {
-        _log.warn("Failed to load OAuth signing key from " + signingKeyFile);
+        _log.warn("Unable to load OAuth key from " + keyFileName);
       }
       return null;
     }
@@ -25,6 +24,6 @@
   consumerSecret=ShindigUtil.convertFromOpenSsl(consumerSecret);
   oAuthConsumer.setConsumerSecret(consumerSecret);
   oAuthConsumer.setKeyType(OAuthConsumerConstants.KEY_TYPE_RSA_PRIVATE);
-  oAuthConsumer.setKeyName(signingKeyName);
+  oAuthConsumer.setKeyName(keyName);
   return oAuthConsumer;
 }

@@ -19,13 +19,13 @@
     oAuthConsumer=OAuthConsumerLocalServiceUtil.getOAuthConsumer(gadget.getGadgetId(),serviceName);
   }
  catch (  Exception e) {
-    return _defaultOAuthConsumer;
+    return _oAuthConsumer;
   }
   if (oAuthConsumer.getKeyType().equals(OAuthConsumerConstants.KEY_TYPE_RSA_PRIVATE)) {
-    if (_defaultOAuthConsumer == null) {
-      throw new GadgetException(GadgetException.Code.INTERNAL_SERVER_ERROR,"No OAuth signing key specified.");
+    if (_oAuthConsumer == null) {
+      throw new GadgetException(GadgetException.Code.INTERNAL_SERVER_ERROR,"No OAuth key specified");
     }
-    oAuthConsumer.setConsumerSecret(_defaultOAuthConsumer.getConsumerSecret());
+    oAuthConsumer.setConsumerSecret(_oAuthConsumer.getConsumerSecret());
   }
   return oAuthConsumer;
 }
