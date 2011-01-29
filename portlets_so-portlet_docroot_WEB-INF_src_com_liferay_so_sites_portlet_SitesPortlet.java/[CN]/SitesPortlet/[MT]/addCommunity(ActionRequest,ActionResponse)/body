@@ -1,0 +1,14 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long userId=PortalUtil.getUserId(actionRequest);
+  String name=ParamUtil.getString(actionRequest,"name");
+  String description=ParamUtil.getString(actionRequest,"description");
+  int type=ParamUtil.getInteger(actionRequest,"type");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Group.class.getName(),actionRequest);
+  Group group=GroupServiceUtil.addGroup(name,description,type,StringPool.BLANK,true,serviceContext);
+  ExpandoBridge expandoBridge=group.getExpandoBridge();
+  expandoBridge.setAttribute("socialOfficeEnabled",Boolean.TRUE);
+  long publicLayoutSetPrototypeId=ParamUtil.getLong(actionRequest,"publicLayoutSetPrototypeId");
+  long privateLayoutSetPrototypeId=ParamUtil.getLong(actionRequest,"privateLayoutSetPrototypeId");
+  PortalClassInvoker.invoke(true,_applyLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId);
+}
