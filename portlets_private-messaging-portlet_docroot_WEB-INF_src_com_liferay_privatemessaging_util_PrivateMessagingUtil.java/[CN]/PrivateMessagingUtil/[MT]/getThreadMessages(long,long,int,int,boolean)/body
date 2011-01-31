@@ -4,7 +4,8 @@
   List<MBMessage> mbMessages=MBMessageLocalServiceUtil.getThreadMessages(mbThreadId,WorkflowConstants.STATUS_ANY,new MessageCreateDateComparator(ascending));
   List<MBMessage> filteredMBMessages=new ArrayList<MBMessage>();
   for (  MBMessage mbMessage : mbMessages) {
-    if (mbMessage.getMessageId() >= topMBMessage.getMessageId()) {
+    int compareTo=DateUtil.compareTo(topMBMessage.getCreateDate(),mbMessage.getCreateDate());
+    if (compareTo <= 0) {
       filteredMBMessages.add(mbMessage);
     }
   }
