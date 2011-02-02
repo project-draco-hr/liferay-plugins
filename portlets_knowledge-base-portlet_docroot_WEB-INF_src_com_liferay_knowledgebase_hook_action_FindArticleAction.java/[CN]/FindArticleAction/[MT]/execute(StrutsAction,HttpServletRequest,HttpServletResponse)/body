@@ -5,23 +5,23 @@
   if (!isValidPlid(plid)) {
     plid=themeDisplay.getPlid();
   }
-  String redirect=null;
-  Article article=getArticle(resourcePrimKey,themeDisplay);
+  PortletURL portletURL=null;
+  Article article=getArticle(resourcePrimKey);
   if (article == null) {
-    redirect=getDisplayPortletURL(resourcePrimKey,plid,request);
+    portletURL=getDisplayPortletURL(plid,request);
   }
-  if (redirect == null) {
-    redirect=getArticleURL(false,plid,article,themeDisplay);
+  if (portletURL == null) {
+    portletURL=getArticleURL(plid,false,article,request);
   }
-  if (redirect == null) {
-    redirect=getArticleURL(true,plid,article,themeDisplay);
+  if (portletURL == null) {
+    portletURL=getArticleURL(plid,true,article,request);
   }
-  if (redirect == null) {
-    redirect=getAdminPortletURL(article,themeDisplay);
+  if (portletURL == null) {
+    portletURL=getAdminPortletURL(article,request);
   }
-  if (redirect == null) {
-    redirect=getDisplayPortletURL(resourcePrimKey,plid,request);
+  if (portletURL == null) {
+    portletURL=getDisplayPortletURL(plid,request);
   }
-  response.sendRedirect(redirect);
+  response.sendRedirect(portletURL.toString());
   return null;
 }

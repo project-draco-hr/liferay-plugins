@@ -1,0 +1,32 @@
+{
+  long resourcePrimKey=ParamUtil.getLong(request,"resourcePrimKey");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(request,portletId);
+  Map<String,String> preferencesMap=KnowledgeBaseUtil.initPortletPreferencesMap(portletId,preferences);
+  WindowState windowState=null;
+  String jspPage=null;
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
+  if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_AGGREGATOR)) {
+    String name=preferencesMap.get("articleWindowState");
+    windowState=WindowStateFactory.getWindowState(name);
+    jspPage="/aggregator/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+    windowState=WindowState.NORMAL;
+    jspPage="/display/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_LIST)) {
+    String name=preferencesMap.get("articleWindowState");
+    windowState=WindowStateFactory.getWindowState(name);
+    jspPage="/list/view_article.jsp";
+  }
+ else   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SEARCH)) {
+    windowState=WindowState.MAXIMIZED;
+    jspPage="/search/view_article.jsp";
+  }
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,portletId,plid,PortletRequest.RENDER_PHASE);
+  portletURL.setWindowState(windowState);
+  portletURL.setPortletMode(PortletMode.VIEW);
+  portletURL.setParameter("jspPage",jspPage);
+  portletURL.setParameter("resourcePrimKey",String.valueOf(resourcePrimKey));
+  return portletURL;
+}

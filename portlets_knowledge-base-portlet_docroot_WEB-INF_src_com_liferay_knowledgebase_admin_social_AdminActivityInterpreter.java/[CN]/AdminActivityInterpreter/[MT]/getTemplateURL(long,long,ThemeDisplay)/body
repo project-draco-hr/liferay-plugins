@@ -8,5 +8,9 @@
   if (!controlPanelEntry.isVisible(portlet,controlPanelEntryCategory,themeDisplay)) {
     return StringPool.BLANK;
   }
-  return AdminUtil.getTemplateURL(groupId,templateId);
+  Map<String,String[]> params=new HashMap<String,String[]>();
+  String namespace=PortalUtil.getPortletNamespace(PortletKeys.KNOWLEDGE_BASE_ADMIN);
+  params.put(namespace + "jspPage",new String[]{"/admin/view_template.jsp"});
+  params.put(namespace + "templateId",new String[]{String.valueOf(templateId)});
+  return PortalUtil.getControlPanelFullURL(groupId,PortletKeys.KNOWLEDGE_BASE_ADMIN,params);
 }

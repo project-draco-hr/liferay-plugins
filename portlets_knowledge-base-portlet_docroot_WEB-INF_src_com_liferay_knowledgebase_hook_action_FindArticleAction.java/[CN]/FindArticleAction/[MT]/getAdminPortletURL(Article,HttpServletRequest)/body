@@ -1,0 +1,20 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  Portlet portlet=PortletLocalServiceUtil.getPortletById(article.getCompanyId(),PortletKeys.KNOWLEDGE_BASE_ADMIN);
+  ControlPanelEntry controlPanelEntry=portlet.getControlPanelEntryInstance();
+  if (controlPanelEntry == null) {
+    controlPanelEntry=(ControlPanelEntry)PortalClassInvoker.invoke(false,"com.liferay.portlet.DefaultControlPanelEntryFactory","getInstance",new String[0]);
+  }
+  String controlPanelEntryCategory=portlet.getControlPanelEntryCategory();
+  if (!controlPanelEntry.isVisible(portlet,controlPanelEntryCategory,themeDisplay)) {
+    return null;
+  }
+  Group controlPanelGroup=GroupLocalServiceUtil.getGroup(article.getCompanyId(),GroupConstants.CONTROL_PANEL);
+  long controlPanelPlid=LayoutLocalServiceUtil.getDefaultPlid(controlPanelGroup.getGroupId(),true);
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,portlet.getPortletId(),controlPanelPlid,PortletRequest.RENDER_PHASE);
+  portletURL.setWindowState(WindowState.MAXIMIZED);
+  portletURL.setPortletMode(PortletMode.VIEW);
+  portletURL.setParameter("jspPage","/admin/view_article.jsp");
+  portletURL.setParameter("resourcePrimKey",String.valueOf(article.getResourcePrimKey()));
+  return portletURL;
+}
