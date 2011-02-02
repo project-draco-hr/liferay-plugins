@@ -1,7 +1,6 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
-  String portletAddDefaultResourceCheckEnabled=PropsUtil.get(PropsKeys.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED);
-  if (!GetterUtil.getBoolean(portletAddDefaultResourceCheckEnabled)) {
+  if (!_PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED) {
     return;
   }
   if (!themeDisplay.isLifecycleRender()) {
@@ -11,8 +10,7 @@
   if (Validator.isNull(portletId)) {
     return;
   }
-  String displayPortletId=PortletKeys.KNOWLEDGE_BASE_DISPLAY + PortletConstants.INSTANCE_SEPARATOR + "0000";
-  if (!portletId.equals(displayPortletId)) {
+  if (!portletId.equals(FindArticleAction.PORTLET_ID)) {
     return;
   }
   String request_p_p_auth=ParamUtil.getString(request,"p_p_auth");

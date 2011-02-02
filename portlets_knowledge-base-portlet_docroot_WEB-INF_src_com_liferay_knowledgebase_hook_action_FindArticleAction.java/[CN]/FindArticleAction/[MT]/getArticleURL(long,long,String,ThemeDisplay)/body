@@ -1,15 +1,15 @@
 {
-  Layout selLayout=LayoutLocalServiceUtil.getLayout(selPlid);
-  String selLayoutActualURL=PortalUtil.getLayoutActualURL(selLayout);
-  String articleURL=themeDisplay.getPortalURL() + selLayoutActualURL;
-  String namespace=PortalUtil.getPortletNamespace(selPortletId);
-  articleURL=HttpUtil.setParameter(articleURL,"p_p_id",selPortletId);
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  String layoutActualURL=PortalUtil.getLayoutActualURL(layout);
+  String articleURL=themeDisplay.getPortalURL() + layoutActualURL;
+  String namespace=PortalUtil.getPortletNamespace(portletId);
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_id",portletId);
   articleURL=HttpUtil.setParameter(articleURL,namespace + "resourcePrimKey",resourcePrimKey);
-  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(selLayout,selPortletId,StringPool.BLANK);
-  Map<String,String> preferencesMap=KnowledgeBaseUtil.initPortletPreferencesMap(selPortletId,preferences);
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
+  Map<String,String> preferencesMap=KnowledgeBaseUtil.initPortletPreferencesMap(portletId,preferences);
   String p_p_state=null;
   String jspPage=null;
-  String rootPortletId=PortletConstants.getRootPortletId(selPortletId);
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
   if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_AGGREGATOR)) {
     p_p_state=preferencesMap.get("articleWindowState");
     jspPage="/aggregator/view_article.jsp";

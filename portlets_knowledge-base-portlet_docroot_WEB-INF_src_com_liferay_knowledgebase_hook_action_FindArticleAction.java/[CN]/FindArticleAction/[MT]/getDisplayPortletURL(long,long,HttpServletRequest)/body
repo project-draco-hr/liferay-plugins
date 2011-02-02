@@ -1,12 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
-  String selPortletId=PortletKeys.KNOWLEDGE_BASE_DISPLAY + PortletConstants.INSTANCE_SEPARATOR + "0000";
-  String articleURL=getArticleURL(resourcePrimKey,selPlid,selPortletId,themeDisplay);
+  String articleURL=getArticleURL(resourcePrimKey,plid,PORTLET_ID,themeDisplay);
   articleURL=HttpUtil.setParameter(articleURL,"p_p_state",WindowState.MAXIMIZED.toString());
-  String portletAddDefaultResourceCheckEnabled=PropsUtil.get(PropsKeys.PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED);
-  if (!GetterUtil.getBoolean(portletAddDefaultResourceCheckEnabled)) {
+  if (!_PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED) {
     return articleURL;
   }
-  articleURL=HttpUtil.setParameter(articleURL,"p_p_auth",AuthTokenUtil.getToken(request,selPlid,selPortletId));
+  articleURL=HttpUtil.setParameter(articleURL,"p_p_auth",AuthTokenUtil.getToken(request,plid,PORTLET_ID));
   return articleURL;
 }
