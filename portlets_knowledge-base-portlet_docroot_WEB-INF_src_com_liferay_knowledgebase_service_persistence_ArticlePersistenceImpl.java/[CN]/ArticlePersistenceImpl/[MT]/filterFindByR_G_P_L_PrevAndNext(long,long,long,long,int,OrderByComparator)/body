@@ -1,0 +1,21 @@
+{
+  if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+    return findByR_G_P_L_PrevAndNext(articleId,resourcePrimKey,groupId,parentResourcePrimKey,latest,orderByComparator);
+  }
+  Article article=findByPrimaryKey(articleId);
+  Session session=null;
+  try {
+    session=openSession();
+    Article[] array=new ArticleImpl[3];
+    array[0]=filterGetByR_G_P_L_PrevAndNext(session,article,resourcePrimKey,groupId,parentResourcePrimKey,latest,orderByComparator,true);
+    array[1]=article;
+    array[2]=filterGetByR_G_P_L_PrevAndNext(session,article,resourcePrimKey,groupId,parentResourcePrimKey,latest,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
