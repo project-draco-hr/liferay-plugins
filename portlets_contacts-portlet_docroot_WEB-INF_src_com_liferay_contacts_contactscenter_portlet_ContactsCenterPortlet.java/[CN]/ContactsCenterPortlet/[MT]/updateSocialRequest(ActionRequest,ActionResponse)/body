@@ -2,5 +2,9 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long requestId=ParamUtil.getLong(actionRequest,"requestId");
   int status=ParamUtil.getInteger(actionRequest,"status");
+  SocialRequest socialRequest=SocialRequestLocalServiceUtil.getSocialRequest(requestId);
+  if (SocialRelationLocalServiceUtil.hasRelation(socialRequest.getReceiverUserId(),socialRequest.getUserId(),SocialRelationConstants.TYPE_UNI_BLOCK)) {
+    status=SocialRequestConstants.STATUS_IGNORE;
+  }
   SocialRequestLocalServiceUtil.updateRequest(requestId,status,themeDisplay);
 }

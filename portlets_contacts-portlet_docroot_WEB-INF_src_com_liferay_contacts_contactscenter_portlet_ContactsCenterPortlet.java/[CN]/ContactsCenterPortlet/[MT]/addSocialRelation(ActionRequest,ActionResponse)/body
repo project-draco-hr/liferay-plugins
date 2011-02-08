@@ -2,5 +2,15 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long userId=ParamUtil.getLong(actionRequest,"userId");
   int type=ParamUtil.getInteger(actionRequest,"type");
+  boolean blocked=SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_BLOCK);
+  if (type == SocialRelationConstants.TYPE_UNI_BLOCK) {
+    SocialRelationLocalServiceUtil.deleteRelations(themeDisplay.getUserId());
+  }
+ else   if (blocked) {
+    return;
+  }
   SocialRelationLocalServiceUtil.addRelation(themeDisplay.getUserId(),userId,type);
+  if (blocked) {
+    SocialRelationLocalServiceUtil.addRelation(userId,themeDisplay.getUserId(),type);
+  }
 }
