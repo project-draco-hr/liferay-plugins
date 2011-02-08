@@ -1,6 +1,6 @@
 {
   Date now=new Date();
-  validate(companyId,url);
+  validate(companyId,url,categories);
   long gadgetId=counterLocalService.increment();
   Gadget gadget=gadgetPersistence.create(gadgetId);
   gadget.setUuid(serviceContext.getUuid());
@@ -17,7 +17,8 @@
   ModulePrefs modulePrefs=gadgetSpec.getModulePrefs();
   gadget.setName(modulePrefs.getTitle());
   gadget.setUrl(url);
+  gadget.setCategories(categories);
   gadgetPersistence.update(gadget,false);
-  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,gadget.getName());
+  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,gadget.getName(),gadget.getCategories());
   return gadget;
 }

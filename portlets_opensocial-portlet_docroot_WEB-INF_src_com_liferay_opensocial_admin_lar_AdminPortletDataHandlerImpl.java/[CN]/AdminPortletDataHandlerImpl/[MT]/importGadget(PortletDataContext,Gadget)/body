@@ -4,11 +4,12 @@
     importedGadget=GadgetLocalServiceUtil.getGadget(gadget.getUuid());
     importedGadget.setName(gadget.getName());
     importedGadget.setUrl(gadget.getUrl());
+    importedGadget.setCategories(gadget.getCategories());
     GadgetLocalServiceUtil.updateGadget(importedGadget,false);
   }
  catch (  NoSuchGadgetException nsge) {
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setUuid(gadget.getUuid());
-    GadgetLocalServiceUtil.addGadget(portletDataContext.getCompanyId(),gadget.getUrl(),serviceContext);
+    GadgetLocalServiceUtil.addGadget(portletDataContext.getCompanyId(),gadget.getUrl(),gadget.getCategories(),serviceContext);
   }
 }
