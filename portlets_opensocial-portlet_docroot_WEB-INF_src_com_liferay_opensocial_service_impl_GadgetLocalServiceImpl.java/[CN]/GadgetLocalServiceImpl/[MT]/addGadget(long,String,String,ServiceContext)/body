@@ -1,6 +1,6 @@
 {
   Date now=new Date();
-  validate(companyId,url,categories);
+  validate(companyId,url,portletCategoryNames);
   long gadgetId=counterLocalService.increment();
   Gadget gadget=gadgetPersistence.create(gadgetId);
   gadget.setUuid(serviceContext.getUuid());
@@ -17,8 +17,8 @@
   ModulePrefs modulePrefs=gadgetSpec.getModulePrefs();
   gadget.setName(modulePrefs.getTitle());
   gadget.setUrl(url);
-  gadget.setCategories(categories);
+  gadget.setPortletCategoryNames(portletCategoryNames);
   gadgetPersistence.update(gadget,false);
-  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,gadget.getName(),gadget.getCategories());
+  gadgetLocalService.initGadget(gadget.getUuid(),companyId,gadgetId,gadget.getName(),gadget.getPortletCategoryNames());
   return gadget;
 }
