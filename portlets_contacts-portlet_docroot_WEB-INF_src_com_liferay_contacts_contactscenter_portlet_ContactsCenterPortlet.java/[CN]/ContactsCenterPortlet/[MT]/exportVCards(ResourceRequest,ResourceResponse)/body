@@ -1,0 +1,9 @@
+{
+  long userId=ParamUtil.getLong(resourceRequest,"userId");
+  int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
+  List<User> users=UserLocalServiceUtil.getSocialUsers(userId,socialRelationType,-1,-1,null);
+  String vCards=ContactsUtil.getVCards(users);
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+  ServletResponseUtil.sendFile(request,response,"vcards.vcf",vCards.getBytes(StringPool.UTF8),"text/x-vcard; charset=UTF-8");
+}
