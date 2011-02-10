@@ -1,6 +1,9 @@
 {
-  ServletContext servletContext=ServletContextPool.get(_servletContextName);
-  String realPath=ServletContextUtil.getRealPath(servletContext,"WEB-INF/classes/schema");
+  String realPath=WebDirDetector.getRootDir(this.getClass().getClassLoader());
+  realPath=realPath.concat("/WEB-INF/classes/schema");
+  if (_log.isDebugEnabled()) {
+    _log.debug(realPath);
+  }
   SchemaLoader schemaLoader=new LdifSchemaLoader(new File(realPath));
   _schemaManager=new DefaultSchemaManager(schemaLoader);
   _schemaManager.loadWithDeps("inetorgperson");
