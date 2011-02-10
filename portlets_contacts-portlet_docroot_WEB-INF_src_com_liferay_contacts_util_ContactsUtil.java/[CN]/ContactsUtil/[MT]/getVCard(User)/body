@@ -1,139 +1,14 @@
 {
+  StringBundler sb=new StringBundler();
+  sb.append(_getHeader());
   Contact contact=user.getContact();
-  StringBuilder sb=new StringBuilder();
-  sb.append("BEGIN:VCARD\nVERSION:3.0\n");
-  sb.append("N:");
-  sb.append(user.getLastName());
-  sb.append(StringPool.SEMICOLON);
-  sb.append(user.getFirstName());
-  sb.append(StringPool.SEMICOLON);
-  sb.append(user.getMiddleName());
-  sb.append(StringPool.SEMICOLON);
-  int prefixId=contact.getPrefixId();
-  if (prefixId > 0) {
-    ListType listType=ListTypeServiceUtil.getListType(prefixId);
-    sb.append(listType.getName());
-  }
-  sb.append(StringPool.SEMICOLON);
-  int suffixId=contact.getSuffixId();
-  if (suffixId > 0) {
-    ListType listType=ListTypeServiceUtil.getListType(suffixId);
-    sb.append(listType.getName());
-  }
-  sb.append(StringPool.NEW_LINE);
-  sb.append("FN:");
-  sb.append(user.getFullName());
-  sb.append(StringPool.NEW_LINE);
-  String jobTitle=user.getJobTitle();
-  if (Validator.isNotNull(jobTitle)) {
-    sb.append("TITLE:");
-    sb.append(jobTitle);
-    sb.append(StringPool.NEW_LINE);
-  }
-  sb.append("EMAIL;TYPE=INTERNET;TYPE=HOME:");
-  sb.append(user.getEmailAddress());
-  sb.append(StringPool.NEW_LINE);
-  List<EmailAddress> emailAddresses=EmailAddressLocalServiceUtil.getEmailAddresses(user.getCompanyId(),Contact.class.getName(),contact.getContactId());
-  for (  EmailAddress emailAddress : emailAddresses) {
-    sb.append("EMAIL;TYPE=INTERNET;TYPE=");
-    ListType listType=emailAddress.getType();
-    sb.append(listType.getName().toUpperCase());
-    sb.append(StringPool.COLON);
-    sb.append(emailAddress.getAddress());
-    sb.append(StringPool.NEW_LINE);
-  }
-  List<Phone> phones=PhoneLocalServiceUtil.getPhones(user.getCompanyId(),Contact.class.getName(),contact.getContactId());
-  for (  Phone phone : phones) {
-    sb.append("TEL;TYPE=");
-    ListType listType=phone.getType();
-    sb.append(listType.getName().toUpperCase());
-    sb.append(StringPool.COLON);
-    sb.append(phone.getNumber());
-    sb.append(StringPool.SPACE);
-    sb.append(phone.getExtension());
-    sb.append(StringPool.NEW_LINE);
-  }
-  List<Address> addresses=AddressLocalServiceUtil.getAddresses(user.getCompanyId(),Contact.class.getName(),contact.getContactId());
-  for (  Address address : addresses) {
-    sb.append("ADR;TYPE=");
-    ListType listType=address.getType();
-    sb.append(listType.getName().toUpperCase());
-    sb.append(StringPool.COLON);
-    sb.append(StringPool.SEMICOLON);
-    sb.append(StringPool.SEMICOLON);
-    if (Validator.isNotNull(address.getStreet1())) {
-      sb.append(address.getStreet1());
-    }
-    if (Validator.isNotNull(address.getStreet2())) {
-      sb.append("\\n");
-      sb.append(address.getStreet2());
-    }
-    if (Validator.isNotNull(address.getStreet3())) {
-      sb.append("\\n");
-      sb.append(address.getStreet3());
-    }
-    sb.append(StringPool.SEMICOLON);
-    if (Validator.isNotNull(address.getCity())) {
-      sb.append(address.getCity());
-    }
-    sb.append(StringPool.SEMICOLON);
-    long regionId=address.getRegionId();
-    if (regionId > 0) {
-      Region region=RegionServiceUtil.getRegion(regionId);
-      sb.append(region.getName());
-    }
-    sb.append(StringPool.SEMICOLON);
-    if (Validator.isNotNull(address.getZip())) {
-      sb.append(address.getZip());
-    }
-    sb.append(StringPool.SEMICOLON);
-    long countryId=address.getCountryId();
-    if (countryId > 0) {
-      Country country=CountryServiceUtil.getCountry(countryId);
-      sb.append(country.getName());
-    }
-    sb.append(StringPool.NEW_LINE);
-  }
-  List<Website> websites=WebsiteLocalServiceUtil.getWebsites(user.getCompanyId(),Contact.class.getName(),contact.getContactId());
-  for (  Website website : websites) {
-    sb.append("URL;TYPE=");
-    ListType listType=website.getType();
-    sb.append(listType.getName().toUpperCase());
-    sb.append(StringPool.COLON);
-    String url=website.getUrl();
-    sb.append(url.replaceAll(StringPool.COLON,"\\:"));
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getAimSn())) {
-    sb.append("X-AIM;type=OTHER;type=pref:");
-    sb.append(contact.getAimSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getIcqSn())) {
-    sb.append("X-ICQ;type=OTHER;type=pref:");
-    sb.append(contact.getAimSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getJabberSn())) {
-    sb.append("X-JABBER;type=OTHER;type=pref:");
-    sb.append(contact.getJabberSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getMsnSn())) {
-    sb.append("X-MSN;type=OTHER;type=pref:");
-    sb.append(contact.getMsnSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getSkypeSn())) {
-    sb.append("X-SKYPE;type=OTHER;type=pref:");
-    sb.append(contact.getSkypeSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  if (Validator.isNotNull(contact.getYmSn())) {
-    sb.append("X-YM;type=OTHER;type=pref:");
-    sb.append(contact.getYmSn());
-    sb.append(StringPool.NEW_LINE);
-  }
-  sb.append("END:VCARD\n");
+  sb.append(_getName(user,contact));
+  sb.append(_getJobTitle(user));
+  sb.append(_getEmailAddresses(user));
+  sb.append(_getPhones(user));
+  sb.append(_getAddresses(user));
+  sb.append(_getWebsites(user));
+  sb.append(_getInstantMessaging(contact));
+  sb.append(_getFooter());
   return sb.toString();
 }
