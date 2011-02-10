@@ -1,10 +1,11 @@
 {
-  String realPath=WebDirDetector.getRootDir(this.getClass().getClassLoader());
-  realPath=realPath.concat("/WEB-INF/classes/schema");
+  ClassLoader classLoader=getClass().getClassLoader();
+  String webDir=WebDirDetector.getRootDir(classLoader);
   if (_log.isDebugEnabled()) {
-    _log.debug(realPath);
+    _log.debug(webDir);
   }
-  SchemaLoader schemaLoader=new LdifSchemaLoader(new File(realPath));
+  File baseDirectory=new File(webDir.concat("/WEB-INF/classes/schema"));
+  SchemaLoader schemaLoader=new LdifSchemaLoader(baseDirectory);
   _schemaManager=new DefaultSchemaManager(schemaLoader);
   _schemaManager.loadWithDeps("inetorgperson");
   _schemaManager.loadWithDeps("liferayperson");
