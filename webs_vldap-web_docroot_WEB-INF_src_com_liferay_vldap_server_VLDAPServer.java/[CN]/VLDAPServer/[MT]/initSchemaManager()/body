@@ -1,5 +1,7 @@
 {
-  SchemaLoader schemaLoader=new DynamicJarLdifSchemaLoader();
+  ServletContext servletContext=ServletContextPool.get(_servletContextName);
+  String realPath=servletContext.getRealPath("WEB-INF/classes/schema");
+  SchemaLoader schemaLoader=new LdifSchemaLoader(new File(realPath));
   _schemaManager=new DefaultSchemaManager(schemaLoader);
   _schemaManager.loadWithDeps("inetorgperson");
   _schemaManager.loadWithDeps("liferayperson");
