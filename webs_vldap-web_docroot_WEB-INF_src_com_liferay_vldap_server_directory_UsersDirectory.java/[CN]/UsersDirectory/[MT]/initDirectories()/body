@@ -5,7 +5,7 @@
   String lastName=null;
   String screenName=getScreenName();
   String emailAddress=null;
-  Boolean active=Boolean.TRUE;
+  int status=WorkflowConstants.STATUS_APPROVED;
   LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
   boolean andSearch=true;
   int start=0;
@@ -26,7 +26,7 @@
  else   if (_company != null) {
     companyId=_company.getCompanyId();
   }
-  List<User> users=UserLocalServiceUtil.search(companyId,firstName,middleName,lastName,screenName,emailAddress,active,params,andSearch,start,end,orderByComparator);
+  List<User> users=UserLocalServiceUtil.search(companyId,firstName,middleName,lastName,screenName,emailAddress,status,params,andSearch,start,end,orderByComparator);
   for (  User user : users) {
     if (user.isDefaultUser()) {
       continue;
