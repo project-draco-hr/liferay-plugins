@@ -1,0 +1,16 @@
+{
+  long memberRequestId=ParamUtil.getLong(actionRequest,"memberRequestId");
+  int status=ParamUtil.getInteger(actionRequest,"status");
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  try {
+    MemberRequestLocalServiceUtil.updateMemberRequest(themeDisplay.getUserId(),memberRequestId,status);
+  }
+ catch (  Exception e) {
+    if ((e instanceof MemberRequestAlreadyUsedException) || (e instanceof MemberRequestInvalidUserException)) {
+      SessionErrors.add(actionRequest,e.getClass().getName(),e);
+    }
+ else {
+      throw e;
+    }
+  }
+}
