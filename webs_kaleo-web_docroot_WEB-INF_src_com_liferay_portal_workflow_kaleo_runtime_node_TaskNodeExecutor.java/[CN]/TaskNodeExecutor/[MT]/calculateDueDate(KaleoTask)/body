@@ -1,9 +1,13 @@
 {
-  Date dueDate=null;
-  KaleoTimer defaultTimer=kaleoTimerLocalService.getDefaultKaleoTimer(kaleoTask.getKaleoTaskId());
-  if (defaultTimer != null) {
-    DelayDuration delayDuration=new DelayDuration(defaultTimer.getDuration(),DurationScale.parse(defaultTimer.getScale()));
-    dueDate=_dueDateCalculator.getDueDate(new Date(),delayDuration);
+  KaleoTimer kaleoTimer=null;
+  try {
+    kaleoTimer=kaleoTimerLocalService.getDefaultKaleoTimer(kaleoTask.getKaleoTaskId());
   }
-  return dueDate;
+ catch (  NoSuchTimerException nste) {
+  }
+  if (kaleoTimer == null) {
+    return null;
+  }
+  DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
+  return _dueDateCalculator.getDueDate(new Date(),delayDuration);
 }

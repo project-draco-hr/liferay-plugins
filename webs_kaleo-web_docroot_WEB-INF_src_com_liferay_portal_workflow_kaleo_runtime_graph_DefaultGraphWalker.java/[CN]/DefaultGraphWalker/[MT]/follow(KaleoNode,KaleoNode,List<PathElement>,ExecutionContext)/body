@@ -1,13 +1,13 @@
 {
   if (sourceKaleoNode != null) {
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(sourceKaleoNode.getType()));
-    nodeExecutor.exit(sourceKaleoNode,executionContext,remainingPathElement);
+    nodeExecutor.exit(sourceKaleoNode,executionContext,remainingPathElements);
   }
   if (targetKaleoNode != null) {
     kaleoLogLocalService.addNodeEntryKaleoLog(executionContext.getKaleoInstanceToken(),sourceKaleoNode,targetKaleoNode,executionContext.getServiceContext());
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(targetKaleoNode.getType()));
     nodeExecutor.enter(targetKaleoNode,executionContext);
-    nodeExecutor.execute(targetKaleoNode,executionContext,remainingPathElement);
+    nodeExecutor.execute(targetKaleoNode,executionContext,remainingPathElements);
   }
   ExecutionUtil.checkKaleoInstanceComplete(executionContext);
 }
