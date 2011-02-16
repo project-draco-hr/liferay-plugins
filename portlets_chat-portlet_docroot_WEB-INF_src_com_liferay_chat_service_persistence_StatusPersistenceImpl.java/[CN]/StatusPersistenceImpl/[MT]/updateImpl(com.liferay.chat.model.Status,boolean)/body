@@ -17,10 +17,10 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,status.getPrimaryKey(),status);
   if (!isNew && (status.getUserId() != statusModelImpl.getOriginalUserId())) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{new Long(statusModelImpl.getOriginalUserId())});
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{Long.valueOf(statusModelImpl.getOriginalUserId())});
   }
   if (isNew || (status.getUserId() != statusModelImpl.getOriginalUserId())) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{new Long(status.getUserId())},status);
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERID,new Object[]{Long.valueOf(status.getUserId())},status);
   }
   return status;
 }

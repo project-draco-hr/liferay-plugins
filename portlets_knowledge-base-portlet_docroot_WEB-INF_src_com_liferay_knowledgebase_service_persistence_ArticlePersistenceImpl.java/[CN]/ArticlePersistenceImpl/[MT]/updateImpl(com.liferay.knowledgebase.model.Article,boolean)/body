@@ -21,16 +21,16 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(ArticleModelImpl.ENTITY_CACHE_ENABLED,ArticleImpl.class,article.getPrimaryKey(),article);
   if (!isNew && (!Validator.equals(article.getUuid(),articleModelImpl.getOriginalUuid()) || (article.getGroupId() != articleModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{articleModelImpl.getOriginalUuid(),new Long(articleModelImpl.getOriginalGroupId())});
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{articleModelImpl.getOriginalUuid(),Long.valueOf(articleModelImpl.getOriginalGroupId())});
   }
   if (isNew || (!Validator.equals(article.getUuid(),articleModelImpl.getOriginalUuid()) || (article.getGroupId() != articleModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{article.getUuid(),new Long(article.getGroupId())},article);
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{article.getUuid(),Long.valueOf(article.getGroupId())},article);
   }
   if (!isNew && ((article.getResourcePrimKey() != articleModelImpl.getOriginalResourcePrimKey()) || (article.getVersion() != articleModelImpl.getOriginalVersion()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{new Long(articleModelImpl.getOriginalResourcePrimKey()),new Integer(articleModelImpl.getOriginalVersion())});
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(articleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(articleModelImpl.getOriginalVersion())});
   }
   if (isNew || ((article.getResourcePrimKey() != articleModelImpl.getOriginalResourcePrimKey()) || (article.getVersion() != articleModelImpl.getOriginalVersion()))) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{new Long(article.getResourcePrimKey()),new Integer(article.getVersion())},article);
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(article.getResourcePrimKey()),Integer.valueOf(article.getVersion())},article);
   }
   return article;
 }
