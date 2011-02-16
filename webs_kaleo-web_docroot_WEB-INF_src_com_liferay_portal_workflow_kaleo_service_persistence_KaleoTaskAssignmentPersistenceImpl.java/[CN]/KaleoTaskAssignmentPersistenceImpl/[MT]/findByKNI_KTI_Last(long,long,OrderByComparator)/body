@@ -1,0 +1,17 @@
+{
+  int count=countByKNI_KTI(kaleoNodeId,kaleoTaskId);
+  List<KaleoTaskAssignment> list=findByKNI_KTI(kaleoNodeId,kaleoTaskId,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("kaleoNodeId=");
+    msg.append(kaleoNodeId);
+    msg.append(", kaleoTaskId=");
+    msg.append(kaleoTaskId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchTaskAssignmentException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

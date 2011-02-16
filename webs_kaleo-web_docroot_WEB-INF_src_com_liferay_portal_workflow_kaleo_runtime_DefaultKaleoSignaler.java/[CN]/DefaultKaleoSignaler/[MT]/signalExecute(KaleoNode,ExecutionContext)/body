@@ -1,0 +1,9 @@
+{
+  NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(currentKaleoNode.getType()));
+  List<PathElement> remainingPathElements=new ArrayList<PathElement>();
+  nodeExecutor.execute(currentKaleoNode,executionContext,remainingPathElements);
+  ExecutionUtil.checkKaleoInstanceComplete(executionContext);
+  for (  PathElement remainingPathElement : remainingPathElements) {
+    _singleDestinationMessageSender.send(remainingPathElement);
+  }
+}

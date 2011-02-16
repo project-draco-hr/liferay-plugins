@@ -1,0 +1,17 @@
+{
+  kaleoTimer=toUnwrappedModel(kaleoTimer);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,kaleoTimer);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(KaleoTimerModelImpl.ENTITY_CACHE_ENABLED,KaleoTimerImpl.class,kaleoTimer.getPrimaryKey());
+  return kaleoTimer;
+}

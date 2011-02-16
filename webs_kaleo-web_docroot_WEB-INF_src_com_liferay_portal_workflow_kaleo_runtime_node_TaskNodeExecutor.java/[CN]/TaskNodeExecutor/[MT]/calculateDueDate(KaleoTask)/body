@@ -1,0 +1,9 @@
+{
+  Date dueDate=null;
+  KaleoTimer defaultTimer=kaleoTimerLocalService.getDefaultKaleoTimer(kaleoTask.getKaleoTaskId());
+  if (defaultTimer != null) {
+    DelayDuration delayDuration=new DelayDuration(defaultTimer.getDuration(),DurationScale.parse(defaultTimer.getScale()));
+    dueDate=_dueDateCalculator.getDueDate(new Date(),delayDuration);
+  }
+  return dueDate;
+}

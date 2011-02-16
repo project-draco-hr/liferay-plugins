@@ -1,0 +1,10 @@
+{
+  KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenPersistence.findByPrimaryKey(kaleoTimerInstanceTokenId);
+  kaleoTimerInstanceToken.setCompletionUserId(serviceContext.getUserId());
+  kaleoTimerInstanceToken.setCompleted(true);
+  kaleoTimerInstanceToken.setCompletionDate(new Date());
+  kaleoTimerInstanceTokenPersistence.update(kaleoTimerInstanceToken,false);
+  kaleoInstanceTokenLocalService.completeKaleoInstanceToken(kaleoTimerInstanceToken.getKaleoInstanceTokenId());
+  deleteTimer(kaleoTimerInstanceToken);
+  return kaleoTimerInstanceToken;
+}

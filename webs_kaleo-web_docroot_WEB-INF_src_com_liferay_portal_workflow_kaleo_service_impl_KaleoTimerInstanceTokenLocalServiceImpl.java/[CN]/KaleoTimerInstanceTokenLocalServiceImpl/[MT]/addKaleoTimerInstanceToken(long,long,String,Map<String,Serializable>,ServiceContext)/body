@@ -1,0 +1,24 @@
+{
+  KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.findByPrimaryKey(kaleoInstanceTokenId);
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  long kaleoTimerInstanceTokenId=counterLocalService.increment();
+  KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenPersistence.create(kaleoTimerInstanceTokenId);
+  kaleoTimerInstanceToken.setGroupId(serviceContext.getScopeGroupId());
+  kaleoTimerInstanceToken.setCompanyId(user.getCompanyId());
+  kaleoTimerInstanceToken.setUserId(user.getUserId());
+  kaleoTimerInstanceToken.setUserName(user.getFullName());
+  kaleoTimerInstanceToken.setCreateDate(now);
+  kaleoTimerInstanceToken.setModifiedDate(now);
+  kaleoTimerInstanceToken.setKaleoDefinitionId(kaleoInstanceToken.getKaleoDefinitionId());
+  kaleoTimerInstanceToken.setKaleoInstanceId(kaleoInstanceToken.getKaleoInstanceId());
+  kaleoTimerInstanceToken.setKaleoTimerId(kaleoTimerId);
+  kaleoTimerInstanceToken.setKaleoTimerName(kaleoTimerName);
+  kaleoTimerInstanceToken.setCompleted(false);
+  kaleoTimerInstanceToken.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
+  KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),workflowContext,serviceContext);
+  kaleoTimerInstanceToken.setKaleoInstanceTokenId(childKaleoInstanceToken.getKaleoInstanceTokenId());
+  kaleoTimerInstanceTokenPersistence.update(kaleoTimerInstanceToken,false);
+  scheduleTimer(kaleoTimerInstanceToken);
+  return kaleoTimerInstanceToken;
+}

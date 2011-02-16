@@ -1,0 +1,16 @@
+{
+  String name=timerElement.elementText("name");
+  String description=timerElement.elementText("description");
+  boolean defaultValue=GetterUtil.getBoolean(timerElement.elementText("default"));
+  boolean required=GetterUtil.getBoolean(timerElement.elementText("required"));
+  Timer timer=new Timer(name,description,defaultValue,required);
+  Element actionsElement=timerElement.element("actions");
+  parseActions(actionsElement,timer);
+  Element reassignmentsElement=timerElement.element("reassignments");
+  Set<Assignment> reassignments=parseAssignments(reassignmentsElement);
+  timer.setReassignments(reassignments);
+  Element delayElement=timerElement.element("delay");
+  DelayDuration delayDuration=parseDelay(delayElement);
+  timer.setDelayDuration(delayDuration);
+  return timer;
+}

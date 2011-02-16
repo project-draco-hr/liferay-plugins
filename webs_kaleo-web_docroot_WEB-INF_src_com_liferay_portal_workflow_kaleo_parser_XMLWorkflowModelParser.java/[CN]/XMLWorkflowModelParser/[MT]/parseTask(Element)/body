@@ -2,12 +2,6 @@
   String name=taskElement.elementText("name");
   String description=taskElement.elementText("description");
   Task task=new Task(name,description);
-  double dueDateDuration=GetterUtil.getDouble(taskElement.elementText("due-date-duration"));
-  if (dueDateDuration > 0) {
-    DurationScale dueDateScale=DurationScale.parse(taskElement.elementText("due-date-scale"));
-    DueDateDuration dueDateDurationModel=new DueDateDuration(dueDateDuration,dueDateScale);
-    task.setDueDateDuration(dueDateDurationModel);
-  }
   Element actionsElement=taskElement.element("actions");
   if (actionsElement != null) {
     parseActions(actionsElement,task);
@@ -16,6 +10,10 @@
   if (assignmentsElement != null) {
     Set<Assignment> assignments=parseAssignments(assignmentsElement);
     task.setAssignments(assignments);
+  }
+  Element timersElement=taskElement.element("timers");
+  if (timersElement != null) {
+    parseTimers(timersElement,task);
   }
   return task;
 }

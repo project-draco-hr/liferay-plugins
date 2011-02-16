@@ -31,5 +31,10 @@
   for (  Notification notification : notifications) {
     kaleoNotificationLocalService.addKaleoNotification(kaleoDefinitionId,kaleoNodeId,node.getName(),notification,serviceContext);
   }
+  Set<Timer> timers=node.getTimers();
+  for (  Timer timer : timers) {
+    KaleoNode timerNode=addKaleoNode(kaleoDefinitionId,timer,serviceContext);
+    kaleoTimerLocalService.addKaleoTimer(kaleoDefinitionId,timerNode.getKaleoNodeId(),kaleoNodeId,timer,serviceContext);
+  }
   return kaleoNode;
 }

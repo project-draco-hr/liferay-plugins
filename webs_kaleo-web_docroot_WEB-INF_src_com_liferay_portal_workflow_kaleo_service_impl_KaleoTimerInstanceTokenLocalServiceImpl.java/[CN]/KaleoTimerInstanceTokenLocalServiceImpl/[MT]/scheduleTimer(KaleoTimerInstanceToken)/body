@@ -1,0 +1,14 @@
+{
+  deleteTimer(kaleoTimerInstanceToken);
+  Calendar startDate=CalendarFactoryUtil.getCalendar();
+  KaleoTimer kaleoTimer=kaleoTimerPersistence.findByPrimaryKey(kaleoTimerInstanceToken.getKaleoTimerId());
+  DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
+  DueDateCalculator dueDateCalculator=new DefaultDueDateCalculator();
+  Date dueDate=dueDateCalculator.getDueDate(new Date(),delayDuration);
+  startDate.setTime(dueDate);
+  CronText cronText=new CronText(startDate);
+  String groupName=getSchedulerGroupName(kaleoTimerInstanceToken);
+  Trigger trigger=new CronTrigger(groupName,groupName,startDate.getTime(),null,cronText.toString());
+  Message message=new Message();
+  message.put("kaleoTimerInstanceTokenId",kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId());
+}
