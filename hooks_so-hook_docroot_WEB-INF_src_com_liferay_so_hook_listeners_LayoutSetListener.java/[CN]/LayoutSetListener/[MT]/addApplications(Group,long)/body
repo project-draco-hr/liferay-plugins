@@ -6,20 +6,20 @@
     }
     Layout layout=addLayout(group,parentLayoutId,portlet.getDisplayName(),"2_columns_ii");
     LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
-    String[] commonPortlets=PortletProps.getArray(PortletPropsKeys.USER_LAYOUT_PORTLETS + "column-1",new Filter("/home"));
+    String[] commonPortletIds=PortletProps.getArray(PortletPropsKeys.USER_LAYOUT_PORTLETS + "column-1",new Filter("/home"));
     String portletIds=StringPool.BLANK;
-    for (    String commonPortlet : commonPortlets) {
-      portletIds=StringUtil.add(portletIds,commonPortlet);
+    for (    String commonPortletId : commonPortletIds) {
+      portletIds=StringUtil.add(portletIds,commonPortletId);
     }
     layoutTypePortlet.setPortletIds("column-1",portletIds);
     layoutTypePortlet.setPortletIds("column-2",portletId);
     LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
     addResources(layout,portletId);
-    for (    String commonPortlet : commonPortlets) {
-      addResources(layout,commonPortlet);
-      if (commonPortlet.startsWith("71_INSTANCE_")) {
-        removePortletBorder(layout,commonPortlet);
-        configureNavigation(layout,commonPortlet);
+    for (    String commonPortletId : commonPortletIds) {
+      addResources(layout,commonPortletId);
+      if (commonPortletId.startsWith("71_INSTANCE_")) {
+        removePortletBorder(layout,commonPortletId);
+        configureNavigation(layout,commonPortletId);
       }
     }
     updatePermissions(layout,false);
