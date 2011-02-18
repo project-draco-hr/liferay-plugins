@@ -1,0 +1,47 @@
+{
+  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+  if (!ArticlePermission.contains(permissionChecker,resourcePrimKey,ActionKeys.VIEW)) {
+    return false;
+  }
+  Article article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletId,StringPool.BLANK);
+  Map<String,String> preferencesMap=initPreferencesMap(rootPortletId,preferences);
+  String selectionMethod=preferencesMap.get("selectionMethod");
+  long[] resourcePrimKeys=StringUtil.split(preferencesMap.get("resourcePrimKeys"),0L);
+  String orderByColumn=preferencesMap.get("orderByColumn");
+  boolean orderByAscending=GetterUtil.getBoolean(preferencesMap.get("orderByAscending"));
+  if (!rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY) && selectionMethod.equals("group")) {
+    return true;
+  }
+  List<Article> articles=null;
+  if (selectionMethod.equals("articles")) {
+    articles=ArticleServiceUtil.getArticles(resourcePrimKeys,WorkflowConstants.STATUS_APPROVED,null);
+  }
+ else   if (selectionMethod.equals("filter")) {
+    long[] classPKs=getAssetEntriesClassPKs(article.getGroupId(),0,null,preferencesMap);
+    articles=ArticleServiceUtil.getArticles(classPKs,WorkflowConstants.STATUS_APPROVED,getOrderByComparator(orderByColumn,orderByAscending));
+  }
+ else   if (selectionMethod.equals("group")) {
+    articles=ArticleServiceUtil.getSiblingArticles(article.getGroupId(),ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,WorkflowConstants.STATUS_APPROVED,0,1,getOrderByComparator(orderByColumn,orderByAscending));
+  }
+  if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+    articles=ListUtil.subList(articles,0,1);
+  }
+  long[] rootResourcePrimKeys=new long[0];
+  for (  Article curArticle : articles) {
+    while (curArticle.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+      curArticle=ArticleServiceUtil.getLatestArticle(curArticle.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
+    }
+    rootResourcePrimKeys=ArrayUtil.append(rootResourcePrimKeys,curArticle.getResourcePrimKey());
+  }
+  while (resourcePrimKey != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+    if (ArrayUtil.contains(rootResourcePrimKeys,resourcePrimKey)) {
+      return true;
+    }
+    Article curArticle=ArticleServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+    resourcePrimKey=curArticle.getParentResourcePrimKey();
+  }
+  return false;
+}

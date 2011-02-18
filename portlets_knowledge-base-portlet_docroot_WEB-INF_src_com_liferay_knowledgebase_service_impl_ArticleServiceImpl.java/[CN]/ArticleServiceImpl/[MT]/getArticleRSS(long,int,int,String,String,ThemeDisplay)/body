@@ -5,8 +5,7 @@
   String feedURL=KnowledgeBaseUtil.getArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL());
   List<Article> articles=Collections.emptyList();
   if (ArticlePermission.contains(getPermissionChecker(),article,ActionKeys.VIEW)) {
-    long[] resourcePrimKeys=getViewableResourcePrimKeys(article.getGroupId(),resourcePrimKey,status);
-    articles=getArticles(article.getGroupId(),resourcePrimKeys,status,null,0,rssDelta,new ArticleModifiedDateComparator());
+    articles=getRSSArticles(article.getGroupId(),resourcePrimKey,status,rssDelta);
   }
   return exportToRSS(rssDisplayStyle,rssFormat,name,description,feedURL,articles,themeDisplay);
 }

@@ -1,6 +1,15 @@
 {
-  String articleURL=portalURL + PortalUtil.getPathMain() + "/portal/knowledge_base/find_article";
-  articleURL=HttpUtil.setParameter(articleURL,"plid",plid);
-  articleURL=HttpUtil.setParameter(articleURL,"resourcePrimKey",resourcePrimKey);
-  return articleURL;
+  StringBundler sb=new StringBundler(11);
+  sb.append(portalURL);
+  sb.append(PortalUtil.getPathMain());
+  sb.append("/portal/knowledge_base/find_article");
+  sb.append(StringPool.QUESTION);
+  sb.append("plid");
+  sb.append(StringPool.EQUAL);
+  sb.append(HttpUtil.encodeURL(String.valueOf(plid)));
+  sb.append(StringPool.AMPERSAND);
+  sb.append("resourcePrimKey");
+  sb.append(StringPool.EQUAL);
+  sb.append(HttpUtil.encodeURL(String.valueOf(resourcePrimKey)));
+  return sb.toString();
 }

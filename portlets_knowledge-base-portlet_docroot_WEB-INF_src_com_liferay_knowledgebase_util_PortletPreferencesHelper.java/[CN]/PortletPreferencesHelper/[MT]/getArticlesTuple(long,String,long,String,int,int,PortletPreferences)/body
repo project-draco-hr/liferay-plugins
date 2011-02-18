@@ -1,0 +1,34 @@
+{
+  Map<String,String> preferencesMap=initPreferencesMap(rootPortletId,preferences);
+  String selectionMethod=preferencesMap.get("selectionMethod");
+  long[] resourcePrimKeys=StringUtil.split(preferencesMap.get("resourcePrimKeys"),0L);
+  String orderByColumn=preferencesMap.get("orderByColumn");
+  boolean orderByAscending=GetterUtil.getBoolean(preferencesMap.get("orderByAscending"));
+  if (selectionMethod.equals("articles")) {
+    if ((assetCategoryId > 0) || Validator.isNotNull(assetTagName)) {
+      long[] classPKs=getAssetEntriesClassPKs(groupId,assetCategoryId,assetTagName,preferencesMap);
+      List<Long> list=new UniqueList<Long>();
+      list.addAll(SetUtil.fromArray(resourcePrimKeys));
+      list.retainAll(SetUtil.fromArray(classPKs));
+      resourcePrimKeys=StringUtil.split(StringUtil.merge(list),0L);
+    }
+    List<Article> articles=ArticleServiceUtil.getArticles(resourcePrimKeys,WorkflowConstants.STATUS_APPROVED,null);
+    return new Tuple(ListUtil.subList(articles,start,end),articles.size());
+  }
+ else   if (selectionMethod.equals("filter")) {
+    long[] classPKs=getAssetEntriesClassPKs(groupId,assetCategoryId,assetTagName,preferencesMap);
+    List<Article> articles=ArticleServiceUtil.getArticles(classPKs,WorkflowConstants.STATUS_APPROVED,getOrderByComparator(orderByColumn,orderByAscending));
+    return new Tuple(ListUtil.subList(articles,start,end),articles.size());
+  }
+ else   if (selectionMethod.equals("group")) {
+    if ((assetCategoryId > 0) || Validator.isNotNull(assetTagName)) {
+      long[] classPKs=getAssetEntriesClassPKs(groupId,assetCategoryId,assetTagName,preferencesMap);
+      List<Article> articles=ArticleServiceUtil.getArticles(classPKs,WorkflowConstants.STATUS_APPROVED,getOrderByComparator(orderByColumn,orderByAscending));
+      return new Tuple(ListUtil.subList(articles,start,end),articles.size());
+    }
+    List<Article> articles=ArticleServiceUtil.getSiblingArticles(groupId,ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,WorkflowConstants.STATUS_APPROVED,start,end,getOrderByComparator(orderByColumn,orderByAscending));
+    int count=ArticleServiceUtil.getSiblingArticlesCount(groupId,ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,WorkflowConstants.STATUS_APPROVED);
+    return new Tuple(articles,count);
+  }
+  return new Tuple(Collections.emptyList(),0);
+}

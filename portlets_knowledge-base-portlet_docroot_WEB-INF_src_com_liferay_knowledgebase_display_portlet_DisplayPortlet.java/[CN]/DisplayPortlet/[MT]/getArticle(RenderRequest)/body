@@ -4,8 +4,8 @@
   String tag=ParamUtil.getString(renderRequest,"tag");
   String portletId=PortalUtil.getPortletId(renderRequest);
   PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
-  Map<String,Object> preferencesArticlesMap=KnowledgeBaseUtil.getPortletPreferencesArticlesMap(themeDisplay.getScopeGroupId(),portletId,categoryId,tag,0,1,portletDisplay.getPortletSetup());
-  List<Article> articles=(List<Article>)preferencesArticlesMap.get("articles");
+  Tuple articlesTuple=PortletPreferencesHelper.getArticlesTuple(themeDisplay.getScopeGroupId(),portletId,categoryId,tag,0,1,portletDisplay.getPortletSetup());
+  List<Article> articles=(List<Article>)articlesTuple.getObject(0);
   if (articles.isEmpty()) {
     return null;
   }

@@ -1,0 +1,39 @@
+{
+  Map<String,String> preferencesMap=initPreferencesMap(rootPortletId,preferences);
+  String selectionMethod=preferencesMap.get("selectionMethod");
+  long[] resourcePrimKeys=StringUtil.split(preferencesMap.get("resourcePrimKeys"),0L);
+  boolean assetEntryQueryAndOperator=GetterUtil.getBoolean(preferencesMap.get("assetEntryQueryAndOperator"));
+  String assetEntryQueryName=preferencesMap.get("assetEntryQueryName");
+  long[] assetCategoryIds=StringUtil.split(preferencesMap.get("assetCategoryIds"),0L);
+  String[] assetTagNames=StringUtil.split(preferencesMap.get("assetTagNames"));
+  long[] selAssetCategoryIds=new long[0];
+  for (  long assetCategoryId : assetCategoryIds) {
+    try {
+      AssetCategoryServiceUtil.getCategory(assetCategoryId);
+    }
+ catch (    Exception e) {
+      continue;
+    }
+    selAssetCategoryIds=ArrayUtil.append(selAssetCategoryIds,assetCategoryId);
+  }
+  String[] selAssetTagNames=new String[0];
+  long[] assetTagIds=AssetTagLocalServiceUtil.getTagIds(groupId,assetTagNames);
+  for (  long assetTagId : assetTagIds) {
+    AssetTag assetTag=null;
+    try {
+      assetTag=AssetTagServiceUtil.getTag(assetTagId);
+    }
+ catch (    Exception e) {
+      continue;
+    }
+    selAssetTagNames=ArrayUtil.append(selAssetTagNames,assetTag.getName());
+  }
+  HashMap<String,Object> params=new HashMap<String,Object>();
+  params.put("selectionMethod",selectionMethod);
+  params.put("resourcePrimKeys",ArrayUtil.toArray(resourcePrimKeys));
+  params.put("assetEntryQueryAndOperator",(Boolean)assetEntryQueryAndOperator);
+  params.put("assetEntryQueryName",assetEntryQueryName);
+  params.put("assetCategoryIds",ArrayUtil.toArray(selAssetCategoryIds));
+  params.put("assetTagNames",selAssetTagNames);
+  return params;
+}

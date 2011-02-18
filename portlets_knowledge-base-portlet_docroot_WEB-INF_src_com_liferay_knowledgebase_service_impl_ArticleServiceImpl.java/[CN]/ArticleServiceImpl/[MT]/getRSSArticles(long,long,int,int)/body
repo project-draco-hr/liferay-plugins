@@ -1,0 +1,34 @@
+{
+  List<Article> articles=new ArrayList<Article>();
+  if (parentResourcePrimKey != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+    Article article=articleLocalService.getLatestArticle(parentResourcePrimKey,status);
+    articles.add(article);
+  }
+  long[] parentResourcePrimKeys=new long[]{parentResourcePrimKey};
+  while (parentResourcePrimKeys.length > 0) {
+    long[] curParentResourcePrimKeys=null;
+    if (parentResourcePrimKeys.length > _SQL_DATA_MAX_PARAMETERS) {
+      curParentResourcePrimKeys=new long[_SQL_DATA_MAX_PARAMETERS];
+      System.arraycopy(parentResourcePrimKeys,0,curParentResourcePrimKeys,0,_SQL_DATA_MAX_PARAMETERS);
+      long[] array=new long[parentResourcePrimKeys.length - _SQL_DATA_MAX_PARAMETERS];
+      System.arraycopy(parentResourcePrimKeys,_SQL_DATA_MAX_PARAMETERS,array,0,parentResourcePrimKeys.length - _SQL_DATA_MAX_PARAMETERS);
+      parentResourcePrimKeys=array;
+    }
+ else {
+      curParentResourcePrimKeys=parentResourcePrimKeys.clone();
+      parentResourcePrimKeys=new long[0];
+    }
+    List<Article> curArticles=null;
+    if (status == WorkflowConstants.STATUS_ANY) {
+      curArticles=articlePersistence.filterFindByG_P_L(groupId,curParentResourcePrimKeys,new int[]{ArticleConstants.LATEST_VERSION});
+    }
+ else {
+      curArticles=articlePersistence.filterFindByG_P_L_S(groupId,curParentResourcePrimKeys,ArticleConstants.LATEST_ANY,status);
+    }
+    articles.addAll(curArticles);
+    long[] resourcePrimKeys=StringUtil.split(ListUtil.toString(curArticles,"resourcePrimKey"),0L);
+    parentResourcePrimKeys=ArrayUtil.append(parentResourcePrimKeys,resourcePrimKeys);
+  }
+  Collections.sort(articles,new ArticleModifiedDateComparator());
+  return ListUtil.subList(articles,0,rssDelta);
+}

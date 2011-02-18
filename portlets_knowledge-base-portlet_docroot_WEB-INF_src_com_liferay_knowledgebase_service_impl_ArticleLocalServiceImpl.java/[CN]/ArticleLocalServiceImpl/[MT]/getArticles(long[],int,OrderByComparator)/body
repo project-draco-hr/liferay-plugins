@@ -1,0 +1,43 @@
+{
+  if ((resourcePrimKeys == null) || (resourcePrimKeys.length == 0)) {
+    return Collections.emptyList();
+  }
+  List<Article> articles=new ArrayList<Article>();
+  long[] selResourcePrimKeys=resourcePrimKeys.clone();
+  while (selResourcePrimKeys.length > 0) {
+    long[] curResourcePrimKeys=null;
+    if (selResourcePrimKeys.length > _SQL_DATA_MAX_PARAMETERS) {
+      curResourcePrimKeys=new long[_SQL_DATA_MAX_PARAMETERS];
+      System.arraycopy(selResourcePrimKeys,0,curResourcePrimKeys,0,_SQL_DATA_MAX_PARAMETERS);
+      long[] array=new long[selResourcePrimKeys.length - _SQL_DATA_MAX_PARAMETERS];
+      System.arraycopy(selResourcePrimKeys,_SQL_DATA_MAX_PARAMETERS,array,0,selResourcePrimKeys.length - _SQL_DATA_MAX_PARAMETERS);
+      selResourcePrimKeys=array;
+    }
+ else {
+      curResourcePrimKeys=selResourcePrimKeys.clone();
+      selResourcePrimKeys=new long[0];
+    }
+    List<Article> curArticles=null;
+    if (status == WorkflowConstants.STATUS_ANY) {
+      curArticles=articlePersistence.findByR_L(curResourcePrimKeys,new int[]{ArticleConstants.LATEST_VERSION});
+    }
+ else {
+      curArticles=articlePersistence.findByR_L_S(curResourcePrimKeys,ArticleConstants.LATEST_ANY,status);
+    }
+    articles.addAll(curArticles);
+  }
+  if (orderByComparator != null) {
+    return ListUtil.sort(articles,orderByComparator);
+  }
+  Map<Long,Article> map=new HashMap<Long,Article>();
+  for (  Article article : articles) {
+    map.put(article.getResourcePrimKey(),article);
+  }
+  articles=new ArrayList<Article>();
+  for (  long resourcePrimKey : resourcePrimKeys) {
+    if (map.containsKey(resourcePrimKey)) {
+      articles.add(map.get(resourcePrimKey));
+    }
+  }
+  return articles;
+}

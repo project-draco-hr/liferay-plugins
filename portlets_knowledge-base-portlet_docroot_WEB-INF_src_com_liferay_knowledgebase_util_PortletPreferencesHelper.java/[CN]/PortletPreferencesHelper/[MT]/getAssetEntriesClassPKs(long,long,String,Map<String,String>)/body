@@ -1,0 +1,73 @@
+{
+  String selectionMethod=preferencesMap.get("selectionMethod");
+  boolean assetEntryQueryAndOperator=GetterUtil.getBoolean(preferencesMap.get("assetEntryQueryAndOperator"));
+  String assetEntryQueryName=preferencesMap.get("assetEntryQueryName");
+  long[] assetCategoryIds=StringUtil.split(preferencesMap.get("assetCategoryIds"),0L);
+  String[] assetTagNames=StringUtil.split(preferencesMap.get("assetTagNames"));
+  long[] allCategoryIds=new long[0];
+  long[] anyCategoryIds=new long[0];
+  long[] allTagIds=new long[0];
+  long[] anyTagIds=new long[0];
+  if (selectionMethod.equals("filter")) {
+    if (assetEntryQueryName.equals("asset-categories")) {
+      if (assetEntryQueryAndOperator) {
+        allCategoryIds=assetCategoryIds;
+      }
+ else {
+        anyCategoryIds=assetCategoryIds;
+      }
+    }
+ else     if (assetEntryQueryName.equals("asset-tags")) {
+      long[] tagIds=AssetTagLocalServiceUtil.getTagIds(groupId,assetTagNames);
+      if (assetEntryQueryAndOperator) {
+        allTagIds=tagIds;
+      }
+ else {
+        anyTagIds=tagIds;
+      }
+    }
+  }
+  if (assetCategoryId > 0) {
+    allCategoryIds=ArrayUtil.append(allCategoryIds,assetCategoryId);
+  }
+  if (Validator.isNotNull(assetTagName)) {
+    String[] names=new String[]{assetTagName};
+    allTagIds=ArrayUtil.append(allTagIds,AssetTagLocalServiceUtil.getTagIds(groupId,names));
+  }
+  List<Long> categoryIds=new UniqueList<Long>();
+  categoryIds.addAll(SetUtil.fromArray(allCategoryIds));
+  categoryIds.addAll(SetUtil.fromArray(anyCategoryIds));
+  for (  long categoryId : categoryIds) {
+    try {
+      AssetCategoryServiceUtil.getCategory(categoryId);
+    }
+ catch (    Exception e) {
+      allCategoryIds=ArrayUtil.remove(allCategoryIds,categoryId);
+      anyCategoryIds=ArrayUtil.remove(anyCategoryIds,categoryId);
+    }
+  }
+  List<Long> tagIds=new UniqueList<Long>();
+  tagIds.addAll(SetUtil.fromArray(allTagIds));
+  tagIds.addAll(SetUtil.fromArray(anyTagIds));
+  for (  long tagId : tagIds) {
+    try {
+      AssetTagServiceUtil.getTag(tagId);
+    }
+ catch (    Exception e) {
+      allTagIds=ArrayUtil.remove(allTagIds,tagId);
+      anyTagIds=ArrayUtil.remove(anyTagIds,tagId);
+    }
+  }
+  if ((allCategoryIds.length == 0) && (allTagIds.length == 0) && (anyCategoryIds.length == 0)&& (anyTagIds.length == 0)) {
+    return new long[0];
+  }
+  AssetEntryQuery assetEntryQuery=new AssetEntryQuery();
+  assetEntryQuery.setClassName(Article.class.getName());
+  assetEntryQuery.setGroupIds(new long[]{groupId});
+  assetEntryQuery.setAllCategoryIds(allCategoryIds);
+  assetEntryQuery.setAnyCategoryIds(anyCategoryIds);
+  assetEntryQuery.setAllTagIds(allTagIds);
+  assetEntryQuery.setAnyTagIds(anyTagIds);
+  List<AssetEntry> assetEntries=AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
+  return StringUtil.split(ListUtil.toString(assetEntries,"classPK"),0L);
+}
