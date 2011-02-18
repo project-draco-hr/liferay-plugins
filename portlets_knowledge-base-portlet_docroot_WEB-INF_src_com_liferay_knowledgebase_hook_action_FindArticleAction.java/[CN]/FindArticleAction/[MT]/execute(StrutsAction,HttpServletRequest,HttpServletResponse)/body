@@ -2,6 +2,7 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   long plid=ParamUtil.getLong(request,"plid");
   long resourcePrimKey=ParamUtil.getLong(request,"resourcePrimKey");
+  boolean maximized=ParamUtil.getBoolean(request,"maximized");
   if (!isValidPlid(plid)) {
     plid=themeDisplay.getPlid();
   }
@@ -21,6 +22,9 @@
   }
   if (portletURL == null) {
     portletURL=getDisplayPortletURL(plid,request);
+  }
+  if (maximized) {
+    portletURL.setWindowState(WindowState.MAXIMIZED);
   }
   response.sendRedirect(portletURL.toString());
   return null;

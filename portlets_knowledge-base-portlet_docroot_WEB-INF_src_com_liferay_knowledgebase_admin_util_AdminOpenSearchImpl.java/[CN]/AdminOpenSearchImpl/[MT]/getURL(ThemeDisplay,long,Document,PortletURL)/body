@@ -1,4 +1,10 @@
 {
   long resourcePrimKey=GetterUtil.getLong(result.get(Field.ENTRY_CLASS_PK));
-  return KnowledgeBaseUtil.getArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL());
+  WindowState windowState=portletURL.getWindowState();
+  if (windowState.equals(WindowState.MAXIMIZED)) {
+    return KnowledgeBaseUtil.getArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL(),true);
+  }
+ else {
+    return KnowledgeBaseUtil.getArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL(),false);
+  }
 }
