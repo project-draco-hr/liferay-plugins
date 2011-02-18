@@ -1,7 +1,8 @@
 {
-  MethodHandler methodHandler=new MethodHandler(_updateAssetMethodKey38,userId,ClpSerializer.translateInput(article),ClpSerializer.translateInput(assetCategoryIds),ClpSerializer.translateInput(assetTagNames));
+  Object returnObj=null;
+  MethodHandler methodHandler=new MethodHandler(_getArticlesMethodKey6,ClpSerializer.translateInput(resourcePrimKeys),status,ClpSerializer.translateInput(orderByComparator));
   try {
-    _classLoaderProxy.invoke(methodHandler);
+    returnObj=_classLoaderProxy.invoke(methodHandler);
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -17,4 +18,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
+  return (java.util.List<com.liferay.knowledgebase.model.Article>)ClpSerializer.translateOutput(returnObj);
 }
