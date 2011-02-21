@@ -1,10 +1,8 @@
 {
   KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
-  List<KaleoTimerInstanceToken> kaleoTimerInstanceTokens=KaleoTimerInstanceTokenLocalServiceUtil.getKaleoTimerInstanceTokens(kaleoInstanceToken.getKaleoInstanceId());
-  for (  KaleoTimerInstanceToken kaleoTimerInstanceToken : kaleoTimerInstanceTokens) {
-    if (!kaleoTimerInstanceToken.isCompleted()) {
-      return true;
-    }
+  int kaleoTimerInstanceTokensCount=KaleoTimerInstanceTokenLocalServiceUtil.getKaleoTimerInstanceTokensCount(kaleoInstanceToken.getKaleoInstanceId(),false,executionContext.getServiceContext());
+  if (kaleoTimerInstanceTokensCount > 0) {
+    return true;
   }
   return false;
 }
