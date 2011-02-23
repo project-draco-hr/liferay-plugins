@@ -12,12 +12,11 @@
   kaleoTimerInstanceToken.setModifiedDate(now);
   kaleoTimerInstanceToken.setKaleoDefinitionId(kaleoInstanceToken.getKaleoDefinitionId());
   kaleoTimerInstanceToken.setKaleoInstanceId(kaleoInstanceToken.getKaleoInstanceId());
+  kaleoTimerInstanceToken.setKaleoInstanceTokenId(kaleoInstanceTokenId);
   kaleoTimerInstanceToken.setKaleoTimerId(kaleoTimerId);
   kaleoTimerInstanceToken.setKaleoTimerName(kaleoTimerName);
   kaleoTimerInstanceToken.setCompleted(false);
   kaleoTimerInstanceToken.setWorkflowContext(WorkflowContextUtil.convert(workflowContext));
-  KaleoInstanceToken childKaleoInstanceToken=kaleoInstanceTokenLocalService.addKaleoInstanceToken(kaleoInstanceToken.getKaleoInstanceTokenId(),workflowContext,serviceContext);
-  kaleoTimerInstanceToken.setKaleoInstanceTokenId(childKaleoInstanceToken.getKaleoInstanceTokenId());
   kaleoTimerInstanceTokenPersistence.update(kaleoTimerInstanceToken,false);
   scheduleTimer(kaleoTimerInstanceToken);
   return kaleoTimerInstanceToken;

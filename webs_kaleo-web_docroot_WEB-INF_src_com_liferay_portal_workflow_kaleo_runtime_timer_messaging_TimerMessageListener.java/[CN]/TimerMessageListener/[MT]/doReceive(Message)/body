@@ -4,7 +4,7 @@
   KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
   Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTimerInstanceToken.getWorkflowContext());
   ServiceContext serviceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
-  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken.getParentKaleoInstanceToken(),workflowContext,serviceContext);
+  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
   KaleoTimerInstanceTokenLocalServiceUtil.completeKaleoTimerInstanceToken(kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId(),serviceContext);
   KaleoTimer kaleoTimer=kaleoTimerInstanceToken.getKaleoTimer();
   ActionExecutorUtil.executeKaleoActions(kaleoTimer.getKaleoNodeId(),ExecutionType.ON_TIMER,executionContext);

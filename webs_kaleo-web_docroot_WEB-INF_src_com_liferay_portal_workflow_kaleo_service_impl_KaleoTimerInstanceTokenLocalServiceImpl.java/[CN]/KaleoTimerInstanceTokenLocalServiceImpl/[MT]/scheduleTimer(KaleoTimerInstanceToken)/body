@@ -1,6 +1,7 @@
 {
   deleteTimer(kaleoTimerInstanceToken);
   String groupName=getSchedulerGroupName(kaleoTimerInstanceToken);
+  SchedulerEventMessageListenerWrapper schedulerEventListenerWrapper=registerMessageListener(groupName);
   KaleoTimer kaleoTimer=kaleoTimerPersistence.findByPrimaryKey(kaleoTimerInstanceToken.getKaleoTimerId());
   DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
   DueDateCalculator dueDateCalculator=new DefaultDueDateCalculator();
@@ -8,7 +9,9 @@
   Calendar dueDateCalendar=CalendarFactoryUtil.getCalendar();
   dueDateCalendar.setTime(dueDate);
   CronText cronText=new CronText(dueDateCalendar);
-  Trigger trigger=new CronTrigger(groupName,groupName,dueDate,null,cronText.toString());
+  Trigger trigger=new CronTrigger(groupName,groupName,cronText.toString());
   Message message=new Message();
+  message.put(SchedulerEngine.MESSAGE_LISTENER_UUID,schedulerEventListenerWrapper.getMessageListenerUUID());
   message.put("kaleoTimerInstanceTokenId",kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId());
+  SchedulerEngineUtil.schedule(trigger,null,DestinationNames.SCHEDULER_DISPATCH,message);
 }
