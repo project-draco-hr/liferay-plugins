@@ -4,11 +4,24 @@
   for (  Field field : fields) {
     String name=field.getName();
     float boost=field.getBoost();
-    for (    String value : field.getValues()) {
-      if (Validator.isNull(value)) {
-        continue;
+    if (!field.isLocalized()) {
+      for (      String value : field.getValues()) {
+        if (Validator.isNull(value)) {
+          continue;
+        }
+        solrInputDocument.addField(name,value.trim(),boost);
       }
-      solrInputDocument.addField(name,value.trim(),boost);
+    }
+ else {
+      for (      Map.Entry<Locale,String> entry : field.getLocalizedValues().entrySet()) {
+        Locale locale=entry.getKey();
+        String value=entry.getValue();
+        if (Validator.isNull(value)) {
+          continue;
+        }
+        name=name.concat(StringPool.UNDERLINE).concat(locale.getDisplayName());
+        solrInputDocument.addField(name,value.trim(),boost);
+      }
     }
   }
   return solrInputDocument;
