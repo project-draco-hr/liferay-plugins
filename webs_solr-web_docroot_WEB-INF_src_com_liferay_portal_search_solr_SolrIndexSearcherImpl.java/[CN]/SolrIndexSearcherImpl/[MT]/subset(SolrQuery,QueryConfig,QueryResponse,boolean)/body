@@ -8,7 +8,7 @@
     queryResponse=_solrServer.query(solrQuery);
     return subset(solrQuery,queryConfig,queryResponse,false);
   }
-  float maxScore=1f;
+  float maxScore=1;
   if (queryConfig.isScoreEnabled()) {
     maxScore=results.getMaxScore();
   }
@@ -19,8 +19,6 @@
   int j=0;
   Map<String,Map<String,List<String>>> highlights=queryResponse.getHighlighting();
   Set<String> queryTerms=new HashSet<String>();
-  boolean highlightEnabled=queryConfig.isHighlightEnabled();
-  boolean scoringEnabled=queryConfig.isScoreEnabled();
   for (  SolrDocument solrDocument : results) {
     Document document=new DocumentImpl();
     Collection<String> names=solrDocument.getFieldNames();
@@ -28,12 +26,12 @@
       Field field=new Field(name,solrDocument.getFieldValue(name).toString());
       document.add(field);
     }
-    float score=1f;
-    if (scoringEnabled) {
-      score=Float.valueOf(solrDocument.getFieldValue("score").toString());
+    float score=1;
+    if (queryConfig.isScoreEnabled()) {
+      score=GetterUtil.getFloat(solrDocument.getFieldValue("score").toString());
     }
     subsetDocs[j]=document;
-    if (highlightEnabled) {
+    if (queryConfig.isHighlightEnabled()) {
       subsetSnippets[j]=getSnippet(solrDocument,queryTerms,highlights);
     }
  else {
