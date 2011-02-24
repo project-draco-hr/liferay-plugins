@@ -9,11 +9,12 @@
     sb.append(Field.COMPANY_ID);
     sb.append(StringPool.COLON);
     sb.append(companyId);
+    QueryConfig queryConfig=query.getQueryConfig();
     SolrQuery solrQuery=new SolrQuery();
-    solrQuery.setHighlight(true);
-    solrQuery.setHighlightFragsize(80);
-    solrQuery.setHighlightSnippets(3);
-    solrQuery.setIncludeScore(true);
+    solrQuery.setHighlight(queryConfig.isHighlightEnabled());
+    solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
+    solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
+    solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
     solrQuery.setQuery(sb.toString());
     if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
       solrQuery.setRows(0);
