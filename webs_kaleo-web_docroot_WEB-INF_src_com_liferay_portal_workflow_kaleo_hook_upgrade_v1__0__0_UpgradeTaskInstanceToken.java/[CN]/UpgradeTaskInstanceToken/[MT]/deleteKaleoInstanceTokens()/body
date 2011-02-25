@@ -1,0 +1,18 @@
+{
+  if (kaleoInstanceTokenIds.size() == 0) {
+    return;
+  }
+  StringBundler sb=new StringBundler();
+  sb.append("delete from kaleoInstanceToken where ");
+  Iterator<Long> it=kaleoInstanceTokenIds.iterator();
+  while (it.hasNext()) {
+    sb.append("(kaleoInstanceTokenId = ");
+    sb.append(it.next());
+    sb.append(StringPool.CLOSE_PARENTHESIS);
+    if (it.hasNext()) {
+      sb.append(" OR ");
+    }
+  }
+  String sql=sb.toString();
+  runSQL(sql);
+}
