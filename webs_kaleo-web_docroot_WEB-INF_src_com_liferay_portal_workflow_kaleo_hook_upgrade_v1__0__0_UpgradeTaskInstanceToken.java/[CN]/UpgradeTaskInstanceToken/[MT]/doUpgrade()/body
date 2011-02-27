@@ -4,7 +4,7 @@
   ResultSet rs=null;
   try {
     con=DataAccess.getConnection();
-    ps=con.prepareStatement("select kaleoTaskInstanceTokenId, kaleoInstanceTokenId " + "from kaleoTaskInstanceToken");
+    ps=con.prepareStatement("select kaleoTaskInstanceTokenId, kaleoInstanceTokenId from " + "KaleoTaskInstanceToken");
     rs=ps.executeQuery();
     while (rs.next()) {
       long kaleoTaskInstanceTokenId=rs.getLong("kaleoTaskInstanceTokenId");
@@ -14,8 +14,8 @@
         continue;
       }
       StringBundler sb=new StringBundler();
-      sb.append("update KaleoTaskInstanceToken ");
-      sb.append("set kaleoInstanceTokenId = ");
+      sb.append("update KaleoTaskInstanceToken set ");
+      sb.append("kaleoInstanceTokenId = ");
       sb.append(newKaleoInstanceTokenId);
       sb.append(" where kaleoTaskInstanceTokenId = ");
       sb.append(kaleoTaskInstanceTokenId);

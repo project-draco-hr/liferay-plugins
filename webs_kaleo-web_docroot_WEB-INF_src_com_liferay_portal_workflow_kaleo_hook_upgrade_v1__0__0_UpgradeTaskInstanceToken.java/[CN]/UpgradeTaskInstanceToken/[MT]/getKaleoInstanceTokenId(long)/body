@@ -2,30 +2,29 @@
   Connection con=null;
   PreparedStatement ps=null;
   ResultSet rs=null;
-  long parentKaleoInstanceTokenId=0;
   try {
     con=DataAccess.getConnection();
     StringBundler sb=new StringBundler();
-    sb.append("select kaleoNode.type_, ");
-    sb.append("kaleoInstanceToken.kaleoInstanceTokenId ");
-    sb.append("from kaleoNode inner join kaleoInstanceToken on ");
-    sb.append("(kaleonode.kaleonodeId = ");
-    sb.append("kaleoInstanceToken.currentKaleoNodeId) ");
-    sb.append("where kaleoInstanceToken.kaleoInstanceTokenId = ");
-    sb.append("(select parentKaleoInstanceTokenId ");
-    sb.append("from kaleoInstanceToken ");
-    sb.append("where kaleoInstanceTokenId = ? )");
+    sb.append("select KaleoNode.type_, ");
+    sb.append("KaleoInstanceToken.kaleoInstanceTokenId ");
+    sb.append("from KaleoNode inner join KaleoInstanceToken on ");
+    sb.append("(Kaleonode.kaleoNodeId = ");
+    sb.append("KaleoInstanceToken.currentKaleoNodeId) ");
+    sb.append("where KaleoInstanceToken.kaleoInstanceTokenId = ");
+    sb.append("(select parentKaleoInstanceTokenId from ");
+    sb.append("KaleoInstanceToken where KaleoInstanceTokenId = ?)");
     String sql=sb.toString();
     ps=con.prepareStatement(sql);
     ps.setLong(1,kaleoInstanceTokenId);
     rs=ps.executeQuery();
     if (rs.next()) {
-      String nodeType=rs.getString("type_");
-      parentKaleoInstanceTokenId=rs.getLong("kaleoInstanceTokenId");
-      if (!nodeType.equals(NodeType.TASK.toString())) {
+      String type=rs.getString("type_");
+      if (!type.equals(NodeType.TASK.toString())) {
         return kaleoInstanceTokenId;
       }
-      kaleoInstanceTokenIds.add(kaleoInstanceTokenId);
+      long parentKaleoInstanceTokenId=rs.getLong("kaleoInstanceTokenId");
+      _kaleoInstanceTokenIds.add(kaleoInstanceTokenId);
+      return getKaleoInstanceTokenId(parentKaleoInstanceTokenId);
     }
  else {
       return kaleoInstanceTokenId;
@@ -34,5 +33,4 @@
   finally {
     DataAccess.cleanUp(con,ps,rs);
   }
-  return getKaleoInstanceTokenId(parentKaleoInstanceTokenId);
 }
