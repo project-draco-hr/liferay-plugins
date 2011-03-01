@@ -1,14 +1,10 @@
 {
-  keywords=keywords.trim();
-  if (Validator.isNull(keywords)) {
-    return new String[0];
-  }
-  List<String> keywordsList=new ArrayList<String>();
+  List<String> list=new UniqueList<String>();
   StringBundler sb=new StringBundler();
   for (  char c : keywords.toCharArray()) {
     if (Character.isWhitespace(c)) {
       if (sb.length() > 0) {
-        keywordsList.add(sb.toString());
+        list.add(sb.toString());
         sb=new StringBundler();
       }
     }
@@ -16,11 +12,11 @@
       sb.append(c);
     }
  else {
-      return new String[0];
+      return new String[]{keywords};
     }
   }
   if (sb.length() > 0) {
-    keywordsList.add(sb.toString());
+    list.add(sb.toString());
   }
-  return keywordsList.toArray(new String[keywordsList.size()]);
+  return StringUtil.split(StringUtil.merge(list));
 }
