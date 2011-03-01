@@ -1,0 +1,46 @@
+{
+  super(portletRequest,new DisplayTerms(portletRequest),new DisplayTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,headerNames,EMPTY_RESULTS_MESSAGE);
+  try {
+    PortalPreferences preferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
+    String orderByCol=ParamUtil.getString(portletRequest,"orderByCol");
+    String orderByType=ParamUtil.getString(portletRequest,"orderByType");
+    if (Validator.isNotNull(orderByCol) && Validator.isNotNull(orderByType)) {
+      preferences.setValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col",orderByCol);
+      preferences.setValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type",orderByType);
+    }
+ else {
+      orderByCol=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col","modified-date");
+      orderByType=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type","desc");
+    }
+    boolean orderByAsc=false;
+    if (orderByType.equals("asc")) {
+      orderByAsc=true;
+    }
+    OrderByComparator orderByComparator=null;
+    if (orderByCol.equals("create-date")) {
+      orderByComparator=new ArticleCreateDateComparator(orderByAsc);
+    }
+ else     if (orderByCol.equals("modified-date")) {
+      orderByComparator=new ArticleModifiedDateComparator(orderByAsc);
+    }
+ else     if (orderByCol.equals("priority")) {
+      orderByComparator=new ArticlePriorityComparator(orderByAsc);
+    }
+ else     if (orderByCol.equals("status")) {
+      orderByComparator=new ArticleStatusComparator(orderByAsc);
+    }
+ else     if (orderByCol.equals("title")) {
+      orderByComparator=new ArticleTitleComparator(orderByAsc);
+    }
+ else     if (orderByCol.equals("user-name")) {
+      orderByComparator=new ArticleUserNameComparator(orderByAsc);
+    }
+    setOrderableHeaders(orderableHeaders);
+    setOrderByCol(orderByCol);
+    setOrderByType(orderByType);
+    setOrderByComparator(orderByComparator);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
+}
