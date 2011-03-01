@@ -1,16 +1,27 @@
 {
-  super(portletRequest,new DisplayTerms(portletRequest),new DisplayTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,headerNames,EMPTY_RESULTS_MESSAGE);
+  super(portletRequest,new ArticleDisplayTerms(portletRequest),new ArticleSearchTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,headerNames,EMPTY_RESULTS_MESSAGE);
+  ArticleDisplayTerms displayTerms=(ArticleDisplayTerms)getDisplayTerms();
+  iteratorURL.setParameter(ArticleDisplayTerms.ANYTIME,String.valueOf(displayTerms.isAnytime()));
+  iteratorURL.setParameter(ArticleDisplayTerms.CONTENT,displayTerms.getContent());
+  iteratorURL.setParameter(ArticleDisplayTerms.END_DATE_DAY,String.valueOf(displayTerms.getEndDateDay()));
+  iteratorURL.setParameter(ArticleDisplayTerms.END_DATE_MONTH,String.valueOf(displayTerms.getEndDateMonth()));
+  iteratorURL.setParameter(ArticleDisplayTerms.END_DATE_YEAR,String.valueOf(displayTerms.getEndDateYear()));
+  iteratorURL.setParameter(ArticleDisplayTerms.START_DATE_DAY,String.valueOf(displayTerms.getStartDateDay()));
+  iteratorURL.setParameter(ArticleDisplayTerms.START_DATE_MONTH,String.valueOf(displayTerms.getStartDateMonth()));
+  iteratorURL.setParameter(ArticleDisplayTerms.START_DATE_YEAR,String.valueOf(displayTerms.getStartDateYear()));
+  iteratorURL.setParameter(ArticleDisplayTerms.STATUS,String.valueOf(displayTerms.getStatus()));
+  iteratorURL.setParameter(ArticleDisplayTerms.TITLE,displayTerms.getTitle());
   try {
     PortalPreferences preferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
-    String orderByCol=ParamUtil.getString(portletRequest,"orderByCol");
-    String orderByType=ParamUtil.getString(portletRequest,"orderByType");
-    if (Validator.isNotNull(orderByCol) && Validator.isNotNull(orderByType)) {
+    String oldOrderByCol=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col","modified-date");
+    String oldOrderByType=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type","desc");
+    String orderByCol=ParamUtil.getString(portletRequest,"orderByCol",oldOrderByCol);
+    String orderByType=ParamUtil.getString(portletRequest,"orderByType",oldOrderByType);
+    if (!Validator.equals(orderByCol,oldOrderByCol) || !Validator.equals(orderByType,oldOrderByType)) {
       preferences.setValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col",orderByCol);
       preferences.setValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type",orderByType);
-    }
- else {
-      orderByCol=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col","modified-date");
-      orderByType=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type","desc");
+      ArticleSearchTerms searchTerms=(ArticleSearchTerms)getSearchTerms();
+      searchTerms.setCurStartValues(new int[0]);
     }
     boolean orderByAsc=false;
     if (orderByType.equals("asc")) {

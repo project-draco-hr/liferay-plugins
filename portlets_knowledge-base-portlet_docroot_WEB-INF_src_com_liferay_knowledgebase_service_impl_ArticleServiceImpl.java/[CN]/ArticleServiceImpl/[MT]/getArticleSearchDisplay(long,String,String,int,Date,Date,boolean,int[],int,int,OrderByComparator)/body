@@ -1,0 +1,39 @@
+{
+  int start=0;
+  if (curStartValues.length > (cur - SearchContainer.DEFAULT_CUR)) {
+    start=curStartValues[cur - SearchContainer.DEFAULT_CUR];
+    curStartValues=ArrayUtil.subset(curStartValues,0,cur - SearchContainer.DEFAULT_CUR + 1);
+  }
+ else {
+    cur=SearchContainer.DEFAULT_CUR;
+    curStartValues=new int[]{0};
+  }
+  int end=start + _INTERVAL;
+  List<Article> articles=new ArrayList<Article>();
+  int curStartValue=0;
+  while (curStartValue == 0) {
+    List<Article> curArticles=articleLocalService.search(groupId,title,content,status,startDate,endDate,andOperator,start,end,orderByComparator);
+    if (curArticles.isEmpty()) {
+      break;
+    }
+    for (int i=0; i < curArticles.size(); i++) {
+      Article curArticle=curArticles.get(i);
+      if (!ArticlePermission.contains(getPermissionChecker(),curArticle,ActionKeys.VIEW)) {
+        continue;
+      }
+      if (articles.size() == delta) {
+        curStartValue=start + i;
+        break;
+      }
+      articles.add(curArticle);
+    }
+    start=start + _INTERVAL;
+    end=start + _INTERVAL;
+  }
+  int total=((cur - 1) * delta) + articles.size();
+  if (curStartValue > 0) {
+    curStartValues=ArrayUtil.append(curStartValues,curStartValue);
+    total=total + 1;
+  }
+  return new ArticleSearchDisplayImpl(articles,total,curStartValues);
+}
