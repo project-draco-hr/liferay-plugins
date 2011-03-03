@@ -9,6 +9,12 @@
     portletSession.setAttribute(WebKeys.SESSION_CONTEXT,sessionContext);
   }
   ResourceContext resourceContext=wsrpResourceResponse.getResourceContext();
+  CacheControl cacheControl=resourceContext.getCacheControl();
+  if (cacheControl != null) {
+    if (cacheControl.getExpires() == 0) {
+      resourceResponse.setProperty(HttpHeaders.CACHE_CONTROL,HttpHeaders.CACHE_CONTROL_NO_CACHE_NO_STORE_VALUE);
+    }
+  }
   NamedString[] clientAttributes=resourceContext.getClientAttributes();
   if (clientAttributes != null) {
     for (    NamedString clientAttribute : clientAttributes) {
@@ -18,12 +24,6 @@
         resourceResponse.setProperty(HttpHeaders.CONTENT_DISPOSITION,value);
         break;
       }
-    }
-  }
-  CacheControl cacheControl=resourceContext.getCacheControl();
-  if (cacheControl != null) {
-    if (cacheControl.getExpires() == 0) {
-      resourceResponse.setProperty(HttpHeaders.CACHE_CONTROL,HttpHeaders.CACHE_CONTROL_NO_CACHE_NO_STORE_VALUE);
     }
   }
   processMimeResponse(resourceRequest,resourceResponse,resourceContext);
