@@ -1,0 +1,18 @@
+{
+  Article article=findByPrimaryKey(articleId);
+  Session session=null;
+  try {
+    session=openSession();
+    Article[] array=new ArticleImpl[3];
+    array[0]=getByG_R_L_S_PrevAndNext(session,article,groupId,resourcePrimKey,latest,status,orderByComparator,true);
+    array[1]=article;
+    array[2]=getByG_R_L_S_PrevAndNext(session,article,groupId,resourcePrimKey,latest,status,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
