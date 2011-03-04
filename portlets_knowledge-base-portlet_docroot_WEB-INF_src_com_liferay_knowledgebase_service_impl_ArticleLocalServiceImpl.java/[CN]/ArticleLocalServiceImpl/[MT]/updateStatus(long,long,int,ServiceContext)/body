@@ -11,18 +11,17 @@
   if (status != WorkflowConstants.STATUS_APPROVED) {
     return article;
   }
-  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+  if (!article.isFirstVersion()) {
     Article oldArticle=articlePersistence.findByR_V(resourcePrimKey,article.getVersion() - 1);
     oldArticle.setLatest(ArticleConstants.LATEST_ARCHIVED);
     articlePersistence.update(oldArticle,false);
   }
-  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+  if (!article.isFirstVersion()) {
     AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
     updateAsset(userId,article,assetEntry.getCategoryIds(),assetEntry.getTagNames());
     assetEntryLocalService.deleteEntry(Article.class.getName(),article.getPrimaryKey());
   }
-  assetEntryLocalService.updateVisible(Article.class.getName(),resourcePrimKey,true);
-  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+  if (!article.isFirstVersion()) {
     socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_ARTICLE,StringPool.BLANK,0);
   }
  else {
@@ -30,7 +29,7 @@
   }
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.reindex(article);
-  if (article.getVersion() != ArticleConstants.DEFAULT_VERSION) {
+  if (!article.isFirstVersion()) {
     deleteAttachments(article,article.getResourcePrimKey());
     addAttachments(article,ArticleConstants.DIR_NAME_PREFIX + article.getPrimaryKey());
     deleteAttachments(article,article.getPrimaryKey());

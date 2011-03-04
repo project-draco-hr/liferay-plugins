@@ -49,7 +49,7 @@
   subscriptionSender.setUserId(article.getUserId());
   subscriptionSender.addPersistedSubscribers(Article.class.getName(),article.getGroupId());
   subscriptionSender.addPersistedSubscribers(Article.class.getName(),article.getResourcePrimKey());
-  while (article.getParentResourcePrimKey() != ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+  while (!article.isRoot()) {
     article=getLatestArticle(article.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     subscriptionSender.addPersistedSubscribers(Article.class.getName(),article.getResourcePrimKey());
   }

@@ -1,0 +1,39 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
+  long priority=PriorityHelper.getPriority(groupId,0,parentResourcePrimKey,0);
+  Date now=new Date();
+  validate(title,content);
+  long articleId=counterLocalService.increment();
+  long resourcePrimKey=counterLocalService.increment();
+  long rootResourcePrimKey=getRootResourcePrimKey(resourcePrimKey,parentResourcePrimKey);
+  Article article=articlePersistence.create(articleId);
+  article.setUuid(serviceContext.getUuid());
+  article.setResourcePrimKey(resourcePrimKey);
+  article.setGroupId(groupId);
+  article.setCompanyId(user.getCompanyId());
+  article.setUserId(user.getUserId());
+  article.setUserName(user.getFullName());
+  article.setCreateDate(serviceContext.getCreateDate(now));
+  article.setModifiedDate(serviceContext.getModifiedDate(now));
+  article.setRootResourcePrimKey(rootResourcePrimKey);
+  article.setParentResourcePrimKey(parentResourcePrimKey);
+  article.setVersion(ArticleConstants.DEFAULT_VERSION);
+  article.setTitle(title);
+  article.setContent(content);
+  article.setDescription(description);
+  article.setPriority(priority);
+  article.setLatest(ArticleConstants.LATEST_VERSION);
+  article.setStatus(WorkflowConstants.STATUS_DRAFT);
+  articlePersistence.update(article,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addArticleResources(article,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addArticleResources(article,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  updateAsset(userId,article,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
+  addAttachments(article,dirName);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),groupId,userId,Article.class.getName(),resourcePrimKey,article,serviceContext);
+  return article;
+}

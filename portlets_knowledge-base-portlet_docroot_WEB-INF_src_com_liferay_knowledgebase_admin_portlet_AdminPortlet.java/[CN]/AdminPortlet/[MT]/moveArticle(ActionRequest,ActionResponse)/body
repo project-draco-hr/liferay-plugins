@@ -1,0 +1,8 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+  long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
+  int humanPriority=ParamUtil.getInteger(actionRequest,"humanPriority");
+  long priority=PriorityHelper.getPriority(themeDisplay.getScopeGroupId(),resourcePrimKey,parentResourcePrimKey,humanPriority);
+  ArticleServiceUtil.moveArticle(themeDisplay.getScopeGroupId(),resourcePrimKey,parentResourcePrimKey,priority);
+}

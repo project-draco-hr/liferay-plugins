@@ -1,6 +1,6 @@
 {
   assetEntryLocalService.deleteEntry(Article.class.getName(),article.getResourcePrimKey());
-  if ((article.getVersion() != ArticleConstants.DEFAULT_VERSION) && (article.getStatus() != WorkflowConstants.STATUS_APPROVED)) {
+  if (!article.isFirstVersion() && !article.isApproved()) {
     assetEntryLocalService.deleteEntry(Article.class.getName(),article.getPrimaryKey());
   }
 }

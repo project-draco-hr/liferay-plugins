@@ -1,0 +1,19 @@
+{
+  Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  if (article.getParentResourcePrimKey() == parentResourcePrimKey) {
+    return;
+  }
+  long rootResourcePrimKey=getRootResourcePrimKey(resourcePrimKey,parentResourcePrimKey);
+  if (article.getRootResourcePrimKey() == rootResourcePrimKey) {
+    return;
+  }
+  List<Article> articles=getArticles(resourcePrimKey,WorkflowConstants.STATUS_ANY,null);
+  for (  Article article1 : articles) {
+    List<Article> curArticles=getArticles(article1.getResourcePrimKey(),WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    for (    Article article2 : curArticles) {
+      article2.setRootResourcePrimKey(rootResourcePrimKey);
+      articlePersistence.update(article2,false);
+    }
+  }
+  SearchEngineUtil.updatePermissionFields(Article.class.getName(),String.valueOf(resourcePrimKey));
+}

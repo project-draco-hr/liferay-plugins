@@ -1,0 +1,21 @@
+{
+  List<Article> articles=getArticles(new long[]{resourcePrimKey},status,null);
+  articles=ListUtil.copy(articles);
+  Long[][] params=new Long[][]{new Long[]{resourcePrimKey}};
+  while ((params=KnowledgeBaseUtil.getParams(params[0])) != null) {
+    List<Article> curArticles=null;
+    if (status == WorkflowConstants.STATUS_ANY) {
+      curArticles=articlePersistence.findByP_L(ArrayUtil.toArray(params[1]),new int[]{ArticleConstants.LATEST_VERSION});
+    }
+ else {
+      curArticles=articlePersistence.findByP_L_S(ArrayUtil.toArray(params[1]),ArticleConstants.LATEST_ANY,status);
+    }
+    articles.addAll(curArticles);
+    long[] resourcePrimKeys=StringUtil.split(ListUtil.toString(curArticles,"resourcePrimKey"),0L);
+    params[0]=ArrayUtil.append(params[0],ArrayUtil.toArray(resourcePrimKeys));
+  }
+  if (orderByComparator != null) {
+    articles=ListUtil.sort(articles,orderByComparator);
+  }
+  return new UnmodifiableList<Article>(articles);
+}

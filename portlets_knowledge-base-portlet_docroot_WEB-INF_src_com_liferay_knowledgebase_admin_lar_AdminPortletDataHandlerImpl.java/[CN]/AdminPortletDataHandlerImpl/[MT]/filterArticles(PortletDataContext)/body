@@ -1,28 +1,20 @@
 {
   List<Article> articles=new ArrayList<Article>();
   List<Article> siblingArticles=new ArrayList<Article>();
-  long[] parentResourcePrimKeys={ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY};
-  while (parentResourcePrimKeys.length > 0) {
-    long[] curParentResourcePrimKeys=null;
-    if (parentResourcePrimKeys.length > _SQL_DATA_MAX_PARAMETERS) {
-      curParentResourcePrimKeys=ArrayUtil.subset(parentResourcePrimKeys,0,_SQL_DATA_MAX_PARAMETERS);
-      parentResourcePrimKeys=ArrayUtil.subset(parentResourcePrimKeys,_SQL_DATA_MAX_PARAMETERS,parentResourcePrimKeys.length);
-    }
- else {
-      curParentResourcePrimKeys=parentResourcePrimKeys.clone();
-      parentResourcePrimKeys=new long[0];
-    }
-    List<Article> curArticles=ArticleUtil.findByG_P_L_S(portletDataContext.getScopeGroupId(),curParentResourcePrimKeys,ArticleConstants.LATEST_ANY,WorkflowConstants.STATUS_APPROVED);
+  Long[][] params=new Long[][]{new Long[]{ArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY}};
+  while ((params=KnowledgeBaseUtil.getParams(params[0])) != null) {
+    List<Article> curArticles=ArticleUtil.findByG_P_L_S(portletDataContext.getScopeGroupId(),ArrayUtil.toArray(params[1]),ArticleConstants.LATEST_ANY,WorkflowConstants.STATUS_APPROVED);
     for (    Article curArticle : curArticles) {
       if (portletDataContext.isWithinDateRange(curArticle.getModifiedDate())) {
         siblingArticles.add(curArticle);
       }
     }
-    if (parentResourcePrimKeys.length == 0) {
+    if (params[0].length == 0) {
       Collections.sort(siblingArticles,new ArticlePriorityComparator(true));
       articles.addAll(siblingArticles);
-      parentResourcePrimKeys=StringUtil.split(ListUtil.toString(siblingArticles,"resourcePrimKey"),0L);
+      long[] resourcePrimKeys=StringUtil.split(ListUtil.toString(siblingArticles,"resourcePrimKey"),0L);
       siblingArticles=new ArrayList<Article>();
+      params[0]=ArrayUtil.toArray(resourcePrimKeys);
     }
   }
   return articles;

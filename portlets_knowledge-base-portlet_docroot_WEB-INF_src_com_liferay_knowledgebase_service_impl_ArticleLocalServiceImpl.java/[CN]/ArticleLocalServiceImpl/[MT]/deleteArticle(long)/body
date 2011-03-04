@@ -1,5 +1,5 @@
 {
-  Article article=articlePersistence.findByResourcePrimKey_First(resourcePrimKey,new ArticleVersionComparator());
+  Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   List<Article> articles=getSiblingArticles(article.getGroupId(),resourcePrimKey,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
   for (  Article curArticle : articles) {
     deleteArticle(curArticle.getResourcePrimKey());

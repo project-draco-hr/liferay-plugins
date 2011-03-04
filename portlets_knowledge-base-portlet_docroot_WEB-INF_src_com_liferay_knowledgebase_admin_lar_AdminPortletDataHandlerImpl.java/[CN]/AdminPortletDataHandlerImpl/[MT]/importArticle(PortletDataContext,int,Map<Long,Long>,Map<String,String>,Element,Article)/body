@@ -19,19 +19,23 @@
   serviceContext.setModifiedDate(article.getModifiedDate());
   serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
   Article importedArticle=null;
+  long priority=0;
   if (portletDataContext.isDataStrategyMirror()) {
     Article existingArticle=ArticleUtil.fetchByUUID_G(article.getUuid(),portletDataContext.getScopeGroupId());
     if (existingArticle == null) {
       importedArticle=importArticleVersions(portletDataContext,article.getUuid(),parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,articleElement);
+      priority=PriorityHelper.getPriority(portletDataContext.getScopeGroupId(),0,parentResourcePrimKey,0);
     }
  else {
-      long priority=PriorityHelper.getPriority(existingArticle.getGroupId(),existingArticle.getResourcePrimKey(),parentResourcePrimKey,humanPriority);
-      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),priority,dirName,serviceContext);
+      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getTitle(),article.getContent(),article.getDescription(),dirName,serviceContext);
+      priority=PriorityHelper.getPriority(existingArticle.getGroupId(),existingArticle.getResourcePrimKey(),parentResourcePrimKey,humanPriority);
     }
   }
  else {
     importedArticle=importArticleVersions(portletDataContext,null,parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,articleElement);
+    priority=PriorityHelper.getPriority(portletDataContext.getScopeGroupId(),0,parentResourcePrimKey,0);
   }
+  importedArticle=ArticleLocalServiceUtil.moveArticle(userId,portletDataContext.getScopeGroupId(),importedArticle.getResourcePrimKey(),parentResourcePrimKey,priority);
   resourcePrimKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   portletDataContext.importPermissions(Article.class,article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
   if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"ratings")) {

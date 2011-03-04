@@ -6,17 +6,15 @@
   String title=ParamUtil.getString(actionRequest,"title");
   String content=ParamUtil.getString(actionRequest,"content");
   String description=ParamUtil.getString(actionRequest,"description");
-  int humanPriority=ParamUtil.getInteger(actionRequest,"humanPriority");
   String dirName=ParamUtil.getString(actionRequest,"dirName");
   int workflowAction=ParamUtil.getInteger(actionRequest,"workflowAction",WorkflowConstants.ACTION_PUBLISH);
-  long priority=PriorityHelper.getPriority(themeDisplay.getScopeGroupId(),resourcePrimKey,parentResourcePrimKey,humanPriority);
   Article article=null;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Article.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    article=ArticleServiceUtil.addArticle(parentResourcePrimKey,title,content,description,priority,dirName,serviceContext);
+    article=ArticleServiceUtil.addArticle(parentResourcePrimKey,title,content,description,dirName,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    article=ArticleServiceUtil.updateArticle(resourcePrimKey,parentResourcePrimKey,title,content,description,priority,dirName,serviceContext);
+    article=ArticleServiceUtil.updateArticle(resourcePrimKey,title,content,description,dirName,serviceContext);
   }
   if (!cmd.equals(Constants.ADD) && !cmd.equals(Constants.UPDATE)) {
     return;
