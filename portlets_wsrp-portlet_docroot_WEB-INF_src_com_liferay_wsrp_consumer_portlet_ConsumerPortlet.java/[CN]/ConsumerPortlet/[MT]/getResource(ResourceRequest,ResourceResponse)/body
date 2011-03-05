@@ -21,7 +21,8 @@
   getResource.setResourceParams(resourceParams);
   getResource.setRuntimeContext(runtimeContext);
   getResource.setUserContext(userContext);
-  WSRP_v2_Markup_PortType markupService=getMarkupService(resourceRequest,wsrpConsumerManager,wsrpConsumer);
+  ServiceHolder serviceHolder=getServiceHolder(resourceRequest,wsrpConsumerManager,wsrpConsumer);
+  WSRP_v2_Markup_PortType markupService=serviceHolder.getMarkupService();
   oasis.names.tc.wsrp.v2.types.ResourceResponse wsrpResourceResponse=markupService.getResource(getResource);
-  processResourceResponse(resourceRequest,resourceResponse,wsrpConsumerManager,wsrpResourceResponse);
+  processResourceResponse(resourceRequest,resourceResponse,wsrpConsumerManager,serviceHolder,wsrpResourceResponse);
 }

@@ -21,7 +21,8 @@
   getMarkup.setRegistrationContext(wsrpConsumer.getRegistrationContext());
   getMarkup.setRuntimeContext(runtimeContext);
   getMarkup.setUserContext(userContext);
-  WSRP_v2_Markup_PortType markupService=getMarkupService(portletRequest,wsrpConsumerManager,wsrpConsumer);
+  ServiceHolder serviceHolder=getServiceHolder(portletRequest,wsrpConsumerManager,wsrpConsumer);
+  WSRP_v2_Markup_PortType markupService=serviceHolder.getMarkupService();
   MarkupResponse markupResponse=null;
   try {
     markupResponse=markupService.getMarkup(getMarkup);
@@ -31,6 +32,6 @@
     markupService.initCookie(initCookie);
     markupResponse=markupService.getMarkup(getMarkup);
   }
-  processMarkupResponse(portletRequest,portletResponse,markupResponse);
+  processMarkupResponse(portletRequest,portletResponse,serviceHolder,markupResponse);
   return markupResponse;
 }

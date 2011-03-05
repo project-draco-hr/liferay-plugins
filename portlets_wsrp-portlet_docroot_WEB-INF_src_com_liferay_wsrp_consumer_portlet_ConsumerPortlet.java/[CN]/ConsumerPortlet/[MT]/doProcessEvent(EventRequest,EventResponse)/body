@@ -16,7 +16,8 @@
   handleEvents.setRegistrationContext(wsrpConsumer.getRegistrationContext());
   handleEvents.setRuntimeContext(runtimeContext);
   handleEvents.setUserContext(userContext);
-  WSRP_v2_Markup_PortType markupService=getMarkupService(eventRequest,wsrpConsumerManager,wsrpConsumer);
+  ServiceHolder serviceHolder=getServiceHolder(eventRequest,wsrpConsumerManager,wsrpConsumer);
+  WSRP_v2_Markup_PortType markupService=serviceHolder.getMarkupService();
   HandleEventsResponse handleEventsResponse=markupService.handleEvents(handleEvents);
-  processHandleEventsResponse(eventRequest,eventResponse,wsrpConsumerManager,handleEventsResponse);
+  processHandleEventsResponse(eventRequest,eventResponse,wsrpConsumerManager,serviceHolder,handleEventsResponse);
 }

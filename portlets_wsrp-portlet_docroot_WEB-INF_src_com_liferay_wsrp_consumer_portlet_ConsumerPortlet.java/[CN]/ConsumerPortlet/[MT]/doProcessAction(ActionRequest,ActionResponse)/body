@@ -16,7 +16,8 @@
   performBlockingInteraction.setRegistrationContext(wsrpConsumer.getRegistrationContext());
   performBlockingInteraction.setRuntimeContext(runtimeContext);
   performBlockingInteraction.setUserContext(userContext);
-  WSRP_v2_Markup_PortType markupService=getMarkupService(actionRequest,wsrpConsumerManager,wsrpConsumer);
+  ServiceHolder serviceHolder=getServiceHolder(actionRequest,wsrpConsumerManager,wsrpConsumer);
+  WSRP_v2_Markup_PortType markupService=serviceHolder.getMarkupService();
   BlockingInteractionResponse blockingInteractionResponse=markupService.performBlockingInteraction(performBlockingInteraction);
-  processBlockingInteractionResponse(actionRequest,actionResponse,wsrpConsumerManager,blockingInteractionResponse);
+  processBlockingInteractionResponse(actionRequest,actionResponse,wsrpConsumerManager,serviceHolder,blockingInteractionResponse);
 }
