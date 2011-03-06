@@ -10,6 +10,7 @@
   if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"tags")) {
     assetTagNames=portletDataContext.getAssetTagNames(Article.class,article.getResourcePrimKey());
   }
+  Map<String,Serializable> expandoAttributes=getExpandoAttributes(portletDataContext,articleElement);
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
@@ -18,6 +19,9 @@
   serviceContext.setCreateDate(article.getCreateDate());
   serviceContext.setModifiedDate(article.getModifiedDate());
   serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  if ((expandoAttributes != null) && !expandoAttributes.isEmpty()) {
+    serviceContext.setExpandoBridgeAttributes(expandoAttributes);
+  }
   Article importedArticle=null;
   long priority=0;
   if (portletDataContext.isDataStrategyMirror()) {
