@@ -3,7 +3,7 @@
   List<Comment> comments=CommentUtil.findByG_C(portletDataContext.getScopeGroupId(),classNameId);
   for (  Comment comment : comments) {
     if (!portletDataContext.isWithinDateRange(comment.getModifiedDate())) {
-      return;
+      continue;
     }
     String path=getPortletPath(portletDataContext) + "/comments/" + comment.getCommentId()+ ".xml";
     if (!portletDataContext.isPathNotProcessed(path)) {

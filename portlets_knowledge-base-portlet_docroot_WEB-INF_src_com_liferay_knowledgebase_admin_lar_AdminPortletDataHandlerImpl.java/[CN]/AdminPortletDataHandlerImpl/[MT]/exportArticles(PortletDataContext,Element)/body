@@ -1,5 +1,8 @@
 {
-  for (  Article article : filterArticles(portletDataContext)) {
+  for (  Article article : getArticles(portletDataContext)) {
+    if (!portletDataContext.isWithinDateRange(article.getModifiedDate())) {
+      continue;
+    }
     String path=getPortletPath(portletDataContext) + "/articles/" + article.getResourcePrimKey()+ ".xml";
     if (!portletDataContext.isPathNotProcessed(path)) {
       continue;
