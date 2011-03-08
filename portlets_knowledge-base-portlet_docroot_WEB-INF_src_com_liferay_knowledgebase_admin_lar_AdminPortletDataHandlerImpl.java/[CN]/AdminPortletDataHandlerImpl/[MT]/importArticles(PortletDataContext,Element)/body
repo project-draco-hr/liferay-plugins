@@ -8,14 +8,13 @@
       importArticleAttachments(portletDataContext,importId,dirNames,rootElement);
     }
     List<Element> articleElements=rootElement.elements("article");
-    for (int i=0; i < articleElements.size(); i++) {
-      Element articleElement=articleElements.get(i);
+    for (    Element articleElement : articleElements) {
       String path=articleElement.attributeValue("path");
       if (!portletDataContext.isPathNotProcessed(path)) {
         continue;
       }
       Article article=(Article)portletDataContext.getZipEntryAsObject(path);
-      importArticle(portletDataContext,i + 1,resourcePrimKeys,dirNames,articleElement,article);
+      importArticle(portletDataContext,resourcePrimKeys,dirNames,articleElement,article);
     }
     importComments(portletDataContext,"article-comment",resourcePrimKeys,rootElement);
   }

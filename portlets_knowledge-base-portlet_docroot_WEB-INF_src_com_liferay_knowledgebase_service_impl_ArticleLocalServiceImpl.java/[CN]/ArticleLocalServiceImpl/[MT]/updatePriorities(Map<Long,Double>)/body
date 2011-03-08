@@ -1,0 +1,21 @@
+{
+  for (  double priority : resourcePrimKeyToPriorityMap.values()) {
+    validate(priority);
+  }
+  List<Article> articles=new ArrayList<Article>();
+  for (  long resourcePrimKey : resourcePrimKeyToPriorityMap.keySet()) {
+    Article article=null;
+    try {
+      article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+    }
+ catch (    NoSuchArticleException nsae) {
+      continue;
+    }
+    articles.add(article);
+  }
+  for (  Article article : articles) {
+    double priority=resourcePrimKeyToPriorityMap.get(article.getResourcePrimKey());
+    article.setPriority(priority);
+    articlePersistence.update(article,false);
+  }
+}
