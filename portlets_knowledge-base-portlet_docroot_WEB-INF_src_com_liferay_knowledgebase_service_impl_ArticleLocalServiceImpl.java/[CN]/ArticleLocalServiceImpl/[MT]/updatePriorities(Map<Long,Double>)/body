@@ -2,17 +2,8 @@
   for (  double priority : resourcePrimKeyToPriorityMap.values()) {
     validate(priority);
   }
-  List<Article> articles=new ArrayList<Article>();
-  for (  long resourcePrimKey : resourcePrimKeyToPriorityMap.keySet()) {
-    Article article=null;
-    try {
-      article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
-    }
- catch (    NoSuchArticleException nsae) {
-      continue;
-    }
-    articles.add(article);
-  }
+  long[] resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeyToPriorityMap.keySet()),0L);
+  List<Article> articles=getArticles(resourcePrimKeys,WorkflowConstants.STATUS_ANY,null);
   for (  Article article : articles) {
     double priority=resourcePrimKeyToPriorityMap.get(article.getResourcePrimKey());
     article.setPriority(priority);

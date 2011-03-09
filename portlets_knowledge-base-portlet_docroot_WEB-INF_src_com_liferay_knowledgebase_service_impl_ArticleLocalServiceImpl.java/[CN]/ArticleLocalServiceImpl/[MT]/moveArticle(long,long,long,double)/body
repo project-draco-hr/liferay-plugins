@@ -1,0 +1,10 @@
+{
+  validate(priority);
+  updatePermissionFields(resourcePrimKey,parentResourcePrimKey);
+  Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  article.setParentResourcePrimKey(parentResourcePrimKey);
+  article.setPriority(priority);
+  articlePersistence.update(article,false);
+  socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.MOVE_ARTICLE,StringPool.BLANK,0);
+  return article;
+}
