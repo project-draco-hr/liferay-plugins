@@ -1,4 +1,8 @@
 {
+  List<Article> siblingArticles=getSiblingArticles(article.getGroupId(),article.getResourcePrimKey(),WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new ArticlePriorityComparator());
+  for (  Article siblingArticle : siblingArticles) {
+    deleteArticle(siblingArticle);
+  }
   resourceLocalService.deleteResource(article.getCompanyId(),Article.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,article.getResourcePrimKey());
   articlePersistence.removeByResourcePrimKey(article.getResourcePrimKey());
   commentLocalService.deleteComments(Article.class.getName(),article.getResourcePrimKey());
