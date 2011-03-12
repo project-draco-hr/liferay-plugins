@@ -1,5 +1,9 @@
 {
-  SimpleChain simpleChain=new SimpleChain();
+  SimpleChain requestChain=new SimpleChain();
+  Handler logHandler=new LogHandler();
+  if (PortletPropsValues.WSRP_DEBUG) {
+    requestChain.addHandler(logHandler);
+  }
   if (Validator.isNotNull(userToken)) {
     Handler handler=new WSDoAllSender();
     handler.setOption(WSHandlerConstants.ACTION,"UsernameToken");
@@ -7,10 +11,14 @@
     handler.setOption(UsernameToken.PASSWORD_TYPE,WSConstants.PW_NONE);
     handler.setOption(WSHandlerConstants.PW_CALLBACK_CLASS,PasswordCallback.class.getName());
     handler.setOption(WSHandlerConstants.USER,userToken);
-    simpleChain.addHandler(handler);
+    requestChain.addHandler(handler);
+  }
+  SimpleChain responseChain=new SimpleChain();
+  if (PortletPropsValues.WSRP_DEBUG) {
+    responseChain.addHandler(logHandler);
   }
   SimpleProvider simpleProvider=new SimpleProvider();
   HTTPSender httpSender=new WSRPHTTPSender(forwardCookies);
-  simpleProvider.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME,new SimpleTargetedChain(simpleChain,httpSender,null));
+  simpleProvider.deployTransport(HTTPTransport.DEFAULT_TRANSPORT_NAME,new SimpleTargetedChain(requestChain,httpSender,responseChain));
   return simpleProvider;
 }
