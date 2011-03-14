@@ -54,7 +54,9 @@
   }
   navigationalContext.setPublicValues(publicValues.toArray(new NamedString[publicValues.size()]));
   mimeRequest.setNavigationalContext(navigationalContext);
-  processFormParameters(portletRequest,portletResponse,mimeRequest);
+  if (mimeRequest instanceof MarkupParams) {
+    processFormParameters(portletRequest,portletResponse,mimeRequest);
+  }
   portletContext.setPortletHandle(wsrpConsumerPortlet.getPortletHandle());
   runtimeContext.setNamespacePrefix(portletResponse.getNamespace());
   runtimeContext.setPortletInstanceKey(portletResponse.getNamespace());
