@@ -22,12 +22,12 @@
   tasksEntry.setStatus(status);
   tasksEntryPersistence.update(tasksEntry,false);
   updateAsset(tasksEntry.getUserId(),tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
-  int activity=TasksActivityKeys.UPDATE_TASK;
+  int activity=TasksActivityKeys.UPDATE_ENTRY;
   if (status == TasksEntryConstants.STATUS_RESOLVED) {
-    activity=TasksActivityKeys.RESOLVE_TASK;
+    activity=TasksActivityKeys.RESOLVE_ENTRY;
   }
  else   if (status == TasksEntryConstants.STATUS_REOPENED) {
-    activity=TasksActivityKeys.REOPEN_TASK;
+    activity=TasksActivityKeys.REOPEN_ENTRY;
   }
   SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,StringPool.BLANK,assigneeUserId);
   return tasksEntry;
