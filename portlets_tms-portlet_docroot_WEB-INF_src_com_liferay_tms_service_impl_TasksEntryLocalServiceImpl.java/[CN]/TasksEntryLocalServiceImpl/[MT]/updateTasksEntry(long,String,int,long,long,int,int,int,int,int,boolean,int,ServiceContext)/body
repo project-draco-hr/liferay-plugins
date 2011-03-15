@@ -11,7 +11,7 @@
   tasksEntry.setPriority(priority);
   tasksEntry.setAssigneeUserId(assigneeUserId);
   tasksEntry.setDueDate(dueDate);
-  if (status == TasksConstants.STATUS_RESOLVED) {
+  if (status == TasksEntryConstants.STATUS_RESOLVED) {
     tasksEntry.setResolverUserId(resolverUserId);
     tasksEntry.setFinishDate(now);
   }
@@ -21,14 +21,14 @@
   }
   tasksEntry.setStatus(status);
   tasksEntryPersistence.update(tasksEntry,false);
+  updateAsset(tasksEntry.getUserId(),tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   int activity=TasksActivityKeys.UPDATE_TASK;
-  if (status == TasksConstants.STATUS_RESOLVED) {
+  if (status == TasksEntryConstants.STATUS_RESOLVED) {
     activity=TasksActivityKeys.RESOLVE_TASK;
   }
- else   if (status == TasksConstants.STATUS_REOPENED) {
+ else   if (status == TasksEntryConstants.STATUS_REOPENED) {
     activity=TasksActivityKeys.REOPEN_TASK;
   }
   SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,StringPool.BLANK,assigneeUserId);
-  updateAsset(tasksEntry.getUserId(),tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   return tasksEntry;
 }
