@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long userId=themeDisplay.getUserId();
+  long microblogsEntryId=ParamUtil.getLong(actionRequest,"microblogsEntryId");
+  String content=ParamUtil.getString(actionRequest,"content");
+  int type=ParamUtil.getInteger(actionRequest,"type");
+  long receiverUserId=ParamUtil.getLong(actionRequest,"receiverUserId");
+  long receiverEntryId=ParamUtil.getLong(actionRequest,"receiverEntryId");
+  int socialRelationType=ParamUtil.getInteger(actionRequest,"socialRelationType");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(MicroblogsEntry.class.getName(),actionRequest);
+  serviceContext.setAssetTagNames(getTags(content));
+  if (microblogsEntryId > 0) {
+    MicroblogsEntryServiceUtil.updateMicroblogsEntry(microblogsEntryId,content,socialRelationType,serviceContext);
+  }
+ else {
+    MicroblogsEntryServiceUtil.addMicroblogsEntry(userId,content,type,receiverUserId,receiverEntryId,socialRelationType,serviceContext);
+  }
+}

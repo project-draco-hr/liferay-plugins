@@ -1,0 +1,29 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.getMicroblogsEntry(activity.getClassPK());
+  if (!MicroblogsEntryPermission.contains(permissionChecker,microblogsEntry,ActionKeys.VIEW)) {
+    return null;
+  }
+  int activityType=activity.getType();
+  long userId=activity.getUserId();
+  long receiverUserId=activity.getReceiverUserId();
+  String link=StringPool.BLANK;
+  String receiverUserName=getUserName(receiverUserId,themeDisplay);
+  StringBundler sb=new StringBundler(4);
+  if (receiverUserId > 0) {
+    if (microblogsEntry.getType() == MicroblogsEntryConstants.REPLY) {
+      sb.append("@");
+      sb.append(receiverUserName);
+      sb.append(": ");
+    }
+ else     if (microblogsEntry.getType() == MicroblogsEntryConstants.REPOST) {
+      sb.append(themeDisplay.translate("repost-from"));
+      sb.append(receiverUserName);
+      sb.append(": ");
+    }
+  }
+  sb.append(cleanContent(microblogsEntry.getContent()));
+  String title=sb.toString();
+  String body=getUserName(userId,themeDisplay);
+  return new SocialActivityFeedEntry(link,title,body);
+}

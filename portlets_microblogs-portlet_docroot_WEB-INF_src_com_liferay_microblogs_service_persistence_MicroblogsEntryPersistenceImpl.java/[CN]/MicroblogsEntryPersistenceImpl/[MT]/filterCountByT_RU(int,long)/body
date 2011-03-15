@@ -1,0 +1,27 @@
+{
+  if (!InlineSQLHelperUtil.isEnabled()) {
+    return countByT_RU(type,receiverUserId);
+  }
+  StringBundler query=new StringBundler(3);
+  query.append(_FILTER_SQL_COUNT_MICROBLOGSENTRY_WHERE);
+  query.append(_FINDER_COLUMN_T_RU_TYPE_2);
+  query.append(_FINDER_COLUMN_T_RU_RECEIVERUSERID_2);
+  String sql=InlineSQLHelperUtil.replacePermissionCheck(query.toString(),MicroblogsEntry.class.getName(),_FILTER_COLUMN_PK,_FILTER_COLUMN_USERID);
+  Session session=null;
+  try {
+    session=openSession();
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar(COUNT_COLUMN_NAME,com.liferay.portal.kernel.dao.orm.Type.LONG);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(type);
+    qPos.add(receiverUserId);
+    Long count=(Long)q.uniqueResult();
+    return count.intValue();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,20 @@
+{
+  MicroblogsEntry microblogsEntry=(MicroblogsEntry)EntityCacheUtil.getResult(MicroblogsEntryModelImpl.ENTITY_CACHE_ENABLED,MicroblogsEntryImpl.class,microblogsEntryId,this);
+  if (microblogsEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      microblogsEntry=(MicroblogsEntry)session.get(MicroblogsEntryImpl.class,new Long(microblogsEntryId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (microblogsEntry != null) {
+        cacheResult(microblogsEntry);
+      }
+      closeSession(session);
+    }
+  }
+  return microblogsEntry;
+}

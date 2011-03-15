@@ -1,0 +1,59 @@
+{
+  String userIdsString=StringPool.BLANK;
+  if (userIds != null) {
+    for (    long userId : userIds) {
+      userIdsString=StringUtil.add(userIdsString,String.valueOf(userId));
+    }
+    if (userIdsString.endsWith(StringPool.COMMA)) {
+      userIdsString=userIdsString.substring(0,userIdsString.length() - 1);
+    }
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    StringBundler sb=new StringBundler(17);
+    sb.append(CustomSQLUtil.get(FIND_BY_C_U_T_RU_RE_S_V));
+    if (userIds != null) {
+      sb.append(_AND_USER_IDS);
+      sb.append("(" + userIdsString + ")");
+    }
+    if (companyId > 0) {
+      sb.append(_AND_COMPANY_ID);
+      sb.append(companyId);
+    }
+    if (type > 0) {
+      sb.append(_AND_TYPE);
+      sb.append(type);
+    }
+    if (receiverUserId > 0) {
+      sb.append(_AND_RECEIVER_USER_ID);
+      sb.append(receiverUserId);
+    }
+    if (receiverEntryId > 0) {
+      sb.append(_AND_RECEIVER_ENTRY_ID);
+      sb.append(receiverEntryId);
+    }
+    if (socialRelationType > 0) {
+      sb.append(_AND_SOCIALRELATION_TYPE);
+      sb.append(socialRelationType);
+    }
+    sb.append(_GROUP_BY);
+    sb.append(_MICROBLOGS_ENTRY_ID);
+    sb.append(_ORDER_BY);
+    sb.append(_CREATE_DATE_DESC);
+    String sql=sb.toString();
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addEntity("Microblogs_MicroblogsEntry",MicroblogsEntryImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(MicroblogsEntryConstants.EVERYONE);
+    qPos.add(viewerUserId);
+    qPos.add(viewerUserId);
+    return (List<MicroblogsEntry>)QueryUtil.list(q,getDialect(),start,end);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
