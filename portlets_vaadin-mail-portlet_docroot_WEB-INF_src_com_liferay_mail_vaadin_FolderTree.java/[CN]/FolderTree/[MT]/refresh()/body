@@ -1,0 +1,20 @@
+{
+  ArrayList<Long> expanded=new ArrayList<Long>();
+  for (  Object root : rootItemIds()) {
+    if (isExpanded(root)) {
+      Account account=getFolderContainer().getAccount(root);
+      if (account != null) {
+        expanded.add(account.getAccountId());
+      }
+    }
+  }
+  Folder selectedFolder=getFolderContainer().getFolder(getValue());
+  getFolderContainer().refresh();
+  for (  Long accountId : expanded) {
+    expandItem(getFolderContainer().getAccountItemId(accountId));
+  }
+  if (selectedFolder != null) {
+    Object id=getFolderContainer().getFolderItemId(selectedFolder.getAccountId(),selectedFolder.getFolderId());
+    select(id);
+  }
+}

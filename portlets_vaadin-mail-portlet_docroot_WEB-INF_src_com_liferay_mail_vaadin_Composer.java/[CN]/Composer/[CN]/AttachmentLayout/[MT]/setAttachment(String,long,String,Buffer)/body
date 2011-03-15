@@ -1,0 +1,30 @@
+{
+  removeAllComponents();
+  DecimalFormat df=new DecimalFormat("#########0.0");
+  String size=null;
+  if (length >= 1000 * 1000 * 1000) {
+    size=df.format((float)length / (1000 * 1000 * 1000)) + " " + Lang.get("gigabytes");
+  }
+ else   if (length >= 1000 * 1000) {
+    size=df.format((float)length / (1000 * 1000)) + " " + Lang.get("megabytes");
+  }
+ else   if (length >= 1000) {
+    size=df.format((float)length / 1000) + " " + Lang.get("kilobytes");
+  }
+ else {
+    size=df.format(length) + " " + Lang.get("bytes");
+  }
+  StreamResource sr=new StreamResource(buffer,file,getApplication());
+  final Link l=new Link(file + " (" + size+ ") ",sr);
+  addComponent(l);
+  Button b=new Button("x",new Button.ClickListener(){
+    public void buttonClick(    ClickEvent event){
+      removeAttachment(AttachmentLayout.this);
+    }
+  }
+);
+  b.setDescription(Lang.get("remove") + file);
+  b.setStyleName("small");
+  addComponent(b);
+  setExpandRatio(b,1.0f);
+}

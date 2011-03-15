@@ -1,0 +1,21 @@
+{
+  if (listener != null) {
+    if (event.getButton() == cancelButton) {
+      listener.cancel();
+    }
+ else     if (event.getButton() == okButton) {
+      if (!addressField.isValid()) {
+        controller.showInfo(Lang.get("please-enter-a-valid-email-address"));
+      }
+ else       if (!mailInHostNameField.isValid()) {
+        controller.showInfo(Lang.get("please-enter-a-valid-incoming-server-name"));
+      }
+ else       if (!mailOutHostNameField.isValid()) {
+        controller.showInfo(Lang.get("please-enter-a-valid-outgoing-server-name"));
+      }
+ else {
+        listener.saveAccount(getAccount());
+      }
+    }
+  }
+}

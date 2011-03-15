@@ -1,0 +1,20 @@
+{
+  rootIds.clear();
+  accountFolders=new HashMap<Long,List<ItemId>>();
+  Collection<Account> oldAccounts=accountIdToAccount.values();
+  accountIdToAccount=new HashMap<Long,Account>();
+  for (  Account account : oldAccounts) {
+    try {
+      account=AccountLocalServiceUtil.getAccount(account.getAccountId());
+      rootIds.add(new ItemId(account));
+      accountIdToAccount.put(account.getAccountId(),account);
+    }
+ catch (    PortalException e) {
+      _log.info("The account " + account.getAccountId() + " does not exist anymore",e);
+    }
+catch (    SystemException e) {
+      _log.info("The account " + account.getAccountId() + " does not exist anymore",e);
+    }
+  }
+  fireItemSetChange();
+}

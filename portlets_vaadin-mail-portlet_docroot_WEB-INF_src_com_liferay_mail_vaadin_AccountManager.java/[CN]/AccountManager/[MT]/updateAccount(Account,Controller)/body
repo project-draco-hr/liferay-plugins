@@ -1,0 +1,25 @@
+{
+  try {
+    PasswordRetriever passwordRetriever=controller.getPasswordRetriever();
+    if (account.isSavePassword()) {
+      passwordRetriever.removePassword(account.getAccountId());
+    }
+    String password=account.getPasswordDecrypted();
+    if (Validator.isNull(password)) {
+      String oldPassword=passwordRetriever.getPassword(account.getAccountId());
+      if (Validator.isNull(oldPassword)) {
+        throw new MailException("no password");
+      }
+ else {
+        password=oldPassword;
+      }
+    }
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(controller.getUser().getUserId(),account.getAccountId(),password);
+    mailbox.updateAccount(account.getAccountId(),account.getPersonalName(),password,account.isSavePassword(),account.getSignature(),account.isUseSignature(),account.getFolderPrefix(),account.getDefaultSender());
+    return null;
+  }
+ catch (  MailException me) {
+    _log.error(me,me);
+    return "unable-to-update-account";
+  }
+}

@@ -1,0 +1,14 @@
+{
+  String newMessageBody="<p>&nbsp;</p><br /><br />---------- " + Lang.get("forwarded-message") + " ----------<br />";
+  newMessageBody+=Lang.get("from") + ": " + originalMessage.getSender()+ "<br />";
+  newMessageBody+=Lang.get("date") + ": " + formatDate(originalMessage.getSentDate(),Controller.get().getUserLocale())+ "<br />";
+  newMessageBody+=Lang.get("subject") + ": " + originalMessage.getSubject()+ "<br />";
+  newMessageBody+=Lang.get("to") + ": " + originalMessage.getTo()+ "<br />";
+  String cc=originalMessage.getCc();
+  if (cc != null && !cc.equals("")) {
+    newMessageBody+=Lang.get("cc") + ": " + originalMessage.getCc()+ "<br />";
+  }
+  newMessageBody+="<br/>";
+  newMessageBody+=originalMessage.getBody();
+  return newMessageBody;
+}

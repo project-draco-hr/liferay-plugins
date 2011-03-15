@@ -1,0 +1,24 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  long accountId=ParamUtil.getLong(uploadRequest,"accountId");
+  long messageId=ParamUtil.getLong(uploadRequest,"messageId");
+  String to=ParamUtil.getString(uploadRequest,"to");
+  String cc=ParamUtil.getString(uploadRequest,"cc");
+  String bcc=ParamUtil.getString(uploadRequest,"bcc");
+  String subject=ParamUtil.getString(uploadRequest,"subject");
+  String body=ParamUtil.getString(uploadRequest,"body");
+  int attachmentCount=ParamUtil.getInteger(uploadRequest,"attachmentCount");
+  List<MailFile> mailFiles=new ArrayList<MailFile>();
+  for (int i=1; i <= attachmentCount; i++) {
+    File file=uploadRequest.getFile("attachment" + i);
+    String filename=uploadRequest.getFileName("attachment" + i);
+    if (FileUtil.getBytes(file) != null) {
+      mailFiles.add(new MailFile(file,filename,file.length()));
+    }
+  }
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+  MailManager mailManager=MailManager.getInstance(request);
+  JSONObject responseData=mailManager.sendMessage(accountId,messageId,to,cc,bcc,subject,body,mailFiles);
+  actionResponse.sendRedirect(PortalUtil.getLayoutURL(themeDisplay) + "/-/mail/send_message?responseData=" + responseData);
+}

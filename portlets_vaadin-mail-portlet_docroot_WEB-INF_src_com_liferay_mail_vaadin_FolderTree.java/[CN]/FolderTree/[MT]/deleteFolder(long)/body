@@ -1,0 +1,29 @@
+{
+  Controller controller=Controller.get();
+  try {
+    Folder folder=FolderLocalServiceUtil.getFolder(folderId);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(controller.getUser().getUserId(),folder.getAccountId(),controller.getPasswordRetriever().getPassword(folder.getAccountId()));
+    mailbox.deleteFolder(folderId);
+    controller.showInfo(Lang.get("folder-has-been-deleted"));
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.FOLDER_REQUIRED) {
+      controller.showError(Lang.get("this-is-a-required-folder-and-can-not-be-deleted"));
+      return;
+    }
+ else     if (me.getType() == MailException.FOLDER_DELETE_FAILED) {
+      controller.showError(Lang.get("the-mail-server-will-not-allow-this-folder-to-be-deleted"));
+      return;
+    }
+    _log.error(me,me);
+    controller.showError(Lang.get("unable-to-delete-folder"));
+  }
+catch (  PortalException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-delete-folder"));
+  }
+catch (  SystemException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-delete-folder"));
+  }
+}

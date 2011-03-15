@@ -1,0 +1,24 @@
+{
+  DynamicQuery countQuery=DynamicQueryFactoryUtil.forClass(Message.class,getClass().getClassLoader());
+  DynamicQuery messageQuery=DynamicQueryFactoryUtil.forClass(Message.class,getClass().getClassLoader());
+  countQuery.add(RestrictionsFactoryUtil.eq("folderId",folderId));
+  messageQuery.add(RestrictionsFactoryUtil.eq("folderId",folderId));
+  if (Validator.isNotNull(keywords)) {
+    String value="%" + keywords + "%";
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    disjunction.add(RestrictionsFactoryUtil.ilike("subject",value));
+    disjunction.add(RestrictionsFactoryUtil.ilike("body",value));
+    countQuery.add(disjunction);
+    messageQuery.add(disjunction);
+  }
+  if (orderByType.equals("desc")) {
+    messageQuery.addOrder(OrderFactoryUtil.desc(orderByField));
+  }
+ else {
+    messageQuery.addOrder(OrderFactoryUtil.asc(orderByField));
+  }
+  int start=messagesPerPage * (pageNumber - 1);
+  int end=messagesPerPage * pageNumber;
+  messages.addAll(messagePersistence.findWithDynamicQuery(messageQuery,start,end));
+  return (int)dynamicQueryCount(countQuery);
+}

@@ -1,0 +1,12 @@
+{
+  List<Message> messages=MessageLocalServiceUtil.getCompanyMessages(companyId,start,end);
+  if (messages.isEmpty()) {
+    return;
+  }
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  Message message : messages) {
+    Document document=getDocument(message);
+    documents.add(document);
+  }
+  SearchEngineUtil.updateDocuments(companyId,documents);
+}

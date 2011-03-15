@@ -1,0 +1,14 @@
+{
+  List<Message> messages=mainMailView.getSelectedMessages();
+  if (messages.isEmpty()) {
+    Controller.get().showError(Lang.get("no-messages-selected"));
+    return;
+  }
+  try {
+    MessageUtil.deleteMessages(messages);
+    Controller.get().showInfo(Lang.get("messages-have-been-deleted"));
+  }
+ catch (  Exception e) {
+    Controller.get().showError(Lang.get("unable-to-delete-messages"),e);
+  }
+}

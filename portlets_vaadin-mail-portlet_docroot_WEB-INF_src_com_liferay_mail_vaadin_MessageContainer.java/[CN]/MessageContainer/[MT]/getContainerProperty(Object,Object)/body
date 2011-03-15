@@ -1,0 +1,28 @@
+{
+  Message m=(Message)itemId;
+  if (propertyId.equals("icon")) {
+    Boolean hasAttachments=this.hasAttachments.get(m);
+    if (hasAttachments == null) {
+      return null;
+    }
+ else     if (hasAttachments) {
+      return new ObjectProperty(attachmentIcon);
+    }
+ else {
+      return null;
+    }
+  }
+  Property p=super.getContainerProperty(itemId,propertyId);
+  if (propertyId.equals("sentDate")) {
+    return formatDate((Date)p.getValue());
+  }
+ else   if (propertyId.equals("size")) {
+    return formatSize((Long)p.getValue());
+  }
+ else   if (propertyId.equals("subject")) {
+    return formatSubject(m,(String)p.getValue());
+  }
+ else {
+    return p;
+  }
+}

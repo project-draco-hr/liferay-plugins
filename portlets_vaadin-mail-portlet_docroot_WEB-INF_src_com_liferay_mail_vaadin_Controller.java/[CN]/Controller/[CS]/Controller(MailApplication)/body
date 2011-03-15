@@ -1,0 +1,18 @@
+{
+  this.mailApplication=mailApplication;
+  tl=new TransactionListener(){
+    public void transactionStart(    Application application,    Object transactionData){
+      if (application instanceof MailApplication) {
+        Controller ctr=((MailApplication)application).getController();
+        controller.set(ctr);
+      }
+ else {
+        controller.set(null);
+      }
+    }
+    public void transactionEnd(    Application application,    Object transactionData){
+    }
+  }
+;
+  this.mailApplication.getContext().addTransactionListener(tl);
+}

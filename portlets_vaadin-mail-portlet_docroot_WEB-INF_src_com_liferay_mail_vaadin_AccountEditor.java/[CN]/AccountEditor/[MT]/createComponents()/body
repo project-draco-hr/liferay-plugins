@@ -1,0 +1,43 @@
+{
+  addressField=new TextField(Lang.get("email-address"));
+  addressField.focus();
+  loginField=new TextField(Lang.get("login"));
+  personalNameField=new TextField(Lang.get("personal-name"));
+  passwordField=new TextField(Lang.get("password"));
+  passwordField.setSecret(true);
+  passwordSavedCheckBox=new CheckBox(Lang.get("save-password"));
+  mailInHostNameField=new TextField(Lang.get("incoming-imap-server"));
+  mailInPortCombo=new ComboBox(Lang.get("incoming-port"),controller.getConfigurationManager().getIncomingPorts());
+  mailInSecureCheckBox=new CheckBox(Lang.get("use-secure-incoming-connection"));
+  mailOutHostNameField=new TextField(Lang.get("outgoing-smtp-server"));
+  mailOutPortCombo=new ComboBox(Lang.get("outgoing-port"),controller.getConfigurationManager().getOutgoingPorts());
+  mailOutSecureCheckBox=new CheckBox(Lang.get("use-secure-outgoing-connection"));
+  addressField.setRequired(true);
+  mailInHostNameField.setRequired(true);
+  mailOutHostNameField.setRequired(true);
+  addComponent(addressField);
+  if (!useLocalPartOfEmailAddressAsLogin) {
+    addComponent(loginField);
+  }
+  addComponent(personalNameField);
+  addComponent(passwordField);
+  addComponent(passwordSavedCheckBox);
+  if (!hideSettings) {
+    addComponent(mailInHostNameField);
+    addComponent(mailInPortCombo);
+    addComponent(mailInSecureCheckBox);
+    addComponent(mailOutHostNameField);
+    addComponent(mailOutPortCombo);
+    addComponent(mailOutSecureCheckBox);
+  }
+  HorizontalLayout footer=new HorizontalLayout();
+  footer.setSpacing(true);
+  okButton=new Button(Lang.get("save"));
+  okButton.setStyleName("primary");
+  okButton.addListener(this);
+  footer.addComponent(okButton);
+  cancelButton=new Button(Lang.get("cancel"));
+  cancelButton.addListener(this);
+  footer.addComponent(cancelButton);
+  addComponent(footer);
+}

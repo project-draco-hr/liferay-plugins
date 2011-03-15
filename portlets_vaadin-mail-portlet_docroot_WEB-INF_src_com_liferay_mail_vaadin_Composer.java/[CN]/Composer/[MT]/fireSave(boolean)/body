@@ -1,0 +1,65 @@
+{
+  if (!getFrom().isSavePassword() && !skipPasswordCheck) {
+    Account account=getFrom();
+    String password=null;
+    try {
+      password=Controller.get().getPasswordRetriever().getPassword(account.getAccountId());
+    }
+ catch (    PortalException e2) {
+    }
+catch (    SystemException e2) {
+    }
+    if (password != null) {
+      try {
+        Controller.get().getMailManager().storePassword(account.getAccountId(),password);
+        Controller.get().getAccountManager().updateAccount(account,Controller.get());
+        Controller.get().getMailManager().synchronizeAccount(account.getAccountId());
+      }
+ catch (      PortalException e1) {
+        Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+      }
+catch (      SystemException e1) {
+        Controller.get().showError(Lang.get("unable-to-synchronize-account"),e1);
+      }
+    }
+ else {
+      PasswordPrompt prompt=new PasswordPrompt(account);
+      prompt.addListener(new Window.CloseListener(){
+        public void windowClose(        CloseEvent e){
+          PasswordPrompt prompt=(PasswordPrompt)e.getWindow();
+          if (prompt.getStatus() == PasswordPrompt.Status.VALIDATED) {
+            fireSave(true);
+          }
+        }
+      }
+);
+      getWindow().addWindow(prompt);
+      prompt.center();
+      return;
+    }
+  }
+  Message msg=null;
+  try {
+    msg=MessageUtil.saveOrSendMessage(getFrom(),getTo(),getCc(),getBcc(),getSubject(),getMessage(),getAttachments(),false,draftMessageId);
+    for (    ComposerListener listener : listeners) {
+      listener.messageSaved(this,msg);
+    }
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.MESSAGE_HAS_NO_RECIPIENTS) {
+      getApplication().getMainWindow().showNotification(Lang.get("please-specify-at-least-one-recipient"),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+    }
+ else {
+      getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),me.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+    }
+    return;
+  }
+catch (  PortalException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+catch (  SystemException e) {
+    _log.error(e);
+    getApplication().getMainWindow().showNotification(Lang.get("unable-to-save-draft"),e.getMessage(),Notification.TYPE_ERROR_MESSAGE);
+  }
+}

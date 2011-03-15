@@ -1,0 +1,25 @@
+{
+  Controller controller=Controller.get();
+  try {
+    Folder folder=FolderLocalServiceUtil.getFolder(folderId);
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(controller.getUser().getUserId(),folder.getAccountId(),controller.getPasswordRetriever().getPassword(folder.getAccountId()));
+    mailbox.renameFolder(folderId,displayName);
+    controller.showInfo(Lang.get("folder-renamed-successfully"));
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.FOLDER_ALREADY_EXISTS) {
+      controller.showError(Lang.get("a-folder-with-the-same-name-already-exists"));
+      return;
+    }
+    _log.error(me,me);
+    controller.showError(Lang.get("unable-to-rename-folder"));
+  }
+catch (  PortalException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-rename-folder"));
+  }
+catch (  SystemException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-rename-folder"));
+  }
+}

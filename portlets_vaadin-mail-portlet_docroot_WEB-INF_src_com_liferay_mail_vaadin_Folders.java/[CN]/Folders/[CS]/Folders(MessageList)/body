@@ -1,0 +1,18 @@
+{
+  this.messageList=messageList;
+  mainLayout=new VerticalLayout();
+  mainLayout.setSizeFull();
+  mainPanel=new Accordion();
+  mainPanel.setSizeFull();
+  mainPanel.setStyleName("borderless");
+  accountLayout=new VerticalLayout();
+  mainLayout.addComponent(createComposeButton());
+  mainLayout.addComponent(mainPanel);
+  mainLayout.setExpandRatio(mainPanel,1);
+  mainPanel.addComponent(accountLayout);
+  tree=new FolderTree(this,messageList);
+  accountLayout.addComponent(tree);
+  setSizeFull();
+  setCompositionRoot(mainLayout);
+  Controller.get().addListener(this);
+}

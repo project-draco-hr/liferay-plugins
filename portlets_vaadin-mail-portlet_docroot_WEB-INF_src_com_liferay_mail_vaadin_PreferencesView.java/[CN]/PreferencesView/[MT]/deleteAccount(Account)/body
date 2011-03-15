@@ -1,0 +1,21 @@
+{
+  final ConfirmDialog confirm=new ConfirmDialog(Lang.get("confirm"),Lang.get("delete-account"),Lang.get("are-you-sure-you-want-to-delete-this-account"));
+  confirm.addConfirmButtonListener(new ClickListener(){
+    public void buttonClick(    ClickEvent event){
+      try {
+        confirm.closeDialog();
+        AccountLocalServiceUtil.deleteAccount(account);
+        controller.showInfo(Lang.get("account-has-been-deleted"));
+      }
+ catch (      SystemException e) {
+        controller.showError(Lang.get("unable-to-delete-account"),e);
+      }
+catch (      PortalException e) {
+        controller.showError(Lang.get("unable-to-delete-account"),e);
+      }
+      updateAccountList();
+    }
+  }
+);
+  controller.getApplication().getMainWindow().addWindow(confirm);
+}

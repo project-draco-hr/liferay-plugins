@@ -1,0 +1,24 @@
+{
+  Controller controller=Controller.get();
+  try {
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(controller.getUser().getUserId(),accountId,controller.getPasswordRetriever().getPassword(accountId));
+    mailbox.addFolder(displayName);
+    controller.showInfo(Lang.get("folder-has-been-created"));
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.FOLDER_ALREADY_EXISTS) {
+      controller.showError(Lang.get("a-folder-with-the-same-name-already-exists"));
+      return;
+    }
+    _log.error(me,me);
+    controller.showError(Lang.get("unable-to-create-folder"));
+  }
+catch (  PortalException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-create-folder"));
+  }
+catch (  SystemException e) {
+    _log.error(e,e);
+    controller.showError(Lang.get("unable-to-create-folder"));
+  }
+}

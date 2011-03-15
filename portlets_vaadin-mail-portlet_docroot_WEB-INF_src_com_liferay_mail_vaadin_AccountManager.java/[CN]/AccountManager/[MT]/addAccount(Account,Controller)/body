@@ -1,0 +1,21 @@
+{
+  try {
+    PasswordRetriever passwordRetriever=controller.getPasswordRetriever();
+    User user=controller.getUser();
+    Mailbox mailbox=MailboxFactoryUtil.getMailbox(user.getUserId(),account.getProtocol());
+    Account createdAccount=mailbox.addAccount(account.getAddress(),account.getPersonalName(),account.getProtocol(),account.getIncomingHostName(),account.getIncomingPort(),account.isIncomingSecure(),account.getOutgoingHostName(),account.getOutgoingPort(),account.isOutgoingSecure(),account.getLogin(),account.getPasswordDecrypted(),account.isSavePassword(),account.getSignature(),account.isUseSignature(),account.getFolderPrefix(),account.getDefaultSender());
+    if (!account.isSavePassword()) {
+      passwordRetriever.setPassword(createdAccount.getAccountId(),account.getPasswordDecrypted());
+    }
+    mailbox=MailboxFactoryUtil.getMailbox(user.getUserId(),createdAccount.getAccountId(),passwordRetriever.getPassword(createdAccount.getAccountId()));
+    mailbox.synchronize();
+    return null;
+  }
+ catch (  MailException me) {
+    if (me.getType() == MailException.ACCOUNT_ALREADY_EXISTS) {
+      return "an-account-with-the-same-address-already-exists";
+    }
+    _log.error(me,me);
+    return "unable-to-add-account";
+  }
+}

@@ -1,0 +1,28 @@
+{
+  if (account == null) {
+    account=new AccountImpl();
+    account.setNew(true);
+    account.setProtocol("imap");
+    account.setSignature("");
+    account.setUseSignature(false);
+    account.setFolderPrefix("");
+    account.setDefaultSender(false);
+  }
+  account.setAddress((String)addressField.getValue());
+  if (useLocalPartOfEmailAddressAsLogin) {
+    account.setLogin(account.getAddress().split("@")[0]);
+  }
+ else {
+    account.setLogin((String)loginField.getValue());
+  }
+  account.setPersonalName((String)personalNameField.getValue());
+  account.setPasswordDecrypted((String)passwordField.getValue());
+  account.setSavePassword((Boolean)passwordSavedCheckBox.getValue());
+  account.setIncomingHostName((String)mailInHostNameField.getValue());
+  account.setIncomingPort((Integer)mailInPortCombo.getValue());
+  account.setIncomingSecure((Boolean)mailInSecureCheckBox.getValue());
+  account.setOutgoingHostName((String)mailOutHostNameField.getValue());
+  account.setOutgoingPort((Integer)mailOutPortCombo.getValue());
+  account.setOutgoingSecure((Boolean)mailOutSecureCheckBox.getValue());
+  return account;
+}

@@ -1,0 +1,16 @@
+{
+  boolean drafts=false;
+  if (accountId != null && folder != null) {
+    try {
+      Account account=AccountLocalServiceUtil.getAccount(accountId);
+      drafts=(account.getDraftFolderId() == folder.getFolderId());
+    }
+ catch (    SystemException e) {
+      _log.warn("Could not get draft folder",e);
+    }
+catch (    PortalException e) {
+      _log.warn("Could not get draft folder",e);
+    }
+  }
+  return drafts;
+}

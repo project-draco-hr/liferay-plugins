@@ -1,0 +1,29 @@
+{
+  Container.Indexed container=(Container.Indexed)getContainerDataSource();
+  HashSet<Object> range=new HashSet<Object>();
+  int idx=container.indexOfId(startMessage);
+  int end=container.indexOfId(endMessage);
+  if (idx > end) {
+    int t=idx;
+    idx=end;
+    end=t;
+    range.add(endMessage);
+  }
+ else {
+    range.add(startMessage);
+  }
+  while (idx < end) {
+    Object id=container.getIdByIndex(++idx);
+    range.add(id);
+  }
+  Set<Message> selected=(Set<Message>)getValue();
+  if (selected != null && selected.containsAll(range)) {
+    HashSet<Message> newSelection=new HashSet<Message>();
+    newSelection.addAll(selected);
+    newSelection.removeAll(range);
+    setValue(newSelection);
+  }
+ else {
+    setValue(range);
+  }
+}

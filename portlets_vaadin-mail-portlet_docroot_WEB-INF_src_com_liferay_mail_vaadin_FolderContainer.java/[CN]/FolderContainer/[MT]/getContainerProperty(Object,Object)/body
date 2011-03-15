@@ -1,0 +1,38 @@
+{
+  ItemId id=(ItemId)itemId;
+  if (CAPTION.equals(propertyId)) {
+    if (id.isAccount()) {
+      return new MethodProperty(id.getAccount(),"address");
+    }
+ else {
+      Folder f=id.getFolder();
+      if (accountIdToAccount.get(f.getAccountId()).getInboxFolderId() == f.getFolderId()) {
+        String text=id.getFolder().getDisplayName();
+        try {
+          long unread=MessageLocalServiceUtil.getFolderUnreadMessagesCount(f.getFolderId());
+          text+=" (" + unread + ")";
+        }
+ catch (        SystemException e) {
+          text+=" (?)";
+          _log.debug(e);
+        }
+        return new ObjectProperty(text);
+      }
+ else {
+        return new MethodProperty(id.getFolder(),"displayName");
+      }
+    }
+  }
+ else   if (ICON.equals(propertyId)) {
+    Resource icon=getIconForItem(id);
+    if (icon == null) {
+      return null;
+    }
+ else {
+      return new ObjectProperty(icon);
+    }
+  }
+ else {
+    return null;
+  }
+}

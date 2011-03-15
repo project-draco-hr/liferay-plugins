@@ -1,0 +1,19 @@
+{
+  message=toUnwrappedModel(message);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,message);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  MessageModelImpl messageModelImpl=(MessageModelImpl)message;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{Long.valueOf(messageModelImpl.getFolderId()),Long.valueOf(messageModelImpl.getRemoteMessageId())});
+  EntityCacheUtil.removeResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,message.getPrimaryKey());
+  return message;
+}

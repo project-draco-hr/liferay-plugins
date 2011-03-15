@@ -1,0 +1,22 @@
+{
+  super("");
+  this.folderChangedListener=listener;
+  this.messageList=msgList;
+  setSizeFull();
+  setSelectable(true);
+  setNullSelectionAllowed(false);
+  setImmediate(true);
+  setMultiSelect(false);
+  if (messageList != null) {
+    setDropHandler(this);
+  }
+  addListener(new Property.ValueChangeListener(){
+    public void valueChange(    Property.ValueChangeEvent event){
+      if (folderChangedListener != null) {
+        folderChangedListener.selectedFolderChanged(((FolderContainer)getContainerDataSource()).getFolder(event.getProperty().getValue()));
+      }
+    }
+  }
+);
+  addActionHandler(this);
+}

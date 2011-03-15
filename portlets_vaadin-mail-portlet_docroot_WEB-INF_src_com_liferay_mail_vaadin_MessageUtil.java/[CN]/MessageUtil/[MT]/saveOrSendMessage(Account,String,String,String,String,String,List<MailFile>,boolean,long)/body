@@ -1,0 +1,17 @@
+{
+  long accountId=account.getAccountId();
+  if (!isAccountOwner(account)) {
+    throw new MailException(Lang.get("unable-to-access-account"));
+  }
+  if (sendMessage) {
+    if ((to == null || "".equals(to.trim())) && (cc == null || "".equals(cc.trim())) && (bcc == null || "".equals(bcc.trim()))) {
+      throw new MailException(MailException.MESSAGE_HAS_NO_RECIPIENTS);
+    }
+  }
+  Mailbox mailbox=getMailbox(accountId);
+  Message message=mailbox.saveDraft(accountId,draftMessageId,to,cc,bcc,subject,body,attachments);
+  if (sendMessage) {
+    mailbox.sendMessage(accountId,message.getMessageId());
+  }
+  return message;
+}
