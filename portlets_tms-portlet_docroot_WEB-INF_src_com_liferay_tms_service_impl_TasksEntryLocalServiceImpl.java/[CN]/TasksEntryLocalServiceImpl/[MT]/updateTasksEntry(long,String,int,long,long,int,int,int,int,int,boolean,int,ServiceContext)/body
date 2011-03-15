@@ -1,0 +1,34 @@
+{
+  Date now=new Date();
+  TasksEntry tasksEntry=tasksEntryPersistence.findByPrimaryKey(tasksEntryId);
+  User user=UserLocalServiceUtil.getUserById(tasksEntry.getUserId());
+  Date dueDate=null;
+  if (!neverDue) {
+    dueDate=PortalUtil.getDate(dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,user.getTimeZone(),new TasksEntryDueDateException());
+  }
+  tasksEntry.setModifiedDate(now);
+  tasksEntry.setTitle(title);
+  tasksEntry.setPriority(priority);
+  tasksEntry.setAssigneeUserId(assigneeUserId);
+  tasksEntry.setDueDate(dueDate);
+  if (status == TasksConstants.STATUS_RESOLVED) {
+    tasksEntry.setResolverUserId(resolverUserId);
+    tasksEntry.setFinishDate(now);
+  }
+ else {
+    tasksEntry.setResolverUserId(0);
+    tasksEntry.setFinishDate(null);
+  }
+  tasksEntry.setStatus(status);
+  tasksEntryPersistence.update(tasksEntry,false);
+  int activity=TasksActivityKeys.UPDATE_TASK;
+  if (status == TasksConstants.STATUS_RESOLVED) {
+    activity=TasksActivityKeys.RESOLVE_TASK;
+  }
+ else   if (status == TasksConstants.STATUS_REOPENED) {
+    activity=TasksActivityKeys.REOPEN_TASK;
+  }
+  SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,StringPool.BLANK,assigneeUserId);
+  updateAsset(tasksEntry.getUserId(),tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
+  return tasksEntry;
+}

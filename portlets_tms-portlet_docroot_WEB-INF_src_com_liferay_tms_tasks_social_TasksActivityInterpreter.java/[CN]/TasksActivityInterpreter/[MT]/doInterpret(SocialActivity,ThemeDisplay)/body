@@ -1,0 +1,33 @@
+{
+  TasksEntry tasksEntry=TasksEntryLocalServiceUtil.getTasksEntry(activity.getClassPK());
+  long userId=activity.getUserId();
+  long receiverUserId=activity.getReceiverUserId();
+  int activityType=activity.getType();
+  String link=StringPool.BLANK;
+  String titlePattern=null;
+  if (activityType == TasksActivityKeys.ADD_TASK) {
+    titlePattern="activity-tasks-add-entry";
+  }
+ else   if (activityType == TasksActivityKeys.REOPEN_TASK) {
+    titlePattern="activity-tasks-reopened-entry";
+  }
+ else   if (activityType == TasksActivityKeys.RESOLVE_TASK) {
+    titlePattern="activity-tasks-resolved-entry";
+    userId=tasksEntry.getResolverUserId();
+    receiverUserId=tasksEntry.getUserId();
+  }
+ else   if (activityType == TasksActivityKeys.UPDATE_TASK) {
+    titlePattern="activity-tasks-update-entry";
+  }
+  if ((userId != receiverUserId) && (receiverUserId != 0)) {
+    titlePattern+="-for";
+  }
+  String creatorUserName=getUserName(userId,themeDisplay);
+  String receiverUserName=getUserName(receiverUserId,themeDisplay);
+  Object[] titleArguments=new Object[]{creatorUserName,receiverUserName};
+  String title=themeDisplay.translate(titlePattern,titleArguments);
+  StringBuilder sb=new StringBuilder();
+  sb.append(cleanContent(tasksEntry.getTitle()));
+  String body=sb.toString();
+  return new SocialActivityFeedEntry(link,title,body);
+}

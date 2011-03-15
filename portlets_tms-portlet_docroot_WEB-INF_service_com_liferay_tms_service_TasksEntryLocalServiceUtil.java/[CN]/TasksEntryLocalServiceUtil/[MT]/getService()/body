@@ -1,0 +1,12 @@
+{
+  if (_service == null) {
+    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),TasksEntryLocalService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,TasksEntryLocalService.class.getName(),portletClassLoader);
+    _service=new TasksEntryLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+    ReferenceRegistry.registerReference(TasksEntryLocalServiceUtil.class,"_service");
+    MethodCache.remove(TasksEntryLocalService.class);
+  }
+  return _service;
+}

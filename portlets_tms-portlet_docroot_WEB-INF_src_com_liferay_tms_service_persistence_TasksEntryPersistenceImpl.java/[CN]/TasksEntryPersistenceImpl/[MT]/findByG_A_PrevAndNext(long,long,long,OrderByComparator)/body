@@ -1,0 +1,18 @@
+{
+  TasksEntry tasksEntry=findByPrimaryKey(tasksEntryId);
+  Session session=null;
+  try {
+    session=openSession();
+    TasksEntry[] array=new TasksEntryImpl[3];
+    array[0]=getByG_A_PrevAndNext(session,tasksEntry,groupId,assigneeUserId,orderByComparator,true);
+    array[1]=tasksEntry;
+    array[2]=getByG_A_PrevAndNext(session,tasksEntry,groupId,assigneeUserId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    TasksEntry tasksEntry=(TasksEntry)session.get(TasksEntryImpl.class,Long.valueOf(tasksEntryId));
+    if (tasksEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + tasksEntryId);
+      }
+      throw new NoSuchTasksEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + tasksEntryId);
+    }
+    return tasksEntryPersistence.remove(tasksEntry);
+  }
+ catch (  NoSuchTasksEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

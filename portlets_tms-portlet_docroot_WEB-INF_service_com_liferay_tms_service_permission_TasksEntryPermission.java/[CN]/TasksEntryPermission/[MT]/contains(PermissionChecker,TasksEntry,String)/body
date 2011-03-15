@@ -1,0 +1,9 @@
+{
+  if (permissionChecker.getUserId() == tasksEntry.getAssigneeUserId()) {
+    return true;
+  }
+  if (permissionChecker.hasOwnerPermission(tasksEntry.getCompanyId(),TasksEntry.class.getName(),tasksEntry.getTasksEntryId(),tasksEntry.getUserId(),actionId)) {
+    return true;
+  }
+  return permissionChecker.hasPermission(tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntry.getTasksEntryId(),actionId);
+}

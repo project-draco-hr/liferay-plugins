@@ -1,0 +1,16 @@
+{
+  Date now=new Date();
+  TasksEntry tasksEntry=tasksEntryPersistence.findByPrimaryKey(tasksEntryId);
+  tasksEntry.setModifiedDate(now);
+  if (status == TasksConstants.STATUS_RESOLVED) {
+    tasksEntry.setResolverUserId(resolverUserId);
+    tasksEntry.setFinishDate(now);
+  }
+ else {
+    tasksEntry.setResolverUserId(0);
+    tasksEntry.setFinishDate(null);
+  }
+  tasksEntry.setStatus(status);
+  tasksEntryPersistence.update(tasksEntry,false);
+  return tasksEntry;
+}

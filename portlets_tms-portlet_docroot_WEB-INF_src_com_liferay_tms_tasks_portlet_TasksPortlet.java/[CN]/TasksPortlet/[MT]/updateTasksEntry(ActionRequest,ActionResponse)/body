@@ -1,0 +1,32 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long tasksEntryId=ParamUtil.getLong(actionRequest,"tasksEntryId");
+  String title=ParamUtil.getString(actionRequest,"title");
+  int priority=ParamUtil.getInteger(actionRequest,"priority");
+  long assigneeUserId=ParamUtil.getLong(actionRequest,"assigneeUserId");
+  long resolverUserId=ParamUtil.getLong(actionRequest,"resolverUserId");
+  int dueDateMonth=ParamUtil.getInteger(actionRequest,"dueDateMonth");
+  int dueDateDay=ParamUtil.getInteger(actionRequest,"dueDateDay");
+  int dueDateYear=ParamUtil.getInteger(actionRequest,"dueDateYear");
+  int dueDateHour=ParamUtil.getInteger(actionRequest,"dueDateHour");
+  int dueDateMinute=ParamUtil.getInteger(actionRequest,"dueDateMinute");
+  int dueDateAmPm=ParamUtil.getInteger(actionRequest,"dueDateAmPm");
+  boolean neverDue=ParamUtil.getBoolean(actionRequest,"neverDue");
+  if (dueDateAmPm == Calendar.PM) {
+    dueDateHour+=12;
+  }
+  int status=ParamUtil.getInteger(actionRequest,"status");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(TasksEntry.class.getName(),actionRequest);
+  TasksEntry taskEntry=null;
+  if (tasksEntryId <= 0) {
+    taskEntry=TasksEntryServiceUtil.addTasksEntry(title,priority,assigneeUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,serviceContext);
+  }
+ else {
+    taskEntry=TasksEntryServiceUtil.updateTasksEntry(tasksEntryId,title,priority,assigneeUserId,resolverUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,status,serviceContext);
+  }
+  PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(actionRequest),"1_WAR_tmsportlet",themeDisplay.getLayout().getPlid(),PortletRequest.RENDER_PHASE);
+  portletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+  portletURL.setParameter("jspPage","/tasks/view_task.jsp");
+  portletURL.setParameter("tasksEntryId",String.valueOf(taskEntry.getTasksEntryId()));
+  actionResponse.sendRedirect(portletURL.toString());
+}

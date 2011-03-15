@@ -1,0 +1,21 @@
+{
+  if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+    return findByG_R_PrevAndNext(tasksEntryId,groupId,resolverUserId,orderByComparator);
+  }
+  TasksEntry tasksEntry=findByPrimaryKey(tasksEntryId);
+  Session session=null;
+  try {
+    session=openSession();
+    TasksEntry[] array=new TasksEntryImpl[3];
+    array[0]=filterGetByG_R_PrevAndNext(session,tasksEntry,groupId,resolverUserId,orderByComparator,true);
+    array[1]=tasksEntry;
+    array[2]=filterGetByG_R_PrevAndNext(session,tasksEntry,groupId,resolverUserId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
