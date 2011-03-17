@@ -2,19 +2,15 @@
   Session session=null;
   try {
     session=openSession();
-    StringBundler sb=new StringBundler(3);
-    sb.append(CustomSQLUtil.get(COUNT_BY_U_VU));
-    sb.append(" GROUP BY");
-    sb.append(" MicroblogsEntry.microblogsEntryId");
-    String sql=sb.toString();
+    String sql=CustomSQLUtil.get(COUNT_BY_U_MU);
     sql=StringUtil.replace(sql,"[$JOIN_BY_SOCIAL_RELATION$]",_joinBySocialRelationSQL);
     SQLQuery q=session.createSQLQuery(sql);
     q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
-    qPos.add(viewUserId);
+    qPos.add(microblogsEntryUserId);
     qPos.add(userId);
-    qPos.add(viewUserId);
+    qPos.add(microblogsEntryUserId);
     Iterator<Long> itr=q.list().iterator();
     if (itr.hasNext()) {
       Long count=itr.next();
