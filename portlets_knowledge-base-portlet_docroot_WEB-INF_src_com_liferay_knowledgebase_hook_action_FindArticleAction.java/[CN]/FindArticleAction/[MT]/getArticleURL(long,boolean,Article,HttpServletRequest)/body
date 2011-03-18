@@ -6,16 +6,28 @@
     layouts.remove(selLayout);
     layouts.add(0,selLayout);
   }
-  String[] rootPortletIds=PortletKeys.KNOWLEDGE_BASE_PORTLETS;
   for (  Layout layout : layouts) {
     LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
     List<Portlet> portlets=layoutTypePortlet.getAllPortlets();
     for (    Portlet portlet : portlets) {
       String rootPortletId=PortletConstants.getRootPortletId(portlet.getPortletId());
-      if (!ArrayUtil.contains(rootPortletIds,rootPortletId)) {
+      if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+        return getArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+      }
+      if (!rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_ARTICLE)) {
         continue;
       }
-      if (PortletPreferencesHelper.hasArticle(layout.getPlid(),portlet.getPortletId(),article.getResourcePrimKey())) {
+      PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
+      long resourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
+      Article selArticle=null;
+      try {
+        selArticle=ArticleLocalServiceUtil.getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+      }
+ catch (      NoSuchArticleException nsae) {
+        continue;
+      }
+      long rootResourcePrimKey=selArticle.getRootResourcePrimKey();
+      if (article.getRootResourcePrimKey() == rootResourcePrimKey) {
         return getArticleURL(layout.getPlid(),portlet.getPortletId(),request);
       }
     }
