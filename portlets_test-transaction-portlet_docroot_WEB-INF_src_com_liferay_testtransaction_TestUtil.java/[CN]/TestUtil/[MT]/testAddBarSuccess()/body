@@ -1,0 +1,16 @@
+{
+  String text="testBar";
+  try {
+    Bar bar=BarLocalServiceUtil.addBarSuccess(text);
+    bar=BarLocalServiceUtil.getBar(bar.getBarId());
+    if (!text.equals(bar.getText())) {
+      throw new Exception("Bar text does not match, expected : " + text + ", got : "+ bar.getText());
+    }
+    BarLocalServiceUtil.cleanUp(bar);
+    return "Passed";
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+    return "Failed";
+  }
+}

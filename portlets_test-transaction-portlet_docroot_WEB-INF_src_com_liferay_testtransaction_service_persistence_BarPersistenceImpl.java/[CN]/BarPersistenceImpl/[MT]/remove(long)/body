@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    Bar bar=(Bar)session.get(BarImpl.class,Long.valueOf(barId));
+    if (bar == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + barId);
+      }
+      throw new NoSuchBarException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + barId);
+    }
+    return barPersistence.remove(bar);
+  }
+ catch (  NoSuchBarException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,56 @@
+{
+  Object[] finderArgs=new Object[]{text,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
+  List<Bar> list=(List<Bar>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_TEXT,finderArgs,this);
+  if (list == null) {
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(3 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(3);
+    }
+    query.append(_SQL_SELECT_BAR_WHERE);
+    if (text == null) {
+      query.append(_FINDER_COLUMN_TEXT_TEXT_1);
+    }
+ else {
+      if (text.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_TEXT_TEXT_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_TEXT_TEXT_2);
+      }
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else {
+      query.append(BarModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (text != null) {
+        qPos.add(text);
+      }
+      list=(List<Bar>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_TEXT,finderArgs);
+      }
+ else {
+        cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_TEXT,finderArgs,list);
+      }
+      closeSession(session);
+    }
+  }
+  return list;
+}
