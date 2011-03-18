@@ -1,0 +1,8 @@
+{
+  long companyId=ParamUtil.getLong(resourceRequest,"companyId");
+  String fileName=ParamUtil.getString(resourceRequest,"fileName");
+  String shortFileName=FileUtil.getShortFileName(fileName);
+  InputStream is=DLLocalServiceUtil.getFileAsStream(companyId,CompanyConstants.SYSTEM,fileName);
+  String contentType=MimeTypesUtil.getContentType(fileName);
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,shortFileName,is,contentType);
+}
