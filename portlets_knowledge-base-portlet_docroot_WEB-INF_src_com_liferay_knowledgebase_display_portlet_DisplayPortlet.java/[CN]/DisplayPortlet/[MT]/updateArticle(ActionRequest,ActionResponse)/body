@@ -1,0 +1,33 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
+  long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
+  String title=ParamUtil.getString(actionRequest,"title");
+  String content=ParamUtil.getString(actionRequest,"content");
+  String description=ParamUtil.getString(actionRequest,"description");
+  String dirName=ParamUtil.getString(actionRequest,"dirName");
+  int workflowAction=ParamUtil.getInteger(actionRequest,"workflowAction",WorkflowConstants.ACTION_PUBLISH);
+  Article article=null;
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(Article.class.getName(),actionRequest);
+  if (cmd.equals(Constants.ADD)) {
+    article=ArticleServiceUtil.addArticle(parentResourcePrimKey,title,content,description,dirName,serviceContext);
+  }
+ else   if (cmd.equals(Constants.UPDATE)) {
+    article=ArticleServiceUtil.updateArticle(resourcePrimKey,title,content,description,dirName,serviceContext);
+  }
+  if (!cmd.equals(Constants.ADD) && !cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  if (workflowAction == WorkflowConstants.ACTION_SAVE_DRAFT) {
+    String namespace=actionResponse.getNamespace();
+    String redirect=getRedirect(actionRequest,actionResponse);
+    String editURL=PortalUtil.getLayoutFullURL(themeDisplay);
+    editURL=HttpUtil.setParameter(editURL,"p_p_id",PortletKeys.KNOWLEDGE_BASE_DISPLAY);
+    editURL=HttpUtil.setParameter(editURL,namespace + "jspPage",jspPath + "edit_article.jsp");
+    editURL=HttpUtil.setParameter(editURL,namespace + "redirect",redirect);
+    editURL=HttpUtil.setParameter(editURL,namespace + "resourcePrimKey",article.getResourcePrimKey());
+    editURL=HttpUtil.setParameter(editURL,namespace + "status",WorkflowConstants.STATUS_ANY);
+    actionRequest.setAttribute(WebKeys.REDIRECT,editURL);
+  }
+}

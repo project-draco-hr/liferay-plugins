@@ -1,14 +1,26 @@
 {
   try {
+    Integer status=WorkflowConstants.STATUS_APPROVED;
+    String s=ParamUtil.getString(renderRequest,"status");
+    if (Validator.isNotNull(s)) {
+      status=GetterUtil.getInteger(s);
+    }
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
     Article article=null;
     long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
     if (resourcePrimKey > 0) {
-      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,_STATUS);
+      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,status.intValue());
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
+    Template template=null;
+    long templateId=ParamUtil.getLong(renderRequest,"templateId");
+    if (templateId > 0) {
+      template=TemplateServiceUtil.getTemplate(templateId);
+    }
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_TEMPLATE,template);
   }
  catch (  Exception e) {
-    if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
+    if (e instanceof NoSuchArticleException || e instanceof NoSuchTemplateException || e instanceof PrincipalException) {
       SessionErrors.add(renderRequest,e.getClass().getName());
     }
  else {
