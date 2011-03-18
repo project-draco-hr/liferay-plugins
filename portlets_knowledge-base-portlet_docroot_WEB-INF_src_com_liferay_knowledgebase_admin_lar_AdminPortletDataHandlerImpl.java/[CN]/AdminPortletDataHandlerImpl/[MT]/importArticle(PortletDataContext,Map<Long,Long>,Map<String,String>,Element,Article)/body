@@ -25,8 +25,9 @@
       importedArticle=importArticleVersions(portletDataContext,article.getUuid(),parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,articleElement);
     }
  else {
-      importedArticle=ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getTitle(),article.getContent(),article.getDescription(),dirName,serviceContext);
-      importedArticle=ArticleLocalServiceUtil.moveArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getPriority());
+      ArticleLocalServiceUtil.updateArticle(userId,existingArticle.getResourcePrimKey(),article.getTitle(),article.getContent(),article.getDescription(),dirName,serviceContext);
+      ArticleLocalServiceUtil.moveArticle(userId,existingArticle.getResourcePrimKey(),parentResourcePrimKey,article.getPriority());
+      importedArticle=ArticleLocalServiceUtil.getLatestArticle(existingArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     }
   }
  else {

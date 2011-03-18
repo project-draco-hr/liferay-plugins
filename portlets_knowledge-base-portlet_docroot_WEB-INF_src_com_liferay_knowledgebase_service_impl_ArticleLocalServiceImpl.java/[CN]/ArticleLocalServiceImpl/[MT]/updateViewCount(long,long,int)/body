@@ -1,0 +1,11 @@
+{
+  Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  article.setViewCount(viewCount);
+  articlePersistence.update(article,false);
+  if (!article.isApproved() && !article.isFirstVersion()) {
+    article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+    article.setViewCount(viewCount);
+    articlePersistence.update(article,false);
+  }
+  assetEntryLocalService.incrementViewCounter(userId,Article.class.getName(),article.getClassPK());
+}

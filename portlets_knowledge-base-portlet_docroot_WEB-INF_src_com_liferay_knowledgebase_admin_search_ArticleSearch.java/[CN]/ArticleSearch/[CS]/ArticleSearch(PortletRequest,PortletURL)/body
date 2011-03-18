@@ -1,5 +1,5 @@
 {
-  super(portletRequest,new ArticleDisplayTerms(portletRequest),new ArticleSearchTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,headerNames,EMPTY_RESULTS_MESSAGE);
+  super(portletRequest,new ArticleDisplayTerms(portletRequest),new ArticleSearchTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,null,EMPTY_RESULTS_MESSAGE);
   ArticleDisplayTerms displayTerms=(ArticleDisplayTerms)getDisplayTerms();
   iteratorURL.setParameter(ArticleDisplayTerms.ANYTIME,String.valueOf(displayTerms.isAnytime()));
   iteratorURL.setParameter(ArticleDisplayTerms.CONTENT,displayTerms.getContent());
@@ -13,8 +13,11 @@
   iteratorURL.setParameter(ArticleDisplayTerms.TITLE,displayTerms.getTitle());
   try {
     PortalPreferences preferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
-    String oldOrderByCol=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col","modified-date");
-    String oldOrderByType=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type","desc");
+    PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(portletRequest);
+    String portletOrderByCol=portletPreferences.getValue("articlesOrderByCol",StringPool.BLANK);
+    String portletOrderByType=portletPreferences.getValue("articlesOrderByType",StringPool.BLANK);
+    String oldOrderByCol=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-col",portletOrderByCol);
+    String oldOrderByType=preferences.getValue(PortletKeys.KNOWLEDGE_BASE_ADMIN,"articles-order-by-type",portletOrderByType);
     String orderByCol=ParamUtil.getString(portletRequest,"orderByCol",oldOrderByCol);
     String orderByType=ParamUtil.getString(portletRequest,"orderByType",oldOrderByType);
     if (!Validator.equals(orderByCol,oldOrderByCol) || !Validator.equals(orderByType,oldOrderByType)) {
@@ -23,30 +26,7 @@
       ArticleSearchTerms searchTerms=(ArticleSearchTerms)getSearchTerms();
       searchTerms.setCurStartValues(new int[0]);
     }
-    boolean orderByAsc=false;
-    if (orderByType.equals("asc")) {
-      orderByAsc=true;
-    }
-    OrderByComparator orderByComparator=null;
-    if (orderByCol.equals("create-date")) {
-      orderByComparator=new ArticleCreateDateComparator(orderByAsc);
-    }
- else     if (orderByCol.equals("modified-date")) {
-      orderByComparator=new ArticleModifiedDateComparator(orderByAsc);
-    }
- else     if (orderByCol.equals("priority")) {
-      orderByComparator=new ArticlePriorityComparator(orderByAsc);
-    }
- else     if (orderByCol.equals("status")) {
-      orderByComparator=new ArticleStatusComparator(orderByAsc);
-    }
- else     if (orderByCol.equals("title")) {
-      orderByComparator=new ArticleTitleComparator(orderByAsc);
-    }
- else     if (orderByCol.equals("user-name")) {
-      orderByComparator=new ArticleUserNameComparator(orderByAsc);
-    }
-    setOrderableHeaders(orderableHeaders);
+    OrderByComparator orderByComparator=KnowledgeBaseUtil.getArticleOrderByComparator(orderByCol,orderByType);
     setOrderByCol(orderByCol);
     setOrderByType(orderByType);
     setOrderByComparator(orderByComparator);

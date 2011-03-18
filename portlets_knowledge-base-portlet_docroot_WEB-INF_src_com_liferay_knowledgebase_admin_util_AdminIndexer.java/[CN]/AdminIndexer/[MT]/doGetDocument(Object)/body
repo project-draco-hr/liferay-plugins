@@ -10,13 +10,15 @@
   String title=article.getTitle();
   String content=HtmlUtil.extractText(article.getContent());
   String description=article.getDescription();
+  Date createDate=article.getCreateDate();
   Date modifiedDate=article.getModifiedDate();
   long[] assetCategoryIds=AssetCategoryLocalServiceUtil.getCategoryIds(Article.class.getName(),resourcePrimKey);
   String[] assetCategoryNames=AssetCategoryLocalServiceUtil.getCategoryNames(Article.class.getName(),resourcePrimKey);
   String[] assetTagNames=AssetTagLocalServiceUtil.getTagNames(Article.class.getName(),resourcePrimKey);
   Document document=new DocumentImpl();
   document.addUID(PORTLET_ID,resourcePrimKey);
-  document.addModifiedDate(modifiedDate);
+  document.addDate("create",createDate);
+  document.addDate(Field.MODIFIED,modifiedDate);
   document.addKeyword(Field.COMPANY_ID,companyId);
   document.addKeyword(Field.PORTLET_ID,PORTLET_ID);
   document.addKeyword(Field.GROUP_ID,groupId);
@@ -32,5 +34,7 @@
   document.addKeyword(Field.ENTRY_CLASS_NAME,Article.class.getName());
   document.addKeyword(Field.ENTRY_CLASS_PK,resourcePrimKey);
   document.addKeyword(Field.ROOT_ENTRY_CLASS_PK,rootResourcePrimKey);
+  document.addKeyword(Field.USER_NAME + "Keyword",userName,true);
+  document.addKeyword(Field.TITLE + "Keyword",title,true);
   return document;
 }

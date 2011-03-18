@@ -1,11 +1,5 @@
 {
-  Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),PortletKeys.KNOWLEDGE_BASE_ADMIN);
-  ControlPanelEntry controlPanelEntry=portlet.getControlPanelEntryInstance();
-  if (controlPanelEntry == null) {
-    controlPanelEntry=(ControlPanelEntry)PortalClassInvoker.invoke(false,"com.liferay.portlet.DefaultControlPanelEntryFactory","getInstance",new String[0]);
-  }
-  String controlPanelEntryCategory=portlet.getControlPanelEntryCategory();
-  if (!controlPanelEntry.isVisible(portlet,controlPanelEntryCategory,themeDisplay)) {
+  if (!AdminUtil.isVisible(themeDisplay)) {
     return StringPool.BLANK;
   }
   Map<String,String[]> params=new HashMap<String,String[]>();

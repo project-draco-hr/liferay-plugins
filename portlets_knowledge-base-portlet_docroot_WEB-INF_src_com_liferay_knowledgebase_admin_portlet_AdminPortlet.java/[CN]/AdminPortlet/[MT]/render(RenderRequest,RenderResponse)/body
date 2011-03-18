@@ -1,9 +1,11 @@
 {
   try {
+    Integer status=WorkflowConstants.STATUS_ANY;
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
     Article article=null;
     long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
     if (resourcePrimKey > 0) {
-      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,_STATUS);
+      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,status.intValue());
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
     Template template=null;
