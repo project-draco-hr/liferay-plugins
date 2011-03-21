@@ -9,7 +9,8 @@
   mediaItem.setNumViews(String.valueOf(fileEntry.getReadCount()));
   mediaItem.setTitle(fileEntry.getTitle());
   mediaItem.setType(toMediaItemType(fileEntry.getExtension()));
-  mediaItem.setUrl(getFileEntryURL(fileEntry,securityToken));
+  String fileEntryURL=ShindigUtil.getFileEntryURL(securityToken.getDomain(),fileEntry.getFileEntryId());
+  mediaItem.setUrl(fileEntryURL);
   FileVersion fileVersion=fileEntry.getLatestFileVersion();
   SerializerUtil.copyProperties(fileVersion.getAttributes(),mediaItem,_MEDIA_ITEM_FIELDS);
   return mediaItem;

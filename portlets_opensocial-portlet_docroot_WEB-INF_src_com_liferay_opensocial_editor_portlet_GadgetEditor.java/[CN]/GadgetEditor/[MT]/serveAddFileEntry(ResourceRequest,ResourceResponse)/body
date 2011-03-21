@@ -1,0 +1,22 @@
+{
+  long folderId=ParamUtil.getLong(resourceRequest,"folderId");
+  Folder folder=DLAppServiceUtil.getFolder(folderId);
+  long repositoryId=folder.getRepositoryId();
+  String fileEntryTitle=ParamUtil.getString(resourceRequest,"fileEntryTitle");
+  String content=ParamUtil.getString(resourceRequest,"content");
+  byte[] bytes=content.getBytes(StringPool.UTF8);
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  String extension=FileUtil.getExtension(fileEntryTitle);
+  serviceContext.setAttribute("extension",extension);
+  serviceContext.setAttribute("sourceFileName",fileEntryTitle);
+  serviceContext.setScopeGroupId(folder.getGroupId());
+  FileEntry fileEntry=DLAppServiceUtil.addFileEntry(repositoryId,folderId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,bytes,serviceContext);
+  long fileEntryId=fileEntry.getFileEntryId();
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("fileEntryId",String.valueOf(fileEntryId));
+  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
+  String contentType=ContentTypes.TEXT_JAVASCRIPT;
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+}

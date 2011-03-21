@@ -1,0 +1,23 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String content=ParamUtil.getString(resourceRequest,"content");
+  boolean isContentValid=ShindigUtil.isContentValid(content);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("isContentValid",isContentValid);
+  if (isContentValid) {
+    String url="http://localhost/raw.xml";
+    long moduleId=ShindigUtil.getModuleId(resourceResponse.getNamespace());
+    boolean requiresPubsub=ShindigUtil.isRequiresPubsubFromContent(content);
+    String ownerId=ShindigUtil.getOwnerId(themeDisplay.getLayout());
+    String currentURL=PortalUtil.getCurrentURL(resourceRequest);
+    String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),url,PortalUtil.getPortalURL(themeDisplay),url,moduleId,currentURL);
+    jsonObject.put("appId",url);
+    jsonObject.put("moduleId",moduleId);
+    jsonObject.put("requiresPubsub",requiresPubsub);
+    jsonObject.put("secureToken",secureToken);
+    jsonObject.put("specUrl",url);
+  }
+  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
+  String contentType=ContentTypes.TEXT_JAVASCRIPT;
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+}

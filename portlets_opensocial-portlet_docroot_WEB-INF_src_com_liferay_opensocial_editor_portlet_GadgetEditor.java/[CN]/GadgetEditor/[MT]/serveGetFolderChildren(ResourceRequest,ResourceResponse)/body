@@ -1,0 +1,34 @@
+{
+  long repositoryId=ParamUtil.getLong(resourceRequest,"repositoryId");
+  long folderId=ParamUtil.getLong(resourceRequest,"folderId");
+  List<Folder> folders=DLAppServiceUtil.getFolders(repositoryId,folderId);
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  if (folders.size() > 0) {
+    for (    Folder folder : folders) {
+      folders=ListUtil.sort(folders,new RepositoryModelNameComparator(true));
+      JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+      jsonObject.put("id",String.valueOf(folder.getFolderId()));
+      jsonObject.put("label",folder.getName());
+      jsonObject.put("leaf",false);
+      jsonObject.put("type","io");
+      jsonArray.put(jsonObject);
+    }
+  }
+  boolean getFileEntries=ParamUtil.getBoolean(resourceRequest,"getFileEntries");
+  if (getFileEntries) {
+    List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(repositoryId,folderId);
+    if (fileEntries.size() > 0) {
+      fileEntries=ListUtil.sort(fileEntries,new RepositoryModelNameComparator(true));
+      for (      FileEntry fileEntry : fileEntries) {
+        JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+        jsonObject.put("id",String.valueOf(fileEntry.getFileEntryId()));
+        jsonObject.put("label",fileEntry.getTitle());
+        jsonObject.put("leaf",true);
+        jsonArray.put(jsonObject);
+      }
+    }
+  }
+  InputStream is=new UnsyncByteArrayInputStream(jsonArray.toString().getBytes());
+  String contentType=ContentTypes.TEXT_JAVASCRIPT;
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+}

@@ -1,0 +1,17 @@
+{
+  long parentFolderId=ParamUtil.getLong(resourceRequest,"parentFolderId");
+  Folder parentFolder=DLAppServiceUtil.getFolder(parentFolderId);
+  long repositoryId=parentFolder.getRepositoryId();
+  String folderName=ParamUtil.getString(resourceRequest,"folderName");
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setScopeGroupId(parentFolder.getGroupId());
+  Folder folder=DLAppServiceUtil.addFolder(repositoryId,parentFolderId,folderName,StringPool.BLANK,serviceContext);
+  long folderId=folder.getFolderId();
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("folderId",folderId);
+  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
+  String contentType=ContentTypes.TEXT_JAVASCRIPT;
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+}
