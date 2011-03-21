@@ -16,11 +16,9 @@
     oldArticle.setLatest(ArticleConstants.LATEST_ARCHIVED);
     articlePersistence.update(oldArticle,false);
   }
-  if (!article.isFirstVersion()) {
-    AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
-    updateAsset(userId,article,assetEntry.getCategoryIds(),assetEntry.getTagNames());
-    assetEntryLocalService.deleteEntry(Article.class.getName(),article.getPrimaryKey());
-  }
+  AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
+  updateAsset(userId,article,assetEntry.getCategoryIds(),assetEntry.getTagNames());
+  assetEntryLocalService.deleteEntry(Article.class.getName(),article.getPrimaryKey());
   if (!article.isFirstVersion()) {
     socialActivityLocalService.addActivity(userId,article.getGroupId(),Article.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_ARTICLE,StringPool.BLANK,0);
   }
@@ -29,11 +27,10 @@
   }
   Indexer indexer=IndexerRegistryUtil.getIndexer(Article.class);
   indexer.reindex(article);
-  if (!article.isFirstVersion()) {
-    deleteAttachments(article,article.getResourcePrimKey());
-    addAttachments(article,ArticleConstants.DIR_NAME_PREFIX + article.getPrimaryKey());
-    deleteAttachments(article,article.getPrimaryKey());
-  }
+  deleteAttachments(article,article.getResourcePrimKey());
+  String dirName=ArticleConstants.DIR_NAME_PREFIX + article.getPrimaryKey();
+  addAttachments(article,dirName);
+  deleteAttachments(article,article.getPrimaryKey());
   notifySubscribers(article,serviceContext);
   return article;
 }
