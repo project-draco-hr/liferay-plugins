@@ -10,8 +10,8 @@
   Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   for (  String fileName : article.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
-    InputStream inputStream=dlLocalService.getFileAsStream(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-    addAttachment(companyId,dirName,shortFileName,inputStream);
+    byte[] bytes=dlLocalService.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    addAttachment(companyId,dirName,shortFileName,bytes);
   }
   return dirName;
 }

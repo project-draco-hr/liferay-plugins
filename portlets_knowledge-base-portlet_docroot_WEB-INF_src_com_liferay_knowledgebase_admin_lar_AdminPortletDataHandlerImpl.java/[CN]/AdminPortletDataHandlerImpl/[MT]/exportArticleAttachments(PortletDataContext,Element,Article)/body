@@ -5,10 +5,10 @@
   for (  String fileName : article.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
     String path=rootPath + StringPool.SLASH + shortFileName;
-    InputStream inputStream=DLLocalServiceUtil.getFileAsStream(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    byte[] bytes=DLLocalServiceUtil.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     Element fileElement=articleAttachmentsElement.addElement("file");
     fileElement.addAttribute("path",path);
     fileElement.addAttribute("short-file-name",shortFileName);
-    portletDataContext.addZipEntry(path,inputStream);
+    portletDataContext.addZipEntry(path,bytes);
   }
 }
