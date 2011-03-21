@@ -10,7 +10,7 @@ synchronized (ClpSerializer.class) {
       ClassLoader classLoader=ClpSerializer.class.getClassLoader();
       Class<?> portletPropsClass=classLoader.loadClass("com.liferay.util.portlet.PortletProps");
       Method getMethod=portletPropsClass.getMethod("get",new Class<?>[]{String.class});
-      String portletPropsServletContextName=(String)getMethod.invoke(null,"mail-portlet-deployment-context");
+      String portletPropsServletContextName=(String)getMethod.invoke(null,"vaadin-mail-portlet-deployment-context");
       if (Validator.isNotNull(portletPropsServletContextName)) {
         _servletContextName=portletPropsServletContextName;
       }
@@ -22,7 +22,7 @@ synchronized (ClpSerializer.class) {
     }
     if (Validator.isNull(_servletContextName)) {
       try {
-        String propsUtilServletContextName=PropsUtil.get("mail-portlet-deployment-context");
+        String propsUtilServletContextName=PropsUtil.get("vaadin-mail-portlet-deployment-context");
         if (Validator.isNotNull(propsUtilServletContextName)) {
           _servletContextName=propsUtilServletContextName;
         }
@@ -34,7 +34,7 @@ synchronized (ClpSerializer.class) {
       }
     }
     if (Validator.isNull(_servletContextName)) {
-      _servletContextName="mail-portlet";
+      _servletContextName="vaadin-mail-portlet";
     }
     return _servletContextName;
   }
