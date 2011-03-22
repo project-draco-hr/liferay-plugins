@@ -1,23 +1,22 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String content=ParamUtil.getString(resourceRequest,"content");
-  boolean isContentValid=ShindigUtil.isContentValid(content);
+  boolean contentValid=ShindigUtil.isContentValid(content);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  jsonObject.put("isContentValid",isContentValid);
-  if (isContentValid) {
-    String url="http://localhost/raw.xml";
+  jsonObject.put("contentValid",contentValid);
+  if (contentValid) {
+    String appId="http://localhost/raw.xml";
+    jsonObject.put("appId",appId);
     long moduleId=ShindigUtil.getModuleId(resourceResponse.getNamespace());
+    jsonObject.put("moduleId",moduleId);
     boolean requiresPubsub=ShindigUtil.isRequiresPubsubFromContent(content);
+    jsonObject.put("requiresPubsub",requiresPubsub);
     String ownerId=ShindigUtil.getOwnerId(themeDisplay.getLayout());
     String currentURL=PortalUtil.getCurrentURL(resourceRequest);
-    String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),url,PortalUtil.getPortalURL(themeDisplay),url,moduleId,currentURL);
-    jsonObject.put("appId",url);
-    jsonObject.put("moduleId",moduleId);
-    jsonObject.put("requiresPubsub",requiresPubsub);
+    String portalURL=PortalUtil.getPortalURL(themeDisplay);
+    String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),appId,portalURL,appId,moduleId,currentURL);
     jsonObject.put("secureToken",secureToken);
-    jsonObject.put("specUrl",url);
+    jsonObject.put("specUrl",appId);
   }
-  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
-  String contentType=ContentTypes.TEXT_JAVASCRIPT;
-  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+  writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }

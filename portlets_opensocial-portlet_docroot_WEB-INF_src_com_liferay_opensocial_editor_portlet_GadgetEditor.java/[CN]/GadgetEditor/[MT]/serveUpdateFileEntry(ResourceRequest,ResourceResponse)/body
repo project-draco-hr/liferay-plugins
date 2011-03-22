@@ -1,10 +1,10 @@
 {
   long fileEntryId=ParamUtil.getLong(resourceRequest,"fileEntryId");
-  String fileEntryTitle=ParamUtil.getString(resourceRequest,"fileEntryTitle");
   FileEntry fileEntry=DLAppServiceUtil.getFileEntry(fileEntryId);
+  String fileEntryTitle=ParamUtil.getString(resourceRequest,"fileEntryTitle");
   byte[] bytes=null;
   String content=ParamUtil.getString(resourceRequest,"content");
-  if (!content.isEmpty()) {
+  if (Validator.isNotNull(content)) {
     bytes=content.getBytes(StringPool.UTF8);
   }
   ServiceContext serviceContext=new ServiceContext();
@@ -12,7 +12,5 @@
   serviceContext.setModifiedDate(fileEntry.getModifiedDate());
   DLAppServiceUtil.updateFileEntry(fileEntryId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,false,bytes,serviceContext);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
-  String contentType=ContentTypes.TEXT_JAVASCRIPT;
-  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+  writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }

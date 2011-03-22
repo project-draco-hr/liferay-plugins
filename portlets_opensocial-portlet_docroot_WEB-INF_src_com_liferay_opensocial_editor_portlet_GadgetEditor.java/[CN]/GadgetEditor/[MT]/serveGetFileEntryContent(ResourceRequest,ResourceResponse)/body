@@ -4,7 +4,5 @@
   String content=StringUtil.read(fileEntry.getContentStream());
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   jsonObject.put("content",content);
-  InputStream is=new UnsyncByteArrayInputStream(jsonObject.toString().getBytes());
-  String contentType=ContentTypes.TEXT_JAVASCRIPT;
-  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,is,contentType);
+  writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }
