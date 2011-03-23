@@ -1,0 +1,20 @@
+{
+  CalendarBooking calendarBooking=(CalendarBooking)EntityCacheUtil.getResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBookingId,this);
+  if (calendarBooking == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      calendarBooking=(CalendarBooking)session.get(CalendarBookingImpl.class,Long.valueOf(calendarBookingId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (calendarBooking != null) {
+        cacheResult(calendarBooking);
+      }
+      closeSession(session);
+    }
+  }
+  return calendarBooking;
+}

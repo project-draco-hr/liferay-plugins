@@ -1,0 +1,30 @@
+{
+  calendarEvent=toUnwrappedModel(calendarEvent);
+  boolean isNew=calendarEvent.isNew();
+  CalendarEventModelImpl calendarEventModelImpl=(CalendarEventModelImpl)calendarEvent;
+  if (Validator.isNull(calendarEvent.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    calendarEvent.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,calendarEvent,merge);
+    calendarEvent.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(CalendarEventModelImpl.ENTITY_CACHE_ENABLED,CalendarEventImpl.class,calendarEvent.getPrimaryKey(),calendarEvent);
+  if (!isNew && (!Validator.equals(calendarEvent.getUuid(),calendarEventModelImpl.getOriginalUuid()) || (calendarEvent.getGroupId() != calendarEventModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarEventModelImpl.getOriginalUuid(),Long.valueOf(calendarEventModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(calendarEvent.getUuid(),calendarEventModelImpl.getOriginalUuid()) || (calendarEvent.getGroupId() != calendarEventModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarEvent.getUuid(),Long.valueOf(calendarEvent.getGroupId())},calendarEvent);
+  }
+  return calendarEvent;
+}
