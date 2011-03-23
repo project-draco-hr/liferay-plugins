@@ -1,0 +1,15 @@
+{
+  long classNameId=PortalUtil.getClassNameId(className);
+  CalendarResource calendarResource=calendarResourcePersistence.findByPrimaryKey(calendarResourceId);
+  calendarResource.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarResource.setClassNameId(classNameId);
+  calendarResource.setClassPK(classPK);
+  calendarResource.setNameMap(nameMap);
+  calendarResource.setDescriptionMap(descriptionMap);
+  calendarResource.setActive(active);
+  calendarResourcePersistence.update(calendarResource,false);
+  if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
+    updateCalendarResourceResources(calendarResource,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  return calendarResource;
+}

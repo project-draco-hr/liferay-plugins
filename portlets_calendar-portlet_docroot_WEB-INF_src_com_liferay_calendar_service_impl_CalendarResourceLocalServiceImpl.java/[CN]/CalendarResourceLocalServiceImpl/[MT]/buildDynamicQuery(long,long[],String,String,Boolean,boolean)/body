@@ -1,0 +1,42 @@
+{
+  Junction junction=null;
+  if (andOperator) {
+    junction=RestrictionsFactoryUtil.conjunction();
+  }
+ else {
+    junction=RestrictionsFactoryUtil.disjunction();
+  }
+  Map<String,String> terms=new HashMap<String,String>();
+  if (Validator.isNotNull(name)) {
+    terms.put("name",name);
+  }
+  if (Validator.isNotNull(description)) {
+    terms.put("description",description);
+  }
+  for (  Map.Entry<String,String> entry : terms.entrySet()) {
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    for (    String s : CalendarUtil.splitKeywords(entry.getValue())) {
+      String value=StringPool.PERCENT + s + StringPool.PERCENT;
+      disjunction.add(RestrictionsFactoryUtil.ilike(entry.getKey(),value));
+    }
+    junction.add(disjunction);
+  }
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(CalendarBooking.class,getClass().getClassLoader());
+  if (companyId > 0) {
+    Property property=PropertyFactoryUtil.forName("companyId");
+    dynamicQuery.add(property.eq(companyId));
+  }
+  if ((groupIds != null) && (groupIds.length > 0)) {
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    Property property=PropertyFactoryUtil.forName("groupId");
+    for (    long groupId : groupIds) {
+      disjunction.add(property.eq(groupId));
+    }
+    dynamicQuery.add(disjunction);
+  }
+  if (active != null) {
+    Property property=PropertyFactoryUtil.forName("active");
+    dynamicQuery.add(property.eq(active));
+  }
+  return dynamicQuery.add(junction);
+}

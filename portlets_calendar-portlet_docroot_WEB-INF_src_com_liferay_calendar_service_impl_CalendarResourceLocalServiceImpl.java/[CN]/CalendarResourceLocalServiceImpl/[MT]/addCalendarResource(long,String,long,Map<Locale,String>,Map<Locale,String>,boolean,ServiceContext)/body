@@ -1,0 +1,28 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
+  long classNameId=PortalUtil.getClassNameId(className);
+  Date now=new Date();
+  long calendarResourceId=counterLocalService.increment();
+  CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
+  calendarResource.setUuid(serviceContext.getUuid());
+  calendarResource.setGroupId(groupId);
+  calendarResource.setCompanyId(user.getCompanyId());
+  calendarResource.setUserId(user.getUserId());
+  calendarResource.setUserName(user.getFullName());
+  calendarResource.setCreateDate(serviceContext.getCreateDate(now));
+  calendarResource.setModifiedDate(serviceContext.getModifiedDate(now));
+  calendarResource.setClassNameId(classNameId);
+  calendarResource.setClassPK(classPK);
+  calendarResource.setNameMap(nameMap);
+  calendarResource.setDescriptionMap(descriptionMap);
+  calendarResource.setActive(active);
+  calendarResourcePersistence.update(calendarResource,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addCalendarResourceResources(calendarResource,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addCalendarResourceResources(calendarResource,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  return calendarResource;
+}

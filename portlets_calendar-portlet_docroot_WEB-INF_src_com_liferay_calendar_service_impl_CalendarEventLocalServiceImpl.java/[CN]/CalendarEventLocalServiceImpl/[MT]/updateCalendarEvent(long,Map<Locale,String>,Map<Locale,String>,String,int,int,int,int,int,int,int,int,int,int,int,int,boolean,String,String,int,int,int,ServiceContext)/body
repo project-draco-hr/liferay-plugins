@@ -1,0 +1,34 @@
+{
+  if (allDay) {
+    startDateHour=0;
+    startDateMinute=0;
+    endDateHour=23;
+    endDateMinute=59;
+    durationHour=23;
+    durationMinute=59;
+  }
+  validate(titleMap,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,durationHour,durationMinute,allDay);
+  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,TimeZoneUtil.getDefault(),null);
+  Date endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,TimeZoneUtil.getDefault(),null);
+  CalendarEvent calendarEvent=calendarEventPersistence.findByPrimaryKey(calendarEventId);
+  calendarEvent.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarEvent.setTitleMap(titleMap);
+  calendarEvent.setDescriptionMap(descriptionMap);
+  calendarEvent.setLocation(location);
+  calendarEvent.setStartDate(startDate);
+  calendarEvent.setEndDate(endDate);
+  calendarEvent.setDurationHour(durationHour);
+  calendarEvent.setDurationMinute(durationMinute);
+  calendarEvent.setAllDay(allDay);
+  calendarEvent.setRecurrence(recurrence);
+  calendarEvent.setType(type);
+  calendarEvent.setRemindBy(remindBy);
+  calendarEvent.setFirstReminder(firstReminder);
+  calendarEvent.setSecondReminder(secondReminder);
+  calendarEventPersistence.update(calendarEvent,false);
+  if ((serviceContext.getCommunityPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
+    updateCalendarEventResources(calendarEvent,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  calendarBookingLocalService.updateCalendarBookings(calendarEventId,serviceContext);
+  return calendarEvent;
+}

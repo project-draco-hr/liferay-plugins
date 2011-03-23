@@ -1,0 +1,46 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
+  Date now=new Date();
+  if (allDay) {
+    startDateHour=0;
+    startDateMinute=0;
+    endDateHour=23;
+    endDateMinute=59;
+    durationHour=23;
+    durationMinute=59;
+  }
+  validate(titleMap,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,durationHour,durationMinute,allDay);
+  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,TimeZoneUtil.getDefault(),null);
+  Date endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,TimeZoneUtil.getDefault(),null);
+  long calendarEventId=counterLocalService.increment();
+  CalendarEvent calendarEvent=calendarEventPersistence.create(calendarEventId);
+  calendarEvent.setUuid(serviceContext.getUuid());
+  calendarEvent.setGroupId(groupId);
+  calendarEvent.setCompanyId(user.getCompanyId());
+  calendarEvent.setUserId(user.getUserId());
+  calendarEvent.setUserName(user.getFullName());
+  calendarEvent.setCreateDate(serviceContext.getCreateDate(now));
+  calendarEvent.setModifiedDate(serviceContext.getModifiedDate(now));
+  calendarEvent.setTitleMap(titleMap);
+  calendarEvent.setDescriptionMap(descriptionMap);
+  calendarEvent.setLocation(location);
+  calendarEvent.setStartDate(startDate);
+  calendarEvent.setEndDate(endDate);
+  calendarEvent.setDurationHour(durationHour);
+  calendarEvent.setDurationMinute(durationMinute);
+  calendarEvent.setAllDay(allDay);
+  calendarEvent.setRecurrence(recurrence);
+  calendarEvent.setType(type);
+  calendarEvent.setRemindBy(remindBy);
+  calendarEvent.setFirstReminder(firstReminder);
+  calendarEvent.setSecondReminder(secondReminder);
+  calendarEventPersistence.update(calendarEvent,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addCalendarEventResources(calendarEvent,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addCalendarEventResources(calendarEvent,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  return calendarEvent;
+}

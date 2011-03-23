@@ -1,0 +1,17 @@
+{
+  CalendarEvent calendarEvent=calendarEventPersistence.findByPrimaryKey(calendarEventId);
+  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarBooking.setCalendarEventId(calendarEventId);
+  calendarBooking.setTitleMap(calendarEvent.getTitleMap());
+  calendarBooking.setDescriptionMap(calendarEvent.getDescriptionMap());
+  calendarBooking.setLocation(calendarEvent.getLocation());
+  calendarBooking.setStartDate(calendarEvent.getStartDate());
+  calendarBooking.setEndDate(calendarEvent.getEndDate());
+  calendarBooking.setDurationHour(calendarEvent.getDurationHour());
+  calendarBooking.setDurationMinute(calendarEvent.getDurationMinute());
+  calendarBooking.setRecurrence(calendarEvent.getRecurrence());
+  calendarBooking.setType(calendarEvent.getType());
+  calendarBookingPersistence.update(calendarBooking,false);
+  return calendarBooking;
+}

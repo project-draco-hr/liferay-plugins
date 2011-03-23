@@ -1,0 +1,33 @@
+{
+  Junction junction=null;
+  if (andOperator) {
+    junction=RestrictionsFactoryUtil.conjunction();
+  }
+ else {
+    junction=RestrictionsFactoryUtil.disjunction();
+  }
+  Map<String,String> terms=new HashMap<String,String>();
+  if (Validator.isNotNull(title)) {
+    terms.put("title",title);
+  }
+  if (Validator.isNotNull(description)) {
+    terms.put("description",description);
+  }
+  if (Validator.isNotNull(type)) {
+    terms.put("type",type);
+  }
+  for (  Map.Entry<String,String> entry : terms.entrySet()) {
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    for (    String s : CalendarUtil.splitKeywords(entry.getValue())) {
+      String value=StringPool.PERCENT + s + StringPool.PERCENT;
+      disjunction.add(RestrictionsFactoryUtil.ilike(entry.getKey(),value));
+    }
+    junction.add(disjunction);
+  }
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(CalendarBooking.class,getClass().getClassLoader());
+  if (calendarResourceId > 0) {
+    Property property=PropertyFactoryUtil.forName("calendarResourceId");
+    dynamicQuery.add(property.eq(calendarResourceId));
+  }
+  return dynamicQuery.add(junction);
+}
