@@ -1,0 +1,18 @@
+{
+  Date now=new Date();
+  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  CalendarEvent event=calendarEventLocalService.getCalendarEvent(calendarBooking.getCalendarEventId());
+  if ((userId == event.getUserId()) && (status == WorkflowConstants.STATUS_DENIED)) {
+    calendarEventLocalService.deleteCalendarEvent(calendarBooking.getCalendarEventId());
+  }
+ else {
+    calendarBooking.setModifiedDate(now);
+    calendarBooking.setStatus(status);
+    calendarBooking.setStatusDate(new Date());
+    calendarBooking.setStatusByUserId(userId);
+    User user=userLocalService.getUser(userId);
+    calendarBooking.setStatusByUserName(user.getFullName());
+    calendarBookingPersistence.update(calendarBooking,false);
+  }
+  return calendarBooking;
+}

@@ -28,6 +28,9 @@
   calendarBooking.setRecurrence(calendarEvent.getRecurrence());
   calendarBooking.setType(calendarEvent.getType());
   calendarBooking.setRequired(required);
+  calendarBooking.setStatus(WorkflowConstants.STATUS_DRAFT);
+  calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking,false);
+  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId);
   return calendarBooking;
 }
