@@ -1,0 +1,15 @@
+{
+  int count=countByCalendarEventId(calendarEventId);
+  List<CalendarBooking> list=findByCalendarEventId(calendarEventId,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("calendarEventId=");
+    msg.append(calendarEventId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchBookingException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

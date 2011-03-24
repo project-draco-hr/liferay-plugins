@@ -26,5 +26,11 @@
   if (isNew || (!Validator.equals(calendarResource.getUuid(),calendarResourceModelImpl.getOriginalUuid()) || (calendarResource.getGroupId() != calendarResourceModelImpl.getOriginalGroupId()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarResource.getUuid(),Long.valueOf(calendarResource.getGroupId())},calendarResource);
   }
+  if (!isNew && ((calendarResource.getClassNameId() != calendarResourceModelImpl.getOriginalClassNameId()) || (calendarResource.getClassPK() != calendarResourceModelImpl.getOriginalClassPK()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalClassNameId()),Long.valueOf(calendarResourceModelImpl.getOriginalClassPK())});
+  }
+  if (isNew || ((calendarResource.getClassNameId() != calendarResourceModelImpl.getOriginalClassNameId()) || (calendarResource.getClassPK() != calendarResourceModelImpl.getOriginalClassPK()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,new Object[]{Long.valueOf(calendarResource.getClassNameId()),Long.valueOf(calendarResource.getClassPK())},calendarResource);
+  }
   return calendarResource;
 }
