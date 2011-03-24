@@ -1,7 +1,6 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   long groupId=serviceContext.getScopeGroupId();
-  Date now=new Date();
   if (allDay) {
     startDateHour=0;
     startDateMinute=0;
@@ -10,9 +9,10 @@
     durationHour=23;
     durationMinute=59;
   }
-  validate(titleMap,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,durationHour,durationMinute,allDay);
   Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,TimeZoneUtil.getDefault(),null);
   Date endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,TimeZoneUtil.getDefault(),null);
+  Date now=new Date();
+  validate(titleMap,startDateMonth,startDateDay,startDateYear,endDateMonth,endDateDay,endDateYear,durationHour,durationMinute,allDay);
   long calendarEventId=counterLocalService.increment();
   CalendarEvent calendarEvent=calendarEventPersistence.create(calendarEventId);
   calendarEvent.setUuid(serviceContext.getUuid());
