@@ -2,16 +2,16 @@
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
   CalendarEvent calendarEvent=calendarEventLocalService.getCalendarEvent(calendarBooking.getCalendarEventId());
   if ((userId == calendarEvent.getUserId()) && (status == WorkflowConstants.STATUS_DENIED)) {
-    calendarEventLocalService.deleteCalendarEvent(calendarBooking.getCalendarEventId());
+    calendarEventLocalService.deleteCalendarEvent(calendarEvent);
   }
  else {
     User user=userLocalService.getUser(userId);
     Date now=new Date();
-    calendarBooking.setModifiedDate(now);
+    calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
     calendarBooking.setStatus(status);
     calendarBooking.setStatusByUserId(userId);
     calendarBooking.setStatusByUserName(user.getFullName());
-    calendarBooking.setStatusDate(now);
+    calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
     calendarBookingPersistence.update(calendarBooking,false);
   }
   return calendarBooking;
