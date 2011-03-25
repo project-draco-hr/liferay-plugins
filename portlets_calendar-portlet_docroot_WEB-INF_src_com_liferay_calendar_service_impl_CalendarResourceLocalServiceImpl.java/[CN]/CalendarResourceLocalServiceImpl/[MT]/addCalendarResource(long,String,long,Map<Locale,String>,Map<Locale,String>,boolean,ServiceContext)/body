@@ -1,19 +1,20 @@
 {
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
   if (Validator.isNull(className)) {
     className=CalendarResource.class.getName();
   }
   long classNameId=PortalUtil.getClassNameId(className);
   if (hasCalendarResource(classNameId,classPK)) {
-    throw new DuplicateCalendarResourceException("Cannot add the same resource: " + className + " "+ classPK);
+    throw new DuplicateCalendarResourceException();
   }
-  if (isGlobalResource(className)) {
-    long globalUserId=getGlobalResourceUserId(className,classPK);
-    if (globalUserId > 0) {
-      userId=globalUserId;
+  if (className.equals(Group.class.getName()) || className.equals(User.class.getName())) {
+    long globalCalendarResourceUserId=getGlobalCalendarResourceUserId(className,classPK);
+    if (globalCalendarResourceUserId > 0) {
+      userId=globalCalendarResourceUserId;
+      user=userPersistence.findByPrimaryKey(userId);
     }
   }
-  User user=userPersistence.findByPrimaryKey(userId);
-  long groupId=serviceContext.getScopeGroupId();
   Date now=new Date();
   long calendarResourceId=counterLocalService.increment();
   CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
@@ -21,11 +22,7 @@
   calendarResource.setGroupId(groupId);
   calendarResource.setCompanyId(user.getCompanyId());
   calendarResource.setUserId(user.getUserId());
-  String userName=user.getFullName();
-  if (user.isDefaultUser()) {
-    userName=user.getScreenName();
-  }
-  calendarResource.setUserName(userName);
+  calendarResource.setUserName(user.getFullName());
   calendarResource.setCreateDate(serviceContext.getCreateDate(now));
   calendarResource.setModifiedDate(serviceContext.getModifiedDate(now));
   calendarResource.setClassNameId(classNameId);
