@@ -2,13 +2,15 @@
   Session session=null;
   try {
     session=openSession();
-    String sql=CustomSQLUtil.get(COUNT_BY_U_MU);
+    String sql=CustomSQLUtil.get(COUNT_BY_U_AT);
     SQLQuery q=session.createSQLQuery(sql);
     q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
     qPos.add(userId);
+    qPos.add(assetTagName);
     qPos.add(userId);
+    qPos.add(assetTagName);
     Iterator<Long> itr=q.list().iterator();
     if (itr.hasNext()) {
       Long count=itr.next();

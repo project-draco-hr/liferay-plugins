@@ -2,11 +2,13 @@
   Session session=null;
   try {
     session=openSession();
-    String sql=CustomSQLUtil.get(COUNT_BY_U_MU);
+    String sql=CustomSQLUtil.get(COUNT_BY_USER_ID);
+    sql=StringUtil.replace(sql,"[$JOIN_BY_SOCIAL_RELATION$]",_joinBySocialRelationSQL);
     SQLQuery q=session.createSQLQuery(sql);
     q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
+    qPos.add(userId);
     qPos.add(userId);
     qPos.add(userId);
     Iterator<Long> itr=q.list().iterator();

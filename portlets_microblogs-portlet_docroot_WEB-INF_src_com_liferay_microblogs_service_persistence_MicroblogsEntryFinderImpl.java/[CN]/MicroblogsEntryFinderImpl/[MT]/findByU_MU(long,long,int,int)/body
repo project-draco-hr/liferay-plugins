@@ -3,12 +3,10 @@
   try {
     session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_U_MU);
-    sql=StringUtil.replace(sql,"[$JOIN_BY_SOCIAL_RELATION$]",_joinBySocialRelationSQL);
     SQLQuery q=session.createSQLQuery(sql);
     q.addEntity("MicroblogsEntry",MicroblogsEntryImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
-    qPos.add(microblogsEntryUserId);
     qPos.add(userId);
     qPos.add(microblogsEntryUserId);
     return (List<MicroblogsEntry>)QueryUtil.list(q,getDialect(),start,end);
