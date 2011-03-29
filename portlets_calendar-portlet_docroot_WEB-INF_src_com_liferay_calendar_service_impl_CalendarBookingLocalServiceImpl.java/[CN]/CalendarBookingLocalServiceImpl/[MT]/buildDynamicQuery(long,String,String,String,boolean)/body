@@ -17,10 +17,12 @@
     terms.put("type",type);
   }
   for (  Map.Entry<String,String> entry : terms.entrySet()) {
+    String key=entry.getKey();
+    String value=entry.getValue();
     Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
-    for (    String s : CalendarUtil.splitKeywords(entry.getValue())) {
-      String value=StringPool.PERCENT + s + StringPool.PERCENT;
-      disjunction.add(RestrictionsFactoryUtil.ilike(entry.getKey(),value));
+    for (    String keyword : CalendarUtil.splitKeywords(value)) {
+      Criterion criterion=RestrictionsFactoryUtil.ilike(key,StringUtil.quote(keyword,StringPool.PERCENT));
+      disjunction.add(criterion);
     }
     junction.add(disjunction);
   }
