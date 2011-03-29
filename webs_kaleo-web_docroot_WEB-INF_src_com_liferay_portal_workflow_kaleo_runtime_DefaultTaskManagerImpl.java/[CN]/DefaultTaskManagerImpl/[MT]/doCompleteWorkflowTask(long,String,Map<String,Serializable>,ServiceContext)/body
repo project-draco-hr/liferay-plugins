@@ -6,12 +6,6 @@
   }
   serviceContext.setScopeGroupId(kaleoTaskInstanceToken.getGroupId());
   kaleoTaskInstanceToken=kaleoTaskInstanceTokenLocalService.completeKaleoTaskInstanceToken(kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId(),serviceContext);
-  KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenLocalService.getKaleoInstanceToken(kaleoTaskInstanceToken.getKaleoInstanceTokenId());
   kaleoLogLocalService.addTaskCompletionKaleoLog(kaleoTaskInstanceToken,comment,workflowContext,serviceContext);
-  if (workflowContext == null) {
-    workflowContext=WorkflowContextUtil.convert(kaleoInstanceToken.getKaleoInstance().getWorkflowContext());
-  }
-  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
-  _kaleoSignaler.signalExit(transitionName,executionContext);
   return new WorkflowTaskAdapter(kaleoTaskInstanceToken,workflowContext);
 }

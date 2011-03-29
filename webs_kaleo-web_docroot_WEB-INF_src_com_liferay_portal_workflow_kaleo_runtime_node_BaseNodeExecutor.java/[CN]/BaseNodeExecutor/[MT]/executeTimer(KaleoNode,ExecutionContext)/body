@@ -1,0 +1,9 @@
+{
+  ServiceContext serviceContext=executionContext.getServiceContext();
+  KaleoTimerInstanceToken kaleoTimerInstanceToken=executionContext.getKaleoTimerInstanceToken();
+  KaleoTimer kaleoTimer=kaleoTimerInstanceToken.getKaleoTimer();
+  ActionExecutorUtil.executeKaleoActions(kaleoTimer.getKaleoNodeId(),ExecutionType.ON_TIMER,executionContext);
+  NotificationUtil.sendKaleoNotifications(kaleoTimer.getKaleoNodeId(),ExecutionType.ON_TIMER,executionContext);
+  doExecuteTimer(currentKaleoNode,kaleoTimer,executionContext);
+  kaleoTimerInstanceTokenLocalService.completeKaleoTimerInstanceToken(kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId(),serviceContext);
+}

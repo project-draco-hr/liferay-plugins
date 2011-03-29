@@ -1,0 +1,14 @@
+{
+  try {
+    KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenLocalService.getKaleoTimerInstanceToken(kaleoTimerInstanceTokenId);
+    KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
+    KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
+    ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,kaleoTimerInstanceToken,workflowContext,serviceContext);
+    NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(currentKaleoNode.getType()));
+    nodeExecutor.executeTimer(currentKaleoNode,executionContext);
+    return executionContext;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}

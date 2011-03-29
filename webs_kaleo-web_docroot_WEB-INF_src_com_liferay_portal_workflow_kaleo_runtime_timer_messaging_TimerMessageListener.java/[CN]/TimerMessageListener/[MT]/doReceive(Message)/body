@@ -1,16 +1,10 @@
 {
+  long kaleoTimerInstanceTokenId=message.getLong("kaleoTimerInstanceTokenId");
   KaleoTimerInstanceToken kaleoTimerInstanceToken=getKaleoTimerInstanceToken(message);
   KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
-  KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
   Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTimerInstanceToken.getWorkflowContext());
   ServiceContext serviceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
-  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
-  KaleoTimerInstanceTokenLocalServiceUtil.completeKaleoTimerInstanceToken(kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId(),serviceContext);
-  KaleoTimer kaleoTimer=kaleoTimerInstanceToken.getKaleoTimer();
-  ActionExecutorUtil.executeKaleoActions(kaleoTimer.getKaleoNodeId(),ExecutionType.ON_TIMER,executionContext);
-  NotificationUtil.sendKaleoNotifications(kaleoTimer.getKaleoNodeId(),ExecutionType.ON_TIMER,executionContext);
-  if (currentKaleoNode.getType().equals(NodeType.TASK.name())) {
-    TaskAssignerUtil.reassignKaleoTask(kaleoTimer.getKaleoNodeId(),kaleoTimer.getParentKaleoNodeId(),executionContext);
-  }
+  ExecutionContext executionContext=_workflowEngine.executeTimerWorkflowInstance(kaleoTimerInstanceTokenId,serviceContext,workflowContext);
+  KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
   _kaleoSignaler.signalExecute(currentKaleoNode,executionContext);
 }
