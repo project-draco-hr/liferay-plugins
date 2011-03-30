@@ -3,7 +3,7 @@
     return dirName;
   }
   dirName="knowledgebase/temp/attachments/" + counterLocalService.increment();
-  dlLocalService.addDirectory(companyId,CompanyConstants.SYSTEM,dirName);
+  dlLocalService.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   if (resourcePrimKey <= 0) {
     return dirName;
   }
@@ -11,7 +11,7 @@
   for (  String fileName : article.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
     byte[] bytes=dlLocalService.getFile(article.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-    addAttachment(companyId,dirName,shortFileName,bytes);
+    addAttachment(dirName,shortFileName,bytes,serviceContext);
   }
   return dirName;
 }

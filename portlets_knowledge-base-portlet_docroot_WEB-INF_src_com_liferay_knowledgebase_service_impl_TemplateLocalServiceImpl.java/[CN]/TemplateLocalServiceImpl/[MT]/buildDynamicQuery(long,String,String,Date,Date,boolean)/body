@@ -18,7 +18,8 @@
     String value=entry.getValue();
     Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
     for (    String keyword : KnowledgeBaseUtil.splitKeywords(value)) {
-      disjunction.add(RestrictionsFactoryUtil.ilike(key,StringPool.PERCENT + keyword + StringPool.PERCENT));
+      Criterion criterion=RestrictionsFactoryUtil.ilike(key,StringUtil.quote(keyword,StringPool.PERCENT));
+      disjunction.add(criterion);
     }
     junction.add(disjunction);
   }
