@@ -1,6 +1,9 @@
 {
   if (status == WorkflowConstants.STATUS_ANY) {
-    return articlePersistence.findByC_L(companyId,ArticleConstants.LATEST_VERSION,start,end,orderByComparator);
+    return articlePersistence.findByC_L(companyId,true,start,end,orderByComparator);
   }
-  return articlePersistence.findByC_L_S(companyId,ArticleConstants.LATEST_ANY,status,start,end,orderByComparator);
+ else   if (status == WorkflowConstants.STATUS_APPROVED) {
+    return articlePersistence.findByC_M(companyId,true,start,end,orderByComparator);
+  }
+  return articlePersistence.findByC_S(companyId,status,start,end,orderByComparator);
 }

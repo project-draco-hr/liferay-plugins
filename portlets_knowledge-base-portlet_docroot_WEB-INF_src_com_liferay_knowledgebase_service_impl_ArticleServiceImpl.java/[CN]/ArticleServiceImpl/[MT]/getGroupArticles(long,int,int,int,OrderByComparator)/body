@@ -1,6 +1,9 @@
 {
   if (status == WorkflowConstants.STATUS_ANY) {
-    return articlePersistence.filterFindByG_L(groupId,new int[]{ArticleConstants.LATEST_VERSION},start,end,orderByComparator);
+    return articlePersistence.filterFindByG_L(groupId,true,start,end,orderByComparator);
   }
-  return articlePersistence.filterFindByG_L_S(groupId,ArticleConstants.LATEST_ANY,status,start,end,orderByComparator);
+ else   if (status == WorkflowConstants.STATUS_APPROVED) {
+    return articlePersistence.filterFindByG_M(groupId,true,start,end,orderByComparator);
+  }
+  return articlePersistence.filterFindByG_S(groupId,status,start,end,orderByComparator);
 }

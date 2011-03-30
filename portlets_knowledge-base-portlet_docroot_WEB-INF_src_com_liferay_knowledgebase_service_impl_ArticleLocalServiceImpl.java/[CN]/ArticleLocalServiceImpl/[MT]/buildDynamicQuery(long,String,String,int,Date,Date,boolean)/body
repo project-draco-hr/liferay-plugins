@@ -39,8 +39,14 @@
     junction.add(disjunction);
   }
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Article.class,getClass().getClassLoader());
-  Property latestProperty=PropertyFactoryUtil.forName("latest");
-  dynamicQuery.add(latestProperty.eq(ArticleConstants.LATEST_VERSION));
+  if (status == WorkflowConstants.STATUS_ANY) {
+    Property property=PropertyFactoryUtil.forName("latest");
+    dynamicQuery.add(property.eq(Boolean.TRUE));
+  }
+ else   if (status == WorkflowConstants.STATUS_APPROVED) {
+    Property property=PropertyFactoryUtil.forName("main");
+    dynamicQuery.add(property.eq(Boolean.TRUE));
+  }
   if (groupId > 0) {
     Property property=PropertyFactoryUtil.forName("groupId");
     dynamicQuery.add(property.eq(groupId));

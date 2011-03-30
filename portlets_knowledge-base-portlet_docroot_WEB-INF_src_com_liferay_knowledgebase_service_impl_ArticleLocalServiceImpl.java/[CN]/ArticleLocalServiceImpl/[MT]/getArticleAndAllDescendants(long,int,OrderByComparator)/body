@@ -5,10 +5,13 @@
   while ((params=KnowledgeBaseUtil.getParams(params[0])) != null) {
     List<Article> curArticles=null;
     if (status == WorkflowConstants.STATUS_ANY) {
-      curArticles=articlePersistence.findByP_L(ArrayUtil.toArray(params[1]),new int[]{ArticleConstants.LATEST_VERSION});
+      curArticles=articlePersistence.findByP_L(ArrayUtil.toArray(params[1]),true);
+    }
+ else     if (status == WorkflowConstants.STATUS_APPROVED) {
+      curArticles=articlePersistence.findByP_M(ArrayUtil.toArray(params[1]),true);
     }
  else {
-      curArticles=articlePersistence.findByP_L_S(ArrayUtil.toArray(params[1]),ArticleConstants.LATEST_ANY,status);
+      curArticles=articlePersistence.findByP_S(ArrayUtil.toArray(params[1]),status);
     }
     articles.addAll(curArticles);
     long[] resourcePrimKeys=StringUtil.split(ListUtil.toString(curArticles,"resourcePrimKey"),0L);

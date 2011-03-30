@@ -1,6 +1,9 @@
 {
   if (status == WorkflowConstants.STATUS_ANY) {
-    return articlePersistence.countByG_L(groupId,ArticleConstants.LATEST_VERSION);
+    return articlePersistence.countByG_L(groupId,true);
   }
-  return articlePersistence.countByG_L_S(groupId,ArticleConstants.LATEST_ANY,status);
+ else   if (status == WorkflowConstants.STATUS_APPROVED) {
+    return articlePersistence.countByG_M(groupId,true);
+  }
+  return articlePersistence.countByG_S(groupId,status);
 }

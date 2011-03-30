@@ -1,8 +1,13 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
+  boolean main=false;
   Date now=new Date();
+  if (status == WorkflowConstants.STATUS_APPROVED) {
+    main=true;
+  }
   Article article=getLatestArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   article.setModifiedDate(serviceContext.getModifiedDate(now));
+  article.setMain(main);
   article.setStatus(status);
   article.setStatusByUserId(user.getUserId());
   article.setStatusByUserName(user.getFullName());
@@ -13,7 +18,7 @@
   }
   if (!article.isFirstVersion()) {
     Article oldArticle=articlePersistence.findByR_V(resourcePrimKey,article.getVersion() - 1);
-    oldArticle.setLatest(ArticleConstants.LATEST_ARCHIVED);
+    oldArticle.setMain(false);
     articlePersistence.update(oldArticle,false);
   }
   AssetEntry assetEntry=assetEntryLocalService.getEntry(Article.class.getName(),article.getPrimaryKey());
