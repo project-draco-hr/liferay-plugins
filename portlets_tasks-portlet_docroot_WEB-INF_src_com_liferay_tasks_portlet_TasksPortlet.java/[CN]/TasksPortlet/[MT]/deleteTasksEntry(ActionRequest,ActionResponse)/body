@@ -5,4 +5,10 @@
   if (Validator.isNotNull(redirect)) {
     actionResponse.sendRedirect(redirect);
   }
+ else {
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+    jsonObject.put("success",true);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
+    ServletResponseUtil.write(response,jsonObject.toString());
+  }
 }
