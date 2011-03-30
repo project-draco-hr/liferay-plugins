@@ -2,8 +2,8 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setCompanyId(companyId);
   serviceContext.setUserId(userId);
-  WorkflowInstanceAdapter workflowInstance=(WorkflowInstanceAdapter)_workflowEngine.signalWorkflowInstance(workflowInstanceId,transitionName,workflowContext,serviceContext);
-  KaleoInstanceToken kaleoInstanceToken=workflowInstance.getKaleoInstanceToken();
+  WorkflowInstanceAdapter workflowInstanceAdapter=(WorkflowInstanceAdapter)_workflowEngine.signalWorkflowInstance(workflowInstanceId,transitionName,workflowContext,serviceContext);
+  KaleoInstanceToken kaleoInstanceToken=workflowInstanceAdapter.getKaleoInstanceToken();
   ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
   try {
     _kaleoSignaler.signalExit(transitionName,executionContext);
@@ -11,5 +11,5 @@
  catch (  Exception e) {
     throw new WorkflowException("Unable to signal next transition",e);
   }
-  return workflowInstance;
+  return workflowInstanceAdapter;
 }
