@@ -23,15 +23,20 @@
     companyId=_role.getCompanyId();
     params.put("usersRoles",_role.getRoleId());
   }
+ else   if (_userGroup != null) {
+    companyId=_userGroup.getCompanyId();
+    params.put("usersUserGroups",_userGroup.getUserGroupId());
+  }
  else   if (_company != null) {
     companyId=_company.getCompanyId();
+    _usersDirectory=this;
   }
   List<User> users=UserLocalServiceUtil.search(companyId,firstName,middleName,lastName,screenName,emailAddress,status,params,andSearch,start,end,orderByComparator);
   for (  User user : users) {
     if (user.isDefaultUser()) {
       continue;
     }
-    Directory userDirectory=new UserDirectory(user,this);
+    Directory userDirectory=new UserDirectory(user,_usersDirectory);
     addAttribute("member",userDirectory.getName().getName());
     _directories.add(userDirectory);
   }

@@ -29,7 +29,10 @@
     roles=RoleLocalServiceUtil.search(_company.getCompanyId(),null,null,new Integer[]{RoleConstants.TYPE_REGULAR},0,PortletPropsValues.SEARCH_MAX_SIZE,null);
   }
   for (  Role role : roles) {
-    Directory roleDirectory=new RoleDirectory(role,this);
+    if (role.getName().equals(RoleConstants.OWNER)) {
+      continue;
+    }
+    Directory roleDirectory=new RoleDirectory(role,this,_usersDirectory);
     _directories.add(roleDirectory);
   }
   return _directories;

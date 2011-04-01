@@ -1,0 +1,14 @@
+{
+  List<UserGroup> userGroups=Collections.emptyList();
+  if (_user != null) {
+    userGroups=UserGroupLocalServiceUtil.getUserUserGroups(_user.getUserId());
+  }
+ else   if (_company != null) {
+    userGroups=UserGroupLocalServiceUtil.getUserGroups(_company.getCompanyId());
+  }
+  for (  UserGroup userGroup : userGroups) {
+    Directory roleDirectory=new UserGroupDirectory(userGroup,this,_usersDirectory);
+    _directories.add(roleDirectory);
+  }
+  return _directories;
+}

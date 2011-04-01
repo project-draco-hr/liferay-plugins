@@ -1,5 +1,8 @@
 {
   InternalSearchResponseEntry internalSearchResponseEntry=new SearchResponseEntryImpl(internalSearchRequest.getMessageId());
+  if (directory.getAttribute("objectClass","groupOfNames") != null) {
+    directory.getDirectories();
+  }
   Entry entry=directory.toEntry(ldapHandlerContext.getSchemaManager(),internalSearchRequest.getAttributes());
   internalSearchResponseEntry.setEntry(entry);
   if (internalResponses.size() > getSizeLimit(internalSearchRequest)) {
