@@ -1,0 +1,41 @@
+{
+  long userId=portletDataContext.getUserId(kbArticle.getUserUuid());
+  long parentResourcePrimKey=MapUtil.getLong(resourcePrimKeys,kbArticle.getParentResourcePrimKey());
+  String dirName=MapUtil.getString(dirNames,String.valueOf(kbArticle.getResourcePrimKey()));
+  long[] assetCategoryIds=null;
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"categories")) {
+    assetCategoryIds=portletDataContext.getAssetCategoryIds(KBArticle.class,kbArticle.getResourcePrimKey());
+  }
+  String[] assetTagNames=null;
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"tags")) {
+    assetTagNames=portletDataContext.getAssetTagNames(KBArticle.class,kbArticle.getResourcePrimKey());
+  }
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setAssetCategoryIds(assetCategoryIds);
+  serviceContext.setAssetTagNames(assetTagNames);
+  serviceContext.setCreateDate(kbArticle.getCreateDate());
+  serviceContext.setModifiedDate(kbArticle.getModifiedDate());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  KBArticle importedKBArticle=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBArticle existingKBArticle=KBArticleUtil.fetchByUUID_G(kbArticle.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBArticle == null) {
+      importedKBArticle=importKBArticleVersions(portletDataContext,kbArticle.getUuid(),parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,kbArticleElement);
+    }
+ else {
+      KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),dirName,serviceContext);
+      KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,kbArticle.getPriority());
+      importedKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
+    }
+  }
+ else {
+    importedKBArticle=importKBArticleVersions(portletDataContext,null,parentResourcePrimKey,dirName,assetCategoryIds,assetTagNames,kbArticleElement);
+  }
+  resourcePrimKeys.put(kbArticle.getResourcePrimKey(),importedKBArticle.getResourcePrimKey());
+  portletDataContext.importPermissions(KBArticle.class,kbArticle.getResourcePrimKey(),importedKBArticle.getResourcePrimKey());
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"ratings")) {
+    portletDataContext.importRatingsEntries(KBArticle.class,kbArticle.getResourcePrimKey(),importedKBArticle.getResourcePrimKey());
+  }
+}

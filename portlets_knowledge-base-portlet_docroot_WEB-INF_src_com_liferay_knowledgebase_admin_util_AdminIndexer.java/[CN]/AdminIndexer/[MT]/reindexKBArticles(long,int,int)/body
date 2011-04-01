@@ -1,0 +1,9 @@
+{
+  List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getCompanyKBArticles(companyId,WorkflowConstants.STATUS_APPROVED,start,end,new KBArticleModifiedDateComparator());
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  KBArticle kbArticle : kbArticles) {
+    Document document=getDocument(kbArticle);
+    documents.add(document);
+  }
+  SearchEngineUtil.updateDocuments(companyId,documents);
+}

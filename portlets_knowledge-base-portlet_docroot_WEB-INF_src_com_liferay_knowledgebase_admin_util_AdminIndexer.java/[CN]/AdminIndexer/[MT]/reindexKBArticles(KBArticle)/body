@@ -1,0 +1,8 @@
+{
+  List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getKBArticleAndAllDescendants(kbArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED,null);
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  KBArticle curKBArticle : kbArticles) {
+    documents.add(getDocument(curKBArticle));
+  }
+  SearchEngineUtil.updateDocuments(kbArticle.getCompanyId(),documents);
+}

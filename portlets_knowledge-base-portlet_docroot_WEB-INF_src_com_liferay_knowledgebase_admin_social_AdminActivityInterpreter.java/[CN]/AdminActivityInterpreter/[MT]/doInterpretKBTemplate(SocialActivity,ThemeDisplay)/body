@@ -1,0 +1,18 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  KBTemplate kbTemplate=KBTemplateLocalServiceUtil.getKBTemplate(activity.getClassPK());
+  if (!KBTemplatePermission.contains(permissionChecker,kbTemplate,ActionKeys.VIEW)) {
+    return null;
+  }
+  String link=StringPool.BLANK;
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_KB_TEMPLATE) {
+    key="activity-knowledge-base-admin-add-kb-template";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_TEMPLATE) {
+    key="activity-knowledge-base-admin-update-kb-template";
+  }
+  String title=getTitle(activity,key,kbTemplate.getTitle(),link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}

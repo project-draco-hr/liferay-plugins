@@ -1,0 +1,15 @@
+{
+  for (  double priority : resourcePrimKeyToPriorityMap.values()) {
+    validate(priority);
+  }
+  long[] resourcePrimKeys=StringUtil.split(StringUtil.merge(resourcePrimKeyToPriorityMap.keySet()),0L);
+  List<KBArticle> kbArticles1=getKBArticles(resourcePrimKeys,WorkflowConstants.STATUS_ANY,null);
+  for (  KBArticle kbArticle1 : kbArticles1) {
+    double priority=resourcePrimKeyToPriorityMap.get(kbArticle1.getResourcePrimKey());
+    List<KBArticle> kbArticles2=getKBArticleVersions(kbArticle1.getResourcePrimKey(),WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    for (    KBArticle kbArticle2 : kbArticles2) {
+      kbArticle2.setPriority(priority);
+      kbArticlePersistence.update(kbArticle2,false);
+    }
+  }
+}

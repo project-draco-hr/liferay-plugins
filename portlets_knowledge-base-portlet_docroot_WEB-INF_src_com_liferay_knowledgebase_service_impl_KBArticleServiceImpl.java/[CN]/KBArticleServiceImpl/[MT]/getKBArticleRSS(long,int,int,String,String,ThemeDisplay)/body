@@ -1,0 +1,8 @@
+{
+  KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(resourcePrimKey,status);
+  String name=HtmlUtil.escape(kbArticle.getTitle());
+  String description=HtmlUtil.escape(kbArticle.getTitle());
+  String feedURL=KnowledgeBaseUtil.getKBArticleURL(themeDisplay.getPlid(),resourcePrimKey,themeDisplay.getPortalURL(),false);
+  List<KBArticle> kbArticles=getKBArticleAndAllDescendants(kbArticle.getGroupId(),resourcePrimKey,status,new KBArticleModifiedDateComparator());
+  return exportToRSS(rssDisplayStyle,rssFormat,name,description,feedURL,ListUtil.subList(kbArticles,0,rssDelta),themeDisplay);
+}

@@ -1,0 +1,36 @@
+{
+  kbComment=toUnwrappedModel(kbComment);
+  boolean isNew=kbComment.isNew();
+  KBCommentModelImpl kbCommentModelImpl=(KBCommentModelImpl)kbComment;
+  if (Validator.isNull(kbComment.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    kbComment.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kbComment,merge);
+    kbComment.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,kbComment.getPrimaryKey(),kbComment);
+  if (!isNew && (!Validator.equals(kbComment.getUuid(),kbCommentModelImpl.getOriginalUuid()) || (kbComment.getGroupId() != kbCommentModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbCommentModelImpl.getOriginalUuid(),Long.valueOf(kbCommentModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(kbComment.getUuid(),kbCommentModelImpl.getOriginalUuid()) || (kbComment.getGroupId() != kbCommentModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbComment.getUuid(),Long.valueOf(kbComment.getGroupId())},kbComment);
+  }
+  if (!isNew && ((kbComment.getUserId() != kbCommentModelImpl.getOriginalUserId()) || (kbComment.getClassNameId() != kbCommentModelImpl.getOriginalClassNameId()) || (kbComment.getClassPK() != kbCommentModelImpl.getOriginalClassPK()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_C_C,new Object[]{Long.valueOf(kbCommentModelImpl.getOriginalUserId()),Long.valueOf(kbCommentModelImpl.getOriginalClassNameId()),Long.valueOf(kbCommentModelImpl.getOriginalClassPK())});
+  }
+  if (isNew || ((kbComment.getUserId() != kbCommentModelImpl.getOriginalUserId()) || (kbComment.getClassNameId() != kbCommentModelImpl.getOriginalClassNameId()) || (kbComment.getClassPK() != kbCommentModelImpl.getOriginalClassPK()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,new Object[]{Long.valueOf(kbComment.getUserId()),Long.valueOf(kbComment.getClassNameId()),Long.valueOf(kbComment.getClassPK())},kbComment);
+  }
+  return kbComment;
+}

@@ -1,0 +1,43 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  boolean main=false;
+  Date now=new Date();
+  if (status == WorkflowConstants.STATUS_APPROVED) {
+    main=true;
+  }
+  KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  kbArticle.setModifiedDate(serviceContext.getModifiedDate(now));
+  kbArticle.setMain(main);
+  kbArticle.setStatus(status);
+  kbArticle.setStatusByUserId(user.getUserId());
+  kbArticle.setStatusByUserName(user.getFullName());
+  kbArticle.setStatusDate(serviceContext.getModifiedDate(now));
+  kbArticlePersistence.update(kbArticle,false);
+  if (status != WorkflowConstants.STATUS_APPROVED) {
+    return kbArticle;
+  }
+  if (!kbArticle.isFirstVersion()) {
+    KBArticle oldKBArticle=kbArticlePersistence.findByR_V(resourcePrimKey,kbArticle.getVersion() - 1);
+    oldKBArticle.setMain(false);
+    kbArticlePersistence.update(oldKBArticle,false);
+  }
+  AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
+  updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
+  assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
+  if (!kbArticle.isFirstVersion()) {
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_KB_ARTICLE,StringPool.BLANK,0);
+  }
+ else {
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_KB_ARTICLE,StringPool.BLANK,0);
+  }
+  Indexer indexer=IndexerRegistryUtil.getIndexer(KBArticle.class);
+  indexer.reindex(kbArticle);
+  if (!kbArticle.isFirstVersion()) {
+    deleteKBArticleAttachments(kbArticle,resourcePrimKey);
+  }
+  String dirName=KBArticleConstants.DIR_NAME_PREFIX + kbArticle.getKbArticleId();
+  addKBArticleAttachments(kbArticle,dirName,serviceContext);
+  deleteKBArticleAttachments(kbArticle,kbArticle.getKbArticleId());
+  notifySubscribers(kbArticle,serviceContext);
+  return kbArticle;
+}

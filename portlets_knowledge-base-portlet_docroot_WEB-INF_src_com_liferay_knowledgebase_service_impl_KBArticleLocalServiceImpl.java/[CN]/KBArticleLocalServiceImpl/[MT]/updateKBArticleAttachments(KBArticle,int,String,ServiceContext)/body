@@ -1,0 +1,15 @@
+{
+  if (kbArticle.getVersion() > oldVersion) {
+    String oldDirName=KBArticleConstants.DIR_NAME_PREFIX + kbArticle.getResourcePrimKey();
+    if (Validator.isNull(dirName)) {
+      addKBArticleAttachments(kbArticle,oldDirName,serviceContext);
+    }
+ else {
+      addKBArticleAttachments(kbArticle,dirName,serviceContext);
+    }
+  }
+ else   if (Validator.isNotNull(dirName)) {
+    deleteKBArticleAttachments(kbArticle,kbArticle.getClassPK());
+    addKBArticleAttachments(kbArticle,dirName,serviceContext);
+  }
+}

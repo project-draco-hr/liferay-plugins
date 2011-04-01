@@ -1,0 +1,18 @@
+{
+  try {
+    String newDirName=_KB_ARTICLE_DIR_NAME_PREFIX + folderId;
+    String oldDirName=_ARTICLE_DIR_NAME_PREFIX + folderId;
+    DLLocalServiceUtil.addDirectory(companyId,CompanyConstants.SYSTEM,newDirName);
+    String[] fileNames=DLLocalServiceUtil.getFileNames(companyId,CompanyConstants.SYSTEM,oldDirName);
+    for (    String fileName : fileNames) {
+      String shortFileName=FileUtil.getShortFileName(fileName);
+      byte[] bytes=DLLocalServiceUtil.getFile(companyId,CompanyConstants.SYSTEM,fileName);
+      ServiceContext serviceContext=new ServiceContext();
+      DLLocalServiceUtil.addFile(companyId,CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,newDirName + StringPool.SLASH + shortFileName,0,StringPool.BLANK,serviceContext.getModifiedDate(null),serviceContext,bytes);
+    }
+    DLLocalServiceUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,oldDirName);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage());
+  }
+}

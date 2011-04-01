@@ -1,0 +1,12 @@
+{
+  if (_service == null) {
+    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBArticleService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,KBArticleService.class.getName(),portletClassLoader);
+    _service=new KBArticleServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+    ReferenceRegistry.registerReference(KBArticleServiceUtil.class,"_service");
+    MethodCache.remove(KBArticleService.class);
+  }
+  return _service;
+}

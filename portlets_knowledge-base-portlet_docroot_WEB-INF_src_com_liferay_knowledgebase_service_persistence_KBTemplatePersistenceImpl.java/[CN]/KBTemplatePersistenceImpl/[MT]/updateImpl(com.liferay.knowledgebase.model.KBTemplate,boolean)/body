@@ -1,0 +1,30 @@
+{
+  kbTemplate=toUnwrappedModel(kbTemplate);
+  boolean isNew=kbTemplate.isNew();
+  KBTemplateModelImpl kbTemplateModelImpl=(KBTemplateModelImpl)kbTemplate;
+  if (Validator.isNull(kbTemplate.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    kbTemplate.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kbTemplate,merge);
+    kbTemplate.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KBTemplateModelImpl.ENTITY_CACHE_ENABLED,KBTemplateImpl.class,kbTemplate.getPrimaryKey(),kbTemplate);
+  if (!isNew && (!Validator.equals(kbTemplate.getUuid(),kbTemplateModelImpl.getOriginalUuid()) || (kbTemplate.getGroupId() != kbTemplateModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbTemplateModelImpl.getOriginalUuid(),Long.valueOf(kbTemplateModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(kbTemplate.getUuid(),kbTemplateModelImpl.getOriginalUuid()) || (kbTemplate.getGroupId() != kbTemplateModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbTemplate.getUuid(),Long.valueOf(kbTemplate.getGroupId())},kbTemplate);
+  }
+  return kbTemplate;
+}

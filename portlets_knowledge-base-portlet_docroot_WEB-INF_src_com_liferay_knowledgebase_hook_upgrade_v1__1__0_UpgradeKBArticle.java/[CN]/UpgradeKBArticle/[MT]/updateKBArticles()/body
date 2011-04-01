@@ -1,0 +1,60 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getConnection();
+    StringBundler sb=new StringBundler(2);
+    sb.append("select * from KB_Article order by resourcePrimKey ");
+    sb.append("desc, version desc");
+    ps=con.prepareStatement(sb.toString());
+    rs=ps.executeQuery();
+    long selResourcePrimKey=-1;
+    int selStatus=-1;
+    while (rs.next()) {
+      String uuid=rs.getString("uuid_");
+      long articleId=rs.getLong("articleId");
+      long resourcePrimKey=rs.getLong("resourcePrimKey");
+      long groupId=rs.getLong("groupId");
+      long companyId=rs.getLong("companyId");
+      long userId=rs.getLong("userId");
+      String userName=rs.getString("userName");
+      Date createDate=rs.getDate("createDate");
+      Date modifiedDate=rs.getDate("modifiedDate");
+      long rootResourcePrimKey=rs.getLong("rootResourcePrimKey");
+      long parentResourcePrimKey=rs.getLong("parentResourcePrimKey");
+      int version=rs.getInt("version");
+      String title=rs.getString("title");
+      String content=rs.getString("content");
+      String description=rs.getString("description");
+      double priority=rs.getDouble("priority");
+      int viewCount=rs.getInt("viewCount");
+      int status=rs.getInt("status");
+      long statusByUserId=rs.getLong("statusByUserId");
+      String statusByUserName=rs.getString("statusByUserName");
+      Date statusDate=rs.getDate("statusDate");
+      boolean latest=false;
+      boolean main=false;
+      if (resourcePrimKey != selResourcePrimKey) {
+        selResourcePrimKey=resourcePrimKey;
+        selStatus=-1;
+        latest=true;
+      }
+      if ((status != selStatus) && (status == _STATUS_APPROVED)) {
+        selStatus=status;
+        main=true;
+      }
+      addKBArticle(uuid,articleId,resourcePrimKey,groupId,companyId,userId,userName,createDate,modifiedDate,rootResourcePrimKey,parentResourcePrimKey,version,title,content,description,priority,viewCount,latest,main,status,statusByUserId,statusByUserName,statusDate);
+      if (main) {
+        addKBArticleAttachments(companyId,resourcePrimKey);
+      }
+ else       if (latest) {
+        addKBArticleAttachments(companyId,articleId);
+      }
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+  runSQL("drop table KB_Article");
+}

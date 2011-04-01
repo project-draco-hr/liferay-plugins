@@ -1,0 +1,13 @@
+{
+  List<KBTemplate> kbTemplates=KBTemplateUtil.findByGroupId(portletDataContext.getScopeGroupId());
+  for (  KBTemplate kbTemplate : kbTemplates) {
+    if (!portletDataContext.isWithinDateRange(kbTemplate.getModifiedDate())) {
+      continue;
+    }
+    String path=getPortletPath(portletDataContext) + "/kbtemplates/" + kbTemplate.getKbTemplateId()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    exportKBTemplate(portletDataContext,rootElement,path,kbTemplate);
+  }
+}

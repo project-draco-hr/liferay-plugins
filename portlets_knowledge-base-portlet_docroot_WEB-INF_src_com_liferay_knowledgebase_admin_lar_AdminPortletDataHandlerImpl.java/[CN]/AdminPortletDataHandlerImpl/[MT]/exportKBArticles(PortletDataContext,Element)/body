@@ -1,0 +1,12 @@
+{
+  for (  KBArticle kbArticle : getKBArticles(portletDataContext)) {
+    if (!portletDataContext.isWithinDateRange(kbArticle.getModifiedDate())) {
+      continue;
+    }
+    String path=getPortletPath(portletDataContext) + "/kbarticles/" + kbArticle.getResourcePrimKey()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    exportKBArticle(portletDataContext,rootElement,path,kbArticle);
+  }
+}

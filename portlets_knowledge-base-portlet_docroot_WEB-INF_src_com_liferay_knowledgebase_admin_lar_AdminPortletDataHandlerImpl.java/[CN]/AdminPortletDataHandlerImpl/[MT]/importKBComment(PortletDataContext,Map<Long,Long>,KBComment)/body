@@ -1,0 +1,21 @@
+{
+  long userId=portletDataContext.getUserId(kbComment.getUserUuid());
+  long classPK=MapUtil.getLong(classPKs,kbComment.getClassPK());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCreateDate(kbComment.getCreateDate());
+  serviceContext.setModifiedDate(kbComment.getModifiedDate());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBComment existingKBComment=KBCommentUtil.fetchByUUID_G(kbComment.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBComment == null) {
+      serviceContext.setUuid(kbComment.getUuid());
+      KBCommentLocalServiceUtil.addKBComment(userId,kbComment.getClassNameId(),classPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
+    }
+ else {
+      KBCommentLocalServiceUtil.updateKBComment(existingKBComment.getKbCommentId(),kbComment.getClassNameId(),classPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
+    }
+  }
+ else {
+    KBCommentLocalServiceUtil.addKBComment(userId,kbComment.getClassNameId(),classPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
+  }
+}

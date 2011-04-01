@@ -1,0 +1,16 @@
+{
+  String[] fileNames=_kbArticle.getAttachmentsFileNames();
+  if (fileNames.length <= 0) {
+    return StringPool.BLANK;
+  }
+  StringBundler sb=new StringBundler(fileNames.length * 5);
+  for (  String fileName : fileNames) {
+    long kb=DLLocalServiceUtil.getFileSize(companyId,CompanyConstants.SYSTEM,fileName);
+    sb.append(FileUtil.getShortFileName(fileName));
+    sb.append(" (");
+    sb.append(TextFormatter.formatKB(kb,locale));
+    sb.append("k)");
+    sb.append("<br />");
+  }
+  return sb.toString();
+}

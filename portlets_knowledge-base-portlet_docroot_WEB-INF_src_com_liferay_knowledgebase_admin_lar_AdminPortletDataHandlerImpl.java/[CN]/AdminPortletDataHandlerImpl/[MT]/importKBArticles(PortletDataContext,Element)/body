@@ -1,0 +1,26 @@
+{
+  long importId=CounterLocalServiceUtil.increment();
+  Map<Long,Long> resourcePrimKeys=new HashMap<Long,Long>();
+  Map<String,String> dirNames=new HashMap<String,String>();
+  try {
+    if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"attachments")) {
+      DLLocalServiceUtil.addDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+      importKBArticleAttachments(portletDataContext,importId,dirNames,rootElement);
+    }
+    List<Element> kbArticleElements=rootElement.elements("kb-article");
+    for (    Element kbArticleElement : kbArticleElements) {
+      String path=kbArticleElement.attributeValue("path");
+      if (!portletDataContext.isPathNotProcessed(path)) {
+        continue;
+      }
+      KBArticle kbArticle=(KBArticle)portletDataContext.getZipEntryAsObject(path);
+      importKBArticle(portletDataContext,resourcePrimKeys,dirNames,kbArticleElement,kbArticle);
+    }
+    importKBComments(portletDataContext,"kb-article-kb-comment",resourcePrimKeys,rootElement);
+  }
+  finally {
+    if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"attachments")) {
+      DLLocalServiceUtil.deleteDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+    }
+  }
+}

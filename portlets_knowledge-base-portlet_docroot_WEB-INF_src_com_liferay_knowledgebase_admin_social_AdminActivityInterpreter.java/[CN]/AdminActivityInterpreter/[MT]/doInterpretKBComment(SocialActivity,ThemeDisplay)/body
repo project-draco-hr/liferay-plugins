@@ -1,0 +1,33 @@
+{
+  KBComment kbComment=KBCommentLocalServiceUtil.getKBComment(activity.getClassPK());
+  KBArticle kbArticle=null;
+  KBTemplate kbTemplate=null;
+  String className=kbComment.getClassName();
+  if (className.equals(KBArticle.class.getName())) {
+    kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+  }
+ else   if (className.equals(KBTemplate.class.getName())) {
+    kbTemplate=KBTemplateLocalServiceUtil.getKBTemplate(kbComment.getClassPK());
+  }
+  String link=StringPool.BLANK;
+  if (kbArticle != null) {
+    link=KnowledgeBaseUtil.getKBArticleURL(themeDisplay.getPlid(),kbArticle.getResourcePrimKey(),themeDisplay.getPortalURL(),false);
+  }
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_KB_COMMENT) {
+    key="activity-knowledge-base-admin-add-kb-comment";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_COMMENT) {
+    key="activity-knowledge-base-admin-update-kb-comment";
+  }
+  String content=StringPool.BLANK;
+  if (kbArticle != null) {
+    content=kbArticle.getTitle();
+  }
+ else   if (kbTemplate != null) {
+    content=kbTemplate.getTitle();
+  }
+  String title=getTitle(activity,key,content,link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}

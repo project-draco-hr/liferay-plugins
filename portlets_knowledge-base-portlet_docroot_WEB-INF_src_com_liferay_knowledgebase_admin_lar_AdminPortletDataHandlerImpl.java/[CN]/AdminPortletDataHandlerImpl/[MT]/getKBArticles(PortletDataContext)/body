@@ -1,0 +1,17 @@
+{
+  List<KBArticle> kbArticles=new ArrayList<KBArticle>();
+  List<KBArticle> siblingKBArticles=new ArrayList<KBArticle>();
+  Long[][] params=new Long[][]{new Long[]{KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY}};
+  while ((params=KnowledgeBaseUtil.getParams(params[0])) != null) {
+    List<KBArticle> curKBArticles=KBArticleUtil.findByG_P_M(portletDataContext.getScopeGroupId(),ArrayUtil.toArray(params[1]),true,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticlePriorityComparator(true));
+    siblingKBArticles.addAll(curKBArticles);
+    if (params[0].length > 0) {
+      continue;
+    }
+    long[] siblingKBArticlesResourcePrimKeys=StringUtil.split(ListUtil.toString(siblingKBArticles,"resourcePrimKey"),0L);
+    params[0]=ArrayUtil.toArray(siblingKBArticlesResourcePrimKeys);
+    kbArticles.addAll(siblingKBArticles);
+    siblingKBArticles.clear();
+  }
+  return kbArticles;
+}

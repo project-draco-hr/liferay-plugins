@@ -1,0 +1,12 @@
+{
+  validate(content);
+  KBComment kbComment=kbCommentPersistence.findByPrimaryKey(kbCommentId);
+  kbComment.setModifiedDate(serviceContext.getModifiedDate(null));
+  kbComment.setClassNameId(classNameId);
+  kbComment.setClassPK(classPK);
+  kbComment.setContent(content);
+  kbComment.setHelpful(helpful);
+  kbCommentPersistence.update(kbComment,false);
+  socialActivityLocalService.addActivity(kbComment.getUserId(),kbComment.getGroupId(),KBComment.class.getName(),kbCommentId,AdminActivityKeys.UPDATE_KB_COMMENT,StringPool.BLANK,0);
+  return kbComment;
+}

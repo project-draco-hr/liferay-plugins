@@ -1,0 +1,26 @@
+{
+  super(portletRequest,new DisplayTerms(portletRequest),new DisplayTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,null,EMPTY_RESULTS_MESSAGE);
+  try {
+    PortalPreferences portalPreferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
+    PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(portletRequest);
+    String orderByCol=ParamUtil.getString(portletRequest,"orderByCol");
+    String orderByType=ParamUtil.getString(portletRequest,"orderByType");
+    if (Validator.isNotNull(orderByCol) && Validator.isNotNull(orderByType)) {
+      portalPreferences.setValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"kb-articles-order-by-col",orderByCol);
+      portalPreferences.setValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"kb-articles-order-by-type",orderByType);
+    }
+ else {
+      String portletOrderByCol=portletPreferences.getValue("kbArticlesOrderByCol",StringPool.BLANK);
+      String portletOrderByType=portletPreferences.getValue("kbArticlesOrderByType",StringPool.BLANK);
+      orderByCol=portalPreferences.getValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"kb-articles-order-by-col",portletOrderByCol);
+      orderByType=portalPreferences.getValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"kb-articles-order-by-type",portletOrderByType);
+    }
+    OrderByComparator orderByComparator=KnowledgeBaseUtil.getKBArticleOrderByComparator(orderByCol,orderByType);
+    setOrderByCol(orderByCol);
+    setOrderByType(orderByType);
+    setOrderByComparator(orderByComparator);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
+}

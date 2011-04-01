@@ -1,0 +1,17 @@
+{
+  List<KBArticle> siblingKBArticles=getSiblingKBArticles(kbArticle.getGroupId(),kbArticle.getResourcePrimKey(),WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticlePriorityComparator());
+  for (  KBArticle siblingKBArticle : siblingKBArticles) {
+    deleteKBArticle(siblingKBArticle);
+  }
+  resourceLocalService.deleteResource(kbArticle.getCompanyId(),KBArticle.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,kbArticle.getResourcePrimKey());
+  kbArticlePersistence.removeByResourcePrimKey(kbArticle.getResourcePrimKey());
+  kbCommentLocalService.deleteKBComments(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+  deleteAssets(kbArticle);
+  ratingsStatsLocalService.deleteStats(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+  socialActivityLocalService.deleteActivities(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+  Indexer indexer=IndexerRegistryUtil.getIndexer(KBArticle.class);
+  indexer.delete(kbArticle);
+  deleteKBArticleAttachments(kbArticle);
+  deleteSubscriptions(kbArticle);
+  workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(kbArticle.getCompanyId(),kbArticle.getGroupId(),KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+}

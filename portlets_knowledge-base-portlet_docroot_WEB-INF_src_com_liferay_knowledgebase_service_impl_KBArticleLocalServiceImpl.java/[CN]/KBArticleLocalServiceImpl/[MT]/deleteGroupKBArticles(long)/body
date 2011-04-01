@@ -1,0 +1,11 @@
+{
+  List<KBArticle> kbArticles=getSiblingKBArticles(groupId,KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticlePriorityComparator());
+  for (  KBArticle kbArticle : kbArticles) {
+    deleteKBArticle(kbArticle);
+  }
+  Group group=groupLocalService.getGroup(groupId);
+  List<Subscription> subscriptions=subscriptionLocalService.getSubscriptions(group.getCompanyId(),KBArticle.class.getName(),groupId);
+  for (  Subscription subscription : subscriptions) {
+    unsubscribeGroupKBArticles(subscription.getUserId(),groupId);
+  }
+}

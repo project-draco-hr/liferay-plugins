@@ -1,0 +1,14 @@
+{
+  long classNameId=PortalUtil.getClassNameId(classObj);
+  List<KBComment> kbComments=KBCommentUtil.findByG_C(portletDataContext.getScopeGroupId(),classNameId);
+  for (  KBComment kbComment : kbComments) {
+    if (!portletDataContext.isWithinDateRange(kbComment.getModifiedDate())) {
+      continue;
+    }
+    String path=getPortletPath(portletDataContext) + "/kbcomments/" + kbComment.getKbCommentId()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    exportKBComment(portletDataContext,rootElement,name,path,kbComment);
+  }
+}

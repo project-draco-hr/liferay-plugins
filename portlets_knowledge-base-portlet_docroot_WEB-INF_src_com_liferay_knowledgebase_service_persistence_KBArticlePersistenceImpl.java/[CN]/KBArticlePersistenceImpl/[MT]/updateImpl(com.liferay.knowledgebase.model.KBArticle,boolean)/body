@@ -1,0 +1,36 @@
+{
+  kbArticle=toUnwrappedModel(kbArticle);
+  boolean isNew=kbArticle.isNew();
+  KBArticleModelImpl kbArticleModelImpl=(KBArticleModelImpl)kbArticle;
+  if (Validator.isNull(kbArticle.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    kbArticle.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,kbArticle,merge);
+    kbArticle.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticle.getPrimaryKey(),kbArticle);
+  if (!isNew && (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticleModelImpl.getOriginalUuid(),Long.valueOf(kbArticleModelImpl.getOriginalGroupId())});
+  }
+  if (isNew || (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticle.getUuid(),Long.valueOf(kbArticle.getGroupId())},kbArticle);
+  }
+  if (!isNew && ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getVersion() != kbArticleModelImpl.getOriginalVersion()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalVersion())});
+  }
+  if (isNew || ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getVersion() != kbArticleModelImpl.getOriginalVersion()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticle.getResourcePrimKey()),Integer.valueOf(kbArticle.getVersion())},kbArticle);
+  }
+  return kbArticle;
+}

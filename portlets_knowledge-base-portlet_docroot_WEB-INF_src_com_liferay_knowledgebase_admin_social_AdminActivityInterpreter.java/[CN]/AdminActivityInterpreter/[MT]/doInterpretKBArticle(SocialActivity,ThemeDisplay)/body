@@ -1,0 +1,21 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  KBArticle kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(activity.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+  if (!KBArticlePermission.contains(permissionChecker,kbArticle,ActionKeys.VIEW)) {
+    return null;
+  }
+  String link=KnowledgeBaseUtil.getKBArticleURL(themeDisplay.getPlid(),kbArticle.getResourcePrimKey(),themeDisplay.getPortalURL(),false);
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_KB_ARTICLE) {
+    key="activity-knowledge-base-admin-add-kb-article";
+  }
+ else   if (activity.getType() == AdminActivityKeys.MOVE_KB_ARTICLE) {
+    key="activity-knowledge-base-admin-move-kb-article";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_ARTICLE) {
+    key="activity-knowledge-base-admin-update-kb-article";
+  }
+  String title=getTitle(activity,key,kbArticle.getTitle(),link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}

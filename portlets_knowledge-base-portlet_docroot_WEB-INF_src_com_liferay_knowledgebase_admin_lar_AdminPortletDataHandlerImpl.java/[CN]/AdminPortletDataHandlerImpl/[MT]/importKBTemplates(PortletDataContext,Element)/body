@@ -1,0 +1,12 @@
+{
+  Map<Long,Long> kbTemplateIds=new HashMap<Long,Long>();
+  for (  Element kbTemplateElement : rootElement.elements("kb-template")) {
+    String path=kbTemplateElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    KBTemplate kbTemplate=(KBTemplate)portletDataContext.getZipEntryAsObject(path);
+    importKBTemplate(portletDataContext,kbTemplateIds,kbTemplate);
+  }
+  importKBComments(portletDataContext,"kb-template-kb-comment",kbTemplateIds,rootElement);
+}

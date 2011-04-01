@@ -1,0 +1,28 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  try {
+    con=DataAccess.getConnection();
+    StringBundler sb=new StringBundler(4);
+    sb.append("insert into KBTemplate (uuid_, kbTemplateId, groupId, ");
+    sb.append("companyId, userId, userName, createDate, ");
+    sb.append("modifiedDate, title, content, description) values (?, ");
+    sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    ps=con.prepareStatement(sb.toString());
+    ps.setString(1,uuid);
+    ps.setLong(2,kbTemplateId);
+    ps.setLong(3,groupId);
+    ps.setLong(4,companyId);
+    ps.setLong(5,userId);
+    ps.setString(6,userName);
+    ps.setDate(7,createDate);
+    ps.setDate(8,modifiedDate);
+    ps.setString(9,title);
+    ps.setString(10,content);
+    ps.setString(11,description);
+    ps.executeUpdate();
+  }
+  finally {
+    DataAccess.cleanUp(con,ps);
+  }
+}

@@ -1,0 +1,25 @@
+{
+  long userId=portletDataContext.getUserId(kbTemplate.getUserUuid());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddCommunityPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setCreateDate(kbTemplate.getCreateDate());
+  serviceContext.setModifiedDate(kbTemplate.getModifiedDate());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  KBTemplate importedKBTemplate=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBTemplate existingKBTemplate=KBTemplateUtil.fetchByUUID_G(kbTemplate.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBTemplate == null) {
+      serviceContext.setUuid(kbTemplate.getUuid());
+      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+    }
+ else {
+      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+    }
+  }
+ else {
+    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+  }
+  kbTemplateIds.put(kbTemplate.getKbTemplateId(),importedKBTemplate.getKbTemplateId());
+  portletDataContext.importPermissions(KBTemplate.class,kbTemplate.getKbTemplateId(),importedKBTemplate.getKbTemplateId());
+}

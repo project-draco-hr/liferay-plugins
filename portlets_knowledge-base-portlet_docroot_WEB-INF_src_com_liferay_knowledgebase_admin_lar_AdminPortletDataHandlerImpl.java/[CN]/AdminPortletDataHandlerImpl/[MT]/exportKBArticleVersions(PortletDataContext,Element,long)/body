@@ -1,0 +1,11 @@
+{
+  Element versionsElement=kbArticleElement.addElement("versions");
+  String rootPath=getPortletPath(portletDataContext) + "/kbarticles/versions/" + resourcePrimKey;
+  List<KBArticle> kbArticles=KBArticleUtil.findByR_S(resourcePrimKey,WorkflowConstants.STATUS_APPROVED,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticleModifiedDateComparator(true));
+  for (  KBArticle kbArticle : kbArticles) {
+    String path=rootPath + StringPool.SLASH + kbArticle.getKbArticleId()+ ".xml";
+    Element curKBArticleElement=versionsElement.addElement("kb-article");
+    curKBArticleElement.addAttribute("path",path);
+    portletDataContext.addZipEntry(path,kbArticle);
+  }
+}

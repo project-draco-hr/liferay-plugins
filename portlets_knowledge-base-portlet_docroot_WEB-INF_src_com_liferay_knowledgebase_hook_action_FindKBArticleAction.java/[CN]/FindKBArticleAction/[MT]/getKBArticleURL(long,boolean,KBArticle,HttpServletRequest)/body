@@ -1,0 +1,36 @@
+{
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(kbArticle.getGroupId(),privateLayout,LayoutConstants.TYPE_PORTLET);
+  Layout selLayout=LayoutLocalServiceUtil.getLayout(plid);
+  if ((selLayout.getGroupId() == kbArticle.getGroupId()) && (selLayout.isTypePortlet())) {
+    layouts=ListUtil.copy(layouts);
+    layouts.remove(selLayout);
+    layouts.add(0,selLayout);
+  }
+  for (  Layout layout : layouts) {
+    LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+    List<Portlet> portlets=layoutTypePortlet.getAllPortlets();
+    for (    Portlet portlet : portlets) {
+      String rootPortletId=PortletConstants.getRootPortletId(portlet.getPortletId());
+      if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
+        return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+      }
+      if (!rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_ARTICLE)) {
+        continue;
+      }
+      PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
+      long resourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
+      KBArticle selKBArticle=null;
+      try {
+        selKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+      }
+ catch (      NoSuchArticleException nsae) {
+        continue;
+      }
+      long rootResourcePrimKey=selKBArticle.getRootResourcePrimKey();
+      if (kbArticle.getRootResourcePrimKey() == rootResourcePrimKey) {
+        return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+      }
+    }
+  }
+  return null;
+}

@@ -1,0 +1,20 @@
+{
+  KBArticle kbArticle=(KBArticle)EntityCacheUtil.getResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticleId,this);
+  if (kbArticle == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kbArticle=(KBArticle)session.get(KBArticleImpl.class,Long.valueOf(kbArticleId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kbArticle != null) {
+        cacheResult(kbArticle);
+      }
+      closeSession(session);
+    }
+  }
+  return kbArticle;
+}

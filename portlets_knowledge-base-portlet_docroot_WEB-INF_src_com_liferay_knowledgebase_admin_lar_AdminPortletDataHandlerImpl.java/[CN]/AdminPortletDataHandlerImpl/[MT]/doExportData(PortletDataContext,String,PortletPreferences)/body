@@ -3,15 +3,15 @@
   Document document=SAXReaderUtil.createDocument();
   Element rootElement=document.addElement("knowledge-base-admin-data");
   rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
-  exportArticles(portletDataContext,rootElement);
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_ARTICLE,"comments")) {
-    exportComments(portletDataContext,Article.class,"article-comment",rootElement);
+  exportKBArticles(portletDataContext,rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"kb-comments")) {
+    exportKBComments(portletDataContext,KBArticle.class,"kb-article-kb-comment",rootElement);
   }
-  if (portletDataContext.getBooleanParameter(_NAMESPACE,"templates")) {
-    exportTemplates(portletDataContext,rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"kb-templates")) {
+    exportKBTemplates(portletDataContext,rootElement);
   }
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_TEMPLATE,"comments")) {
-    exportComments(portletDataContext,Template.class,"template-comment",rootElement);
+  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_TEMPLATE,"kb-comments")) {
+    exportKBComments(portletDataContext,KBTemplate.class,"kb-template-kb-comment",rootElement);
   }
   return document.formattedString();
 }

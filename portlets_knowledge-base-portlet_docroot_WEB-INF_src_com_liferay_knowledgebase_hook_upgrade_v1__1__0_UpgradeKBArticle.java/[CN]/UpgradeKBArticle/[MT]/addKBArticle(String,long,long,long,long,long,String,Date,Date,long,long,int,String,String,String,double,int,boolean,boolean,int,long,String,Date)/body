@@ -1,0 +1,44 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  try {
+    con=DataAccess.getConnection();
+    StringBundler sb=new StringBundler(8);
+    sb.append("insert into KBArticle (uuid_, kbArticleId, ");
+    sb.append("resourcePrimKey, groupId, companyId, userId, ");
+    sb.append("userName, createDate, modifiedDate, ");
+    sb.append("rootResourcePrimKey, parentResourcePrimKey, version, ");
+    sb.append("title, content, description, priority, viewCount, ");
+    sb.append("latest, main, status, statusByUserId, ");
+    sb.append("statusByUserName, statusDate) values (?, ?, ?, ?, ?, ");
+    sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    ps=con.prepareStatement(sb.toString());
+    ps.setString(1,uuid);
+    ps.setLong(2,kbArticleId);
+    ps.setLong(3,resourcePrimKey);
+    ps.setLong(4,groupId);
+    ps.setLong(5,companyId);
+    ps.setLong(6,userId);
+    ps.setString(7,userName);
+    ps.setDate(8,createDate);
+    ps.setDate(9,modifiedDate);
+    ps.setLong(10,rootResourcePrimKey);
+    ps.setLong(11,parentResourcePrimKey);
+    ps.setInt(12,version);
+    ps.setString(13,title);
+    ps.setString(14,content);
+    ps.setString(15,description);
+    ps.setDouble(16,priority);
+    ps.setInt(17,viewCount);
+    ps.setBoolean(18,latest);
+    ps.setBoolean(19,main);
+    ps.setInt(20,status);
+    ps.setLong(21,statusByUserId);
+    ps.setString(22,statusByUserName);
+    ps.setDate(23,statusDate);
+    ps.executeUpdate();
+  }
+  finally {
+    DataAccess.cleanUp(con,ps);
+  }
+}

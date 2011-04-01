@@ -1,0 +1,10 @@
+{
+  HttpServletRequest request=liferayPortletRequest.getHttpServletRequest();
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!AdminPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),ActionKeys.ADD_KB_ARTICLE)) {
+    return null;
+  }
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,PortletKeys.KNOWLEDGE_BASE_ADMIN,getControlPanelPlid(themeDisplay),PortletRequest.RENDER_PHASE);
+  portletURL.setParameter("jspPage","/admin/edit_article.jsp");
+  return portletURL;
+}

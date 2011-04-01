@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    KBTemplate kbTemplate=(KBTemplate)session.get(KBTemplateImpl.class,Long.valueOf(kbTemplateId));
+    if (kbTemplate == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kbTemplateId);
+      }
+      throw new NoSuchTemplateException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + kbTemplateId);
+    }
+    return kbTemplatePersistence.remove(kbTemplate);
+  }
+ catch (  NoSuchTemplateException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

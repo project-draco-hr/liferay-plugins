@@ -2,12 +2,12 @@
   try {
     int status=ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_APPROVED);
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
-    Article article=null;
+    KBArticle kbArticle=null;
     long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
     if (resourcePrimKey > 0) {
-      article=ArticleServiceUtil.getLatestArticle(resourcePrimKey,status);
+      kbArticle=KBArticleServiceUtil.getLatestKBArticle(resourcePrimKey,status);
     }
-    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,article);
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle);
   }
  catch (  Exception e) {
     if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {

@@ -1,0 +1,14 @@
+{
+  validate(priority);
+  updatePermissionFields(resourcePrimKey,parentResourcePrimKey);
+  List<KBArticle> kbArticles=getKBArticleVersions(resourcePrimKey,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticleVersionComparator());
+  for (  KBArticle kbArticle : kbArticles) {
+    kbArticle.setParentResourcePrimKey(parentResourcePrimKey);
+    kbArticle.setPriority(priority);
+    kbArticlePersistence.update(kbArticle,false);
+  }
+  KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  if (kbArticle.isApproved() || !kbArticle.isFirstVersion()) {
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.MOVE_KB_ARTICLE,StringPool.BLANK,0);
+  }
+}
