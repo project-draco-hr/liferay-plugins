@@ -1,0 +1,15 @@
+{
+  String barText=(String)message.getPayload();
+  boolean rollback=message.getBoolean("ROLLBACK");
+  try {
+    if (rollback) {
+      BarLocalServiceUtil.addBarWithoutClassNameRollback(barText);
+    }
+ else {
+      BarLocalServiceUtil.addBarWithoutClassName(barText);
+    }
+  }
+ catch (  SystemException se) {
+    throw new RuntimeException(se);
+  }
+}
