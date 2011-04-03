@@ -1,0 +1,28 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getConnection();
+    ps=con.prepareStatement("select * from KB_Comment");
+    rs=ps.executeQuery();
+    while (rs.next()) {
+      String uuid=rs.getString("uuid_");
+      long commentId=rs.getLong("commentId");
+      long groupId=rs.getLong("groupId");
+      long companyId=rs.getLong("companyId");
+      long userId=rs.getLong("userId");
+      String userName=rs.getString("userName");
+      Date createDate=rs.getDate("createDate");
+      Date modifiedDate=rs.getDate("modifiedDate");
+      long classNameId=rs.getLong("classNameId");
+      long classPK=rs.getLong("classPK");
+      String content=rs.getString("content");
+      boolean helpful=rs.getBoolean("helpful");
+      addKBComment(uuid,commentId,groupId,companyId,userId,userName,createDate,modifiedDate,classNameId,classPK,content,helpful);
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+}

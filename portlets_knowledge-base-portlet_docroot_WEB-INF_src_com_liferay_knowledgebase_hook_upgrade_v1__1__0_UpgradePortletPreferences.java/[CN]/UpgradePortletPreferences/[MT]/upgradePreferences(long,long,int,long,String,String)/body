@@ -1,0 +1,39 @@
+{
+  int pos=portletId.indexOf(PortletConstants.WAR_SEPARATOR);
+  String portletName=portletId.substring(0,pos);
+  PortletPreferences defaultPortletPreferences=_portletNameToPortletPreferencesMap.get(portletName);
+  Map<String,String[]> defaultPortletPreferencesMap=defaultPortletPreferences.getMap();
+  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.fromXML(companyId,ownerId,ownerType,plid,portletId,xml);
+  Map<String,String[]> portletPreferencesMap=portletPreferences.getMap();
+  for (  String oldName : portletPreferencesMap.keySet()) {
+    String newName=TextFormatter.format(oldName,TextFormatter.M);
+    String[] oldValues=portletPreferencesMap.get(oldName);
+    portletPreferences.reset(oldName);
+    if (defaultPortletPreferencesMap.containsKey(newName)) {
+      portletPreferences.setValues(newName,oldValues);
+    }
+  }
+  for (  String name : defaultPortletPreferencesMap.keySet()) {
+    if (portletPreferencesMap.containsKey(name)) {
+      continue;
+    }
+    String[] values=defaultPortletPreferencesMap.get(name);
+    portletPreferences.setValues(name,values);
+  }
+  if (_log.isDebugEnabled()) {
+    StringBundler sb=new StringBundler(11);
+    sb.append("Updating portlet preferences for {companyId=");
+    sb.append(companyId);
+    sb.append(", ownerId=");
+    sb.append(ownerId);
+    sb.append(", ownerType=");
+    sb.append(ownerType);
+    sb.append(", plid=");
+    sb.append(plid);
+    sb.append(", portletId=");
+    sb.append(portletId);
+    sb.append("}");
+    _log.debug(sb.toString());
+  }
+  return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+}
