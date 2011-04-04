@@ -5,7 +5,8 @@
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   jsonObject.put("contentValid",contentValid);
   if (contentValid) {
-    String appId="http://localhost/raw.xml";
+    String portalURL=PortalUtil.getPortalURL(themeDisplay);
+    String appId=portalURL.concat("/raw.xml");
     jsonObject.put("appId",appId);
     long moduleId=ShindigUtil.getModuleId(resourceResponse.getNamespace());
     jsonObject.put("moduleId",moduleId);
@@ -13,7 +14,6 @@
     jsonObject.put("requiresPubsub",requiresPubsub);
     String ownerId=ShindigUtil.getOwnerId(themeDisplay.getLayout());
     String currentURL=PortalUtil.getCurrentURL(resourceRequest);
-    String portalURL=PortalUtil.getPortalURL(themeDisplay);
     String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),appId,portalURL,appId,moduleId,currentURL);
     jsonObject.put("secureToken",secureToken);
     jsonObject.put("specUrl",appId);
