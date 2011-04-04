@@ -1,22 +1,5 @@
 {
-  long newClassNameId=getClassNameId(newClassName);
   long oldClassNameId=getClassNameId(oldClassName);
-  StringBundler sb=new StringBundler(3);
-  sb.append("delete from ClassName_ where classNameId = '");
-  sb.append(newClassNameId);
-  sb.append("'");
-  if (_log.isDebugEnabled()) {
-    _log.debug(sb.toString());
-  }
-  runSQL(sb.toString());
-  sb=new StringBundler(5);
-  sb.append("update ClassName_ set value = '");
-  sb.append(newClassName);
-  sb.append("' where classNameId = '");
-  sb.append(oldClassNameId);
-  sb.append("'");
-  if (_log.isDebugEnabled()) {
-    _log.debug(sb.toString());
-  }
-  runSQL(sb.toString());
+  long newClassNameId=getClassNameId(newClassName);
+  runSQL("update ClassName_ set classNameId = " + newClassNameId + " value = '"+ newClassName+ "' where classNameId = "+ oldClassNameId);
 }
