@@ -4,28 +4,20 @@
   ResultSet rs=null;
   try {
     con=DataAccess.getConnection();
-    StringBundler sb=new StringBundler(4);
-    sb.append("select statsId, totalScore, averageScore from ");
-    sb.append("RatingsStats where classNameId = '");
-    sb.append(getClassNameId(_ARTICLE_CLASS_NAME));
-    sb.append("'");
-    ps=con.prepareStatement(sb.toString());
+    long classNameId=getClassNameId("com.liferay.knowledgebase.model.Article");
+    ps=con.prepareStatement("select statsId, totalScore, averageScore from RatingsStats " + "where classNameId = " + classNameId);
     rs=ps.executeQuery();
     while (rs.next()) {
       long statsId=rs.getLong("statsId");
       double totalScore=rs.getDouble("totalScore");
       double averageScore=rs.getDouble("averageScore");
-      sb=new StringBundler(7);
-      sb.append("update RatingsStats set totalScore = '");
+      StringBundler sb=new StringBundler(6);
+      sb.append("update RatingsStats set totalScore = ");
       sb.append(totalScore * 2);
-      sb.append("', averageScore = '");
+      sb.append(", averageScore = ");
       sb.append(averageScore * 2);
-      sb.append("' where statsId = '");
+      sb.append(" where statsId = ");
       sb.append(statsId);
-      sb.append("'");
-      if (_log.isDebugEnabled()) {
-        _log.debug(sb.toString());
-      }
       runSQL(sb.toString());
     }
   }
