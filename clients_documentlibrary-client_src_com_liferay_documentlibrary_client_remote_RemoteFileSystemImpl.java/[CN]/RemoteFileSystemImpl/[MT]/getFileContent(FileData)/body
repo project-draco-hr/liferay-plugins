@@ -1,0 +1,6 @@
+{
+  String fileIdString=fileData.getUuid().toString();
+  String url=StringUtil.replace(_GET_FILE_CONTENT_TEMPLATE,new String[]{"$SERVER_URL","$REPOSITORY_ID","$FILE_UUID"},new String[]{AppPropsValues.SERVER_URL,AppPropsValues.REPOSITORY_ID,fileIdString});
+  ResumableAsyncHandler<Response> resumableAsyncHandler=new FileContentHandler(fileData);
+  _executeRequest(url,"GET",resumableAsyncHandler);
+}

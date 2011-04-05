@@ -1,0 +1,22 @@
+{
+  if (_log.isInfoEnabled()) {
+    _log.info("Connecting with " + url);
+  }
+  RequestBuilder requestBuilder=new RequestBuilder();
+  requestBuilder.setMethod(method);
+  requestBuilder.setUrl(url);
+  RealmBuilder realmBuilder=new RealmBuilder();
+  realmBuilder.setPrincipal(AppPropsValues.USERNAME);
+  realmBuilder.setPassword(AppPropsValues.PASSWORD);
+  realmBuilder.setScheme(Realm.AuthScheme.BASIC);
+  Realm realm=realmBuilder.build();
+  requestBuilder.setRealm(realm);
+  Request request=requestBuilder.build();
+  try {
+    AsyncHttpClient asyncHttpClient=new AsyncHttpClient();
+    asyncHttpClient.executeRequest(request,asyncHandler);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+}

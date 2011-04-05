@@ -1,0 +1,23 @@
+{
+  _fileData=fileData;
+  StringBundler sb=new StringBundler(3);
+  sb.append(AppPropsValues.ROOT_FOLDER);
+  sb.append(File.separator);
+  sb.append(FileSystemManagerUtil.getFullFileName(fileData.getId()));
+  String filename=sb.toString();
+  File file=new File(filename);
+  if (_log.isInfoEnabled()) {
+    _log.info("Creating file " + filename);
+  }
+  try {
+    if (!file.exists()) {
+      FileSystemEventManagerUtil.addLocalFileEvent(fileData.getId(),ChangeType.ADDED);
+      file.createNewFile();
+    }
+    _randomAccessFile=new RandomAccessFile(file,"rw");
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+    _randomAccessFile=null;
+  }
+}

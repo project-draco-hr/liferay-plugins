@@ -1,0 +1,21 @@
+{
+  ResponseBuilder responseBuilder=getResponseBuilder();
+  Response response=responseBuilder.build();
+  try {
+    String responseBody=response.getResponseBody();
+    if (responseBody.length() > 2) {
+      if (_log.isInfoEnabled()) {
+        _log.info("Error updating folder " + _folderData.getTitle() + StringPool.SPACE+ response.getResponseBody());
+      }
+    }
+ else {
+      if (_log.isInfoEnabled()) {
+        _log.info("Updated server with deleted folder " + _folderData.getTitle());
+      }
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage());
+  }
+  return response;
+}

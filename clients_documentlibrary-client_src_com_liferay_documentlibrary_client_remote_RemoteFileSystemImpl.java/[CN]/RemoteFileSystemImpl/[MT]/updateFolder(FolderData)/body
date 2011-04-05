@@ -1,0 +1,6 @@
+{
+  String folderName=_urlEncoded(folderData.getTitle());
+  String url=StringUtil.replace(_UPDATE_FOLDER_TEMPLATE,new String[]{"$SERVER_URL","$REPOSITORY_ID","$FOLDER_ID","$FOLDER_NAME"},new String[]{AppPropsValues.SERVER_URL,AppPropsValues.REPOSITORY_ID,Long.toString(folderData.getId()),folderName});
+  AsyncHandler<Response> asyncHandler=new UpdateFolderHandler(folderData);
+  _executeRequest(url,"POST",asyncHandler);
+}

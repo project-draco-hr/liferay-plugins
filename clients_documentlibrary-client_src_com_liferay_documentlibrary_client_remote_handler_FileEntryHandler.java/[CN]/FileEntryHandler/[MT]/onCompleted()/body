@@ -1,0 +1,18 @@
+{
+  ResponseBuilder responseBuilder=getResponseBuilder();
+  Response response=responseBuilder.build();
+  try {
+    JSONArray fileEntriesJson=new JSONArray(response.getResponseBody());
+    Map<Long,FileEntry> fileEntriesMap=new HashMap<Long,FileEntry>();
+    for (int i=0; i < fileEntriesJson.length(); i++) {
+      JSONObject fileEntry=fileEntriesJson.getJSONObject(i);
+      FileEntry fileData=new FileEntry(fileEntry);
+      fileEntriesMap.put(fileData.getFileEntryId(),fileData);
+    }
+    _fileEntryListener.handleFiles(_parentFolder,fileEntriesMap);
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage());
+  }
+  return response;
+}

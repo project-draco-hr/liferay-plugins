@@ -1,0 +1,14 @@
+{
+  for (  Entry<Long,FileEntry> fileEntry : fileEntries.entrySet()) {
+    FileEntry newFile=fileEntry.getValue();
+    Long fileEntryId=fileEntry.getKey();
+    if (FileSystemManagerUtil.containsFile(fileEntryId)) {
+      FileData originalFile=FileSystemManagerUtil.getFileData(fileEntryId);
+    }
+ else {
+      FileData newFileData=new FileData(newFile);
+      FileSystemManagerUtil.addFile(newFileData);
+      RemoteFileSystemUtil.getFile(newFileData);
+    }
+  }
+}

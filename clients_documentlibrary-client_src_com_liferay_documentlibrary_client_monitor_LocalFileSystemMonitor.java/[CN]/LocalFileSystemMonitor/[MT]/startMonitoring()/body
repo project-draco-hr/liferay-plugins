@@ -1,0 +1,20 @@
+{
+  int mask=JNotify.FILE_CREATED | JNotify.FILE_DELETED | JNotify.FILE_MODIFIED| JNotify.FILE_RENAMED;
+  stopMonitoring();
+  if (_log.isInfoEnabled()) {
+    _log.info("Starting to sync server with root " + AppPropsValues.ROOT_FOLDER);
+  }
+  if (_log.isInfoEnabled()) {
+    _log.info("Starting initial sync");
+  }
+  LocalFileSystemListener folderListener=new LocalFileSystemListener();
+  try {
+    _watchId=JNotify.addWatch(AppPropsValues.ROOT_FOLDER,mask,true,folderListener);
+    if (_log.isInfoEnabled()) {
+      _log.info("Starting to monitor " + AppPropsValues.ROOT_FOLDER);
+    }
+  }
+ catch (  JNotifyException e) {
+    _log.error(e,e);
+  }
+}
