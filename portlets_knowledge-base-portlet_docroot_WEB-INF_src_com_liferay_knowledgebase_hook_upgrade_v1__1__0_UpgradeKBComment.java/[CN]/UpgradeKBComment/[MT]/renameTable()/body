@@ -1,0 +1,13 @@
+{
+  runSQL(KBCommentTable.TABLE_SQL_DROP);
+  runSQL("alter table KB_Comment add kbCommentId LONG");
+  runSQL("update KB_Comment set kbCommentId = commentId");
+  Object[][] columns={{"commentId",new Integer(Types.BIGINT)}};
+  columns=ArrayUtil.append(columns,KBCommentTable.TABLE_COLUMNS);
+  UpgradeTable upgradeTable=UpgradeTableFactoryUtil.getUpgradeTable("KB_Comment",columns);
+  String createSQL=KBCommentTable.TABLE_SQL_CREATE;
+  createSQL=createSQL.substring(0,createSQL.length() - 1) + ",commentId VARCHAR(75) null)";
+  upgradeTable.setCreateSQL(createSQL);
+  upgradeTable.updateTable();
+  runSQL("alter table KBComment drop column commentId");
+}

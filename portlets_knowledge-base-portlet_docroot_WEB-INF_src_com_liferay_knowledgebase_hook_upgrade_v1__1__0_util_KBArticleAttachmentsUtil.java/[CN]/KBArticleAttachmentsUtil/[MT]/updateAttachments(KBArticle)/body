@@ -1,0 +1,25 @@
+{
+  try {
+    long folderId=kbArticle.getClassPK();
+    String oldDirName="knowledgebase/articles/" + folderId;
+    String newDirName="knowledgebase/kbarticles/" + folderId;
+    DLLocalServiceUtil.addDirectory(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,newDirName);
+    String[] fileNames=DLLocalServiceUtil.getFileNames(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,oldDirName);
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setCreateDate(kbArticle.getModifiedDate());
+    serviceContext.setModifiedDate(kbArticle.getModifiedDate());
+    serviceContext.setScopeGroupId(kbArticle.getGroupId());
+    for (    String fileName : fileNames) {
+      String shortFileName=FileUtil.getShortFileName(fileName);
+      byte[] bytes=DLLocalServiceUtil.getFile(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      DLLocalServiceUtil.addFile(kbArticle.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,newDirName + StringPool.SLASH + shortFileName,0,StringPool.BLANK,serviceContext.getModifiedDate(null),serviceContext,bytes);
+    }
+    DLLocalServiceUtil.deleteDirectory(kbArticle.getCompanyId(),CompanyConstants.SYSTEM_STRING,CompanyConstants.SYSTEM,oldDirName);
+    if (_log.isInfoEnabled()) {
+      _log.info("Added attachments for " + folderId);
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e.getMessage());
+  }
+}
