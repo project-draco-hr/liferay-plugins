@@ -1,0 +1,23 @@
+{
+  Element versionsElement=kbArticleElement.element("versions");
+  List<Element> kbArticleElements=versionsElement.elements("kb-article");
+  KBArticle importedKBArticle=null;
+  for (int i=0; i < kbArticleElements.size(); i++) {
+    Element curKBArticleElement=kbArticleElements.get(i);
+    KBArticle curKBArticle=(KBArticle)portletDataContext.getZipEntryAsObject(curKBArticleElement.attributeValue("path"));
+    long curUserId=portletDataContext.getUserId(curKBArticle.getUserUuid());
+    String curDirName=StringPool.BLANK;
+    if (i == (kbArticleElements.size() - 1)) {
+      curDirName=dirName;
+    }
+    ServiceContext serviceContext=portletDataContext.createServiceContext(curKBArticleElement,curKBArticle,_NAMESPACE);
+    if (importedKBArticle == null) {
+      serviceContext.setUuid(uuid);
+      importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(curUserId,parentResourcePrimKey,curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curDirName,serviceContext);
+    }
+ else {
+      importedKBArticle=KBArticleLocalServiceUtil.updateKBArticle(curUserId,importedKBArticle.getResourcePrimKey(),curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curDirName,serviceContext);
+    }
+  }
+  return importedKBArticle;
+}

@@ -1,20 +1,8 @@
 {
   Element kbArticleElement=rootElement.addElement("kb-article");
-  kbArticleElement.addAttribute("path",path);
-  kbArticle.setUserUuid(kbArticle.getUserUuid());
-  portletDataContext.addZipEntry(path,kbArticle);
-  portletDataContext.addPermissions(KBArticle.class,kbArticle.getResourcePrimKey());
   exportKBArticleVersions(portletDataContext,kbArticleElement,kbArticle.getResourcePrimKey());
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"attachments")) {
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"attachments")) {
     exportKBArticleAttachments(portletDataContext,rootElement,kbArticle);
   }
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"categories")) {
-    portletDataContext.addAssetCategories(KBArticle.class,kbArticle.getResourcePrimKey());
-  }
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"tags")) {
-    portletDataContext.addAssetTags(KBArticle.class,kbArticle.getResourcePrimKey());
-  }
-  if (portletDataContext.getBooleanParameter(_NAMESPACE_KB_ARTICLE,"ratings")) {
-    portletDataContext.addRatingsEntries(KBArticle.class,kbArticle.getResourcePrimKey());
-  }
+  portletDataContext.addClassedModel(kbArticleElement,path,kbArticle,_NAMESPACE);
 }

@@ -1,10 +1,7 @@
 {
   long userId=portletDataContext.getUserId(kbComment.getUserUuid());
   long classPK=MapUtil.getLong(classPKs,kbComment.getClassPK());
-  ServiceContext serviceContext=new ServiceContext();
-  serviceContext.setCreateDate(kbComment.getCreateDate());
-  serviceContext.setModifiedDate(kbComment.getModifiedDate());
-  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbCommentElement,kbComment,_NAMESPACE);
   if (portletDataContext.isDataStrategyMirror()) {
     KBComment existingKBComment=KBCommentUtil.fetchByUUID_G(kbComment.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBComment == null) {
