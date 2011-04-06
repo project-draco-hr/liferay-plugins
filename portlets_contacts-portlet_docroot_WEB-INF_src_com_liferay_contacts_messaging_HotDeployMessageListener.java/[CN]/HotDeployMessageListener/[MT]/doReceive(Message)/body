@@ -1,0 +1,15 @@
+{
+  String command=message.getString("command");
+  String servletContextName=message.getString("servletContextName");
+  if (!command.equals("deploy")) {
+    return;
+  }
+  if (servletContextName.equals("chat-portlet")) {
+    registerChatExtension();
+  }
+  if (servletContextName.equals(_SERVLET_CONTEXT_NAME)) {
+    if (PortletLocalServiceUtil.hasPortlet(message.getLong("companyId"),"1_WAR_chatportlet")) {
+      registerChatExtension();
+    }
+  }
+}
