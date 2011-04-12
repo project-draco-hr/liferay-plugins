@@ -1,0 +1,30 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  int layoutSetPrototypeId=ParamUtil.getInteger(resourceRequest,"layoutSetPrototypeId");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  if (layoutSetPrototypeId <= 0) {
+    jsonObject.put("layoutSetPrototypeId",layoutSetPrototypeId);
+    jsonObject.put("name",themeDisplay.translate("none"));
+    jsonObject.put("description",StringPool.BLANK);
+    JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+    jsonObject.put("layouts",jsonArray);
+  }
+ else {
+    LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
+    jsonObject.put("layoutSetPrototypeId",layoutSetPrototypeId);
+    jsonObject.put("name",layoutSetPrototype.getName(themeDisplay.getLocale()));
+    jsonObject.put("description",layoutSetPrototype.getDescription());
+    JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+    Group layoutSetPrototypeGroup=layoutSetPrototype.getGroup();
+    List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(layoutSetPrototypeGroup.getGroupId(),true,0);
+    for (    Layout layout : layouts) {
+      JSONObject curJsonObject=JSONFactoryUtil.createJSONObject();
+      curJsonObject.put("plid",layout.getPlid());
+      curJsonObject.put("name",layout.getName(themeDisplay.getLocale()));
+      jsonArray.put(curJsonObject);
+    }
+    jsonObject.put("layouts",jsonArray);
+  }
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+  ServletResponseUtil.write(response,jsonObject.toString());
+}

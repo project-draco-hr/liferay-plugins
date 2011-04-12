@@ -1,0 +1,30 @@
+{
+  String redirect=ParamUtil.getString(actionRequest,"redirect");
+  if (Validator.isNotNull(redirect)) {
+    doAddSite(actionRequest,actionResponse);
+  }
+ else {
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+    try {
+      doAddSite(actionRequest,actionResponse);
+      jsonObject.put("result","success");
+    }
+ catch (    Exception e) {
+      jsonObject.put("result","failure");
+      String message;
+      if (e instanceof DuplicateGroupException) {
+        message="please-enter-a-unique-name";
+      }
+ else       if (e instanceof GroupNameException) {
+        message="please-enter-a-valid-name";
+      }
+ else {
+        message="your-request-failed-to-complete";
+      }
+      ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+      jsonObject.put("message",themeDisplay.translate(message));
+    }
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
+    ServletResponseUtil.write(response,jsonObject.toString());
+  }
+}

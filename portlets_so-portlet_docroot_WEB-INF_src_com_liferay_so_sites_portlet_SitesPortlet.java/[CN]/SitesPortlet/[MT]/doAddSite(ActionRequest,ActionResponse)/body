@@ -11,7 +11,14 @@
   UnicodeProperties typeSettingsProperties=group.getTypeSettingsProperties();
   typeSettingsProperties.setProperty("customJspServletContextName","so-hook");
   group=GroupServiceUtil.updateGroup(group.getGroupId(),typeSettingsProperties.toString());
-  long publicLayoutSetPrototypeId=ParamUtil.getLong(actionRequest,"publicLayoutSetPrototypeId");
-  long privateLayoutSetPrototypeId=ParamUtil.getLong(actionRequest,"privateLayoutSetPrototypeId");
+  long layoutSetPrototypeId=ParamUtil.getLong(actionRequest,"layoutSetPrototypeId");
+  long publicLayoutSetPrototypeId=0;
+  long privateLayoutSetPrototypeId=0;
+  if (type == GroupConstants.TYPE_COMMUNITY_OPEN) {
+    publicLayoutSetPrototypeId=layoutSetPrototypeId;
+  }
+ else {
+    privateLayoutSetPrototypeId=layoutSetPrototypeId;
+  }
   PortalClassInvoker.invoke(true,_applyLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId,serviceContext);
 }
