@@ -1,5 +1,8 @@
 {
   List<Website> websites=WebsiteLocalServiceUtil.getWebsites(user.getCompanyId(),Contact.class.getName(),user.getContactId());
+  if (websites.isEmpty()) {
+    return StringPool.BLANK;
+  }
   StringBundler sb=new StringBundler(websites.size() * 5);
   for (  Website website : websites) {
     sb.append("URL;TYPE=");
