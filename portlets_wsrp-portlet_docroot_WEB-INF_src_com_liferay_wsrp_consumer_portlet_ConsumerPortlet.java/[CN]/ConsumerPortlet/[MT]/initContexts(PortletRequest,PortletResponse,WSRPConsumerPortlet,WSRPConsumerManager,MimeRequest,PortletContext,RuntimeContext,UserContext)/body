@@ -25,6 +25,11 @@
     Locale locale=locales.get(i);
     localesArray[i]=locale.toString();
   }
+  Locale consumerLocale=themeDisplay.getLocale();
+  if (!locales.contains(consumerLocale)) {
+    String[] addedLocale={consumerLocale.toString(),consumerLocale.getLanguage()};
+    localesArray=ArrayUtil.append(addedLocale,localesArray);
+  }
   mimeRequest.setLocales(localesArray);
   mimeRequest.setMarkupCharacterSets(_CHAR_SETS);
   mimeRequest.setMimeTypes(_MIME_TYPES);
