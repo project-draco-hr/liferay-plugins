@@ -12,6 +12,13 @@
     if (cacheControl.getExpires() == 0) {
       resourceResponse.setProperty(HttpHeaders.CACHE_CONTROL,HttpHeaders.CACHE_CONTROL_NO_CACHE_NO_STORE_VALUE);
     }
+ else     if (cacheControl.getExpires() > 0) {
+      String maxAge=StringUtil.valueOf(cacheControl.getExpires());
+      resourceResponse.setProperty(HttpHeaders.CACHE_CONTROL,"max-age=" + maxAge);
+    }
+ else     if (cacheControl.getExpires() == -1) {
+      resourceResponse.setProperty(HttpHeaders.CACHE_CONTROL,HttpHeaders.CACHE_CONTROL_DEFAULT_VALUE);
+    }
   }
   NamedString[] clientAttributes=resourceContext.getClientAttributes();
   if (clientAttributes != null) {
