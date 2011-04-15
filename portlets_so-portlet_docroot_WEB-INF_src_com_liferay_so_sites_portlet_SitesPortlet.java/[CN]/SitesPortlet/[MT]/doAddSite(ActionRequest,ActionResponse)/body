@@ -12,13 +12,23 @@
   typeSettingsProperties.setProperty("customJspServletContextName","so-hook");
   group=GroupServiceUtil.updateGroup(group.getGroupId(),typeSettingsProperties.toString());
   long layoutSetPrototypeId=ParamUtil.getLong(actionRequest,"layoutSetPrototypeId");
+  boolean privateLayout=(type != GroupConstants.TYPE_COMMUNITY_OPEN);
   long publicLayoutSetPrototypeId=0;
   long privateLayoutSetPrototypeId=0;
-  if (type == GroupConstants.TYPE_COMMUNITY_OPEN) {
-    publicLayoutSetPrototypeId=layoutSetPrototypeId;
-  }
- else {
+  if (privateLayout) {
     privateLayoutSetPrototypeId=layoutSetPrototypeId;
   }
+ else {
+    publicLayoutSetPrototypeId=layoutSetPrototypeId;
+  }
   PortalClassInvoker.invoke(true,_applyLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId,serviceContext);
+  long[] deleteLayoutIds=getLongArray(actionRequest,"deleteLayoutIds");
+  List<Layout> layouts=new ArrayList(deleteLayoutIds.length);
+  for (  long deleteLayoutId : deleteLayoutIds) {
+    Layout layout=LayoutLocalServiceUtil.getLayout(group.getGroupId(),privateLayout,deleteLayoutId);
+    layouts.add(layout);
+  }
+  for (  Layout layout : layouts) {
+    LayoutLocalServiceUtil.deleteLayout(layout,true);
+  }
 }
