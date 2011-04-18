@@ -1,21 +1,11 @@
 {
   Portlet portlet=_portletsPool.get(wsrpConsumerPortletUuid);
-  if (portlet != null && portlet.isActive()) {
+  if ((portlet != null) && portlet.isActive()) {
     return portlet;
-  }
-  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
-  PortletDescription portletDescription=null;
-  try {
-    WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
-    portletDescription=wsrpConsumerManager.getPortletDescription(portletHandle);
-  }
- catch (  Exception e) {
-    _log.warn("Unable to connect to WSRP producer for portlet " + wsrpConsumerPortletUuid,e);
   }
   String portletName=ConsumerPortlet.PORTLET_NAME_PREFIX.concat(wsrpConsumerPortletUuid);
   String portletId=PortalUtil.getJsSafePortletId(PortalUUIDUtil.toJsSafeUuid(portletName));
   portlet=PortletLocalServiceUtil.clonePortlet(companyId,_CONSUMER_PORTLET_ID);
-  portlet.setActive(true);
   portlet.setPortletId(portletId);
   portlet.setTimestamp(System.currentTimeMillis());
   PortletApp portletApp=PortletLocalServiceUtil.getPortletApp(ClpSerializer.getServletContextName());
@@ -24,12 +14,23 @@
   portlet.setDisplayName(portletId);
   Map<String,String> initParams=portlet.getInitParams();
   initParams.put(InvokerPortlet.INIT_INVOKER_PORTLET_NAME,_CONSUMER_PORTLET_NAME);
+  WSRPConsumer wsrpConsumer=wsrpConsumerPersistence.findByPrimaryKey(wsrpConsumerId);
+  PortletDescription portletDescription=null;
+  try {
+    WSRPConsumerManager wsrpConsumerManager=WSRPConsumerManagerFactory.getWSRPConsumerManager(wsrpConsumer,userToken);
+    portletDescription=wsrpConsumerManager.getPortletDescription(portletHandle);
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Unable to connect to WSRP producer for portlet " + wsrpConsumerPortletUuid,e);
+    }
+  }
   if (portletDescription != null) {
     addPortletExtraInfo(portlet,portletApp,portletDescription,name);
+    portlet.setActive(true);
   }
  else {
     PortletInfo portletInfo=new PortletInfo(name,name,StringPool.BLANK,StringPool.BLANK);
-    portlet.setActive(false);
     portlet.setPortletInfo(portletInfo);
   }
   _portletsPool.put(wsrpConsumerPortletUuid,portlet);
