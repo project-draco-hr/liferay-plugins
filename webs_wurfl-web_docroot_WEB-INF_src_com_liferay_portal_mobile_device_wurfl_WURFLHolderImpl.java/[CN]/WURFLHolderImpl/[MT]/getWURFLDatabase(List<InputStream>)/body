@@ -1,0 +1,18 @@
+{
+  String primaryDatabaseFileName=PortletPropsValues.WURFL_DATABASE_PRIMARY;
+  InputStream primaryDatabaseInputStream=getClass().getResourceAsStream(primaryDatabaseFileName);
+  if (Validator.isNull(primaryDatabaseInputStream)) {
+    throw new IllegalStateException("WURFL database not initialized, please define: " + PortletPropsKeys.WURFL_DATABASE_PRIMARY);
+  }
+  if (primaryDatabaseFileName.endsWith(".zip") || primaryDatabaseFileName.endsWith(".jar")) {
+    ZipInputStream zipInputStream=new ZipInputStream(primaryDatabaseInputStream);
+    primaryDatabaseInputStream=zipInputStream;
+    zipInputStream.getNextEntry();
+  }
+ else   if (primaryDatabaseFileName.endsWith(".gz")) {
+    primaryDatabaseInputStream=new GZIPInputStream(primaryDatabaseInputStream);
+  }
+  XMLResource primaryDatabaseXMLResource=new XMLResource(primaryDatabaseInputStream);
+  inputStreams.add(primaryDatabaseInputStream);
+  return primaryDatabaseXMLResource;
+}

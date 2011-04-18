@@ -1,0 +1,34 @@
+{
+  if (_initialized) {
+    return;
+  }
+  WURFLUtils wurflUtils=_wurflHolder.getWURFLUtils();
+  if (wurflUtils == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Can not load WURFL devices. " + "WURFL database was not loaded properly!");
+    }
+    return;
+  }
+  Map<String,VersionableName> oses=new HashMap<String,VersionableName>();
+  Map<String,VersionableName> browsers=new HashMap<String,VersionableName>();
+  Map<String,VersionableName> brands=new HashMap<String,VersionableName>();
+  long startTime=System.currentTimeMillis();
+  for (  Object deviceIdObj : wurflUtils.getAllDevicesId()) {
+    String deviceId=(String)deviceIdObj;
+    _deviceIds.add(deviceId);
+    Device device=wurflUtils.getDeviceById(deviceId);
+    updateVersionableCapability(device,brands,WURFLConstants.BRAND_NAME,WURFLConstants.MODEL_NAME,WURFLConstants.MARKETING_NAME);
+    updateVersionableCapability(device,oses,WURFLConstants.DEVICE_OS,WURFLConstants.DEVICE_OS_VERSION);
+    updateVersionableCapability(device,browsers,WURFLConstants.MOBILE_BROWSER,WURFLConstants.MOBILE_BROWSER_VERSION);
+    updateCapability(device,_pointingMethods,WURFLConstants.POINTING_METHOD);
+    updateDevicesByCapabilities(device,WURFLConstants.DEVICE_OS);
+  }
+  _operatingSystems=new TreeSet<VersionableName>(oses.values());
+  _browsers=new TreeSet<VersionableName>(browsers.values());
+  _brands=new TreeSet<VersionableName>(brands.values());
+  if (_log.isDebugEnabled()) {
+    long endTime=System.currentTimeMillis();
+    _log.debug("Database load completed in " + (endTime - startTime) + " milliseconds.");
+  }
+  _initialized=true;
+}

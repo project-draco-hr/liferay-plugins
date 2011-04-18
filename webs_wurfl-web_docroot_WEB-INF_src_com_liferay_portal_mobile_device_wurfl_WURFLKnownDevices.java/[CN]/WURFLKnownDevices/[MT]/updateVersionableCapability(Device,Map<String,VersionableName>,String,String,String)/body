@@ -1,0 +1,24 @@
+{
+  String capabilityValue=device.getCapability(capabilityName);
+  if (Validator.isNotNull(capabilityValue)) {
+    VersionableName versionableCapability=capabilitiesMap.get(capabilityValue);
+    if (versionableCapability == null) {
+      versionableCapability=new VersionableName(capabilityValue);
+      capabilitiesMap.put(capabilityValue,versionableCapability);
+    }
+    String capabilitySubVersionValue=null;
+    if (Validator.isNotNull(capabilitySubVersionAttributeName)) {
+      capabilitySubVersionValue=device.getCapability(capabilitySubVersionAttributeName);
+    }
+    String capabilityVersionValue=device.getCapability(capabilityVersionAttributeName);
+    if (Validator.isNotNull(capabilityVersionValue)) {
+      if (Validator.isNotNull(capabilitySubVersionValue)) {
+        capabilityVersionValue=capabilityVersionValue.concat(" (").concat(capabilitySubVersionValue).concat(")");
+      }
+    }
+ else {
+      capabilityVersionValue=capabilitySubVersionValue;
+    }
+    versionableCapability.addVersion(capabilityVersionValue);
+  }
+}

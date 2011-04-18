@@ -1,0 +1,18 @@
+{
+  WURFLManager wurflManager=_wurflHolderImpl.getWURFLManager();
+  if (wurflManager == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("WURFL database was not loaded initialized!");
+    }
+    return UnknownDevice.getInstance();
+  }
+  net.sourceforge.wurfl.core.Device wurflDevice=wurflManager.getDeviceForRequest(httpServletRequest);
+  Device device=null;
+  if (wurflDevice != null) {
+    Map<String,String> capabilities=wurflDevice.getCapabilities();
+    if ((capabilities != null) && !capabilities.isEmpty()) {
+      device=new WURFLDevice(capabilities);
+    }
+  }
+  return device;
+}

@@ -1,0 +1,14 @@
+{
+  WURFLResources wurflPatches=new WURFLResources();
+  String databasePatchesPath=PortletPropsValues.WURFL_DATABASE_PATCHES_PATH;
+  File databasePatchesDir=new File(databasePatchesPath);
+  if (databasePatchesDir.exists() && databasePatchesDir.isDirectory()) {
+    File[] databasePatchFiles=databasePatchesDir.listFiles();
+    for (    File databasePatchFile : databasePatchFiles) {
+      FileInputStream fis=new FileInputStream(databasePatchFile);
+      inputStreams.add(fis);
+      wurflPatches.add(new XMLResource(databasePatchFile));
+    }
+  }
+  return wurflPatches;
+}
