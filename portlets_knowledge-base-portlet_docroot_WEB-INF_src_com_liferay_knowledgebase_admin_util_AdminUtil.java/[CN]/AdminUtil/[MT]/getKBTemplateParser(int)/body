@@ -1,9 +1,15 @@
 {
   if (engineType == KBTemplateConstants.ENGINE_TYPE_FREEMARKER) {
-    return (KBTemplateParser)InstancePool.get(KBFreeMarkerTemplateParserImpl.class.getName(),false);
+    if (_freeMarkerKBTemplateParser == null) {
+      _freeMarkerKBTemplateParser=(KBTemplateParser)InstanceFactory.newInstance(KBFreeMarkerTemplateParserImpl.class.getName());
+    }
+    return _freeMarkerKBTemplateParser;
   }
  else   if (engineType == KBTemplateConstants.ENGINE_TYPE_VELOCITY) {
-    return (KBTemplateParser)InstancePool.get(KBVelocityTemplateParserImpl.class.getName(),false);
+    if (_velocityKBTemplateParser == null) {
+      _velocityKBTemplateParser=(KBTemplateParser)InstanceFactory.newInstance(KBVelocityTemplateParserImpl.class.getName());
+    }
+    return _velocityKBTemplateParser;
   }
   return null;
 }
