@@ -1,0 +1,22 @@
+{
+  String key=null;
+  String value=null;
+  if (kbTemplate.isFreeMarker()) {
+    key=PortletPropsKeys.ADMIN_KB_TEMPLATE_ERROR_FREEMARKER;
+    value=PortletPropsValues.ADMIN_KB_TEMPLATE_ERROR_FREEMARKER;
+  }
+ else   if (kbTemplate.isVelocity()) {
+    key=PortletPropsKeys.ADMIN_KB_TEMPLATE_ERROR_VELOCITY;
+    value=PortletPropsValues.ADMIN_KB_TEMPLATE_ERROR_VELOCITY;
+  }
+  Map<String,Object> variables=new HashMap<String,Object>();
+  variables.put("exception",e);
+  variables.put("kbTemplate",kbTemplate);
+  KBTemplateParser kbTemplateParser=AdminUtil.getKBTemplateParser(kbTemplate.getEngineType());
+  try {
+    return kbTemplateParser.transform(key,ContentUtil.get(value),variables,request);
+  }
+ catch (  Exception e1) {
+    return kbArticle.getContent();
+  }
+}

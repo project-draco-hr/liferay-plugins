@@ -7,14 +7,14 @@
     KBTemplate existingKBTemplate=KBTemplateUtil.fetchByUUID_G(kbTemplate.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBTemplate == null) {
       serviceContext.setUuid(kbTemplate.getUuid());
-      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getEngineType(),kbTemplate.isCacheable(),serviceContext);
     }
  else {
-      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getEngineType(),kbTemplate.isCacheable(),serviceContext);
     }
   }
  else {
-    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getDescription(),serviceContext);
+    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),kbTemplate.getEngineType(),kbTemplate.isCacheable(),serviceContext);
   }
   kbTemplatePKs.put(kbTemplate.getKbTemplateId(),importedKBTemplate.getKbTemplateId());
   portletDataContext.importClassedModel(kbTemplate,importedKBTemplate,_NAMESPACE);

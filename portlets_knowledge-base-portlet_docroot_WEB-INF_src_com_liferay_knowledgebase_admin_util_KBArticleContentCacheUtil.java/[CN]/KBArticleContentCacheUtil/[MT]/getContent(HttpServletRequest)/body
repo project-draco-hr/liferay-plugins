@@ -1,0 +1,27 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  KBArticle kbArticle=(KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE);
+  KBTemplate kbTemplate=kbArticle.getKBTemplate();
+  if (kbTemplate == null) {
+    return kbArticle.getContent();
+  }
+  String key=_encodeKey(themeDisplay.getScopeGroupId(),kbArticle,kbTemplate);
+  String content=null;
+  if (kbTemplate.isCacheable()) {
+    content=(String)_portalCache.get(key);
+  }
+  if (content != null) {
+    return content;
+  }
+  KBTemplateParser kbTemplateParser=AdminUtil.getKBTemplateParser(kbTemplate.getEngineType());
+  try {
+    content=kbTemplateParser.transform(request);
+  }
+ catch (  Exception e) {
+    return _processException(kbArticle,kbTemplate,e,request);
+  }
+  if (kbTemplate.isCacheable()) {
+    _portalCache.put(key,content);
+  }
+  return content;
+}

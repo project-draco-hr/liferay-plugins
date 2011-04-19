@@ -3,12 +3,14 @@
   long kbTemplateId=ParamUtil.getLong(actionRequest,"kbTemplateId");
   String title=ParamUtil.getString(actionRequest,"title");
   String content=ParamUtil.getString(actionRequest,"content");
-  String description=ParamUtil.getString(actionRequest,"description");
+  int engineType=ParamUtil.getInteger(actionRequest,"engineType");
+  boolean cacheable=ParamUtil.getBoolean(actionRequest,"cacheable");
+  transform(content,engineType,actionRequest);
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBTemplate.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    KBTemplateServiceUtil.addKBTemplate(title,content,description,serviceContext);
+    KBTemplateServiceUtil.addKBTemplate(title,content,engineType,cacheable,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    KBTemplateServiceUtil.updateKBTemplate(kbTemplateId,title,content,description,serviceContext);
+    KBTemplateServiceUtil.updateKBTemplate(kbTemplateId,title,content,engineType,cacheable,serviceContext);
   }
 }

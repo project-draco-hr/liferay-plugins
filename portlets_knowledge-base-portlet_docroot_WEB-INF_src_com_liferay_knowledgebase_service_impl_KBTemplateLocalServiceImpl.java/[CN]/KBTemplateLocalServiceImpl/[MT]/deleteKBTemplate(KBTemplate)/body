@@ -1,4 +1,8 @@
 {
+  int count=kbArticleLocalService.getKBTemplateKBArticlesCount(kbTemplate.getKbTemplateId());
+  if (count > 0) {
+    throw new RequiredKBTemplateException(kbTemplate);
+  }
   kbTemplatePersistence.remove(kbTemplate);
   resourceLocalService.deleteResource(kbTemplate.getCompanyId(),KBTemplate.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,kbTemplate.getKbTemplateId());
   kbCommentLocalService.deleteKBComments(KBTemplate.class.getName(),kbTemplate.getKbTemplateId());

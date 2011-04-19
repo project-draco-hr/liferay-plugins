@@ -1,0 +1,8 @@
+{
+  KBArticle kbArticle=(KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE);
+  KBTemplate kbTemplate=kbArticle.getKBTemplate();
+  String freeMarkerTemplateId=getFreeMarkerTemplateId(kbTemplate.getGroupId(),kbTemplate.getKbTemplateId());
+  UnsyncStringWriter unsyncStringWriter=new UnsyncStringWriter();
+  FreeMarkerEngineUtil.mergeTemplate(freeMarkerTemplateId,kbTemplate.getContent(),getFreeMarkerContext(request),unsyncStringWriter);
+  return unsyncStringWriter.toString();
+}

@@ -1,0 +1,16 @@
+{
+  FreeMarkerContext freeMarkerContext=FreeMarkerEngineUtil.getWrappedStandardToolsContext();
+  FreeMarkerVariablesUtil.insertVariables(freeMarkerContext,request);
+  KBArticle kbArticle=(KBArticle)request.getAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE);
+  if (kbArticle != null) {
+    freeMarkerContext.put("kbArticle",kbArticle);
+  }
+ else {
+    freeMarkerContext.put("kbArticle",new KBArticleImpl());
+  }
+  String[] restrictedVariables=PortletPropsValues.ADMIN_KB_TEMPLATE_RESTRICTED_VARIABLES;
+  for (  String restrictedVariable : restrictedVariables) {
+    freeMarkerContext.put(restrictedVariable,StringPool.BLANK);
+  }
+  return freeMarkerContext;
+}

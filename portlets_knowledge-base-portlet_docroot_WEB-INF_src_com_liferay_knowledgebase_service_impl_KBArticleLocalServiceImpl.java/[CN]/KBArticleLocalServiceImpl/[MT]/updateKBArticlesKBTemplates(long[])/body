@@ -1,0 +1,13 @@
+{
+  for (  long kbArticleId : kbArticleIds) {
+    KBArticle kbArticle=null;
+    try {
+      kbArticle=kbArticlePersistence.findByPrimaryKey(kbArticleId);
+    }
+ catch (    NoSuchArticleException nsae) {
+      continue;
+    }
+    kbArticle.setKbTemplateId(KBArticleConstants.DEFAULT_KB_TEMPLATE_ID);
+    kbArticlePersistence.update(kbArticle,false);
+  }
+}
