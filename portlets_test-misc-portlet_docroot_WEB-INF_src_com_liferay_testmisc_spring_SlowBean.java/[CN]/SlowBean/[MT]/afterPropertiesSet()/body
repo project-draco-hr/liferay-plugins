@@ -1,0 +1,17 @@
+{
+  try {
+    Thread.sleep(1000);
+    String className=TestSchedulerMessageListener.class.getName();
+    TriggerState triggerState=SchedulerEngineUtil.getJobState(className,className,StorageType.MEMORY);
+    if (triggerState == null) {
+      SchedulerTestResult.setScheduledBeforeSpringInitialized(false);
+    }
+ else {
+      SchedulerTestResult.setScheduledBeforeSpringInitialized(true);
+    }
+    SchedulerTestResult.setRanBeforeSpringInitialzed(TestSchedulerMessageListener.isRan());
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}
