@@ -1,0 +1,11 @@
+{
+  List<Element> kbCommentElements=rootElement.elements("kb-comment");
+  for (  Element kbCommentElement : kbCommentElements) {
+    String path=kbCommentElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    KBComment kbComment=(KBComment)portletDataContext.getZipEntryAsObject(path);
+    importKBComment(portletDataContext,kbCommentElement,kbComment);
+  }
+}

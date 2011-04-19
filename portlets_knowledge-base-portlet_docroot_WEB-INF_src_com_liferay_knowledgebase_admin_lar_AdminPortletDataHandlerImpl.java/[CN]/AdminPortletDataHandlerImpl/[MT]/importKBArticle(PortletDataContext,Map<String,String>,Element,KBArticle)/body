@@ -1,0 +1,24 @@
+{
+  Map<Long,Long> kbArticlePKs=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBArticle.class);
+  long userId=portletDataContext.getUserId(kbArticle.getUserUuid());
+  long parentResourcePrimKey=MapUtil.getLong(kbArticlePKs,kbArticle.getParentResourcePrimKey());
+  String dirName=MapUtil.getString(dirNames,String.valueOf(kbArticle.getResourcePrimKey()));
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticleElement,kbArticle,_NAMESPACE);
+  KBArticle importedKBArticle=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBArticle existingKBArticle=KBArticleUtil.fetchByUUID_G(kbArticle.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBArticle == null) {
+      importedKBArticle=importKBArticleVersions(portletDataContext,kbArticle.getUuid(),parentResourcePrimKey,dirName,kbArticleElement);
+    }
+ else {
+      KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),dirName,serviceContext);
+      KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,kbArticle.getPriority());
+      importedKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
+    }
+  }
+ else {
+    importedKBArticle=importKBArticleVersions(portletDataContext,null,parentResourcePrimKey,dirName,kbArticleElement);
+  }
+  kbArticlePKs.put(kbArticle.getResourcePrimKey(),importedKBArticle.getResourcePrimKey());
+  portletDataContext.importClassedModel(kbArticle,importedKBArticle,_NAMESPACE);
+}

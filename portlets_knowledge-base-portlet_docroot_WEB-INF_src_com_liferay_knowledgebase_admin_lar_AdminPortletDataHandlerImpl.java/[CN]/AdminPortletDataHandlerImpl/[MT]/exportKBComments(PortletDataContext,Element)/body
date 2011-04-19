@@ -1,0 +1,13 @@
+{
+  List<KBComment> kbComments=KBCommentUtil.findByGroupId(portletDataContext.getScopeGroupId());
+  for (  KBComment kbComment : kbComments) {
+    if (!portletDataContext.isWithinDateRange(kbComment.getModifiedDate())) {
+      continue;
+    }
+    String path=getPortletPath(portletDataContext) + "/kbcomments/" + kbComment.getKbCommentId()+ ".xml";
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    exportKBComment(portletDataContext,rootElement,path,kbComment);
+  }
+}

@@ -2,12 +2,11 @@
   Element versionsElement=kbArticleElement.element("versions");
   List<Element> kbArticleElements=versionsElement.elements("kb-article");
   KBArticle importedKBArticle=null;
-  for (int i=0; i < kbArticleElements.size(); i++) {
-    Element curKBArticleElement=kbArticleElements.get(i);
+  for (  Element curKBArticleElement : kbArticleElements) {
     KBArticle curKBArticle=(KBArticle)portletDataContext.getZipEntryAsObject(curKBArticleElement.attributeValue("path"));
     long curUserId=portletDataContext.getUserId(curKBArticle.getUserUuid());
     String curDirName=StringPool.BLANK;
-    if (i == (kbArticleElements.size() - 1)) {
+    if (curKBArticle.isMain()) {
       curDirName=dirName;
     }
     ServiceContext serviceContext=portletDataContext.createServiceContext(curKBArticleElement,curKBArticle,_NAMESPACE);
