@@ -1,14 +1,12 @@
 {
-  WURFLResources wurflPatches=new WURFLResources();
-  String databasePatchesPath=PortletPropsValues.WURFL_DATABASE_PATCHES_PATH;
-  File databasePatchesDir=new File(databasePatchesPath);
-  if (databasePatchesDir.exists() && databasePatchesDir.isDirectory()) {
-    File[] databasePatchFiles=databasePatchesDir.listFiles();
-    for (    File databasePatchFile : databasePatchFiles) {
-      FileInputStream fis=new FileInputStream(databasePatchFile);
-      inputStreams.add(fis);
-      wurflPatches.add(new XMLResource(databasePatchFile));
-    }
+  WURFLResources wurflResources=new WURFLResources();
+  String[] fileNames=FileUtil.listFiles(PortletPropsValues.WURFL_DATABASE_PATCHES);
+  for (  String fileName : fileNames) {
+    File file=new File(fileName);
+    FileInputStream fileInputStream=new FileInputStream(file);
+    inputStreams.add(fileInputStream);
+    XMLResource xmlResource=new XMLResource(file);
+    wurflResources.add(xmlResource);
   }
-  return wurflPatches;
+  return wurflResources;
 }

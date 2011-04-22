@@ -1,0 +1,18 @@
+{
+  if ((capabilityNames == null) || (capabilityNames.length == 0)) {
+    return;
+  }
+  for (  String capabilityName : capabilityNames) {
+    String capabilityValue=device.getCapability(capabilityName);
+    if (Validator.isNull(capabilityValue)) {
+      continue;
+    }
+    Capability capability=new Capability(capabilityName,capabilityValue);
+    Set<String> deviceIds=_devicesIds.get(capability);
+    if (deviceIds == null) {
+      deviceIds=new TreeSet<String>();
+      _devicesIds.put(capability,deviceIds);
+    }
+    deviceIds.add(device.getId());
+  }
+}

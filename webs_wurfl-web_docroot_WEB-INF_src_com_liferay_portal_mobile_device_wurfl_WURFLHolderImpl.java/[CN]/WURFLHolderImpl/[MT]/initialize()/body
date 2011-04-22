@@ -1,26 +1,26 @@
 {
   List<InputStream> inputStreams=new ArrayList<InputStream>();
   try {
-    XMLResource primaryDatabaseXMLResource=getWURFLDatabase(inputStreams);
-    WURFLResources wurflPatches=getWURFLDatabasePatches(inputStreams);
-    WURFLModel model=new DefaultWURFLModel(primaryDatabaseXMLResource,wurflPatches);
-    MatcherManager matcherManager=new MatcherManager(model);
-    DeviceProvider deviceProvider=new DefaultDeviceProvider(model);
-    WURFLService service=new DefaultWURFLService(matcherManager,deviceProvider);
-    WURFLManager manager=new DefaultWURFLManager(service);
-    WURFLUtils utils=new WURFLUtils(model,deviceProvider);
-    _wurflHolder=new DefaultWURFLHolder(manager,utils);
+    XMLResource xmlResource=getWURFLDatabase(inputStreams);
+    WURFLResources wurflResources=getWURFLDatabasePatches(inputStreams);
+    WURFLModel wurflModel=new DefaultWURFLModel(xmlResource,wurflResources);
+    MatcherManager matcherManager=new MatcherManager(wurflModel);
+    DeviceProvider deviceProvider=new DefaultDeviceProvider(wurflModel);
+    WURFLService wurflService=new DefaultWURFLService(matcherManager,deviceProvider);
+    WURFLManager wurflManager=new DefaultWURFLManager(wurflService);
+    WURFLUtils wurflUtils=new WURFLUtils(wurflModel,deviceProvider);
+    _wurflHolder=new DefaultWURFLHolder(wurflManager,wurflUtils);
   }
   finally {
-    for (    InputStream in : inputStreams) {
+    for (    InputStream inputStream : inputStreams) {
       try {
-        in.close();
+        inputStream.close();
       }
- catch (      IOException e) {
+ catch (      IOException ioe) {
       }
     }
   }
   if (_log.isDebugEnabled()) {
-    _log.debug("WURFL initialised!");
+    _log.debug("Initialised");
   }
 }

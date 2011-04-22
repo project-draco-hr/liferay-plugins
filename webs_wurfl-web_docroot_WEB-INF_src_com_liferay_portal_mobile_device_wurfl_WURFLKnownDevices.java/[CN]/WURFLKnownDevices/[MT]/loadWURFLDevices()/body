@@ -4,31 +4,32 @@
   }
   WURFLUtils wurflUtils=_wurflHolder.getWURFLUtils();
   if (wurflUtils == null) {
-    if (_log.isWarnEnabled()) {
-      _log.warn("Can not load WURFL devices. " + "WURFL database was not loaded properly!");
-    }
+    _log.error("Unable to load WURFL devices");
     return;
   }
-  Map<String,VersionableName> oses=new HashMap<String,VersionableName>();
-  Map<String,VersionableName> browsers=new HashMap<String,VersionableName>();
+  StopWatch stopWatch=null;
+  if (_log.isDebugEnabled()) {
+    stopWatch=new StopWatch();
+    stopWatch.start();
+    _log.debug("Loading database");
+  }
   Map<String,VersionableName> brands=new HashMap<String,VersionableName>();
-  long startTime=System.currentTimeMillis();
-  for (  Object deviceIdObj : wurflUtils.getAllDevicesId()) {
-    String deviceId=(String)deviceIdObj;
-    _deviceIds.add(deviceId);
+  Map<String,VersionableName> browsers=new HashMap<String,VersionableName>();
+  Map<String,VersionableName> operatingSystems=new HashMap<String,VersionableName>();
+  for (  Object deviceIdObject : wurflUtils.getAllDevicesId()) {
+    String deviceId=(String)deviceIdObject;
     Device device=wurflUtils.getDeviceById(deviceId);
     updateVersionableCapability(device,brands,WURFLConstants.BRAND_NAME,WURFLConstants.MODEL_NAME,WURFLConstants.MARKETING_NAME);
-    updateVersionableCapability(device,oses,WURFLConstants.DEVICE_OS,WURFLConstants.DEVICE_OS_VERSION);
-    updateVersionableCapability(device,browsers,WURFLConstants.MOBILE_BROWSER,WURFLConstants.MOBILE_BROWSER_VERSION);
+    updateVersionableCapability(device,browsers,WURFLConstants.MOBILE_BROWSER,WURFLConstants.MOBILE_BROWSER_VERSION,null);
+    updateVersionableCapability(device,operatingSystems,WURFLConstants.DEVICE_OS,WURFLConstants.DEVICE_OS_VERSION,null);
     updateCapability(device,_pointingMethods,WURFLConstants.POINTING_METHOD);
-    updateDevicesByCapabilities(device,WURFLConstants.DEVICE_OS);
+    updateDevicesIds(device,WURFLConstants.DEVICE_OS);
   }
-  _operatingSystems=new TreeSet<VersionableName>(oses.values());
-  _browsers=new TreeSet<VersionableName>(browsers.values());
   _brands=new TreeSet<VersionableName>(brands.values());
+  _browsers=new TreeSet<VersionableName>(browsers.values());
+  _operatingSystems=new TreeSet<VersionableName>(operatingSystems.values());
   if (_log.isDebugEnabled()) {
-    long endTime=System.currentTimeMillis();
-    _log.debug("Database load completed in " + (endTime - startTime) + " milliseconds.");
+    _log.debug("Loaded database in " + stopWatch.getTime() + " ms");
   }
   _initialized=true;
 }
