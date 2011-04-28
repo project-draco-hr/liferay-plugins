@@ -1,0 +1,11 @@
+{
+  long folderId=ParamUtil.getLong(resourceRequest,"folderId");
+  Folder folder=DLAppServiceUtil.getFolder(folderId);
+  String folderName=ParamUtil.getString(resourceRequest,"folderName");
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCreateDate(folder.getCreateDate());
+  serviceContext.setModifiedDate(folder.getModifiedDate());
+  DLAppServiceUtil.updateFolder(folderId,folderName,StringPool.BLANK,serviceContext);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
+}

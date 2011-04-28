@@ -6,10 +6,10 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  Folder folder : folders) {
     JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-    jsonObject.put("id",String.valueOf(folder.getFolderId()));
+    jsonObject.put("entryId",String.valueOf(folder.getFolderId()));
     jsonObject.put("label",folder.getName());
     jsonObject.put("leaf",false);
-    jsonObject.put("type","io");
+    jsonObject.put("type","editor");
     jsonArray.put(jsonObject);
   }
   boolean getFileEntries=ParamUtil.getBoolean(resourceRequest,"getFileEntries");
@@ -18,9 +18,13 @@
     fileEntries=ListUtil.sort(fileEntries,new RepositoryModelNameComparator(true));
     for (    FileEntry fileEntry : fileEntries) {
       JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-      jsonObject.put("id",String.valueOf(fileEntry.getFileEntryId()));
+      long fileEntryId=fileEntry.getFileEntryId();
+      jsonObject.put("entryId",String.valueOf(fileEntryId));
+      String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntryId);
+      jsonObject.put("fileEntryURL",fileEntryURL);
       jsonObject.put("label",fileEntry.getTitle());
       jsonObject.put("leaf",true);
+      jsonObject.put("type","editor");
       jsonArray.put(jsonObject);
     }
   }

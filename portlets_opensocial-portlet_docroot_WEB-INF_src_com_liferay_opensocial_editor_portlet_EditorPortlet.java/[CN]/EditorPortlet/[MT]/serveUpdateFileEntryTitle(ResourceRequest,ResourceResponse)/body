@@ -1,0 +1,12 @@
+{
+  long fileEntryId=ParamUtil.getLong(resourceRequest,"fileEntryId");
+  FileEntry fileEntry=DLAppServiceUtil.getFileEntry(fileEntryId);
+  String fileEntryTitle=ParamUtil.getString(resourceRequest,"fileEntryTitle");
+  byte[] bytes=null;
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCreateDate(fileEntry.getCreateDate());
+  serviceContext.setModifiedDate(fileEntry.getModifiedDate());
+  DLAppServiceUtil.updateFileEntry(fileEntryId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,false,bytes,serviceContext);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
+}
