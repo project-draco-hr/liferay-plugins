@@ -1,0 +1,18 @@
+{
+  hrTimeSheet=toUnwrappedModel(hrTimeSheet);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,hrTimeSheet,merge);
+    hrTimeSheet.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(HRTimeSheetModelImpl.ENTITY_CACHE_ENABLED,HRTimeSheetImpl.class,hrTimeSheet.getPrimaryKey(),hrTimeSheet);
+  return hrTimeSheet;
+}

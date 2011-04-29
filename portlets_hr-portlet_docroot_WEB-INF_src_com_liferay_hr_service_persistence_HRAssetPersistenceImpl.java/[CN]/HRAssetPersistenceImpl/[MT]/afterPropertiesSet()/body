@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.hr.model.HRAsset")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<HRAsset>> listenersList=new ArrayList<ModelListener<HRAsset>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<HRAsset>)InstanceFactory.newInstance(listenerClassName));
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}

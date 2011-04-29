@@ -1,0 +1,18 @@
+{
+  if (!_persistenceImpl.containsHRJobTitle.contains(hrBranchId,hrJobTitleId)) {
+    ModelListener<com.liferay.hr.model.HRJobTitle>[] hrJobTitleListeners=hrJobTitlePersistence.getListeners();
+    for (    ModelListener<HRBranch> listener : listeners) {
+      listener.onBeforeAddAssociation(hrBranchId,com.liferay.hr.model.HRJobTitle.class.getName(),hrJobTitleId);
+    }
+    for (    ModelListener<com.liferay.hr.model.HRJobTitle> listener : hrJobTitleListeners) {
+      listener.onBeforeAddAssociation(hrJobTitleId,HRBranch.class.getName(),hrBranchId);
+    }
+    _sqlUpdate.update(new Object[]{new Long(hrBranchId),new Long(hrJobTitleId)});
+    for (    ModelListener<HRBranch> listener : listeners) {
+      listener.onAfterAddAssociation(hrBranchId,com.liferay.hr.model.HRJobTitle.class.getName(),hrJobTitleId);
+    }
+    for (    ModelListener<com.liferay.hr.model.HRJobTitle> listener : hrJobTitleListeners) {
+      listener.onAfterAddAssociation(hrJobTitleId,HRBranch.class.getName(),hrBranchId);
+    }
+  }
+}

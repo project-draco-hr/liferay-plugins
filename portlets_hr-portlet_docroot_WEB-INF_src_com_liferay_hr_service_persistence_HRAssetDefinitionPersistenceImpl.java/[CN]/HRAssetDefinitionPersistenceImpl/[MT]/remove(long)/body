@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRAssetDefinition hrAssetDefinition=(HRAssetDefinition)session.get(HRAssetDefinitionImpl.class,Long.valueOf(hrAssetDefinitionId));
+    if (hrAssetDefinition == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetDefinitionId);
+      }
+      throw new NoSuchAssetDefinitionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetDefinitionId);
+    }
+    return hrAssetDefinitionPersistence.remove(hrAssetDefinition);
+  }
+ catch (  NoSuchAssetDefinitionException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,20 @@
+{
+  HRTimeSheetHoursPerDay hrTimeSheetHoursPerDay=(HRTimeSheetHoursPerDay)EntityCacheUtil.getResult(HRTimeSheetHoursPerDayModelImpl.ENTITY_CACHE_ENABLED,HRTimeSheetHoursPerDayImpl.class,hrTimeSheetHoursPerDay,this);
+  if (hrTimeSheetHoursPerDay == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrTimeSheetHoursPerDay=(HRTimeSheetHoursPerDay)session.get(HRTimeSheetHoursPerDayImpl.class,Long.valueOf(hrTimeSheetHoursPerDay));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrTimeSheetHoursPerDay != null) {
+        cacheResult(hrTimeSheetHoursPerDay);
+      }
+      closeSession(session);
+    }
+  }
+  return hrTimeSheetHoursPerDay;
+}

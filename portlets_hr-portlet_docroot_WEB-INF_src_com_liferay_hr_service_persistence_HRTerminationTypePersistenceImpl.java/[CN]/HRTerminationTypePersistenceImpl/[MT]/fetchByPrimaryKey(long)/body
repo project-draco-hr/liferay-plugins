@@ -1,0 +1,20 @@
+{
+  HRTerminationType hrTerminationType=(HRTerminationType)EntityCacheUtil.getResult(HRTerminationTypeModelImpl.ENTITY_CACHE_ENABLED,HRTerminationTypeImpl.class,hrTerminationTypeId,this);
+  if (hrTerminationType == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrTerminationType=(HRTerminationType)session.get(HRTerminationTypeImpl.class,Long.valueOf(hrTerminationTypeId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrTerminationType != null) {
+        cacheResult(hrTerminationType);
+      }
+      closeSession(session);
+    }
+  }
+  return hrTerminationType;
+}

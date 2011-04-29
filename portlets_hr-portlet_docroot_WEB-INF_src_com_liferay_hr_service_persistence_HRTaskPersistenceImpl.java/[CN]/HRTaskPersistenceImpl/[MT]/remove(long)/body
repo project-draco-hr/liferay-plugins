@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRTask hrTask=(HRTask)session.get(HRTaskImpl.class,Long.valueOf(hrTaskId));
+    if (hrTask == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTaskId);
+      }
+      throw new NoSuchTaskException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTaskId);
+    }
+    return hrTaskPersistence.remove(hrTask);
+  }
+ catch (  NoSuchTaskException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

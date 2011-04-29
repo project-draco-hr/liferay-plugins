@@ -1,0 +1,65 @@
+{
+  Object[] finderArgs=new Object[]{groupId,code};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_C,finderArgs,this);
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(3);
+    query.append(_SQL_SELECT_HRTERMINATIONTYPE_WHERE);
+    query.append(_FINDER_COLUMN_G_C_GROUPID_2);
+    if (code == null) {
+      query.append(_FINDER_COLUMN_G_C_CODE_1);
+    }
+ else {
+      if (code.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_G_C_CODE_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_G_C_CODE_2);
+      }
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(groupId);
+      if (code != null) {
+        qPos.add(code);
+      }
+      List<HRTerminationType> list=q.list();
+      result=list;
+      HRTerminationType hrTerminationType=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,finderArgs,list);
+      }
+ else {
+        hrTerminationType=list.get(0);
+        cacheResult(hrTerminationType);
+        if ((hrTerminationType.getGroupId() != groupId) || (hrTerminationType.getCode() == null) || !hrTerminationType.getCode().equals(code)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,finderArgs,hrTerminationType);
+        }
+      }
+      return hrTerminationType;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,finderArgs);
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (HRTerminationType)result;
+    }
+  }
+}

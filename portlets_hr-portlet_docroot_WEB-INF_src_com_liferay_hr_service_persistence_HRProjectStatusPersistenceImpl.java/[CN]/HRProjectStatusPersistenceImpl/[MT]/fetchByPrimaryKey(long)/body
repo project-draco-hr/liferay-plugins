@@ -1,0 +1,20 @@
+{
+  HRProjectStatus hrProjectStatus=(HRProjectStatus)EntityCacheUtil.getResult(HRProjectStatusModelImpl.ENTITY_CACHE_ENABLED,HRProjectStatusImpl.class,hrProjectStatusId,this);
+  if (hrProjectStatus == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrProjectStatus=(HRProjectStatus)session.get(HRProjectStatusImpl.class,Long.valueOf(hrProjectStatusId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrProjectStatus != null) {
+        cacheResult(hrProjectStatus);
+      }
+      closeSession(session);
+    }
+  }
+  return hrProjectStatus;
+}

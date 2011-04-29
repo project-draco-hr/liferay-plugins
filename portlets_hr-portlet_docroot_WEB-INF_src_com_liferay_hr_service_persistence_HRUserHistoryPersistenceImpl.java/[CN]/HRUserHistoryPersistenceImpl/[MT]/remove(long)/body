@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRUserHistory hrUserHistory=(HRUserHistory)session.get(HRUserHistoryImpl.class,Long.valueOf(hrUserHistoryId));
+    if (hrUserHistory == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserHistoryId);
+      }
+      throw new NoSuchUserHistoryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserHistoryId);
+    }
+    return hrUserHistoryPersistence.remove(hrUserHistory);
+  }
+ catch (  NoSuchUserHistoryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

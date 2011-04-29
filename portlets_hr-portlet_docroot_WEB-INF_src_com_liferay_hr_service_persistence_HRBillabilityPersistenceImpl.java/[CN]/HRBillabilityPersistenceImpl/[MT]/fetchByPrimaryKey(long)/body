@@ -1,0 +1,20 @@
+{
+  HRBillability hrBillability=(HRBillability)EntityCacheUtil.getResult(HRBillabilityModelImpl.ENTITY_CACHE_ENABLED,HRBillabilityImpl.class,hrBillabilityId,this);
+  if (hrBillability == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrBillability=(HRBillability)session.get(HRBillabilityImpl.class,Long.valueOf(hrBillabilityId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrBillability != null) {
+        cacheResult(hrBillability);
+      }
+      closeSession(session);
+    }
+  }
+  return hrBillability;
+}

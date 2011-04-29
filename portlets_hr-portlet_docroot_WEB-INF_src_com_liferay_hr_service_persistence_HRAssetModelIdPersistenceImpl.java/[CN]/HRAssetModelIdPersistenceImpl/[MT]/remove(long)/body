@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRAssetModelId hrAssetModelId=(HRAssetModelId)session.get(HRAssetModelIdImpl.class,Long.valueOf(hrAssetModelId));
+    if (hrAssetModelId == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetModelId);
+      }
+      throw new NoSuchAssetModelIdException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetModelId);
+    }
+    return hrAssetModelIdPersistence.remove(hrAssetModelId);
+  }
+ catch (  NoSuchAssetModelIdException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRHoliday hrHoliday=(HRHoliday)session.get(HRHolidayImpl.class,Long.valueOf(hrHolidayId));
+    if (hrHoliday == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrHolidayId);
+      }
+      throw new NoSuchHolidayException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrHolidayId);
+    }
+    return hrHolidayPersistence.remove(hrHoliday);
+  }
+ catch (  NoSuchHolidayException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

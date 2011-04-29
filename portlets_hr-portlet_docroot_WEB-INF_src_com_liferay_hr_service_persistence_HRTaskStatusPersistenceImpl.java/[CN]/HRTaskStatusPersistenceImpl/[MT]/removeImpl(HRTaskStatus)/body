@@ -1,0 +1,19 @@
+{
+  hrTaskStatus=toUnwrappedModel(hrTaskStatus);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,hrTaskStatus);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  HRTaskStatusModelImpl hrTaskStatusModelImpl=(HRTaskStatusModelImpl)hrTaskStatus;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrTaskStatusModelImpl.getGroupId()),hrTaskStatusModelImpl.getCode()});
+  EntityCacheUtil.removeResult(HRTaskStatusModelImpl.ENTITY_CACHE_ENABLED,HRTaskStatusImpl.class,hrTaskStatus.getPrimaryKey());
+  return hrTaskStatus;
+}

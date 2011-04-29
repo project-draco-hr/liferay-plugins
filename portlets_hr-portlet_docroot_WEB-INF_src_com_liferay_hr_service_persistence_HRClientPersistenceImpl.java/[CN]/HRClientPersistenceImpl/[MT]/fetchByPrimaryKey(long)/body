@@ -1,0 +1,20 @@
+{
+  HRClient hrClient=(HRClient)EntityCacheUtil.getResult(HRClientModelImpl.ENTITY_CACHE_ENABLED,HRClientImpl.class,hrClientId,this);
+  if (hrClient == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrClient=(HRClient)session.get(HRClientImpl.class,Long.valueOf(hrClientId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrClient != null) {
+        cacheResult(hrClient);
+      }
+      closeSession(session);
+    }
+  }
+  return hrClient;
+}

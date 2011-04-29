@@ -1,0 +1,26 @@
+{
+  hrTimeOffFrequencyType=toUnwrappedModel(hrTimeOffFrequencyType);
+  boolean isNew=hrTimeOffFrequencyType.isNew();
+  HRTimeOffFrequencyTypeModelImpl hrTimeOffFrequencyTypeModelImpl=(HRTimeOffFrequencyTypeModelImpl)hrTimeOffFrequencyType;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,hrTimeOffFrequencyType,merge);
+    hrTimeOffFrequencyType.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(HRTimeOffFrequencyTypeModelImpl.ENTITY_CACHE_ENABLED,HRTimeOffFrequencyTypeImpl.class,hrTimeOffFrequencyType.getPrimaryKey(),hrTimeOffFrequencyType);
+  if (!isNew && ((hrTimeOffFrequencyType.getGroupId() != hrTimeOffFrequencyTypeModelImpl.getOriginalGroupId()) || !Validator.equals(hrTimeOffFrequencyType.getCode(),hrTimeOffFrequencyTypeModelImpl.getOriginalCode()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrTimeOffFrequencyTypeModelImpl.getOriginalGroupId()),hrTimeOffFrequencyTypeModelImpl.getOriginalCode()});
+  }
+  if (isNew || ((hrTimeOffFrequencyType.getGroupId() != hrTimeOffFrequencyTypeModelImpl.getOriginalGroupId()) || !Validator.equals(hrTimeOffFrequencyType.getCode(),hrTimeOffFrequencyTypeModelImpl.getOriginalCode()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrTimeOffFrequencyType.getGroupId()),hrTimeOffFrequencyType.getCode()},hrTimeOffFrequencyType);
+  }
+  return hrTimeOffFrequencyType;
+}

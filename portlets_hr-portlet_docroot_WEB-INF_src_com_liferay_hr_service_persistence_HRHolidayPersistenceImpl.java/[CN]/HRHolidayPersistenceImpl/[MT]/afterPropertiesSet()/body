@@ -1,0 +1,19 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.hr.model.HRHoliday")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<HRHoliday>> listenersList=new ArrayList<ModelListener<HRHoliday>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<HRHoliday>)InstanceFactory.newInstance(listenerClassName));
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+  containsHROffice=new ContainsHROffice(this);
+  addHROffice=new AddHROffice(this);
+  clearHROffices=new ClearHROffices(this);
+  removeHROffice=new RemoveHROffice(this);
+}

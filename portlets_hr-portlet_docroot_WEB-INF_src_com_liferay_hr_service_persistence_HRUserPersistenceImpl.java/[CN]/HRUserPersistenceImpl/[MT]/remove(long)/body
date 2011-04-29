@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRUser hrUser=(HRUser)session.get(HRUserImpl.class,Long.valueOf(hrUserId));
+    if (hrUser == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserId);
+      }
+      throw new NoSuchUserException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserId);
+    }
+    return hrUserPersistence.remove(hrUser);
+  }
+ catch (  NoSuchUserException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,20 @@
+{
+  HRUser hrUser=(HRUser)EntityCacheUtil.getResult(HRUserModelImpl.ENTITY_CACHE_ENABLED,HRUserImpl.class,hrUserId,this);
+  if (hrUser == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrUser=(HRUser)session.get(HRUserImpl.class,Long.valueOf(hrUserId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrUser != null) {
+        cacheResult(hrUser);
+      }
+      closeSession(session);
+    }
+  }
+  return hrUser;
+}

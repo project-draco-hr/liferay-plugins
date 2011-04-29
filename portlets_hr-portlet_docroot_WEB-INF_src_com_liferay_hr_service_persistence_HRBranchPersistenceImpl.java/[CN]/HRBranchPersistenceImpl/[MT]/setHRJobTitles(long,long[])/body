@@ -1,0 +1,20 @@
+{
+  try {
+    Set<Long> hrJobTitlePKSet=SetUtil.fromArray(hrJobTitlePKs);
+    List<com.liferay.hr.model.HRJobTitle> hrJobTitles=getHRJobTitles(pk);
+    for (    com.liferay.hr.model.HRJobTitle hrJobTitle : hrJobTitles) {
+      if (!hrJobTitlePKSet.remove(hrJobTitle.getPrimaryKey())) {
+        removeHRJobTitle.remove(pk,hrJobTitle.getPrimaryKey());
+      }
+    }
+    for (    Long hrJobTitlePK : hrJobTitlePKSet) {
+      addHRJobTitle.add(pk,hrJobTitlePK);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    FinderCacheUtil.clearCache(HRBranchModelImpl.MAPPING_TABLE_HRBRANCHES_HRJOBTITLES_NAME);
+  }
+}

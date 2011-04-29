@@ -1,0 +1,20 @@
+{
+  HRAssetDefinition hrAssetDefinition=(HRAssetDefinition)EntityCacheUtil.getResult(HRAssetDefinitionModelImpl.ENTITY_CACHE_ENABLED,HRAssetDefinitionImpl.class,hrAssetDefinitionId,this);
+  if (hrAssetDefinition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrAssetDefinition=(HRAssetDefinition)session.get(HRAssetDefinitionImpl.class,Long.valueOf(hrAssetDefinitionId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrAssetDefinition != null) {
+        cacheResult(hrAssetDefinition);
+      }
+      closeSession(session);
+    }
+  }
+  return hrAssetDefinition;
+}

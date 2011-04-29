@@ -1,0 +1,20 @@
+{
+  HRTaskStatus hrTaskStatus=(HRTaskStatus)EntityCacheUtil.getResult(HRTaskStatusModelImpl.ENTITY_CACHE_ENABLED,HRTaskStatusImpl.class,hrTaskStatusId,this);
+  if (hrTaskStatus == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrTaskStatus=(HRTaskStatus)session.get(HRTaskStatusImpl.class,Long.valueOf(hrTaskStatusId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrTaskStatus != null) {
+        cacheResult(hrTaskStatus);
+      }
+      closeSession(session);
+    }
+  }
+  return hrTaskStatus;
+}

@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.hr.model.HRBillability")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<HRBillability>> listenersList=new ArrayList<ModelListener<HRBillability>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<HRBillability>)InstanceFactory.newInstance(listenerClassName));
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}
