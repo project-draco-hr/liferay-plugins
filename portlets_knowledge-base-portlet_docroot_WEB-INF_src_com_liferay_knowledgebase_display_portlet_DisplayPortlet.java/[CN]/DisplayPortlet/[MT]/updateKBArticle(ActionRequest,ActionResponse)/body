@@ -1,5 +1,6 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String portletId=PortalUtil.getPortletId(actionRequest);
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   long parentResourcePrimKey=ParamUtil.getLong(actionRequest,"parentResourcePrimKey");
@@ -12,7 +13,7 @@
   KBArticle kbArticle=null;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    kbArticle=KBArticleServiceUtil.addKBArticle(parentResourcePrimKey,title,content,description,kbTemplateId,dirName,serviceContext);
+    kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,content,description,kbTemplateId,dirName,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
     kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,kbTemplateId,dirName,serviceContext);

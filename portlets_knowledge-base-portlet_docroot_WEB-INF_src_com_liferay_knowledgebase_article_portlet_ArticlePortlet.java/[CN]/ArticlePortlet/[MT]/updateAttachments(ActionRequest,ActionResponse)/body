@@ -1,8 +1,9 @@
 {
+  String portletId=PortalUtil.getPortletId(actionRequest);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   String dirName=ParamUtil.getString(actionRequest,"dirName");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
-  dirName=KBArticleServiceUtil.updateAttachments(resourcePrimKey,dirName,serviceContext);
+  dirName=KBArticleServiceUtil.updateAttachments(portletId,resourcePrimKey,dirName,serviceContext);
   String redirect=ParamUtil.getString(actionRequest,"redirect");
   redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "dirName",dirName);
   actionRequest.setAttribute(WebKeys.REDIRECT,redirect);

@@ -1,4 +1,5 @@
 {
+  String portletId=PortalUtil.getPortletId(actionRequest);
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long kbTemplateId=ParamUtil.getLong(actionRequest,"kbTemplateId");
   String title=ParamUtil.getString(actionRequest,"title");
@@ -8,7 +9,7 @@
   transform(kbTemplateId,content,engineType,actionRequest);
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBTemplate.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    KBTemplateServiceUtil.addKBTemplate(title,content,engineType,cacheable,serviceContext);
+    KBTemplateServiceUtil.addKBTemplate(portletId,title,content,engineType,cacheable,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
     KBTemplateServiceUtil.updateKBTemplate(kbTemplateId,title,content,engineType,cacheable,serviceContext);

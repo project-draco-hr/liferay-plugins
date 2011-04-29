@@ -1,9 +1,10 @@
 {
   UploadPortletRequest uploadRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  String portletId=PortalUtil.getPortletId(actionRequest);
   long resourcePrimKey=ParamUtil.getLong(uploadRequest,"resourcePrimKey");
   String dirName=ParamUtil.getString(uploadRequest,"dirName");
   File file=uploadRequest.getFile("file");
   String fileName=uploadRequest.getFileName("file");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
-  KBArticleServiceUtil.addAttachment(resourcePrimKey,dirName,fileName,FileUtil.getBytes(file),serviceContext);
+  KBArticleServiceUtil.addAttachment(portletId,resourcePrimKey,dirName,fileName,FileUtil.getBytes(file),serviceContext);
 }
