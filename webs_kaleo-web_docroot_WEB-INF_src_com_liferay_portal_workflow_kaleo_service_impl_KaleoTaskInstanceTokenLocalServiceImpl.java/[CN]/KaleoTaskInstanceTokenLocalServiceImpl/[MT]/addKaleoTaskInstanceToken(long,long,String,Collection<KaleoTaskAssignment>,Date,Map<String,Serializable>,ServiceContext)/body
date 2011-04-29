@@ -4,7 +4,11 @@
   Date now=new Date();
   long kaleoTaskInstanceTokenId=counterLocalService.increment();
   KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenPersistence.create(kaleoTaskInstanceTokenId);
-  long groupId=GroupUtil.getGroupId(serviceContext);
+  long groupId=serviceContext.getScopeGroupId();
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  if (group.isStagingGroup()) {
+    groupId=group.getLiveGroupId();
+  }
   kaleoTaskInstanceToken.setGroupId(groupId);
   kaleoTaskInstanceToken.setCompanyId(user.getCompanyId());
   kaleoTaskInstanceToken.setUserId(user.getUserId());
