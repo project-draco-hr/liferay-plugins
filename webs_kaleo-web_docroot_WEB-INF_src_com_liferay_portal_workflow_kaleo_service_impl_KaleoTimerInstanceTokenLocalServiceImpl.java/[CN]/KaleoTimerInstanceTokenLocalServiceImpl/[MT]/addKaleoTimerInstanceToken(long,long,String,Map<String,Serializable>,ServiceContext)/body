@@ -4,7 +4,8 @@
   Date now=new Date();
   long kaleoTimerInstanceTokenId=counterLocalService.increment();
   KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenPersistence.create(kaleoTimerInstanceTokenId);
-  kaleoTimerInstanceToken.setGroupId(serviceContext.getScopeGroupId());
+  long groupId=GroupUtil.getGroupId(serviceContext);
+  kaleoTimerInstanceToken.setGroupId(groupId);
   kaleoTimerInstanceToken.setCompanyId(user.getCompanyId());
   kaleoTimerInstanceToken.setUserId(user.getUserId());
   kaleoTimerInstanceToken.setUserName(user.getFullName());
