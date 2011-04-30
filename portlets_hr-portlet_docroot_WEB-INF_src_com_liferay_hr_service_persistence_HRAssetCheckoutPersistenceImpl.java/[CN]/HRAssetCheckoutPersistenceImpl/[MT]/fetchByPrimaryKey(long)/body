@@ -1,0 +1,20 @@
+{
+  HRAssetCheckout hrAssetCheckout=(HRAssetCheckout)EntityCacheUtil.getResult(HRAssetCheckoutModelImpl.ENTITY_CACHE_ENABLED,HRAssetCheckoutImpl.class,hrAssetCheckoutId,this);
+  if (hrAssetCheckout == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrAssetCheckout=(HRAssetCheckout)session.get(HRAssetCheckoutImpl.class,Long.valueOf(hrAssetCheckoutId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrAssetCheckout != null) {
+        cacheResult(hrAssetCheckout);
+      }
+      closeSession(session);
+    }
+  }
+  return hrAssetCheckout;
+}

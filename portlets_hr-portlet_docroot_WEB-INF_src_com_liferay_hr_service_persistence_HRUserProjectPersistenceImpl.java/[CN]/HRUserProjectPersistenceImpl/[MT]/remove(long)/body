@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRUserProject hrUserProject=(HRUserProject)session.get(HRUserProjectImpl.class,Long.valueOf(hrUserProjectId));
+    if (hrUserProject == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserProjectId);
+      }
+      throw new NoSuchUserProjectException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrUserProjectId);
+    }
+    return hrUserProjectPersistence.remove(hrUserProject);
+  }
+ catch (  NoSuchUserProjectException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

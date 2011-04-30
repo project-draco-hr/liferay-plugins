@@ -1,0 +1,18 @@
+{
+  hrBranch=toUnwrappedModel(hrBranch);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,hrBranch,merge);
+    hrBranch.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(HRBranchModelImpl.ENTITY_CACHE_ENABLED,HRBranchImpl.class,hrBranch.getPrimaryKey(),hrBranch);
+  return hrBranch;
+}

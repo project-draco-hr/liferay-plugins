@@ -1,0 +1,17 @@
+{
+  hrExpense=toUnwrappedModel(hrExpense);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,hrExpense);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(HRExpenseModelImpl.ENTITY_CACHE_ENABLED,HRExpenseImpl.class,hrExpense.getPrimaryKey());
+  return hrExpense;
+}

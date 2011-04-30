@@ -1,0 +1,20 @@
+{
+  HRTimeOff hrTimeOff=(HRTimeOff)EntityCacheUtil.getResult(HRTimeOffModelImpl.ENTITY_CACHE_ENABLED,HRTimeOffImpl.class,hrTimeOffId,this);
+  if (hrTimeOff == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrTimeOff=(HRTimeOff)session.get(HRTimeOffImpl.class,Long.valueOf(hrTimeOffId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrTimeOff != null) {
+        cacheResult(hrTimeOff);
+      }
+      closeSession(session);
+    }
+  }
+  return hrTimeOff;
+}

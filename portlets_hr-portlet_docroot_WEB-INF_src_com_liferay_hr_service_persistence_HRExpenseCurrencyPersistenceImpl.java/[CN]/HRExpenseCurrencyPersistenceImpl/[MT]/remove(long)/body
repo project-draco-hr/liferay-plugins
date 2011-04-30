@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRExpenseCurrency hrExpenseCurrency=(HRExpenseCurrency)session.get(HRExpenseCurrencyImpl.class,Long.valueOf(hrExpenseCurrencyId));
+    if (hrExpenseCurrency == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrExpenseCurrencyId);
+      }
+      throw new NoSuchExpenseCurrencyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrExpenseCurrencyId);
+    }
+    return hrExpenseCurrencyPersistence.remove(hrExpenseCurrency);
+  }
+ catch (  NoSuchExpenseCurrencyException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

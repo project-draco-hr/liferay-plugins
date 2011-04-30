@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HREmploymentType hrEmploymentType=(HREmploymentType)session.get(HREmploymentTypeImpl.class,Long.valueOf(hrEmploymentTypeId));
+    if (hrEmploymentType == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrEmploymentTypeId);
+      }
+      throw new NoSuchEmploymentTypeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrEmploymentTypeId);
+    }
+    return hrEmploymentTypePersistence.remove(hrEmploymentType);
+  }
+ catch (  NoSuchEmploymentTypeException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

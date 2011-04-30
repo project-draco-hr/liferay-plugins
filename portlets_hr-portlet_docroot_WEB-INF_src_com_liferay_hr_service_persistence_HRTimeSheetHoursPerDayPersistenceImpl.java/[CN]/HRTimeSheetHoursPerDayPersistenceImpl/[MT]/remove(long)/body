@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRTimeSheetHoursPerDay hrTimeSheetHoursPerDay=(HRTimeSheetHoursPerDay)session.get(HRTimeSheetHoursPerDayImpl.class,Long.valueOf(hrTimeSheetHoursPerDayId));
+    if (hrTimeSheetHoursPerDay == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeSheetHoursPerDayId);
+      }
+      throw new NoSuchTimeSheetHoursPerDayException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeSheetHoursPerDayId);
+    }
+    return hrTimeSheetHoursPerDayPersistence.remove(hrTimeSheetHoursPerDay);
+  }
+ catch (  NoSuchTimeSheetHoursPerDayException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

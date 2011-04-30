@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HROffice hrOffice=(HROffice)session.get(HROfficeImpl.class,Long.valueOf(hrOfficeId));
+    if (hrOffice == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrOfficeId);
+      }
+      throw new NoSuchOfficeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrOfficeId);
+    }
+    return hrOfficePersistence.remove(hrOffice);
+  }
+ catch (  NoSuchOfficeException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

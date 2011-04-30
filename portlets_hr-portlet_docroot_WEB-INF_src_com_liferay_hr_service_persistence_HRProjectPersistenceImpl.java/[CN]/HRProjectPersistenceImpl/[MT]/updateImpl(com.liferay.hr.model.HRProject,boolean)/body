@@ -1,0 +1,18 @@
+{
+  hrProject=toUnwrappedModel(hrProject);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,hrProject,merge);
+    hrProject.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(HRProjectModelImpl.ENTITY_CACHE_ENABLED,HRProjectImpl.class,hrProject.getPrimaryKey(),hrProject);
+  return hrProject;
+}

@@ -1,0 +1,26 @@
+{
+  hrTaskStatus=toUnwrappedModel(hrTaskStatus);
+  boolean isNew=hrTaskStatus.isNew();
+  HRTaskStatusModelImpl hrTaskStatusModelImpl=(HRTaskStatusModelImpl)hrTaskStatus;
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,hrTaskStatus,merge);
+    hrTaskStatus.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(HRTaskStatusModelImpl.ENTITY_CACHE_ENABLED,HRTaskStatusImpl.class,hrTaskStatus.getPrimaryKey(),hrTaskStatus);
+  if (!isNew && ((hrTaskStatus.getGroupId() != hrTaskStatusModelImpl.getOriginalGroupId()) || !Validator.equals(hrTaskStatus.getCode(),hrTaskStatusModelImpl.getOriginalCode()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrTaskStatusModelImpl.getOriginalGroupId()),hrTaskStatusModelImpl.getOriginalCode()});
+  }
+  if (isNew || ((hrTaskStatus.getGroupId() != hrTaskStatusModelImpl.getOriginalGroupId()) || !Validator.equals(hrTaskStatus.getCode(),hrTaskStatusModelImpl.getOriginalCode()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrTaskStatus.getGroupId()),hrTaskStatus.getCode()},hrTaskStatus);
+  }
+  return hrTaskStatus;
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRTimeOffPolicy hrTimeOffPolicy=(HRTimeOffPolicy)session.get(HRTimeOffPolicyImpl.class,Long.valueOf(hrTimeOffPolicyId));
+    if (hrTimeOffPolicy == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeOffPolicyId);
+      }
+      throw new NoSuchTimeOffPolicyException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeOffPolicyId);
+    }
+    return hrTimeOffPolicyPersistence.remove(hrTimeOffPolicy);
+  }
+ catch (  NoSuchTimeOffPolicyException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

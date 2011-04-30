@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRAsset hrAsset=(HRAsset)session.get(HRAssetImpl.class,Long.valueOf(hrAssetId));
+    if (hrAsset == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetId);
+      }
+      throw new NoSuchAssetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetId);
+    }
+    return hrAssetPersistence.remove(hrAsset);
+  }
+ catch (  NoSuchAssetException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

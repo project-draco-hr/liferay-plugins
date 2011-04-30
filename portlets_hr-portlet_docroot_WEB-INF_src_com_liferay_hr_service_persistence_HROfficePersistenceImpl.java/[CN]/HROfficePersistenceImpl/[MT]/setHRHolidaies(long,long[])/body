@@ -1,0 +1,20 @@
+{
+  try {
+    Set<Long> hrHolidayPKSet=SetUtil.fromArray(hrHolidayPKs);
+    List<com.liferay.hr.model.HRHoliday> hrHolidaies=getHRHolidaies(pk);
+    for (    com.liferay.hr.model.HRHoliday hrHoliday : hrHolidaies) {
+      if (!hrHolidayPKSet.remove(hrHoliday.getPrimaryKey())) {
+        removeHRHoliday.remove(pk,hrHoliday.getPrimaryKey());
+      }
+    }
+    for (    Long hrHolidayPK : hrHolidayPKSet) {
+      addHRHoliday.add(pk,hrHolidayPK);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    FinderCacheUtil.clearCache(HROfficeModelImpl.MAPPING_TABLE_HRHOLIDAYS_HROFFICES_NAME);
+  }
+}

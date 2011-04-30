@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRTimeOffType hrTimeOffType=(HRTimeOffType)session.get(HRTimeOffTypeImpl.class,Long.valueOf(hrTimeOffTypeId));
+    if (hrTimeOffType == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeOffTypeId);
+      }
+      throw new NoSuchTimeOffTypeException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrTimeOffTypeId);
+    }
+    return hrTimeOffTypePersistence.remove(hrTimeOffType);
+  }
+ catch (  NoSuchTimeOffTypeException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

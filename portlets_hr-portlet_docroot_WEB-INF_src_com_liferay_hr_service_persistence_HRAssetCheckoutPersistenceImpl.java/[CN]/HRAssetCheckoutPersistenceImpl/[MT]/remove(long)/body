@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRAssetCheckout hrAssetCheckout=(HRAssetCheckout)session.get(HRAssetCheckoutImpl.class,Long.valueOf(hrAssetCheckoutId));
+    if (hrAssetCheckout == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetCheckoutId);
+      }
+      throw new NoSuchAssetCheckoutException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetCheckoutId);
+    }
+    return hrAssetCheckoutPersistence.remove(hrAssetCheckout);
+  }
+ catch (  NoSuchAssetCheckoutException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

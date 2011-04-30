@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRAssetVendor hrAssetVendor=(HRAssetVendor)session.get(HRAssetVendorImpl.class,Long.valueOf(hrAssetVendorId));
+    if (hrAssetVendor == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetVendorId);
+      }
+      throw new NoSuchAssetVendorException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrAssetVendorId);
+    }
+    return hrAssetVendorPersistence.remove(hrAssetVendor);
+  }
+ catch (  NoSuchAssetVendorException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

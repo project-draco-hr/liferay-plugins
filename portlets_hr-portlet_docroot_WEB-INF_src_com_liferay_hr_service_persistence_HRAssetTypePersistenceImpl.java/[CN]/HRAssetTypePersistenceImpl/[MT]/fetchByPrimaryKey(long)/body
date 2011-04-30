@@ -1,0 +1,20 @@
+{
+  HRAssetType hrAssetType=(HRAssetType)EntityCacheUtil.getResult(HRAssetTypeModelImpl.ENTITY_CACHE_ENABLED,HRAssetTypeImpl.class,hrAssetTypeId,this);
+  if (hrAssetType == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrAssetType=(HRAssetType)session.get(HRAssetTypeImpl.class,Long.valueOf(hrAssetTypeId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrAssetType != null) {
+        cacheResult(hrAssetType);
+      }
+      closeSession(session);
+    }
+  }
+  return hrAssetType;
+}

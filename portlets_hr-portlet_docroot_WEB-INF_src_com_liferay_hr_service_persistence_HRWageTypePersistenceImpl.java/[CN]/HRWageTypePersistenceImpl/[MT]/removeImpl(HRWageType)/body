@@ -1,0 +1,19 @@
+{
+  hrWageType=toUnwrappedModel(hrWageType);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,hrWageType);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  HRWageTypeModelImpl hrWageTypeModelImpl=(HRWageTypeModelImpl)hrWageType;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_C,new Object[]{Long.valueOf(hrWageTypeModelImpl.getGroupId()),hrWageTypeModelImpl.getCode()});
+  EntityCacheUtil.removeResult(HRWageTypeModelImpl.ENTITY_CACHE_ENABLED,HRWageTypeImpl.class,hrWageType.getPrimaryKey());
+  return hrWageType;
+}

@@ -1,0 +1,20 @@
+{
+  HRUserTask hrUserTask=(HRUserTask)EntityCacheUtil.getResult(HRUserTaskModelImpl.ENTITY_CACHE_ENABLED,HRUserTaskImpl.class,hrUserTaskId,this);
+  if (hrUserTask == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrUserTask=(HRUserTask)session.get(HRUserTaskImpl.class,Long.valueOf(hrUserTaskId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrUserTask != null) {
+        cacheResult(hrUserTask);
+      }
+      closeSession(session);
+    }
+  }
+  return hrUserTask;
+}

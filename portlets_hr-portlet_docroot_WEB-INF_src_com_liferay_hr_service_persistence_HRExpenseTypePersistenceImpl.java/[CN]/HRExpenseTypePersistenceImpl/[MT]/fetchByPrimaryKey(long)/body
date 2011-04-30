@@ -1,0 +1,20 @@
+{
+  HRExpenseType hrExpenseType=(HRExpenseType)EntityCacheUtil.getResult(HRExpenseTypeModelImpl.ENTITY_CACHE_ENABLED,HRExpenseTypeImpl.class,hrExpenseTypeId,this);
+  if (hrExpenseType == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrExpenseType=(HRExpenseType)session.get(HRExpenseTypeImpl.class,Long.valueOf(hrExpenseTypeId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrExpenseType != null) {
+        cacheResult(hrExpenseType);
+      }
+      closeSession(session);
+    }
+  }
+  return hrExpenseType;
+}

@@ -1,0 +1,36 @@
+{
+  Object[] finderArgs=new Object[]{pk,String.valueOf(start),String.valueOf(end),String.valueOf(orderByComparator)};
+  List<com.liferay.hr.model.HRBranch> list=(List<com.liferay.hr.model.HRBranch>)FinderCacheUtil.getResult(FINDER_PATH_GET_HRBRANCHS,finderArgs,this);
+  if (list == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      String sql=null;
+      if (orderByComparator != null) {
+        sql=_SQL_GETHRBRANCHS.concat(ORDER_BY_CLAUSE).concat(orderByComparator.getOrderBy());
+      }
+ else {
+        sql=_SQL_GETHRBRANCHS;
+      }
+      SQLQuery q=session.createSQLQuery(sql);
+      q.addEntity("HRBranch",com.liferay.hr.model.impl.HRBranchImpl.class);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(pk);
+      list=(List<com.liferay.hr.model.HRBranch>)QueryUtil.list(q,getDialect(),start,end);
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (list == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_GET_HRBRANCHS,finderArgs);
+      }
+ else {
+        hrBranchPersistence.cacheResult(list);
+        FinderCacheUtil.putResult(FINDER_PATH_GET_HRBRANCHS,finderArgs,list);
+      }
+      closeSession(session);
+    }
+  }
+  return list;
+}

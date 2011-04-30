@@ -1,0 +1,20 @@
+{
+  HRHoliday hrHoliday=(HRHoliday)EntityCacheUtil.getResult(HRHolidayModelImpl.ENTITY_CACHE_ENABLED,HRHolidayImpl.class,hrHolidayId,this);
+  if (hrHoliday == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      hrHoliday=(HRHoliday)session.get(HRHolidayImpl.class,Long.valueOf(hrHolidayId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (hrHoliday != null) {
+        cacheResult(hrHoliday);
+      }
+      closeSession(session);
+    }
+  }
+  return hrHoliday;
+}
