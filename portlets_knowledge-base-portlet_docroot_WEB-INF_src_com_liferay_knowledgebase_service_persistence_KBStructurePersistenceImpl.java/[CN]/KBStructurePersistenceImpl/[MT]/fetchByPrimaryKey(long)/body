@@ -1,0 +1,20 @@
+{
+  KBStructure kbStructure=(KBStructure)EntityCacheUtil.getResult(KBStructureModelImpl.ENTITY_CACHE_ENABLED,KBStructureImpl.class,kbStructureId,this);
+  if (kbStructure == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      kbStructure=(KBStructure)session.get(KBStructureImpl.class,Long.valueOf(kbStructureId));
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (kbStructure != null) {
+        cacheResult(kbStructure);
+      }
+      closeSession(session);
+    }
+  }
+  return kbStructure;
+}
