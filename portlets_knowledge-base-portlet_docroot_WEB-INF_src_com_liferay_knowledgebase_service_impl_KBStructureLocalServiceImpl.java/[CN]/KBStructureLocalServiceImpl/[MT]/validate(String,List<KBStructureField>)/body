@@ -1,0 +1,41 @@
+{
+  if (Validator.isNull(title)) {
+    throw new KBStructureTitleException();
+  }
+  List<String> kbStructureFieldNames=new ArrayList<String>();
+  List<String> kbStructureFieldLabels=new ArrayList<String>();
+  for (  KBStructureField kbStructureField : kbStructureFields) {
+    if (Validator.isNull(kbStructureField.getName())) {
+      throw new KBStructureFieldNameException();
+    }
+    if (kbStructureFieldNames.contains(kbStructureField.getName())) {
+      throw new DuplicateKBStructureFieldNameException();
+    }
+    kbStructureFieldNames.add(kbStructureField.getName());
+    if (Validator.isNull(kbStructureField.getLabel())) {
+      throw new KBStructureFieldLabelException();
+    }
+    if (kbStructureFieldLabels.contains(kbStructureField.getLabel())) {
+      throw new DuplicateKBStructureFieldLabelException();
+    }
+    kbStructureFieldLabels.add(kbStructureField.getLabel());
+    List<String> kbStructureOptionLabels=new ArrayList<String>();
+    List<String> kbStructureOptionValues=new ArrayList<String>();
+    for (    KBStructureOption kbStructureOption : kbStructureField.getKbStructureOptions()) {
+      if (Validator.isNull(kbStructureOption.getLabel())) {
+        throw new KBStructureOptionLabelException();
+      }
+      if (kbStructureOptionLabels.contains(kbStructureOption.getLabel())) {
+        throw new DuplicateKBStructureOptionLabelException();
+      }
+      kbStructureOptionLabels.add(kbStructureOption.getLabel());
+      if (Validator.isNull(kbStructureOption.getValue())) {
+        throw new KBStructureOptionValueException();
+      }
+      if (kbStructureOptionValues.contains(kbStructureOption.getValue())) {
+        throw new DuplicateKBStructureOptionValueException();
+      }
+      kbStructureOptionValues.add(kbStructureOption.getValue());
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  Document document=null;
+  try {
+    document=SAXReaderUtil.read(content);
+  }
+ catch (  DocumentException de) {
+    throw new PortalException(de);
+  }
+  Element rootElement=document.getRootElement();
+  for (  Element kbStructureElement : rootElement.elements()) {
+    String languageId=kbStructureElement.attributeValue("language-id");
+    if (!languageId.equals(localizedLanguageId)) {
+      continue;
+    }
+    kbStructureElement.detach();
+    try {
+      return document.formattedString();
+    }
+ catch (    IOException ioe) {
+      return document.asXML();
+    }
+  }
+  return content;
+}

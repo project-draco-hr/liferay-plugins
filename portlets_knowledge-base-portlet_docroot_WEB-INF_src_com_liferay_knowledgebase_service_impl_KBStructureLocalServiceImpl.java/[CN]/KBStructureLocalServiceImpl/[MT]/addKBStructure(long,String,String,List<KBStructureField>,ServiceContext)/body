@@ -1,0 +1,30 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  long groupId=serviceContext.getScopeGroupId();
+  Map<Locale,String> titleMap=new HashMap<Locale,String>();
+  String content=StringPool.BLANK;
+  Date now=new Date();
+  validate(title,kbStructureFields);
+  titleMap.put(LocaleUtil.fromLanguageId(localizedLanguageId),title);
+  content=KBStructureContentUtil.addKBStructureFields(localizedLanguageId,kbStructureFields);
+  long kbStructureId=counterLocalService.increment();
+  KBStructure kbStructure=kbStructurePersistence.create(kbStructureId);
+  kbStructure.setUuid(serviceContext.getUuid());
+  kbStructure.setGroupId(groupId);
+  kbStructure.setCompanyId(user.getCompanyId());
+  kbStructure.setUserId(user.getUserId());
+  kbStructure.setUserName(user.getFullName());
+  kbStructure.setCreateDate(serviceContext.getCreateDate(now));
+  kbStructure.setModifiedDate(serviceContext.getModifiedDate(now));
+  kbStructure.setTitleMap(titleMap);
+  kbStructure.setContent(content);
+  kbStructurePersistence.update(kbStructure,false);
+  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
+    addKBStructureResources(kbStructure,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  }
+ else {
+    addKBStructureResources(kbStructure,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+  }
+  socialActivityLocalService.addActivity(userId,groupId,KBStructure.class.getName(),kbStructureId,AdminActivityKeys.ADD_KB_STRUCTURE,StringPool.BLANK,0);
+  return kbStructure;
+}

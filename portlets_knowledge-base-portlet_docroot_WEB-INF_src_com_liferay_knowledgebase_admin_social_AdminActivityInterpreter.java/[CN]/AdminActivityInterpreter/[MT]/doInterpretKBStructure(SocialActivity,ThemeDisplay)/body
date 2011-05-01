@@ -1,0 +1,29 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  KBStructure kbStructure=KBStructureLocalServiceUtil.getKBStructure(activity.getClassPK());
+  if (!KBStructurePermission.contains(permissionChecker,kbStructure,ActionKeys.VIEW)) {
+    return null;
+  }
+  String link=StringPool.BLANK;
+  String key=StringPool.BLANK;
+  if (activity.getType() == AdminActivityKeys.ADD_KB_STRUCTURE) {
+    key="activity-knowledge-base-admin-add-kb-structure";
+  }
+ else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_STRUCTURE) {
+    key="activity-knowledge-base-admin-update-kb-structure";
+  }
+  String content=kbStructure.getTitle(themeDisplay.getLocale());
+  if (Validator.isNotNull(activity.getExtraData())) {
+    Locale locale=LocaleUtil.fromLanguageId(activity.getExtraData());
+    StringBundler sb=new StringBundler(5);
+    sb.append(content);
+    sb.append(StringPool.SPACE);
+    sb.append(StringPool.OPEN_PARENTHESIS);
+    sb.append(locale.getDisplayName(themeDisplay.getLocale()));
+    sb.append(StringPool.CLOSE_PARENTHESIS);
+    content=sb.toString();
+  }
+  String title=getTitle(activity,key,content,link,themeDisplay);
+  String body=StringPool.BLANK;
+  return new SocialActivityFeedEntry(link,title,body);
+}

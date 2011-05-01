@@ -1,0 +1,10 @@
+{
+  KBStructure kbStructure=kbStructurePersistence.findByPrimaryKey(kbStructureId);
+  Map<Locale,String> titleMap=kbStructure.getTitleMap();
+  String content=KBStructureContentUtil.deleteKBStructureFields(localizedLanguageId,kbStructure.getContent());
+  titleMap.remove(LocaleUtil.fromLanguageId(localizedLanguageId));
+  kbStructure.setModifiedDate(serviceContext.getModifiedDate(null));
+  kbStructure.setTitleMap(titleMap);
+  kbStructure.setContent(content);
+  kbStructurePersistence.update(kbStructure,false);
+}

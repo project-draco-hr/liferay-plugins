@@ -1,0 +1,34 @@
+{
+  for (  Map.Entry<String,Element> entry : elements.entrySet()) {
+    Element oldKBStructureElement=entry.getValue();
+    Element newKBStructureElement=oldKBStructureElement.createCopy();
+    for (    Element newKBStructureFieldElement : newKBStructureElement.elements()) {
+      newKBStructureFieldElement.detach();
+    }
+    for (    Element defaultKBStructureFieldElement : defaultKBStructureElement.elements()) {
+      String defaultKBStructureFieldId=defaultKBStructureFieldElement.attributeValue("kb-structure-field-id");
+      Element oldKBStructureFieldElement=(Element)oldKBStructureElement.selectSingleNode("kb-structure-field[@kb-structure-field-id='" + defaultKBStructureFieldId + "']");
+      if (oldKBStructureFieldElement == null) {
+        newKBStructureElement.add(defaultKBStructureFieldElement.createCopy());
+        continue;
+      }
+      Element newKBStructureFieldElement=oldKBStructureFieldElement.createCopy();
+      for (      Element newKBStructureOptionElement : newKBStructureFieldElement.elements()) {
+        newKBStructureOptionElement.detach();
+      }
+      for (      Element defaultKBStructureOptionElement : defaultKBStructureFieldElement.elements()) {
+        String defaultKBStructureOptionId=defaultKBStructureOptionElement.attributeValue("kb-structure-option-id");
+        Element oldKBStructureOptionElement=(Element)oldKBStructureFieldElement.selectSingleNode("kb-structure-option[@kb-structure-option-id='" + defaultKBStructureOptionId + "']");
+        if (oldKBStructureOptionElement == null) {
+          newKBStructureFieldElement.add(defaultKBStructureOptionElement.createCopy());
+        }
+ else {
+          newKBStructureFieldElement.add(oldKBStructureOptionElement.createCopy());
+        }
+      }
+      newKBStructureElement.add(newKBStructureFieldElement);
+    }
+    rootElement.add(newKBStructureElement);
+  }
+  return rootElement;
+}

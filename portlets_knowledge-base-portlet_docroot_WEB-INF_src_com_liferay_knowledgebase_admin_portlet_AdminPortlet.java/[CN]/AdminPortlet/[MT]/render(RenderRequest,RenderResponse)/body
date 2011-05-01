@@ -14,9 +14,15 @@
       kbTemplate=KBTemplateServiceUtil.getKBTemplate(kbTemplateId);
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_KB_TEMPLATE,kbTemplate);
+    KBStructure kbStructure=null;
+    long kbStructureId=ParamUtil.getLong(renderRequest,"kbStructureId");
+    if (kbStructureId > 0) {
+      kbStructure=KBStructureServiceUtil.getKBStructure(kbStructureId);
+    }
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_KB_STRUCTURE,kbStructure);
   }
  catch (  Exception e) {
-    if (e instanceof NoSuchArticleException || e instanceof NoSuchTemplateException || e instanceof PrincipalException) {
+    if (e instanceof NoSuchArticleException || e instanceof NoSuchStructureException || e instanceof NoSuchTemplateException|| e instanceof PrincipalException) {
       SessionErrors.add(renderRequest,e.getClass().getName());
     }
  else {

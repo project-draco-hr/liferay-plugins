@@ -1,0 +1,45 @@
+{
+  Junction junction=null;
+  if (andOperator) {
+    junction=RestrictionsFactoryUtil.conjunction();
+  }
+ else {
+    junction=RestrictionsFactoryUtil.disjunction();
+  }
+  Map<String,String> terms=new HashMap<String,String>();
+  if (Validator.isNotNull(title)) {
+    terms.put("title",title);
+  }
+  if (Validator.isNotNull(content)) {
+    String escapedContent=StringEscapeUtils.escapeXml(content);
+    terms.put("content",content + StringPool.SPACE + escapedContent);
+  }
+  for (  Map.Entry<String,String> entry : terms.entrySet()) {
+    String key=entry.getKey();
+    String value=entry.getValue();
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    for (    String keyword : KnowledgeBaseUtil.splitKeywords(value)) {
+      Criterion criterion=RestrictionsFactoryUtil.ilike(key,StringUtil.quote(keyword,StringPool.PERCENT));
+      disjunction.add(criterion);
+    }
+    junction.add(disjunction);
+  }
+  if ((endDate != null) && (startDate != null)) {
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    String[] propertyNames={"createDate","modifiedDate"};
+    for (    String propertyName : propertyNames) {
+      Property property=PropertyFactoryUtil.forName(propertyName);
+      Conjunction conjunction=RestrictionsFactoryUtil.conjunction();
+      conjunction.add(property.gt(startDate));
+      conjunction.add(property.lt(endDate));
+      disjunction.add(conjunction);
+    }
+    junction.add(disjunction);
+  }
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KBStructure.class,getClass().getClassLoader());
+  if (groupId > 0) {
+    Property property=PropertyFactoryUtil.forName("groupId");
+    dynamicQuery.add(property.eq(groupId));
+  }
+  return dynamicQuery.add(junction);
+}
