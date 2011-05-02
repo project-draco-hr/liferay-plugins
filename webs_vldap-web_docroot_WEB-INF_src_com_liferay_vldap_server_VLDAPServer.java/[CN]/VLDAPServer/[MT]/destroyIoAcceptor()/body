@@ -1,5 +1,9 @@
 {
   if (_ioAcceptor != null) {
+    Map<Long,IoSession> managedSessions=_ioAcceptor.getManagedSessions();
+    for (    IoSession ioSession : managedSessions.values()) {
+      ioSession.close(true);
+    }
     _ioAcceptor.unbind();
     _ioAcceptor.dispose();
   }
