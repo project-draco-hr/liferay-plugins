@@ -1,6 +1,13 @@
 {
   StringBuilder sb=new StringBuilder();
-  sb.append(getWidgetPath());
+  String[] locales=mimeRequest.getLocales();
+  if (locales.length != 0) {
+    String languageId=locales[0];
+    sb.append(getWidgetPath(languageId));
+  }
+ else {
+    sb.append(getWidgetPath());
+  }
   sb.append(StringPool.QUESTION);
   String propertiesAuthenticatonTokenSharedSecret=Encryptor.digest(PropsUtil.get(PropsKeys.AUTH_TOKEN_SHARED_SECRET));
   sb.append("p_auth_secret=");
