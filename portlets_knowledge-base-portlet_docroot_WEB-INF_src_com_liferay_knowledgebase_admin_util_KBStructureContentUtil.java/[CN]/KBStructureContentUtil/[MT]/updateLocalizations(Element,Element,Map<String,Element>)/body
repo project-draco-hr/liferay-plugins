@@ -1,15 +1,15 @@
 {
   for (  Map.Entry<String,Element> entry : elements.entrySet()) {
-    Element oldKBStructureElement=entry.getValue();
-    Element newKBStructureElement=oldKBStructureElement.createCopy();
-    for (    Element newKBStructureFieldElement : newKBStructureElement.elements()) {
+    Element oldKBStructureContentElement=entry.getValue();
+    Element newKBStructureContentElement=oldKBStructureContentElement.createCopy();
+    for (    Element newKBStructureFieldElement : newKBStructureContentElement.elements()) {
       newKBStructureFieldElement.detach();
     }
-    for (    Element defaultKBStructureFieldElement : defaultKBStructureElement.elements()) {
+    for (    Element defaultKBStructureFieldElement : defaultKBStructureContentElement.elements()) {
       String defaultKBStructureFieldId=defaultKBStructureFieldElement.attributeValue("kb-structure-field-id");
-      Element oldKBStructureFieldElement=(Element)oldKBStructureElement.selectSingleNode("kb-structure-field[@kb-structure-field-id='" + defaultKBStructureFieldId + "']");
+      Element oldKBStructureFieldElement=(Element)oldKBStructureContentElement.selectSingleNode("kb-structure-field[@kb-structure-field-id='" + defaultKBStructureFieldId + "']");
       if (oldKBStructureFieldElement == null) {
-        newKBStructureElement.add(defaultKBStructureFieldElement.createCopy());
+        newKBStructureContentElement.add(defaultKBStructureFieldElement.createCopy());
         continue;
       }
       Element newKBStructureFieldElement=oldKBStructureFieldElement.createCopy();
@@ -26,9 +26,9 @@
           newKBStructureFieldElement.add(oldKBStructureOptionElement.createCopy());
         }
       }
-      newKBStructureElement.add(newKBStructureFieldElement);
+      newKBStructureContentElement.add(newKBStructureFieldElement);
     }
-    rootElement.add(newKBStructureElement);
+    rootElement.add(newKBStructureContentElement);
   }
   return rootElement;
 }

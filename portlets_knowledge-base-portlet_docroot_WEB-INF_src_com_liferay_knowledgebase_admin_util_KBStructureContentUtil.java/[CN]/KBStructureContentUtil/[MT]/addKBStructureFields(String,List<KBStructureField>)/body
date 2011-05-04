@@ -1,15 +1,15 @@
 {
   Document document=SAXReaderUtil.createDocument();
-  Element rootElement=document.addElement("form-builder");
+  Element rootElement=document.addElement("kb-structure");
   rootElement.addAttribute("default-language-id",localizedLanguageId);
-  Element kbStructureElement=rootElement.addElement("kb-structure");
-  kbStructureElement.addAttribute("language-id",localizedLanguageId);
+  Element kbStructureContentElement=rootElement.addElement("kb-structure-content");
+  kbStructureContentElement.addAttribute("language-id",localizedLanguageId);
   for (  KBStructureField kbStructureField : kbStructureFields) {
     String kbStructureFieldId=String.valueOf(CounterLocalServiceUtil.increment());
     String kbStructureFieldName=StringEscapeUtils.escapeXml(kbStructureField.getName());
     String kbStructureFieldLabel=StringEscapeUtils.escapeXml(kbStructureField.getLabel());
     String kbStructureFieldType=StringEscapeUtils.escapeXml(kbStructureField.getType());
-    Element kbStructureFieldElement=kbStructureElement.addElement("kb-structure-field");
+    Element kbStructureFieldElement=kbStructureContentElement.addElement("kb-structure-field");
     kbStructureFieldElement.addAttribute("kb-structure-field-id",kbStructureFieldId);
     kbStructureFieldElement.addAttribute("name",kbStructureFieldName);
     kbStructureFieldElement.addAttribute("label",kbStructureFieldLabel);

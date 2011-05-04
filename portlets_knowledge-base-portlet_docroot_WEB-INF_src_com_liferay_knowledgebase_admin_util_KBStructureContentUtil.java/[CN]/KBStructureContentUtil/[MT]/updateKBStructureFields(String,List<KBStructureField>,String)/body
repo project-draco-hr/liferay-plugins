@@ -7,12 +7,12 @@
     throw new PortalException(de);
   }
   Element rootElement=document.getRootElement();
-  Element oldKBStructureElement=(Element)rootElement.selectSingleNode("kb-structure[@language-id='" + localizedLanguageId + "']");
-  if (oldKBStructureElement != null) {
-    oldKBStructureElement.detach();
+  Element oldKBStructureContentElement=(Element)rootElement.selectSingleNode("kb-structure-content[@language-id='" + localizedLanguageId + "']");
+  if (oldKBStructureContentElement != null) {
+    oldKBStructureContentElement.detach();
   }
-  Element newKBStructureElement=rootElement.addElement("kb-structure");
-  newKBStructureElement.addAttribute("language-id",localizedLanguageId);
+  Element newKBStructureContentElement=rootElement.addElement("kb-structure-content");
+  newKBStructureContentElement.addAttribute("language-id",localizedLanguageId);
   for (  KBStructureField kbStructureField : kbStructureFields) {
     String kbStructureFieldId=kbStructureField.getKbStructureFieldId();
     String kbStructureFieldName=StringEscapeUtils.escapeXml(kbStructureField.getName());
@@ -21,7 +21,7 @@
     if (Validator.isNull(kbStructureFieldId)) {
       kbStructureFieldId=String.valueOf(CounterLocalServiceUtil.increment());
     }
-    Element kbStructureFieldElement=newKBStructureElement.addElement("kb-structure-field");
+    Element kbStructureFieldElement=newKBStructureContentElement.addElement("kb-structure-field");
     kbStructureFieldElement.addAttribute("kb-structure-field-id",kbStructureFieldId);
     kbStructureFieldElement.addAttribute("name",kbStructureFieldName);
     kbStructureFieldElement.addAttribute("label",kbStructureFieldLabel);
@@ -46,20 +46,16 @@
     elements.put(languageId,(Element)element.detach());
   }
   String defaultLanguageId=rootElement.attributeValue("default-language-id");
-  Element defaultKBStructureElement=elements.remove(defaultLanguageId);
-  rootElement.add(defaultKBStructureElement);
+  Element defaultKBStructureContentElement=elements.remove(defaultLanguageId);
+  rootElement.add(defaultKBStructureContentElement);
   if (!localizedLanguageId.equals(defaultLanguageId)) {
     for (    Map.Entry<String,Element> entry : elements.entrySet()) {
       rootElement.add(entry.getValue());
     }
-    try {
-      return document.formattedString();
-    }
- catch (    IOException ioe) {
-      return document.asXML();
-    }
   }
-  updateLocalizations(rootElement,defaultKBStructureElement,elements);
+ else {
+    updateLocalizations(rootElement,defaultKBStructureContentElement,elements);
+  }
   try {
     return document.formattedString();
   }

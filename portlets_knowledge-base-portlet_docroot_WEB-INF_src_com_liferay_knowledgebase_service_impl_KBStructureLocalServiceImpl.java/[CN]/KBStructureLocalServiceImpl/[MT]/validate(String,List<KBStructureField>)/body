@@ -11,6 +11,11 @@
     if (kbStructureFieldNames.contains(kbStructureField.getName())) {
       throw new DuplicateKBStructureFieldNameException();
     }
+    for (    char c : kbStructureField.getName().toCharArray()) {
+      if (!Validator.isChar(c) && !Validator.isDigit(c) && (c != CharPool.DASH)&& (c != CharPool.UNDERLINE)) {
+        throw new KBStructureFieldNameException();
+      }
+    }
     kbStructureFieldNames.add(kbStructureField.getName());
     if (Validator.isNull(kbStructureField.getLabel())) {
       throw new KBStructureFieldLabelException();

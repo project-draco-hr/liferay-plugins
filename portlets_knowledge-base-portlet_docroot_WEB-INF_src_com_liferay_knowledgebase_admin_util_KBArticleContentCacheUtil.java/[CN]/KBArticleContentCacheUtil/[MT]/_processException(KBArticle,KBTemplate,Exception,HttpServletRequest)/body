@@ -9,8 +9,12 @@
     key=PortletPropsKeys.ADMIN_KB_TEMPLATE_ERROR_VELOCITY;
     value=PortletPropsValues.ADMIN_KB_TEMPLATE_ERROR_VELOCITY;
   }
+  String exception=e.getMessage();
+  if (Validator.isNull(exception)) {
+    exception=e.getClass().getName();
+  }
   Map<String,Object> variables=new HashMap<String,Object>();
-  variables.put("exception",e);
+  variables.put("exception",exception);
   variables.put("kbTemplate",kbTemplate);
   try {
     KBTemplateParser kbTemplateParser=AdminUtil.getKBTemplateParser(kbTemplate.getEngineType());

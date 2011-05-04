@@ -5,12 +5,12 @@
   Document document=SAXReaderUtil.read(content);
   List<KBStructureField> kbStructureFields=new ArrayList<KBStructureField>();
   Element rootElement=document.getRootElement();
-  Element kbStructureElement=(Element)rootElement.selectSingleNode("kb-structure[@language-id='" + localizedLanguageId + "']");
-  if (kbStructureElement == null) {
+  Element kbStructureContentElement=(Element)rootElement.selectSingleNode("kb-structure-content[@language-id='" + localizedLanguageId + "']");
+  if (kbStructureContentElement == null) {
     String value=rootElement.attributeValue("default-language-id");
-    kbStructureElement=(Element)rootElement.selectSingleNode("kb-structure[@language-id='" + value + "']");
+    kbStructureContentElement=(Element)rootElement.selectSingleNode("kb-structure-content[@language-id='" + value + "']");
   }
-  for (  Element kbStructureFieldElement : kbStructureElement.elements()) {
+  for (  Element kbStructureFieldElement : kbStructureContentElement.elements()) {
     String kbStructureFieldId=kbStructureFieldElement.attributeValue("kb-structure-field-id");
     String kbStructureFieldName=StringEscapeUtils.unescapeXml(kbStructureFieldElement.attributeValue("name"));
     String kbStructureFieldLabel=StringEscapeUtils.unescapeXml(kbStructureFieldElement.attributeValue("label"));
