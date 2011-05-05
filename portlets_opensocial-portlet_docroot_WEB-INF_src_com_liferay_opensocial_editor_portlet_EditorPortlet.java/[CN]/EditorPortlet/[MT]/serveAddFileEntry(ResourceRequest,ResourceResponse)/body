@@ -11,11 +11,10 @@
   serviceContext.setAttribute("extension",extension);
   serviceContext.setAttribute("sourceFileName",fileEntryTitle);
   serviceContext.setScopeGroupId(folder.getGroupId());
-  FileEntry fileEntry=DLAppServiceUtil.addFileEntry(folder.getRepositoryId(),folderId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,bytes,serviceContext);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  long fileEntryId=fileEntry.getFileEntryId();
-  jsonObject.put("fileEntryId",String.valueOf(fileEntryId));
-  String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntryId);
+  FileEntry fileEntry=DLAppServiceUtil.addFileEntry(folder.getRepositoryId(),folderId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,bytes,serviceContext);
+  jsonObject.put("fileEntryId",fileEntry.getFileEntryId());
+  String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntry.getFileEntryId());
   jsonObject.put("fileEntryURL",fileEntryURL);
   writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }

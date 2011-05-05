@@ -6,7 +6,7 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  Folder folder : folders) {
     JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-    jsonObject.put("entryId",String.valueOf(folder.getFolderId()));
+    jsonObject.put("entryId",folder.getFolderId());
     jsonObject.put("label",folder.getName());
     jsonObject.put("leaf",false);
     jsonObject.put("type","editor");
@@ -18,9 +18,8 @@
     fileEntries=ListUtil.sort(fileEntries,new RepositoryModelNameComparator(true));
     for (    FileEntry fileEntry : fileEntries) {
       JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-      long fileEntryId=fileEntry.getFileEntryId();
-      jsonObject.put("entryId",String.valueOf(fileEntryId));
-      String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntryId);
+      jsonObject.put("entryId",fileEntry.getFileEntryId());
+      String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntry.getFileEntryId());
       jsonObject.put("fileEntryURL",fileEntryURL);
       jsonObject.put("label",fileEntry.getTitle());
       jsonObject.put("leaf",true);
