@@ -6,7 +6,7 @@
   if (allResults && (length > 0)) {
     solrQuery.setRows((int)length);
     queryResponse=_solrServer.query(solrQuery);
-    return subset(solrQuery,queryConfig,queryResponse,false);
+    return subset(solrQuery,query,queryConfig,queryResponse,false);
   }
   float maxScore=1;
   boolean scoreEnabled=queryConfig.isScoreEnabled();
@@ -25,7 +25,7 @@
     Document document=new DocumentImpl();
     Collection<String> names=solrDocument.getFieldNames();
     for (    String name : names) {
-      Field field=new Field(name,solrDocument.getFieldValue(name).toString());
+      Field field=new Field(name,ArrayUtil.toStringArray(solrDocument.getFieldValues(name).toArray()));
       document.add(field);
     }
     float score=1;
@@ -45,6 +45,7 @@
   float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
   subset.setDocs(subsetDocs);
   subset.setLength((int)length);
+  subset.setQuery(query);
   subset.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
   subset.setScores(subsetScores);
   subset.setSearchTime(searchTime);

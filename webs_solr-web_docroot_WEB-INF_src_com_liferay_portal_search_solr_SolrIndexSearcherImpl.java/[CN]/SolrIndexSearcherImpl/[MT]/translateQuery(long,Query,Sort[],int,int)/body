@@ -1,21 +1,14 @@
 {
   try {
+    QueryTranslatorUtil.translateForSolr(query);
     String queryString=query.toString();
-    queryString=queryString.replaceAll(":\\*",":");
-    queryString=queryString.replaceAll(":\\w+:",":");
-    StringBundler sb=new StringBundler(queryString);
-    sb.append(StringPool.SPACE);
-    sb.append(StringPool.PLUS);
-    sb.append(Field.COMPANY_ID);
-    sb.append(StringPool.COLON);
-    sb.append(companyId);
     QueryConfig queryConfig=query.getQueryConfig();
     SolrQuery solrQuery=new SolrQuery();
     solrQuery.setHighlight(queryConfig.isHighlightEnabled());
     solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
     solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
     solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
-    solrQuery.setQuery(sb.toString());
+    solrQuery.setQuery(queryString);
     if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
       solrQuery.setRows(0);
     }
@@ -24,8 +17,7 @@
       solrQuery.setStart(start);
     }
     if ((sorts != null) && (sorts.length > 0)) {
-      for (int i=0; i < sorts.length; i++) {
-        Sort sortField=sorts[i];
+      for (      Sort sortField : sorts) {
         if (sortField == null) {
           continue;
         }
