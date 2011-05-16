@@ -5,6 +5,11 @@
   String description=rootElement.elementText("description");
   int version=GetterUtil.getInteger(rootElement.elementText("version"));
   Definition definition=new Definition(name,description,version);
+  List<Element> conditionElements=rootElement.elements("condition");
+  for (  Element conditionElement : conditionElements) {
+    Condition condition=parseCondition(conditionElement);
+    definition.addNode(condition);
+  }
   List<Element> forkElements=rootElement.elements("fork");
   for (  Element forkElement : forkElements) {
     Fork fork=parseFork(forkElement);
@@ -25,6 +30,6 @@
     Task task=parseTask(taskElement);
     definition.addNode(task);
   }
-  parseTransitions(definition,forkElements,joinElements,stateElements,taskElements);
+  parseTransitions(definition,conditionElements,forkElements,joinElements,stateElements,taskElements);
   return definition;
 }
