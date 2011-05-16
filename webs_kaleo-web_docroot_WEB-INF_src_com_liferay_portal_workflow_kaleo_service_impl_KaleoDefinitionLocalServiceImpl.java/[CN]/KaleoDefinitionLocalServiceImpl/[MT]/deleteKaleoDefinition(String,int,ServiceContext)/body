@@ -7,9 +7,9 @@
     throw new WorkflowException("Cannot delete incomplete workflow definition " + kaleoDefinition.getKaleoDefinitionId());
   }
   kaleoDefinitionPersistence.remove(kaleoDefinition);
+  kaleoConditionLocalService.deleteKaleoDefinitionKaleoCondition(kaleoDefinition.getKaleoDefinitionId());
   kaleoInstanceLocalService.deleteKaleoDefinitionKaleoInstances(kaleoDefinition.getKaleoDefinitionId());
   kaleoNodeLocalService.deleteKaleoDefinitionKaleoNodes(kaleoDefinition.getKaleoDefinitionId());
-  kaleoConditionLocalService.deleteKaleoDefinitionKaleoCondition(kaleoDefinition.getKaleoDefinitionId());
   kaleoTaskLocalService.deleteKaleoDefinitionKaleoTasks(kaleoDefinition.getKaleoDefinitionId());
   kaleoTransitionLocalService.deleteKaleoDefinitionKaleoTransitions(kaleoDefinition.getKaleoDefinitionId());
 }
