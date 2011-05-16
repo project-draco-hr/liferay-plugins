@@ -17,11 +17,11 @@
   kbTemplate.setEngineType(engineType);
   kbTemplate.setCacheable(cacheable);
   kbTemplatePersistence.update(kbTemplate,false);
-  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
-    addKBTemplateResources(kbTemplate,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
+  if (serviceContext.getAddGroupPermissions() || serviceContext.getAddGuestPermissions()) {
+    addKBTemplateResources(kbTemplate,serviceContext.getAddGroupPermissions(),serviceContext.getAddGuestPermissions());
   }
  else {
-    addKBTemplateResources(kbTemplate,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
+    addKBTemplateResources(kbTemplate,serviceContext.getGroupPermissions(),serviceContext.getGuestPermissions());
   }
   socialActivityLocalService.addActivity(userId,groupId,KBTemplate.class.getName(),kbTemplateId,AdminActivityKeys.ADD_KB_TEMPLATE,StringPool.BLANK,0);
   return kbTemplate;
