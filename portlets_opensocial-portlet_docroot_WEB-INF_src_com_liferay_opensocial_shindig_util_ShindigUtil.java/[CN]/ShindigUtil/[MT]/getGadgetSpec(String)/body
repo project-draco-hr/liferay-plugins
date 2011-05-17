@@ -1,10 +1,5 @@
 {
-  JSONObject gadgetContextJSONObject=new JSONObject();
-  gadgetContextJSONObject.put("debug",GetterUtil.getBoolean(PortletPropsValues.SHINDIG_JS_DEBUG));
-  gadgetContextJSONObject.put("ignoreCache",GetterUtil.getBoolean(PortletPropsValues.SHINDIG_NO_CACHE));
-  JSONObject gadgetRequestJSONObject=new JSONObject();
-  gadgetRequestJSONObject.put("url",url);
-  JsonRpcGadgetContext jsonRpcGadgetContext=new JsonRpcGadgetContext(gadgetContextJSONObject,gadgetRequestJSONObject);
-  Gadget gadget=_processor.process(jsonRpcGadgetContext);
-  return gadget.getSpec();
+  boolean debug=GetterUtil.getBoolean(PortletPropsValues.SHINDIG_JS_DEBUG);
+  boolean ignoreCache=GetterUtil.getBoolean(PortletPropsValues.SHINDIG_NO_CACHE);
+  return getGadgetSpec(url,debug,ignoreCache);
 }

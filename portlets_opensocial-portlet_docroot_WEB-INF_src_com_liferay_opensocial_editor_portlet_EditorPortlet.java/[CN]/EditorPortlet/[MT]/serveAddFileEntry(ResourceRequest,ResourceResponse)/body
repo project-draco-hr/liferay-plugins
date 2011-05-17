@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long folderId=ParamUtil.getLong(resourceRequest,"folderId");
   Folder folder=DLAppServiceUtil.getFolder(folderId);
   String fileEntryTitle=ParamUtil.getString(resourceRequest,"fileEntryTitle");
@@ -14,7 +15,8 @@
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   FileEntry fileEntry=DLAppServiceUtil.addFileEntry(folder.getRepositoryId(),folderId,fileEntryTitle,StringPool.BLANK,StringPool.BLANK,bytes,serviceContext);
   jsonObject.put("fileEntryId",fileEntry.getFileEntryId());
-  String fileEntryURL=ShindigUtil.getFileEntryURL(StringPool.BLANK,fileEntry.getFileEntryId());
+  String portalURL=PortalUtil.getPortalURL(themeDisplay);
+  String fileEntryURL=ShindigUtil.getFileEntryURL(portalURL,fileEntry.getFileEntryId());
   jsonObject.put("fileEntryURL",fileEntryURL);
   writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }

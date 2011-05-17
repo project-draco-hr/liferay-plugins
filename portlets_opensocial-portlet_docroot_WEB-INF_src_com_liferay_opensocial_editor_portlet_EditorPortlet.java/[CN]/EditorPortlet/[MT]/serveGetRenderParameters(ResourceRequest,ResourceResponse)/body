@@ -1,22 +1,23 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String content=ParamUtil.getString(resourceRequest,"content");
-  boolean contentValid=ShindigUtil.isContentValid(content);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  jsonObject.put("contentValid",contentValid);
-  if (contentValid) {
-    String portalURL=PortalUtil.getPortalURL(themeDisplay);
-    String appId=portalURL.concat("/raw.xml");
-    jsonObject.put("appId",appId);
-    long moduleId=ShindigUtil.getModuleId(resourceResponse.getNamespace());
-    jsonObject.put("moduleId",moduleId);
-    boolean requiresPubsub=ShindigUtil.isRequiresPubsubFromContent(content);
-    jsonObject.put("requiresPubsub",requiresPubsub);
-    String ownerId=ShindigUtil.getOwnerId(themeDisplay.getLayout());
-    String currentURL=PortalUtil.getCurrentURL(resourceRequest);
-    String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),appId,portalURL,appId,moduleId,currentURL);
-    jsonObject.put("secureToken",secureToken);
-    jsonObject.put("specUrl",appId);
-  }
+  String fileEntryURL=ParamUtil.getString(resourceRequest,"fileEntryURL");
+  GadgetSpec gadgetSpec=ShindigUtil.getGadgetSpec(fileEntryURL,true,true);
+  ModulePrefs modulePrefs=gadgetSpec.getModulePrefs();
+  int height=modulePrefs.getHeight();
+  jsonObject.put("height",height);
+  long moduleId=ShindigUtil.getModuleId(resourceResponse.getNamespace());
+  jsonObject.put("moduleId",moduleId);
+  Map<String,Feature> features=modulePrefs.getFeatures();
+  boolean requiresPubsub=features.containsKey("pubsub-2");
+  jsonObject.put("requiresPubsub",requiresPubsub);
+  boolean scrolling=modulePrefs.getScrolling();
+  jsonObject.put("scrolling",scrolling);
+  String ownerId=ShindigUtil.getOwnerId(themeDisplay.getLayout());
+  String portalURL=PortalUtil.getPortalURL(themeDisplay);
+  String currentURL=PortalUtil.getCurrentURL(resourceRequest);
+  String secureToken=ShindigUtil.createSecurityToken(ownerId,themeDisplay.getUserId(),fileEntryURL,portalURL,fileEntryURL,moduleId,currentURL);
+  jsonObject.put("secureToken",secureToken);
+  jsonObject.put("specUrl",fileEntryURL);
   writeJSON(resourceRequest,resourceResponse,jsonObject.toString());
 }
