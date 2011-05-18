@@ -1,0 +1,21 @@
+{
+  if (_string != null) {
+    return _string;
+  }
+  if (_byteArrayOutputStream != null) {
+    try {
+      _string=_byteArrayOutputStream.toString(StringPool.UTF8);
+    }
+ catch (    UnsupportedEncodingException uee) {
+      uee.printStackTrace();
+      _string=StringPool.BLANK;
+    }
+  }
+ else   if (_printWriter != null) {
+    _string=_unsyncStringWriter.toString();
+  }
+ else {
+    _string=StringPool.BLANK;
+  }
+  return _string;
+}
