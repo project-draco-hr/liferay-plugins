@@ -15,14 +15,7 @@
     return;
   }
   String jobTitle=ParamUtil.getString(actionRequest,"jobTitle");
+  UserLocalServiceUtil.updateJobTitle(user.getUserId(),jobTitle);
   String aboutMe=ParamUtil.getString(actionRequest,"aboutMe");
-  try {
-    ExpandoValueLocalServiceUtil.addValue(themeDisplay.getCompanyId(),User.class.getName(),"SN","aboutMe",user.getUserId(),aboutMe);
-    Contact contact=user.getContact();
-    contact.setJobTitle(jobTitle);
-    ContactLocalServiceUtil.updateContact(contact);
-  }
- catch (  Exception e) {
-    _log.error(e,e);
-  }
+  ExpandoValueLocalServiceUtil.addValue(themeDisplay.getCompanyId(),User.class.getName(),"SN","aboutMe",user.getUserId(),aboutMe);
 }
