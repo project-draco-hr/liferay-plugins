@@ -1,0 +1,14 @@
+{
+  String portletId=PortletKeys.KNOWLEDGE_BASE_ARTICLE_DEFAULT_INSTANCE;
+  PortletURL portletURL=getKBArticleURL(plid,portletId,request);
+  portletURL.setWindowState(LiferayWindowState.MAXIMIZED);
+  portletURL.setPortletMode(PortletMode.VIEW);
+  if (status != WorkflowConstants.STATUS_APPROVED) {
+    portletURL.setParameter("status",String.valueOf(status));
+  }
+  if (_PORTLET_ADD_DEFAULT_RESOURCE_CHECK_ENABLED) {
+    String token=AuthTokenUtil.getToken(request,plid,portletId);
+    portletURL.setParameter("p_p_auth",token);
+  }
+  return portletURL;
+}

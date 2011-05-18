@@ -4,6 +4,7 @@
   long userId=portletDataContext.getUserId(kbArticle.getUserUuid());
   long parentResourcePrimKey=MapUtil.getLong(kbArticlePKs,kbArticle.getParentResourcePrimKey());
   long kbTemplateId=MapUtil.getLong(kbTemplatePKs,kbArticle.getKbTemplateId());
+  String[] sections=AdminUtil.unescapeSections(kbArticle.getSections());
   String dirName=MapUtil.getString(dirNames,String.valueOf(kbArticle.getResourcePrimKey()));
   ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticleElement,kbArticle,_NAMESPACE);
   KBArticle importedKBArticle=null;
@@ -13,7 +14,7 @@
       importedKBArticle=importKBArticleVersions(portletDataContext,kbArticle.getUuid(),parentResourcePrimKey,dirName,kbArticleElement);
     }
  else {
-      KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),kbTemplateId,dirName,serviceContext);
+      KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),kbTemplateId,sections,dirName,serviceContext);
       KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,kbArticle.getPriority());
       importedKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     }

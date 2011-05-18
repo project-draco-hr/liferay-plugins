@@ -1,10 +1,11 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String value=renderRequest.getParameter("status");
-  if (Validator.isNotNull(value)) {
-    return GetterUtil.getInteger(value);
-  }
   if (!themeDisplay.isSignedIn()) {
+    return WorkflowConstants.STATUS_APPROVED;
+  }
+  String value=renderRequest.getParameter("status");
+  int status=GetterUtil.getInteger(value);
+  if ((value != null) && (status == WorkflowConstants.STATUS_APPROVED)) {
     return WorkflowConstants.STATUS_APPROVED;
   }
   long resourcePrimKey=getResourcePrimKey(renderRequest);
@@ -13,7 +14,7 @@
   }
   PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
   if (KBArticlePermission.contains(permissionChecker,resourcePrimKey,ActionKeys.UPDATE)) {
-    return WorkflowConstants.STATUS_ANY;
+    return ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_ANY);
   }
   return WorkflowConstants.STATUS_APPROVED;
 }

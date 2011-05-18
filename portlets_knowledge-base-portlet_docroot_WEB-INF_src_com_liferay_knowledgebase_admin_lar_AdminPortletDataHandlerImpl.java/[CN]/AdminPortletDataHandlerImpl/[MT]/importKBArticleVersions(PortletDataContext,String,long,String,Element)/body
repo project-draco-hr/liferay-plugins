@@ -7,6 +7,7 @@
     KBArticle curKBArticle=(KBArticle)portletDataContext.getZipEntryAsObject(curKBArticleElement.attributeValue("path"));
     long curUserId=portletDataContext.getUserId(curKBArticle.getUserUuid());
     long curKBTemplateId=MapUtil.getLong(kbTemplatePKs,curKBArticle.getKbTemplateId());
+    String[] curSections=AdminUtil.unescapeSections(curKBArticle.getSections());
     String curDirName=StringPool.BLANK;
     if (curKBArticle.isMain()) {
       curDirName=dirName;
@@ -14,10 +15,10 @@
     ServiceContext serviceContext=portletDataContext.createServiceContext(curKBArticleElement,curKBArticle,_NAMESPACE);
     if (importedKBArticle == null) {
       serviceContext.setUuid(uuid);
-      importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(curUserId,parentResourcePrimKey,curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curKBTemplateId,curDirName,serviceContext);
+      importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(curUserId,parentResourcePrimKey,curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curKBTemplateId,curSections,curDirName,serviceContext);
     }
  else {
-      importedKBArticle=KBArticleLocalServiceUtil.updateKBArticle(curUserId,importedKBArticle.getResourcePrimKey(),curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curKBTemplateId,curDirName,serviceContext);
+      importedKBArticle=KBArticleLocalServiceUtil.updateKBArticle(curUserId,importedKBArticle.getResourcePrimKey(),curKBArticle.getTitle(),curKBArticle.getContent(),curKBArticle.getDescription(),curKBTemplateId,curSections,curDirName,serviceContext);
     }
   }
   return importedKBArticle;

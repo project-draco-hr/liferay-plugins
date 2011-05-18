@@ -1,0 +1,17 @@
+{
+  super(portletRequest,new DisplayTerms(portletRequest),new DisplayTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,null,EMPTY_RESULTS_MESSAGE);
+  try {
+    PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(portletRequest);
+    int delta=GetterUtil.getInteger(preferences.getValue("kbArticlesDelta",null));
+    setDelta(delta);
+    String orderByCol=preferences.getValue("kbArticlesOrderByCol",StringPool.BLANK);
+    String orderByType=preferences.getValue("kbArticlesOrderByType",StringPool.BLANK);
+    setOrderByCol(orderByCol);
+    setOrderByType(orderByType);
+    OrderByComparator orderByComparator=KnowledgeBaseUtil.getKBArticleOrderByComparator(orderByCol,orderByType);
+    setOrderByComparator(orderByComparator);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
+}
