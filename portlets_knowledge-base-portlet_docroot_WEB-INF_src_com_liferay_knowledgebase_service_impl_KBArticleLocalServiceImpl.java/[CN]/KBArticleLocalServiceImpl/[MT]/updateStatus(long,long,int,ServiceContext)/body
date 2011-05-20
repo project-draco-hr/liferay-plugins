@@ -24,6 +24,7 @@
   AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
   updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
   assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
+  assetEntryLocalService.updateVisible(KBArticle.class.getName(),kbArticle.getResourcePrimKey(),true);
   if (!kbArticle.isFirstVersion()) {
     socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_KB_ARTICLE,StringPool.BLANK,0);
   }
