@@ -1,7 +1,5 @@
 {
   hrExpenseCurrency=toUnwrappedModel(hrExpenseCurrency);
-  boolean isNew=hrExpenseCurrency.isNew();
-  HRExpenseCurrencyModelImpl hrExpenseCurrencyModelImpl=(HRExpenseCurrencyModelImpl)hrExpenseCurrency;
   Session session=null;
   try {
     session=openSession();
@@ -16,11 +14,5 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(HRExpenseCurrencyModelImpl.ENTITY_CACHE_ENABLED,HRExpenseCurrencyImpl.class,hrExpenseCurrency.getPrimaryKey(),hrExpenseCurrency);
-  if (!isNew && ((hrExpenseCurrency.getGroupId() != hrExpenseCurrencyModelImpl.getOriginalGroupId()) || !Validator.equals(hrExpenseCurrency.getFromCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalFromCurrencyCode()) || !Validator.equals(hrExpenseCurrency.getToCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalToCurrencyCode())|| !Validator.equals(hrExpenseCurrency.getConversionDate(),hrExpenseCurrencyModelImpl.getOriginalConversionDate()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F_T_C,new Object[]{Long.valueOf(hrExpenseCurrencyModelImpl.getOriginalGroupId()),hrExpenseCurrencyModelImpl.getOriginalFromCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalToCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalConversionDate()});
-  }
-  if (isNew || ((hrExpenseCurrency.getGroupId() != hrExpenseCurrencyModelImpl.getOriginalGroupId()) || !Validator.equals(hrExpenseCurrency.getFromCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalFromCurrencyCode()) || !Validator.equals(hrExpenseCurrency.getToCurrencyCode(),hrExpenseCurrencyModelImpl.getOriginalToCurrencyCode())|| !Validator.equals(hrExpenseCurrency.getConversionDate(),hrExpenseCurrencyModelImpl.getOriginalConversionDate()))) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F_T_C,new Object[]{Long.valueOf(hrExpenseCurrency.getGroupId()),hrExpenseCurrency.getFromCurrencyCode(),hrExpenseCurrency.getToCurrencyCode(),hrExpenseCurrency.getConversionDate()},hrExpenseCurrency);
-  }
   return hrExpenseCurrency;
 }

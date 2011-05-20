@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    HRExpenseCurrencyConversion hrExpenseCurrencyConversion=(HRExpenseCurrencyConversion)session.get(HRExpenseCurrencyConversionImpl.class,Long.valueOf(hrExpenseCurrencyConversionId));
+    if (hrExpenseCurrencyConversion == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrExpenseCurrencyConversionId);
+      }
+      throw new NoSuchExpenseCurrencyConversionException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + hrExpenseCurrencyConversionId);
+    }
+    return hrExpenseCurrencyConversionPersistence.remove(hrExpenseCurrencyConversion);
+  }
+ catch (  NoSuchExpenseCurrencyConversionException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

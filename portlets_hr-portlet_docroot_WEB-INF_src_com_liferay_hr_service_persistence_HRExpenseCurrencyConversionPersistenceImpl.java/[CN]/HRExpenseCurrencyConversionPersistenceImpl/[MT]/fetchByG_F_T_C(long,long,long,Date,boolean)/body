@@ -1,0 +1,65 @@
+{
+  Object[] finderArgs=new Object[]{groupId,fromHRExpenseCurrencyId,toHRExpenseCurrencyId,conversionDate};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_F_T_C,finderArgs,this);
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(6);
+    query.append(_SQL_SELECT_HREXPENSECURRENCYCONVERSION_WHERE);
+    query.append(_FINDER_COLUMN_G_F_T_C_GROUPID_2);
+    query.append(_FINDER_COLUMN_G_F_T_C_FROMHREXPENSECURRENCYID_2);
+    query.append(_FINDER_COLUMN_G_F_T_C_TOHREXPENSECURRENCYID_2);
+    if (conversionDate == null) {
+      query.append(_FINDER_COLUMN_G_F_T_C_CONVERSIONDATE_1);
+    }
+ else {
+      query.append(_FINDER_COLUMN_G_F_T_C_CONVERSIONDATE_2);
+    }
+    query.append(HRExpenseCurrencyConversionModelImpl.ORDER_BY_JPQL);
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(groupId);
+      qPos.add(fromHRExpenseCurrencyId);
+      qPos.add(toHRExpenseCurrencyId);
+      if (conversionDate != null) {
+        qPos.add(CalendarUtil.getTimestamp(conversionDate));
+      }
+      List<HRExpenseCurrencyConversion> list=q.list();
+      result=list;
+      HRExpenseCurrencyConversion hrExpenseCurrencyConversion=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F_T_C,finderArgs,list);
+      }
+ else {
+        hrExpenseCurrencyConversion=list.get(0);
+        cacheResult(hrExpenseCurrencyConversion);
+        if ((hrExpenseCurrencyConversion.getGroupId() != groupId) || (hrExpenseCurrencyConversion.getFromHRExpenseCurrencyId() != fromHRExpenseCurrencyId) || (hrExpenseCurrencyConversion.getToHRExpenseCurrencyId() != toHRExpenseCurrencyId)|| (hrExpenseCurrencyConversion.getConversionDate() == null)|| !hrExpenseCurrencyConversion.getConversionDate().equals(conversionDate)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_F_T_C,finderArgs,hrExpenseCurrencyConversion);
+        }
+      }
+      return hrExpenseCurrencyConversion;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_F_T_C,finderArgs);
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (HRExpenseCurrencyConversion)result;
+    }
+  }
+}

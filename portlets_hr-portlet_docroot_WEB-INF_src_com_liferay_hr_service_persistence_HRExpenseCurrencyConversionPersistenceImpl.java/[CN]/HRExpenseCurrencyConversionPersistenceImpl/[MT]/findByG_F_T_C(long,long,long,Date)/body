@@ -1,0 +1,21 @@
+{
+  HRExpenseCurrencyConversion hrExpenseCurrencyConversion=fetchByG_F_T_C(groupId,fromHRExpenseCurrencyId,toHRExpenseCurrencyId,conversionDate);
+  if (hrExpenseCurrencyConversion == null) {
+    StringBundler msg=new StringBundler(10);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("groupId=");
+    msg.append(groupId);
+    msg.append(", fromHRExpenseCurrencyId=");
+    msg.append(fromHRExpenseCurrencyId);
+    msg.append(", toHRExpenseCurrencyId=");
+    msg.append(toHRExpenseCurrencyId);
+    msg.append(", conversionDate=");
+    msg.append(conversionDate);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchExpenseCurrencyConversionException(msg.toString());
+  }
+  return hrExpenseCurrencyConversion;
+}
