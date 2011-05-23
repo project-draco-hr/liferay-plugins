@@ -1,5 +1,7 @@
 {
   hrExpenseType=toUnwrappedModel(hrExpenseType);
+  boolean isNew=hrExpenseType.isNew();
+  HRExpenseTypeModelImpl hrExpenseTypeModelImpl=(HRExpenseTypeModelImpl)hrExpenseType;
   Session session=null;
   try {
     session=openSession();
@@ -14,5 +16,11 @@
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(HRExpenseTypeModelImpl.ENTITY_CACHE_ENABLED,HRExpenseTypeImpl.class,hrExpenseType.getPrimaryKey(),hrExpenseType);
+  if (!isNew && ((hrExpenseType.getGroupId() != hrExpenseTypeModelImpl.getOriginalGroupId()) || !Validator.equals(hrExpenseType.getName(),hrExpenseTypeModelImpl.getOriginalName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_N,new Object[]{Long.valueOf(hrExpenseTypeModelImpl.getOriginalGroupId()),hrExpenseTypeModelImpl.getOriginalName()});
+  }
+  if (isNew || ((hrExpenseType.getGroupId() != hrExpenseTypeModelImpl.getOriginalGroupId()) || !Validator.equals(hrExpenseType.getName(),hrExpenseTypeModelImpl.getOriginalName()))) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_N,new Object[]{Long.valueOf(hrExpenseType.getGroupId()),hrExpenseType.getName()},hrExpenseType);
+  }
   return hrExpenseType;
 }
