@@ -1,11 +1,14 @@
 {
   try {
-    if (layoutSet.isPrivateLayout()) {
+    Group group=GroupLocalServiceUtil.getGroup(layoutSet.getGroupId());
+    if (!group.isUser()) {
       return;
     }
-    Group group=GroupLocalServiceUtil.getGroup(layoutSet.getGroupId());
-    if (group.isUser()) {
-      addUserLayouts(group);
+    if (layoutSet.isPrivateLayout()) {
+      addPrivateUserLayouts(group);
+    }
+ else {
+      addPublicUserLayouts(group);
     }
   }
  catch (  Exception e) {
