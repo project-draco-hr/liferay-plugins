@@ -1,5 +1,10 @@
 {
   checkPermissions(actionRequest);
   long oAuthConsumerId=ParamUtil.getLong(actionRequest,"oAuthConsumerId");
-  OAuthConsumerLocalServiceUtil.deleteOAuthConsumer(oAuthConsumerId);
+  try {
+    OAuthConsumerLocalServiceUtil.deleteOAuthConsumer(oAuthConsumerId);
+  }
+ catch (  PortalException pe) {
+    SessionErrors.add(actionRequest,pe.getClass().getName());
+  }
 }

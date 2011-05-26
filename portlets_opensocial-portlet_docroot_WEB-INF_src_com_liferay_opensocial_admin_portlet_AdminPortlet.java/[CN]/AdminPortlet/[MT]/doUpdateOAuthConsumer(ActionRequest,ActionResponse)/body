@@ -1,15 +1,7 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long oAuthConsumerId=ParamUtil.getLong(actionRequest,"oAuthConsumerId");
-  long gadgetId=ParamUtil.getLong(actionRequest,"gadgetId");
-  String serviceName=ParamUtil.getString(actionRequest,"serviceName");
   String consumerKey=ParamUtil.getString(actionRequest,"consumerKey");
   String consumerSecret=ParamUtil.getString(actionRequest,"consumerSecret");
   String keyType=ParamUtil.getString(actionRequest,"keyType");
-  if (oAuthConsumerId <= 0) {
-    OAuthConsumerLocalServiceUtil.addOAuthConsumer(themeDisplay.getCompanyId(),gadgetId,serviceName,consumerKey,consumerSecret,keyType);
-  }
- else {
-    OAuthConsumerLocalServiceUtil.updateOAuthConsumer(oAuthConsumerId,consumerKey,consumerSecret,keyType,StringPool.BLANK,StringPool.BLANK);
-  }
+  OAuthConsumerLocalServiceUtil.updateOAuthConsumer(oAuthConsumerId,consumerKey,consumerSecret,keyType,StringPool.BLANK,StringPool.BLANK);
 }
