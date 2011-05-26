@@ -1,16 +1,16 @@
 {
   List<Group> groups=new ArrayList<Group>(MAX_RESULT_SIZE);
-  LinkedHashMap params=new LinkedHashMap();
-  params.put("usersGroups",new Long(userId));
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  params.put("usersGroups",userId);
   List<Group> usersGroups=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,MAX_RESULT_SIZE,new GroupNameComparator(true));
   groups.addAll(usersGroups);
   if (Validator.isNull(keywords) || (groups.size() >= MAX_RESULT_SIZE)) {
     return groups;
   }
-  params=new LinkedHashMap();
-  List types=new ArrayList();
-  types.add(new Integer(GroupConstants.TYPE_SITE_OPEN));
-  types.add(new Integer(GroupConstants.TYPE_SITE_RESTRICTED));
+  params.clear();
+  List<Integer> types=new ArrayList<Integer>();
+  types.add(GroupConstants.TYPE_SITE_OPEN);
+  types.add(GroupConstants.TYPE_SITE_RESTRICTED);
   params.put("types",types);
   List<Group> visibleGroup=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,MAX_RESULT_SIZE,new GroupNameComparator());
   for (  Group group : visibleGroup) {

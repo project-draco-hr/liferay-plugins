@@ -1,5 +1,4 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String name=ParamUtil.getString(actionRequest,"name");
   String description=ParamUtil.getString(actionRequest,"description");
   int type=ParamUtil.getInteger(actionRequest,"type");
@@ -26,7 +25,7 @@
   }
   PortalClassInvoker.invoke(true,_applyLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId,serviceContext);
   long[] deleteLayoutIds=getLongArray(actionRequest,"deleteLayoutIds");
-  List<Layout> layouts=new ArrayList(deleteLayoutIds.length);
+  List<Layout> layouts=new ArrayList<Layout>(deleteLayoutIds.length);
   for (  long deleteLayoutId : deleteLayoutIds) {
     Layout layout=LayoutLocalServiceUtil.getLayout(group.getGroupId(),privateLayout,deleteLayoutId);
     layouts.add(layout);

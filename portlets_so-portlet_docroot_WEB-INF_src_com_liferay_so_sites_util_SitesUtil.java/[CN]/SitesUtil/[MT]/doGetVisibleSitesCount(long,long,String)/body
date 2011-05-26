@@ -1,21 +1,22 @@
 {
   if (Validator.isNull(keywords)) {
-    LinkedHashMap params=new LinkedHashMap();
-    params.put("usersGroups",new Long(userId));
+    LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+    params.put("usersGroups",userId);
     return GroupLocalServiceUtil.searchCount(comapnyId,keywords,null,params);
   }
  else {
-    LinkedHashMap params=new LinkedHashMap();
-    List types=new ArrayList();
-    types.add(new Integer(GroupConstants.TYPE_SITE_OPEN));
-    types.add(new Integer(GroupConstants.TYPE_SITE_RESTRICTED));
+    LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+    List<Integer> types=new ArrayList<Integer>();
+    types.add(GroupConstants.TYPE_SITE_OPEN);
+    types.add(GroupConstants.TYPE_SITE_RESTRICTED);
     params.put("types",types);
     int count=GroupLocalServiceUtil.searchCount(comapnyId,keywords,null,params);
-    params=new LinkedHashMap();
-    params.put("usersGroups",new Long(userId));
-    types=new ArrayList();
-    types.add(new Integer(GroupConstants.TYPE_SITE_PRIVATE));
+    params.clear();
+    params.put("usersGroups",userId);
+    types.clear();
+    types.add(GroupConstants.TYPE_SITE_PRIVATE);
     params.put("types",types);
-    return count + GroupLocalServiceUtil.searchCount(comapnyId,keywords,null,params);
+    count+=GroupLocalServiceUtil.searchCount(comapnyId,keywords,null,params);
+    return count;
   }
 }

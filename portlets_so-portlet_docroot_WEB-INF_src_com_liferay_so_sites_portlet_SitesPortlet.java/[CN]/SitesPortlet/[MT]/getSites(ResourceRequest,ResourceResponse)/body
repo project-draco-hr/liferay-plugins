@@ -16,14 +16,14 @@
   List<Group> groups=null;
   int count=0;
   if (directory) {
-    LinkedHashMap params=new LinkedHashMap();
+    LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
     if (userGroups) {
-      params.put("usersGroups",new Long(themeDisplay.getUserId()));
+      params.put("usersGroups",themeDisplay.getUserId());
     }
  else {
-      List types=new ArrayList();
-      types.add(new Integer(GroupConstants.TYPE_SITE_OPEN));
-      types.add(new Integer(GroupConstants.TYPE_SITE_RESTRICTED));
+      List<Integer> types=new ArrayList<Integer>();
+      types.add(GroupConstants.TYPE_SITE_OPEN);
+      types.add(GroupConstants.TYPE_SITE_RESTRICTED);
       params.put("types",types);
     }
     groups=GroupLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,null,params,start,end,new GroupNameComparator(true));
