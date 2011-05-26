@@ -5,27 +5,17 @@
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   if (cmd.equals(Constants.ADD)) {
     GadgetPermission.check(permissionChecker,groupId,ActionKeys.PUBLISH_GADGET);
-    try {
-      Gadget gadget=doAddGadget(actionRequest,actionResponse);
-      long gadgetId=gadget.getGadgetId();
-      String publishGadgetRedirect=ParamUtil.getString(actionRequest,"publishGadgetRedirect");
-      boolean deletePermission=GadgetPermission.contains(permissionChecker,groupId,gadgetId,ActionKeys.DELETE);
-      publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"deletePermission",deletePermission);
-      publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"gadgetId",gadgetId);
-      actionResponse.sendRedirect(publishGadgetRedirect);
-    }
- catch (    PortalException pe) {
-      SessionErrors.add(actionRequest,pe.getClass().getName());
-    }
+    Gadget gadget=doAddGadget(actionRequest,actionResponse);
+    long gadgetId=gadget.getGadgetId();
+    String publishGadgetRedirect=ParamUtil.getString(actionRequest,"publishGadgetRedirect");
+    boolean deletePermission=GadgetPermission.contains(permissionChecker,groupId,gadgetId,ActionKeys.DELETE);
+    publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"deletePermission",deletePermission);
+    publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"gadgetId",gadgetId);
+    actionResponse.sendRedirect(publishGadgetRedirect);
   }
  else {
     long gadgetId=ParamUtil.getLong(actionRequest,"gadgetId");
     GadgetPermission.check(permissionChecker,groupId,gadgetId,ActionKeys.UPDATE);
-    try {
-      doUpdateGadget(actionRequest,actionResponse);
-    }
- catch (    PortalException pe) {
-      SessionErrors.add(actionRequest,pe.getClass().getName());
-    }
+    doUpdateGadget(actionRequest,actionResponse);
   }
 }
