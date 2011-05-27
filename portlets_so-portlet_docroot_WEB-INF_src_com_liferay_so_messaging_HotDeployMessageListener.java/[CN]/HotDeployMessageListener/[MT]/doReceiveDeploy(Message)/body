@@ -1,0 +1,12 @@
+{
+  String servletContextName=message.getString("servletContextName");
+  if (servletContextName.equals("contacts-portlet")) {
+    registerContactsExtension();
+  }
+ else   if (servletContextName.equals("so-portlet")) {
+    long companyId=message.getLong("companyId");
+    if (PortletLocalServiceUtil.hasPortlet(companyId,"1_WAR_contactsportlet")) {
+      registerContactsExtension();
+    }
+  }
+}
