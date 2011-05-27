@@ -25,7 +25,8 @@
     Document document=new DocumentImpl();
     Collection<String> names=solrDocument.getFieldNames();
     for (    String name : names) {
-      Field field=new Field(name,ArrayUtil.toStringArray(solrDocument.getFieldValues(name).toArray()));
+      Collection<Object> fieldValues=solrDocument.getFieldValues(name);
+      Field field=new Field(name,ArrayUtil.toStringArray(fieldValues.toArray(new Object[fieldValues.size()])));
       document.add(field);
     }
     float score=1;

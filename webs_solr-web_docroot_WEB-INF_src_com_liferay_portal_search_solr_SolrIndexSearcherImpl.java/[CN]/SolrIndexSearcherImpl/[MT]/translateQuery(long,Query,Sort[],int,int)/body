@@ -1,42 +1,36 @@
 {
-  try {
-    QueryTranslatorUtil.translateForSolr(query);
-    String queryString=query.toString();
-    QueryConfig queryConfig=query.getQueryConfig();
-    SolrQuery solrQuery=new SolrQuery();
-    solrQuery.setHighlight(queryConfig.isHighlightEnabled());
-    solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
-    solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
-    solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
-    solrQuery.setQuery(queryString);
-    if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
-      solrQuery.setRows(0);
-    }
+  QueryTranslatorUtil.translateForSolr(query);
+  String queryString=query.toString();
+  QueryConfig queryConfig=query.getQueryConfig();
+  SolrQuery solrQuery=new SolrQuery();
+  solrQuery.setHighlight(queryConfig.isHighlightEnabled());
+  solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
+  solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
+  solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
+  solrQuery.setQuery(queryString);
+  if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+    solrQuery.setRows(0);
+  }
  else {
-      solrQuery.setRows(end - start);
-      solrQuery.setStart(start);
-    }
-    if ((sorts != null) && (sorts.length > 0)) {
-      for (      Sort sortField : sorts) {
-        if (sortField == null) {
-          continue;
-        }
-        String sortFieldName=sortField.getFieldName();
-        ORDER order=ORDER.asc;
-        if (sortFieldName == null) {
-          sortFieldName="score";
-          order=ORDER.desc;
-        }
- else         if (sortField.isReverse()) {
-          order=ORDER.desc;
-        }
-        solrQuery.addSortField(sortFieldName,order);
+    solrQuery.setRows(end - start);
+    solrQuery.setStart(start);
+  }
+  if ((sorts != null) && (sorts.length > 0)) {
+    for (    Sort sort : sorts) {
+      if (sort == null) {
+        continue;
       }
+      String sortFieldName=sort.getFieldName();
+      ORDER order=ORDER.asc;
+      if (sortFieldName == null) {
+        sortFieldName="score";
+        order=ORDER.desc;
+      }
+ else       if (sort.isReverse()) {
+        order=ORDER.desc;
+      }
+      solrQuery.addSortField(sortFieldName,order);
     }
-    return solrQuery;
   }
- catch (  Exception e) {
-    _log.error(e,e);
-    throw new SearchException(e.getMessage());
-  }
+  return solrQuery;
 }

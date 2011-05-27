@@ -1,24 +1,21 @@
 {
-  long companyId=searchContext.getCompanyId();
-  Sort[] sorts=searchContext.getSorts();
-  int start=searchContext.getStart();
-  int end=searchContext.getEnd();
-  Map<String,Facet> facets=null;
   try {
-    SolrQuery solrQuery=translateQuery(companyId,query,sorts,start,end);
-    facets=searchContext.getFacets();
+    SolrQuery solrQuery=translateQuery(searchContext.getCompanyId(),query,searchContext.getSorts(),searchContext.getStart(),searchContext.getEnd());
+    Map<String,Facet> facets=searchContext.getFacets();
     for (    Facet facet : facets.values()) {
       if (facet.isStatic()) {
         continue;
       }
       FacetConfiguration facetConfiguration=facet.getFacetConfiguration();
       if (facet instanceof RangeFacet) {
-        JSONArray rangesJSONArray=facetConfiguration.getData().getJSONArray("ranges");
         solrQuery.addFacetField(facetConfiguration.getFieldName());
+        JSONObject dataJSONObject=facetConfiguration.getData();
+        JSONArray rangesJSONArray=dataJSONObject.getJSONArray("ranges");
         if (rangesJSONArray != null) {
           for (int i=0; i < rangesJSONArray.length(); i++) {
             JSONObject rangeJSONObject=rangesJSONArray.getJSONObject(i);
-            String facetQuery=facetConfiguration.getFieldName().concat(StringPool.COLON).concat(rangeJSONObject.getString("range"));
+            String range=rangeJSONObject.getString("range");
+            String facetQuery=facetConfiguration.getFieldName() + StringPool.COLON + range;
             solrQuery.addFacetQuery(facetQuery);
           }
         }
@@ -35,12 +32,14 @@
     }
     for (    FacetField facetField : queryResponse.getFacetFields()) {
       Facet facet=facets.get(facetField.getName());
+      FacetCollector facetCollector=null;
       if (facet instanceof RangeFacet) {
-        facet.setFacetCollector(new SolrFacetQueryCollector(facetField.getName(),queryResponse.getFacetQuery()));
+        facetCollector=new SolrFacetQueryCollector(facetField.getName(),queryResponse.getFacetQuery());
       }
  else {
-        facet.setFacetCollector(new SolrFacetFieldCollector(facetField.getName(),facetField));
+        facetCollector=new SolrFacetFieldCollector(facetField.getName(),facetField);
       }
+      facet.setFacetCollector(facetCollector);
     }
     return subset(solrQuery,query,query.getQueryConfig(),queryResponse,allResults);
   }
