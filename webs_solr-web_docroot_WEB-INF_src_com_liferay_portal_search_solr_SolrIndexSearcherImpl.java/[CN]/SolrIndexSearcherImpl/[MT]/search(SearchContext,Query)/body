@@ -30,16 +30,19 @@
     if (solrQuery.getRows() == 0) {
       allResults=true;
     }
-    for (    FacetField facetField : queryResponse.getFacetFields()) {
-      Facet facet=facets.get(facetField.getName());
-      FacetCollector facetCollector=null;
-      if (facet instanceof RangeFacet) {
-        facetCollector=new SolrFacetQueryCollector(facetField.getName(),queryResponse.getFacetQuery());
-      }
+    List<FacetField> facetFields=queryResponse.getFacetFields();
+    if (facetFields != null) {
+      for (      FacetField facetField : facetFields) {
+        Facet facet=facets.get(facetField.getName());
+        FacetCollector facetCollector=null;
+        if (facet instanceof RangeFacet) {
+          facetCollector=new SolrFacetQueryCollector(facetField.getName(),queryResponse.getFacetQuery());
+        }
  else {
-        facetCollector=new SolrFacetFieldCollector(facetField.getName(),facetField);
+          facetCollector=new SolrFacetFieldCollector(facetField.getName(),facetField);
+        }
+        facet.setFacetCollector(facetCollector);
       }
-      facet.setFacetCollector(facetCollector);
     }
     return subset(solrQuery,query,query.getQueryConfig(),queryResponse,allResults);
   }
