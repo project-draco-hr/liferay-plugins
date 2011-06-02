@@ -2,10 +2,13 @@
   Map<Locale,String> localeNamesMap=new HashMap<Locale,String>();
   Locale defaultLocale=LocaleUtil.getDefault();
   localeNamesMap.put(defaultLocale,name);
-  String description=name + " Site Template";
+  String description=name;
   boolean active=true;
   long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
   ServiceContext serviceContext=new ServiceContext();
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(defaultUserId,companyId,localeNamesMap,description,active,serviceContext);
+  UnicodeProperties settingsProperties=layoutSetPrototype.getSettingsProperties();
+  settingsProperties.setProperty("customJspServletContextName","so-hook");
+  layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.updateLayoutSetPrototype(layoutSetPrototype.getLayoutSetPrototypeId(),settingsProperties.toString());
   return layoutSetPrototype;
 }
