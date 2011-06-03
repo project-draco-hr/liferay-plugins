@@ -12,14 +12,9 @@
     if (userId == pollerRequest.getUserId()) {
       continue;
     }
-    String statusMessage=null;
-    try {
-      Status buddyStatus=StatusLocalServiceUtil.getUserStatus(userId);
-      awake=buddyStatus.getAwake();
-      statusMessage=buddyStatus.getMessage();
-    }
- catch (    NoSuchStatusException nsse) {
-    }
+    Status buddyStatus=StatusLocalServiceUtil.getUserStatus(userId);
+    awake=buddyStatus.getAwake();
+    String statusMessage=buddyStatus.getMessage();
     JSONObject curUserJSON=JSONFactoryUtil.createJSONObject();
     curUserJSON.put("userId",userId);
     curUserJSON.put("fullName",fullName);
