@@ -1,0 +1,39 @@
+{
+  try {
+    Connection connection=getConnection(userId);
+    if (connection == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("User " + userId + " is not connected to Jabber");
+      }
+      return buddies;
+    }
+    List<Object[]> jabberBuddies=new ArrayList<Object[]>();
+    jabberBuddies.addAll(buddies);
+    Roster roster=connection.getRoster();
+    Collection<RosterEntry> rosterEntries=roster.getEntries();
+    BuddyComparator buddyComparator=new BuddyComparator(true);
+    for (    RosterEntry rosterEntry : rosterEntries) {
+      Presence presence=roster.getPresence(rosterEntry.getUser());
+      if (!presence.isAvailable()) {
+        continue;
+      }
+      User user=UserLocalServiceUtil.getUserByScreenName(companyId,getScreenName(rosterEntry.getUser()));
+      Object[] jabberBuddy=new Object[6];
+      jabberBuddy[0]=user.getUserId();
+      jabberBuddy[1]=user.getFirstName();
+      jabberBuddy[2]=user.getMiddleName();
+      jabberBuddy[3]=user.getLastName();
+      jabberBuddy[4]=user.getPortraitId();
+      jabberBuddy[5]=true;
+      if (Collections.binarySearch(jabberBuddies,jabberBuddy,buddyComparator) < 0) {
+        jabberBuddies.add(jabberBuddy);
+      }
+    }
+    Collections.sort(jabberBuddies,buddyComparator);
+    return jabberBuddies;
+  }
+ catch (  Exception e) {
+    _log.error("Unable to get Jabber buddies",e);
+    return buddies;
+  }
+}
