@@ -1,4 +1,16 @@
 {
   folder.setNew(true);
-  return folderPersistence.update(folder,false);
+  folder=folderPersistence.update(folder,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(folder);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return folder;
 }

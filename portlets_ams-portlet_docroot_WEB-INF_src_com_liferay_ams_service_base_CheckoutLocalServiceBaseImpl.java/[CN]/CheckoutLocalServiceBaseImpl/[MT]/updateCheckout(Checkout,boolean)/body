@@ -1,4 +1,16 @@
 {
   checkout.setNew(false);
-  return checkoutPersistence.update(checkout,merge);
+  checkout=checkoutPersistence.update(checkout,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(checkout);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return checkout;
 }

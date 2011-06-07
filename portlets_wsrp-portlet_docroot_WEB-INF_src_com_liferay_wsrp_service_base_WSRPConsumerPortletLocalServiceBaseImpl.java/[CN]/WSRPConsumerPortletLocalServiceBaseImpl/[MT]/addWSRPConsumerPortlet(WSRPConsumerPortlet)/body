@@ -1,4 +1,16 @@
 {
   wsrpConsumerPortlet.setNew(true);
-  return wsrpConsumerPortletPersistence.update(wsrpConsumerPortlet,false);
+  wsrpConsumerPortlet=wsrpConsumerPortletPersistence.update(wsrpConsumerPortlet,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(wsrpConsumerPortlet);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return wsrpConsumerPortlet;
 }

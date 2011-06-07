@@ -1,3 +1,14 @@
 {
-  checkoutPersistence.remove(checkoutId);
+  Checkout checkout=checkoutPersistence.remove(checkoutId);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.delete(checkout);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
 }

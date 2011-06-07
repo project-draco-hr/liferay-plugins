@@ -1,4 +1,16 @@
 {
   status.setNew(false);
-  return statusPersistence.update(status,merge);
+  status=statusPersistence.update(status,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(status);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return status;
 }

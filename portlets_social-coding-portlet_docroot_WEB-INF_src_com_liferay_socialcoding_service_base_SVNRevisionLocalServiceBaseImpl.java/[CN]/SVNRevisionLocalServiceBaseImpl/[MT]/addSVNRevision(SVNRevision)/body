@@ -1,4 +1,16 @@
 {
   svnRevision.setNew(true);
-  return svnRevisionPersistence.update(svnRevision,false);
+  svnRevision=svnRevisionPersistence.update(svnRevision,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(svnRevision);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return svnRevision;
 }

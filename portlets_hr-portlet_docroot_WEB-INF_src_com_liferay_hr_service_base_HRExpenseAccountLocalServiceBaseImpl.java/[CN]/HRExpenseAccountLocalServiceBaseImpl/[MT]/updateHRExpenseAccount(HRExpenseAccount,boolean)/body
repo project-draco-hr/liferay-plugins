@@ -1,4 +1,16 @@
 {
   hrExpenseAccount.setNew(false);
-  return hrExpenseAccountPersistence.update(hrExpenseAccount,merge);
+  hrExpenseAccount=hrExpenseAccountPersistence.update(hrExpenseAccount,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(hrExpenseAccount);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return hrExpenseAccount;
 }

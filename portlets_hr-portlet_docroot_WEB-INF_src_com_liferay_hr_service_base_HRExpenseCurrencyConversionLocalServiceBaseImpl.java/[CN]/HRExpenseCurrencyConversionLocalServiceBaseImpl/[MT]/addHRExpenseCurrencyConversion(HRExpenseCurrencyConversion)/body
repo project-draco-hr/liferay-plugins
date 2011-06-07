@@ -1,4 +1,16 @@
 {
   hrExpenseCurrencyConversion.setNew(true);
-  return hrExpenseCurrencyConversionPersistence.update(hrExpenseCurrencyConversion,false);
+  hrExpenseCurrencyConversion=hrExpenseCurrencyConversionPersistence.update(hrExpenseCurrencyConversion,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(hrExpenseCurrencyConversion);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return hrExpenseCurrencyConversion;
 }

@@ -1,4 +1,16 @@
 {
   tasksEntry.setNew(true);
-  return tasksEntryPersistence.update(tasksEntry,false);
+  tasksEntry=tasksEntryPersistence.update(tasksEntry,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(tasksEntry);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return tasksEntry;
 }

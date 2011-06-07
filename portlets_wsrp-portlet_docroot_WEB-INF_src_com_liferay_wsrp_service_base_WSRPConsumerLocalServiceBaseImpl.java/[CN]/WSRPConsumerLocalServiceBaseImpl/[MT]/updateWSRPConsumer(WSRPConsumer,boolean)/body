@@ -1,4 +1,16 @@
 {
   wsrpConsumer.setNew(false);
-  return wsrpConsumerPersistence.update(wsrpConsumer,merge);
+  wsrpConsumer=wsrpConsumerPersistence.update(wsrpConsumer,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(wsrpConsumer);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return wsrpConsumer;
 }

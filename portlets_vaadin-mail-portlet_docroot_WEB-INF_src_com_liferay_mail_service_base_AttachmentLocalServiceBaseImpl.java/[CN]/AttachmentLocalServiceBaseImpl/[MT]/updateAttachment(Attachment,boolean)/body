@@ -1,4 +1,16 @@
 {
   attachment.setNew(false);
-  return attachmentPersistence.update(attachment,merge);
+  attachment=attachmentPersistence.update(attachment,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(attachment);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return attachment;
 }

@@ -1,4 +1,16 @@
 {
   jiraChangeItem.setNew(true);
-  return jiraChangeItemPersistence.update(jiraChangeItem,false);
+  jiraChangeItem=jiraChangeItemPersistence.update(jiraChangeItem,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(jiraChangeItem);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return jiraChangeItem;
 }

@@ -1,4 +1,16 @@
 {
   asset.setNew(false);
-  return assetPersistence.update(asset,merge);
+  asset=assetPersistence.update(asset,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(asset);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return asset;
 }

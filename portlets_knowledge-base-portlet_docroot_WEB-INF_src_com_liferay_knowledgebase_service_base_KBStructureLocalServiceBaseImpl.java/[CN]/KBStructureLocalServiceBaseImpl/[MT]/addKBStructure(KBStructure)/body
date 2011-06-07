@@ -1,4 +1,16 @@
 {
   kbStructure.setNew(true);
-  return kbStructurePersistence.update(kbStructure,false);
+  kbStructure=kbStructurePersistence.update(kbStructure,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kbStructure);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kbStructure;
 }

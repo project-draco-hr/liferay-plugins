@@ -1,4 +1,16 @@
 {
   jiraChangeGroup.setNew(false);
-  return jiraChangeGroupPersistence.update(jiraChangeGroup,merge);
+  jiraChangeGroup=jiraChangeGroupPersistence.update(jiraChangeGroup,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(jiraChangeGroup);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return jiraChangeGroup;
 }

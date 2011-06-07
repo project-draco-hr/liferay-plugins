@@ -1,4 +1,16 @@
 {
   jiraIssue.setNew(true);
-  return jiraIssuePersistence.update(jiraIssue,false);
+  jiraIssue=jiraIssuePersistence.update(jiraIssue,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(jiraIssue);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return jiraIssue;
 }

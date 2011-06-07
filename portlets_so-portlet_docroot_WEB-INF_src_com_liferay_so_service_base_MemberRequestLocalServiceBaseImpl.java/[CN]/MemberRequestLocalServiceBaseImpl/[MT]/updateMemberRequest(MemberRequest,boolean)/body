@@ -1,4 +1,16 @@
 {
   memberRequest.setNew(false);
-  return memberRequestPersistence.update(memberRequest,merge);
+  memberRequest=memberRequestPersistence.update(memberRequest,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(memberRequest);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return memberRequest;
 }

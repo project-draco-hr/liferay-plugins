@@ -1,3 +1,14 @@
 {
-  jiraChangeGroupPersistence.remove(jiraChangeGroupId);
+  JIRAChangeGroup jiraChangeGroup=jiraChangeGroupPersistence.remove(jiraChangeGroupId);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.delete(jiraChangeGroup);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
 }

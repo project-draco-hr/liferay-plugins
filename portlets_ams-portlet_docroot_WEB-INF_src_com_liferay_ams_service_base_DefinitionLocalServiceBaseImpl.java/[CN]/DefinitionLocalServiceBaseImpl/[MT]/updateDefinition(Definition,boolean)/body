@@ -1,4 +1,16 @@
 {
   definition.setNew(false);
-  return definitionPersistence.update(definition,merge);
+  definition=definitionPersistence.update(definition,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(definition);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return definition;
 }

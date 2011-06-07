@@ -1,4 +1,16 @@
 {
   hrExpenseCurrency.setNew(false);
-  return hrExpenseCurrencyPersistence.update(hrExpenseCurrency,merge);
+  hrExpenseCurrency=hrExpenseCurrencyPersistence.update(hrExpenseCurrency,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(hrExpenseCurrency);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return hrExpenseCurrency;
 }

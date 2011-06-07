@@ -1,4 +1,16 @@
 {
   hrExpense.setNew(false);
-  return hrExpensePersistence.update(hrExpense,merge);
+  hrExpense=hrExpensePersistence.update(hrExpense,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(hrExpense);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return hrExpense;
 }

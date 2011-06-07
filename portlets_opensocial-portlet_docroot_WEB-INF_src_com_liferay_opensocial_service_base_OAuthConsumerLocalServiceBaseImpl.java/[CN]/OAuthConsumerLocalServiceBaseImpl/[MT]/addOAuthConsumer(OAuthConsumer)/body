@@ -1,4 +1,16 @@
 {
   oAuthConsumer.setNew(true);
-  return oAuthConsumerPersistence.update(oAuthConsumer,false);
+  oAuthConsumer=oAuthConsumerPersistence.update(oAuthConsumer,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(oAuthConsumer);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return oAuthConsumer;
 }

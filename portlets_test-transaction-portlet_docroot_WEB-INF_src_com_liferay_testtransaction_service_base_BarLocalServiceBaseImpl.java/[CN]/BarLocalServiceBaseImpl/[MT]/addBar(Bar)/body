@@ -1,4 +1,16 @@
 {
   bar.setNew(true);
-  return barPersistence.update(bar,false);
+  bar=barPersistence.update(bar,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(bar);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return bar;
 }

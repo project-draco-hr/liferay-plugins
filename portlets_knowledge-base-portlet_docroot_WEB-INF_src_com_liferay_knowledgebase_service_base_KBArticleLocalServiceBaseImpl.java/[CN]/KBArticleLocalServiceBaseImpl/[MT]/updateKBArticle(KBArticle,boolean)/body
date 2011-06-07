@@ -1,4 +1,16 @@
 {
   kbArticle.setNew(false);
-  return kbArticlePersistence.update(kbArticle,merge);
+  kbArticle=kbArticlePersistence.update(kbArticle,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kbArticle);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kbArticle;
 }

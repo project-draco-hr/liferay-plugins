@@ -1,4 +1,16 @@
 {
   kbTemplate.setNew(false);
-  return kbTemplatePersistence.update(kbTemplate,merge);
+  kbTemplate=kbTemplatePersistence.update(kbTemplate,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kbTemplate);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kbTemplate;
 }

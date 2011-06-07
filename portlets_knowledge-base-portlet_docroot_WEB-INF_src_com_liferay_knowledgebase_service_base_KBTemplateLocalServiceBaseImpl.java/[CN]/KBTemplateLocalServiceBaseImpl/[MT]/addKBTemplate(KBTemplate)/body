@@ -1,4 +1,16 @@
 {
   kbTemplate.setNew(true);
-  return kbTemplatePersistence.update(kbTemplate,false);
+  kbTemplate=kbTemplatePersistence.update(kbTemplate,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kbTemplate);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kbTemplate;
 }

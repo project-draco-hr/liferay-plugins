@@ -1,3 +1,14 @@
 {
-  svnRepositoryPersistence.remove(svnRepositoryId);
+  SVNRepository svnRepository=svnRepositoryPersistence.remove(svnRepositoryId);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.delete(svnRepository);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
 }
