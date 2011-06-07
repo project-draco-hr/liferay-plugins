@@ -1,4 +1,16 @@
 {
   kaleoNotificationRecipient.setNew(false);
-  return kaleoNotificationRecipientPersistence.update(kaleoNotificationRecipient,merge);
+  kaleoNotificationRecipient=kaleoNotificationRecipientPersistence.update(kaleoNotificationRecipient,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoNotificationRecipient);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoNotificationRecipient;
 }

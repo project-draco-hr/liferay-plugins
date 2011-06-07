@@ -1,4 +1,16 @@
 {
   kaleoNode.setNew(false);
-  return kaleoNodePersistence.update(kaleoNode,merge);
+  kaleoNode=kaleoNodePersistence.update(kaleoNode,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoNode);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoNode;
 }

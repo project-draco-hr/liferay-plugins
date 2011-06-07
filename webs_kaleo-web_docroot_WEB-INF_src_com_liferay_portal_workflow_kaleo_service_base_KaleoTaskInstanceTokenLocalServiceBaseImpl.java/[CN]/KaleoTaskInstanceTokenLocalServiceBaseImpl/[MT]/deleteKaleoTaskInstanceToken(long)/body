@@ -1,3 +1,14 @@
 {
-  kaleoTaskInstanceTokenPersistence.remove(kaleoTaskInstanceTokenId);
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTaskInstanceTokenPersistence.remove(kaleoTaskInstanceTokenId);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.delete(kaleoTaskInstanceToken);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
 }

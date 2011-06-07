@@ -1,4 +1,16 @@
 {
   kaleoLog.setNew(true);
-  return kaleoLogPersistence.update(kaleoLog,false);
+  kaleoLog=kaleoLogPersistence.update(kaleoLog,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoLog);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoLog;
 }

@@ -1,4 +1,16 @@
 {
   kaleoInstanceToken.setNew(true);
-  return kaleoInstanceTokenPersistence.update(kaleoInstanceToken,false);
+  kaleoInstanceToken=kaleoInstanceTokenPersistence.update(kaleoInstanceToken,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoInstanceToken);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoInstanceToken;
 }

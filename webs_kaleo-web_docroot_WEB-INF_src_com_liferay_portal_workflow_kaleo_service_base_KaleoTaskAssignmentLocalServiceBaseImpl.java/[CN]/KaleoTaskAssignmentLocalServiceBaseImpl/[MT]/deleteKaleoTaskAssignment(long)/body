@@ -1,3 +1,14 @@
 {
-  kaleoTaskAssignmentPersistence.remove(kaleoTaskAssignmentId);
+  KaleoTaskAssignment kaleoTaskAssignment=kaleoTaskAssignmentPersistence.remove(kaleoTaskAssignmentId);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.delete(kaleoTaskAssignment);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
 }

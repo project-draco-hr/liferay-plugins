@@ -1,4 +1,16 @@
 {
   kaleoInstance.setNew(false);
-  return kaleoInstancePersistence.update(kaleoInstance,merge);
+  kaleoInstance=kaleoInstancePersistence.update(kaleoInstance,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoInstance);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoInstance;
 }

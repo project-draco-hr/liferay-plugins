@@ -1,4 +1,16 @@
 {
   kaleoTimer.setNew(false);
-  return kaleoTimerPersistence.update(kaleoTimer,merge);
+  kaleoTimer=kaleoTimerPersistence.update(kaleoTimer,merge);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(kaleoTimer);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return kaleoTimer;
 }
