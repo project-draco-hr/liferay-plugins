@@ -3,9 +3,14 @@
   LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
   List<String> columns=layoutTemplate.getColumns();
   for (  String column : columns) {
-    String keyPrefix=PortletPropsKeys.SITE_PROTOTYPE_PORTLETS;
-    Filter filter=new Filter(name);
-    String[] portletIds=PortletProps.getArray(keyPrefix + column,filter);
+    String[] portletIds=null;
+    if (Validator.isNull(name)) {
+      portletIds=PortletProps.getArray(keyPrefix + column);
+    }
+ else {
+      Filter filter=new Filter(name);
+      portletIds=PortletProps.getArray(keyPrefix + column,filter);
+    }
     String portlets=StringPool.BLANK;
     for (    String portletId : portletIds) {
       portlets=StringUtil.add(portlets,portletId);
@@ -16,7 +21,14 @@
   List<String> portletIds=layoutTypePortlet.getPortletIds();
   for (  String portletId : portletIds) {
     addResources(layout,portletId);
-    if (portletId.startsWith("1_WAR_wysiwygportlet")) {
+    if (portletId.equals("2_WAR_microblogsportlet")) {
+      removePortletBorder(layout,portletId);
+    }
+ else     if (portletId.startsWith("71_INSTANCE_")) {
+      removePortletBorder(layout,portletId);
+      configureNavigation(layout,portletId);
+    }
+ else     if (portletId.startsWith("1_WAR_wysiwygportlet")) {
       updatePortletTitle(layout,portletId,"Welcome");
     }
  else     if (portletId.equals(PortletKeys.ALERTS)) {
