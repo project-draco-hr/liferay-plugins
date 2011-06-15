@@ -10,20 +10,19 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddGroupPermissions(true);
   serviceContext.setAddGuestPermissions(true);
-  String extension=FileUtil.getExtension(fileName);
-  serviceContext.setAttribute("extension",extension);
   serviceContext.setAttribute("sourceFileName",fileName);
   serviceContext.setExpandoBridgeAttributes(SerializerUtil.toExpandoAttributes(mediaItem,_MEDIA_ITEM_FIELDS,user.getCompanyId(),DLFileEntry.class.getName()));
   serviceContext.setScopeGroupId(groupIdLong);
+  String contentType=MimeTypesUtil.getContentType(fileName);
   if (mediaItemId == null) {
     long albumIdLong=GetterUtil.getLong(albumId);
-    DLAppServiceUtil.addFileEntry(groupIdLong,albumIdLong,fileName,mediaItem.getDescription(),StringPool.BLANK,byteArray,serviceContext);
+    DLAppServiceUtil.addFileEntry(groupIdLong,albumIdLong,fileName,contentType,mediaItem.getDescription(),StringPool.BLANK,byteArray,serviceContext);
   }
  else {
     long mediaItemIdLong=GetterUtil.getLong(mediaItemId);
     FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(mediaItemIdLong);
     serviceContext.setCreateDate(fileEntry.getCreateDate());
     serviceContext.setModifiedDate(fileEntry.getModifiedDate());
-    DLAppServiceUtil.updateFileEntry(fileEntry.getFileEntryId(),fileName,mediaItem.getTitle(),mediaItem.getDescription(),StringPool.BLANK,false,byteArray,serviceContext);
+    DLAppServiceUtil.updateFileEntry(fileEntry.getFileEntryId(),fileName,contentType,mediaItem.getTitle(),mediaItem.getDescription(),StringPool.BLANK,false,byteArray,serviceContext);
   }
 }
