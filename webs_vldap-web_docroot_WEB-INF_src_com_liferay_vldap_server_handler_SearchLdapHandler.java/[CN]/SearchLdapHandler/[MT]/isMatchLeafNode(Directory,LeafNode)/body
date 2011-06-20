@@ -1,0 +1,33 @@
+{
+  if (leafNode instanceof EqualityNode<?>) {
+    EqualityNode<?> equalityNode=(EqualityNode<?>)leafNode;
+    String attributeId=equalityNode.getAttribute();
+    String value=equalityNode.getValue().getString();
+    if (directory.hasAttribute(attributeId,value)) {
+      return true;
+    }
+ else {
+      return false;
+    }
+  }
+ else   if (leafNode instanceof GreaterEqNode<?>) {
+  }
+ else   if (leafNode instanceof LessEqNode<?>) {
+  }
+ else   if (leafNode instanceof PresenceNode) {
+    PresenceNode presenceNode=(PresenceNode)leafNode;
+    String attributeId=presenceNode.getAttribute();
+    if (directory.hasAttribute(attributeId)) {
+      return true;
+    }
+ else {
+      return false;
+    }
+  }
+ else   if (leafNode instanceof SubstringNode) {
+  }
+  if (_log.isWarnEnabled()) {
+    _log.warn("Unsupported expression " + leafNode);
+  }
+  return true;
+}

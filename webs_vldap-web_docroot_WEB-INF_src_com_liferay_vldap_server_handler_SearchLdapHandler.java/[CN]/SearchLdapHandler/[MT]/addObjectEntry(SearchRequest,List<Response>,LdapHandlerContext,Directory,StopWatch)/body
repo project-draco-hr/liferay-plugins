@@ -1,0 +1,12 @@
+{
+  SearchResultEntry searchResponseEntry=new SearchResultEntryImpl(searchRequest.getMessageId());
+  Entry entry=directory.toEntry(searchRequest.getAttributes());
+  searchResponseEntry.setEntry(entry);
+  if (responses.size() >= getSizeLimit(searchRequest)) {
+    throw new SearchSizeLimitException();
+  }
+  if ((stopWatch.getTime() / Time.SECOND) > getTimeLimit(searchRequest)) {
+    throw new SearchTimeLimitException();
+  }
+  responses.add(searchResponseEntry);
+}

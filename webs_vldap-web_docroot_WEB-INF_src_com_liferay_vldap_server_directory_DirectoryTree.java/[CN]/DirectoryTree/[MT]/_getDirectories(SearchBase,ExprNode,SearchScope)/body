@@ -1,0 +1,10 @@
+{
+  List<Directory> directories=new ArrayList<Directory>();
+  List<FilterConstraint> filterConstraints=_toFilterConstraints(exprNode);
+  boolean subtree=searchScope.equals(SearchScope.SUBTREE);
+  DirectoryBuilder searchBaseDirectoryBuilder=searchBase.getDirectoryBuilder();
+  for (  DirectoryBuilder directoryBuilder : searchBaseDirectoryBuilder.getDirectoryBuilders()) {
+    directories.addAll(directoryBuilder.buildDirectories(searchBase,filterConstraints,subtree));
+  }
+  return directories;
+}

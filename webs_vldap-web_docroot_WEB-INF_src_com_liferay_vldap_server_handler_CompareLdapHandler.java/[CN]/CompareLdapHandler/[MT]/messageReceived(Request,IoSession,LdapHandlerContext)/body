@@ -1,0 +1,16 @@
+{
+  CompareRequest compareRequest=(CompareRequest)request;
+  SearchBase searchBase=DirectoryTree.getSearchBase(compareRequest.getName(),PortletPropsValues.SEARCH_MAX_SIZE);
+  if (searchBase == null) {
+    return toList(getResponse(compareRequest,ResultCodeEnum.COMPARE_FALSE));
+  }
+  Directory directory=searchBase.getDirectory();
+  if (directory == null) {
+    return toList(getResponse(compareRequest,ResultCodeEnum.COMPARE_FALSE));
+  }
+  Value<?> value=compareRequest.getAssertionValue();
+  if (!directory.hasAttribute(compareRequest.getAttributeId(),value.getString())) {
+    return toList(getResponse(compareRequest,ResultCodeEnum.COMPARE_FALSE));
+  }
+  return toList(getResponse(compareRequest,ResultCodeEnum.COMPARE_TRUE));
+}

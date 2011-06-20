@@ -1,0 +1,19 @@
+{
+  if (leftFilterConstraints.isEmpty()) {
+    return rightFilterConstraints;
+  }
+  List<FilterConstraint> filterConstraints=new ArrayList<FilterConstraint>();
+  for (  FilterConstraint leftFilterConstraint : leftFilterConstraints) {
+    for (    FilterConstraint rightFilterConstraint : rightFilterConstraints) {
+      FilterConstraint filterConstraint=merge(leftFilterConstraint,rightFilterConstraint);
+      if (filterConstraint == null) {
+        continue;
+      }
+      if (filterConstraint.isEmpty()) {
+        continue;
+      }
+      filterConstraints.add(filterConstraint);
+    }
+  }
+  return filterConstraints;
+}

@@ -1,0 +1,30 @@
+{
+  if (branchNode instanceof AndNode) {
+    List<FilterConstraint> filterConstraints=new ArrayList<FilterConstraint>();
+    for (    ExprNode exprNode : branchNode.getChildren()) {
+      List<FilterConstraint> childFilterConstraints=_toFilterConstraints(exprNode);
+      if (childFilterConstraints == null) {
+        continue;
+      }
+      filterConstraints=FilterConstraint.getCombinations(filterConstraints,childFilterConstraints);
+    }
+    return filterConstraints;
+  }
+ else   if (branchNode instanceof NotNode) {
+  }
+ else   if (branchNode instanceof OrNode) {
+    List<FilterConstraint> filterConstraints=new ArrayList<FilterConstraint>();
+    for (    ExprNode exprNode : branchNode.getChildren()) {
+      List<FilterConstraint> childFilterConstraints=_toFilterConstraints(exprNode);
+      if (childFilterConstraints == null) {
+        continue;
+      }
+      filterConstraints.addAll(childFilterConstraints);
+    }
+    return filterConstraints;
+  }
+  if (_log.isWarnEnabled()) {
+    _log.warn("Unsupported expression " + branchNode);
+  }
+  return null;
+}

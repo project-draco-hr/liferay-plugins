@@ -1,0 +1,62 @@
+{
+  addAttribute("cn",user.getScreenName());
+  addAttribute("createTimestamp",_simpleDateFormat.format(user.getCreateDate()));
+  addAttribute("displayName",user.getFullName());
+  addAttribute("givenName",user.getFirstName());
+  addAttribute("mail",user.getEmailAddress());
+  addAttribute("modifyTimestamp",_simpleDateFormat.format(user.getModifiedDate()));
+  addAttribute("sn",user.getLastName());
+  addAttribute("objectclass","groupOfNames");
+  addAttribute("objectclass","inetOrgPerson");
+  addAttribute("objectclass","liferayPerson");
+  addAttribute("objectclass","top");
+  addAttribute("uid",String.valueOf(user.getUserId()));
+  addAttribute("uuid",user.getUuid());
+  setName(top,company);
+  String name=getName();
+  setName(top,company,"cn=" + user.getScreenName(),"Users");
+  long groupClassNameId=PortalUtil.getClassNameId(Group.class.getName());
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  params.put("usersGroups",user.getUserId());
+  List<Group> groups=GroupLocalServiceUtil.search(user.getCompanyId(),new long[]{groupClassNameId},null,null,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    StringBundler sb=new StringBundler(6);
+    sb.append("cn=");
+    sb.append(group.getName());
+    sb.append(",ou=");
+    sb.append(group.getName());
+    sb.append(",ou=Communities,");
+    sb.append(name);
+    addAttribute("member",sb.toString());
+  }
+  for (  Organization organization : user.getOrganizations()) {
+    StringBundler sb=new StringBundler(6);
+    sb.append("cn=");
+    sb.append(organization.getName());
+    sb.append(",ou=");
+    sb.append(organization.getName());
+    sb.append(",ou=Organizations,");
+    sb.append(name);
+    addAttribute("member",sb.toString());
+  }
+  for (  Role role : user.getRoles()) {
+    StringBundler sb=new StringBundler(6);
+    sb.append("cn=");
+    sb.append(role.getName());
+    sb.append(",ou=");
+    sb.append(role.getName());
+    sb.append(",ou=Roles,");
+    sb.append(name);
+    addAttribute("member",sb.toString());
+  }
+  for (  UserGroup userGroup : user.getUserGroups()) {
+    StringBundler sb=new StringBundler(6);
+    sb.append("cn=");
+    sb.append(userGroup.getName());
+    sb.append(",ou=");
+    sb.append(userGroup.getName());
+    sb.append(",ou=User Groups,");
+    sb.append(name);
+    addAttribute("member",sb.toString());
+  }
+}

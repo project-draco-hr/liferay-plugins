@@ -1,0 +1,18 @@
+{
+  List<Directory> directories=new ArrayList<Directory>();
+  if (filterConstraints == null) {
+    Directory directory=new UsersDirectory(searchBase.getTop(),searchBase.getCompany());
+    directories.add(directory);
+  }
+ else {
+    for (    FilterConstraint filterConstraint : filterConstraints) {
+      if (!isValidFilterConstraint(filterConstraint)) {
+        continue;
+      }
+      Directory directory=new UsersDirectory(searchBase.getTop(),searchBase.getCompany());
+      directories.add(directory);
+      break;
+    }
+  }
+  return directories;
+}

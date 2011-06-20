@@ -1,0 +1,30 @@
+{
+  if (filterConstraints == null) {
+    return OrganizationLocalServiceUtil.getOrganizations(searchBase.getCompanyId(),OrganizationConstants.ANY_PARENT_ORGANIZATION_ID);
+  }
+  List<Organization> organizations=new ArrayList<Organization>();
+  for (  FilterConstraint filterConstraint : filterConstraints) {
+    if (!isValidFilterConstraint(filterConstraint)) {
+      continue;
+    }
+    String name=filterConstraint.getValue("ou");
+    if (name == null) {
+      name=filterConstraint.getValue("cn");
+    }
+    String member=filterConstraint.getValue("member");
+    String screenName=DirectoryTree.getRdnValue(new Dn(member),3);
+    if (screenName != null) {
+      User user=UserLocalServiceUtil.getUserByScreenName(searchBase.getCompanyId(),screenName);
+      for (      Organization organization : user.getOrganizations()) {
+        if ((name != null) && !name.equals(organization.getName())) {
+          continue;
+        }
+        organizations.add(organization);
+      }
+    }
+ else {
+      organizations.addAll(OrganizationLocalServiceUtil.search(searchBase.getCompanyId(),OrganizationConstants.ANY_PARENT_ORGANIZATION_ID,name,null,null,null,null,null,null,null,true,0,(int)searchBase.getSizeLimit()));
+    }
+  }
+  return organizations;
+}

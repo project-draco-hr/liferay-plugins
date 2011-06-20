@@ -1,0 +1,20 @@
+{
+  if (filterConstraints == null) {
+    return CompanyLocalServiceUtil.getCompanies();
+  }
+  List<Company> companies=new ArrayList<Company>();
+  for (  FilterConstraint filterConstraint : filterConstraints) {
+    if (!isValidFilterConstraint(filterConstraint)) {
+      continue;
+    }
+    String companyWebId=filterConstraint.getValue("ou");
+    if (companyWebId == null) {
+      companies.addAll(CompanyLocalServiceUtil.getCompanies(false));
+    }
+ else {
+      Company company=CompanyLocalServiceUtil.getCompanyByWebId(companyWebId);
+      companies.add(company);
+    }
+  }
+  return companies;
+}

@@ -1,0 +1,15 @@
+{
+  BindRequest bindRequest=(BindRequest)request;
+  String saslMechanism=GetterUtil.getString(bindRequest.getSaslMechanism());
+  Response response=null;
+  if (saslMechanism.equals(DIGEST_MD5)) {
+    response=getSaslResponse(bindRequest,ioSession,ldapHandlerContext);
+  }
+ else   if (bindRequest.isSimple()) {
+    response=getSimpleResponse(bindRequest,ioSession,ldapHandlerContext);
+  }
+ else {
+    response=getUnsupportedResponse(bindRequest);
+  }
+  return toList(response);
+}

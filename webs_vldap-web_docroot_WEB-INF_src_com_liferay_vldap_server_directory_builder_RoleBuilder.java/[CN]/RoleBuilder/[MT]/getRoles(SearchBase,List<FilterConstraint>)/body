@@ -1,0 +1,34 @@
+{
+  if (filterConstraints == null) {
+    return RoleLocalServiceUtil.getRoles(searchBase.getCompanyId());
+  }
+  List<Role> roles=new ArrayList<Role>();
+  for (  FilterConstraint filterConstraint : filterConstraints) {
+    if (!isValidFilterConstraint(filterConstraint)) {
+      continue;
+    }
+    String name=filterConstraint.getValue("ou");
+    if (name == null) {
+      name=filterConstraint.getValue("cn");
+    }
+    String description=filterConstraint.getValue("description");
+    String member=filterConstraint.getValue("member");
+    String screenName=DirectoryTree.getRdnValue(new Dn(member),3);
+    if (screenName != null) {
+      User user=UserLocalServiceUtil.getUserByScreenName(searchBase.getCompanyId(),screenName);
+      for (      Role role : user.getRoles()) {
+        if ((name != null) && !name.equals(role.getName())) {
+          continue;
+        }
+        if ((description != null) && !description.equals(role.getDescription())) {
+          continue;
+        }
+        roles.add(role);
+      }
+    }
+ else {
+      roles.addAll(RoleLocalServiceUtil.search(searchBase.getCompanyId(),name,description,null,0,(int)searchBase.getSizeLimit(),null));
+    }
+  }
+  return roles;
+}

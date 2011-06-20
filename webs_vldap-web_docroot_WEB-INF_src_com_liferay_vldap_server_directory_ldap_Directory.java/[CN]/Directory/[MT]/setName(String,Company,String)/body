@@ -1,0 +1,14 @@
+{
+  StringBundler sb=new StringBundler(3 + (organizationUnits.length * 3));
+  for (  String organizationUnit : organizationUnits) {
+    if (!organizationUnit.startsWith("cn=") && !organizationUnit.startsWith("ou=")) {
+      sb.append("ou=");
+    }
+    sb.append(escape(organizationUnit));
+    sb.append(",");
+  }
+  sb.append(escape(company.getWebId()));
+  sb.append(",o=");
+  sb.append(escape(top));
+  _name=sb.toString();
+}

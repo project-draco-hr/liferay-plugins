@@ -1,0 +1,30 @@
+{
+  if (member == null) {
+    return true;
+  }
+  Dn dn=new Dn(member);
+  String companyWebId=DirectoryTree.getRdnValue(dn,1);
+  String type=DirectoryTree.getRdnValue(dn,2);
+  String typeValue=DirectoryTree.getRdnValue(dn,3);
+  Company company=CompanyLocalServiceUtil.getCompanyByWebId(companyWebId);
+  if (type.equalsIgnoreCase("Communities")) {
+    Group group=GroupLocalServiceUtil.getGroup(company.getCompanyId(),typeValue);
+    params.put("usersGroups",group.getGroupId());
+  }
+ else   if (type.equalsIgnoreCase("Organizations")) {
+    Organization organization=OrganizationLocalServiceUtil.getOrganization(company.getCompanyId(),typeValue);
+    params.put("usersOrgs",organization.getOrganizationId());
+  }
+ else   if (type.equalsIgnoreCase("Roles")) {
+    Role role=RoleLocalServiceUtil.getRole(company.getCompanyId(),typeValue);
+    params.put("usersRoles",role.getRoleId());
+  }
+ else   if (type.equalsIgnoreCase("User Groups")) {
+    UserGroup userGroup=UserGroupLocalServiceUtil.getUserGroup(company.getCompanyId(),typeValue);
+    params.put("usersUserGroups",userGroup.getUserGroupId());
+  }
+ else {
+    return false;
+  }
+  return true;
+}

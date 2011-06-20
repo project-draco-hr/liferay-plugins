@@ -1,0 +1,15 @@
+{
+  Entry entry=new DefaultEntry();
+  entry.setDn(getDn());
+  boolean wildcardAttributes=searchRequestAttributes.contains(StringPool.STAR);
+  for (  Attribute attribute : getAttributes()) {
+    if (!wildcardAttributes && !containsIgnoreCase(searchRequestAttributes,attribute.getAttributeId())) {
+      continue;
+    }
+    entry.add(attribute.getAttributeId(),attribute.getValue());
+  }
+  if (containsIgnoreCase(searchRequestAttributes,"hassubordinates")) {
+    entry.add("hassubordinates","true");
+  }
+  return entry;
+}

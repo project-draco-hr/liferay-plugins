@@ -1,0 +1,33 @@
+{
+  if (branchNode instanceof AndNode) {
+    for (    ExprNode exprNode : branchNode.getChildren()) {
+      if (!isMatch(directory,exprNode)) {
+        return false;
+      }
+    }
+    return true;
+  }
+ else   if (branchNode instanceof NotNode) {
+    for (    ExprNode exprNode : branchNode.getChildren()) {
+      if (!isMatch(directory,exprNode)) {
+        return true;
+      }
+ else {
+        return false;
+      }
+    }
+    return false;
+  }
+ else   if (branchNode instanceof OrNode) {
+    for (    ExprNode exprNode : branchNode.getChildren()) {
+      if (isMatch(directory,exprNode)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  if (_log.isWarnEnabled()) {
+    _log.warn("Unsupported expression " + branchNode);
+  }
+  return true;
+}
