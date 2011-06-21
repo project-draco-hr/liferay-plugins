@@ -1,10 +1,10 @@
 {
-  List<Group> groups=new ArrayList<Group>(MAX_RESULT_SIZE);
+  List<Group> groups=new ArrayList<Group>(maxResultSize);
   LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
   params.put("usersGroups",userId);
-  List<Group> usersGroups=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,MAX_RESULT_SIZE,new GroupNameComparator(true));
+  List<Group> usersGroups=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,maxResultSize,new GroupNameComparator(true));
   groups.addAll(usersGroups);
-  if (Validator.isNull(keywords) || (groups.size() >= MAX_RESULT_SIZE)) {
+  if (Validator.isNull(keywords) || (groups.size() >= maxResultSize)) {
     return groups;
   }
   params.clear();
@@ -12,12 +12,12 @@
   types.add(GroupConstants.TYPE_SITE_OPEN);
   types.add(GroupConstants.TYPE_SITE_RESTRICTED);
   params.put("types",types);
-  List<Group> visibleGroup=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,MAX_RESULT_SIZE,new GroupNameComparator());
+  List<Group> visibleGroup=GroupLocalServiceUtil.search(companyId,keywords,null,params,0,maxResultSize,new GroupNameComparator(true));
   for (  Group group : visibleGroup) {
     if (!usersGroups.contains(group)) {
       groups.add(group);
     }
-    if (groups.size() > MAX_RESULT_SIZE) {
+    if (groups.size() > maxResultSize) {
       break;
     }
   }
