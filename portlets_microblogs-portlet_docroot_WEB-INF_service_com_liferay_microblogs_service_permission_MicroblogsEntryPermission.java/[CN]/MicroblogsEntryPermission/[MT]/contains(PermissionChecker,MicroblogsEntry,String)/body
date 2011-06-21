@@ -5,8 +5,11 @@
   if (permissionChecker.hasOwnerPermission(microblogsEntry.getCompanyId(),MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getUserId(),actionId)) {
     return true;
   }
-  if ((microblogsEntry.getSocialRelationType() != 0) && (microblogsEntry.getUserId() != permissionChecker.getUserId()) && !SocialRelationLocalServiceUtil.hasRelation(permissionChecker.getUserId(),microblogsEntry.getUserId(),microblogsEntry.getSocialRelationType())) {
-    return false;
+  if (microblogsEntry.getSocialRelationType() == 0) {
+    return true;
   }
-  return permissionChecker.hasPermission(0,MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId(),actionId);
+  if ((microblogsEntry.getSocialRelationType() != 0) && (microblogsEntry.getUserId() != permissionChecker.getUserId()) && SocialRelationLocalServiceUtil.hasRelation(permissionChecker.getUserId(),microblogsEntry.getUserId(),microblogsEntry.getSocialRelationType())) {
+    return true;
+  }
+  return false;
 }
