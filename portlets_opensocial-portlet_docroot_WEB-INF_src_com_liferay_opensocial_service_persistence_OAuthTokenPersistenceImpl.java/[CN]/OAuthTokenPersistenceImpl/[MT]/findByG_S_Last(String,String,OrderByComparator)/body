@@ -1,0 +1,17 @@
+{
+  int count=countByG_S(gadgetKey,serviceName);
+  List<OAuthToken> list=findByG_S(gadgetKey,serviceName,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("gadgetKey=");
+    msg.append(gadgetKey);
+    msg.append(", serviceName=");
+    msg.append(serviceName);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchOAuthTokenException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

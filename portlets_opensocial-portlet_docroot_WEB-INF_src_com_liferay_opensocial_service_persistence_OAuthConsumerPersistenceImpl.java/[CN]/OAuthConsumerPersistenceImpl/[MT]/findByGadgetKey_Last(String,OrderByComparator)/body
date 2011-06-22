@@ -1,0 +1,15 @@
+{
+  int count=countByGadgetKey(gadgetKey);
+  List<OAuthConsumer> list=findByGadgetKey(gadgetKey,count - 1,count,orderByComparator);
+  if (list.isEmpty()) {
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("gadgetKey=");
+    msg.append(gadgetKey);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    throw new NoSuchOAuthConsumerException(msg.toString());
+  }
+ else {
+    return list.get(0);
+  }
+}

@@ -2,5 +2,12 @@
   if (hasUserPrefs(portletConfig,renderRequest)) {
     doRender(portletConfig,renderRequest,renderResponse);
   }
+  try {
+    Gadget gadget=getGadget(portletConfig,renderRequest);
+    Map<String,OAuthService> oAuthServices=ShindigUtil.getOAuthServices(gadget.getUrl());
+    renderRequest.setAttribute(WebKeys.OAUTH_SERVICES,oAuthServices);
+  }
+ catch (  Exception e) {
+  }
   return "/adhoc_gadget/configuration.jsp";
 }
