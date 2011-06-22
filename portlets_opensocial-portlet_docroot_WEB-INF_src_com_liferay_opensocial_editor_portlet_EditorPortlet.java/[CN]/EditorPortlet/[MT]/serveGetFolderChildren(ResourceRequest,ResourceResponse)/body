@@ -16,7 +16,6 @@
   boolean getFileEntries=ParamUtil.getBoolean(resourceRequest,"getFileEntries");
   if (getFileEntries) {
     PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-    boolean publishGadgetPermission=GadgetPermission.contains(permissionChecker,themeDisplay.getScopeGroupId(),ActionKeys.PUBLISH_GADGET);
     List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(repositoryId,folderId);
     fileEntries=ListUtil.sort(fileEntries,new RepositoryModelNameComparator(true));
     for (    FileEntry fileEntry : fileEntries) {
@@ -36,7 +35,6 @@
       jsonObject.put("label",fileEntry.getTitle());
       jsonObject.put("leaf",true);
       JSONObject jsonPermissions=JSONFactoryUtil.createJSONObject();
-      jsonPermissions.put("publishGadgetPermission",publishGadgetPermission);
       if (gadgetId > 0) {
         boolean unpublishPermission=GadgetPermission.contains(permissionChecker,themeDisplay.getScopeGroupId(),gadgetId,ActionKeys.DELETE);
         jsonPermissions.put("unpublishPermission",unpublishPermission);
