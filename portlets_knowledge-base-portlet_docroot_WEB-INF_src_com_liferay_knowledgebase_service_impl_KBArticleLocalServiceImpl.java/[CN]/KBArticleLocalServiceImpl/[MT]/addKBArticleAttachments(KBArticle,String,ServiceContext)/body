@@ -1,6 +1,6 @@
 {
   try {
-    dlLocalService.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,kbArticle.getAttachmentsDirName());
+    dlStore.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,kbArticle.getAttachmentsDirName());
   }
  catch (  DuplicateDirectoryException dde) {
     _log.error("Directory already exists for " + dde.getMessage());
@@ -8,9 +8,9 @@
   if (Validator.isNull(dirName)) {
     return;
   }
-  String[] fileNames=dlLocalService.getFileNames(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+  String[] fileNames=dlStore.getFileNames(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   for (  String fileName : fileNames) {
-    byte[] bytes=dlLocalService.getFile(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    byte[] bytes=dlStore.getFile(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     try {
       addAttachment(kbArticle.getAttachmentsDirName(),FileUtil.getShortFileName(fileName),bytes,serviceContext);
     }

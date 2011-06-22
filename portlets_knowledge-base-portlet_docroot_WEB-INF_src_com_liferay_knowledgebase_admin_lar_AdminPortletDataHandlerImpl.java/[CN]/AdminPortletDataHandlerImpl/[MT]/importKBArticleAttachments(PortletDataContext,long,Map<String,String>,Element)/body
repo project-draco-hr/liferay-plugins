@@ -3,7 +3,7 @@
   for (  Element kbArticleAttachmentsElement : kbArticleAttachmentsElements) {
     String resourcePrimKey=kbArticleAttachmentsElement.attributeValue("resource-prim-key");
     String dirName="knowledgebase/temp/import/" + importId + StringPool.SLASH+ resourcePrimKey;
-    DLLocalServiceUtil.addDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+    DLStoreUtil.addDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
     List<Element> fileElements=kbArticleAttachmentsElement.elements("file");
     ServiceContext serviceContext=new ServiceContext();
     serviceContext.setCompanyId(portletDataContext.getCompanyId());
@@ -12,7 +12,7 @@
       String shortFileName=fileElement.attributeValue("short-file-name");
       String fileName=dirName + StringPool.SLASH + shortFileName;
       byte[] bytes=portletDataContext.getZipEntryAsByteArray(fileElement.attributeValue("path"));
-      DLLocalServiceUtil.addFile(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,bytes);
+      DLStoreUtil.addFile(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM_STRING,GroupConstants.DEFAULT_PARENT_GROUP_ID,CompanyConstants.SYSTEM,fileName,0,StringPool.BLANK,serviceContext.getCreateDate(null),serviceContext,bytes);
     }
     dirNames.put(resourcePrimKey,dirName);
   }
