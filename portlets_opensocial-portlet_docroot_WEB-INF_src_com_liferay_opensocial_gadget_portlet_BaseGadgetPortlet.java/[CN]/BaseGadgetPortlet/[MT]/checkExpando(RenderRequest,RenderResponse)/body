@@ -7,6 +7,8 @@
     ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
   }
  catch (  NoSuchColumnException nsce) {
-    ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+    Role role=RoleLocalServiceUtil.getRole(expandoColumn.getCompanyId(),RoleConstants.USER);
+    ResourcePermissionLocalServiceUtil.setResourcePermissions(expandoColumn.getCompanyId(),ExpandoColumn.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,String.valueOf(expandoColumn.getColumnId()),role.getRoleId(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});
   }
 }

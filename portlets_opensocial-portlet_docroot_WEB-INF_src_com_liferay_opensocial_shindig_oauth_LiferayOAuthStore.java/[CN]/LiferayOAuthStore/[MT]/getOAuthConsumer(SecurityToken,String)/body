@@ -1,24 +1,12 @@
 {
-  long userId=GetterUtil.getLong(securityToken.getViewerId());
-  User user=null;
-  try {
-    user=UserLocalServiceUtil.getUser(userId);
-  }
- catch (  Exception e) {
-    throw new GadgetException(GadgetException.Code.INTERNAL_SERVER_ERROR,e);
-  }
-  Gadget gadget=null;
-  try {
-    gadget=GadgetLocalServiceUtil.getGadget(user.getCompanyId(),securityToken.getAppUrl());
-  }
- catch (  Exception e) {
-    throw new GadgetException(GadgetException.Code.INTERNAL_SERVER_ERROR,e);
-  }
   OAuthConsumer oAuthConsumer=null;
   try {
-    oAuthConsumer=OAuthConsumerLocalServiceUtil.getOAuthConsumer(gadget.getGadgetId(),serviceName);
+    oAuthConsumer=OAuthConsumerLocalServiceUtil.fetchOAuthConsumer(securityToken.getAppId(),serviceName);
   }
- catch (  Exception e) {
+ catch (  SystemException se) {
+    throw new GadgetException(GadgetException.Code.INTERNAL_SERVER_ERROR,se);
+  }
+  if (oAuthConsumer == null) {
     return _oAuthConsumer;
   }
   if (oAuthConsumer.getKeyType().equals(OAuthConsumerConstants.KEY_TYPE_RSA_PRIVATE)) {
