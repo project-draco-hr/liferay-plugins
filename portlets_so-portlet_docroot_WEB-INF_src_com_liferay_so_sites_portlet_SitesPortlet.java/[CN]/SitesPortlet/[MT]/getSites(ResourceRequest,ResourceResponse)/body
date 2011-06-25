@@ -2,6 +2,7 @@
   boolean directory=ParamUtil.getBoolean(resourceRequest,"directory");
   String keywords=DAOParamUtil.getLike(resourceRequest,"keywords");
   boolean userGroups=ParamUtil.getBoolean(resourceRequest,"userGroups");
+  int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
   int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
@@ -9,6 +10,7 @@
   optionsJSONObject.put("directory",directory);
   optionsJSONObject.put("keywords",keywords);
   optionsJSONObject.put("userGroups",userGroups);
+  optionsJSONObject.put("maxResultSize",maxResultSize);
   optionsJSONObject.put("start",start);
   optionsJSONObject.put("end",end);
   jsonObject.put("options",optionsJSONObject);
@@ -30,7 +32,7 @@
     count=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
+    groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
     count=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
   }
   jsonObject.put("count",count);
