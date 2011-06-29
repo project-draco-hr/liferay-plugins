@@ -1,0 +1,24 @@
+{
+  if (!className.equals(MBThread.class.getName())) {
+    return null;
+  }
+  MBThread mbThread=null;
+  try {
+    mbThread=MBThreadLocalServiceUtil.getThread(classPK);
+  }
+ catch (  Exception e) {
+  }
+  if (mbThread == null) {
+    return null;
+  }
+  MBMessage mbMessage=null;
+  try {
+    mbMessage=MBMessageLocalServiceUtil.getMessage(mbThread.getRootMessageId());
+  }
+ catch (  Exception e) {
+  }
+  if (mbMessage == null) {
+    return null;
+  }
+  return mbMessage.getSubject();
+}

@@ -1,0 +1,21 @@
+{
+  if (Validator.isNull(title)) {
+    title=getMBCategoryTitle(className,classPK);
+  }
+  if (Validator.isNull(title)) {
+    title=getMBThreadTitle(className,classPK);
+  }
+  if (Validator.isNull(title)) {
+    title=getGroupTitle(className,classPK,locale);
+  }
+  if (Validator.isNull(title)) {
+    return String.valueOf(classPK);
+  }
+  StringBundler sb=new StringBundler(5);
+  sb.append(classPK);
+  sb.append(StringPool.SPACE);
+  sb.append(StringPool.OPEN_PARENTHESIS);
+  sb.append(title);
+  sb.append(StringPool.CLOSE_PARENTHESIS);
+  return sb.toString();
+}
