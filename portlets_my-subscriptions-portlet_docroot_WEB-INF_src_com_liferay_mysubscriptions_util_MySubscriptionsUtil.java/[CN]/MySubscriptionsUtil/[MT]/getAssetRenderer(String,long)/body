@@ -1,6 +1,12 @@
 {
-  AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
   try {
+    if (className.equals(MBThread.class.getName())) {
+      className=MBMessage.class.getName();
+      MBThread mbThread=null;
+      mbThread=MBThreadLocalServiceUtil.getThread(classPK);
+      classPK=mbThread.getRootMessageId();
+    }
+    AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
     return assetRendererFactory.getAssetRenderer(classPK);
   }
  catch (  Exception e) {
