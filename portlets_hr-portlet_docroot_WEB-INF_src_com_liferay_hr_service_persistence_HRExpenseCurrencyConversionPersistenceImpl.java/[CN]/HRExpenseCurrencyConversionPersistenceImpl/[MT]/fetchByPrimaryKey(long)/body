@@ -1,17 +1,25 @@
 {
   HRExpenseCurrencyConversion hrExpenseCurrencyConversion=(HRExpenseCurrencyConversion)EntityCacheUtil.getResult(HRExpenseCurrencyConversionModelImpl.ENTITY_CACHE_ENABLED,HRExpenseCurrencyConversionImpl.class,hrExpenseCurrencyConversionId,this);
+  if (hrExpenseCurrencyConversion == _nullHRExpenseCurrencyConversion) {
+    return null;
+  }
   if (hrExpenseCurrencyConversion == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrExpenseCurrencyConversion=(HRExpenseCurrencyConversion)session.get(HRExpenseCurrencyConversionImpl.class,Long.valueOf(hrExpenseCurrencyConversionId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrExpenseCurrencyConversion != null) {
         cacheResult(hrExpenseCurrencyConversion);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRExpenseCurrencyConversionModelImpl.ENTITY_CACHE_ENABLED,HRExpenseCurrencyConversionImpl.class,hrExpenseCurrencyConversionId,_nullHRExpenseCurrencyConversion);
       }
       closeSession(session);
     }

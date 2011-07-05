@@ -1,17 +1,25 @@
 {
   Type type=(Type)EntityCacheUtil.getResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,typeId,this);
+  if (type == _nullType) {
+    return null;
+  }
   if (type == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       type=(Type)session.get(TypeImpl.class,Long.valueOf(typeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (type != null) {
         cacheResult(type);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,typeId,_nullType);
       }
       closeSession(session);
     }

@@ -1,17 +1,25 @@
 {
   TasksEntry tasksEntry=(TasksEntry)EntityCacheUtil.getResult(TasksEntryModelImpl.ENTITY_CACHE_ENABLED,TasksEntryImpl.class,tasksEntryId,this);
+  if (tasksEntry == _nullTasksEntry) {
+    return null;
+  }
   if (tasksEntry == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       tasksEntry=(TasksEntry)session.get(TasksEntryImpl.class,Long.valueOf(tasksEntryId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (tasksEntry != null) {
         cacheResult(tasksEntry);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(TasksEntryModelImpl.ENTITY_CACHE_ENABLED,TasksEntryImpl.class,tasksEntryId,_nullTasksEntry);
       }
       closeSession(session);
     }

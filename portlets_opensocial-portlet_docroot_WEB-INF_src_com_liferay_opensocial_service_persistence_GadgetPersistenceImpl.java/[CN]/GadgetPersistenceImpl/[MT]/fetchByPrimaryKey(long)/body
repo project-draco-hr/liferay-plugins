@@ -1,17 +1,25 @@
 {
   Gadget gadget=(Gadget)EntityCacheUtil.getResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId,this);
+  if (gadget == _nullGadget) {
+    return null;
+  }
   if (gadget == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       gadget=(Gadget)session.get(GadgetImpl.class,Long.valueOf(gadgetId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (gadget != null) {
         cacheResult(gadget);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId,_nullGadget);
       }
       closeSession(session);
     }

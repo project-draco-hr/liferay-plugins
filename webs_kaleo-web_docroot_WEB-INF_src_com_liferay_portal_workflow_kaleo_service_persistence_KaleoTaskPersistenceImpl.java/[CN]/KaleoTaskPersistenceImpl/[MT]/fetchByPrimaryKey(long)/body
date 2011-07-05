@@ -1,17 +1,25 @@
 {
   KaleoTask kaleoTask=(KaleoTask)EntityCacheUtil.getResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTaskId,this);
+  if (kaleoTask == _nullKaleoTask) {
+    return null;
+  }
   if (kaleoTask == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kaleoTask=(KaleoTask)session.get(KaleoTaskImpl.class,Long.valueOf(kaleoTaskId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kaleoTask != null) {
         cacheResult(kaleoTask);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTaskId,_nullKaleoTask);
       }
       closeSession(session);
     }

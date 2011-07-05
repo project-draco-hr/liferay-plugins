@@ -1,17 +1,25 @@
 {
   HRBillability hrBillability=(HRBillability)EntityCacheUtil.getResult(HRBillabilityModelImpl.ENTITY_CACHE_ENABLED,HRBillabilityImpl.class,hrBillabilityId,this);
+  if (hrBillability == _nullHRBillability) {
+    return null;
+  }
   if (hrBillability == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrBillability=(HRBillability)session.get(HRBillabilityImpl.class,Long.valueOf(hrBillabilityId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrBillability != null) {
         cacheResult(hrBillability);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRBillabilityModelImpl.ENTITY_CACHE_ENABLED,HRBillabilityImpl.class,hrBillabilityId,_nullHRBillability);
       }
       closeSession(session);
     }

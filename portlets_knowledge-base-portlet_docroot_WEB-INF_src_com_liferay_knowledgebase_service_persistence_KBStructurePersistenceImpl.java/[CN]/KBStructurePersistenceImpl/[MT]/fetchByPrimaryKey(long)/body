@@ -1,17 +1,25 @@
 {
   KBStructure kbStructure=(KBStructure)EntityCacheUtil.getResult(KBStructureModelImpl.ENTITY_CACHE_ENABLED,KBStructureImpl.class,kbStructureId,this);
+  if (kbStructure == _nullKBStructure) {
+    return null;
+  }
   if (kbStructure == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kbStructure=(KBStructure)session.get(KBStructureImpl.class,Long.valueOf(kbStructureId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kbStructure != null) {
         cacheResult(kbStructure);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KBStructureModelImpl.ENTITY_CACHE_ENABLED,KBStructureImpl.class,kbStructureId,_nullKBStructure);
       }
       closeSession(session);
     }

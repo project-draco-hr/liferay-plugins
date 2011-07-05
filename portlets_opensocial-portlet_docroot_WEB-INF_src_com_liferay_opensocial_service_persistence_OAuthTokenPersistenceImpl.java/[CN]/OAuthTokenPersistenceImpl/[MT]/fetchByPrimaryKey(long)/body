@@ -1,17 +1,25 @@
 {
   OAuthToken oAuthToken=(OAuthToken)EntityCacheUtil.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oAuthTokenId,this);
+  if (oAuthToken == _nullOAuthToken) {
+    return null;
+  }
   if (oAuthToken == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       oAuthToken=(OAuthToken)session.get(OAuthTokenImpl.class,Long.valueOf(oAuthTokenId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (oAuthToken != null) {
         cacheResult(oAuthToken);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oAuthTokenId,_nullOAuthToken);
       }
       closeSession(session);
     }

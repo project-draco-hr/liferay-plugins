@@ -1,17 +1,25 @@
 {
   HRUserProject hrUserProject=(HRUserProject)EntityCacheUtil.getResult(HRUserProjectModelImpl.ENTITY_CACHE_ENABLED,HRUserProjectImpl.class,hrUserProjectId,this);
+  if (hrUserProject == _nullHRUserProject) {
+    return null;
+  }
   if (hrUserProject == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrUserProject=(HRUserProject)session.get(HRUserProjectImpl.class,Long.valueOf(hrUserProjectId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrUserProject != null) {
         cacheResult(hrUserProject);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRUserProjectModelImpl.ENTITY_CACHE_ENABLED,HRUserProjectImpl.class,hrUserProjectId,_nullHRUserProject);
       }
       closeSession(session);
     }

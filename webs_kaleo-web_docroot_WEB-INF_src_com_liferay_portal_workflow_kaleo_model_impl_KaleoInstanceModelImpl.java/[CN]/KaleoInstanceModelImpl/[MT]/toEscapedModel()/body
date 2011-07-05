@@ -3,6 +3,9 @@
     return (KaleoInstance)this;
   }
  else {
-    return (KaleoInstance)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    if (_escapedModelProxy == null) {
+      _escapedModelProxy=(KaleoInstance)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    }
+    return _escapedModelProxy;
   }
 }

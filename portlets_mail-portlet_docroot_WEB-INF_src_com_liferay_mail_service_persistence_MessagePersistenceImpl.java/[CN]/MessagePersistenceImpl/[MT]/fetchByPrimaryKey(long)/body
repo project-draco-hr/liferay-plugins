@@ -1,17 +1,25 @@
 {
   Message message=(Message)EntityCacheUtil.getResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId,this);
+  if (message == _nullMessage) {
+    return null;
+  }
   if (message == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       message=(Message)session.get(MessageImpl.class,Long.valueOf(messageId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (message != null) {
         cacheResult(message);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId,_nullMessage);
       }
       closeSession(session);
     }

@@ -1,17 +1,25 @@
 {
   JIRAAction jiraAction=(JIRAAction)EntityCacheUtil.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId,this);
+  if (jiraAction == _nullJIRAAction) {
+    return null;
+  }
   if (jiraAction == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       jiraAction=(JIRAAction)session.get(JIRAActionImpl.class,Long.valueOf(jiraActionId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (jiraAction != null) {
         cacheResult(jiraAction);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId,_nullJIRAAction);
       }
       closeSession(session);
     }

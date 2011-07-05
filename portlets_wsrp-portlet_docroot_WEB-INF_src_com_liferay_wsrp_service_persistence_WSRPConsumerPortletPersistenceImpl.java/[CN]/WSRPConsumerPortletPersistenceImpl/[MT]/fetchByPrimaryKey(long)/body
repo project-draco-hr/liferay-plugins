@@ -1,17 +1,25 @@
 {
   WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)EntityCacheUtil.getResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerPortletImpl.class,wsrpConsumerPortletId,this);
+  if (wsrpConsumerPortlet == _nullWSRPConsumerPortlet) {
+    return null;
+  }
   if (wsrpConsumerPortlet == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       wsrpConsumerPortlet=(WSRPConsumerPortlet)session.get(WSRPConsumerPortletImpl.class,Long.valueOf(wsrpConsumerPortletId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (wsrpConsumerPortlet != null) {
         cacheResult(wsrpConsumerPortlet);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerPortletImpl.class,wsrpConsumerPortletId,_nullWSRPConsumerPortlet);
       }
       closeSession(session);
     }

@@ -3,14 +3,14 @@
     return dirName;
   }
   dirName="knowledgebase/temp/attachments/" + counterLocalService.increment();
-  dlStore.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+  DLStoreUtil.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   if (resourcePrimKey <= 0) {
     return dirName;
   }
   KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   for (  String fileName : kbArticle.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
-    byte[] bytes=dlStore.getFile(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    byte[] bytes=DLStoreUtil.getFile(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
     addAttachment(dirName,shortFileName,bytes,serviceContext);
   }
   return dirName;

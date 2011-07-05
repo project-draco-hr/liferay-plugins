@@ -1,17 +1,25 @@
 {
   JIRAChangeGroup jiraChangeGroup=(JIRAChangeGroup)EntityCacheUtil.getResult(JIRAChangeGroupModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeGroupImpl.class,jiraChangeGroupId,this);
+  if (jiraChangeGroup == _nullJIRAChangeGroup) {
+    return null;
+  }
   if (jiraChangeGroup == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       jiraChangeGroup=(JIRAChangeGroup)session.get(JIRAChangeGroupImpl.class,Long.valueOf(jiraChangeGroupId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (jiraChangeGroup != null) {
         cacheResult(jiraChangeGroup);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(JIRAChangeGroupModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeGroupImpl.class,jiraChangeGroupId,_nullJIRAChangeGroup);
       }
       closeSession(session);
     }

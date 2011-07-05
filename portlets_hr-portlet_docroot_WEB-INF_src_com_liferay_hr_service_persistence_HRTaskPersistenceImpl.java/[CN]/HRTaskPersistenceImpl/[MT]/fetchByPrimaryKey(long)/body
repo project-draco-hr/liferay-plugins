@@ -1,17 +1,25 @@
 {
   HRTask hrTask=(HRTask)EntityCacheUtil.getResult(HRTaskModelImpl.ENTITY_CACHE_ENABLED,HRTaskImpl.class,hrTaskId,this);
+  if (hrTask == _nullHRTask) {
+    return null;
+  }
   if (hrTask == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrTask=(HRTask)session.get(HRTaskImpl.class,Long.valueOf(hrTaskId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrTask != null) {
         cacheResult(hrTask);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRTaskModelImpl.ENTITY_CACHE_ENABLED,HRTaskImpl.class,hrTaskId,_nullHRTask);
       }
       closeSession(session);
     }

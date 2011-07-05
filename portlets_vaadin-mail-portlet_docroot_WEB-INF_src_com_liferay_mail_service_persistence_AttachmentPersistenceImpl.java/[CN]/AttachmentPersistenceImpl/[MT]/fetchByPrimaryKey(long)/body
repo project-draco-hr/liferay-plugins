@@ -1,17 +1,25 @@
 {
   Attachment attachment=(Attachment)EntityCacheUtil.getResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachmentId,this);
+  if (attachment == _nullAttachment) {
+    return null;
+  }
   if (attachment == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       attachment=(Attachment)session.get(AttachmentImpl.class,Long.valueOf(attachmentId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (attachment != null) {
         cacheResult(attachment);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachmentId,_nullAttachment);
       }
       closeSession(session);
     }

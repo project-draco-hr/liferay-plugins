@@ -1,17 +1,25 @@
 {
   UserThread userThread=(UserThread)EntityCacheUtil.getResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThreadId,this);
+  if (userThread == _nullUserThread) {
+    return null;
+  }
   if (userThread == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       userThread=(UserThread)session.get(UserThreadImpl.class,Long.valueOf(userThreadId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (userThread != null) {
         cacheResult(userThread);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThreadId,_nullUserThread);
       }
       closeSession(session);
     }

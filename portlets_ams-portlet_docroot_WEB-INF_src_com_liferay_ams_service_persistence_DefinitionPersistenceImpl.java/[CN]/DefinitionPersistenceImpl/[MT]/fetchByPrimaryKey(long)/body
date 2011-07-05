@@ -1,17 +1,25 @@
 {
   Definition definition=(Definition)EntityCacheUtil.getResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,definitionId,this);
+  if (definition == _nullDefinition) {
+    return null;
+  }
   if (definition == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       definition=(Definition)session.get(DefinitionImpl.class,Long.valueOf(definitionId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (definition != null) {
         cacheResult(definition);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,definitionId,_nullDefinition);
       }
       closeSession(session);
     }

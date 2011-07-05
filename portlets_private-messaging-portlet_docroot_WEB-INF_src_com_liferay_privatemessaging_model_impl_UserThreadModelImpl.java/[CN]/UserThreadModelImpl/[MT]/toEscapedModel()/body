@@ -3,6 +3,9 @@
     return (UserThread)this;
   }
  else {
-    return (UserThread)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    if (_escapedModelProxy == null) {
+      _escapedModelProxy=(UserThread)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    }
+    return _escapedModelProxy;
   }
 }

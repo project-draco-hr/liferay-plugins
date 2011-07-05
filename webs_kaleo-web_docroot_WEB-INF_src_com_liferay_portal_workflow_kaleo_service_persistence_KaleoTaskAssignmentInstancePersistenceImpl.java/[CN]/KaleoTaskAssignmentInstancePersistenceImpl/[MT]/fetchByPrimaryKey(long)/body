@@ -1,17 +1,25 @@
 {
   KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=(KaleoTaskAssignmentInstance)EntityCacheUtil.getResult(KaleoTaskAssignmentInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentInstanceImpl.class,kaleoTaskAssignmentInstanceId,this);
+  if (kaleoTaskAssignmentInstance == _nullKaleoTaskAssignmentInstance) {
+    return null;
+  }
   if (kaleoTaskAssignmentInstance == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kaleoTaskAssignmentInstance=(KaleoTaskAssignmentInstance)session.get(KaleoTaskAssignmentInstanceImpl.class,Long.valueOf(kaleoTaskAssignmentInstanceId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kaleoTaskAssignmentInstance != null) {
         cacheResult(kaleoTaskAssignmentInstance);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KaleoTaskAssignmentInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentInstanceImpl.class,kaleoTaskAssignmentInstanceId,_nullKaleoTaskAssignmentInstance);
       }
       closeSession(session);
     }

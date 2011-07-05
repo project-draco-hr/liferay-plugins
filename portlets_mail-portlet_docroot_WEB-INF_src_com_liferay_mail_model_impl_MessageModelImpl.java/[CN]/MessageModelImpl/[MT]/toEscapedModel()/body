@@ -3,6 +3,9 @@
     return (Message)this;
   }
  else {
-    return (Message)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    if (_escapedModelProxy == null) {
+      _escapedModelProxy=(Message)Proxy.newProxyInstance(_classLoader,_escapedModelProxyInterfaces,new AutoEscapeBeanHandler(this));
+    }
+    return _escapedModelProxy;
   }
 }

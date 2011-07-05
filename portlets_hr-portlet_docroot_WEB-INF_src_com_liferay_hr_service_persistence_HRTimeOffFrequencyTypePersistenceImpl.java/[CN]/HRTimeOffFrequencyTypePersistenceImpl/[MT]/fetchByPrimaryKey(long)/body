@@ -1,17 +1,25 @@
 {
   HRTimeOffFrequencyType hrTimeOffFrequencyType=(HRTimeOffFrequencyType)EntityCacheUtil.getResult(HRTimeOffFrequencyTypeModelImpl.ENTITY_CACHE_ENABLED,HRTimeOffFrequencyTypeImpl.class,hrTimeOffFrequencyTypeId,this);
+  if (hrTimeOffFrequencyType == _nullHRTimeOffFrequencyType) {
+    return null;
+  }
   if (hrTimeOffFrequencyType == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrTimeOffFrequencyType=(HRTimeOffFrequencyType)session.get(HRTimeOffFrequencyTypeImpl.class,Long.valueOf(hrTimeOffFrequencyTypeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrTimeOffFrequencyType != null) {
         cacheResult(hrTimeOffFrequencyType);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRTimeOffFrequencyTypeModelImpl.ENTITY_CACHE_ENABLED,HRTimeOffFrequencyTypeImpl.class,hrTimeOffFrequencyTypeId,_nullHRTimeOffFrequencyType);
       }
       closeSession(session);
     }

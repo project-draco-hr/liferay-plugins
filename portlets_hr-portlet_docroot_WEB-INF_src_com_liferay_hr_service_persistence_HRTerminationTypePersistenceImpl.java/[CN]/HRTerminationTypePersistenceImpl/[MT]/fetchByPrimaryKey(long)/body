@@ -1,17 +1,25 @@
 {
   HRTerminationType hrTerminationType=(HRTerminationType)EntityCacheUtil.getResult(HRTerminationTypeModelImpl.ENTITY_CACHE_ENABLED,HRTerminationTypeImpl.class,hrTerminationTypeId,this);
+  if (hrTerminationType == _nullHRTerminationType) {
+    return null;
+  }
   if (hrTerminationType == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrTerminationType=(HRTerminationType)session.get(HRTerminationTypeImpl.class,Long.valueOf(hrTerminationTypeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrTerminationType != null) {
         cacheResult(hrTerminationType);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRTerminationTypeModelImpl.ENTITY_CACHE_ENABLED,HRTerminationTypeImpl.class,hrTerminationTypeId,_nullHRTerminationType);
       }
       closeSession(session);
     }

@@ -1,17 +1,25 @@
 {
   HRUserHistory hrUserHistory=(HRUserHistory)EntityCacheUtil.getResult(HRUserHistoryModelImpl.ENTITY_CACHE_ENABLED,HRUserHistoryImpl.class,hrUserHistoryId,this);
+  if (hrUserHistory == _nullHRUserHistory) {
+    return null;
+  }
   if (hrUserHistory == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrUserHistory=(HRUserHistory)session.get(HRUserHistoryImpl.class,Long.valueOf(hrUserHistoryId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrUserHistory != null) {
         cacheResult(hrUserHistory);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRUserHistoryModelImpl.ENTITY_CACHE_ENABLED,HRUserHistoryImpl.class,hrUserHistoryId,_nullHRUserHistory);
       }
       closeSession(session);
     }

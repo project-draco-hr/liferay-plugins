@@ -1,17 +1,25 @@
 {
   HRAsset hrAsset=(HRAsset)EntityCacheUtil.getResult(HRAssetModelImpl.ENTITY_CACHE_ENABLED,HRAssetImpl.class,hrAssetId,this);
+  if (hrAsset == _nullHRAsset) {
+    return null;
+  }
   if (hrAsset == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrAsset=(HRAsset)session.get(HRAssetImpl.class,Long.valueOf(hrAssetId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrAsset != null) {
         cacheResult(hrAsset);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRAssetModelImpl.ENTITY_CACHE_ENABLED,HRAssetImpl.class,hrAssetId,_nullHRAsset);
       }
       closeSession(session);
     }

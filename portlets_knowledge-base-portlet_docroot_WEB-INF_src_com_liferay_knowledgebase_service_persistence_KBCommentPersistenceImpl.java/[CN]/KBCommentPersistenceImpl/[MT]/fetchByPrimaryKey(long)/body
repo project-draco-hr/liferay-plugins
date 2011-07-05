@@ -1,17 +1,25 @@
 {
   KBComment kbComment=(KBComment)EntityCacheUtil.getResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,kbCommentId,this);
+  if (kbComment == _nullKBComment) {
+    return null;
+  }
   if (kbComment == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kbComment=(KBComment)session.get(KBCommentImpl.class,Long.valueOf(kbCommentId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kbComment != null) {
         cacheResult(kbComment);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,kbCommentId,_nullKBComment);
       }
       closeSession(session);
     }

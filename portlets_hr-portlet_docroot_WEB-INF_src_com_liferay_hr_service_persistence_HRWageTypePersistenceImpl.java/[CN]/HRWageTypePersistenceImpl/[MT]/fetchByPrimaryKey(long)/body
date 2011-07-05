@@ -1,17 +1,25 @@
 {
   HRWageType hrWageType=(HRWageType)EntityCacheUtil.getResult(HRWageTypeModelImpl.ENTITY_CACHE_ENABLED,HRWageTypeImpl.class,hrWageTypeId,this);
+  if (hrWageType == _nullHRWageType) {
+    return null;
+  }
   if (hrWageType == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrWageType=(HRWageType)session.get(HRWageTypeImpl.class,Long.valueOf(hrWageTypeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrWageType != null) {
         cacheResult(hrWageType);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRWageTypeModelImpl.ENTITY_CACHE_ENABLED,HRWageTypeImpl.class,hrWageTypeId,_nullHRWageType);
       }
       closeSession(session);
     }

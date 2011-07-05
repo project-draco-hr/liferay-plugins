@@ -1,17 +1,25 @@
 {
   KaleoNode kaleoNode=(KaleoNode)EntityCacheUtil.getResult(KaleoNodeModelImpl.ENTITY_CACHE_ENABLED,KaleoNodeImpl.class,kaleoNodeId,this);
+  if (kaleoNode == _nullKaleoNode) {
+    return null;
+  }
   if (kaleoNode == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kaleoNode=(KaleoNode)session.get(KaleoNodeImpl.class,Long.valueOf(kaleoNodeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kaleoNode != null) {
         cacheResult(kaleoNode);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KaleoNodeModelImpl.ENTITY_CACHE_ENABLED,KaleoNodeImpl.class,kaleoNodeId,_nullKaleoNode);
       }
       closeSession(session);
     }

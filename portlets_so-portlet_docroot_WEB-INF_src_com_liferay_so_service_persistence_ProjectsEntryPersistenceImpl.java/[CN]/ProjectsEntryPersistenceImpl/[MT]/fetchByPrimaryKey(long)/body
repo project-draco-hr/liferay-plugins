@@ -1,17 +1,25 @@
 {
   ProjectsEntry projectsEntry=(ProjectsEntry)EntityCacheUtil.getResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,projectsEntryId,this);
+  if (projectsEntry == _nullProjectsEntry) {
+    return null;
+  }
   if (projectsEntry == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       projectsEntry=(ProjectsEntry)session.get(ProjectsEntryImpl.class,Long.valueOf(projectsEntryId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (projectsEntry != null) {
         cacheResult(projectsEntry);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,projectsEntryId,_nullProjectsEntry);
       }
       closeSession(session);
     }

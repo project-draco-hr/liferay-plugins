@@ -1,17 +1,25 @@
 {
   HRBranch hrBranch=(HRBranch)EntityCacheUtil.getResult(HRBranchModelImpl.ENTITY_CACHE_ENABLED,HRBranchImpl.class,hrBranchId,this);
+  if (hrBranch == _nullHRBranch) {
+    return null;
+  }
   if (hrBranch == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrBranch=(HRBranch)session.get(HRBranchImpl.class,Long.valueOf(hrBranchId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrBranch != null) {
         cacheResult(hrBranch);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRBranchModelImpl.ENTITY_CACHE_ENABLED,HRBranchImpl.class,hrBranchId,_nullHRBranch);
       }
       closeSession(session);
     }

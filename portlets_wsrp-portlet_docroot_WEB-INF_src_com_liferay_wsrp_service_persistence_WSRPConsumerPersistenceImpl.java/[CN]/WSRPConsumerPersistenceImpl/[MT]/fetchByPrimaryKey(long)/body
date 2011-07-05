@@ -1,17 +1,25 @@
 {
   WSRPConsumer wsrpConsumer=(WSRPConsumer)EntityCacheUtil.getResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,wsrpConsumerId,this);
+  if (wsrpConsumer == _nullWSRPConsumer) {
+    return null;
+  }
   if (wsrpConsumer == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       wsrpConsumer=(WSRPConsumer)session.get(WSRPConsumerImpl.class,Long.valueOf(wsrpConsumerId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (wsrpConsumer != null) {
         cacheResult(wsrpConsumer);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,wsrpConsumerId,_nullWSRPConsumer);
       }
       closeSession(session);
     }

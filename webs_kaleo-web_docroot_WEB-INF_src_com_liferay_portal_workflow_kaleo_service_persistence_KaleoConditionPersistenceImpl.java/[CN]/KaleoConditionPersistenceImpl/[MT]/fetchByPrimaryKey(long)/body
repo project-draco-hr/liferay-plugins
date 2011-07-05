@@ -1,17 +1,25 @@
 {
   KaleoCondition kaleoCondition=(KaleoCondition)EntityCacheUtil.getResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,KaleoConditionImpl.class,kaleoConditionId,this);
+  if (kaleoCondition == _nullKaleoCondition) {
+    return null;
+  }
   if (kaleoCondition == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kaleoCondition=(KaleoCondition)session.get(KaleoConditionImpl.class,Long.valueOf(kaleoConditionId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kaleoCondition != null) {
         cacheResult(kaleoCondition);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,KaleoConditionImpl.class,kaleoConditionId,_nullKaleoCondition);
       }
       closeSession(session);
     }

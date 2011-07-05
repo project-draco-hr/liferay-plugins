@@ -1,17 +1,25 @@
 {
   HROffice hrOffice=(HROffice)EntityCacheUtil.getResult(HROfficeModelImpl.ENTITY_CACHE_ENABLED,HROfficeImpl.class,hrOfficeId,this);
+  if (hrOffice == _nullHROffice) {
+    return null;
+  }
   if (hrOffice == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrOffice=(HROffice)session.get(HROfficeImpl.class,Long.valueOf(hrOfficeId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrOffice != null) {
         cacheResult(hrOffice);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HROfficeModelImpl.ENTITY_CACHE_ENABLED,HROfficeImpl.class,hrOfficeId,_nullHROffice);
       }
       closeSession(session);
     }

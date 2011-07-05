@@ -1,17 +1,25 @@
 {
   Entry entry=(Entry)EntityCacheUtil.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,entryId,this);
+  if (entry == _nullEntry) {
+    return null;
+  }
   if (entry == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       entry=(Entry)session.get(EntryImpl.class,Long.valueOf(entryId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (entry != null) {
         cacheResult(entry);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,entryId,_nullEntry);
       }
       closeSession(session);
     }

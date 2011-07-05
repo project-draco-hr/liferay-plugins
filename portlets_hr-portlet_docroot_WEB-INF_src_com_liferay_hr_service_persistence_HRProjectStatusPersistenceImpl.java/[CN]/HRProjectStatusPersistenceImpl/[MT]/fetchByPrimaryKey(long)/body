@@ -1,17 +1,25 @@
 {
   HRProjectStatus hrProjectStatus=(HRProjectStatus)EntityCacheUtil.getResult(HRProjectStatusModelImpl.ENTITY_CACHE_ENABLED,HRProjectStatusImpl.class,hrProjectStatusId,this);
+  if (hrProjectStatus == _nullHRProjectStatus) {
+    return null;
+  }
   if (hrProjectStatus == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrProjectStatus=(HRProjectStatus)session.get(HRProjectStatusImpl.class,Long.valueOf(hrProjectStatusId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrProjectStatus != null) {
         cacheResult(hrProjectStatus);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRProjectStatusModelImpl.ENTITY_CACHE_ENABLED,HRProjectStatusImpl.class,hrProjectStatusId,_nullHRProjectStatus);
       }
       closeSession(session);
     }

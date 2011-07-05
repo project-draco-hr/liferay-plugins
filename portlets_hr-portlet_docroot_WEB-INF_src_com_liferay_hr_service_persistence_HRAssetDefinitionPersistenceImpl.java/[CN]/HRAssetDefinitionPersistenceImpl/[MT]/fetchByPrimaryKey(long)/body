@@ -1,17 +1,25 @@
 {
   HRAssetDefinition hrAssetDefinition=(HRAssetDefinition)EntityCacheUtil.getResult(HRAssetDefinitionModelImpl.ENTITY_CACHE_ENABLED,HRAssetDefinitionImpl.class,hrAssetDefinitionId,this);
+  if (hrAssetDefinition == _nullHRAssetDefinition) {
+    return null;
+  }
   if (hrAssetDefinition == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrAssetDefinition=(HRAssetDefinition)session.get(HRAssetDefinitionImpl.class,Long.valueOf(hrAssetDefinitionId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrAssetDefinition != null) {
         cacheResult(hrAssetDefinition);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRAssetDefinitionModelImpl.ENTITY_CACHE_ENABLED,HRAssetDefinitionImpl.class,hrAssetDefinitionId,_nullHRAssetDefinition);
       }
       closeSession(session);
     }

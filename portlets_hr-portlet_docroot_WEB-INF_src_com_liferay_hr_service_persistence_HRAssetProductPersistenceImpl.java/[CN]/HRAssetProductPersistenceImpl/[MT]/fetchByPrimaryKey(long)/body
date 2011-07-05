@@ -1,17 +1,25 @@
 {
   HRAssetProduct hrAssetProduct=(HRAssetProduct)EntityCacheUtil.getResult(HRAssetProductModelImpl.ENTITY_CACHE_ENABLED,HRAssetProductImpl.class,hrAssetProductId,this);
+  if (hrAssetProduct == _nullHRAssetProduct) {
+    return null;
+  }
   if (hrAssetProduct == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrAssetProduct=(HRAssetProduct)session.get(HRAssetProductImpl.class,Long.valueOf(hrAssetProductId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrAssetProduct != null) {
         cacheResult(hrAssetProduct);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRAssetProductModelImpl.ENTITY_CACHE_ENABLED,HRAssetProductImpl.class,hrAssetProductId,_nullHRAssetProduct);
       }
       closeSession(session);
     }

@@ -1,17 +1,25 @@
 {
   HRUserTimeOff hrUserTimeOff=(HRUserTimeOff)EntityCacheUtil.getResult(HRUserTimeOffModelImpl.ENTITY_CACHE_ENABLED,HRUserTimeOffImpl.class,hrUserTimeOffId,this);
+  if (hrUserTimeOff == _nullHRUserTimeOff) {
+    return null;
+  }
   if (hrUserTimeOff == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrUserTimeOff=(HRUserTimeOff)session.get(HRUserTimeOffImpl.class,Long.valueOf(hrUserTimeOffId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrUserTimeOff != null) {
         cacheResult(hrUserTimeOff);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRUserTimeOffModelImpl.ENTITY_CACHE_ENABLED,HRUserTimeOffImpl.class,hrUserTimeOffId,_nullHRUserTimeOff);
       }
       closeSession(session);
     }

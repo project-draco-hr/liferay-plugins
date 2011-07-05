@@ -1,17 +1,25 @@
 {
   KaleoLog kaleoLog=(KaleoLog)EntityCacheUtil.getResult(KaleoLogModelImpl.ENTITY_CACHE_ENABLED,KaleoLogImpl.class,kaleoLogId,this);
+  if (kaleoLog == _nullKaleoLog) {
+    return null;
+  }
   if (kaleoLog == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       kaleoLog=(KaleoLog)session.get(KaleoLogImpl.class,Long.valueOf(kaleoLogId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (kaleoLog != null) {
         cacheResult(kaleoLog);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(KaleoLogModelImpl.ENTITY_CACHE_ENABLED,KaleoLogImpl.class,kaleoLogId,_nullKaleoLog);
       }
       closeSession(session);
     }

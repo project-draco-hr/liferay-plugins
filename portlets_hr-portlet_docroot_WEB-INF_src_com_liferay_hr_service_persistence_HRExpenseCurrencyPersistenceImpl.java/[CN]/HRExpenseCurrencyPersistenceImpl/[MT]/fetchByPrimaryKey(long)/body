@@ -1,17 +1,25 @@
 {
   HRExpenseCurrency hrExpenseCurrency=(HRExpenseCurrency)EntityCacheUtil.getResult(HRExpenseCurrencyModelImpl.ENTITY_CACHE_ENABLED,HRExpenseCurrencyImpl.class,hrExpenseCurrencyId,this);
+  if (hrExpenseCurrency == _nullHRExpenseCurrency) {
+    return null;
+  }
   if (hrExpenseCurrency == null) {
     Session session=null;
+    boolean hasException=false;
     try {
       session=openSession();
       hrExpenseCurrency=(HRExpenseCurrency)session.get(HRExpenseCurrencyImpl.class,Long.valueOf(hrExpenseCurrencyId));
     }
  catch (    Exception e) {
+      hasException=true;
       throw processException(e);
     }
  finally {
       if (hrExpenseCurrency != null) {
         cacheResult(hrExpenseCurrency);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(HRExpenseCurrencyModelImpl.ENTITY_CACHE_ENABLED,HRExpenseCurrencyImpl.class,hrExpenseCurrencyId,_nullHRExpenseCurrency);
       }
       closeSession(session);
     }

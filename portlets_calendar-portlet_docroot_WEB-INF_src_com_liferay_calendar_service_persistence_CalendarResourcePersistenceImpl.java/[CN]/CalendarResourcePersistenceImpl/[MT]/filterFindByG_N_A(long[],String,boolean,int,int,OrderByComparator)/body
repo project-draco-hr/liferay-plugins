@@ -3,7 +3,12 @@
     return findByG_N_A(groupIds,name,active,start,end,orderByComparator);
   }
   StringBundler query=new StringBundler();
-  query.append(_FILTER_SQL_SELECT_CALENDARRESOURCE_WHERE);
+  if (getDB().isSupportsInlineDistinct()) {
+    query.append(_FILTER_SQL_SELECT_CALENDARRESOURCE_WHERE);
+  }
+ else {
+    query.append(_FILTER_SQL_SELECT_CALENDARRESOURCE_NO_INLINE_DISTINCT_WHERE_1);
+  }
   boolean conjunctionable=false;
   if ((groupIds == null) || (groupIds.length > 0)) {
     if (conjunctionable) {
@@ -39,7 +44,9 @@
   }
   query.append(_FINDER_COLUMN_G_N_A_ACTIVE_5);
   conjunctionable=true;
-  appendGroupByComparator(query,_FILTER_COLUMN_PK);
+  if (!getDB().isSupportsInlineDistinct()) {
+    query.append(_FILTER_SQL_SELECT_CALENDARRESOURCE_NO_INLINE_DISTINCT_WHERE_2);
+  }
   if (orderByComparator != null) {
     if (getDB().isSupportsInlineDistinct()) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
@@ -56,7 +63,7 @@
       query.append(CalendarResourceModelImpl.ORDER_BY_SQL);
     }
   }
-  String sql=InlineSQLHelperUtil.replacePermissionCheck(query.toString(),CalendarResource.class.getName(),_FILTER_COLUMN_PK,groupIds);
+  String sql=InlineSQLHelperUtil.replacePermissionCheck(query.toString(),CalendarResource.class.getName(),_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,groupIds);
   Session session=null;
   try {
     session=openSession();
