@@ -1,0 +1,38 @@
+{
+  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  Date now=new Date();
+  long kaleoTimerId=counterLocalService.increment();
+  KaleoTimer kaleoTimer=kaleoTimerPersistence.create(kaleoTimerId);
+  kaleoTimer.setCompanyId(user.getCompanyId());
+  kaleoTimer.setUserId(user.getUserId());
+  kaleoTimer.setUserName(user.getFullName());
+  kaleoTimer.setCreateDate(now);
+  kaleoTimer.setModifiedDate(now);
+  kaleoTimer.setKaleoDefinitionId(kaleoDefinitionId);
+  kaleoTimer.setKaleoClassName(kaleoClassName);
+  kaleoTimer.setKaleoClassPK(kaleoClassPK);
+  kaleoTimer.setName(timer.getName());
+  kaleoTimer.setBlocking(timer.isBlocking());
+  DelayDuration delayDuration=timer.getDelayDuration();
+  kaleoTimer.setDuration(delayDuration.getDuration());
+  kaleoTimer.setScale(delayDuration.getDurationScale().getValue());
+  DelayDuration recurrence=timer.getRecurrence();
+  if (recurrence != null) {
+    kaleoTimer.setRecurrenceDuration(recurrence.getDuration());
+    kaleoTimer.setRecurrenceScale(recurrence.getDurationScale().getValue());
+  }
+  kaleoTimerPersistence.update(kaleoTimer,false);
+  Set<Action> actions=timer.getActions();
+  for (  Action action : actions) {
+    kaleoActionLocalService.addKaleoAction(kaleoDefinitionId,KaleoTimer.class.getName(),kaleoTimerId,timer.getName(),action,serviceContext);
+  }
+  Set<Notification> notifications=timer.getNotifications();
+  for (  Notification notification : notifications) {
+    kaleoNotificationLocalService.addKaleoNotification(kaleoDefinitionId,KaleoTimer.class.getName(),kaleoTimerId,timer.getName(),notification,serviceContext);
+  }
+  Set<Assignment> reassignments=timer.getReassignments();
+  for (  Assignment reassignment : reassignments) {
+    kaleoTaskAssignmentLocalService.addKaleoTaskAssignment(kaleoDefinitionId,KaleoTimer.class.getName(),kaleoTimerId,reassignment,serviceContext);
+  }
+  return kaleoTimer;
+}

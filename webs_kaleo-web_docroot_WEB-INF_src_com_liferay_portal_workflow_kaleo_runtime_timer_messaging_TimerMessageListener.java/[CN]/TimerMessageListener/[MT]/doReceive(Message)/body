@@ -1,10 +1,19 @@
 {
   long kaleoTimerInstanceTokenId=message.getLong("kaleoTimerInstanceTokenId");
-  KaleoTimerInstanceToken kaleoTimerInstanceToken=getKaleoTimerInstanceToken(message);
-  KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
-  Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTimerInstanceToken.getWorkflowContext());
-  ServiceContext serviceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
-  ExecutionContext executionContext=_workflowEngine.executeTimerWorkflowInstance(kaleoTimerInstanceTokenId,serviceContext,workflowContext);
-  KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
-  _kaleoSignaler.signalExecute(currentKaleoNode,executionContext);
+  try {
+    KaleoTimerInstanceToken kaleoTimerInstanceToken=getKaleoTimerInstanceToken(message);
+    KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
+    Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTimerInstanceToken.getWorkflowContext());
+    ServiceContext serviceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
+    ExecutionContext executionContext=_workflowEngine.executeTimerWorkflowInstance(kaleoTimerInstanceTokenId,serviceContext,workflowContext);
+    KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
+    _kaleoSignaler.signalExecute(currentKaleoNode,executionContext);
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Unable to execute scheduled job.  Unregistering job " + message,e);
+    }
+    String groupName=SchedulerUtil.getGroupName(kaleoTimerInstanceTokenId);
+    SchedulerEngineUtil.delete(groupName,StorageType.PERSISTED);
+  }
 }

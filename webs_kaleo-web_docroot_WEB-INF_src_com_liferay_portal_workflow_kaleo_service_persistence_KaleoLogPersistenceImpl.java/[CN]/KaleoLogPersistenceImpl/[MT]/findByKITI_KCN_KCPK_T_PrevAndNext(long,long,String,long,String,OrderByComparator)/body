@@ -1,0 +1,18 @@
+{
+  KaleoLog kaleoLog=findByPrimaryKey(kaleoLogId);
+  Session session=null;
+  try {
+    session=openSession();
+    KaleoLog[] array=new KaleoLogImpl[3];
+    array[0]=getByKITI_KCN_KCPK_T_PrevAndNext(session,kaleoLog,kaleoInstanceTokenId,kaleoClassName,kaleoClassPK,type,orderByComparator,true);
+    array[1]=kaleoLog;
+    array[2]=getByKITI_KCN_KCPK_T_PrevAndNext(session,kaleoLog,kaleoInstanceTokenId,kaleoClassName,kaleoClassPK,type,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

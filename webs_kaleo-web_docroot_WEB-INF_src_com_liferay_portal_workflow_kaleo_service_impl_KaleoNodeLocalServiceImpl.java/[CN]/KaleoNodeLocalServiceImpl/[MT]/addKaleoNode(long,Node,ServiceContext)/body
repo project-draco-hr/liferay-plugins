@@ -10,6 +10,7 @@
   kaleoNode.setModifiedDate(now);
   kaleoNode.setKaleoDefinitionId(kaleoDefinitionId);
   kaleoNode.setName(node.getName());
+  kaleoNode.setMetadata(node.getMetadata());
   kaleoNode.setDescription(node.getDescription());
   kaleoNode.setType(node.getNodeType().name());
   boolean initial=false;
@@ -25,16 +26,15 @@
   kaleoNodePersistence.update(kaleoNode,false);
   Set<Action> actions=node.getActions();
   for (  Action action : actions) {
-    kaleoActionLocalService.addKaleoAction(kaleoDefinitionId,kaleoNodeId,node.getName(),action,serviceContext);
+    kaleoActionLocalService.addKaleoAction(kaleoDefinitionId,KaleoNode.class.getName(),kaleoNodeId,node.getName(),action,serviceContext);
   }
   Set<Notification> notifications=node.getNotifications();
   for (  Notification notification : notifications) {
-    kaleoNotificationLocalService.addKaleoNotification(kaleoDefinitionId,kaleoNodeId,node.getName(),notification,serviceContext);
+    kaleoNotificationLocalService.addKaleoNotification(kaleoDefinitionId,KaleoNode.class.getName(),kaleoNodeId,node.getName(),notification,serviceContext);
   }
   Set<Timer> timers=node.getTimers();
   for (  Timer timer : timers) {
-    KaleoNode timerKaleoNode=addKaleoNode(kaleoDefinitionId,timer,serviceContext);
-    kaleoTimerLocalService.addKaleoTimer(kaleoDefinitionId,timerKaleoNode.getKaleoNodeId(),kaleoNodeId,timer,serviceContext);
+    kaleoTimerLocalService.addKaleoTimer(kaleoDefinitionId,KaleoNode.class.getName(),kaleoNodeId,timer,serviceContext);
   }
   return kaleoNode;
 }

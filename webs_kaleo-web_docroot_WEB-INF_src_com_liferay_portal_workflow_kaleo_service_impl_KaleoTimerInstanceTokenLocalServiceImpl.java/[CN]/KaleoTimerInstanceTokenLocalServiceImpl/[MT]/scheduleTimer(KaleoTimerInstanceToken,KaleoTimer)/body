@@ -1,0 +1,23 @@
+{
+  deleteScheduledTimer(kaleoTimerInstanceToken);
+  String groupName=getSchedulerGroupName(kaleoTimerInstanceToken);
+  SchedulerEventMessageListenerWrapper schedulerEventListenerWrapper=registerMessageListener(groupName);
+  DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
+  DueDateCalculator dueDateCalculator=new DefaultDueDateCalculator();
+  Date dueDate=dueDateCalculator.getDueDate(new Date(),delayDuration);
+  Calendar dueDateCalendar=CalendarFactoryUtil.getCalendar();
+  dueDateCalendar.setTime(dueDate);
+  CronText cronText=null;
+  if (!kaleoTimer.isRecurring()) {
+    cronText=new CronText(dueDateCalendar);
+  }
+ else {
+    DelayDuration recurrence=new DelayDuration(kaleoTimer.getRecurrenceDuration(),DurationScale.parse(kaleoTimer.getRecurrenceScale()));
+    cronText=new CronText(dueDateCalendar,recurrence.getDurationScale().getIntValue(),(int)recurrence.getDuration());
+  }
+  Trigger trigger=new CronTrigger(groupName,groupName,cronText.toString());
+  Message message=new Message();
+  message.put(SchedulerEngine.MESSAGE_LISTENER_UUID,schedulerEventListenerWrapper.getMessageListenerUUID());
+  message.put("kaleoTimerInstanceTokenId",kaleoTimerInstanceToken.getKaleoTimerInstanceTokenId());
+  SchedulerEngineUtil.schedule(trigger,StorageType.PERSISTED,null,DestinationNames.SCHEDULER_DISPATCH,message,0);
+}

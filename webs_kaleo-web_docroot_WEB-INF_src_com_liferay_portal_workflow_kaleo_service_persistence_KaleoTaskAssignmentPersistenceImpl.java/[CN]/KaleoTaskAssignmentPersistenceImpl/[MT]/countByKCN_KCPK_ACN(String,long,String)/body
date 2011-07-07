@@ -1,0 +1,57 @@
+{
+  Object[] finderArgs=new Object[]{kaleoClassName,kaleoClassPK,assigneeClassName};
+  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_KCN_KCPK_ACN,finderArgs,this);
+  if (count == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_COUNT_KALEOTASKASSIGNMENT_WHERE);
+    if (kaleoClassName == null) {
+      query.append(_FINDER_COLUMN_KCN_KCPK_ACN_KALEOCLASSNAME_1);
+    }
+ else {
+      if (kaleoClassName.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_KCN_KCPK_ACN_KALEOCLASSNAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_KCN_KCPK_ACN_KALEOCLASSNAME_2);
+      }
+    }
+    query.append(_FINDER_COLUMN_KCN_KCPK_ACN_KALEOCLASSPK_2);
+    if (assigneeClassName == null) {
+      query.append(_FINDER_COLUMN_KCN_KCPK_ACN_ASSIGNEECLASSNAME_1);
+    }
+ else {
+      if (assigneeClassName.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_KCN_KCPK_ACN_ASSIGNEECLASSNAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_KCN_KCPK_ACN_ASSIGNEECLASSNAME_2);
+      }
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (kaleoClassName != null) {
+        qPos.add(kaleoClassName);
+      }
+      qPos.add(kaleoClassPK);
+      if (assigneeClassName != null) {
+        qPos.add(assigneeClassName);
+      }
+      count=(Long)q.uniqueResult();
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (count == null) {
+        count=Long.valueOf(0);
+      }
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KCN_KCPK_ACN,finderArgs,count);
+      closeSession(session);
+    }
+  }
+  return count.intValue();
+}

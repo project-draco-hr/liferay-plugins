@@ -16,8 +16,13 @@
     if (targetNode == null) {
       throw new WorkflowException("Unable to find target node " + targetName);
     }
-    boolean defaultValue=GetterUtil.getBoolean(transitionElement.elementText("default"));
+    boolean defaultValue=GetterUtil.getBoolean(transitionElement.elementText("default"),true);
     Transition transition=new Transition(transitionName,sourceNode,targetNode,defaultValue);
+    Element timerElement=transitionElement.element("timer");
+    if (timerElement != null) {
+      Timer timer=parseTimerElement(timerElement,false);
+      transition.setTimers(timer);
+    }
     sourceNode.addTransition(transition);
   }
 }

@@ -7,16 +7,5 @@
     kaleoTaskInstance.setDueDate(cal.getTime());
   }
   kaleoTaskInstanceTokenPersistence.update(kaleoTaskInstance,false);
-  KaleoTimer kaleoTimer=null;
-  try {
-    kaleoTimer=kaleoTimerLocalService.getDefaultKaleoTimer(kaleoTaskInstance.getKaleoTaskId());
-  }
- catch (  NoSuchTimerException nste) {
-  }
-  if (kaleoTimer != null) {
-    kaleoTimerInstanceTokenLocalService.deleteKaleoTimerInstanceToken(kaleoTaskInstance.getKaleoInstanceId(),kaleoTimer.getKaleoTimerId());
-    Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTaskInstance.getWorkflowContext());
-    kaleoTimerInstanceTokenLocalService.addKaleoTimerInstanceToken(kaleoTaskInstance.getKaleoInstanceTokenId(),kaleoTimer.getKaleoTimerId(),kaleoTimer.getName(),workflowContext,serviceContext);
-  }
   return kaleoTaskInstance;
 }

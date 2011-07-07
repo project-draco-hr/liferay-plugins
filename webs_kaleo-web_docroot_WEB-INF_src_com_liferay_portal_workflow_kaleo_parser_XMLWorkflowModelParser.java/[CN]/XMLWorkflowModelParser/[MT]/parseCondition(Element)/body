@@ -4,13 +4,15 @@
   String script=conditionElement.elementText("script");
   String scriptLanguage=conditionElement.elementText("script-language");
   Condition condition=new Condition(name,description,script,scriptLanguage);
+  String metadata=conditionElement.elementText("metadata");
+  condition.setMetadata(metadata);
   Element actionsElement=conditionElement.element("actions");
   if (actionsElement != null) {
-    parseActions(actionsElement,condition);
+    parseActionsElement(actionsElement,condition);
   }
   Element timersElement=conditionElement.element("timers");
   if (timersElement != null) {
-    parseTimers(timersElement,condition);
+    parseTimerElements(timersElement,condition);
   }
   return condition;
 }

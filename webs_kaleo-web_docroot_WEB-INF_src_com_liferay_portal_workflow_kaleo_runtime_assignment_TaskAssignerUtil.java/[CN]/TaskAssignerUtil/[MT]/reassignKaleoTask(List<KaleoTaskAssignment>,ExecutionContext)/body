@@ -1,0 +1,10 @@
+{
+  List<KaleoTaskAssignment> kaleoTaskAssignments=new ArrayList<KaleoTaskAssignment>();
+  for (  KaleoTaskAssignment kaleoTaskReassignment : kaleoTaskReassignments) {
+    Collection<KaleoTaskAssignment> calculatedKaleoTaskAssignments=_taskAssignmentSelector.calculateTaskAssignments(kaleoTaskReassignment,executionContext);
+    kaleoTaskAssignments.addAll(calculatedKaleoTaskAssignments);
+  }
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
+  KaleoTaskAssignmentInstanceLocalServiceUtil.deleteKaleoTaskAssignmentInstances(kaleoTaskInstanceToken);
+  KaleoTaskAssignmentInstanceLocalServiceUtil.addTaskAssignmentInstances(kaleoTaskInstanceToken,kaleoTaskAssignments,executionContext.getWorkflowContext(),executionContext.getServiceContext());
+}

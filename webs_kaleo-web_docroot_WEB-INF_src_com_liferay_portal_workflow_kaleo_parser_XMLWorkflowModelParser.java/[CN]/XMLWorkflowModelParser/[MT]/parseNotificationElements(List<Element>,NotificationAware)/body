@@ -1,0 +1,19 @@
+{
+  Set<Notification> notifications=new HashSet<Notification>(notificationElements.size());
+  for (  Element notificationElement : notificationElements) {
+    String name=notificationElement.elementText("name");
+    String description=notificationElement.elementText("description");
+    String executionType=notificationElement.elementText("execution-type");
+    String template=notificationElement.elementText("template");
+    String templateLanguage=notificationElement.elementText("template-language");
+    Notification notification=new Notification(name,description,executionType,template,templateLanguage);
+    List<Element> notificationTypeElements=notificationElement.elements("notification-type");
+    for (    Element notificationTypeElement : notificationTypeElements) {
+      notification.addNotificationType(notificationTypeElement.getText());
+    }
+    Element recipientsElement=notificationElement.element("recipients");
+    parseRecipients(recipientsElement,notification);
+    notifications.add(notification);
+  }
+  notificationAware.setNotifications(notifications);
+}

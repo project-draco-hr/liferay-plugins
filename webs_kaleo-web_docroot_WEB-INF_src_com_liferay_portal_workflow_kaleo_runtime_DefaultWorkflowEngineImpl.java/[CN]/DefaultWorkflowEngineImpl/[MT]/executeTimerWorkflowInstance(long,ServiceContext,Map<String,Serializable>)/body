@@ -2,8 +2,10 @@
   try {
     KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenLocalService.getKaleoTimerInstanceToken(kaleoTimerInstanceTokenId);
     KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTimerInstanceToken.getKaleoTaskInstanceToken();
     KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
     ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,kaleoTimerInstanceToken,workflowContext,serviceContext);
+    executionContext.setKaleoTaskInstanceToken(kaleoTaskInstanceToken);
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(currentKaleoNode.getType()));
     nodeExecutor.executeTimer(currentKaleoNode,executionContext);
     return executionContext;

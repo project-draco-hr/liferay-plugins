@@ -1,0 +1,18 @@
+{
+  if (timersElement == null) {
+    return;
+  }
+  List<Element> timerActionElements=timersElement.elements("timer-action");
+  if (!timerActionElements.isEmpty()) {
+    parseActionElements(timerActionElements,timer);
+  }
+  List<Element> timerNotificationElements=timersElement.elements("timer-notification");
+  if (!timerNotificationElements.isEmpty()) {
+    parseNotificationElements(timerNotificationElements,timer);
+  }
+  Element reassignmentsElement=timersElement.element("reassignments");
+  if (reassignmentsElement != null) {
+    Set<Assignment> assignments=parseAssignments(reassignmentsElement);
+    timer.setReassignments(assignments);
+  }
+}

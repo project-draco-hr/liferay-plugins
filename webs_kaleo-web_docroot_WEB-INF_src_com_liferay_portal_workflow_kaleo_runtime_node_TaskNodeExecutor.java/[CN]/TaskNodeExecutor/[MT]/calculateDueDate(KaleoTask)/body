@@ -1,13 +1,13 @@
 {
-  KaleoTimer kaleoTimer=null;
-  try {
-    kaleoTimer=kaleoTimerLocalService.getDefaultKaleoTimer(kaleoTask.getKaleoTaskId());
-  }
- catch (  NoSuchTimerException nste) {
-  }
-  if (kaleoTimer == null) {
+  List<KaleoTimer> kaleoTimers=kaleoTimerLocalService.getKaleoTimers(KaleoNode.class.getName(),kaleoTask.getKaleoNodeId());
+  if (kaleoTimers.isEmpty()) {
     return null;
   }
-  DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
-  return _dueDateCalculator.getDueDate(new Date(),delayDuration);
+  TreeSet<Date> sortedDueDates=new TreeSet<Date>();
+  for (  KaleoTimer kaleoTimer : kaleoTimers) {
+    DelayDuration delayDuration=new DelayDuration(kaleoTimer.getDuration(),DurationScale.parse(kaleoTimer.getScale()));
+    Date dueDate=_dueDateCalculator.getDueDate(new Date(),delayDuration);
+    sortedDueDates.add(dueDate);
+  }
+  return sortedDueDates.first();
 }
