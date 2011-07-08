@@ -17,6 +17,11 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   List<Group> groups=null;
   int count=0;
+  PortletPreferences preferences=resourceRequest.getPreferences();
+  String portletResource=ParamUtil.getString(resourceRequest,"portletResource");
+  if (Validator.isNotNull(portletResource)) {
+    preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,portletResource);
+  }
   if (directory) {
     LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
     if (userGroups) {
@@ -32,8 +37,12 @@
     count=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
-    count=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
+    groups=SitesUtil.getBookmarkedSites(preferences);
+    count=groups.size();
+    if (groups.isEmpty() || Validator.isNotNull(keywords)) {
+      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
+      count=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
+    }
   }
   jsonObject.put("count",count);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
@@ -60,6 +69,21 @@
       portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
       portletURL.setParameter("addUserIds",String.valueOf(themeDisplay.getUserId()));
       groupJSONObject.put("joinUrl",portletURL.toString());
+    }
+    PortletURL bookmarkPortletURL=resourceResponse.createActionURL();
+    bookmarkPortletURL.setWindowState(WindowState.NORMAL);
+    bookmarkPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateBookmarks");
+    bookmarkPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+    bookmarkPortletURL.setParameter("bookmarkGroupId",String.valueOf(group.getGroupId()));
+    bookmarkPortletURL.setParameter("portletResource",portletResource);
+    String bookmarkGroupIds=preferences.getValue("bookmarkGroupIds",StringPool.BLANK);
+    if (!StringUtil.contains(bookmarkGroupIds,String.valueOf(group.getGroupId()))) {
+      bookmarkPortletURL.setParameter(Constants.CMD,Constants.ADD);
+      groupJSONObject.put("addBookmarkURL",bookmarkPortletURL.toString());
+    }
+ else {
+      bookmarkPortletURL.setParameter(Constants.CMD,Constants.DELETE);
+      groupJSONObject.put("deleteBookmarkURL",bookmarkPortletURL.toString());
     }
     jsonArray.put(groupJSONObject);
   }

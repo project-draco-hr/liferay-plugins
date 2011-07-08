@@ -1,0 +1,30 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  long bookmarkGroupId=ParamUtil.getLong(actionRequest,"bookmarkGroupId");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
+  try {
+    GroupServiceUtil.getGroup(bookmarkGroupId);
+  }
+ catch (  Exception e) {
+    jsonObject.put("result","failure");
+    ServletResponseUtil.write(response,jsonObject.toString());
+    return;
+  }
+  PortletPreferences preferences=actionRequest.getPreferences();
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  if (Validator.isNotNull(portletResource)) {
+    preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  }
+  String bookmarkGroupIds=preferences.getValue("bookmarkGroupIds",StringPool.BLANK);
+  if (cmd.equals(Constants.ADD)) {
+    bookmarkGroupIds=StringUtil.add(bookmarkGroupIds,String.valueOf(bookmarkGroupId));
+  }
+ else   if (cmd.equals(Constants.DELETE)) {
+    bookmarkGroupIds=StringUtil.remove(bookmarkGroupIds,String.valueOf(bookmarkGroupId));
+  }
+  preferences.setValue("bookmarkGroupIds",bookmarkGroupIds);
+  preferences.store();
+  jsonObject.put("result","success");
+  ServletResponseUtil.write(response,jsonObject.toString());
+}
