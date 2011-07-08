@@ -12,8 +12,9 @@
     cronText=new CronText(dueDateCalendar);
   }
  else {
-    DelayDuration recurrence=new DelayDuration(kaleoTimer.getRecurrenceDuration(),DurationScale.parse(kaleoTimer.getRecurrenceScale()));
-    cronText=new CronText(dueDateCalendar,recurrence.getDurationScale().getIntValue(),(int)recurrence.getDuration());
+    DelayDuration recurrenceDelayDuration=new DelayDuration(kaleoTimer.getRecurrenceDuration(),DurationScale.parse(kaleoTimer.getRecurrenceScale()));
+    DurationScale durationScale=recurrenceDelayDuration.getDurationScale();
+    cronText=new CronText(dueDateCalendar,durationScale.getIntegerValue(),(int)recurrenceDelayDuration.getDuration());
   }
   Trigger trigger=new CronTrigger(groupName,groupName,cronText.toString());
   Message message=new Message();
