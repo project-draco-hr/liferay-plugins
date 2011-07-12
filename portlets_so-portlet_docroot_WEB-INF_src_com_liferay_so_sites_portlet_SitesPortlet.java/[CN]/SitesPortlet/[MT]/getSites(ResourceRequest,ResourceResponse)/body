@@ -37,7 +37,7 @@
     count=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    groups=SitesUtil.getBookmarkedSites(preferences);
+    groups=SitesUtil.getStarredSites(preferences);
     count=groups.size();
     if (groups.isEmpty() || Validator.isNotNull(keywords)) {
       groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
@@ -70,20 +70,20 @@
       portletURL.setParameter("addUserIds",String.valueOf(themeDisplay.getUserId()));
       groupJSONObject.put("joinUrl",portletURL.toString());
     }
-    PortletURL bookmarkPortletURL=resourceResponse.createActionURL();
-    bookmarkPortletURL.setWindowState(WindowState.NORMAL);
-    bookmarkPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateBookmarks");
-    bookmarkPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
-    bookmarkPortletURL.setParameter("bookmarkGroupId",String.valueOf(group.getGroupId()));
-    bookmarkPortletURL.setParameter("portletResource",portletResource);
-    String bookmarkGroupIds=preferences.getValue("bookmarkGroupIds",StringPool.BLANK);
-    if (!StringUtil.contains(bookmarkGroupIds,String.valueOf(group.getGroupId()))) {
-      bookmarkPortletURL.setParameter(Constants.CMD,Constants.ADD);
-      groupJSONObject.put("addBookmarkURL",bookmarkPortletURL.toString());
+    PortletURL starPortletURL=resourceResponse.createActionURL();
+    starPortletURL.setWindowState(WindowState.NORMAL);
+    starPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateStars");
+    starPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+    starPortletURL.setParameter("starredGroupId",String.valueOf(group.getGroupId()));
+    starPortletURL.setParameter("portletResource",portletResource);
+    String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+    if (!StringUtil.contains(starredGroupIds,String.valueOf(group.getGroupId()))) {
+      starPortletURL.setParameter(Constants.CMD,Constants.ADD);
+      groupJSONObject.put("starURL",starPortletURL.toString());
     }
  else {
-      bookmarkPortletURL.setParameter(Constants.CMD,Constants.DELETE);
-      groupJSONObject.put("deleteBookmarkURL",bookmarkPortletURL.toString());
+      starPortletURL.setParameter(Constants.CMD,Constants.DELETE);
+      groupJSONObject.put("unstarURL",starPortletURL.toString());
     }
     jsonArray.put(groupJSONObject);
   }
