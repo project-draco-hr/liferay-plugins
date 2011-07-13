@@ -7,17 +7,16 @@
   String title=ParamUtil.getString(actionRequest,"title");
   String content=ParamUtil.getString(actionRequest,"content");
   String description=ParamUtil.getString(actionRequest,"description");
-  long kbTemplateId=ParamUtil.getLong(actionRequest,"kbTemplateId");
   String[] sections=actionRequest.getParameterValues("sections");
   String dirName=ParamUtil.getString(actionRequest,"dirName");
   int workflowAction=ParamUtil.getInteger(actionRequest,"workflowAction",WorkflowConstants.ACTION_PUBLISH);
   KBArticle kbArticle=null;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,content,description,kbTemplateId,sections,dirName,serviceContext);
+    kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,content,description,sections,dirName,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,kbTemplateId,sections,dirName,serviceContext);
+    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,sections,dirName,serviceContext);
   }
   if (!cmd.equals(Constants.ADD) && !cmd.equals(Constants.UPDATE)) {
     return;
