@@ -17,11 +17,7 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   List<Group> groups=null;
   int count=0;
-  PortletPreferences preferences=resourceRequest.getPreferences();
-  String portletResource=ParamUtil.getString(resourceRequest,"portletResource");
-  if (Validator.isNotNull(portletResource)) {
-    preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,portletResource);
-  }
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,"5_WAR_soportlet");
   if (directory) {
     LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
     if (userGroups) {
@@ -75,7 +71,6 @@
     starPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateStars");
     starPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
     starPortletURL.setParameter("starredGroupId",String.valueOf(group.getGroupId()));
-    starPortletURL.setParameter("portletResource",portletResource);
     String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
     if (!StringUtil.contains(starredGroupIds,String.valueOf(group.getGroupId()))) {
       starPortletURL.setParameter(Constants.CMD,Constants.ADD);

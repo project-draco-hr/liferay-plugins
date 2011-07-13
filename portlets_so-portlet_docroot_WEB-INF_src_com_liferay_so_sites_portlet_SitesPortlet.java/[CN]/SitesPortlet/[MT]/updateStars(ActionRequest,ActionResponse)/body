@@ -11,11 +11,7 @@
     ServletResponseUtil.write(response,jsonObject.toString());
     return;
   }
-  PortletPreferences preferences=actionRequest.getPreferences();
-  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
-  if (Validator.isNotNull(portletResource)) {
-    preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
-  }
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,"5_WAR_soportlet");
   String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
   if (cmd.equals(Constants.ADD)) {
     starredGroupIds=StringUtil.add(starredGroupIds,String.valueOf(starredGroupId));
