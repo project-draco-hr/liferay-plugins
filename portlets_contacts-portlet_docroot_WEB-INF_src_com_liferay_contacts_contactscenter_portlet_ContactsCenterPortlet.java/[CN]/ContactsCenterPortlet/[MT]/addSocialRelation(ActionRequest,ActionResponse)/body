@@ -4,10 +4,7 @@
   int type=ParamUtil.getInteger(actionRequest,"type");
   boolean blocked=SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY);
   if (type == SocialRelationConstants.TYPE_UNI_ENEMY) {
-    List<SocialRelation> relations=SocialRelationLocalServiceUtil.getRelations(themeDisplay.getUserId(),userId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-    for (    SocialRelation relation : relations) {
-      SocialRelationLocalServiceUtil.deleteRelation(relation);
-    }
+    SocialRelationLocalServiceUtil.deleteRelations(themeDisplay.getUserId(),userId);
   }
  else   if (blocked) {
     return;
