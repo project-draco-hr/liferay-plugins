@@ -1,7 +1,9 @@
 {
+  SearchContext searchContext=new SearchContext();
+  searchContext.setSearchEngineId(SearchEngineUtil.SYSTEM_ENGINE_ID);
   if (obj instanceof Account) {
     Account account=(Account)obj;
-    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create();
+    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
     booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
     booleanQuery.addRequiredTerm("accountId",account.getAccountId());
     Hits hits=SearchEngineUtil.search(account.getCompanyId(),booleanQuery,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
@@ -12,7 +14,7 @@
   }
  else   if (obj instanceof Folder) {
     Folder folder=(Folder)obj;
-    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create();
+    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
     booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
     booleanQuery.addRequiredTerm("folderId",folder.getFolderId());
     Hits hits=SearchEngineUtil.search(folder.getCompanyId(),booleanQuery,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
