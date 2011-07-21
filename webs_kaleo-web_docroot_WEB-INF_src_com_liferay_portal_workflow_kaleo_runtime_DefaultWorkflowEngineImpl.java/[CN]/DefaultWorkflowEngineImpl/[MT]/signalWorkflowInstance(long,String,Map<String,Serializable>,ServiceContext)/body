@@ -2,6 +2,10 @@
   try {
     KaleoInstance kaleoInstance=doUpdateContext(workflowInstanceId,workflowContext,serviceContext);
     KaleoInstanceToken kaleoInstanceToken=kaleoInstance.getRootKaleoInstanceToken(serviceContext);
+    if (Validator.isNotNull(transitionName)) {
+      KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
+      currentKaleoNode.getKaleoTransition(transitionName);
+    }
     serviceContext.setScopeGroupId(kaleoInstanceToken.getGroupId());
     return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,workflowContext);
   }
