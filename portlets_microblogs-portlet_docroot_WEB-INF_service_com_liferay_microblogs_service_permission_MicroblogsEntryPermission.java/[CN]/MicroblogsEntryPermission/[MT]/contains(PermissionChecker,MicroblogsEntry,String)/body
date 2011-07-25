@@ -1,6 +1,9 @@
 {
-  if (permissionChecker.getUserId() == microblogsEntry.getUserId()) {
-    return true;
+  if (actionId.equals(ActionKeys.UPDATE) || actionId.equals(ActionKeys.DELETE)) {
+    if (permissionChecker.hasOwnerPermission(microblogsEntry.getCompanyId(),MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getUserId(),actionId)) {
+      return true;
+    }
+    return false;
   }
   if (permissionChecker.hasOwnerPermission(microblogsEntry.getCompanyId(),MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getUserId(),actionId)) {
     return true;
