@@ -1,0 +1,14 @@
+{
+  if (formElements.isEmpty()) {
+    return;
+  }
+  Set<Form> forms=new HashSet<Form>(formElements.size());
+  for (  Element formElement : formElements) {
+    long formTemplateId=GetterUtil.getLong(formElement.elementText("form-template-id"));
+    Form form=new Form(formTemplateId);
+    forms.add(form);
+    String description=formElement.elementText("description");
+    form.setDescription(description);
+  }
+  task.setForms(forms);
+}

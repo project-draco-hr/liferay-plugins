@@ -1,0 +1,12 @@
+{
+  if (_service == null) {
+    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KaleoTaskFormLocalService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,KaleoTaskFormLocalService.class.getName(),portletClassLoader);
+    _service=new KaleoTaskFormLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+    ReferenceRegistry.registerReference(KaleoTaskFormLocalServiceUtil.class,"_service");
+    MethodCache.remove(KaleoTaskFormLocalService.class);
+  }
+  return _service;
+}

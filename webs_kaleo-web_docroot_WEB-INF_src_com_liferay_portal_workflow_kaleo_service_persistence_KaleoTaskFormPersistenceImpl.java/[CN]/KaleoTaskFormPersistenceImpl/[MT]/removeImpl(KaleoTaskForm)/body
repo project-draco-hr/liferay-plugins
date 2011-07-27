@@ -1,0 +1,17 @@
+{
+  kaleoTaskForm=toUnwrappedModel(kaleoTaskForm);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,kaleoTaskForm);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.removeResult(KaleoTaskFormModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskFormImpl.class,kaleoTaskForm.getPrimaryKey());
+  return kaleoTaskForm;
+}
