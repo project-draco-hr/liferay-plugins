@@ -2,21 +2,15 @@
   Session session=null;
   try {
     session=openSession();
-    String sql=CustomSQLUtil.get(COUNT_BY_U_MU);
+    String sql=CustomSQLUtil.get(FIND_BY_U_MU);
     SQLQuery q=session.createSQLQuery(sql);
-    q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
+    q.addEntity("MicroblogsEntry",MicroblogsEntryImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
     qPos.add(userId);
+    qPos.add(type);
     qPos.add(microblogsEntryUserId);
-    Iterator<Long> itr=q.list().iterator();
-    if (itr.hasNext()) {
-      Long count=itr.next();
-      if (count != null) {
-        return count.intValue();
-      }
-    }
-    return 0;
+    return (List<MicroblogsEntry>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
     throw new SystemException(e);
