@@ -35,7 +35,8 @@
     subject=AdminUtil.getEmailKBArticleUpdatedSubject(preferences);
     body=AdminUtil.getEmailKBArticleUpdatedBody(preferences);
   }
-  String portletId=serviceContext.getPortletPreferencesIds().getPortletId();
+  PortletPreferencesIds portletPreferencesIds=serviceContext.getPortletPreferencesIds();
+  String portletId=portletPreferencesIds.getPortletId();
   long groupId=kbArticle.getGroupId();
   Group group=GroupLocalServiceUtil.getGroup(groupId);
   if (group.isLayout()) {
@@ -48,7 +49,7 @@
   subscriptionSender.setContextUserPrefix("ARTICLE");
   subscriptionSender.setFrom(fromAddress,fromName);
   subscriptionSender.setGroupId(groupId);
-  subscriptionSender.setScopeGroupId(serviceContext.getScopeGroupId());
+  subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
   subscriptionSender.setPortletId(portletId);
   subscriptionSender.setHtmlFormat(true);
   subscriptionSender.setMailId("kb_article",kbArticle.getKbArticleId());
