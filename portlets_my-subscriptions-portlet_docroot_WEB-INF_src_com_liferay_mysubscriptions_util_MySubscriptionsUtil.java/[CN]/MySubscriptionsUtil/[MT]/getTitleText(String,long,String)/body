@@ -8,7 +8,12 @@
   if (className.equals(MBCategory.class.getName())) {
     title="Message Board at ";
   }
-  title+=getGroupTitle(className,classPK);
+  try {
+    Group group=GroupLocalServiceUtil.getGroup(classPK);
+    title+=group.getDescriptiveName();
+  }
+ catch (  Exception e) {
+  }
   if (Validator.isNull(title)) {
     title=String.valueOf(classPK);
   }
