@@ -35,25 +35,17 @@
     subject=AdminUtil.getEmailKBArticleUpdatedSubject(preferences);
     body=AdminUtil.getEmailKBArticleUpdatedBody(preferences);
   }
-  PortletPreferencesIds portletPreferencesIds=serviceContext.getPortletPreferencesIds();
-  String portletId=portletPreferencesIds.getPortletId();
-  long groupId=kbArticle.getGroupId();
-  Group group=GroupLocalServiceUtil.getGroup(groupId);
-  if (group.isLayout()) {
-    groupId=group.getParentGroupId();
-  }
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(kbArticle,serviceContext);
   subscriptionSender.setBody(body);
   subscriptionSender.setCompanyId(kbArticle.getCompanyId());
   subscriptionSender.setContextAttributes("[$ARTICLE_CONTENT$]",kbArticleContent,"[$ARTICLE_CONTENT_DIFF$]",kbArticleDiffs.get("content"),"[$ARTICLE_TITLE$]",kbArticle.getTitle(),"[$ARTICLE_TITLE_DIFF$]",kbArticleDiffs.get("title"));
   subscriptionSender.setContextUserPrefix("ARTICLE");
   subscriptionSender.setFrom(fromAddress,fromName);
-  subscriptionSender.setGroupId(groupId);
-  subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
-  subscriptionSender.setPortletId(portletId);
   subscriptionSender.setHtmlFormat(true);
   subscriptionSender.setMailId("kb_article",kbArticle.getKbArticleId());
+  subscriptionSender.setPortletId(serviceContext.getPortletId());
   subscriptionSender.setReplyToAddress(fromAddress);
+  subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
   subscriptionSender.setSubject(subject);
   subscriptionSender.setUserId(kbArticle.getUserId());
   subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getGroupId());
