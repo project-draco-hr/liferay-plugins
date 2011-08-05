@@ -1,0 +1,19 @@
+{
+  app=toUnwrappedModel(app);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,app);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  AppModelImpl appModelImpl=(AppModelImpl)app;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,new Object[]{Long.valueOf(appModelImpl.getMarketplaceAppId())});
+  EntityCacheUtil.removeResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey());
+  return app;
+}

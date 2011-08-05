@@ -1,0 +1,28 @@
+{
+  App app=(App)EntityCacheUtil.getResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,appId,this);
+  if (app == _nullApp) {
+    return null;
+  }
+  if (app == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      app=(App)session.get(AppImpl.class,Long.valueOf(appId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (app != null) {
+        cacheResult(app);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,appId,_nullApp);
+      }
+      closeSession(session);
+    }
+  }
+  return app;
+}

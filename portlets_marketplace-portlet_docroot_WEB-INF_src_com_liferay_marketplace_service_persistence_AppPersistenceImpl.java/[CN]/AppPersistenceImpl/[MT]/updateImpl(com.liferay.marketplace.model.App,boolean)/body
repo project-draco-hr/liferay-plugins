@@ -1,0 +1,30 @@
+{
+  app=toUnwrappedModel(app);
+  boolean isNew=app.isNew();
+  AppModelImpl appModelImpl=(AppModelImpl)app;
+  if (Validator.isNull(app.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    app.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,app,merge);
+    app.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey(),app);
+  if (!isNew && (app.getMarketplaceAppId() != appModelImpl.getOriginalMarketplaceAppId())) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,new Object[]{Long.valueOf(appModelImpl.getOriginalMarketplaceAppId())});
+  }
+  if (isNew || (app.getMarketplaceAppId() != appModelImpl.getOriginalMarketplaceAppId())) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,new Object[]{Long.valueOf(app.getMarketplaceAppId())},app);
+  }
+  return app;
+}

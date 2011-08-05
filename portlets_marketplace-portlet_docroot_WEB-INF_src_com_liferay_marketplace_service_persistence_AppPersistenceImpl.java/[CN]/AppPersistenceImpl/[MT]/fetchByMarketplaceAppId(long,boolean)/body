@@ -1,0 +1,51 @@
+{
+  Object[] finderArgs=new Object[]{marketplaceAppId};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,finderArgs,this);
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(2);
+    query.append(_SQL_SELECT_APP_WHERE);
+    query.append(_FINDER_COLUMN_MARKETPLACEAPPID_MARKETPLACEAPPID_2);
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(marketplaceAppId);
+      List<App> list=q.list();
+      result=list;
+      App app=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,finderArgs,list);
+      }
+ else {
+        app=list.get(0);
+        cacheResult(app);
+        if ((app.getMarketplaceAppId() != marketplaceAppId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,finderArgs,app);
+        }
+      }
+      return app;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MARKETPLACEAPPID,finderArgs);
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (App)result;
+    }
+  }
+}

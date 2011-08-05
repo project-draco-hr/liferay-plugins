@@ -1,0 +1,19 @@
+{
+  module=toUnwrappedModel(module);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,module);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  ModuleModelImpl moduleModelImpl=(ModuleModelImpl)module;
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_C,new Object[]{Long.valueOf(moduleModelImpl.getAppId()),moduleModelImpl.getContextName()});
+  EntityCacheUtil.removeResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,module.getPrimaryKey());
+  return module;
+}

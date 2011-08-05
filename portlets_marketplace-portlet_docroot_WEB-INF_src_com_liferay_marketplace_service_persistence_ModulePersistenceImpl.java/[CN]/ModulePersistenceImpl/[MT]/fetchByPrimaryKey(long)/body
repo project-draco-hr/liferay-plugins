@@ -1,0 +1,28 @@
+{
+  Module module=(Module)EntityCacheUtil.getResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId,this);
+  if (module == _nullModule) {
+    return null;
+  }
+  if (module == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      module=(Module)session.get(ModuleImpl.class,Long.valueOf(moduleId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (module != null) {
+        cacheResult(module);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId,_nullModule);
+      }
+      closeSession(session);
+    }
+  }
+  return module;
+}
