@@ -6,19 +6,18 @@
   String to=ParamUtil.getString(uploadRequest,"to");
   String subject=ParamUtil.getString(uploadRequest,"subject");
   String body=ParamUtil.getString(uploadRequest,"body");
-  List<ObjectValuePair<String,byte[]>> files=new ArrayList<ObjectValuePair<String,byte[]>>();
+  List<ObjectValuePair<String,File>> files=new ArrayList<ObjectValuePair<String,File>>();
   for (int i=1; i <= 3; i++) {
     File file=uploadRequest.getFile("msgFile" + i);
     String fileName=uploadRequest.getFileName("msgFile" + i);
     try {
-      byte[] bytes=FileUtil.getBytes(file);
-      if ((bytes != null) && (bytes.length > 0)) {
-        ObjectValuePair<String,byte[]> ovp=new ObjectValuePair<String,byte[]>(fileName,bytes);
+      if ((file != null) && (file.length() > 0)) {
+        ObjectValuePair<String,File> ovp=new ObjectValuePair<String,File>(fileName,file);
         files.add(ovp);
       }
     }
- catch (    IOException ioe) {
-      _log.error("unable to attach file " + fileName,ioe);
+ catch (    Exception e) {
+      _log.error("unable to attach file " + fileName,e);
     }
   }
   UserThreadLocalServiceUtil.addPrivateMessage(userId,mbThreadId,to,subject,body,files,themeDisplay);
