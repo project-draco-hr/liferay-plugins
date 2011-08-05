@@ -1,0 +1,31 @@
+{
+  App app=appPersistence.findByMarketplaceAppId(marketplaceAppId);
+  if (!DLStoreUtil.hasFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath())) {
+    throw new DownloadNotFoundException();
+  }
+  String tmpDir=SystemProperties.get(SystemProperties.TMP_DIR) + StringPool.SLASH + Time.getTimestamp();
+  try {
+    File liferayPackage=DLStoreUtil.getFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath());
+    ZipFile zipFile=new ZipFile(liferayPackage);
+    Enumeration enu=zipFile.entries();
+    while (enu.hasMoreElements()) {
+      ZipEntry entry=(ZipEntry)enu.nextElement();
+      String fileName=entry.getName();
+      if (_log.isInfoEnabled()) {
+        _log.info("Extracting " + fileName + " from appId "+ app.getAppId());
+      }
+      InputStream is=zipFile.getInputStream(entry);
+      File tempPluginPackage=new File(tmpDir + StringPool.SLASH + fileName);
+      FileUtil.write(tempPluginPackage,is);
+      String context=getContext(fileName);
+      DeployManagerUtil.deploy(tempPluginPackage,context);
+      moduleLocalService.addModule(app.getUserId(),app.getAppId(),context);
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+ finally {
+    FileUtil.deltree(tmpDir);
+  }
+}

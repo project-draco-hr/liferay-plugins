@@ -1,0 +1,15 @@
+{
+  validate(version,0);
+  App app=appPersistence.findByPrimaryKey(appId);
+  app.setModifiedDate(new Date());
+  app.setVersion(version);
+  if (is != null) {
+    try {
+      DLStoreUtil.deleteFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath());
+    }
+ catch (    Exception e) {
+    }
+    DLStoreUtil.addFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath(),false,is);
+  }
+  return app;
+}
