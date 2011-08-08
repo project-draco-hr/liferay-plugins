@@ -42,6 +42,7 @@
   }
   jsonObject.put("count",count);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
   for (  Group group : groups) {
     JSONObject groupJSONObject=JSONFactoryUtil.createJSONObject();
     groupJSONObject.put("name",group.getDescriptiveName());
@@ -71,7 +72,6 @@
     starPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateStars");
     starPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
     starPortletURL.setParameter("starredGroupId",String.valueOf(group.getGroupId()));
-    String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
     if (!StringUtil.contains(starredGroupIds,String.valueOf(group.getGroupId()))) {
       starPortletURL.setParameter(Constants.CMD,Constants.ADD);
       groupJSONObject.put("starURL",starPortletURL.toString());
