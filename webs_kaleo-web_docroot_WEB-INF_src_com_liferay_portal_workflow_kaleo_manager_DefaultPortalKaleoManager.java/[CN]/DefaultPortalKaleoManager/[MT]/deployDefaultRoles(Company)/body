@@ -2,12 +2,13 @@
   User defaultUser=UserLocalServiceUtil.getDefaultUser(company.getCompanyId());
   for (  Map.Entry<String,String> entry : _defaultRoles.entrySet()) {
     String name=entry.getKey();
-    String description=entry.getValue();
     try {
       RoleLocalServiceUtil.getRole(company.getCompanyId(),name);
     }
  catch (    NoSuchRoleException nsre) {
-      RoleLocalServiceUtil.addRole(defaultUser.getUserId(),company.getCompanyId(),name,null,description,RoleConstants.TYPE_REGULAR);
+      Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+      descriptionMap.put(LocaleUtil.getDefault(),entry.getValue());
+      RoleLocalServiceUtil.addRole(defaultUser.getUserId(),company.getCompanyId(),name,null,descriptionMap,RoleConstants.TYPE_REGULAR);
     }
   }
 }
