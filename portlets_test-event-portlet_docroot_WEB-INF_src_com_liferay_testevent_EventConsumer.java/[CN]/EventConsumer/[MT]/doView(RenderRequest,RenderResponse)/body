@@ -1,20 +1,19 @@
 {
   PrintWriter writer=response.getWriter();
-  if (runTest) {
-    writer.write("Click 'Process Event' to run test");
+  try {
+    if (_runTest) {
+      writer.write("Click 'Process Event' to run test");
+      return;
+    }
+    if (_passedTest) {
+      writer.write("PASSED");
+    }
+ else {
+      writer.write("FAILED");
+    }
   }
- else {
-    try {
-      if (passed) {
-        writer.write("PASSED");
-      }
- else {
-        writer.write("FAILED");
-      }
-    }
   finally {
-      writer.close();
-      runTest=true;
-    }
+    writer.close();
+    _runTest=true;
   }
 }
