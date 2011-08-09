@@ -16,8 +16,8 @@
   jsonObject.put("options",optionsJSONObject);
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   List<Group> groups=null;
-  int count=0;
-  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,"5_WAR_soportlet");
+  int groupsCount=0;
+  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,"5_WAR_soportlet");
   if (directory) {
     LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
     if (userGroups) {
@@ -30,23 +30,23 @@
       params.put("types",types);
     }
     groups=GroupLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,null,params,start,end,new GroupNameComparator(true));
-    count=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
+    groupsCount=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    groups=SitesUtil.getStarredSites(preferences);
-    count=groups.size();
+    groups=SitesUtil.getStarredSites(portletPreferences);
+    groupsCount=groups.size();
     if (groups.isEmpty() || Validator.isNotNull(keywords)) {
       groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
-      count=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
+      groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
     }
   }
-  jsonObject.put("count",count);
+  jsonObject.put("count",groupsCount);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+  String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   for (  Group group : groups) {
     JSONObject groupJSONObject=JSONFactoryUtil.createJSONObject();
-    groupJSONObject.put("name",group.getDescriptiveName());
     groupJSONObject.put("description",group.getDescription());
+    groupJSONObject.put("name",group.getDescriptiveName());
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
       PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.MY_SITES,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
       portletURL.setWindowState(WindowState.NORMAL);
@@ -83,6 +83,5 @@
     jsonArray.put(groupJSONObject);
   }
   jsonObject.put("sites",jsonArray);
-  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
-  ServletResponseUtil.write(response,jsonObject.toString());
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
 }

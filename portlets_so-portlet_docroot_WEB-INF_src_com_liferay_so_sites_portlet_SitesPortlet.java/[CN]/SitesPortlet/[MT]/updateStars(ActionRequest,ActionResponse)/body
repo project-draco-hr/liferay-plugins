@@ -2,25 +2,24 @@
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long starredGroupId=ParamUtil.getLong(actionRequest,"starredGroupId");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
   try {
     GroupServiceUtil.getGroup(starredGroupId);
   }
  catch (  Exception e) {
     jsonObject.put("result","failure");
-    ServletResponseUtil.write(response,jsonObject.toString());
+    writeJSON(actionRequest,actionResponse,jsonObject);
     return;
   }
-  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,"5_WAR_soportlet");
-  String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,"5_WAR_soportlet");
+  String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   if (cmd.equals(Constants.ADD)) {
     starredGroupIds=StringUtil.add(starredGroupIds,String.valueOf(starredGroupId));
   }
  else   if (cmd.equals(Constants.DELETE)) {
     starredGroupIds=StringUtil.remove(starredGroupIds,String.valueOf(starredGroupId));
   }
-  preferences.setValue("starredGroupIds",starredGroupIds);
-  preferences.store();
+  portletPreferences.setValue("starredGroupIds",starredGroupIds);
+  portletPreferences.store();
   jsonObject.put("result","success");
-  ServletResponseUtil.write(response,jsonObject.toString());
+  writeJSON(actionRequest,actionResponse,jsonObject);
 }
