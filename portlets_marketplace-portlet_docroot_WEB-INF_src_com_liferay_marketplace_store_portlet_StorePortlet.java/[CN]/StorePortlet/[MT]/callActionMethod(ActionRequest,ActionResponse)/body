@@ -1,0 +1,27 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (Validator.isNull(cmd)) {
+    return super.callActionMethod(actionRequest,actionResponse);
+  }
+  try {
+    if (cmd.equals("download")) {
+      downloadApp(actionRequest,actionResponse);
+    }
+ else     if (cmd.equals("get")) {
+      getApp(actionRequest,actionResponse);
+    }
+ else     if (cmd.equals("install")) {
+      installApp(actionRequest,actionResponse);
+    }
+ else     if (cmd.equals("uninstall")) {
+      uninstallApp(actionRequest,actionResponse);
+    }
+ else {
+      return super.callActionMethod(actionRequest,actionResponse);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+  return true;
+}

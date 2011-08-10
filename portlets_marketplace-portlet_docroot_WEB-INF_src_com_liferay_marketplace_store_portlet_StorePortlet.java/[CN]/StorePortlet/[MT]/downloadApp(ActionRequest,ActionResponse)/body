@@ -1,0 +1,16 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long marketplaceAppId=ParamUtil.getLong(actionRequest,"appId");
+  String version=ParamUtil.getString(actionRequest,"version");
+  String url=ParamUtil.getString(actionRequest,"url");
+  URL marketplaceURL=new URL(url);
+  InputStream is=marketplaceURL.openStream();
+  App app=AppLocalServiceUtil.fetchApp(marketplaceAppId);
+  if (app == null) {
+    app=AppLocalServiceUtil.addApp(themeDisplay.getUserId(),marketplaceAppId,version,is);
+  }
+ else {
+    app=AppLocalServiceUtil.updateApp(app.getAppId(),version,is);
+  }
+  sendJSONResponse(actionResponse,"success");
+}
