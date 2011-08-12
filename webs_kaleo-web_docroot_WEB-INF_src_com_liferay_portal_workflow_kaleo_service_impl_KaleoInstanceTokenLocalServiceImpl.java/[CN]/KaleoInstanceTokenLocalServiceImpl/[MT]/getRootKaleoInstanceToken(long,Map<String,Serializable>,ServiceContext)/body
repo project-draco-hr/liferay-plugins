@@ -4,7 +4,7 @@
   if (rootKaleoInstanceTokenId > 0) {
     return kaleoInstanceTokenPersistence.findByPrimaryKey(rootKaleoInstanceTokenId);
   }
-  User user=userPersistence.findByPrimaryKey(serviceContext.getUserId());
+  User user=UserUtil.getServiceContextUser(serviceContext,userPersistence,userLocalService);
   Date now=new Date();
   rootKaleoInstanceTokenId=counterLocalService.increment();
   KaleoInstanceToken kaleoInstanceToken=kaleoInstanceTokenPersistence.create(rootKaleoInstanceTokenId);
