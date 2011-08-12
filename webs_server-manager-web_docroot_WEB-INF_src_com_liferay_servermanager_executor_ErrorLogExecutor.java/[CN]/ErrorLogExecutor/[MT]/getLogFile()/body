@@ -1,0 +1,11 @@
+{
+  File logFile=null;
+  if (ServerDetector.isJBoss()) {
+    File logDirectory=new File(System.getProperty("jboss.server.log.dir"));
+    logFile=new File(logDirectory,"boot.log");
+  }
+ else   if (ServerDetector.isTomcat()) {
+    logFile=new File(System.getProperty("catalina.base") + "/logs/catalina." + getTomcatDateString()+ ".log");
+  }
+  return logFile;
+}

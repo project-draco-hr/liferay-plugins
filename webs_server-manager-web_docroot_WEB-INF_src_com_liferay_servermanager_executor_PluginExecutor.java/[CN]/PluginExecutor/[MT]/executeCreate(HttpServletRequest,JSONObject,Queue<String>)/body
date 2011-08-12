@@ -1,0 +1,22 @@
+{
+  File tempFile=getTempFile(request,responseJSONObject);
+  if (tempFile == null) {
+    return;
+  }
+  String context=arguments.poll();
+  DeployManagerUtil.deploy(tempFile,context);
+  boolean success=FileUtils.deleteQuietly(tempFile.getParentFile());
+  if (success) {
+    return;
+  }
+  String message="Could not remove temp directory " + tempFile.getParentFile();
+  _log.error(message);
+  responseJSONObject.put(JSONKeys.ERROR,message);
+  success=FileUtils.deleteQuietly(tempFile);
+  if (success) {
+    return;
+  }
+  message="Could not remove temp file " + tempFile;
+  _log.error(message);
+  responseJSONObject.put(JSONKeys.ERROR,message);
+}

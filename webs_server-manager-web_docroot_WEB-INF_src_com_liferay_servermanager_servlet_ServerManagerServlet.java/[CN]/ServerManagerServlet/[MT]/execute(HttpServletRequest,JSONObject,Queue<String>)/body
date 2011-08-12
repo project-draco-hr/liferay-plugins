@@ -1,0 +1,23 @@
+{
+  Executor executor=_executor;
+  while (true) {
+    Executor nextExecutor=executor.getNextExecutor(arguments);
+    if (nextExecutor == null) {
+      break;
+    }
+    executor=nextExecutor;
+  }
+  String method=request.getMethod();
+  if (method.equalsIgnoreCase(HttpMethods.DELETE)) {
+    executor.executeDelete(request,responseJSONObject,arguments);
+  }
+ else   if (method.equalsIgnoreCase(HttpMethods.GET)) {
+    executor.executeRead(request,responseJSONObject,arguments);
+  }
+ else   if (method.equalsIgnoreCase(HttpMethods.POST)) {
+    executor.executeCreate(request,responseJSONObject,arguments);
+  }
+ else   if (method.equalsIgnoreCase(HttpMethods.PUT)) {
+    executor.executeUpdate(request,responseJSONObject,arguments);
+  }
+}

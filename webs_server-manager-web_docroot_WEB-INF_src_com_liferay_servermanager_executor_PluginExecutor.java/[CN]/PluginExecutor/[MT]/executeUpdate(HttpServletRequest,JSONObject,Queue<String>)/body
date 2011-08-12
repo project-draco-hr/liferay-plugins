@@ -1,0 +1,33 @@
+{
+  String context=arguments.poll();
+  File contextDirectory=getDeployDirectory(context);
+  if (!contextDirectory.exists()) {
+    responseJSONObject.put(JSONKeys.ERROR,"Context directory " + contextDirectory.getAbsolutePath() + " does not exist");
+    responseJSONObject.put(JSONKeys.STATUS,1);
+    return;
+  }
+  File tempFile=getTempFile(request,responseJSONObject);
+  if (tempFile == null) {
+    return;
+  }
+  FileUtil.unzip(tempFile,contextDirectory);
+  File partialAppDeletePropsFile=new File(contextDirectory,"META-INF/liferay-partialapp-delete.props");
+  if (!partialAppDeletePropsFile.exists()) {
+    return;
+  }
+  BufferedReader bufferedReader=new BufferedReader(new FileReader(partialAppDeletePropsFile));
+  String line=null;
+  while ((line=bufferedReader.readLine()) != null) {
+    File staleFile=new File(contextDirectory,line.trim());
+    if (!staleFile.exists()) {
+      continue;
+    }
+    boolean success=FileUtils.deleteQuietly(staleFile);
+    if (!success) {
+      String message="Could not delete file " + staleFile.getAbsolutePath();
+      _log.error(message);
+      responseJSONObject.put(JSONKeys.ERROR,message);
+    }
+  }
+  FileUtils.deleteQuietly(partialAppDeletePropsFile);
+}
