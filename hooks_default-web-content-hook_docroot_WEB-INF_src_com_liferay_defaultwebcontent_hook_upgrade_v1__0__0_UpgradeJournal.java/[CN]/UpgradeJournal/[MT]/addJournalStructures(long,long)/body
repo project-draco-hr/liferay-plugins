@@ -1,26 +1,19 @@
 {
+  Map<Locale,String> nameMap=new HashMap<Locale,String>();
+  nameMap.put(LocaleUtil.getDefault(),"Article");
+  Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+  descriptionMap.put(LocaleUtil.getDefault(),"This structure accommodates article title, both main, and " + "preview images, and the main article body.");
+  String xsd=getFileAsString("/structures/article.xml");
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
-  Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
-  Map<Locale,String> nameMap=new HashMap<Locale,String>();
-  String structureId="ARTICLE";
-  nameMap.put(LocaleUtil.getDefault(),"Article");
-  descriptionMap.put(LocaleUtil.getDefault(),"This structure accommodates article title, both main, and " + "preview images, and the main article body.");
-  String xsd=getFileAsString("/structures/article.xml");
-  JournalStructureLocalServiceUtil.addStructure(userId,groupId,structureId,false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
-  nameMap.clear();
-  descriptionMap.clear();
-  structureId="MULTIPLE-ITEM-CAROUSEL";
+  JournalStructureLocalServiceUtil.addStructure(userId,groupId,"ARTICLE",false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
   nameMap.put(LocaleUtil.getDefault(),"Carousel");
   descriptionMap.put(LocaleUtil.getDefault(),"This is a simple carousel structure designed to handle other " + "necessary carousel configurations.");
   xsd=getFileAsString("/structures/multiple_item_carousel.xml");
-  JournalStructureLocalServiceUtil.addStructure(userId,groupId,structureId,false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
-  nameMap.clear();
-  descriptionMap.clear();
-  structureId="MULTIPLE-ITEM";
+  JournalStructureLocalServiceUtil.addStructure(userId,groupId,"MULTIPLE-ITEM-CAROUSEL",false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
   nameMap.put(LocaleUtil.getDefault(),"Multiple Item");
-  descriptionMap.put(LocaleUtil.getDefault(),"This is a simple structure with a single repeatable element " + "that includes an HTML field, and text-box for a title and " + "url designation.");
+  descriptionMap.put(LocaleUtil.getDefault(),"This is a simple structure with a single repeatable element " + "that includes an HTML field, and text-box for a title and " + "URL designation.");
   xsd=getFileAsString("/structures/multiple_item.xml");
-  JournalStructureLocalServiceUtil.addStructure(userId,groupId,structureId,false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
+  JournalStructureLocalServiceUtil.addStructure(userId,groupId,"MULTIPLE-ITEM",false,StringPool.BLANK,nameMap,descriptionMap,xsd,serviceContext);
 }
