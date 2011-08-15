@@ -11,7 +11,7 @@
   subject=StringUtil.replace(subject,new String[]{"[$COMPANY_NAME$]","[$FROM_NAME$]"},new String[]{company.getName(),sender.getFullName()});
   String body=StringUtil.read(PrivateMessagingPortlet.class.getResourceAsStream("dependencies/notification_message_body.tmpl"));
   long portraitId=sender.getPortraitId();
-  String tokenId=ImageServletTokenUtil.getToken(sender.getPortraitId());
+  String tokenId=WebServerServletTokenUtil.getToken(sender.getPortraitId());
   String portraitURL=themeDisplay.getPortalURL() + themeDisplay.getPathImage() + "/user_"+ (sender.isFemale() ? "female" : "male")+ "_portrait?img_id="+ portraitId+ "&t="+ tokenId;
   String threadURL=layoutFullURL + "/-/private_messaging/thread/" + mbMessage.getThreadId();
   body=StringUtil.replace(body,new String[]{"[$BODY$]","[$COMPANY_NAME$]","[$FROM_AVATAR$]","[$FROM_NAME$]","[$FROM_PROFILE_URL$]","[$SUBJECT$]","[$THREAD_URL$]"},new String[]{mbMessage.getBody(),company.getName(),portraitURL,sender.getFullName(),sender.getDisplayURL(themeDisplay),mbMessage.getSubject(),threadURL});
