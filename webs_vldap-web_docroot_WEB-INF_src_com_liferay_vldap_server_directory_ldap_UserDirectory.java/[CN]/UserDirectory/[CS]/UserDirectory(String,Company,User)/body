@@ -1,17 +1,17 @@
 {
+  addAttribute("cn",user.getScreenName());
   Date createDate=user.getCreateDate();
   if (createDate == null) {
     createDate=new Date();
   }
-  Date modifyDate=user.getModifiedDate();
-  if (modifyDate == null) {
-    modifyDate=new Date();
-  }
-  addAttribute("cn",user.getScreenName());
   addAttribute("createTimestamp",_simpleDateFormat.format(createDate));
   addAttribute("displayName",user.getFullName());
   addAttribute("givenName",user.getFirstName());
   addAttribute("mail",user.getEmailAddress());
+  Date modifyDate=user.getModifiedDate();
+  if (modifyDate == null) {
+    modifyDate=new Date();
+  }
   addAttribute("modifyTimestamp",_simpleDateFormat.format(modifyDate));
   addAttribute("sn",user.getLastName());
   addAttribute("objectclass","groupOfNames");
@@ -20,7 +20,7 @@
   addAttribute("objectclass","top");
   addAttribute("uid",String.valueOf(user.getUserId()));
   addAttribute("uuid",user.getUuid());
-  String name=LdapUtil.createName(top,company);
+  String name=LdapUtil.buildName(top,company);
   setName(top,company,"Users","cn=" + user.getScreenName());
   long groupClassNameId=PortalUtil.getClassNameId(Group.class.getName());
   LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
