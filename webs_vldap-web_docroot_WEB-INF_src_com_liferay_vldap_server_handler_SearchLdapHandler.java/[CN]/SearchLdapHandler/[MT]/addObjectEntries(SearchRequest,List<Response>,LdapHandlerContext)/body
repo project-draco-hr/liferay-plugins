@@ -1,5 +1,6 @@
 {
-  SearchBase searchBase=DirectoryTree.getSearchBase(searchRequest.getBase(),getSizeLimit(searchRequest));
+  DirectoryTree directoryTree=new DirectoryTree();
+  SearchBase searchBase=directoryTree.getSearchBase(searchRequest.getBase(),getSizeLimit(searchRequest));
   if (searchBase == null) {
     return;
   }
@@ -18,10 +19,10 @@
       searchBase.setSizeLimit(searchBase.getSizeLimit() - 1);
     }
   }
- else   if (searchScope.equals(SearchScope.ONELEVEL) || searchScope.equals(SearchScope.SUBTREE)) {
+  if (searchScope.equals(SearchScope.ONELEVEL) || searchScope.equals(SearchScope.SUBTREE)) {
     StopWatch stopWatch=new StopWatch();
     stopWatch.start();
-    List<Directory> subdirectories=DirectoryTree.getDirectories(searchBase,searchRequest.getFilter(),searchScope);
+    List<Directory> subdirectories=directoryTree.getDirectories(searchBase,searchRequest.getFilter(),searchScope);
     for (    Directory subdirectory : subdirectories) {
       addObjectEntry(searchRequest,responses,ldapHandlerContext,subdirectory,stopWatch);
     }
