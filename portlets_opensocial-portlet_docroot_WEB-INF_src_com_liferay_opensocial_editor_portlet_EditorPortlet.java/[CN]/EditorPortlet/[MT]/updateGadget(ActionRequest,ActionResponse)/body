@@ -7,8 +7,8 @@
     GadgetPermission.check(permissionChecker,groupId,ActionKeys.PUBLISH_GADGET);
     Gadget gadget=doAddGadget(actionRequest,actionResponse);
     String publishGadgetRedirect=ParamUtil.getString(actionRequest,"publishGadgetRedirect");
-    boolean deletePermission=GadgetPermission.contains(permissionChecker,groupId,gadget.getGadgetId(),ActionKeys.DELETE);
-    publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"deletePermission",deletePermission);
+    boolean unpublishPermission=GadgetPermission.contains(permissionChecker,groupId,gadget.getGadgetId(),ActionKeys.DELETE);
+    publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"unpublishPermission",unpublishPermission);
     publishGadgetRedirect=HttpUtil.addParameter(publishGadgetRedirect,"gadgetId",gadget.getGadgetId());
     actionResponse.sendRedirect(publishGadgetRedirect);
   }
