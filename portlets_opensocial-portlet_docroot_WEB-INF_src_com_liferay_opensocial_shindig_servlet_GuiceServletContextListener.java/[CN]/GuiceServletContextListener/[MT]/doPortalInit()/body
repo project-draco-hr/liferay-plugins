@@ -1,3 +1,7 @@
 {
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
+  currentThread.setContextClassLoader(PortletClassLoaderUtil.getClassLoader());
   _guiceServletContextListener.contextInitialized(_initializedServletContextEvent);
+  currentThread.setContextClassLoader(contextClassLoader);
 }
