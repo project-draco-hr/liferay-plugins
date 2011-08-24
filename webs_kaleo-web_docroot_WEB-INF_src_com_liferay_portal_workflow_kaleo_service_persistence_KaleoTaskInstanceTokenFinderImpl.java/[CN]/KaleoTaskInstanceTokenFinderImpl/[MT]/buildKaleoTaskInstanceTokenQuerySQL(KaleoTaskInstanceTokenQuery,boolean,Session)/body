@@ -14,17 +14,17 @@
   sql=CustomSQLUtil.appendCriteria(sql,getSearchByUserRoles(kaleoTaskInstanceTokenQuery));
   if (appendSearchCriteria(kaleoTaskInstanceTokenQuery)) {
     sql=CustomSQLUtil.appendCriteria(sql," AND (");
-    if (Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) || Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetType())) {
+    if (Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) || Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetTypes())) {
       sql=CustomSQLUtil.appendCriteria(sql," (");
     }
     sql=CustomSQLUtil.appendCriteria(sql,getAssetPrimaryKey(kaleoTaskInstanceTokenQuery));
-    sql=CustomSQLUtil.appendCriteria(sql,getAssetType(kaleoTaskInstanceTokenQuery,Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys())));
-    if (Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) || Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetType())) {
+    sql=CustomSQLUtil.appendCriteria(sql,getAssetTypes(kaleoTaskInstanceTokenQuery,Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys())));
+    if (Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) || Validator.isNotNull(kaleoTaskInstanceTokenQuery.getAssetTypes())) {
       sql=CustomSQLUtil.appendCriteria(sql,") ");
     }
-    sql=CustomSQLUtil.appendCriteria(sql,getDueDateGT(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetType()))));
-    sql=CustomSQLUtil.appendCriteria(sql,getDueDateLT(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetType()) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null))));
-    sql=CustomSQLUtil.appendCriteria(sql,getTaskName(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetType()) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null)&& (kaleoTaskInstanceTokenQuery.getDueDateLT() == null))));
+    sql=CustomSQLUtil.appendCriteria(sql,getDueDateGT(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetTypes()))));
+    sql=CustomSQLUtil.appendCriteria(sql,getDueDateLT(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetTypes()) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null))));
+    sql=CustomSQLUtil.appendCriteria(sql,getTaskName(kaleoTaskInstanceTokenQuery,(Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetPrimaryKeys()) && Validator.isNull(kaleoTaskInstanceTokenQuery.getAssetTypes()) && (kaleoTaskInstanceTokenQuery.getDueDateGT() == null)&& (kaleoTaskInstanceTokenQuery.getDueDateLT() == null))));
     sql=CustomSQLUtil.appendCriteria(sql,")");
     sql=CustomSQLUtil.replaceAndOperator(sql,kaleoTaskInstanceTokenQuery.isAndOperator());
   }
