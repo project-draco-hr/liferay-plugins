@@ -1,13 +1,10 @@
 {
   Object returnObj=null;
-  MethodHandler methodHandler=new MethodHandler(_updateDueDateMethodKey44,kaleoTaskInstanceTokenId,ClpSerializer.translateInput(dueDate),ClpSerializer.translateInput(serviceContext));
+  MethodHandler methodHandler=new MethodHandler(_searchCountMethodKey41,ClpSerializer.translateInput(keywords),ClpSerializer.translateInput(assetTypes),ClpSerializer.translateInput(completed),ClpSerializer.translateInput(searchByUserRoles),ClpSerializer.translateInput(serviceContext));
   try {
     returnObj=_classLoaderProxy.invoke(methodHandler);
   }
  catch (  Throwable t) {
-    if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-      throw (com.liferay.portal.kernel.exception.PortalException)t;
-    }
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
       throw (com.liferay.portal.kernel.exception.SystemException)t;
     }
@@ -18,5 +15,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
-  return (com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken)ClpSerializer.translateOutput(returnObj);
+  return ((Integer)returnObj).intValue();
 }
