@@ -1,0 +1,31 @@
+{
+  int i=0;
+  Locale defaultLocale=LocaleUtil.getDefault();
+  int[] formFieldsIndexes=StringUtil.split(ParamUtil.getString(actionRequest,"formFieldsIndexes"),0);
+  HashMap<String,Set<String>> localizedUniqueFieldNames=new HashMap<String,Set<String>>();
+  for (  int formFieldsIndex : formFieldsIndexes) {
+    Map<Locale,String> fieldLabelMap=LocalizationUtil.getLocalizationMap(actionRequest,"fieldLabel" + formFieldsIndex);
+    if (Validator.isNull(fieldLabelMap.get(defaultLocale))) {
+      continue;
+    }
+    for (    Locale locale : fieldLabelMap.keySet()) {
+      String languageId=LocaleUtil.toLanguageId(locale);
+      String fieldLabelValue=fieldLabelMap.get(locale);
+      Set<String> localizedFieldNamesSet=localizedUniqueFieldNames.get(languageId);
+      if (localizedFieldNamesSet == null) {
+        localizedFieldNamesSet=new HashSet<String>();
+      }
+      localizedUniqueFieldNames.put(languageId,localizedFieldNamesSet);
+      if (Validator.isNotNull(fieldLabelValue)) {
+        if (localizedFieldNamesSet.contains(fieldLabelValue)) {
+          return false;
+        }
+ else {
+          localizedFieldNamesSet.add(fieldLabelValue);
+        }
+      }
+    }
+    i++;
+  }
+  return true;
+}
