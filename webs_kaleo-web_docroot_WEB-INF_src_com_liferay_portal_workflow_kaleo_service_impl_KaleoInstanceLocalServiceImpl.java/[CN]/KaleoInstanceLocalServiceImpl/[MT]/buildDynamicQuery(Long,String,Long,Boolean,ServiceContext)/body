@@ -1,22 +1,11 @@
 {
-  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoInstance.class,getClass().getClassLoader());
-  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
-  if (userId != null) {
-    dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
-  }
+  String[] assetClassNames=null;
   if (Validator.isNotNull(assetClassName)) {
-    dynamicQuery.add(PropertyFactoryUtil.forName("className").like(assetClassName));
+    assetClassNames=new String[]{assetClassName};
   }
+  Long[] assetClassPKs=null;
   if (Validator.isNotNull(assetClassPK)) {
-    dynamicQuery.add(PropertyFactoryUtil.forName("classPK").eq(assetClassPK));
+    assetClassPKs=new Long[]{assetClassPK};
   }
-  if (completed != null) {
-    if (completed) {
-      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNotNull());
-    }
- else {
-      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNull());
-    }
-  }
-  return dynamicQuery;
+  return buildDynamicQuery(userId,assetClassNames,assetClassPKs,completed,serviceContext);
 }

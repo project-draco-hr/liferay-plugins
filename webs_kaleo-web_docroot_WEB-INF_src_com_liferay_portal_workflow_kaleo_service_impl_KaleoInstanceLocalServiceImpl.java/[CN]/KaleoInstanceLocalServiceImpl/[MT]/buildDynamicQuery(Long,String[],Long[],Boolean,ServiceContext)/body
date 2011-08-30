@@ -1,0 +1,22 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoInstance.class,getClass().getClassLoader());
+  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  if (userId != null) {
+    dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+  }
+  if (Validator.isNotNull(assetClassNames)) {
+    dynamicQuery.add(getAssetClassNames(assetClassNames));
+  }
+  if (Validator.isNotNull(assetClassPKs)) {
+    dynamicQuery.add(getAssetClassPKs(assetClassPKs));
+  }
+  if (completed != null) {
+    if (completed) {
+      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNotNull());
+    }
+ else {
+      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNull());
+    }
+  }
+  return dynamicQuery;
+}
