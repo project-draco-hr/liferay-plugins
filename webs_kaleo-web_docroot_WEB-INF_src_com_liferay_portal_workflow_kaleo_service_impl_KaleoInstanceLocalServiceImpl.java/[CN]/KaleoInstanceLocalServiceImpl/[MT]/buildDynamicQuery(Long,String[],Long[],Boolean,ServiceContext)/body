@@ -1,21 +1,25 @@
 {
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoInstance.class,getClass().getClassLoader());
-  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
+  Property companyIdProperty=PropertyFactoryUtil.forName("companyId");
+  dynamicQuery.add(companyIdProperty.eq(serviceContext.getCompanyId()));
   if (userId != null) {
-    dynamicQuery.add(PropertyFactoryUtil.forName("userId").eq(userId));
+    Property userIdProperty=PropertyFactoryUtil.forName("userId");
+    dynamicQuery.add(userIdProperty.eq(userId));
   }
-  if (Validator.isNotNull(assetClassNames)) {
+  if ((assetClassNames != null) && (assetClassNames.length > 0)) {
     dynamicQuery.add(getAssetClassNames(assetClassNames));
   }
-  if (Validator.isNotNull(assetClassPKs)) {
+  if ((assetClassPKs != null) && (assetClassPKs.length > 0)) {
     dynamicQuery.add(getAssetClassPKs(assetClassPKs));
   }
   if (completed != null) {
     if (completed) {
-      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNotNull());
+      Property completionDateProperty=PropertyFactoryUtil.forName("completionDate");
+      dynamicQuery.add(completionDateProperty.isNotNull());
     }
  else {
-      dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNull());
+      Property completionDateProperty=PropertyFactoryUtil.forName("completionDate");
+      dynamicQuery.add(completionDateProperty.isNull());
     }
   }
   return dynamicQuery;

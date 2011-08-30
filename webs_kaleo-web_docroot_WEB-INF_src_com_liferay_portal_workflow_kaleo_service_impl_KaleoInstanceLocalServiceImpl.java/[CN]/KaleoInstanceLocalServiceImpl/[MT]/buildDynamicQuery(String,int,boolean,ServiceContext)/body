@@ -1,13 +1,18 @@
 {
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoInstance.class,getClass().getClassLoader());
-  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
-  dynamicQuery.add(PropertyFactoryUtil.forName("kaleoDefinitionName").eq(kaleoDefinitionName));
-  dynamicQuery.add(PropertyFactoryUtil.forName("kaleoDefinitionVersion").eq(kaleoDefinitionVersion));
+  Property companyIdProperty=PropertyFactoryUtil.forName("companyId");
+  dynamicQuery.add(companyIdProperty.eq(serviceContext.getCompanyId()));
+  Property kaleoDefinitionNameProperty=PropertyFactoryUtil.forName("kaleoDefinitionName");
+  dynamicQuery.add(kaleoDefinitionNameProperty.eq(kaleoDefinitionName));
+  Property kaleoDefinitionVersionProperty=PropertyFactoryUtil.forName("kaleoDefinitionVersion");
+  dynamicQuery.add(kaleoDefinitionVersionProperty.eq(kaleoDefinitionVersion));
   if (completed) {
-    dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNotNull());
+    Property completionDateProperty=PropertyFactoryUtil.forName("completionDate");
+    dynamicQuery.add(completionDateProperty.isNotNull());
   }
  else {
-    dynamicQuery.add(PropertyFactoryUtil.forName("completionDate").isNull());
+    Property completionDateProperty=PropertyFactoryUtil.forName("completionDate");
+    dynamicQuery.add(completionDateProperty.isNull());
   }
   return dynamicQuery;
 }
