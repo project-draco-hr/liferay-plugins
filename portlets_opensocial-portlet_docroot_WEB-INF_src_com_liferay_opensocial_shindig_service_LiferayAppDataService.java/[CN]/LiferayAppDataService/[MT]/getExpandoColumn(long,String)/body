@@ -6,11 +6,8 @@
  catch (  NoSuchTableException nste) {
     _log.error(nste,nste);
   }
-  ExpandoColumn expandoColumn=null;
-  try {
-    expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
-  }
- catch (  NoSuchColumnException nsce) {
+  ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
+  if (expandoColumn == null) {
     expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
   }
   return expandoColumn;

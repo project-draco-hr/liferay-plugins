@@ -3,11 +3,9 @@
   ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial());
   String namespace=renderResponse.getNamespace();
   String columnName=ShindigUtil.getColumnUserPrefs(namespace);
-  try {
-    ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
-  }
- catch (  NoSuchColumnException nsce) {
-    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
+  ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
+  if (expandoColumn == null) {
+    expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
     Role role=RoleLocalServiceUtil.getRole(expandoColumn.getCompanyId(),RoleConstants.USER);
     ResourcePermissionLocalServiceUtil.setResourcePermissions(expandoColumn.getCompanyId(),ExpandoColumn.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,String.valueOf(expandoColumn.getColumnId()),role.getRoleId(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});
   }
