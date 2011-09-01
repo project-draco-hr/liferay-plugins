@@ -10,7 +10,10 @@
     writeJSON(actionRequest,actionResponse,jsonObject);
     return;
   }
-  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,"5_WAR_soportlet");
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+  Group userGroup=user.getGroup();
+  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),2,0,"5_WAR_soportlet");
   String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   if (cmd.equals(Constants.ADD)) {
     starredGroupIds=StringUtil.add(starredGroupIds,String.valueOf(starredGroupId));

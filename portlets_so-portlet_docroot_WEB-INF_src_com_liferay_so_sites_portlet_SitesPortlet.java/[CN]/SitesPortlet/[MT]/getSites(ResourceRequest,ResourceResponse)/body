@@ -5,6 +5,7 @@
   int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
   int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
+  String tabs1=ParamUtil.getString(resourceRequest,"tabs1");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
   optionsJSONObject.put("directory",directory);
@@ -15,9 +16,8 @@
   optionsJSONObject.put("end",end);
   jsonObject.put("options",optionsJSONObject);
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  List<Group> groups=null;
+  List<Group> groups=new ArrayList<Group>();
   int groupsCount=0;
-  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest,"5_WAR_soportlet");
   if (directory) {
     LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
     if (userGroups) {
@@ -33,7 +33,7 @@
     groupsCount=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    groups=SitesUtil.getStarredSites(portletPreferences);
+    groups=SitesUtil.getStarredSites(themeDisplay.getUserId());
     groupsCount=groups.size();
     if (groups.isEmpty() || Validator.isNotNull(keywords)) {
       groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize);
@@ -42,11 +42,10 @@
   }
   jsonObject.put("count",groupsCount);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   for (  Group group : groups) {
     JSONObject groupJSONObject=JSONFactoryUtil.createJSONObject();
-    groupJSONObject.put("description",group.getDescription());
     groupJSONObject.put("name",group.getDescriptiveName());
+    groupJSONObject.put("description",group.getDescription());
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
       PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.MY_SITES,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
       portletURL.setWindowState(WindowState.NORMAL);
@@ -72,6 +71,10 @@
     starPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateStars");
     starPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
     starPortletURL.setParameter("starredGroupId",String.valueOf(group.getGroupId()));
+    User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+    Group userGroup=user.getGroup();
+    PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),2,0,"5_WAR_soportlet");
+    String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
     if (!StringUtil.contains(starredGroupIds,String.valueOf(group.getGroupId()))) {
       starPortletURL.setParameter(Constants.CMD,Constants.ADD);
       groupJSONObject.put("starURL",starPortletURL.toString());

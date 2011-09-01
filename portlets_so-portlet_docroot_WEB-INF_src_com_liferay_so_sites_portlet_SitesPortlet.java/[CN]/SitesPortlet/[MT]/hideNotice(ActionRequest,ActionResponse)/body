@@ -1,5 +1,8 @@
 {
-  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,"5_WAR_soportlet");
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+  Group userGroup=user.getGroup();
+  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),2,0,"5_WAR_soportlet");
   portletPreferences.setValue("hide-notice",Boolean.TRUE.toString());
   portletPreferences.store();
 }
