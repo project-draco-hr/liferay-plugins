@@ -2,7 +2,7 @@
   String starredGroupIds=StringPool.BLANK;
   User user=UserLocalServiceUtil.getUser(userId);
   Group userGroup=user.getGroup();
-  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),2,0,"5_WAR_soportlet");
+  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
   if (preferences != null) {
     starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
   }
@@ -11,7 +11,15 @@
   for (  long groupId : groupIds) {
     try {
       Group group=GroupServiceUtil.getGroup(groupId);
-      groups.add(group);
+      if (Validator.isNull(name)) {
+        groups.add(group);
+      }
+ else {
+        String groupDescriptiveName=group.getDescriptiveName().toLowerCase();
+        if (groupDescriptiveName.contains(name.toLowerCase())) {
+          groups.add(group);
+        }
+      }
     }
  catch (    Exception e) {
       StringUtil.remove(starredGroupIds,String.valueOf(groupId));

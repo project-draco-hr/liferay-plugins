@@ -1,0 +1,15 @@
+{
+  String starredGroupIds=StringPool.BLANK;
+  try {
+    User user=UserLocalServiceUtil.getUser(userId);
+    Group userGroup=user.getGroup();
+    PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
+    if (preferences != null) {
+      starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return starredGroupIds;
+}

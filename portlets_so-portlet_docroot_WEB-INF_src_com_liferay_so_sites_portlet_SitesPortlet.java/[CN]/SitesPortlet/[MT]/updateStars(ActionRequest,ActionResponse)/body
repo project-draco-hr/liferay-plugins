@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long starredGroupId=ParamUtil.getLong(actionRequest,"starredGroupId");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
@@ -10,19 +11,18 @@
     writeJSON(actionRequest,actionResponse,jsonObject);
     return;
   }
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+  User user=themeDisplay.getUser();
   Group userGroup=user.getGroup();
-  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),2,0,"5_WAR_soportlet");
-  String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
+  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
+  String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
   if (cmd.equals(Constants.ADD)) {
     starredGroupIds=StringUtil.add(starredGroupIds,String.valueOf(starredGroupId));
   }
  else   if (cmd.equals(Constants.DELETE)) {
     starredGroupIds=StringUtil.remove(starredGroupIds,String.valueOf(starredGroupId));
   }
-  portletPreferences.setValue("starredGroupIds",starredGroupIds);
-  portletPreferences.store();
+  preferences.setValue("starredGroupIds",starredGroupIds);
+  preferences.store();
   jsonObject.put("result","success");
   writeJSON(actionRequest,actionResponse,jsonObject);
 }
