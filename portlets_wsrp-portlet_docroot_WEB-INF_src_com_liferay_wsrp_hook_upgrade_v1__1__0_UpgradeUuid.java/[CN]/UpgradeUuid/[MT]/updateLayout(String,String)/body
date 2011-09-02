@@ -5,14 +5,13 @@
   try {
     con=DataAccess.getConnection();
     ps=con.prepareStatement("select plid, typeSettings from Layout where typeSettings " + "like ?");
-    String oldPortletIdParam=StringPool.PERCENT.concat(oldPortletId).concat(StringPool.PERCENT);
-    ps.setString(1,oldPortletIdParam);
+    ps.setString(1,StringPool.PERCENT + oldPortletId + StringPool.PERCENT);
     rs=ps.executeQuery();
     while (rs.next()) {
       long plid=rs.getLong("plid");
       String typeSettings=rs.getString("typeSettings");
       typeSettings=StringUtil.replace(typeSettings,oldPortletId,newPortletId);
-      updateTypeSettings(plid,typeSettings);
+      updateLayout(plid,typeSettings);
     }
   }
   finally {
