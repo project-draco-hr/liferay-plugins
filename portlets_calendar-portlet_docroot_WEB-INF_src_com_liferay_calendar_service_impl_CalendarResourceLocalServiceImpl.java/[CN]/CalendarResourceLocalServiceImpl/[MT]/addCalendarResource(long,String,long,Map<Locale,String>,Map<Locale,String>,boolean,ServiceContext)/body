@@ -32,11 +32,6 @@
   calendarResource.setActive(active);
   calendarResource.setExpandoBridgeAttributes(serviceContext);
   calendarResourcePersistence.update(calendarResource,false);
-  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
-    addCalendarResourceResources(calendarResource,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
-  }
- else {
-    addCalendarResourceResources(calendarResource,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
-  }
+  resourceLocalService.addModelResources(calendarResource,serviceContext);
   return calendarResource;
 }

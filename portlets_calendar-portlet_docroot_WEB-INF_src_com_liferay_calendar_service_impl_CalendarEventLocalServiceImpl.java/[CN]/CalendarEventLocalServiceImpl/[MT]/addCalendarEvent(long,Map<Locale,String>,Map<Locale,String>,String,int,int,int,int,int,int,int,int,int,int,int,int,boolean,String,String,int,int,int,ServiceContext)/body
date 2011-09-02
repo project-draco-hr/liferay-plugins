@@ -37,11 +37,6 @@
   calendarEvent.setSecondReminder(secondReminder);
   calendarEvent.setExpandoBridgeAttributes(serviceContext);
   calendarEventPersistence.update(calendarEvent,false);
-  if (serviceContext.getAddCommunityPermissions() || serviceContext.getAddGuestPermissions()) {
-    addCalendarEventResources(calendarEvent,serviceContext.getAddCommunityPermissions(),serviceContext.getAddGuestPermissions());
-  }
- else {
-    addCalendarEventResources(calendarEvent,serviceContext.getCommunityPermissions(),serviceContext.getGuestPermissions());
-  }
+  resourceLocalService.addModelResources(calendarEvent,serviceContext);
   return calendarEvent;
 }
