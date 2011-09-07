@@ -1,30 +1,31 @@
 {
   String starredGroupIds=StringPool.BLANK;
   User user=UserLocalServiceUtil.getUser(userId);
-  Group userGroup=user.getGroup();
-  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
-  if (preferences != null) {
-    starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+  Group group=user.getGroup();
+  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),group.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
+  if (portletPreferences != null) {
+    starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   }
   long[] groupIds=StringUtil.split(starredGroupIds,0L);
   List<Group> groups=new ArrayList<Group>(groupIds.length);
   for (  long groupId : groupIds) {
     try {
-      Group group=GroupServiceUtil.getGroup(groupId);
+      Group curGroup=GroupServiceUtil.getGroup(groupId);
       if (Validator.isNull(name)) {
-        groups.add(group);
+        groups.add(curGroup);
       }
  else {
-        String groupDescriptiveName=group.getDescriptiveName().toLowerCase();
+        String groupDescriptiveName=curGroup.getDescriptiveName();
+        groupDescriptiveName=groupDescriptiveName.toLowerCase();
         if (groupDescriptiveName.contains(name.toLowerCase())) {
-          groups.add(group);
+          groups.add(curGroup);
         }
       }
     }
  catch (    Exception e) {
       StringUtil.remove(starredGroupIds,String.valueOf(groupId));
-      preferences.setValue("starredGroupIds",starredGroupIds);
-      preferences.store();
+      portletPreferences.setValue("starredGroupIds",starredGroupIds);
+      portletPreferences.store();
     }
   }
   Collections.sort(groups,new GroupNameComparator(true));

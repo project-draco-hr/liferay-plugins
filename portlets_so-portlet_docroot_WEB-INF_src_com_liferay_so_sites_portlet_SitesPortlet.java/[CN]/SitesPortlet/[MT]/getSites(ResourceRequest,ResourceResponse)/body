@@ -1,20 +1,20 @@
 {
   boolean directory=ParamUtil.getBoolean(resourceRequest,"directory");
-  String keywords=DAOParamUtil.getLike(resourceRequest,"keywords");
-  String name=ParamUtil.getString(resourceRequest,"keywords");
-  boolean userGroups=ParamUtil.getBoolean(resourceRequest,"userGroups");
-  int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
-  String tabs1=ParamUtil.getString(resourceRequest,"searchTab");
-  int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
+  String keywords=DAOParamUtil.getLike(resourceRequest,"keywords");
+  int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
+  String name=ParamUtil.getString(resourceRequest,"keywords");
+  String searchTab=ParamUtil.getString(resourceRequest,"searchTab");
+  int start=ParamUtil.getInteger(resourceRequest,"start");
+  boolean userGroups=ParamUtil.getBoolean(resourceRequest,"userGroups");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
   optionsJSONObject.put("directory",directory);
+  optionsJSONObject.put("end",end);
   optionsJSONObject.put("keywords",keywords);
-  optionsJSONObject.put("userGroups",userGroups);
   optionsJSONObject.put("maxResultSize",maxResultSize);
   optionsJSONObject.put("start",start);
-  optionsJSONObject.put("end",end);
+  optionsJSONObject.put("userGroups",userGroups);
   jsonObject.put("options",optionsJSONObject);
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   List<Group> groups=null;
@@ -34,16 +34,16 @@
     groupsCount=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    if (tabs1.equals("my-favorites")) {
+    if (searchTab.equals("my-favorites")) {
       groups=SitesUtil.getStarredSites(themeDisplay.getUserId(),name);
       groupsCount=groups.size();
     }
- else     if (tabs1.equals("my-sites")) {
-      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize,true);
+ else     if (searchTab.equals("my-sites")) {
+      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true,maxResultSize);
       groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true);
     }
  else {
-      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,maxResultSize,false);
+      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false,maxResultSize);
       groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false);
     }
   }
@@ -51,20 +51,22 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  Group group : groups) {
     JSONObject groupJSONObject=JSONFactoryUtil.createJSONObject();
-    groupJSONObject.put("name",group.getDescriptiveName());
     groupJSONObject.put("description",group.getDescription());
     groupJSONObject.put("name",group.getDescriptiveName());
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
-      PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.MY_SITES,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
+      Layout layout=themeDisplay.getLayout();
+      PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.MY_SITES,layout.getPlid(),PortletRequest.ACTION_PHASE);
       portletURL.setWindowState(WindowState.NORMAL);
       portletURL.setParameter("struts_action","/my_sites/view");
       portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
       portletURL.setParameter("privateLayout",String.valueOf(!group.hasPublicLayouts()));
       groupJSONObject.put("url",portletURL.toString());
     }
-    boolean socialOfficeEnabled=GetterUtil.getBoolean(group.getExpandoBridge().getAttribute("socialOfficeEnabled"));
+    ExpandoBridge expandoBridge=group.getExpandoBridge();
+    boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
     groupJSONObject.put("socialOfficeEnabled",socialOfficeEnabled);
-    PortletURL siteAssignmentsPortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
+    Layout layout=themeDisplay.getLayout();
+    PortletURL siteAssignmentsPortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,layout.getPlid(),PortletRequest.ACTION_PHASE);
     siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
     siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
     siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");

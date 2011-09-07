@@ -12,17 +12,17 @@
     return;
   }
   User user=themeDisplay.getUser();
-  Group userGroup=user.getGroup();
-  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),userGroup.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
-  String starredGroupIds=preferences.getValue("starredGroupIds",StringPool.BLANK);
+  Group group=user.getGroup();
+  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(user.getCompanyId(),group.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,0,"5_WAR_soportlet");
+  String starredGroupIds=portletPreferences.getValue("starredGroupIds",StringPool.BLANK);
   if (cmd.equals(Constants.ADD)) {
     starredGroupIds=StringUtil.add(starredGroupIds,String.valueOf(starredGroupId));
   }
  else   if (cmd.equals(Constants.DELETE)) {
     starredGroupIds=StringUtil.remove(starredGroupIds,String.valueOf(starredGroupId));
   }
-  preferences.setValue("starredGroupIds",starredGroupIds);
-  preferences.store();
+  portletPreferences.setValue("starredGroupIds",starredGroupIds);
+  portletPreferences.store();
   jsonObject.put("result","success");
   writeJSON(actionRequest,actionResponse,jsonObject);
 }
