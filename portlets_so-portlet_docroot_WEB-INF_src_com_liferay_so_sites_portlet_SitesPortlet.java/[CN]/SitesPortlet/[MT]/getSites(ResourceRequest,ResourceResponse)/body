@@ -4,9 +4,9 @@
   String name=ParamUtil.getString(resourceRequest,"keywords");
   boolean userGroups=ParamUtil.getBoolean(resourceRequest,"userGroups");
   int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
+  String tabs1=ParamUtil.getString(resourceRequest,"searchTab");
   int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
-  String tabs1=ParamUtil.getString(resourceRequest,"searchTab");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
   optionsJSONObject.put("directory",directory);
@@ -64,19 +64,19 @@
     }
     boolean socialOfficeEnabled=GetterUtil.getBoolean(group.getExpandoBridge().getAttribute("socialOfficeEnabled"));
     groupJSONObject.put("socialOfficeEnabled",socialOfficeEnabled);
-    PortletURL membershipPortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
-    membershipPortletURL.setWindowState(WindowState.NORMAL);
-    membershipPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
-    membershipPortletURL.setParameter(Constants.CMD,"group_users");
-    membershipPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
-    membershipPortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+    PortletURL siteAssignmentsPortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
+    siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
+    siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
+    siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");
+    siteAssignmentsPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+    siteAssignmentsPortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
     if (!GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId()) && (group.getType() == GroupConstants.TYPE_SITE_OPEN)) {
-      membershipPortletURL.setParameter("addUserIds",String.valueOf(themeDisplay.getUserId()));
-      groupJSONObject.put("joinUrl",membershipPortletURL.toString());
+      siteAssignmentsPortletURL.setParameter("addUserIds",String.valueOf(themeDisplay.getUserId()));
+      groupJSONObject.put("joinUrl",siteAssignmentsPortletURL.toString());
     }
  else     if (GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId())) {
-      membershipPortletURL.setParameter("removeUserIds",String.valueOf(themeDisplay.getUserId()));
-      groupJSONObject.put("leaveUrl",membershipPortletURL.toString());
+      siteAssignmentsPortletURL.setParameter("removeUserIds",String.valueOf(themeDisplay.getUserId()));
+      groupJSONObject.put("leaveUrl",siteAssignmentsPortletURL.toString());
     }
     if (GroupPermissionUtil.contains(themeDisplay.getPermissionChecker(),group.getGroupId(),ActionKeys.DELETE)) {
       PortletURL deletePortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
