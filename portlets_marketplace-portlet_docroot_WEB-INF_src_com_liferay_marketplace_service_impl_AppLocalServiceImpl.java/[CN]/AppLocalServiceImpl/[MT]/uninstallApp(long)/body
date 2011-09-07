@@ -1,15 +1,13 @@
 {
-  App app=appPersistence.findByMarketplaceAppId(marketplaceAppId);
-  List<Module> modules=moduleLocalService.getAppModules(app.getAppId());
-  String appServerType=ServerDetector.getServerId();
-  boolean jbossAppServer=appServerType.startsWith(ServerDetector.JBOSS_ID);
+  App app=appPersistence.findByRemoteAppId(remoteAppId);
+  List<Module> modules=modulePersistence.findByAppId(app.getAppId());
   for (  Module module : modules) {
-    String context=module.getContextName();
+    String contextName=module.getContextName();
     if (hasDependentApp(module)) {
       continue;
     }
     try {
-      DeployManagerUtil.undeploy(context);
+      DeployManagerUtil.undeploy(contextName);
     }
  catch (    Exception e) {
       _log.error(e,e);

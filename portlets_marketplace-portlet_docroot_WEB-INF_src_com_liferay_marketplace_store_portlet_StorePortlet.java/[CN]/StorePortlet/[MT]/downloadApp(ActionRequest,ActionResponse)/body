@@ -1,16 +1,18 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  long marketplaceAppId=ParamUtil.getLong(actionRequest,"appId");
+  long remoteAppId=ParamUtil.getLong(actionRequest,"appId");
   String version=ParamUtil.getString(actionRequest,"version");
   String url=ParamUtil.getString(actionRequest,"url");
-  URL marketplaceURL=new URL(url);
-  InputStream is=marketplaceURL.openStream();
-  App app=AppLocalServiceUtil.fetchApp(marketplaceAppId);
+  URL urlObj=new URL(url);
+  InputStream inputStream=urlObj.openStream();
+  App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
   if (app == null) {
-    app=AppLocalServiceUtil.addApp(themeDisplay.getUserId(),marketplaceAppId,version,is);
+    app=AppLocalServiceUtil.addApp(themeDisplay.getUserId(),remoteAppId,version,inputStream);
   }
  else {
-    app=AppLocalServiceUtil.updateApp(app.getAppId(),version,is);
+    app=AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
   }
-  sendJSONResponse(actionResponse,"success");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("message","success");
+  writeJSON(actionRequest,actionResponse,jsonObject);
 }

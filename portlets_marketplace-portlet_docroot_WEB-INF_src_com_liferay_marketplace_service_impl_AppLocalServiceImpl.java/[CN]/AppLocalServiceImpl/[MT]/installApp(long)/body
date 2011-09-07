@@ -1,25 +1,25 @@
 {
-  App app=appPersistence.findByMarketplaceAppId(marketplaceAppId);
+  App app=appPersistence.findByRemoteAppId(remoteAppId);
   if (!DLStoreUtil.hasFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath())) {
-    throw new DownloadNotFoundException();
+    throw new NoSuchFileException();
   }
   String tmpDir=SystemProperties.get(SystemProperties.TMP_DIR) + StringPool.SLASH + Time.getTimestamp();
   try {
-    File liferayPackage=DLStoreUtil.getFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath());
-    ZipFile zipFile=new ZipFile(liferayPackage);
-    Enumeration enu=zipFile.entries();
+    File liferayPackageFile=DLStoreUtil.getFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath());
+    ZipFile zipFile=new ZipFile(liferayPackageFile);
+    Enumeration<ZipEntry> enu=(Enumeration<ZipEntry>)zipFile.entries();
     while (enu.hasMoreElements()) {
-      ZipEntry entry=(ZipEntry)enu.nextElement();
-      String fileName=entry.getName();
+      ZipEntry zipEntry=enu.nextElement();
+      String fileName=zipEntry.getName();
       if (_log.isInfoEnabled()) {
-        _log.info("Extracting " + fileName + " from appId "+ app.getAppId());
+        _log.info("Extracting " + fileName + " from app "+ app.getAppId());
       }
-      InputStream is=zipFile.getInputStream(entry);
-      File tempPluginPackage=new File(tmpDir + StringPool.SLASH + fileName);
-      FileUtil.write(tempPluginPackage,is);
-      String context=getContext(fileName);
-      DeployManagerUtil.deploy(tempPluginPackage,context);
-      moduleLocalService.addModule(app.getUserId(),app.getAppId(),context);
+      InputStream inputStream=zipFile.getInputStream(zipEntry);
+      File pluginPackageFile=new File(tmpDir + StringPool.SLASH + fileName);
+      FileUtil.write(pluginPackageFile,inputStream);
+      String contextName=getContextName(fileName);
+      DeployManagerUtil.deploy(pluginPackageFile,contextName);
+      moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
     }
   }
  catch (  Exception e) {

@@ -1,0 +1,11 @@
+{
+  if (Validator.isNull(version)) {
+    throw new AppVersionException();
+  }
+  if (remoteAppId > 0) {
+    App app=appPersistence.fetchByRemoteAppId(remoteAppId);
+    if (app != null) {
+      throw new DuplicateAppException();
+    }
+  }
+}

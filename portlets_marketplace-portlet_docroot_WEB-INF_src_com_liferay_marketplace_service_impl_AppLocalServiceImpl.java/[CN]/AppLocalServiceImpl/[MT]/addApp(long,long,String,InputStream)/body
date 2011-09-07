@@ -1,18 +1,17 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
-  validate(version,marketplaceAppId);
   Date now=new Date();
+  validate(remoteAppId,version);
   long appId=counterLocalService.increment();
   App app=appPersistence.create(appId);
-  app.setAppId(appId);
   app.setCompanyId(user.getCompanyId());
   app.setUserId(user.getUserId());
   app.setUserName(user.getFullName());
   app.setCreateDate(now);
   app.setModifiedDate(now);
-  app.setMarketplaceAppId(marketplaceAppId);
+  app.setRemoteAppId(remoteAppId);
   app.setVersion(version);
   appPersistence.update(app,false);
-  DLStoreUtil.addFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath(),false,is);
+  DLStoreUtil.addFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath(),false,inputStream);
   return app;
 }
