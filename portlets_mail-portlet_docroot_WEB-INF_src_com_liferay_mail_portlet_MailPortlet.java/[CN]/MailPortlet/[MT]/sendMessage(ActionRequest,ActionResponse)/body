@@ -10,15 +10,23 @@
   String body=ParamUtil.getString(uploadPortletRequest,"body");
   int attachmentCount=ParamUtil.getInteger(uploadPortletRequest,"attachmentCount");
   List<MailFile> mailFiles=new ArrayList<MailFile>();
-  for (int i=1; i <= attachmentCount; i++) {
-    File file=uploadPortletRequest.getFile("attachment" + i);
-    String filename=uploadPortletRequest.getFileName("attachment" + i);
-    if (FileUtil.getBytes(file) != null) {
-      mailFiles.add(new MailFile(file,filename,file.length()));
+  try {
+    for (int i=1; i <= attachmentCount; i++) {
+      File file=uploadPortletRequest.getFile("attachment" + i,true);
+      long size=uploadPortletRequest.getSize("attachment" + i);
+      String filename=uploadPortletRequest.getFileName("attachment" + i);
+      if (file != null) {
+        mailFiles.add(new MailFile(file,filename,size));
+      }
+    }
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+    MailManager mailManager=MailManager.getInstance(request);
+    JSONObject responseData=mailManager.sendMessage(accountId,messageId,to,cc,bcc,subject,body,mailFiles);
+    actionResponse.sendRedirect(PortalUtil.getLayoutURL(themeDisplay) + "/-/mail/send_message?responseData=" + responseData);
+  }
+  finally {
+    for (    MailFile mailFile : mailFiles) {
+      mailFile.cleanup();
     }
   }
-  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
-  MailManager mailManager=MailManager.getInstance(request);
-  JSONObject responseData=mailManager.sendMessage(accountId,messageId,to,cc,bcc,subject,body,mailFiles);
-  actionResponse.sendRedirect(PortalUtil.getLayoutURL(themeDisplay) + "/-/mail/send_message?responseData=" + responseData);
 }
