@@ -1,0 +1,13 @@
+{
+  try {
+    Definition definition=_workflowModelParser.parse(inputStream);
+    if (_workflowValidator != null) {
+      _workflowValidator.validate(definition);
+    }
+    WorkflowDefinition workflowDefinition=_workflowDeployer.deploy(title,definition,scope,serviceContext);
+    return workflowDefinition;
+  }
+ catch (  Exception e) {
+    throw new WorkflowException(e);
+  }
+}

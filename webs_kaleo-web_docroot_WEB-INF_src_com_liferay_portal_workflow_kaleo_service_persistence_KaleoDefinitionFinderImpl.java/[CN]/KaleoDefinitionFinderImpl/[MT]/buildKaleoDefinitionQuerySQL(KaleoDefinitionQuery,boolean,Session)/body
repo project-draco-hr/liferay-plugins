@@ -1,0 +1,30 @@
+{
+  String sql=null;
+  if (count) {
+    sql=CustomSQLUtil.get(COUNT_BY_C_N_A_S);
+  }
+ else {
+    sql=CustomSQLUtil.get(FIND_BY_C_N_A_S);
+  }
+  sql=CustomSQLUtil.appendCriteria(sql,getActive(kaleoDefinitionQuery));
+  sql=CustomSQLUtil.appendCriteria(sql,getName(kaleoDefinitionQuery));
+  sql=CustomSQLUtil.appendCriteria(sql,getScope(kaleoDefinitionQuery));
+  if (kaleoDefinitionQuery.getOrderByComparator() != null) {
+    StringBundler sb=new StringBundler(sql);
+    appendOrderByComparator(sb,_ORDER_BY_ENTITY_ALIAS,kaleoDefinitionQuery.getOrderByComparator());
+    sql=sb.toString();
+  }
+  SQLQuery q=session.createSQLQuery(sql);
+  if (count) {
+    q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
+  }
+ else {
+    q.addEntity("KaleoDefinition",KaleoDefinitionImpl.class);
+  }
+  QueryPos qPos=QueryPos.getInstance(q);
+  qPos.add(kaleoDefinitionQuery.getCompanyId());
+  setActive(qPos,kaleoDefinitionQuery);
+  setName(qPos,kaleoDefinitionQuery);
+  setScope(qPos,kaleoDefinitionQuery);
+  return q;
+}
