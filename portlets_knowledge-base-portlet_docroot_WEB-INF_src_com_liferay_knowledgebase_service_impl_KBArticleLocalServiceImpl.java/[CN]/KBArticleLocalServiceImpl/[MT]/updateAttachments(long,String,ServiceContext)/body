@@ -10,8 +10,14 @@
   KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   for (  String fileName : kbArticle.getAttachmentsFileNames()) {
     String shortFileName=FileUtil.getShortFileName(fileName);
-    byte[] bytes=DLStoreUtil.getFileAsBytes(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-    addAttachment(dirName,shortFileName,bytes,serviceContext);
+    InputStream inputStream=null;
+    try {
+      inputStream=DLStoreUtil.getFileAsStream(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      addAttachment(dirName,shortFileName,inputStream,serviceContext);
+    }
+  finally {
+      StreamUtil.cleanUp(inputStream);
+    }
   }
   return dirName;
 }

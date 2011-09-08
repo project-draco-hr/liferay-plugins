@@ -10,12 +10,16 @@
   }
   String[] fileNames=DLStoreUtil.getFileNames(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   for (  String fileName : fileNames) {
-    byte[] bytes=DLStoreUtil.getFileAsBytes(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+    InputStream inputStream=null;
     try {
-      addAttachment(kbArticle.getAttachmentsDirName(),FileUtil.getShortFileName(fileName),bytes,serviceContext);
+      inputStream=DLStoreUtil.getFileAsStream(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      addAttachment(kbArticle.getAttachmentsDirName(),FileUtil.getShortFileName(fileName),inputStream,serviceContext);
     }
  catch (    DuplicateFileException dfe) {
       _log.error("File already exists for " + dfe.getMessage());
+    }
+ finally {
+      StreamUtil.cleanUp(inputStream);
     }
   }
 }
