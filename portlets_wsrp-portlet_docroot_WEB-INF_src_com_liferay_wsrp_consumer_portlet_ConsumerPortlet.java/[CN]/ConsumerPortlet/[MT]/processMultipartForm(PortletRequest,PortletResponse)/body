@@ -29,12 +29,18 @@
       mimeAttribute.setName(HttpHeaders.CONTENT_DISPOSITION);
       mimeAttribute.setValue(sb.toString());
       uploadContext.setMimeAttributes(new NamedString[]{mimeAttribute});
-      File file=uploadPortletRequest.getFile(name);
-      byte[] bytes=FileUtil.getBytes(file);
-      if (bytes == null) {
-        continue;
+      InputStream inputStream=null;
+      try {
+        inputStream=uploadPortletRequest.getFileAsStream(name);
+        byte[] bytes=FileUtil.getBytes(inputStream);
+        if (bytes == null) {
+          continue;
+        }
+        uploadContext.setUploadData(bytes);
       }
-      uploadContext.setUploadData(bytes);
+  finally {
+        StreamUtil.cleanUp(inputStream);
+      }
       uploadContexts.add(uploadContext);
     }
   }
