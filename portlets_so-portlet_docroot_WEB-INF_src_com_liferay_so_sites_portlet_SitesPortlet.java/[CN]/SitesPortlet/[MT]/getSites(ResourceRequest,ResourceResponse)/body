@@ -48,6 +48,7 @@
     }
   }
   jsonObject.put("count",groupsCount);
+  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  Group group : groups) {
     JSONObject groupJSONObject=JSONFactoryUtil.createJSONObject();
@@ -55,7 +56,7 @@
     groupJSONObject.put("name",group.getDescriptiveName());
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
       Layout layout=themeDisplay.getLayout();
-      PortletURL portletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.MY_SITES,layout.getPlid(),PortletRequest.ACTION_PHASE);
+      PortletURL portletURL=liferayPortletResponse.createActionURL(PortletKeys.MY_SITES);
       portletURL.setWindowState(WindowState.NORMAL);
       portletURL.setParameter("struts_action","/my_sites/view");
       portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
@@ -66,7 +67,7 @@
     boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
     groupJSONObject.put("socialOfficeEnabled",socialOfficeEnabled);
     Layout layout=themeDisplay.getLayout();
-    PortletURL siteAssignmentsPortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,layout.getPlid(),PortletRequest.ACTION_PHASE);
+    PortletURL siteAssignmentsPortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
     siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
     siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
     siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");
@@ -81,7 +82,7 @@
       groupJSONObject.put("leaveUrl",siteAssignmentsPortletURL.toString());
     }
     if (GroupPermissionUtil.contains(themeDisplay.getPermissionChecker(),group.getGroupId(),ActionKeys.DELETE)) {
-      PortletURL deletePortletURL=PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(resourceRequest),PortletKeys.SITES_ADMIN,themeDisplay.getLayout().getPlid(),PortletRequest.ACTION_PHASE);
+      PortletURL deletePortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
       deletePortletURL.setWindowState(WindowState.NORMAL);
       deletePortletURL.setParameter("struts_action","/sites_admin/edit_site");
       deletePortletURL.setParameter(Constants.CMD,Constants.DELETE);
