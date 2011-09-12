@@ -17,6 +17,7 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThread.getPrimaryKey(),userThread);
   if (!isNew && ((userThread.getUserId() != userThreadModelImpl.getOriginalUserId()) || (userThread.getMbThreadId() != userThreadModelImpl.getOriginalMbThreadId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FIND_ALL,FINDER_ARGS_EMPTY);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_M,new Object[]{Long.valueOf(userThreadModelImpl.getOriginalUserId()),Long.valueOf(userThreadModelImpl.getOriginalMbThreadId())});
   }
   if (isNew || ((userThread.getUserId() != userThreadModelImpl.getOriginalUserId()) || (userThread.getMbThreadId() != userThreadModelImpl.getOriginalMbThreadId()))) {

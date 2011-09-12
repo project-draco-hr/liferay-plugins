@@ -21,6 +21,7 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,module.getPrimaryKey(),module);
   if (!isNew && ((module.getAppId() != moduleModelImpl.getOriginalAppId()) || !Validator.equals(module.getContextName(),moduleModelImpl.getOriginalContextName()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FIND_ALL,FINDER_ARGS_EMPTY);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_C,new Object[]{Long.valueOf(moduleModelImpl.getOriginalAppId()),moduleModelImpl.getOriginalContextName()});
   }
   if (isNew || ((module.getAppId() != moduleModelImpl.getOriginalAppId()) || !Validator.equals(module.getContextName(),moduleModelImpl.getOriginalContextName()))) {

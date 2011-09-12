@@ -17,6 +17,7 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(KaleoTaskInstanceTokenModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskInstanceTokenImpl.class,kaleoTaskInstanceToken.getPrimaryKey(),kaleoTaskInstanceToken);
   if (!isNew && ((kaleoTaskInstanceToken.getKaleoInstanceId() != kaleoTaskInstanceTokenModelImpl.getOriginalKaleoInstanceId()) || (kaleoTaskInstanceToken.getKaleoTaskId() != kaleoTaskInstanceTokenModelImpl.getOriginalKaleoTaskId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FIND_ALL,FINDER_ARGS_EMPTY);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KII_KTI,new Object[]{Long.valueOf(kaleoTaskInstanceTokenModelImpl.getOriginalKaleoInstanceId()),Long.valueOf(kaleoTaskInstanceTokenModelImpl.getOriginalKaleoTaskId())});
   }
   if (isNew || ((kaleoTaskInstanceToken.getKaleoInstanceId() != kaleoTaskInstanceTokenModelImpl.getOriginalKaleoInstanceId()) || (kaleoTaskInstanceToken.getKaleoTaskId() != kaleoTaskInstanceTokenModelImpl.getOriginalKaleoTaskId()))) {

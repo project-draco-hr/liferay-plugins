@@ -21,6 +21,7 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducer.getPrimaryKey(),wsrpProducer);
   if (!isNew && (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid()) || (wsrpProducer.getGroupId() != wsrpProducerModelImpl.getOriginalGroupId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FIND_ALL,FINDER_ARGS_EMPTY);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducerModelImpl.getOriginalUuid(),Long.valueOf(wsrpProducerModelImpl.getOriginalGroupId())});
   }
   if (isNew || (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid()) || (wsrpProducer.getGroupId() != wsrpProducerModelImpl.getOriginalGroupId()))) {

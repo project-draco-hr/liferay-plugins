@@ -17,6 +17,7 @@
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
   EntityCacheUtil.putResult(MeetupsRegistrationModelImpl.ENTITY_CACHE_ENABLED,MeetupsRegistrationImpl.class,meetupsRegistration.getPrimaryKey(),meetupsRegistration);
   if (!isNew && ((meetupsRegistration.getUserId() != meetupsRegistrationModelImpl.getOriginalUserId()) || (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()))) {
+    FinderCacheUtil.removeResult(FINDER_PATH_FIND_ALL,FINDER_ARGS_EMPTY);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalUserId()),Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())});
   }
   if (isNew || ((meetupsRegistration.getUserId() != meetupsRegistrationModelImpl.getOriginalUserId()) || (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()))) {
