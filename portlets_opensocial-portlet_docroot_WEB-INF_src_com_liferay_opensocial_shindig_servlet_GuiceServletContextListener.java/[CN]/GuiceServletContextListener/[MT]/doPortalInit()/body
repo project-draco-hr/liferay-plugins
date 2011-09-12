@@ -1,15 +1,15 @@
 {
-  ClassLoader portalClassLoader=PortalClassLoaderUtil.getClassLoader();
+  ClassLoader portletClassLoader=PortletClassLoaderUtil.getClassLoader();
   Thread currentThread=Thread.currentThread();
   ClassLoader contextClassLoader=currentThread.getContextClassLoader();
   try {
-    if (contextClassLoader != portalClassLoader) {
-      currentThread.setContextClassLoader(portalClassLoader);
+    if (contextClassLoader != portletClassLoader) {
+      currentThread.setContextClassLoader(portletClassLoader);
     }
     _guiceServletContextListener.contextInitialized(_initializedServletContextEvent);
   }
   finally {
-    if (contextClassLoader != portalClassLoader) {
+    if (contextClassLoader != portletClassLoader) {
       currentThread.setContextClassLoader(contextClassLoader);
     }
   }
