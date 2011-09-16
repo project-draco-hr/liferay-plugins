@@ -1,7 +1,8 @@
 {
-  String body=getString(fileName);
+  String fileName=StringUtil.extractLast(filePath,StringPool.SLASH);
+  String body=getString(filePath);
   List<ObjectValuePair<String,InputStream>> inputStreamOVPs=new ArrayList<ObjectValuePair<String,InputStream>>();
-  InputStream inputStream=getInputStream(fileName);
+  InputStream inputStream=getInputStream(filePath);
   ObjectValuePair<String,InputStream> inputStreamOVP=new ObjectValuePair<String,InputStream>(fileName,inputStream);
   inputStreamOVPs.add(inputStreamOVP);
   return MBMessageLocalServiceUtil.addMessage(userId,userName,groupId,categoryId,threadId,parentMessageId,subject,body,StringPool.BLANK,inputStreamOVPs,false,-1.0,false,serviceContext);
