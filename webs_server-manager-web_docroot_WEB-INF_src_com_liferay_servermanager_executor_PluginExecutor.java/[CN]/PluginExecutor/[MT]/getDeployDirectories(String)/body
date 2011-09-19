@@ -1,0 +1,35 @@
+{
+  List<File> deployDirectories=new ArrayList<File>();
+  String deployDirName=DeployManagerUtil.getDeployDir();
+  File deployDir=new File(deployDirName,context);
+  if (deployDir.exists()) {
+    deployDirectories.add(deployDir);
+  }
+ else {
+    File deployWarDir=new File(deployDirName,context + ".war");
+    deployDirectories.add(deployWarDir);
+  }
+  if (ServerDetector.isTomcat()) {
+    File tmpDir=new File(System.getProperty("java.io.tmpdir"));
+    if (tmpDir.exists()) {
+      File[] tempContexts=tmpDir.listFiles(new FilenameFilter(){
+        public boolean accept(        File dir,        String name){
+          if (name.endsWith("-" + context)) {
+            return true;
+          }
+          return false;
+        }
+      }
+);
+      if (tempContexts != null && tempContexts.length > 0)       Arrays.sort(tempContexts,new Comparator<File>(){
+        public int compare(        File arg0,        File arg1){
+          return arg0.getName().compareTo(arg1.getName());
+        }
+      }
+);
+      File tempDeployDir=tempContexts[tempContexts.length - 1];
+      deployDirectories.add(tempDeployDir);
+    }
+  }
+  return deployDirectories.toArray(new File[deployDirectories.size()]);
+}
