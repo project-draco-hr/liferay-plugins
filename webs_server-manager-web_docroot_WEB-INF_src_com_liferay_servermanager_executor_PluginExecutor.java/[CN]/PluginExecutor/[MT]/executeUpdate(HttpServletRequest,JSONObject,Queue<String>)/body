@@ -1,9 +1,9 @@
 {
   String context=arguments.poll();
-  File[] deployDirectories=getDeployDirectories(context);
-  for (  File deployDirectory : deployDirectories) {
-    if (!deployDirectory.exists()) {
-      responseJSONObject.put(JSONKeys.ERROR,"Context directory " + deployDirectory.getAbsolutePath() + " does not exist");
+  List<File> deployDirs=getDeployDirectories(context);
+  for (  File deployDir : deployDirs) {
+    if (!deployDir.exists()) {
+      responseJSONObject.put(JSONKeys.ERROR,"Context directory " + deployDir.getAbsolutePath() + " does not exist");
       responseJSONObject.put(JSONKeys.STATUS,1);
       return;
     }
@@ -12,29 +12,32 @@
   if (tempFile == null) {
     return;
   }
-  for (  File deployDirectory : deployDirectories) {
+  for (  File deployDirectory : deployDirs) {
     FileUtil.unzip(tempFile,deployDirectory);
   }
-  File partialAppDeletePropsFile=new File(deployDirectories[0],"META-INF/liferay-partialapp-delete.props");
+  File partialAppDeletePropsFile=new File(deployDirs.get(0),"META-INF/liferay-partialapp-delete.props");
   if (!partialAppDeletePropsFile.exists()) {
     return;
   }
   BufferedReader bufferedReader=new BufferedReader(new FileReader(partialAppDeletePropsFile));
   String line=null;
   while ((line=bufferedReader.readLine()) != null) {
-    for (    File deployDirectory : deployDirectories) {
+    for (    File deployDirectory : deployDirs) {
       File staleFile=new File(deployDirectory,line.trim());
       if (!staleFile.exists()) {
         continue;
       }
       boolean success=FileUtils.deleteQuietly(staleFile);
-      if (!success) {
-        String message="Could not delete file " + staleFile.getAbsolutePath();
-        _log.error(message);
-        responseJSONObject.put(JSONKeys.ERROR,message);
+      if (success) {
+        continue;
       }
+      String message="Unable to delete file " + staleFile.getAbsolutePath();
+      _log.error(message);
+      responseJSONObject.put(JSONKeys.ERROR,message);
     }
   }
   FileUtils.deleteQuietly(partialAppDeletePropsFile);
-  _log.info("Update of " + context + " context successful.");
+  if (_log.isInfoEnabled()) {
+    _log.info("Successfully updated " + context);
+  }
 }

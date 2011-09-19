@@ -1,37 +1,37 @@
 {
-  List<File> deployDirectories=new ArrayList<File>();
+  List<File> deployDirs=new ArrayList<File>();
   String deployDirName=DeployManagerUtil.getDeployDir();
   File deployDir=new File(deployDirName,context);
   if (deployDir.exists()) {
-    deployDirectories.add(deployDir);
+    deployDirs.add(deployDir);
   }
  else {
     File deployWarDir=new File(deployDirName,context + ".war");
-    deployDirectories.add(deployWarDir);
+    deployDirs.add(deployWarDir);
   }
   if (ServerDetector.isTomcat()) {
-    File tmpDir=new File(System.getProperty("java.io.tmpdir"));
-    if (tmpDir.exists()) {
-      File[] tmpContexts=tmpDir.listFiles(new FilenameFilter(){
-        public boolean accept(        File dir,        String name){
-          if (name.endsWith("-" + context)) {
-            return true;
-          }
-          return false;
+    File tempDir=new File(SystemProperties.get(SystemProperties.TMP_DIR));
+    File[] tempContextDirs=tempDir.listFiles(new FilenameFilter(){
+      public boolean accept(      File dir,      String name){
+        if (name.endsWith("-" + context)) {
+          return true;
+        }
+        return false;
+      }
+    }
+);
+    if ((tempContextDirs != null) && (tempContextDirs.length > 0)) {
+      Arrays.sort(tempContextDirs,new Comparator<File>(){
+        public int compare(        File file1,        File file2){
+          String fileName1=file1.getName();
+          String fileName2=file2.getName();
+          return fileName1.compareTo(fileName2);
         }
       }
 );
-      if (tmpContexts != null && tmpContexts.length > 0) {
-        Arrays.sort(tmpContexts,new Comparator<File>(){
-          public int compare(          File arg0,          File arg1){
-            return arg0.getName().compareTo(arg1.getName());
-          }
-        }
-);
-      }
-      File tempDeployDir=tmpContexts[tmpContexts.length - 1];
-      deployDirectories.add(tempDeployDir);
+      File tempContextDir=tempContextDirs[tempContextDirs.length - 1];
+      deployDirs.add(tempContextDir);
     }
   }
-  return deployDirectories.toArray(new File[deployDirectories.size()]);
+  return deployDirs;
 }
