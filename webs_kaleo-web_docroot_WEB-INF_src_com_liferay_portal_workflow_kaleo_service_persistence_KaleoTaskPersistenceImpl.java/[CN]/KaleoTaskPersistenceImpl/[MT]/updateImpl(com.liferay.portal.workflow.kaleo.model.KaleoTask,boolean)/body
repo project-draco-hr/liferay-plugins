@@ -14,13 +14,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTask.getPrimaryKey(),kaleoTask);
-  if (!isNew && (kaleoTask.getKaleoNodeId() != kaleoTaskModelImpl.getOriginalKaleoNodeId())) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoTaskModelImpl.getOriginalKaleoNodeId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (kaleoTask.getKaleoNodeId() != kaleoTaskModelImpl.getOriginalKaleoNodeId())) {
+ else {
+    if (kaleoTask.getCompanyId() != kaleoTaskModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(kaleoTaskModelImpl.getOriginalCompanyId())});
+    }
+    if (kaleoTask.getKaleoDefinitionId() != kaleoTaskModelImpl.getOriginalKaleoDefinitionId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID,new Object[]{Long.valueOf(kaleoTaskModelImpl.getOriginalKaleoDefinitionId())});
+    }
+  }
+  EntityCacheUtil.putResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTask.getPrimaryKey(),kaleoTask);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoTask.getKaleoNodeId())},kaleoTask);
+  }
+ else {
+    if (kaleoTask.getKaleoNodeId() != kaleoTaskModelImpl.getOriginalKaleoNodeId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoTaskModelImpl.getOriginalKaleoNodeId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoTask.getKaleoNodeId())},kaleoTask);
+    }
   }
   return kaleoTask;
 }

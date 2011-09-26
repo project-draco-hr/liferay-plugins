@@ -1,5 +1,7 @@
 {
   attachment=toUnwrappedModel(attachment);
+  boolean isNew=attachment.isNew();
+  AttachmentModelImpl attachmentModelImpl=(AttachmentModelImpl)attachment;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,15 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (attachment.getMessageId() != attachmentModelImpl.getOriginalMessageId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MESSAGEID,new Object[]{Long.valueOf(attachmentModelImpl.getOriginalMessageId())});
+    }
+  }
   EntityCacheUtil.putResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachment.getPrimaryKey(),attachment);
   return attachment;
 }

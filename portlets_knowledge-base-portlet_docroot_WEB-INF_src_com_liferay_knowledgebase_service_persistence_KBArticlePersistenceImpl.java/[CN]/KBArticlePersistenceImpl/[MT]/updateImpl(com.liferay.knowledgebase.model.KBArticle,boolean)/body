@@ -18,19 +18,98 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{kbArticleModelImpl.getOriginalUuid()});
+    }
+    if (kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEPRIMKEY,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_G,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Long.valueOf(kbArticleModelImpl.getOriginalGroupId())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getCompanyId() != kbArticleModelImpl.getOriginalCompanyId()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalCompanyId()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getCompanyId() != kbArticleModelImpl.getOriginalCompanyId()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalCompanyId()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getCompanyId() != kbArticleModelImpl.getOriginalCompanyId()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalCompanyId()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_G_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_G_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_G_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || !Validator.equals(kbArticle.getSections(),kbArticleModelImpl.getOriginalSections())|| (kbArticle.getLatest() != kbArticleModelImpl.getOriginalLatest())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_S_L,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),kbArticleModelImpl.getOriginalSections(),Boolean.valueOf(kbArticleModelImpl.getOriginalLatest())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || !Validator.equals(kbArticle.getSections(),kbArticleModelImpl.getOriginalSections())|| (kbArticle.getMain() != kbArticleModelImpl.getOriginalMain())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_S_M,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),kbArticleModelImpl.getOriginalSections(),Boolean.valueOf(kbArticleModelImpl.getOriginalMain())});
+    }
+    if ((kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()) || (kbArticle.getParentResourcePrimKey() != kbArticleModelImpl.getOriginalParentResourcePrimKey()) || !Validator.equals(kbArticle.getSections(),kbArticleModelImpl.getOriginalSections())|| (kbArticle.getStatus() != kbArticleModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_P_S_S,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalGroupId()),Long.valueOf(kbArticleModelImpl.getOriginalParentResourcePrimKey()),kbArticleModelImpl.getOriginalSections(),Integer.valueOf(kbArticleModelImpl.getOriginalStatus())});
+    }
+  }
   EntityCacheUtil.putResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticle.getPrimaryKey(),kbArticle);
-  if (!isNew && (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticleModelImpl.getOriginalUuid(),Long.valueOf(kbArticleModelImpl.getOriginalGroupId())});
-  }
-  if (isNew || (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId()))) {
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticle.getUuid(),Long.valueOf(kbArticle.getGroupId())},kbArticle);
-  }
-  if (!isNew && ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getVersion() != kbArticleModelImpl.getOriginalVersion()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalVersion())});
-  }
-  if (isNew || ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getVersion() != kbArticleModelImpl.getOriginalVersion()))) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticle.getResourcePrimKey()),Integer.valueOf(kbArticle.getVersion())},kbArticle);
+  }
+ else {
+    if (!Validator.equals(kbArticle.getUuid(),kbArticleModelImpl.getOriginalUuid()) || (kbArticle.getGroupId() != kbArticleModelImpl.getOriginalGroupId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticleModelImpl.getOriginalUuid(),Long.valueOf(kbArticleModelImpl.getOriginalGroupId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticle.getUuid(),Long.valueOf(kbArticle.getGroupId())},kbArticle);
+    }
+    if ((kbArticle.getResourcePrimKey() != kbArticleModelImpl.getOriginalResourcePrimKey()) || (kbArticle.getVersion() != kbArticleModelImpl.getOriginalVersion())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalVersion())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticle.getResourcePrimKey()),Integer.valueOf(kbArticle.getVersion())},kbArticle);
+    }
   }
   return kbArticle;
 }

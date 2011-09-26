@@ -18,13 +18,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducer.getPrimaryKey(),wsrpProducer);
-  if (!isNew && (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid()) || (wsrpProducer.getGroupId() != wsrpProducerModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducerModelImpl.getOriginalUuid(),Long.valueOf(wsrpProducerModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid()) || (wsrpProducer.getGroupId() != wsrpProducerModelImpl.getOriginalGroupId()))) {
+ else {
+    if (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{wsrpProducerModelImpl.getOriginalUuid()});
+    }
+    if (wsrpProducer.getCompanyId() != wsrpProducerModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(wsrpProducerModelImpl.getOriginalCompanyId())});
+    }
+  }
+  EntityCacheUtil.putResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducer.getPrimaryKey(),wsrpProducer);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducer.getUuid(),Long.valueOf(wsrpProducer.getGroupId())},wsrpProducer);
+  }
+ else {
+    if (!Validator.equals(wsrpProducer.getUuid(),wsrpProducerModelImpl.getOriginalUuid()) || (wsrpProducer.getGroupId() != wsrpProducerModelImpl.getOriginalGroupId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducerModelImpl.getOriginalUuid(),Long.valueOf(wsrpProducerModelImpl.getOriginalGroupId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducer.getUuid(),Long.valueOf(wsrpProducer.getGroupId())},wsrpProducer);
+    }
   }
   return wsrpProducer;
 }

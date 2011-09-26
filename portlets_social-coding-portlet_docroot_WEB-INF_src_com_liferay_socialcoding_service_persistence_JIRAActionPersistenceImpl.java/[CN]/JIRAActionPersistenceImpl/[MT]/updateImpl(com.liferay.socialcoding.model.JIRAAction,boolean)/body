@@ -1,5 +1,7 @@
 {
   jiraAction=toUnwrappedModel(jiraAction);
+  boolean isNew=jiraAction.isNew();
+  JIRAActionModelImpl jiraActionModelImpl=(JIRAActionModelImpl)jiraAction;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,21 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (!Validator.equals(jiraAction.getJiraUserId(),jiraActionModelImpl.getOriginalJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAUSERID,new Object[]{jiraActionModelImpl.getOriginalJiraUserId()});
+    }
+    if (jiraAction.getJiraIssueId() != jiraActionModelImpl.getOriginalJiraIssueId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAISSUEID,new Object[]{Long.valueOf(jiraActionModelImpl.getOriginalJiraIssueId())});
+    }
+    if (!Validator.equals(jiraAction.getType(),jiraActionModelImpl.getOriginalType())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE,new Object[]{jiraActionModelImpl.getOriginalType()});
+    }
+  }
   EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraAction.getPrimaryKey(),jiraAction);
   return jiraAction;
 }

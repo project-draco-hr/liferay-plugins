@@ -1,5 +1,7 @@
 {
   projectsEntry=toUnwrappedModel(projectsEntry);
+  boolean isNew=projectsEntry.isNew();
+  ProjectsEntryModelImpl projectsEntryModelImpl=(ProjectsEntryModelImpl)projectsEntry;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,15 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (projectsEntry.getUserId() != projectsEntryModelImpl.getOriginalUserId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(projectsEntryModelImpl.getOriginalUserId())});
+    }
+  }
   EntityCacheUtil.putResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,projectsEntry.getPrimaryKey(),projectsEntry);
   return projectsEntry;
 }

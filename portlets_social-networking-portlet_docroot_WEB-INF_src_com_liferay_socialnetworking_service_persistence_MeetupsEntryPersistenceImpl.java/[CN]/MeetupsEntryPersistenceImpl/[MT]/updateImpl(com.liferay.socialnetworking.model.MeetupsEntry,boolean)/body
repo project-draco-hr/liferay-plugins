@@ -1,5 +1,7 @@
 {
   meetupsEntry=toUnwrappedModel(meetupsEntry);
+  boolean isNew=meetupsEntry.isNew();
+  MeetupsEntryModelImpl meetupsEntryModelImpl=(MeetupsEntryModelImpl)meetupsEntry;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,18 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (meetupsEntry.getCompanyId() != meetupsEntryModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(meetupsEntryModelImpl.getOriginalCompanyId())});
+    }
+    if (meetupsEntry.getUserId() != meetupsEntryModelImpl.getOriginalUserId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(meetupsEntryModelImpl.getOriginalUserId())});
+    }
+  }
   EntityCacheUtil.putResult(MeetupsEntryModelImpl.ENTITY_CACHE_ENABLED,MeetupsEntryImpl.class,meetupsEntry.getPrimaryKey(),meetupsEntry);
   return meetupsEntry;
 }

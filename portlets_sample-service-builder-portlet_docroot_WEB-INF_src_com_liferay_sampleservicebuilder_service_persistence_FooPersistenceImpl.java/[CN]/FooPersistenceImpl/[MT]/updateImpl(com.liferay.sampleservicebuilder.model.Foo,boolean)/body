@@ -18,13 +18,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey(),foo);
-  if (!isNew && (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{fooModelImpl.getOriginalUuid(),Long.valueOf(fooModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId()))) {
+ else {
+    if (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{fooModelImpl.getOriginalUuid()});
+    }
+    if (foo.getField2() != fooModelImpl.getOriginalField2()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FIELD2,new Object[]{Boolean.valueOf(fooModelImpl.getOriginalField2())});
+    }
+  }
+  EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey(),foo);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{foo.getUuid(),Long.valueOf(foo.getGroupId())},foo);
+  }
+ else {
+    if (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{fooModelImpl.getOriginalUuid(),Long.valueOf(fooModelImpl.getOriginalGroupId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{foo.getUuid(),Long.valueOf(foo.getGroupId())},foo);
+    }
   }
   return foo;
 }

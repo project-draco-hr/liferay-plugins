@@ -1,6 +1,15 @@
 {
-  Object[] finderArgs=new Object[]{StringUtil.merge(groupIds),name,active,start,end,orderByComparator};
-  List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(FINDER_PATH_FIND_BY_G_N_A,finderArgs,this);
+  FinderPath finderPath=null;
+  Object[] finderArgs=null;
+  if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
+    finderPath=FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_A;
+    finderArgs=new Object[]{StringUtil.merge(groupIds),name,active};
+  }
+ else {
+    finderPath=FINDER_PATH_WITH_PAGINATION_FIND_BY_G_N_A;
+    finderArgs=new Object[]{StringUtil.merge(groupIds),name,active,start,end,orderByComparator};
+  }
+  List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if (list == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_SELECT_CALENDARRESOURCE_WHERE);
@@ -65,11 +74,11 @@
     }
  finally {
       if (list == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FIND_BY_G_N_A,finderArgs);
+        FinderCacheUtil.removeResult(finderPath,finderArgs);
       }
  else {
         cacheResult(list);
-        FinderCacheUtil.putResult(FINDER_PATH_FIND_BY_G_N_A,finderArgs,list);
+        FinderCacheUtil.putResult(finderPath,finderArgs,list);
       }
       closeSession(session);
     }

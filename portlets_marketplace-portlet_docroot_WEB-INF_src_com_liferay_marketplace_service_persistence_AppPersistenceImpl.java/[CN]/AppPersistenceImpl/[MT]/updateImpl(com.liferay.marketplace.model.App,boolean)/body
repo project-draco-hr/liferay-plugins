@@ -18,13 +18,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey(),app);
-  if (!isNew && (app.getRemoteAppId() != appModelImpl.getOriginalRemoteAppId())) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(appModelImpl.getOriginalRemoteAppId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (app.getRemoteAppId() != appModelImpl.getOriginalRemoteAppId())) {
+ else {
+    if (!Validator.equals(app.getUuid(),appModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{appModelImpl.getOriginalUuid()});
+    }
+    if (app.getCompanyId() != appModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(appModelImpl.getOriginalCompanyId())});
+    }
+  }
+  EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey(),app);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(app.getRemoteAppId())},app);
+  }
+ else {
+    if (app.getRemoteAppId() != appModelImpl.getOriginalRemoteAppId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(appModelImpl.getOriginalRemoteAppId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(app.getRemoteAppId())},app);
+    }
   }
   return app;
 }

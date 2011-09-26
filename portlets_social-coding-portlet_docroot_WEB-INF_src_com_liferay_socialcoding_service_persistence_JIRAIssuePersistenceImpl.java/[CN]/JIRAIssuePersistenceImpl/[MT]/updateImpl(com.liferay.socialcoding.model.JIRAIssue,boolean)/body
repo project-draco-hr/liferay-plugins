@@ -14,13 +14,51 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,jiraIssue.getPrimaryKey(),jiraIssue);
-  if (!isNew && (!Validator.equals(jiraIssue.getKey(),jiraIssueModelImpl.getOriginalKey()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,new Object[]{jiraIssueModelImpl.getOriginalKey()});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (!Validator.equals(jiraIssue.getKey(),jiraIssueModelImpl.getOriginalKey()))) {
+ else {
+    if (jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PROJECTID,new Object[]{Long.valueOf(jiraIssueModelImpl.getOriginalProjectId())});
+    }
+    if (!Validator.equals(jiraIssue.getReporterJiraUserId(),jiraIssueModelImpl.getOriginalReporterJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_REPORTERJIRAUSERID,new Object[]{jiraIssueModelImpl.getOriginalReporterJiraUserId()});
+    }
+    if (!Validator.equals(jiraIssue.getAssigneeJiraUserId(),jiraIssueModelImpl.getOriginalAssigneeJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ASSIGNEEJIRAUSERID,new Object[]{jiraIssueModelImpl.getOriginalAssigneeJiraUserId()});
+    }
+    if (!Validator.equals(jiraIssue.getModifiedDate(),jiraIssueModelImpl.getOriginalModifiedDate()) || (jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MD_P,new Object[]{jiraIssueModelImpl.getOriginalModifiedDate(),Long.valueOf(jiraIssueModelImpl.getOriginalProjectId())});
+    }
+    if ((jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getReporterJiraUserId(),jiraIssueModelImpl.getOriginalReporterJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_RJUI,new Object[]{Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalReporterJiraUserId()});
+    }
+    if ((jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getAssigneeJiraUserId(),jiraIssueModelImpl.getOriginalAssigneeJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_AJUI,new Object[]{Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalAssigneeJiraUserId()});
+    }
+    if (!Validator.equals(jiraIssue.getModifiedDate(),jiraIssueModelImpl.getOriginalModifiedDate()) || (jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getReporterJiraUserId(),jiraIssueModelImpl.getOriginalReporterJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MD_P_RJUI,new Object[]{jiraIssueModelImpl.getOriginalModifiedDate(),Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalReporterJiraUserId()});
+    }
+    if (!Validator.equals(jiraIssue.getModifiedDate(),jiraIssueModelImpl.getOriginalModifiedDate()) || (jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getAssigneeJiraUserId(),jiraIssueModelImpl.getOriginalAssigneeJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MD_P_AJUI,new Object[]{jiraIssueModelImpl.getOriginalModifiedDate(),Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalAssigneeJiraUserId()});
+    }
+    if ((jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getReporterJiraUserId(),jiraIssueModelImpl.getOriginalReporterJiraUserId()) || !Validator.equals(jiraIssue.getStatus(),jiraIssueModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_RJUI_S,new Object[]{Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalReporterJiraUserId(),jiraIssueModelImpl.getOriginalStatus()});
+    }
+    if ((jiraIssue.getProjectId() != jiraIssueModelImpl.getOriginalProjectId()) || !Validator.equals(jiraIssue.getAssigneeJiraUserId(),jiraIssueModelImpl.getOriginalAssigneeJiraUserId()) || !Validator.equals(jiraIssue.getStatus(),jiraIssueModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_AJUI_S,new Object[]{Long.valueOf(jiraIssueModelImpl.getOriginalProjectId()),jiraIssueModelImpl.getOriginalAssigneeJiraUserId(),jiraIssueModelImpl.getOriginalStatus()});
+    }
+  }
+  EntityCacheUtil.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,jiraIssue.getPrimaryKey(),jiraIssue);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,new Object[]{jiraIssue.getKey()},jiraIssue);
+  }
+ else {
+    if (!Validator.equals(jiraIssue.getKey(),jiraIssueModelImpl.getOriginalKey())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,new Object[]{jiraIssueModelImpl.getOriginalKey()});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,new Object[]{jiraIssue.getKey()},jiraIssue);
+    }
   }
   return jiraIssue;
 }

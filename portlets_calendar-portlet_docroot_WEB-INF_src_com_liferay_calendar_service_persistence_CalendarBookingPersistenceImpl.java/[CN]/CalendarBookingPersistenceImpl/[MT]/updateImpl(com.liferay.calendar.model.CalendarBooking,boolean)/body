@@ -18,13 +18,33 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBooking.getPrimaryKey(),calendarBooking);
-  if (!isNew && (!Validator.equals(calendarBooking.getUuid(),calendarBookingModelImpl.getOriginalUuid()) || (calendarBooking.getGroupId() != calendarBookingModelImpl.getOriginalGroupId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBookingModelImpl.getOriginalUuid(),Long.valueOf(calendarBookingModelImpl.getOriginalGroupId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || (!Validator.equals(calendarBooking.getUuid(),calendarBookingModelImpl.getOriginalUuid()) || (calendarBooking.getGroupId() != calendarBookingModelImpl.getOriginalGroupId()))) {
+ else {
+    if (!Validator.equals(calendarBooking.getUuid(),calendarBookingModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{calendarBookingModelImpl.getOriginalUuid()});
+    }
+    if (calendarBooking.getCalendarEventId() != calendarBookingModelImpl.getOriginalCalendarEventId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CALENDAREVENTID,new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalCalendarEventId())});
+    }
+    if (calendarBooking.getCalendarResourceId() != calendarBookingModelImpl.getOriginalCalendarResourceId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CALENDARRESOURCEID,new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalCalendarResourceId())});
+    }
+    if ((calendarBooking.getClassNameId() != calendarBookingModelImpl.getOriginalClassNameId()) || (calendarBooking.getClassPK() != calendarBookingModelImpl.getOriginalClassPK())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_C,new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalClassNameId()),Long.valueOf(calendarBookingModelImpl.getOriginalClassPK())});
+    }
+  }
+  EntityCacheUtil.putResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBooking.getPrimaryKey(),calendarBooking);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBooking.getUuid(),Long.valueOf(calendarBooking.getGroupId())},calendarBooking);
+  }
+ else {
+    if (!Validator.equals(calendarBooking.getUuid(),calendarBookingModelImpl.getOriginalUuid()) || (calendarBooking.getGroupId() != calendarBookingModelImpl.getOriginalGroupId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBookingModelImpl.getOriginalUuid(),Long.valueOf(calendarBookingModelImpl.getOriginalGroupId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBooking.getUuid(),Long.valueOf(calendarBooking.getGroupId())},calendarBooking);
+    }
   }
   return calendarBooking;
 }

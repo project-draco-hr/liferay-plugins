@@ -14,13 +14,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(MeetupsRegistrationModelImpl.ENTITY_CACHE_ENABLED,MeetupsRegistrationImpl.class,meetupsRegistration.getPrimaryKey(),meetupsRegistration);
-  if (!isNew && ((meetupsRegistration.getUserId() != meetupsRegistrationModelImpl.getOriginalUserId()) || (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalUserId()),Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || ((meetupsRegistration.getUserId() != meetupsRegistrationModelImpl.getOriginalUserId()) || (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()))) {
+ else {
+    if (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MEETUPSENTRYID,new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())});
+    }
+    if ((meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()) || (meetupsRegistration.getStatus() != meetupsRegistrationModelImpl.getOriginalStatus())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ME_S,new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId()),Integer.valueOf(meetupsRegistrationModelImpl.getOriginalStatus())});
+    }
+  }
+  EntityCacheUtil.putResult(MeetupsRegistrationModelImpl.ENTITY_CACHE_ENABLED,MeetupsRegistrationImpl.class,meetupsRegistration.getPrimaryKey(),meetupsRegistration);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistration.getUserId()),Long.valueOf(meetupsRegistration.getMeetupsEntryId())},meetupsRegistration);
+  }
+ else {
+    if ((meetupsRegistration.getUserId() != meetupsRegistrationModelImpl.getOriginalUserId()) || (meetupsRegistration.getMeetupsEntryId() != meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalUserId()),Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistration.getUserId()),Long.valueOf(meetupsRegistration.getMeetupsEntryId())},meetupsRegistration);
+    }
   }
   return meetupsRegistration;
 }

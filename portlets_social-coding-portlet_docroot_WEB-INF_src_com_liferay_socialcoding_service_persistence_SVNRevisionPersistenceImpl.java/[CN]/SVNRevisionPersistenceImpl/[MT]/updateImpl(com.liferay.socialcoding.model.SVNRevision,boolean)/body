@@ -1,5 +1,7 @@
 {
   svnRevision=toUnwrappedModel(svnRevision);
+  boolean isNew=svnRevision.isNew();
+  SVNRevisionModelImpl svnRevisionModelImpl=(SVNRevisionModelImpl)svnRevision;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,21 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (!Validator.equals(svnRevision.getSvnUserId(),svnRevisionModelImpl.getOriginalSvnUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNUSERID,new Object[]{svnRevisionModelImpl.getOriginalSvnUserId()});
+    }
+    if (svnRevision.getSvnRepositoryId() != svnRevisionModelImpl.getOriginalSvnRepositoryId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNREPOSITORYID,new Object[]{Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())});
+    }
+    if (!Validator.equals(svnRevision.getSvnUserId(),svnRevisionModelImpl.getOriginalSvnUserId()) || (svnRevision.getSvnRepositoryId() != svnRevisionModelImpl.getOriginalSvnRepositoryId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNU_SVNR,new Object[]{svnRevisionModelImpl.getOriginalSvnUserId(),Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())});
+    }
+  }
   EntityCacheUtil.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,svnRevision.getPrimaryKey(),svnRevision);
   return svnRevision;
 }

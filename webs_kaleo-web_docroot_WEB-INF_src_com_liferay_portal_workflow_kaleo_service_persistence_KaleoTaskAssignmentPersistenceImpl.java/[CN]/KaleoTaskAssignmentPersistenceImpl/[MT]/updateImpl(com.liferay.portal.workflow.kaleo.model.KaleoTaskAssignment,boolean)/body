@@ -1,5 +1,7 @@
 {
   kaleoTaskAssignment=toUnwrappedModel(kaleoTaskAssignment);
+  boolean isNew=kaleoTaskAssignment.isNew();
+  KaleoTaskAssignmentModelImpl kaleoTaskAssignmentModelImpl=(KaleoTaskAssignmentModelImpl)kaleoTaskAssignment;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,24 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (kaleoTaskAssignment.getCompanyId() != kaleoTaskAssignmentModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(kaleoTaskAssignmentModelImpl.getOriginalCompanyId())});
+    }
+    if (kaleoTaskAssignment.getKaleoDefinitionId() != kaleoTaskAssignmentModelImpl.getOriginalKaleoDefinitionId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID,new Object[]{Long.valueOf(kaleoTaskAssignmentModelImpl.getOriginalKaleoDefinitionId())});
+    }
+    if (!Validator.equals(kaleoTaskAssignment.getKaleoClassName(),kaleoTaskAssignmentModelImpl.getOriginalKaleoClassName()) || (kaleoTaskAssignment.getKaleoClassPK() != kaleoTaskAssignmentModelImpl.getOriginalKaleoClassPK())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK,new Object[]{kaleoTaskAssignmentModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTaskAssignmentModelImpl.getOriginalKaleoClassPK())});
+    }
+    if (!Validator.equals(kaleoTaskAssignment.getKaleoClassName(),kaleoTaskAssignmentModelImpl.getOriginalKaleoClassName()) || (kaleoTaskAssignment.getKaleoClassPK() != kaleoTaskAssignmentModelImpl.getOriginalKaleoClassPK()) || !Validator.equals(kaleoTaskAssignment.getAssigneeClassName(),kaleoTaskAssignmentModelImpl.getOriginalAssigneeClassName())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_ACN,new Object[]{kaleoTaskAssignmentModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTaskAssignmentModelImpl.getOriginalKaleoClassPK()),kaleoTaskAssignmentModelImpl.getOriginalAssigneeClassName()});
+    }
+  }
   EntityCacheUtil.putResult(KaleoTaskAssignmentModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskAssignmentImpl.class,kaleoTaskAssignment.getPrimaryKey(),kaleoTaskAssignment);
   return kaleoTaskAssignment;
 }

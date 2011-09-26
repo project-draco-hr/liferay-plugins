@@ -1,5 +1,7 @@
 {
   kaleoInstance=toUnwrappedModel(kaleoInstance);
+  boolean isNew=kaleoInstance.isNew();
+  KaleoInstanceModelImpl kaleoInstanceModelImpl=(KaleoInstanceModelImpl)kaleoInstance;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,24 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (kaleoInstance.getCompanyId() != kaleoInstanceModelImpl.getOriginalCompanyId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(kaleoInstanceModelImpl.getOriginalCompanyId())});
+    }
+    if (kaleoInstance.getKaleoDefinitionId() != kaleoInstanceModelImpl.getOriginalKaleoDefinitionId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID,new Object[]{Long.valueOf(kaleoInstanceModelImpl.getOriginalKaleoDefinitionId())});
+    }
+    if ((kaleoInstance.getKaleoDefinitionId() != kaleoInstanceModelImpl.getOriginalKaleoDefinitionId()) || (kaleoInstance.getCompleted() != kaleoInstanceModelImpl.getOriginalCompleted())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KDI_C,new Object[]{Long.valueOf(kaleoInstanceModelImpl.getOriginalKaleoDefinitionId()),Boolean.valueOf(kaleoInstanceModelImpl.getOriginalCompleted())});
+    }
+    if ((kaleoInstance.getCompanyId() != kaleoInstanceModelImpl.getOriginalCompanyId()) || !Validator.equals(kaleoInstance.getKaleoDefinitionName(),kaleoInstanceModelImpl.getOriginalKaleoDefinitionName()) || (kaleoInstance.getKaleoDefinitionVersion() != kaleoInstanceModelImpl.getOriginalKaleoDefinitionVersion())|| !Validator.equals(kaleoInstance.getCompletionDate(),kaleoInstanceModelImpl.getOriginalCompletionDate())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_KDN_KDV_CD,new Object[]{Long.valueOf(kaleoInstanceModelImpl.getOriginalCompanyId()),kaleoInstanceModelImpl.getOriginalKaleoDefinitionName(),Integer.valueOf(kaleoInstanceModelImpl.getOriginalKaleoDefinitionVersion()),kaleoInstanceModelImpl.getOriginalCompletionDate()});
+    }
+  }
   EntityCacheUtil.putResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceImpl.class,kaleoInstance.getPrimaryKey(),kaleoInstance);
   return kaleoInstance;
 }

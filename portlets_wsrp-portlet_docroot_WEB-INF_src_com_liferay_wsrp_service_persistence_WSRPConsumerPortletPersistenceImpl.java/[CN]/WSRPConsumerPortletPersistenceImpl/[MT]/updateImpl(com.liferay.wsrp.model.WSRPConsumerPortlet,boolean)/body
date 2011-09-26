@@ -18,13 +18,27 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
-  EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerPortletImpl.class,wsrpConsumerPortlet.getPrimaryKey(),wsrpConsumerPortlet);
-  if (!isNew && ((wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()) || !Validator.equals(wsrpConsumerPortlet.getPortletHandle(),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()))) {
-    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P,new Object[]{Long.valueOf(wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()});
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  if (isNew || ((wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()) || !Validator.equals(wsrpConsumerPortlet.getPortletHandle(),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()))) {
+ else {
+    if (!Validator.equals(wsrpConsumerPortlet.getUuid(),wsrpConsumerPortletModelImpl.getOriginalUuid())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{wsrpConsumerPortletModelImpl.getOriginalUuid()});
+    }
+    if (wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_WSRPCONSUMERID,new Object[]{Long.valueOf(wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId())});
+    }
+  }
+  EntityCacheUtil.putResult(WSRPConsumerPortletModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerPortletImpl.class,wsrpConsumerPortlet.getPrimaryKey(),wsrpConsumerPortlet);
+  if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,new Object[]{Long.valueOf(wsrpConsumerPortlet.getWsrpConsumerId()),wsrpConsumerPortlet.getPortletHandle()},wsrpConsumerPortlet);
+  }
+ else {
+    if ((wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()) || !Validator.equals(wsrpConsumerPortlet.getPortletHandle(),wsrpConsumerPortletModelImpl.getOriginalPortletHandle())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P,new Object[]{Long.valueOf(wsrpConsumerPortletModelImpl.getOriginalWsrpConsumerId()),wsrpConsumerPortletModelImpl.getOriginalPortletHandle()});
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,new Object[]{Long.valueOf(wsrpConsumerPortlet.getWsrpConsumerId()),wsrpConsumerPortlet.getPortletHandle()},wsrpConsumerPortlet);
+    }
   }
   return wsrpConsumerPortlet;
 }

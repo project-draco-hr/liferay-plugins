@@ -1,5 +1,7 @@
 {
   wallEntry=toUnwrappedModel(wallEntry);
+  boolean isNew=wallEntry.isNew();
+  WallEntryModelImpl wallEntryModelImpl=(WallEntryModelImpl)wallEntry;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,21 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (wallEntry.getGroupId() != wallEntryModelImpl.getOriginalGroupId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId())});
+    }
+    if (wallEntry.getUserId() != wallEntryModelImpl.getOriginalUserId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalUserId())});
+    }
+    if ((wallEntry.getGroupId() != wallEntryModelImpl.getOriginalGroupId()) || (wallEntry.getUserId() != wallEntryModelImpl.getOriginalUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId()),Long.valueOf(wallEntryModelImpl.getOriginalUserId())});
+    }
+  }
   EntityCacheUtil.putResult(WallEntryModelImpl.ENTITY_CACHE_ENABLED,WallEntryImpl.class,wallEntry.getPrimaryKey(),wallEntry);
   return wallEntry;
 }

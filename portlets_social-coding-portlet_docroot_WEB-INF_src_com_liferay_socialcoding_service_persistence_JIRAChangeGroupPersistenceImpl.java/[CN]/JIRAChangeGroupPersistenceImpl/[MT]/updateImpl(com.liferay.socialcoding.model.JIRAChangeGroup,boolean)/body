@@ -1,5 +1,7 @@
 {
   jiraChangeGroup=toUnwrappedModel(jiraChangeGroup);
+  boolean isNew=jiraChangeGroup.isNew();
+  JIRAChangeGroupModelImpl jiraChangeGroupModelImpl=(JIRAChangeGroupModelImpl)jiraChangeGroup;
   Session session=null;
   try {
     session=openSession();
@@ -12,7 +14,18 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST);
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if (!Validator.equals(jiraChangeGroup.getJiraUserId(),jiraChangeGroupModelImpl.getOriginalJiraUserId())) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAUSERID,new Object[]{jiraChangeGroupModelImpl.getOriginalJiraUserId()});
+    }
+    if (jiraChangeGroup.getJiraIssueId() != jiraChangeGroupModelImpl.getOriginalJiraIssueId()) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAISSUEID,new Object[]{Long.valueOf(jiraChangeGroupModelImpl.getOriginalJiraIssueId())});
+    }
+  }
   EntityCacheUtil.putResult(JIRAChangeGroupModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeGroupImpl.class,jiraChangeGroup.getPrimaryKey(),jiraChangeGroup);
   return jiraChangeGroup;
 }
