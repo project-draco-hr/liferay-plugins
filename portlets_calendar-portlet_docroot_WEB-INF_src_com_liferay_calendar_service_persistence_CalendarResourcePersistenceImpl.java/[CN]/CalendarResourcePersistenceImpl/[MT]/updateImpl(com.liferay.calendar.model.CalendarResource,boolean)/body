@@ -19,24 +19,34 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !CalendarResourceModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(calendarResource.getUuid(),calendarResourceModelImpl.getOriginalUuid())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{calendarResourceModelImpl.getOriginalUuid()});
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarResourceModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
     }
-    if (calendarResource.getActive() != calendarResourceModelImpl.getOriginalActive()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,new Object[]{Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())});
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACTIVE,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACTIVE,args);
     }
-    if ((calendarResource.getGroupId() != calendarResourceModelImpl.getOriginalGroupId()) || (calendarResource.getActive() != calendarResourceModelImpl.getOriginalActive())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A,new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalGroupId()),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())});
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalGroupId()),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_A,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_A,args);
     }
-    if ((calendarResource.getGroupId() != calendarResourceModelImpl.getOriginalGroupId()) || !Validator.equals(calendarResource.getName(),calendarResourceModelImpl.getOriginalName()) || (calendarResource.getActive() != calendarResourceModelImpl.getOriginalActive())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_A,new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalGroupId()),calendarResourceModelImpl.getOriginalName(),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())});
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_A.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalGroupId()),calendarResourceModelImpl.getOriginalName(),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_N_A,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_N_A,args);
     }
-    if ((calendarResource.getCompanyId() != calendarResourceModelImpl.getOriginalCompanyId()) || !Validator.equals(calendarResource.getName(),calendarResourceModelImpl.getOriginalName()) || (calendarResource.getActive() != calendarResourceModelImpl.getOriginalActive())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_A,new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalCompanyId()),calendarResourceModelImpl.getOriginalName(),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())});
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_A.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalCompanyId()),calendarResourceModelImpl.getOriginalName(),Boolean.valueOf(calendarResourceModelImpl.getOriginalActive())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_N_A,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_N_A,args);
     }
   }
   EntityCacheUtil.putResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,CalendarResourceImpl.class,calendarResource.getPrimaryKey(),calendarResource);
@@ -45,11 +55,11 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,new Object[]{Long.valueOf(calendarResource.getClassNameId()),Long.valueOf(calendarResource.getClassPK())},calendarResource);
   }
  else {
-    if (!Validator.equals(calendarResource.getUuid(),calendarResourceModelImpl.getOriginalUuid()) || (calendarResource.getGroupId() != calendarResourceModelImpl.getOriginalGroupId())) {
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarResourceModelImpl.getOriginalUuid(),Long.valueOf(calendarResourceModelImpl.getOriginalGroupId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarResource.getUuid(),Long.valueOf(calendarResource.getGroupId())},calendarResource);
     }
-    if ((calendarResource.getClassNameId() != calendarResourceModelImpl.getOriginalClassNameId()) || (calendarResource.getClassPK() != calendarResourceModelImpl.getOriginalClassPK())) {
+    if ((calendarResourceModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_C_C.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,new Object[]{Long.valueOf(calendarResourceModelImpl.getOriginalClassNameId()),Long.valueOf(calendarResourceModelImpl.getOriginalClassPK())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,new Object[]{Long.valueOf(calendarResource.getClassNameId()),Long.valueOf(calendarResource.getClassPK())},calendarResource);
     }

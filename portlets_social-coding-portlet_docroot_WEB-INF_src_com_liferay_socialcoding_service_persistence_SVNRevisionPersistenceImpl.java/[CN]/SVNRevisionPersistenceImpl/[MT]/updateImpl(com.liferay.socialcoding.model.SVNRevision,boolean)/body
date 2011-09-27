@@ -15,18 +15,24 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !SVNRevisionModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(svnRevision.getSvnUserId(),svnRevisionModelImpl.getOriginalSvnUserId())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNUSERID,new Object[]{svnRevisionModelImpl.getOriginalSvnUserId()});
+    if ((svnRevisionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNUSERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{svnRevisionModelImpl.getOriginalSvnUserId()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SVNUSERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNUSERID,args);
     }
-    if (svnRevision.getSvnRepositoryId() != svnRevisionModelImpl.getOriginalSvnRepositoryId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNREPOSITORYID,new Object[]{Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())});
+    if ((svnRevisionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNREPOSITORYID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SVNREPOSITORYID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNREPOSITORYID,args);
     }
-    if (!Validator.equals(svnRevision.getSvnUserId(),svnRevisionModelImpl.getOriginalSvnUserId()) || (svnRevision.getSvnRepositoryId() != svnRevisionModelImpl.getOriginalSvnRepositoryId())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNU_SVNR,new Object[]{svnRevisionModelImpl.getOriginalSvnUserId(),Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())});
+    if ((svnRevisionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNU_SVNR.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{svnRevisionModelImpl.getOriginalSvnUserId(),Long.valueOf(svnRevisionModelImpl.getOriginalSvnRepositoryId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_SVNU_SVNR,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_SVNU_SVNR,args);
     }
   }
   EntityCacheUtil.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,svnRevision.getPrimaryKey(),svnRevision);

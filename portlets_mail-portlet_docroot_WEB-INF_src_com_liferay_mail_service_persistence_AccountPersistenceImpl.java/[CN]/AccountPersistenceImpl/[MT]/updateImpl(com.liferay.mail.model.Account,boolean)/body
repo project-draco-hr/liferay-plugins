@@ -15,12 +15,14 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !AccountModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (account.getUserId() != accountModelImpl.getOriginalUserId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(accountModelImpl.getOriginalUserId())});
+    if ((accountModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(accountModelImpl.getOriginalUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,args);
     }
   }
   EntityCacheUtil.putResult(AccountModelImpl.ENTITY_CACHE_ENABLED,AccountImpl.class,account.getPrimaryKey(),account);
@@ -28,7 +30,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,new Object[]{Long.valueOf(account.getUserId()),account.getAddress()},account);
   }
  else {
-    if ((account.getUserId() != accountModelImpl.getOriginalUserId()) || !Validator.equals(account.getAddress(),accountModelImpl.getOriginalAddress())) {
+    if ((accountModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_U_A.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_A,new Object[]{Long.valueOf(accountModelImpl.getOriginalUserId()),accountModelImpl.getOriginalAddress()});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,new Object[]{Long.valueOf(account.getUserId()),account.getAddress()},account);
     }

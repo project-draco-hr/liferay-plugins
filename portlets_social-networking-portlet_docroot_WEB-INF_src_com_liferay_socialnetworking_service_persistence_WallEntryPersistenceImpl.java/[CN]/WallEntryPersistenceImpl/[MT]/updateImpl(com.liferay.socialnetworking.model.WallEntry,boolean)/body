@@ -15,18 +15,24 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !WallEntryModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (wallEntry.getGroupId() != wallEntryModelImpl.getOriginalGroupId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId())});
+    if ((wallEntryModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,args);
     }
-    if (wallEntry.getUserId() != wallEntryModelImpl.getOriginalUserId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalUserId())});
+    if ((wallEntryModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,args);
     }
-    if ((wallEntry.getGroupId() != wallEntryModelImpl.getOriginalGroupId()) || (wallEntry.getUserId() != wallEntryModelImpl.getOriginalUserId())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U,new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId()),Long.valueOf(wallEntryModelImpl.getOriginalUserId())});
+    if ((wallEntryModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(wallEntryModelImpl.getOriginalGroupId()),Long.valueOf(wallEntryModelImpl.getOriginalUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_U,args);
     }
   }
   EntityCacheUtil.putResult(WallEntryModelImpl.ENTITY_CACHE_ENABLED,WallEntryImpl.class,wallEntry.getPrimaryKey(),wallEntry);

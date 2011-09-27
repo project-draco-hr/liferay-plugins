@@ -15,12 +15,14 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !OAuthConsumerModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(oAuthConsumer.getGadgetKey(),oAuthConsumerModelImpl.getOriginalGadgetKey())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GADGETKEY,new Object[]{oAuthConsumerModelImpl.getOriginalGadgetKey()});
+    if ((oAuthConsumerModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GADGETKEY.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{oAuthConsumerModelImpl.getOriginalGadgetKey()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GADGETKEY,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GADGETKEY,args);
     }
   }
   EntityCacheUtil.putResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,oAuthConsumer.getPrimaryKey(),oAuthConsumer);
@@ -28,7 +30,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,new Object[]{oAuthConsumer.getGadgetKey(),oAuthConsumer.getServiceName()},oAuthConsumer);
   }
  else {
-    if (!Validator.equals(oAuthConsumer.getGadgetKey(),oAuthConsumerModelImpl.getOriginalGadgetKey()) || !Validator.equals(oAuthConsumer.getServiceName(),oAuthConsumerModelImpl.getOriginalServiceName())) {
+    if ((oAuthConsumerModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_S,new Object[]{oAuthConsumerModelImpl.getOriginalGadgetKey(),oAuthConsumerModelImpl.getOriginalServiceName()});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,new Object[]{oAuthConsumer.getGadgetKey(),oAuthConsumer.getServiceName()},oAuthConsumer);
     }

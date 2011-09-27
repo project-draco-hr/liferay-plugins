@@ -15,15 +15,19 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !KaleoTimerModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(kaleoTimer.getKaleoClassName(),kaleoTimerModelImpl.getOriginalKaleoClassName()) || (kaleoTimer.getKaleoClassPK() != kaleoTimerModelImpl.getOriginalKaleoClassPK())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK,new Object[]{kaleoTimerModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTimerModelImpl.getOriginalKaleoClassPK())});
+    if ((kaleoTimerModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{kaleoTimerModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTimerModelImpl.getOriginalKaleoClassPK())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KCN_KCPK,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK,args);
     }
-    if (!Validator.equals(kaleoTimer.getKaleoClassName(),kaleoTimerModelImpl.getOriginalKaleoClassName()) || (kaleoTimer.getKaleoClassPK() != kaleoTimerModelImpl.getOriginalKaleoClassPK()) || (kaleoTimer.getBlocking() != kaleoTimerModelImpl.getOriginalBlocking())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING,new Object[]{kaleoTimerModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTimerModelImpl.getOriginalKaleoClassPK()),Boolean.valueOf(kaleoTimerModelImpl.getOriginalBlocking())});
+    if ((kaleoTimerModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{kaleoTimerModelImpl.getOriginalKaleoClassName(),Long.valueOf(kaleoTimerModelImpl.getOriginalKaleoClassPK()),Boolean.valueOf(kaleoTimerModelImpl.getOriginalBlocking())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KCN_KCPK_BLOCKING,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KCN_KCPK_BLOCKING,args);
     }
   }
   EntityCacheUtil.putResult(KaleoTimerModelImpl.ENTITY_CACHE_ENABLED,KaleoTimerImpl.class,kaleoTimer.getPrimaryKey(),kaleoTimer);

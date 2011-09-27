@@ -15,15 +15,19 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !KaleoConditionModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (kaleoCondition.getCompanyId() != kaleoConditionModelImpl.getOriginalCompanyId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalCompanyId())});
+    if ((kaleoConditionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,args);
     }
-    if (kaleoCondition.getKaleoDefinitionId() != kaleoConditionModelImpl.getOriginalKaleoDefinitionId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID,new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalKaleoDefinitionId())});
+    if ((kaleoConditionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalKaleoDefinitionId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KALEODEFINITIONID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_KALEODEFINITIONID,args);
     }
   }
   EntityCacheUtil.putResult(KaleoConditionModelImpl.ENTITY_CACHE_ENABLED,KaleoConditionImpl.class,kaleoCondition.getPrimaryKey(),kaleoCondition);
@@ -31,7 +35,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoCondition.getKaleoNodeId())},kaleoCondition);
   }
  else {
-    if (kaleoCondition.getKaleoNodeId() != kaleoConditionModelImpl.getOriginalKaleoNodeId()) {
+    if ((kaleoConditionModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_KALEONODEID.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalKaleoNodeId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoCondition.getKaleoNodeId())},kaleoCondition);
     }

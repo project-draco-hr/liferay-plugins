@@ -15,18 +15,24 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !JIRAActionModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(jiraAction.getJiraUserId(),jiraActionModelImpl.getOriginalJiraUserId())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAUSERID,new Object[]{jiraActionModelImpl.getOriginalJiraUserId()});
+    if ((jiraActionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAUSERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{jiraActionModelImpl.getOriginalJiraUserId()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_JIRAUSERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAUSERID,args);
     }
-    if (jiraAction.getJiraIssueId() != jiraActionModelImpl.getOriginalJiraIssueId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAISSUEID,new Object[]{Long.valueOf(jiraActionModelImpl.getOriginalJiraIssueId())});
+    if ((jiraActionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAISSUEID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(jiraActionModelImpl.getOriginalJiraIssueId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_JIRAISSUEID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRAISSUEID,args);
     }
-    if (!Validator.equals(jiraAction.getType(),jiraActionModelImpl.getOriginalType())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE,new Object[]{jiraActionModelImpl.getOriginalType()});
+    if ((jiraActionModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{jiraActionModelImpl.getOriginalType()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_TYPE,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_TYPE,args);
     }
   }
   EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraAction.getPrimaryKey(),jiraAction);

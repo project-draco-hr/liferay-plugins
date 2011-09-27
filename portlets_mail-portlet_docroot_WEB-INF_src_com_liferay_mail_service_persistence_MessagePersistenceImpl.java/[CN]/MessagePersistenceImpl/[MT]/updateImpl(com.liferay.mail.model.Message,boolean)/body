@@ -15,15 +15,19 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !MessageModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (message.getCompanyId() != messageModelImpl.getOriginalCompanyId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,new Object[]{Long.valueOf(messageModelImpl.getOriginalCompanyId())});
+    if ((messageModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(messageModelImpl.getOriginalCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,args);
     }
-    if (message.getFolderId() != messageModelImpl.getOriginalFolderId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FOLDERID,new Object[]{Long.valueOf(messageModelImpl.getOriginalFolderId())});
+    if ((messageModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FOLDERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(messageModelImpl.getOriginalFolderId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FOLDERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FOLDERID,args);
     }
   }
   EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,message.getPrimaryKey(),message);
@@ -31,7 +35,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{Long.valueOf(message.getFolderId()),Long.valueOf(message.getRemoteMessageId())},message);
   }
  else {
-    if ((message.getFolderId() != messageModelImpl.getOriginalFolderId()) || (message.getRemoteMessageId() != messageModelImpl.getOriginalRemoteMessageId())) {
+    if ((messageModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_F_R.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{Long.valueOf(messageModelImpl.getOriginalFolderId()),Long.valueOf(messageModelImpl.getOriginalRemoteMessageId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,new Object[]{Long.valueOf(message.getFolderId()),Long.valueOf(message.getRemoteMessageId())},message);
     }

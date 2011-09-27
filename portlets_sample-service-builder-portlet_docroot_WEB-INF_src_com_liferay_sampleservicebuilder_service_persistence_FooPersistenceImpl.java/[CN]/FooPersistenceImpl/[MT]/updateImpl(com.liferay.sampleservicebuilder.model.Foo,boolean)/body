@@ -19,15 +19,19 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !FooModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{fooModelImpl.getOriginalUuid()});
+    if ((fooModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{fooModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
     }
-    if (foo.getField2() != fooModelImpl.getOriginalField2()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FIELD2,new Object[]{Boolean.valueOf(fooModelImpl.getOriginalField2())});
+    if ((fooModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FIELD2.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Boolean.valueOf(fooModelImpl.getOriginalField2())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FIELD2,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FIELD2,args);
     }
   }
   EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey(),foo);
@@ -35,7 +39,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{foo.getUuid(),Long.valueOf(foo.getGroupId())},foo);
   }
  else {
-    if (!Validator.equals(foo.getUuid(),fooModelImpl.getOriginalUuid()) || (foo.getGroupId() != fooModelImpl.getOriginalGroupId())) {
+    if ((fooModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{fooModelImpl.getOriginalUuid(),Long.valueOf(fooModelImpl.getOriginalGroupId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{foo.getUuid(),Long.valueOf(foo.getGroupId())},foo);
     }

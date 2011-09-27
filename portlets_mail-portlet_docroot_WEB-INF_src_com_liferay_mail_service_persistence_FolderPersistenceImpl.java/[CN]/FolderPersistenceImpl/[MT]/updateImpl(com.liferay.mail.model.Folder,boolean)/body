@@ -15,12 +15,14 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !FolderModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (folder.getAccountId() != folderModelImpl.getOriginalAccountId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,new Object[]{Long.valueOf(folderModelImpl.getOriginalAccountId())});
+    if ((folderModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(folderModelImpl.getOriginalAccountId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_ACCOUNTID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_ACCOUNTID,args);
     }
   }
   EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folder.getPrimaryKey(),folder);
@@ -28,7 +30,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{Long.valueOf(folder.getAccountId()),folder.getFullName()},folder);
   }
  else {
-    if ((folder.getAccountId() != folderModelImpl.getOriginalAccountId()) || !Validator.equals(folder.getFullName(),folderModelImpl.getOriginalFullName())) {
+    if ((folderModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_F.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{Long.valueOf(folderModelImpl.getOriginalAccountId()),folderModelImpl.getOriginalFullName()});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{Long.valueOf(folder.getAccountId()),folder.getFullName()},folder);
     }

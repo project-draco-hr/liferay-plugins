@@ -15,12 +15,14 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !ProjectsEntryModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (projectsEntry.getUserId() != projectsEntryModelImpl.getOriginalUserId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,new Object[]{Long.valueOf(projectsEntryModelImpl.getOriginalUserId())});
+    if ((projectsEntryModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(projectsEntryModelImpl.getOriginalUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,args);
     }
   }
   EntityCacheUtil.putResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,projectsEntry.getPrimaryKey(),projectsEntry);

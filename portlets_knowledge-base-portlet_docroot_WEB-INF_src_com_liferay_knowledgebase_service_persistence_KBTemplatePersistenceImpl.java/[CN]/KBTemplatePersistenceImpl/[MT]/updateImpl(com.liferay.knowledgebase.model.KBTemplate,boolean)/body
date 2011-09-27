@@ -19,15 +19,19 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !KBTemplateModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(kbTemplate.getUuid(),kbTemplateModelImpl.getOriginalUuid())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{kbTemplateModelImpl.getOriginalUuid()});
+    if ((kbTemplateModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{kbTemplateModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
     }
-    if (kbTemplate.getGroupId() != kbTemplateModelImpl.getOriginalGroupId()) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,new Object[]{Long.valueOf(kbTemplateModelImpl.getOriginalGroupId())});
+    if ((kbTemplateModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(kbTemplateModelImpl.getOriginalGroupId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GROUPID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GROUPID,args);
     }
   }
   EntityCacheUtil.putResult(KBTemplateModelImpl.ENTITY_CACHE_ENABLED,KBTemplateImpl.class,kbTemplate.getPrimaryKey(),kbTemplate);
@@ -35,7 +39,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbTemplate.getUuid(),Long.valueOf(kbTemplate.getGroupId())},kbTemplate);
   }
  else {
-    if (!Validator.equals(kbTemplate.getUuid(),kbTemplateModelImpl.getOriginalUuid()) || (kbTemplate.getGroupId() != kbTemplateModelImpl.getOriginalGroupId())) {
+    if ((kbTemplateModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbTemplateModelImpl.getOriginalUuid(),Long.valueOf(kbTemplateModelImpl.getOriginalGroupId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbTemplate.getUuid(),Long.valueOf(kbTemplate.getGroupId())},kbTemplate);
     }

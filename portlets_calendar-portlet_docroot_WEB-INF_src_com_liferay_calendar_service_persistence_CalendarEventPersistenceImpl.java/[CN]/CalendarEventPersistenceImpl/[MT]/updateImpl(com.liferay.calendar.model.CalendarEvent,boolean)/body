@@ -19,12 +19,14 @@
     closeSession(session);
   }
   FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  if (isNew) {
+  if (isNew || !CalendarEventModelImpl.COLUMN_BITMASK_ENABLED) {
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
-    if (!Validator.equals(calendarEvent.getUuid(),calendarEventModelImpl.getOriginalUuid())) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,new Object[]{calendarEventModelImpl.getOriginalUuid()});
+    if ((calendarEventModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarEventModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
     }
   }
   EntityCacheUtil.putResult(CalendarEventModelImpl.ENTITY_CACHE_ENABLED,CalendarEventImpl.class,calendarEvent.getPrimaryKey(),calendarEvent);
@@ -32,7 +34,7 @@
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarEvent.getUuid(),Long.valueOf(calendarEvent.getGroupId())},calendarEvent);
   }
  else {
-    if (!Validator.equals(calendarEvent.getUuid(),calendarEventModelImpl.getOriginalUuid()) || (calendarEvent.getGroupId() != calendarEventModelImpl.getOriginalGroupId())) {
+    if ((calendarEventModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarEventModelImpl.getOriginalUuid(),Long.valueOf(calendarEventModelImpl.getOriginalGroupId())});
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarEvent.getUuid(),Long.valueOf(calendarEvent.getGroupId())},calendarEvent);
     }
