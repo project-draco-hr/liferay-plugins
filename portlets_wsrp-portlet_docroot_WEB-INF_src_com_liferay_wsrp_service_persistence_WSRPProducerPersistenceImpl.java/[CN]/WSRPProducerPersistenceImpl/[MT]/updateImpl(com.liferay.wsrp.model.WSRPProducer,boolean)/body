@@ -40,7 +40,9 @@
   }
  else {
     if ((wsrpProducerModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducerModelImpl.getOriginalUuid(),Long.valueOf(wsrpProducerModelImpl.getOriginalGroupId())});
+      Object[] args=new Object[]{wsrpProducerModelImpl.getOriginalUuid(),Long.valueOf(wsrpProducerModelImpl.getOriginalGroupId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{wsrpProducer.getUuid(),Long.valueOf(wsrpProducer.getGroupId())},wsrpProducer);
     }
   }
