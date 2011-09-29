@@ -1,13 +1,18 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long remoteAppId=ParamUtil.getLong(actionRequest,"appId");
   String version=ParamUtil.getString(actionRequest,"version");
   String url=ParamUtil.getString(actionRequest,"url");
   URL urlObj=new URL(url);
-  InputStream inputStream=urlObj.openStream();
-  App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-  AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
-  AppLocalServiceUtil.installApp(remoteAppId);
-  JSONObject jsonObject=getAppJSONObject(remoteAppId);
-  writeJSON(actionRequest,actionResponse,jsonObject);
+  InputStream inputStream=null;
+  try {
+    inputStream=urlObj.openStream();
+    App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
+    AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
+    AppLocalServiceUtil.installApp(remoteAppId);
+    JSONObject jsonObject=getAppJSONObject(remoteAppId);
+    writeJSON(actionRequest,actionResponse,jsonObject);
+  }
+  finally {
+    StreamUtil.cleanUp(inputStream);
+  }
 }
