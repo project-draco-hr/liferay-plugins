@@ -1,18 +1,6 @@
 {
   long remoteAppId=ParamUtil.getLong(actionRequest,"appId");
-  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-  if (app != null) {
-    jsonObject.put("appId",app.getRemoteAppId());
-    jsonObject.put("downloaded",app.isDownloaded());
-    jsonObject.put("installed",app.isInstalled());
-    jsonObject.put("version",app.getVersion());
-  }
- else {
-    jsonObject.put("appId",remoteAppId);
-    jsonObject.put("downloaded",false);
-    jsonObject.put("installed",false);
-    jsonObject.put("version",StringPool.BLANK);
-  }
+  JSONObject jsonObject=getAppJSONObject(remoteAppId);
+  jsonObject.put("message","success");
   writeJSON(actionRequest,actionResponse,jsonObject);
 }

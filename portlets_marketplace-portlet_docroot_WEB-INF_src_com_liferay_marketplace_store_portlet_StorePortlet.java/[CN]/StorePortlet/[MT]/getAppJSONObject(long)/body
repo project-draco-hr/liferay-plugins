@@ -1,0 +1,17 @@
+{
+  App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  if (app != null) {
+    jsonObject.put("appId",app.getRemoteAppId());
+    jsonObject.put("downloaded",app.isDownloaded());
+    jsonObject.put("installed",app.isInstalled());
+    jsonObject.put("version",app.getVersion());
+  }
+ else {
+    jsonObject.put("appId",remoteAppId);
+    jsonObject.put("downloaded",false);
+    jsonObject.put("installed",false);
+    jsonObject.put("version",StringPool.BLANK);
+  }
+  return jsonObject;
+}

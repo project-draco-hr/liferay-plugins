@@ -6,13 +6,8 @@
   URL urlObj=new URL(url);
   InputStream inputStream=urlObj.openStream();
   App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-  if (app == null) {
-    app=AppLocalServiceUtil.addApp(themeDisplay.getUserId(),remoteAppId,version,inputStream);
-  }
- else {
-    app=AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
-  }
-  JSONObject jsonObject=getAppJSONObject(app.getRemoteAppId());
-  jsonObject.put("message","success");
+  AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
+  AppLocalServiceUtil.installApp(remoteAppId);
+  JSONObject jsonObject=getAppJSONObject(remoteAppId);
   writeJSON(actionRequest,actionResponse,jsonObject);
 }
