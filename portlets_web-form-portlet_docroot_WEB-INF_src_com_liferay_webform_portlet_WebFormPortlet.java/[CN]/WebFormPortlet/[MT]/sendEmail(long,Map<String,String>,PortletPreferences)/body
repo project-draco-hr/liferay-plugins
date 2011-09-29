@@ -7,20 +7,10 @@
     }
     String subject=preferences.getValue("subject",StringPool.BLANK);
     String body=getMailBody(fieldsMap);
-    InternetAddress fromAddress=null;
-    try {
-      String smtpUser=PropsUtil.get(PropsKeys.MAIL_SESSION_MAIL_SMTP_USER);
-      if (Validator.isNotNull(smtpUser)) {
-        fromAddress=new InternetAddress(smtpUser);
-      }
-    }
- catch (    Exception e) {
-      _log.error(e,e);
-    }
+    String fromNamePref=WebFormUtil.getEmailFromName(preferences,companyId);
+    String fromAddressPref=WebFormUtil.getEmailFromAddress(preferences,companyId);
+    InternetAddress fromAddress=new InternetAddress(fromAddressPref,fromNamePref);
     InternetAddress[] toAddresses=InternetAddress.parse(emailAddresses);
-    if (fromAddress == null) {
-      fromAddress=toAddresses[0];
-    }
     MailMessage mailMessage=new MailMessage(fromAddress,subject,body,false);
     mailMessage.setTo(toAddresses);
     MailServiceUtil.sendEmail(mailMessage);
