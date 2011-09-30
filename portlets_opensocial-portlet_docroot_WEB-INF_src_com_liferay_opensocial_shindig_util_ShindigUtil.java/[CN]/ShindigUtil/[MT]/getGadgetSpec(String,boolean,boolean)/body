@@ -4,10 +4,21 @@
   }
   JSONObject gadgetContextJSONObject=new JSONObject();
   gadgetContextJSONObject.put("debug",debug);
+  if (!ignoreCache && _gadgetSpecErrorCache.contains(url)) {
+    ignoreCache=true;
+  }
   gadgetContextJSONObject.put("ignoreCache",ignoreCache);
   JSONObject gadgetRequestJSONObject=new JSONObject();
   gadgetRequestJSONObject.put("url",url);
   JsonRpcGadgetContext jsonRpcGadgetContext=new JsonRpcGadgetContext(gadgetContextJSONObject,gadgetRequestJSONObject);
-  Gadget gadget=_processor.process(jsonRpcGadgetContext);
+  Gadget gadget=null;
+  try {
+    gadget=_processor.process(jsonRpcGadgetContext);
+    _gadgetSpecErrorCache.remove(url);
+  }
+ catch (  ProcessingException pe) {
+    _gadgetSpecErrorCache.add(url);
+    throw pe;
+  }
   return gadget.getSpec();
 }
