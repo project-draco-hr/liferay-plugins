@@ -1,6 +1,8 @@
 {
-  PortalInitThread portalInitThread=new PortalInitThread();
-  portalInitThread.setContextClassLoader(_classLoader);
-  portalInitThread.setServletContext(_servletContext);
-  portalInitThread.start();
+  try {
+    WSRPConsumerPortletLocalServiceUtil.initWSRPConsumerPortlets();
+  }
+ catch (  Exception e) {
+    _log.error("Unable to initialize WSRP consumer portlets",e);
+  }
 }
