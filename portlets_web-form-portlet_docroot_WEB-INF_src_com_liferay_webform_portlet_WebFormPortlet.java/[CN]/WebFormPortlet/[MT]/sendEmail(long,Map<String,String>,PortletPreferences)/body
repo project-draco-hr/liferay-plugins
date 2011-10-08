@@ -5,13 +5,11 @@
       _log.error("The web form email cannot be sent because no email " + "address is configured");
       return false;
     }
+    InternetAddress fromAddress=new InternetAddress(WebFormUtil.getEmailFromAddress(preferences,companyId),WebFormUtil.getEmailFromName(preferences,companyId));
     String subject=preferences.getValue("subject",StringPool.BLANK);
     String body=getMailBody(fieldsMap);
-    String fromNamePref=WebFormUtil.getEmailFromName(preferences,companyId);
-    String fromAddressPref=WebFormUtil.getEmailFromAddress(preferences,companyId);
-    InternetAddress fromAddress=new InternetAddress(fromAddressPref,fromNamePref);
-    InternetAddress[] toAddresses=InternetAddress.parse(emailAddresses);
     MailMessage mailMessage=new MailMessage(fromAddress,subject,body,false);
+    InternetAddress[] toAddresses=InternetAddress.parse(emailAddresses);
     mailMessage.setTo(toAddresses);
     MailServiceUtil.sendEmail(mailMessage);
     return true;
