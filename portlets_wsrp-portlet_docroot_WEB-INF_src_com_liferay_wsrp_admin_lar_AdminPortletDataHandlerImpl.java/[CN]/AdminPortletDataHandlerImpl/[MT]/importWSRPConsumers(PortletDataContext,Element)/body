@@ -1,0 +1,17 @@
+{
+  if (wsrpConsumersElement == null) {
+    return;
+  }
+  for (  Element wsrpConsumerElement : wsrpConsumersElement.elements("wsrp-consumer")) {
+    String path=wsrpConsumerElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    WSRPConsumer wsrpConsumer=(WSRPConsumer)portletDataContext.getZipEntryAsObject(path);
+    WSRPConsumer importedWSRPConsumer=importWSRPConsumer(portletDataContext,wsrpConsumerElement,wsrpConsumer);
+    if (portletDataContext.getBooleanParameter(_NAMESPACE,"wsrp-consumer-portlets")) {
+      Element wsrpConsumerPortletsElement=wsrpConsumerElement.element("wsrp-consumer-portlets");
+      importWSRPConsumerPortlets(portletDataContext,importedWSRPConsumer,wsrpConsumerPortletsElement);
+    }
+  }
+}

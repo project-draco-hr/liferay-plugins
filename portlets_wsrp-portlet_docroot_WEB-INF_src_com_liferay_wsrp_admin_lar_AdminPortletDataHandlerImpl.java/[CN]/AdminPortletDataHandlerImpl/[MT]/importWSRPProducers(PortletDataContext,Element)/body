@@ -1,0 +1,13 @@
+{
+  if (wsrpProducersElement == null) {
+    return;
+  }
+  for (  Element wsrpProducerElement : wsrpProducersElement.elements("wsrp-producer")) {
+    String path=wsrpProducerElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    WSRPProducer wsrpProducer=(WSRPProducer)portletDataContext.getZipEntryAsObject(path);
+    importWSRPProducer(portletDataContext,wsrpProducerElement,wsrpProducer);
+  }
+}

@@ -1,0 +1,13 @@
+{
+  if (wsrpConsumerPortletsElement == null) {
+    return;
+  }
+  for (  Element wsrpConsumerPortletElement : wsrpConsumerPortletsElement.elements("wsrp-consumer-portlet")) {
+    String path=wsrpConsumerPortletElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
+    }
+    WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)portletDataContext.getZipEntryAsObject(path);
+    importWSRPConsumerPortlet(portletDataContext,wsrpConsumer,wsrpConsumerPortletElement,wsrpConsumerPortlet);
+  }
+}
