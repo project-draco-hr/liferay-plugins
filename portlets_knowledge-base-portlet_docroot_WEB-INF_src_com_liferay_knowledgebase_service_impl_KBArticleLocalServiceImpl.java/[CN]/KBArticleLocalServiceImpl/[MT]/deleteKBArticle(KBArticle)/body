@@ -8,7 +8,8 @@
   kbCommentLocalService.deleteKBComments(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
   deleteAssets(kbArticle);
   ratingsStatsLocalService.deleteStats(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
-  socialActivityLocalService.deleteActivities(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+  AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
+  socialActivityLocalService.deleteActivities(assetEntry);
   Indexer indexer=IndexerRegistryUtil.getIndexer(KBArticle.class);
   indexer.delete(kbArticle);
   deleteKBArticleAttachments(kbArticle);
