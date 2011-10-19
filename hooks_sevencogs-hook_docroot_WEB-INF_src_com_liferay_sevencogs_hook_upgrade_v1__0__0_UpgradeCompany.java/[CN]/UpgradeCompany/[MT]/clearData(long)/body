@@ -9,15 +9,15 @@
   }
   List<Group> groups=GroupLocalServiceUtil.search(companyId,null,null,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  Group group : groups) {
-    DLAppLocalServiceUtil.deleteAll(group.getGroupId());
-    JournalArticleLocalServiceUtil.deleteArticles(group.getGroupId());
-    JournalTemplateLocalServiceUtil.deleteTemplates(group.getGroupId());
-    JournalStructureLocalServiceUtil.deleteStructures(group.getGroupId());
     if (!PortalUtil.isSystemGroup(group.getName())) {
       GroupLocalServiceUtil.deleteGroup(group.getGroupId());
     }
  else {
       ServiceContext serviceContext=new ServiceContext();
+      DLAppLocalServiceUtil.deleteAll(group.getGroupId());
+      JournalArticleLocalServiceUtil.deleteArticles(group.getGroupId());
+      JournalTemplateLocalServiceUtil.deleteTemplates(group.getGroupId());
+      JournalStructureLocalServiceUtil.deleteStructures(group.getGroupId());
       LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),false,serviceContext);
       LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,serviceContext);
     }

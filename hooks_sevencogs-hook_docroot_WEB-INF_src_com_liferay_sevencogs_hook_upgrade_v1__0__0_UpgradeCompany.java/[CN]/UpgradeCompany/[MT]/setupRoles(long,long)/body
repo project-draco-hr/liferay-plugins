@@ -1,13 +1,19 @@
 {
   Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
   descriptionMap.put(LocaleUtil.getDefault(),"Publishers are responsible for publishing content.");
-  Role publisherRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Publisher",null,descriptionMap,RoleConstants.TYPE_REGULAR);
+  Role publisherRole=RoleLocalServiceUtil.fetchRole(companyId,"Publisher");
+  if (publisherRole == null) {
+    publisherRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Publisher",null,descriptionMap,RoleConstants.TYPE_REGULAR);
+  }
   setRolePermissions(publisherRole,PortletKeys.JOURNAL,new String[]{ActionKeys.ACCESS_IN_CONTROL_PANEL});
   setRolePermissions(publisherRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE});
   setRolePermissions(publisherRole,JournalArticle.class.getName(),new String[]{ActionKeys.ADD_DISCUSSION,ActionKeys.DELETE,ActionKeys.EXPIRE,ActionKeys.PERMISSIONS,ActionKeys.UPDATE,ActionKeys.VIEW});
   descriptionMap.clear();
   descriptionMap.put(LocaleUtil.getDefault(),"Writers are responsible for creating content.");
-  Role writerRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Writer",null,descriptionMap,RoleConstants.TYPE_REGULAR);
+  Role writerRole=RoleLocalServiceUtil.fetchRole(companyId,"Writer");
+  if (writerRole == null) {
+    writerRole=RoleLocalServiceUtil.addRole(defaultUserId,companyId,"Writer",null,descriptionMap,RoleConstants.TYPE_REGULAR);
+  }
   setRolePermissions(writerRole,PortletKeys.JOURNAL,new String[]{ActionKeys.ACCESS_IN_CONTROL_PANEL});
   setRolePermissions(writerRole,"com.liferay.portlet.journal",new String[]{ActionKeys.ADD_ARTICLE,ActionKeys.ADD_FEED,ActionKeys.ADD_STRUCTURE,ActionKeys.ADD_TEMPLATE});
   setRolePermissions(writerRole,JournalArticle.class.getName(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});

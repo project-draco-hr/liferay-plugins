@@ -5,5 +5,7 @@
   InputStream inputStream=getInputStream(filePath);
   ObjectValuePair<String,InputStream> inputStreamOVP=new ObjectValuePair<String,InputStream>(fileName,inputStream);
   inputStreamOVPs.add(inputStreamOVP);
-  return MBMessageLocalServiceUtil.addMessage(userId,userName,groupId,categoryId,threadId,parentMessageId,subject,body,StringPool.BLANK,inputStreamOVPs,false,-1.0,false,serviceContext);
+  serviceContext.setAddGroupPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  return MBMessageLocalServiceUtil.addMessage(userId,userName,groupId,categoryId,threadId,parentMessageId,subject,body,MBMessageConstants.DEFAULT_FORMAT,inputStreamOVPs,false,-1.0,false,serviceContext);
 }
