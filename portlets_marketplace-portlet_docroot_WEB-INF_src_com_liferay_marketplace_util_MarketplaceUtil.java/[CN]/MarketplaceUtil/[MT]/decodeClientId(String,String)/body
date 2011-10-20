@@ -2,7 +2,7 @@
   if (Validator.isNull(encodedClientId) || Validator.isNull(token)) {
     return StringPool.BLANK;
   }
-  String decodedClientId=UnicodeFormatter.parseString(encodedClientId);
-  byte[] decodedClientIdBytes=xor(decodedClientId.getBytes(),token.getBytes());
-  return new String(decodedClientIdBytes);
+  String base64ClientId=UnicodeFormatter.parseString(encodedClientId);
+  byte[] clientIdBytes=Base64.decode(base64ClientId);
+  return new String(xor(clientIdBytes,token.getBytes()));
 }
