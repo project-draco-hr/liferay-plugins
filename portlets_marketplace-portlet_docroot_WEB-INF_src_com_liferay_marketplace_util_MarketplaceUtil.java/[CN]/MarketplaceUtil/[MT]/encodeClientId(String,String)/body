@@ -1,7 +1,7 @@
 {
-  if (Validator.isNull(clientId) || Validator.isNull(token)) {
+  if (Validator.isNull(decodedClientId) || Validator.isNull(token)) {
     return StringPool.BLANK;
   }
-  byte[] data=xor(clientId.getBytes(),token.getBytes());
-  return new String(Hex.encodeHex(data));
+  byte[] encodedClientIdBytes=xor(decodedClientId.getBytes(),token.getBytes());
+  return UnicodeFormatter.bytesToHex(encodedClientIdBytes);
 }
