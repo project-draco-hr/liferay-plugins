@@ -2,7 +2,9 @@
   if (Validator.isNull(encodedClientId) || Validator.isNull(mpToken)) {
     return StringPool.BLANK;
   }
-  String base64EncodedClientId=UnicodeFormatter.parseString(encodedClientId);
-  byte[] encodedClientIdBytes=Base64.decode(base64EncodedClientId);
+  byte[] encodedClientIdBytes=hexToBytes(encodedClientId);
+  if (encodedClientIdBytes.length == 0) {
+    return StringPool.BLANK;
+  }
   return new String(xor(encodedClientIdBytes,mpToken.getBytes()));
 }
