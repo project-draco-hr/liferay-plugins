@@ -1,4 +1,8 @@
 {
+  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+  if (permissionChecker == null) {
+    setPermissionChecker(servletRequest);
+  }
   String host=servletRequest.getServerName().concat(StringPool.COLON).concat(String.valueOf(servletRequest.getServerPort()));
   ShindigUtil.setHost(host);
   filterChain.doFilter(servletRequest,servletResponse);
