@@ -1,0 +1,48 @@
+{
+  int end=ParamUtil.getInteger(resourceRequest,"end");
+  String keywords=ParamUtil.getString(resourceRequest,"keywords");
+  int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
+  int start=ParamUtil.getInteger(resourceRequest,"start");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
+  optionsJSONObject.put("end",end);
+  optionsJSONObject.put("keywords",keywords);
+  optionsJSONObject.put("socialRelationType",socialRelationType);
+  optionsJSONObject.put("start",start);
+  jsonObject.put("options",optionsJSONObject);
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  Group group=themeDisplay.getScopeGroup();
+  Layout layout=themeDisplay.getLayout();
+  LinkedHashMap<String,Object> params=null;
+  if (group.isUser() && layout.isPublicLayout()) {
+    params=new LinkedHashMap<String,Object>();
+    params.put("socialRelation",new Long[]{group.getClassPK()});
+  }
+ else {
+    if (socialRelationType != 0) {
+      params=new LinkedHashMap<String,Object>();
+      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
+    }
+  }
+  List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
+  int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
+  jsonObject.put("count",usersCount);
+  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  for (  User user : users) {
+    JSONObject userJSONObject=JSONFactoryUtil.createJSONObject();
+    userJSONObject.put("emailAddress",user.getEmailAddress());
+    userJSONObject.put("jobTitle",user.getJobTitle());
+    userJSONObject.put("userFirstName",user.getFirstName());
+    userJSONObject.put("userLastName",user.getLastName());
+    userJSONObject.put("userPortraitURL",user.getPortraitURL(themeDisplay));
+    PortletURL viewSummaryURL=liferayPortletResponse.createRenderURL();
+    viewSummaryURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+    viewSummaryURL.setParameter("jspPage","/contacts_center/view_user.jsp");
+    viewSummaryURL.setParameter("userId",String.valueOf(user.getUserId()));
+    userJSONObject.put("viewSummaryURL",viewSummaryURL.toString());
+    jsonArray.put(userJSONObject);
+  }
+  jsonObject.put("users",jsonArray);
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}
