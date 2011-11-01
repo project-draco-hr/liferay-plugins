@@ -20,14 +20,18 @@
  catch (    DuplicateDirectoryException dde) {
     }
     String filePath=getFilePath(attachment.getMessageId(),fileName);
-    InputStream is=getInputStream(attachmentId);
-    try {
-      DLStoreUtil.addFile(attachment.getCompanyId(),_REPOSITORY_ID,filePath,false,is);
-    }
- catch (    DuplicateFileException dfe) {
-      if (_log.isDebugEnabled()) {
-        _log.debug(dfe,dfe);
+    if (file.exists()) {
+      try {
+        DLStoreUtil.addFile(attachment.getCompanyId(),_REPOSITORY_ID,filePath,file);
       }
+ catch (      DuplicateFileException dfe) {
+        if (_log.isDebugEnabled()) {
+          _log.debug(dfe,dfe);
+        }
+      }
+    }
+ else {
+      throw new PortalException(new FileNotFoundException());
     }
   }
   return attachment;
