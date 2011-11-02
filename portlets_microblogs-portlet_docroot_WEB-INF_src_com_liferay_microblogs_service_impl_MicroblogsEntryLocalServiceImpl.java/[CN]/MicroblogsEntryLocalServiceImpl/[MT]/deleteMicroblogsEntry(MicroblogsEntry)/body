@@ -1,6 +1,11 @@
 {
-  microblogsEntryPersistence.remove(microblogsEntry);
-  AssetEntryLocalServiceUtil.deleteEntry(MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId());
-  AssetEntry assetEntry=AssetEntryLocalServiceUtil.getEntry(MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId());
-  SocialActivityLocalServiceUtil.deleteActivities(assetEntry);
+  try {
+    microblogsEntryPersistence.remove(microblogsEntry);
+    AssetEntry assetEntry=AssetEntryLocalServiceUtil.getEntry(MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId());
+    SocialActivityLocalServiceUtil.deleteActivities(assetEntry);
+    AssetEntryLocalServiceUtil.deleteEntry(MicroblogsEntry.class.getName(),microblogsEntry.getMicroblogsEntryId());
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
 }
