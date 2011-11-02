@@ -7,10 +7,10 @@
   InputStream inputStream=urlObj.openStream();
   App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
   if (app == null) {
-    app=AppLocalServiceUtil.addApp(themeDisplay.getUserId(),remoteAppId,version,inputStream);
+    app=AppServiceUtil.addApp(remoteAppId,version,inputStream);
   }
  else {
-    app=AppLocalServiceUtil.updateApp(app.getAppId(),version,inputStream);
+    app=AppServiceUtil.updateApp(app.getAppId(),version,inputStream);
   }
   JSONObject jsonObject=getAppJSONObject(app.getRemoteAppId());
   jsonObject.put("message","success");
