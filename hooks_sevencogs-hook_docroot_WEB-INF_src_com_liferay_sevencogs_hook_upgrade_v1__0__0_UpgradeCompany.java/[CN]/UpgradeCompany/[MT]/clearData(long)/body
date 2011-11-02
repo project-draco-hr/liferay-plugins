@@ -7,6 +7,7 @@
     }
     UserLocalServiceUtil.deleteUser(user.getUserId());
   }
+  deleteOrganizations(companyId,OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
   List<Group> groups=GroupLocalServiceUtil.search(companyId,null,null,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  Group group : groups) {
     if (!PortalUtil.isSystemGroup(group.getName())) {
@@ -22,5 +23,4 @@
       LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,serviceContext);
     }
   }
-  deleteOrganizations(companyId,OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 }
