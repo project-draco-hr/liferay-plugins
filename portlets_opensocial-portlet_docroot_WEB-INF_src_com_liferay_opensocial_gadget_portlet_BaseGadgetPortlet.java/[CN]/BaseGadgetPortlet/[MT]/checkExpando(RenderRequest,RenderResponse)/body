@@ -1,8 +1,8 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(themeDisplay.getCompanyId(),User.class.getName(),ShindigUtil.getTableOpenSocial());
+  ExpandoTable expandoTable=ExpandoTableLocalServiceUtil.getTable(themeDisplay.getCompanyId(),Layout.class.getName(),ShindigUtil.getTableOpenSocial());
   String namespace=renderResponse.getNamespace();
-  String columnName=ShindigUtil.getColumnUserPrefs(namespace);
+  String columnName=ShindigUtil.getColumnUserPrefs(namespace,themeDisplay);
   ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
   if (expandoColumn == null) {
     expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
