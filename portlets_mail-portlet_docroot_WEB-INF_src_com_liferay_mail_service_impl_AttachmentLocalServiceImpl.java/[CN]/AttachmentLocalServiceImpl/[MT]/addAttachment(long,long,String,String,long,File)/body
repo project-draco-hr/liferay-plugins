@@ -13,6 +13,9 @@
   attachment.setSize(size);
   attachmentPersistence.update(attachment,false);
   if (file != null) {
+    if (!file.exists()) {
+      throw new PortalException(new FileNotFoundException());
+    }
     String directoryPath=getDirectoryPath(attachment.getMessageId());
     try {
       DLStoreUtil.addDirectory(attachment.getCompanyId(),_REPOSITORY_ID,directoryPath);
@@ -20,18 +23,13 @@
  catch (    DuplicateDirectoryException dde) {
     }
     String filePath=getFilePath(attachment.getMessageId(),fileName);
-    if (file.exists()) {
-      try {
-        DLStoreUtil.addFile(attachment.getCompanyId(),_REPOSITORY_ID,filePath,file);
-      }
- catch (      DuplicateFileException dfe) {
-        if (_log.isDebugEnabled()) {
-          _log.debug(dfe,dfe);
-        }
-      }
+    try {
+      DLStoreUtil.addFile(attachment.getCompanyId(),_REPOSITORY_ID,filePath,file);
     }
- else {
-      throw new PortalException(new FileNotFoundException());
+ catch (    DuplicateFileException dfe) {
+      if (_log.isDebugEnabled()) {
+        _log.debug(dfe,dfe);
+      }
     }
   }
   return attachment;
