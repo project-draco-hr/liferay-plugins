@@ -1,14 +1,14 @@
 {
-  int end=ParamUtil.getInteger(resourceRequest,"end");
   String keywords=ParamUtil.getString(resourceRequest,"keywords");
   int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
   int start=ParamUtil.getInteger(resourceRequest,"start");
+  int end=ParamUtil.getInteger(resourceRequest,"end");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
-  optionsJSONObject.put("end",end);
   optionsJSONObject.put("keywords",keywords);
   optionsJSONObject.put("socialRelationType",socialRelationType);
   optionsJSONObject.put("start",start);
+  optionsJSONObject.put("end",end);
   jsonObject.put("options",optionsJSONObject);
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   Group group=themeDisplay.getScopeGroup();
@@ -17,10 +17,8 @@
   if (group.isUser() && layout.isPublicLayout()) {
     params.put("socialRelation",new Long[]{group.getClassPK()});
   }
- else {
-    if (socialRelationType != 0) {
-      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
-    }
+ else   if (socialRelationType != 0) {
+    params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
   }
   List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
   int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
