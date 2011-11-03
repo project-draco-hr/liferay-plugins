@@ -8,9 +8,15 @@
   try {
     Company company=CompanyLocalServiceUtil.getCompany(companyId);
     String userUUIDString=CookieUtil.get((HttpServletRequest)servletRequest,CookieKeys.USER_UUID);
+    if (Validator.isNull(userUUID)) {
+      return false;
+    }
     userUUID=GetterUtil.getString(Encryptor.decrypt(company.getKeyObj(),userUUIDString));
   }
- catch (  Exception e) {
+ catch (  EncryptorException ee) {
+    return false;
+  }
+catch (  Exception e) {
     _log.error(e,e);
     return false;
   }
