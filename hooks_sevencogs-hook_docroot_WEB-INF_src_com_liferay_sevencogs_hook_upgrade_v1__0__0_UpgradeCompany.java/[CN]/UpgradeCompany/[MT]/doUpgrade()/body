@@ -1,11 +1,17 @@
 {
-  long companyId=PortalUtil.getDefaultCompanyId();
-  long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
-  PrincipalThreadLocal.setName(defaultUserId);
-  clearData(companyId);
-  setupCommunities(companyId,defaultUserId);
-  setupOrganizations(companyId,defaultUserId);
-  setupRoles(companyId,defaultUserId);
-  setupUsers(companyId);
-  setupWorkflow(companyId,defaultUserId);
+  String name=PrincipalThreadLocal.getName();
+  try {
+    long companyId=PortalUtil.getDefaultCompanyId();
+    long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
+    PrincipalThreadLocal.setName(defaultUserId);
+    clearData(companyId);
+    setupCommunities(companyId,defaultUserId);
+    setupOrganizations(companyId,defaultUserId);
+    setupRoles(companyId,defaultUserId);
+    setupUsers(companyId);
+    setupWorkflow(companyId,defaultUserId);
+  }
+  finally {
+    PrincipalThreadLocal.setName(name);
+  }
 }
