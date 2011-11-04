@@ -27,9 +27,7 @@
   calendarEvent.setSecondReminder(secondReminder);
   calendarEvent.setExpandoBridgeAttributes(serviceContext);
   calendarEventPersistence.update(calendarEvent,false);
-  if ((serviceContext.getGroupPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
-    updateCalendarEventResources(calendarEvent,serviceContext.getGroupPermissions(),serviceContext.getGuestPermissions());
-  }
+  resourceLocalService.updateModelResources(calendarEvent,serviceContext);
   calendarBookingLocalService.updateCalendarBookings(calendarEventId,serviceContext);
   return calendarEvent;
 }
