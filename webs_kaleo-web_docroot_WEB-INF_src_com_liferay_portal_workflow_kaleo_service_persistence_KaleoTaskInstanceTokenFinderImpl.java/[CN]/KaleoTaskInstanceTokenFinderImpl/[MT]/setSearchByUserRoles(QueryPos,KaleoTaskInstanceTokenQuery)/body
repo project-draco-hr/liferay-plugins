@@ -6,28 +6,9 @@
   if (searchByUserRoles) {
     qPos.add(Role.class.getName());
     List<Long> roleIds=RoleUtil.getRoleIds(kaleoTaskInstanceTokenQuery.getServiceContext());
-    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
     User user=UserLocalServiceUtil.getUserById(kaleoTaskInstanceTokenQuery.getUserId());
-    List<Group> allGroups=new ArrayList<Group>();
-    allGroups.addAll(user.getGroups());
-    allGroups.addAll(GroupLocalServiceUtil.getOrganizationsGroups(user.getOrganizations()));
-    allGroups.addAll(GroupLocalServiceUtil.getOrganizationsRelatedGroups(user.getOrganizations()));
-    allGroups.addAll(GroupLocalServiceUtil.getUserGroupsGroups(user.getUserGroups()));
-    allGroups.addAll(GroupLocalServiceUtil.getUserGroupsRelatedGroups(user.getUserGroups()));
-    for (    Group group : allGroups) {
-      if (group.isUserGroup()) {
-        List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(group.getClassPK());
-        for (        UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
-          roleIds.add(userGroupGroupRole.getRoleId());
-        }
-      }
- else {
-        List<Role> groupRoles=RoleLocalServiceUtil.getGroupRoles(group.getGroupId());
-        for (        Role role : groupRoles) {
-          roleIds.add(role.getRoleId());
-        }
-      }
-    }
+    roleIds=addUserRelatedRoleIds(user,roleIds);
+    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
     if (roleIds.isEmpty() && userGroupRoles.isEmpty()) {
       return;
     }
