@@ -1,8 +1,7 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String token=ParamUtil.getString(actionRequest,"token");
-  String clientId=ExpandoValueLocalServiceUtil.getData(themeDisplay.getCompanyId(),User.class.getName(),"MP","client-id",themeDisplay.getUserId(),"default-client-id");
-  String encodedClientId=MarketplaceUtil.encodeClientId(clientId,token);
+  String encodedClientId=MarketplaceUtil.encodeClientId(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   jsonObject.put("clientId",encodedClientId);
   jsonObject.put("token",token);

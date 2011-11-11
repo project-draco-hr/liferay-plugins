@@ -1,8 +1,17 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long remoteAppId=ParamUtil.getLong(actionRequest,"appId");
+  String token=ParamUtil.getString(actionRequest,"token");
   String version=ParamUtil.getString(actionRequest,"version");
   String url=ParamUtil.getString(actionRequest,"url");
-  URL urlObj=new URL(url);
+  String encodedClientId=MarketplaceUtil.encodeClientId(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token);
+  StringBundler sb=new StringBundler(5);
+  sb.append(url);
+  sb.append(StringPool.SLASH);
+  sb.append(encodedClientId);
+  sb.append(StringPool.SLASH);
+  sb.append(token);
+  URL urlObj=new URL(sb.toString());
   InputStream inputStream=urlObj.openStream();
   App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
   if (app == null) {
