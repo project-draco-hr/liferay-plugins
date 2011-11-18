@@ -23,6 +23,7 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setScopeGroupId(guestGroup.getGroupId());
   User user=UserLocalServiceUtil.addUser(creatorUserId,companyId,autoPassword,password1,password2,autoScreenName,screenName,emailAddress,facebookId,openId,locale,firstName,middleName,lastName,prefixId,suffixId,male,birthdayMonth,birthdayDay,birthdayYear,jobTitle,groupIds,organizationIds,roleIds,userGroupIds,sendEmail,serviceContext);
+  UserLocalServiceUtil.updatePasswordReset(user.getUserId(),false);
   byte[] portrait=getBytes("/users/images/" + screenName + "_portrait.jpg");
   UserLocalServiceUtil.updatePortrait(user.getUserId(),portrait);
   String[] questions=StringUtil.split(PropsUtil.get("users.reminder.queries.questions"));
