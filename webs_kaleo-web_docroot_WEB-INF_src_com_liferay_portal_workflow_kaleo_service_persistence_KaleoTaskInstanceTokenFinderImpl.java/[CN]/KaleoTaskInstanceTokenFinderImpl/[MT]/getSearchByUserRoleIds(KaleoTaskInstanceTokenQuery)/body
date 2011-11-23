@@ -8,17 +8,9 @@
   groups.addAll(GroupLocalServiceUtil.getUserGroupsGroups(user.getUserGroups()));
   groups.addAll(GroupLocalServiceUtil.getUserGroupsRelatedGroups(user.getUserGroups()));
   for (  Group group : groups) {
-    if (group.isUserGroup()) {
-      List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(group.getClassPK());
-      for (      UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
-        roleIds.add(userGroupGroupRole.getRoleId());
-      }
-    }
- else {
-      List<Role> roles=RoleLocalServiceUtil.getGroupRoles(group.getGroupId());
-      for (      Role role : roles) {
-        roleIds.add(role.getRoleId());
-      }
+    List<Role> roles=RoleLocalServiceUtil.getGroupRoles(group.getGroupId());
+    for (    Role role : roles) {
+      roleIds.add(role.getRoleId());
     }
   }
   return roleIds;
