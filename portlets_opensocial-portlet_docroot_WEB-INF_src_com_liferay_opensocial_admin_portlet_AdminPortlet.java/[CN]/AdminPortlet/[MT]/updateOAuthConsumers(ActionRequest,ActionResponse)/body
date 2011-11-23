@@ -1,4 +1,8 @@
 {
-  checkPermissions(actionRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  long groupId=themeDisplay.getScopeGroupId();
+  long gadgetId=ParamUtil.getLong(actionRequest,"gadgetId");
+  GadgetPermission.check(permissionChecker,groupId,gadgetId,ActionKeys.UPDATE);
   ShindigUtil.updateOAuthConsumers(actionRequest,actionResponse);
 }
