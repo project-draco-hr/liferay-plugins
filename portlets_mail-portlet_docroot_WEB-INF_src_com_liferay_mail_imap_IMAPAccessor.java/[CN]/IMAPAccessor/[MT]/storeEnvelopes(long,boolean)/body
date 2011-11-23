@@ -1,5 +1,5 @@
 {
-  IMAPFolder imapFolder=null;
+  Folder imapFolder=null;
   try {
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.fetchFolder(folderId);
     if (folder == null) {
@@ -11,8 +11,8 @@
     if (messageCount == 0) {
       return;
     }
-    Message oldestJxMessage=getMessage(folderId,imapFolder,true);
-    Message newestJxMessage=getMessage(folderId,imapFolder,false);
+    Message oldestJxMessage=getMessage(folderId,(UIDFolder)imapFolder,true);
+    Message newestJxMessage=getMessage(folderId,(UIDFolder)imapFolder,false);
     Message[] jxMessages=new Message[0];
     if (allMessages) {
       if (_log.isDebugEnabled()) {

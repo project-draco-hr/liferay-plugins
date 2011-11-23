@@ -1,8 +1,8 @@
 {
-  IMAPFolder imapFolder=null;
+  Folder imapFolder=null;
   try {
     imapFolder=openFolder(folderId);
-    Message[] jxMessages=imapFolder.getMessagesByUID(remoteMessageIds);
+    Message[] jxMessages=((UIDFolder)imapFolder).getMessagesByUID(remoteMessageIds);
     FetchProfile fetchProfile=new FetchProfile();
     fetchProfile.add(UIDFolder.FetchProfileItem.CONTENT_INFO);
     fetchProfile.add(UIDFolder.FetchProfileItem.FLAGS);
@@ -10,7 +10,7 @@
     imapFolder.fetch(jxMessages,fetchProfile);
     for (    Message jxMessage : jxMessages) {
       String flags=getFlags(jxMessage);
-      long remoteMessageId=imapFolder.getUID(jxMessage);
+      long remoteMessageId=((UIDFolder)imapFolder).getUID(jxMessage);
       com.liferay.mail.model.Message message=MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
       StringBundler bodyPlain=new StringBundler();
       StringBundler bodyHtml=new StringBundler();
