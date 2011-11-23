@@ -1,23 +1,3 @@
 {
-  Session session=null;
-  try {
-    session=openSession();
-    Checkout checkout=(Checkout)session.get(CheckoutImpl.class,Long.valueOf(checkoutId));
-    if (checkout == null) {
-      if (_log.isWarnEnabled()) {
-        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + checkoutId);
-      }
-      throw new NoSuchCheckoutException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + checkoutId);
-    }
-    return checkoutPersistence.remove(checkout);
-  }
- catch (  NoSuchCheckoutException nsee) {
-    throw nsee;
-  }
-catch (  Exception e) {
-    throw processException(e);
-  }
- finally {
-    closeSession(session);
-  }
+  return remove(Long.valueOf(checkoutId));
 }

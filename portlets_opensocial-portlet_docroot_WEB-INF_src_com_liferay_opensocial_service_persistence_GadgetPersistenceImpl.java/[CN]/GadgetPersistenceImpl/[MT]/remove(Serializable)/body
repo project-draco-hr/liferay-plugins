@@ -1,3 +1,23 @@
 {
-  return remove(((Long)primaryKey).longValue());
+  Session session=null;
+  try {
+    session=openSession();
+    Gadget gadget=(Gadget)session.get(GadgetImpl.class,primaryKey);
+    if (gadget == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+      }
+      throw new NoSuchGadgetException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    return remove(gadget);
+  }
+ catch (  NoSuchGadgetException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
 }

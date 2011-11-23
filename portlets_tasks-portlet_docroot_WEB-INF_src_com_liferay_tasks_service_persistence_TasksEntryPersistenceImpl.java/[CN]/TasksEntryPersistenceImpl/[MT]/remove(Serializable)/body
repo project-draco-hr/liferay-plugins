@@ -1,3 +1,23 @@
 {
-  return remove(((Long)primaryKey).longValue());
+  Session session=null;
+  try {
+    session=openSession();
+    TasksEntry tasksEntry=(TasksEntry)session.get(TasksEntryImpl.class,primaryKey);
+    if (tasksEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+      }
+      throw new NoSuchTasksEntryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    return remove(tasksEntry);
+  }
+ catch (  NoSuchTasksEntryException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
 }
