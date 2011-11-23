@@ -1,17 +1,17 @@
 {
   try {
-    Folder imapFolder=getFolder(folderId);
+    Folder jxFolder=getFolder(folderId);
     String newFullName=StringPool.BLANK;
     if (Validator.isNotNull(_account.getFolderPrefix())) {
       Store store=_imapConnection.getStore(true);
-      Folder defaultIMAPFolder=(Folder)store.getDefaultFolder();
-      newFullName=_account.getFolderPrefix() + defaultIMAPFolder.getSeparator() + newDisplayName;
+      Folder defaultJxFolder=store.getDefaultFolder();
+      newFullName=_account.getFolderPrefix() + defaultJxFolder.getSeparator() + newDisplayName;
     }
-    if (!imapFolder.exists()) {
+    if (!jxFolder.exists()) {
       throw new MailException(MailException.FOLDER_DOES_NOT_EXIST);
     }
-    if (imapFolder.renameTo(getFolder(newFullName))) {
-      return new String[]{imapFolder.getFullName(),imapFolder.getName()};
+    if (jxFolder.renameTo(getFolder(newFullName))) {
+      return new String[]{jxFolder.getFullName(),jxFolder.getName()};
     }
  else {
       throw new MailException(MailException.FOLDER_RENAME_FAILED);

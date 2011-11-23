@@ -1,8 +1,8 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    List<Message> jxMessages=getMessages((UIDFolder)imapFolder,messageIds,deleteMissingMessages);
+    jxFolder=openFolder(folderId);
+    List<Message> jxMessages=getMessages(jxFolder,messageIds,deleteMissingMessages);
     for (    Message jxMessage : jxMessages) {
       if (flag == MailConstants.FLAG_FLAGGED) {
         jxMessage.setFlag(Flags.Flag.FLAGGED,value);
@@ -19,6 +19,6 @@
     throw new MailException(me);
   }
  finally {
-    closeFolder(imapFolder,true);
+    closeFolder(jxFolder,true);
   }
 }

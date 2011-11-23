@@ -1,14 +1,14 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    Message[] jxMessages=((UIDFolder)imapFolder).getMessagesByUID(remoteMessageIds);
-    storeEnvelopes(folderId,imapFolder,jxMessages);
+    jxFolder=openFolder(folderId);
+    Message[] jxMessages=getMessagesByUID(jxFolder,remoteMessageIds);
+    storeEnvelopes(folderId,jxFolder,jxMessages);
   }
  catch (  MessagingException me) {
     throw new MailException(me);
   }
  finally {
-    closeFolder(imapFolder,false);
+    closeFolder(jxFolder,false);
   }
 }

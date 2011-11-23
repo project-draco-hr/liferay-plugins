@@ -1,61 +1,61 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.fetchFolder(folderId);
     if (folder == null) {
       return;
     }
-    imapFolder=openFolder(folderId);
-    int messageCount=imapFolder.getMessageCount();
+    jxFolder=openFolder(folderId);
+    int messageCount=jxFolder.getMessageCount();
     FolderLocalServiceUtil.updateFolder(folderId,folder.getFullName(),folder.getDisplayName(),messageCount);
     if (messageCount == 0) {
       return;
     }
-    Message oldestJxMessage=getMessage(folderId,(UIDFolder)imapFolder,true);
-    Message newestJxMessage=getMessage(folderId,(UIDFolder)imapFolder,false);
+    Message oldestJxMessage=getMessage(folderId,jxFolder,true);
+    Message newestJxMessage=getMessage(folderId,jxFolder,false);
     Message[] jxMessages=new Message[0];
     if (allMessages) {
       if (_log.isDebugEnabled()) {
-        _log.debug("Downloading all messages from folder " + imapFolder.getFullName());
+        _log.debug("Downloading all messages from folder " + jxFolder.getFullName());
       }
-      jxMessages=imapFolder.getMessages();
+      jxMessages=jxFolder.getMessages();
     }
  else     if ((oldestJxMessage == null) && (newestJxMessage == null)) {
       if (_log.isDebugEnabled()) {
-        _log.debug("Downloading messages from folder " + imapFolder.getFullName() + " for the first time");
+        _log.debug("Downloading messages from folder " + jxFolder.getFullName() + " for the first time");
       }
       int startingMessageNumber=messageCount - PortletPropsValues.MESSAGES_SYNC_COUNT;
       if (startingMessageNumber < 1) {
         startingMessageNumber=1;
       }
-      jxMessages=imapFolder.getMessages(startingMessageNumber,messageCount);
+      jxMessages=jxFolder.getMessages(startingMessageNumber,messageCount);
     }
  else {
       int oldestMessageNumber=oldestJxMessage.getMessageNumber();
       int newestMessageNumber=newestJxMessage.getMessageNumber();
       if (newestMessageNumber != messageCount) {
         if (_log.isDebugEnabled()) {
-          _log.debug("Downloading new messages from folder " + imapFolder.getFullName());
+          _log.debug("Downloading new messages from folder " + jxFolder.getFullName());
         }
-        jxMessages=imapFolder.getMessages(newestMessageNumber + 1,messageCount);
+        jxMessages=jxFolder.getMessages(newestMessageNumber + 1,messageCount);
       }
  else       if (oldestMessageNumber != 1) {
         if (_log.isDebugEnabled()) {
-          _log.debug("Downloading old messages from folder " + imapFolder.getFullName());
+          _log.debug("Downloading old messages from folder " + jxFolder.getFullName());
         }
         int startingMessageNumber=oldestMessageNumber - PortletPropsValues.MESSAGES_SYNC_COUNT;
         if (startingMessageNumber < 1) {
           startingMessageNumber=1;
         }
-        jxMessages=imapFolder.getMessages(startingMessageNumber,oldestMessageNumber - 1);
+        jxMessages=jxFolder.getMessages(startingMessageNumber,oldestMessageNumber - 1);
       }
     }
-    storeEnvelopes(folderId,imapFolder,jxMessages);
+    storeEnvelopes(folderId,jxFolder,jxMessages);
   }
  catch (  MessagingException me) {
     throw new MailException(me);
   }
  finally {
-    closeFolder(imapFolder,false);
+    closeFolder(jxFolder,false);
   }
 }

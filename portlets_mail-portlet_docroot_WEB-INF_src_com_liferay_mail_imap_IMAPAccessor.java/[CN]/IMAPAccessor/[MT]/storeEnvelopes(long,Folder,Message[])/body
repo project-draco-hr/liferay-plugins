@@ -9,7 +9,7 @@
     fetchProfile.add(UIDFolder.FetchProfileItem.ENVELOPE);
     fetchProfile.add(UIDFolder.FetchProfileItem.FLAGS);
     fetchProfile.add(UIDFolder.FetchProfileItem.UID);
-    imapFolder.fetch(jxMessages,fetchProfile);
+    jxFolder.fetch(jxMessages,fetchProfile);
     for (    Message jxMessage : jxMessages) {
       String sender=InternetAddressUtil.toString(jxMessage.getFrom());
       String to=InternetAddressUtil.toString(jxMessage.getRecipients(RecipientType.TO));
@@ -18,7 +18,7 @@
       Date sentDate=jxMessage.getSentDate();
       String subject=jxMessage.getSubject();
       String flags=getFlags(jxMessage);
-      long remoteMessageId=((UIDFolder)imapFolder).getUID(jxMessage);
+      long remoteMessageId=getUID(jxFolder,jxMessage);
       try {
         MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
       }
@@ -27,13 +27,13 @@
       }
     }
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.getFolder(folderId);
-    FolderLocalServiceUtil.updateFolder(folderId,folder.getFullName(),folder.getDisplayName(),imapFolder.getMessageCount());
+    FolderLocalServiceUtil.updateFolder(folderId,folder.getFullName(),folder.getDisplayName(),jxFolder.getMessageCount());
   }
  catch (  MessagingException me) {
     throw new MailException(me);
   }
   if (_log.isDebugEnabled()) {
     stopWatch.stop();
-    _log.debug("Downloaded " + jxMessages.length + " messages from folder "+ imapFolder.getFullName()+ " completed in "+ stopWatch.getTime()+ " ms");
+    _log.debug("Downloaded " + jxMessages.length + " messages from folder "+ jxFolder.getFullName()+ " completed in "+ stopWatch.getTime()+ " ms");
   }
 }

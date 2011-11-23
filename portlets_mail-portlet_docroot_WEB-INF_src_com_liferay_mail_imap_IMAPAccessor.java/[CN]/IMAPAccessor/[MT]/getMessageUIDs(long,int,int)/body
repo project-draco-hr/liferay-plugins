@@ -1,18 +1,18 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    int[] messageIndexes=getMessageIndexes(imapFolder.getMessageCount(),pageNumber,messagesPerPage);
+    jxFolder=openFolder(folderId);
+    int[] messageIndexes=getMessageIndexes(jxFolder.getMessageCount(),pageNumber,messagesPerPage);
     if (messageIndexes[0] == 0) {
       return new long[0];
     }
-    Message[] jxMessages=imapFolder.getMessages(messageIndexes[0],messageIndexes[1]);
-    return getMessageUIDs(imapFolder,jxMessages);
+    Message[] jxMessages=jxFolder.getMessages(messageIndexes[0],messageIndexes[1]);
+    return getMessageUIDs(jxFolder,jxMessages);
   }
  catch (  MessagingException me) {
     throw new MailException(me);
   }
  finally {
-    closeFolder(imapFolder,false);
+    closeFolder(jxFolder,false);
   }
 }

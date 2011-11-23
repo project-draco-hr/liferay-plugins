@@ -1,9 +1,9 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    imapFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
-    List<Message> jxMessages=getMessages((UIDFolder)imapFolder,messageIds,true);
+    jxFolder=openFolder(folderId);
+    jxFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
+    List<Message> jxMessages=getMessages(jxFolder,messageIds,true);
     for (    Message jxMessage : jxMessages) {
       jxMessage.setFlag(Flags.Flag.DELETED,true);
     }
@@ -12,6 +12,6 @@
     throw new MailException(me);
   }
  finally {
-    closeFolder(imapFolder,true);
+    closeFolder(jxFolder,true);
   }
 }

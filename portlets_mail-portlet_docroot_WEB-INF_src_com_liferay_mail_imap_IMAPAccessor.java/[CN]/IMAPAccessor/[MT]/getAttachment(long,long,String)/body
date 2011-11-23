@@ -1,13 +1,13 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(folderId);
-    Message jxMessage=getMessage((UIDFolder)imapFolder,messageId);
+    jxFolder=openFolder(folderId);
+    Message jxMessage=getMessage(jxFolder,messageId);
     if (jxMessage == null) {
       throw new MailException(MailException.MESSAGE_NOT_FOUND_ON_SERVER);
     }
     Part part=getPart(jxMessage,contentPath);
-    AttachmentHandler attachmentHandler=new IMAPAttachmentHandler(part.getInputStream(),imapFolder);
+    AttachmentHandler attachmentHandler=new IMAPAttachmentHandler(part.getInputStream(),jxFolder);
     return attachmentHandler;
   }
  catch (  MessagingException me) {

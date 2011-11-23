@@ -1,13 +1,13 @@
 {
-  Folder imapFolder=null;
+  Folder jxFolder=null;
   try {
-    imapFolder=openFolder(_account.getSentFolderId());
+    jxFolder=openFolder(_account.getSentFolderId());
     Message jxMessage=createMessage(personalName,sender,to,cc,bcc,subject,body,mailFiles);
     Transport transport=_imapConnection.getTransport();
     transport.sendMessage(jxMessage,jxMessage.getAllRecipients());
     transport.close();
-    imapFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
-    imapFolder.appendMessages(new Message[]{jxMessage});
+    jxFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
+    jxFolder.appendMessages(new Message[]{jxMessage});
   }
  catch (  MessagingException me) {
     throw new MailException(me);
@@ -16,6 +16,6 @@ catch (  UnsupportedEncodingException uee) {
     throw new MailException(uee);
   }
  finally {
-    closeFolder(imapFolder,false);
+    closeFolder(jxFolder,false);
   }
 }
