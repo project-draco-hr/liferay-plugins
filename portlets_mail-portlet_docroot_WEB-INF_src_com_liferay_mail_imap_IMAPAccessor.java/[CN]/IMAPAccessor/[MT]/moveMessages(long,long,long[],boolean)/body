@@ -1,14 +1,14 @@
 {
-  Folder sourceIMAPFolder=null;
-  Folder destinationIMAPFolder=null;
+  Folder sourceJxFolder=null;
+  Folder destinationJxFolder=null;
   try {
-    sourceIMAPFolder=openFolder(sourceFolderId);
-    sourceIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
-    destinationIMAPFolder=openFolder(destinationFolderId);
-    destinationIMAPFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
-    List<Message> jxMessages=getMessages(sourceIMAPFolder,messageIds,deleteMissingMessages);
+    sourceJxFolder=openFolder(sourceFolderId);
+    sourceJxFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
+    destinationJxFolder=openFolder(destinationFolderId);
+    destinationJxFolder.addMessageCountListener(new IMAPMessageCountListener(_user,_account,_password));
+    List<Message> jxMessages=getMessages(sourceJxFolder,messageIds,deleteMissingMessages);
     for (    Message jxMessage : jxMessages) {
-      destinationIMAPFolder.appendMessages(new Message[]{jxMessage});
+      destinationJxFolder.appendMessages(new Message[]{jxMessage});
       jxMessage.setFlag(Flags.Flag.DELETED,true);
     }
   }
@@ -16,7 +16,7 @@
     throw new MailException(me);
   }
  finally {
-    closeFolder(sourceIMAPFolder,true);
-    closeFolder(destinationIMAPFolder,false);
+    closeFolder(sourceJxFolder,true);
+    closeFolder(destinationJxFolder,false);
   }
 }
