@@ -11,10 +11,6 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-  OAuthTokenModelImpl oAuthTokenModelImpl=(OAuthTokenModelImpl)oAuthToken;
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,new Object[]{Long.valueOf(oAuthTokenModelImpl.getUserId()),oAuthTokenModelImpl.getGadgetKey(),oAuthTokenModelImpl.getServiceName(),Long.valueOf(oAuthTokenModelImpl.getModuleId()),oAuthTokenModelImpl.getTokenName()});
-  EntityCacheUtil.removeResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,oAuthToken.getPrimaryKey());
+  clearCache(oAuthToken);
   return oAuthToken;
 }

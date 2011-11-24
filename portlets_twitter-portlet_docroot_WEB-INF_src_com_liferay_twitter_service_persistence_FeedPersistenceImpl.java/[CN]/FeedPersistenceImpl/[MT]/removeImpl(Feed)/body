@@ -11,11 +11,6 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-  FeedModelImpl feedModelImpl=(FeedModelImpl)feed;
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_TWUI,new Object[]{Long.valueOf(feedModelImpl.getCompanyId()),Long.valueOf(feedModelImpl.getTwitterUserId())});
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_TSN,new Object[]{Long.valueOf(feedModelImpl.getCompanyId()),feedModelImpl.getTwitterScreenName()});
-  EntityCacheUtil.removeResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey());
+  clearCache(feed);
   return feed;
 }

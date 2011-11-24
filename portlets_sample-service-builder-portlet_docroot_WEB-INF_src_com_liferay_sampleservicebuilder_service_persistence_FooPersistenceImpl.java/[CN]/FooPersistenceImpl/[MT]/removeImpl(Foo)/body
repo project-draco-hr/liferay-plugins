@@ -11,10 +11,6 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
-  FooModelImpl fooModelImpl=(FooModelImpl)foo;
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{fooModelImpl.getUuid(),Long.valueOf(fooModelImpl.getGroupId())});
-  EntityCacheUtil.removeResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey());
+  clearCache(foo);
   return foo;
 }
