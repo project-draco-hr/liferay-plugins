@@ -1,12 +1,16 @@
 {
-  if (actionRequest.getPortletMode().equals(PortletMode.EDIT)) {
-    String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
-    if (cmd.equals(Constants.UPDATE)) {
-      String language=ParamUtil.getString(actionRequest,"language");
-      PortletPreferences preferences=actionRequest.getPreferences();
-      preferences.setValue("language",language);
-      preferences.store();
-      SessionMessages.add(actionRequest,getPortletConfig().getPortletName() + ".doEdit");
-    }
+  PortletMode portletMode=actionRequest.getPortletMode();
+  if (!portletMode.equals(PortletMode.EDIT)) {
+    return;
   }
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String language=ParamUtil.getString(actionRequest,"language");
+  PortletPreferences preferences=actionRequest.getPreferences();
+  preferences.setValue("language",language);
+  preferences.store();
+  PortletConfig portletConfig=getPortletConfig();
+  SessionMessages.add(actionRequest,portletConfig.getPortletName() + SessionMessages.KEY_SUFFIX_UPDATED_PREFERENCES);
 }
