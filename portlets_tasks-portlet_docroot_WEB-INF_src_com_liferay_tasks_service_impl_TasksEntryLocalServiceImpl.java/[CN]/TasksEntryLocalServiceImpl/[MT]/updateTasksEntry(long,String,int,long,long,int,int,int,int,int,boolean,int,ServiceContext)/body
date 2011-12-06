@@ -6,11 +6,13 @@
   if (!neverDue) {
     dueDate=PortalUtil.getDate(dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,user.getTimeZone(),new TasksEntryDueDateException());
   }
+  long previousAssigneeUserId=tasksEntry.getAssigneeUserId();
   tasksEntry.setModifiedDate(now);
   tasksEntry.setTitle(title);
   tasksEntry.setPriority(priority);
   tasksEntry.setAssigneeUserId(assigneeUserId);
   tasksEntry.setDueDate(dueDate);
+  int previousStatus=tasksEntry.getStatus();
   if (status == TasksEntryConstants.STATUS_RESOLVED) {
     tasksEntry.setResolverUserId(resolverUserId);
     tasksEntry.setFinishDate(now);
@@ -30,5 +32,6 @@
     activity=TasksActivityKeys.REOPEN_ENTRY;
   }
   SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,StringPool.BLANK,assigneeUserId);
+  sendNotificationEvent(tasksEntry,previousStatus,previousAssigneeUserId,serviceContext);
   return tasksEntry;
 }

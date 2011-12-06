@@ -10,7 +10,9 @@
     tasksEntry.setResolverUserId(0);
     tasksEntry.setFinishDate(null);
   }
+  int previousStatus=tasksEntry.getStatus();
   tasksEntry.setStatus(status);
   tasksEntryPersistence.update(tasksEntry,false);
+  sendNotificationEvent(tasksEntry,previousStatus,tasksEntry.getAssigneeUserId(),serviceContext);
   return tasksEntry;
 }
