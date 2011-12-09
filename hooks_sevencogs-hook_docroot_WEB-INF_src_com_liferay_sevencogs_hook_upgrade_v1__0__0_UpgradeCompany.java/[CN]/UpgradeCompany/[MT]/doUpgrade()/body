@@ -6,10 +6,11 @@
     PrincipalThreadLocal.setName(defaultUserId);
     clearData(companyId);
     setupCommunities(companyId,defaultUserId);
-    setupOrganizations(companyId,defaultUserId);
+    Organization organization=setupOrganizations(companyId,defaultUserId);
     setupRoles(companyId,defaultUserId);
-    setupUsers(companyId);
+    List<User> users=setupUsers(companyId);
     setupWorkflow(companyId,defaultUserId);
+    setupSocialActivityCounters(companyId,organization.getGroup(),users);
   }
   finally {
     PrincipalThreadLocal.setName(name);

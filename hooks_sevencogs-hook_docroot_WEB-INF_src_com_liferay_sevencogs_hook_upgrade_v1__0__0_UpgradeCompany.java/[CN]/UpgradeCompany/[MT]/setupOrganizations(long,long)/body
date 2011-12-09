@@ -15,6 +15,7 @@
   Group group=organization.getGroup();
   GroupLocalServiceUtil.updateFriendlyURL(group.getGroupId(),"/7cogs");
   serviceContext.setScopeGroupId(group.getGroupId());
+  enableSocialActivities(companyId,organization.getGroup());
   LayoutSetLocalServiceUtil.updateLogo(group.getGroupId(),false,true,getInputStream("/sample/images/logo.png"));
   LayoutSetLocalServiceUtil.updateLookAndFeel(group.getGroupId(),false,"sevencogs_WAR_sevencogstheme","01","",false);
   AssetVocabulary topicAssetVocabulary=addAssetVocabulary(defaultUserId,"Topic",serviceContext);
@@ -154,6 +155,17 @@
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
   portletId=addPortletId(layout,PortletKeys.MESSAGE_BOARDS,"column-1");
   removePortletBorder(layout,portletId);
+  layout=addLayout(group,"Dashboard",false,"/dashboard","2_columns_ii");
+  portletId=addPortletId(layout,PortletKeys.USER_STATISTICS,"column-1");
+  String[] activityCounterNames=new String[]{"user.message-posts","user.blogs","user.wikis"};
+  configureUserStatistics(layout,portletId,activityCounterNames);
+  portletId=addPortletId(layout,PortletKeys.GROUP_STATISTICS,"column-2");
+  String[][] chartBlocks=new String[3][4];
+  chartBlocks[0]=new String[]{"user.message-posts","area","12months","40"};
+  chartBlocks[1]=new String[]{"asset.activities","pie","12months","50"};
+  chartBlocks[2]=new String[]{"asset.activities","tag-cloud","12months","40"};
+  configureGroupStatistics(layout,portletId,chartBlocks);
+  portletId=addPortletId(layout,PortletKeys.ACTIVITIES,"column-2");
   layout=addLayout(group,"About Us",false,"/about_us","1_2_columns_ii");
   portletId=addPortletId(layout,PortletKeys.JOURNAL_CONTENT,"column-1");
   removePortletBorder(layout,portletId);
@@ -188,4 +200,5 @@
   serviceContext.setAssetTagNames(new String[]{"documents","sharing"});
   journalArticle=addJournalArticle(defaultUserId,group.getGroupId(),"Shared Documents","/sample/journal/articles/documents_shared_docs.xml",serviceContext);
   configureJournalContent(layout,portletId,journalArticle.getArticleId());
+  return organization;
 }
