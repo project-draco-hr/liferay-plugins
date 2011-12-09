@@ -1,9 +1,9 @@
 {
   String context=arguments.poll();
-  List<File> deployDirs=getUpdateDirectories(context);
-  for (  File deployDir : deployDirs) {
-    if (!deployDir.exists()) {
-      responseJSONObject.put(JSONKeys.ERROR,"Context directory " + deployDir.getAbsolutePath() + " does not exist");
+  List<File> installedDirs=getInstalledDirectories(context);
+  for (  File installedDir : installedDirs) {
+    if (!installedDir.exists()) {
+      responseJSONObject.put(JSONKeys.ERROR,"Context directory " + installedDir.getAbsolutePath() + " does not exist");
       responseJSONObject.put(JSONKeys.STATUS,1);
       return;
     }
@@ -12,17 +12,17 @@
   if (tempFile == null) {
     return;
   }
-  for (  File deployDirectory : deployDirs) {
+  for (  File deployDirectory : installedDirs) {
     FileUtil.unzip(tempFile,deployDirectory);
   }
-  File partialAppDeletePropsFile=new File(deployDirs.get(0),"META-INF/liferay-partialapp-delete.props");
+  File partialAppDeletePropsFile=new File(installedDirs.get(0),"META-INF/liferay-partialapp-delete.props");
   if (!partialAppDeletePropsFile.exists()) {
     return;
   }
   BufferedReader bufferedReader=new BufferedReader(new FileReader(partialAppDeletePropsFile));
   String line=null;
   while ((line=bufferedReader.readLine()) != null) {
-    for (    File deployDirectory : deployDirs) {
+    for (    File deployDirectory : installedDirs) {
       File staleFile=new File(deployDirectory,line.trim());
       if (!staleFile.exists()) {
         continue;
