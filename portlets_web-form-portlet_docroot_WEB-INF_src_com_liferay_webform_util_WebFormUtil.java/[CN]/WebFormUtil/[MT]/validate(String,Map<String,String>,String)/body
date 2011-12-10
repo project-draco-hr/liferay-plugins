@@ -1,8 +1,10 @@
 {
   boolean validationResult=false;
   Context context=Context.enter();
-  StringBuilder sb=new StringBuilder();
-  sb.append("currentFieldValue = String('" + HtmlUtil.escapeJS(currentFieldValue) + "');\n");
+  StringBundler sb=new StringBundler();
+  sb.append("currentFieldValue = String('");
+  sb.append(HtmlUtil.escapeJS(currentFieldValue));
+  sb.append("');\n");
   sb.append("var fieldsMap = {};\n");
   for (  String key : fieldsMap.keySet()) {
     sb.append("fieldsMap['");
@@ -25,7 +27,7 @@
     context.evaluateString(scope,script,"Validation Script",1,null);
     Object obj=ScriptableObject.getProperty(scope,"internalValidationResult");
     if (obj instanceof Boolean) {
-      validationResult=((Boolean)obj).booleanValue();
+      validationResult=(Boolean)obj;
     }
  else {
       throw new Exception("The script must return a boolean value");
