@@ -1,15 +1,15 @@
 {
   String fileName=part.getFileName();
   Object content=part.getContent();
-  if (content instanceof Multipart) {
+  if (content instanceof InputStream) {
+    return;
+  }
+ else   if (content instanceof Multipart) {
     Multipart multipart=(Multipart)content;
     for (int i=0; i < multipart.getCount(); i++) {
       Part curPart=multipart.getBodyPart(i);
       getParts(userId,bodyPlain,bodyHtml,contentPath.concat(StringPool.PERIOD).concat(String.valueOf(i)),curPart,mailFiles);
     }
-  }
- else   if (content instanceof InputStream) {
-    return;
   }
  else   if (Validator.isNull(fileName)) {
     String contentType=part.getContentType().toLowerCase();
