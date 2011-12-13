@@ -3,27 +3,19 @@
   if ((status != TasksEntryConstants.STATUS_OPEN) && (status != TasksEntryConstants.STATUS_RESOLVED) && (status != TasksEntryConstants.STATUS_REOPENED)) {
     return;
   }
-  long userId=serviceContext.getUserId();
-  long assigneeUserId=tasksEntry.getAssigneeUserId();
-  long creatorUserId=tasksEntry.getUserId();
-  List<Long> receiverUserIds=new ArrayList<Long>();
-  if (creatorUserId != userId) {
-    receiverUserIds.add(creatorUserId);
-  }
-  if (assigneeUserId != userId && !receiverUserIds.contains(assigneeUserId)) {
-    receiverUserIds.add(assigneeUserId);
-  }
-  if (previousAssigneeUserId != 0 && previousAssigneeUserId != userId && !receiverUserIds.contains(assigneeUserId)) {
-    receiverUserIds.add(previousAssigneeUserId);
-  }
+  HashSet<Long> receiverUserIds=new HashSet<Long>(3);
+  receiverUserIds.add(tasksEntry.getUserId());
+  receiverUserIds.add(previousAssigneeUserId);
+  receiverUserIds.add(tasksEntry.getAssigneeUserId());
+  receiverUserIds.remove(serviceContext.getUserId());
   JSONObject notificationEventJSON=JSONFactoryUtil.createJSONObject();
   notificationEventJSON.put("body",tasksEntry.getTitle());
   notificationEventJSON.put("entryId",tasksEntry.getTasksEntryId());
   notificationEventJSON.put("portletId","1_WAR_tasksportlet");
-  notificationEventJSON.put("userId",userId);
+  notificationEventJSON.put("userId",serviceContext.getUserId());
   for (  long receiverUserId : receiverUserIds) {
     String title=StringPool.BLANK;
-    if (assigneeUserId != previousAssigneeUserId) {
+    if (tasksEntry.getAssigneeUserId() != previousAssigneeUserId) {
       if (receiverUserId == previousAssigneeUserId) {
         title="reassigned-your-task";
       }
