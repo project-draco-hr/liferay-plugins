@@ -1,10 +1,10 @@
 {
-  SocialRequestFeedEntry requestFeedEntry=SocialRequestInterpreterLocalServiceUtil.interpret(socialRequest,themeDisplay);
   JSONObject notificationEventJSON=JSONFactoryUtil.createJSONObject();
+  SocialRequestFeedEntry requestFeedEntry=SocialRequestInterpreterLocalServiceUtil.interpret(socialRequest,themeDisplay);
   notificationEventJSON.put("portletId","1_WAR_contactsportlet");
   notificationEventJSON.put("requestId",socialRequest.getRequestId());
-  notificationEventJSON.put("senderUserId",socialRequest.getUserId());
   notificationEventJSON.put("title",requestFeedEntry.getTitle());
+  notificationEventJSON.put("userId",socialRequest.getUserId());
   NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSON);
   notificationEvent.setDeliveryRequired(0);
   ChannelHubManagerUtil.sendNotificationEvent(socialRequest.getCompanyId(),socialRequest.getReceiverUserId(),notificationEvent);

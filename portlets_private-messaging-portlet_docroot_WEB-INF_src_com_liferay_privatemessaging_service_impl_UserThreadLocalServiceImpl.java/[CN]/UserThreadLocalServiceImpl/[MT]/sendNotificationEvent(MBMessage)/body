@@ -1,21 +1,19 @@
 {
-  User senderUser=UserLocalServiceUtil.getUser(mbMessage.getUserId());
   JSONObject notificationEventJSON=JSONFactoryUtil.createJSONObject();
   notificationEventJSON.put("body",mbMessage.getBody());
   notificationEventJSON.put("entryId",mbMessage.getThreadId());
   notificationEventJSON.put("entryKeyName","mbThreadId");
   notificationEventJSON.put("jspPage","/view.jsp");
   notificationEventJSON.put("portletId","1_WAR_privatemessagingportlet");
-  notificationEventJSON.put("senderUserId",senderUser.getUserId());
   notificationEventJSON.put("title","sent-you-a-message");
+  notificationEventJSON.put("userId",mbMessage.getUserId());
   List<UserThread> userThreads=UserThreadLocalServiceUtil.getMBThreadUserThreads(mbMessage.getThreadId());
   for (  UserThread userThread : userThreads) {
     if (userThread.getUserId() == mbMessage.getUserId()) {
       continue;
     }
-    User receiverUser=UserLocalServiceUtil.getUserById(userThread.getUserId());
     NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSON);
     notificationEvent.setDeliveryRequired(0);
-    ChannelHubManagerUtil.sendNotificationEvent(receiverUser.getCompanyId(),receiverUser.getUserId(),notificationEvent);
+    ChannelHubManagerUtil.sendNotificationEvent(mbMessage.getCompanyId(),userThread.getUserId(),notificationEvent);
   }
 }
