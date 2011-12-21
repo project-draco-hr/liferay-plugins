@@ -4,8 +4,8 @@
     return;
   }
   HashSet<Long> receiverUserIds=new HashSet<Long>(3);
+  receiverUserIds.add(oldAssigneeUserId);
   receiverUserIds.add(tasksEntry.getUserId());
-  receiverUserIds.add(previousAssigneeUserId);
   receiverUserIds.add(tasksEntry.getAssigneeUserId());
   receiverUserIds.remove(serviceContext.getUserId());
   JSONObject notificationEventJSON=JSONFactoryUtil.createJSONObject();
@@ -15,18 +15,18 @@
   notificationEventJSON.put("userId",serviceContext.getUserId());
   for (  long receiverUserId : receiverUserIds) {
     String title=StringPool.BLANK;
-    if (previousStatus == TasksEntryConstants.STATUS_ALL) {
+    if (oldStatus == TasksEntryConstants.STATUS_ALL) {
       title="x-assigned-you-a-task";
     }
- else     if (tasksEntry.getAssigneeUserId() != previousAssigneeUserId) {
-      if (receiverUserId == previousAssigneeUserId) {
+ else     if (tasksEntry.getAssigneeUserId() != oldAssigneeUserId) {
+      if (receiverUserId == oldAssigneeUserId) {
         title="x-reassigned-your-task";
       }
  else {
         title="x-assigned-you-a-task";
       }
     }
- else     if (status != previousStatus) {
+ else     if (status != oldStatus) {
       String statusLabel=TasksEntryConstants.getStatusLabel(tasksEntry.getStatus());
       title="x-" + statusLabel + "-the-task";
     }

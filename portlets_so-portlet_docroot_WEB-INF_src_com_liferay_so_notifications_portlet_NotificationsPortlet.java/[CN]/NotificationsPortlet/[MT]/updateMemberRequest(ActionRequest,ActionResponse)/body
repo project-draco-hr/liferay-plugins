@@ -1,7 +1,6 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long memberRequestId=ParamUtil.getLong(actionRequest,"memberRequestId");
-  String notificationUuid=ParamUtil.getString(actionRequest,"notificationUuid");
   int status=ParamUtil.getInteger(actionRequest,"status");
   try {
     MemberRequestLocalServiceUtil.updateMemberRequest(themeDisplay.getUserId(),memberRequestId,status);
@@ -14,5 +13,6 @@
       throw e;
     }
   }
-  ChannelHubManagerUtil.confirmDelivery(themeDisplay.getCompanyId(),themeDisplay.getUserId(),notificationUuid,false);
+  String notificationEventUuid=ParamUtil.getString(actionRequest,"notificationEventUuid");
+  ChannelHubManagerUtil.confirmDelivery(themeDisplay.getCompanyId(),themeDisplay.getUserId(),notificationEventUuid,false);
 }
