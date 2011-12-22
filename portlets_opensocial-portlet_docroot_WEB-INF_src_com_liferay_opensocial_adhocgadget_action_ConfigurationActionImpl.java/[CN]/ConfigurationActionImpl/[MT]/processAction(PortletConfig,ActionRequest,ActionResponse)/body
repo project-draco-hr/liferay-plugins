@@ -11,7 +11,12 @@
   }
  else {
     String url=getParameter(actionRequest,"url");
-    ShindigUtil.clearGadgetSpecCache(url);
+    try {
+      ShindigUtil.getGadgetSpec(url,false,true);
+    }
+ catch (    Exception e) {
+      SessionErrors.add(actionRequest,"gadgetURL");
+    }
     setPreference(actionRequest,"url",url);
     super.processAction(portletConfig,actionRequest,actionResponse);
   }
