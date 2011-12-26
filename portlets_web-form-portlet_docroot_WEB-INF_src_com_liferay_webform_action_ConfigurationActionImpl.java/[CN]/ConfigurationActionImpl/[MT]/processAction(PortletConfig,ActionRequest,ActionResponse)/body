@@ -28,17 +28,8 @@
       if ((Validator.isNotNull(fieldValidationScript) ^ (Validator.isNotNull(fieldValidationErrorMessage)))) {
         SessionErrors.add(actionRequest,"invalidValidationDefinition" + i);
       }
-      for (      Locale locale : fieldLabelMap.keySet()) {
-        String languageId=LocaleUtil.toLanguageId(locale);
-        String fieldLabelValue=fieldLabelMap.get(locale);
-        String fieldOptionsValue=fieldOptionsMap.get(locale);
-        if (Validator.isNotNull(fieldLabelValue)) {
-          LocalizationUtil.setPreferencesValue(preferences,"fieldLabel" + i,languageId,fieldLabelValue);
-        }
-        if (Validator.isNotNull(fieldOptionsValue)) {
-          LocalizationUtil.setPreferencesValue(preferences,"fieldOptions" + i,languageId,fieldOptionsValue);
-        }
-      }
+      updateFieldLocales("fieldLabel",fieldLabelMap,i,preferences);
+      updateFieldLocales("fieldOptions",fieldOptionsMap,i,preferences);
       preferences.setValue("fieldType" + i,fieldType);
       preferences.setValue("fieldOptional" + i,String.valueOf(fieldOptional));
       preferences.setValue("fieldValidationScript" + i,fieldValidationScript);
