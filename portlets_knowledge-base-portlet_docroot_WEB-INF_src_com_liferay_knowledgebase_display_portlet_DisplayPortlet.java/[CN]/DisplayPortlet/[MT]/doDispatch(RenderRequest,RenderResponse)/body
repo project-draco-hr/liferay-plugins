@@ -1,13 +1,13 @@
 {
-  String jspPage=ParamUtil.getString(renderRequest,"jspPage",viewJSP);
+  String jspPage=ParamUtil.getString(renderRequest,"jspPage",viewTemplate);
   long assetCategoryId=ParamUtil.getLong(renderRequest,"categoryId");
   String assetTagName=ParamUtil.getString(renderRequest,"tag");
-  if ((jspPage.equals(viewJSP) && (assetCategoryId > 0)) || (jspPage.equals(viewJSP) && Validator.isNotNull(assetTagName))) {
-    String path=jspPath + "view_prp_articles.jsp";
+  if ((jspPage.equals(viewTemplate) && (assetCategoryId > 0)) || (jspPage.equals(viewTemplate) && Validator.isNotNull(assetTagName))) {
+    String path=templatePath + "view_prp_articles.jsp";
     include(path,renderRequest,renderResponse);
   }
  else   if (SessionErrors.contains(renderRequest,NoSuchArticleException.class.getName()) || SessionErrors.contains(renderRequest,NoSuchCommentException.class.getName()) || SessionErrors.contains(renderRequest,NoSuchSubscriptionException.class.getName())|| SessionErrors.contains(renderRequest,NoSuchTemplateException.class.getName())|| SessionErrors.contains(renderRequest,PrincipalException.class.getName())) {
-    include(jspPath + "error.jsp",renderRequest,renderResponse);
+    include(templatePath + "error.jsp",renderRequest,renderResponse);
   }
  else {
     super.doDispatch(renderRequest,renderResponse);
