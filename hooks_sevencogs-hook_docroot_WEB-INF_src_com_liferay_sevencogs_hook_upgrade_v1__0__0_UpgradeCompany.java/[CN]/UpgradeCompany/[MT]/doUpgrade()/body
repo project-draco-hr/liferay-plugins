@@ -5,12 +5,12 @@
     long defaultUserId=UserLocalServiceUtil.getDefaultUserId(companyId);
     PrincipalThreadLocal.setName(defaultUserId);
     clearData(companyId);
-    setupCommunities(companyId,defaultUserId);
+    setupSites(companyId,defaultUserId);
     Organization organization=setupOrganizations(companyId,defaultUserId);
     setupRoles(companyId,defaultUserId);
     List<User> users=setupUsers(companyId);
+    setupSocialActivityCounters(organization.getGroup(),users);
     setupWorkflow(companyId,defaultUserId);
-    setupSocialActivityCounters(companyId,organization.getGroup(),users);
   }
   finally {
     PrincipalThreadLocal.setName(name);

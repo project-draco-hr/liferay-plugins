@@ -6,12 +6,17 @@
   Role writerRole=RoleLocalServiceUtil.getRole(companyId,"Writer");
   long[] roleIds={adminRole.getRoleId(),powerUserRole.getRoleId()};
   User brunoUser=addUser(companyId,"bruno","Bruno","Admin",true,"Administrator",roleIds);
+  List<User> users=new ArrayList<User>();
+  users.add(brunoUser);
   roleIds=new long[]{powerUserRole.getRoleId()};
   User kendraUser=addUser(companyId,"kendra","Kendra","Regular",true,"Employee",roleIds);
+  users.add(kendraUser);
   roleIds=new long[]{powerUserRole.getRoleId(),writerRole.getRoleId()};
   User michelleUser=addUser(companyId,"michelle","Michelle","Writer",false,"Writer",roleIds);
+  users.add(michelleUser);
   roleIds=new long[]{powerUserRole.getRoleId(),publisherRole.getRoleId(),portalContentReviewer.getRoleId()};
   User richardUser=addUser(companyId,"richard","Richard","Publisher",true,"Publisher",roleIds);
+  users.add(richardUser);
   AssetCategory learningAssetCategory=_assetCategories.get("Learning");
   AssetCategory liferayAssetCategory=_assetCategories.get("Liferay");
   ServiceContext serviceContext=new ServiceContext();
@@ -58,10 +63,5 @@
   addSocialRequest(michelleUser,richardUser,true);
   addSocialRequest(kendraUser,brunoUser,false);
   addSocialRequest(kendraUser,richardUser,false);
-  List<User> users=new ArrayList<User>();
-  users.add(brunoUser);
-  users.add(michelleUser);
-  users.add(richardUser);
-  users.add(kendraUser);
   return users;
 }

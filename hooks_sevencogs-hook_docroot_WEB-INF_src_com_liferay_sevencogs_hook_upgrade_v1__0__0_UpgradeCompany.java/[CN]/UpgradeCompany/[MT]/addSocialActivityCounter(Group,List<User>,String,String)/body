@@ -1,0 +1,75 @@
+{
+  String[] lineParts=StringUtil.split(line);
+  int endPeriodOffset=GetterUtil.getInteger(lineParts[3]);
+  int endPeriod=SocialCounterPeriodUtil.getEndPeriod(endPeriodOffset);
+  if (endPeriod < 0) {
+    return;
+  }
+  String className=lineParts[0];
+  long classNameId=PortalUtil.getClassNameId(className);
+  String classPKString=lineParts[1];
+  long classPK=12345;
+  if (className.equals(User.class.getName())) {
+    if (classPKString.equals("0")) {
+      int index=getRandomNumber(0,3);
+      User user=users.get(index);
+      classPK=user.getUserId();
+    }
+ else {
+      for (      User user : users) {
+        if (classPKString.equalsIgnoreCase(user.getScreenName())) {
+          classPK=user.getUserId();
+        }
+      }
+    }
+  }
+ else {
+    AssetEntryQuery assetEntryQuery=new AssetEntryQuery();
+    assetEntryQuery.setClassName(className);
+    assetEntryQuery.setGroupIds(new long[]{group.getGroupId()});
+    List<AssetEntry> assetEntries=AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
+    if (!assetEntries.isEmpty()) {
+      int index=getRandomNumber(0,assetEntries.size() - 1);
+      AssetEntry assetEntry=assetEntries.get(index);
+      classPK=assetEntry.getClassPK();
+    }
+  }
+  int ownerType=SocialActivityCounterConstants.TYPE_ACTOR;
+  if (socialActivityCounterName.startsWith("asset.")) {
+    ownerType=SocialActivityCounterConstants.TYPE_ASSET;
+  }
+ else   if (socialActivityCounterName.equals("contribution")) {
+    ownerType=SocialActivityCounterConstants.TYPE_CREATOR;
+  }
+  SocialActivityCounter latestSocialActivityCounter=SocialActivityCounterLocalServiceUtil.fetchLatestActivityCounter(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType);
+  SocialActivityCounter socialActivityCounter=latestSocialActivityCounter;
+  int currentValue=getRandomNumber(0,100);
+  int totalValue=0;
+  if (latestSocialActivityCounter != null) {
+    totalValue=latestSocialActivityCounter.getTotalValue() + currentValue;
+  }
+  int startPeriodOffset=GetterUtil.getInteger(lineParts[2]);
+  int startPeriod=SocialCounterPeriodUtil.getStartPeriod(startPeriodOffset);
+  if ((latestSocialActivityCounter == null) || (latestSocialActivityCounter.getStartPeriod() != startPeriod)) {
+    long socialActivityCounterId=CounterLocalServiceUtil.increment();
+    socialActivityCounter=SocialActivityCounterLocalServiceUtil.createSocialActivityCounter(socialActivityCounterId);
+    socialActivityCounter.setGroupId(group.getGroupId());
+    socialActivityCounter.setCompanyId(group.getCompanyId());
+    socialActivityCounter.setClassNameId(classNameId);
+    socialActivityCounter.setClassPK(classPK);
+    socialActivityCounter.setName(socialActivityCounterName);
+    socialActivityCounter.setOwnerType(ownerType);
+    socialActivityCounter.setCurrentValue(currentValue);
+    socialActivityCounter.setTotalValue(totalValue);
+    socialActivityCounter.setStartPeriod(startPeriod);
+    if (endPeriodOffset == 0) {
+      endPeriod=-1;
+    }
+    socialActivityCounter.setEndPeriod(endPeriod);
+  }
+ else {
+    socialActivityCounter.setCurrentValue(socialActivityCounter.getCurrentValue() + currentValue);
+    socialActivityCounter.setTotalValue(totalValue);
+  }
+  SocialActivityCounterLocalServiceUtil.updateSocialActivityCounter(socialActivityCounter);
+}
