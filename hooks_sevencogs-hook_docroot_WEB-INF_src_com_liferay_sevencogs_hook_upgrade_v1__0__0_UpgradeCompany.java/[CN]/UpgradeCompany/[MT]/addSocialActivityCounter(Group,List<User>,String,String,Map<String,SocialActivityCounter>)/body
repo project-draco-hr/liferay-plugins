@@ -41,14 +41,27 @@
  else   if (socialActivityCounterName.equals("contribution")) {
     ownerType=SocialActivityCounterConstants.TYPE_CREATOR;
   }
-  SocialActivityCounter socialActivityCounter=SocialActivityCounterLocalServiceUtil.addActivityCounter(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType,-1,-1);
+  int startPeriodOffset=GetterUtil.getInteger(lineParts[2]);
+  int startPeriod=SocialCounterPeriodUtil.getStartPeriod(startPeriodOffset);
   int currentValue=getRandomNumber(0,100);
   int totalValue=currentValue;
-  if ((socialActivityCounter.getCurrentValue() != -1) && (socialActivityCounter.getTotalValue() != -1)) {
-    currentValue+=socialActivityCounter.getCurrentValue();
-    totalValue+=socialActivityCounter.getTotalValue();
+  SocialActivityCounter socialActivityCounter=SocialActivityCounterLocalServiceUtil.fetchActivityCounterByStartPeriod(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType,startPeriod);
+  if (socialActivityCounter != null) {
+    totalValue=totalValue + socialActivityCounter.getTotalValue();
   }
-  socialActivityCounter.setCurrentValue(currentValue);
+  String key=encodeKey(group.getGroupId(),classNameId,classPK,socialActivityCounterName);
+  SocialActivityCounter latestSocialActivityCounter=map.get(key);
+  if (latestSocialActivityCounter != null) {
+    totalValue=totalValue + latestSocialActivityCounter.getTotalValue();
+  }
+  if ((socialActivityCounter == null) || (socialActivityCounter.getStartPeriod() != startPeriod)) {
+    if (endPeriodOffset == 0) {
+      endPeriod=-1;
+    }
+    socialActivityCounter=SocialActivityCounterLocalServiceUtil.addActivityCounter(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType,0,0,startPeriod,endPeriod);
+  }
+  socialActivityCounter.setCurrentValue(socialActivityCounter.getCurrentValue() + currentValue);
   socialActivityCounter.setTotalValue(totalValue);
   SocialActivityCounterLocalServiceUtil.updateSocialActivityCounter(socialActivityCounter);
+  map.put(key,socialActivityCounter);
 }
