@@ -43,14 +43,22 @@
   }
   int startPeriodOffset=GetterUtil.getInteger(lineParts[2]);
   int startPeriod=SocialCounterPeriodUtil.getStartPeriod(startPeriodOffset);
+  SocialActivityCounter socialActivityCounter=SocialActivityCounterLocalServiceUtil.fetchActivityCounterByStartPeriod(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType,startPeriod);
   int currentValue=getRandomNumber(0,100);
   int totalValue=currentValue;
-  SocialActivityCounter socialActivityCounter=SocialActivityCounterLocalServiceUtil.fetchActivityCounterByStartPeriod(group.getGroupId(),classNameId,classPK,socialActivityCounterName,ownerType,startPeriod);
   if (socialActivityCounter != null) {
     totalValue=totalValue + socialActivityCounter.getTotalValue();
   }
-  String key=encodeKey(group.getGroupId(),classNameId,classPK,socialActivityCounterName);
-  SocialActivityCounter latestSocialActivityCounter=map.get(key);
+  StringBundler sb=new StringBundler(7);
+  sb.append(StringUtil.toHexString(group.getGroupId()));
+  sb.append(StringPool.POUND);
+  sb.append(StringUtil.toHexString(classNameId));
+  sb.append(StringPool.POUND);
+  sb.append(StringUtil.toHexString(classPK));
+  sb.append(StringPool.POUND);
+  sb.append(StringUtil.toHexString(socialActivityCounterName));
+  String key=sb.toString();
+  SocialActivityCounter latestSocialActivityCounter=socialActivityCounters.get(key);
   if (latestSocialActivityCounter != null) {
     totalValue=totalValue + latestSocialActivityCounter.getTotalValue();
   }
@@ -63,5 +71,5 @@
   socialActivityCounter.setCurrentValue(socialActivityCounter.getCurrentValue() + currentValue);
   socialActivityCounter.setTotalValue(totalValue);
   SocialActivityCounterLocalServiceUtil.updateSocialActivityCounter(socialActivityCounter);
-  map.put(key,socialActivityCounter);
+  socialActivityCounters.put(key,socialActivityCounter);
 }
