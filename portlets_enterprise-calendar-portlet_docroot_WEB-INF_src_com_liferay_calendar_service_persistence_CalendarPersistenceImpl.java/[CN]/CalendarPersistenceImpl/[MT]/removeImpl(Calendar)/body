@@ -1,0 +1,16 @@
+{
+  calendar=toUnwrappedModel(calendar);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,calendar);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  clearCache(calendar);
+  return calendar;
+}

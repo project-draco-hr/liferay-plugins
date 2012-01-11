@@ -1,0 +1,28 @@
+{
+  Calendar calendar=(Calendar)EntityCacheUtil.getResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,CalendarImpl.class,calendarId);
+  if (calendar == _nullCalendar) {
+    return null;
+  }
+  if (calendar == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      calendar=(Calendar)session.get(CalendarImpl.class,Long.valueOf(calendarId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (calendar != null) {
+        cacheResult(calendar);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,CalendarImpl.class,calendarId,_nullCalendar);
+      }
+      closeSession(session);
+    }
+  }
+  return calendar;
+}

@@ -1,0 +1,12 @@
+{
+  if (_service == null) {
+    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),CalendarResourceLocalService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,CalendarResourceLocalService.class.getName(),portletClassLoader);
+    _service=new CalendarResourceLocalServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+    ReferenceRegistry.registerReference(CalendarResourceLocalServiceUtil.class,"_service");
+    MethodCache.remove(CalendarResourceLocalService.class);
+  }
+  return _service;
+}

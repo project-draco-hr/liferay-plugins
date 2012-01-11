@@ -1,0 +1,23 @@
+{
+  if (locationMap == null) {
+    return;
+  }
+  ClassLoader portalClassLoader=PortalClassLoaderUtil.getClassLoader();
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
+  try {
+    if (contextClassLoader != portalClassLoader) {
+      currentThread.setContextClassLoader(portalClassLoader);
+    }
+    Locale[] locales=LanguageUtil.getAvailableLocales();
+    for (    Locale locale : locales) {
+      String location=locationMap.get(locale);
+      setLocation(location,locale,defaultLocale);
+    }
+  }
+  finally {
+    if (contextClassLoader != portalClassLoader) {
+      currentThread.setContextClassLoader(contextClassLoader);
+    }
+  }
+}

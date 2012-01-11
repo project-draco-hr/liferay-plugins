@@ -1,0 +1,72 @@
+{
+  calendar=toUnwrappedModel(calendar);
+  boolean isNew=calendar.isNew();
+  CalendarModelImpl calendarModelImpl=(CalendarModelImpl)calendar;
+  if (Validator.isNull(calendar.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    calendar.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,calendar,merge);
+    calendar.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew || !CalendarModelImpl.COLUMN_BITMASK_ENABLED) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if ((calendarModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarModelImpl.getOriginalResourceBlockId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RESOURCEBLOCKID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID,args);
+      args=new Object[]{Long.valueOf(calendarModelImpl.getResourceBlockId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RESOURCEBLOCKID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID,args);
+    }
+    if ((calendarModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+      args=new Object[]{calendarModelImpl.getUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+    }
+    if ((calendarModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarModelImpl.getOriginalGroupId()),Long.valueOf(calendarModelImpl.getOriginalCalendarResourceId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C,args);
+      args=new Object[]{Long.valueOf(calendarModelImpl.getGroupId()),Long.valueOf(calendarModelImpl.getCalendarResourceId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C,args);
+    }
+    if ((calendarModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_D.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarModelImpl.getOriginalGroupId()),Long.valueOf(calendarModelImpl.getOriginalCalendarResourceId()),Boolean.valueOf(calendarModelImpl.getOriginalDefaultCalendar())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_D,args);
+      args=new Object[]{Long.valueOf(calendarModelImpl.getGroupId()),Long.valueOf(calendarModelImpl.getCalendarResourceId()),Boolean.valueOf(calendarModelImpl.getDefaultCalendar())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_C_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_C_D,args);
+    }
+  }
+  EntityCacheUtil.putResult(CalendarModelImpl.ENTITY_CACHE_ENABLED,CalendarImpl.class,calendar.getPrimaryKey(),calendar);
+  if (isNew) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendar.getUuid(),Long.valueOf(calendar.getGroupId())},calendar);
+  }
+ else {
+    if ((calendarModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarModelImpl.getOriginalUuid(),Long.valueOf(calendarModelImpl.getOriginalGroupId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendar.getUuid(),Long.valueOf(calendar.getGroupId())},calendar);
+    }
+  }
+  return calendar;
+}

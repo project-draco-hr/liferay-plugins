@@ -1,0 +1,16 @@
+{
+  calendarBooking.setNew(true);
+  calendarBooking=calendarBookingPersistence.update(calendarBooking,false);
+  Indexer indexer=IndexerRegistryUtil.getIndexer(getModelClassName());
+  if (indexer != null) {
+    try {
+      indexer.reindex(calendarBooking);
+    }
+ catch (    SearchException se) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(se,se);
+      }
+    }
+  }
+  return calendarBooking;
+}

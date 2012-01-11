@@ -1,0 +1,28 @@
+{
+  CalendarResource calendarResource=(CalendarResource)EntityCacheUtil.getResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,CalendarResourceImpl.class,calendarResourceId);
+  if (calendarResource == _nullCalendarResource) {
+    return null;
+  }
+  if (calendarResource == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      calendarResource=(CalendarResource)session.get(CalendarResourceImpl.class,Long.valueOf(calendarResourceId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (calendarResource != null) {
+        cacheResult(calendarResource);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(CalendarResourceModelImpl.ENTITY_CACHE_ENABLED,CalendarResourceImpl.class,calendarResourceId,_nullCalendarResource);
+      }
+      closeSession(session);
+    }
+  }
+  return calendarResource;
+}
