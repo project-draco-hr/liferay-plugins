@@ -1,22 +1,19 @@
 {
-  FileItemFactory factory=new DiskFileItemFactory();
-  ServletFileUpload upload=new ServletFileUpload(factory);
-  List<FileItem> items=upload.parseRequest(request);
-  Iterator<FileItem> itr=items.iterator();
+  Hashtable<String,FormFile> fileElements=form.getMultipartRequestHandler().getFileElements();
+  Set<Entry<String,FormFile>> entrySet=fileElements.entrySet();
+  Iterator<Entry<String,FormFile>> itr=entrySet.iterator();
   String itemName=StringPool.BLANK;
   while (itr.hasNext()) {
-    FileItem item=itr.next();
-    if (!item.isFormField()) {
-      if (_log.isInfoEnabled()) {
-        _log.info("Field name " + item.getFieldName());
-      }
-      itemName=item.getName();
-      if (_log.isInfoEnabled()) {
-        _log.info("Name " + itemName);
-        _log.info("Content type " + item.getContentType());
-        _log.info("In memory " + item.isInMemory());
-        _log.info("Size " + item.getSize());
-      }
+    Entry<String,FormFile> entry=itr.next();
+    if (_log.isInfoEnabled()) {
+      _log.info("Field name " + entry.getKey());
+    }
+    FormFile item=entry.getValue();
+    itemName=item.getFileName();
+    if (_log.isInfoEnabled()) {
+      _log.info("Name " + itemName);
+      _log.info("Content type " + item.getContentType());
+      _log.info("Size " + item.getFileSize());
     }
   }
   request.setAttribute("file_name",itemName);
