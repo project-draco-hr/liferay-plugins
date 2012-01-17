@@ -10,6 +10,14 @@
     finderArgs=new Object[]{type,receiverUserId,start,end,orderByComparator};
   }
   List<MicroblogsEntry> list=(List<MicroblogsEntry>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    MicroblogsEntry microblogsEntry : list) {
+      if ((type != microblogsEntry.getType()) || (receiverUserId != microblogsEntry.getReceiverUserId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

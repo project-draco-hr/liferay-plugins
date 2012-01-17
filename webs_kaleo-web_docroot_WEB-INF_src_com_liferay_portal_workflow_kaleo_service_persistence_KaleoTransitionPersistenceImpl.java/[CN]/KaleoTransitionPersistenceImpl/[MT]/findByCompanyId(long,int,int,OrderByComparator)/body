@@ -10,6 +10,14 @@
     finderArgs=new Object[]{companyId,start,end,orderByComparator};
   }
   List<KaleoTransition> list=(List<KaleoTransition>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    KaleoTransition kaleoTransition : list) {
+      if ((companyId != kaleoTransition.getCompanyId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

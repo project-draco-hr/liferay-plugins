@@ -10,6 +10,14 @@
     finderArgs=new Object[]{toUserId,start,end,orderByComparator};
   }
   List<Entry> list=(List<Entry>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    Entry entry : list) {
+      if ((toUserId != entry.getToUserId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

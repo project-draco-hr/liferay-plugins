@@ -10,6 +10,14 @@
     finderArgs=new Object[]{svnRepositoryId,start,end,orderByComparator};
   }
   List<SVNRevision> list=(List<SVNRevision>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    SVNRevision svnRevision : list) {
+      if ((svnRepositoryId != svnRevision.getSvnRepositoryId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

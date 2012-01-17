@@ -10,6 +10,14 @@
     finderArgs=new Object[]{companyId,kaleoDefinitionName,kaleoDefinitionVersion,completionDate,start,end,orderByComparator};
   }
   List<KaleoInstance> list=(List<KaleoInstance>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    KaleoInstance kaleoInstance : list) {
+      if ((companyId != kaleoInstance.getCompanyId()) || !Validator.equals(kaleoDefinitionName,kaleoInstance.getKaleoDefinitionName()) || (kaleoDefinitionVersion != kaleoInstance.getKaleoDefinitionVersion())|| !Validator.equals(completionDate,kaleoInstance.getCompletionDate())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

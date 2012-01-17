@@ -10,6 +10,14 @@
     finderArgs=new Object[]{kaleoDefinitionId,start,end,orderByComparator};
   }
   List<KaleoTaskAssignmentInstance> list=(List<KaleoTaskAssignmentInstance>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance : list) {
+      if ((kaleoDefinitionId != kaleoTaskAssignmentInstance.getKaleoDefinitionId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

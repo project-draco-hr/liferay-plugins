@@ -10,6 +10,14 @@
     finderArgs=new Object[]{uuid,start,end,orderByComparator};
   }
   List<WSRPConsumerPortlet> list=(List<WSRPConsumerPortlet>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    WSRPConsumerPortlet wsrpConsumerPortlet : list) {
+      if (!Validator.equals(uuid,wsrpConsumerPortlet.getUuid())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

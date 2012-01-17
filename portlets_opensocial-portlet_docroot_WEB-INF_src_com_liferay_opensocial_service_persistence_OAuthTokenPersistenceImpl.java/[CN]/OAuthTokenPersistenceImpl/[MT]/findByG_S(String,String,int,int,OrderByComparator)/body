@@ -10,6 +10,14 @@
     finderArgs=new Object[]{gadgetKey,serviceName,start,end,orderByComparator};
   }
   List<OAuthToken> list=(List<OAuthToken>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    OAuthToken oAuthToken : list) {
+      if (!Validator.equals(gadgetKey,oAuthToken.getGadgetKey()) || !Validator.equals(serviceName,oAuthToken.getServiceName())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

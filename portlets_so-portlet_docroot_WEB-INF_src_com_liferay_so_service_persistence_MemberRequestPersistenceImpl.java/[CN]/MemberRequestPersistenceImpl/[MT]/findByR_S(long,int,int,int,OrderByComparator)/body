@@ -10,6 +10,14 @@
     finderArgs=new Object[]{receiverUserId,status,start,end,orderByComparator};
   }
   List<MemberRequest> list=(List<MemberRequest>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    MemberRequest memberRequest : list) {
+      if ((receiverUserId != memberRequest.getReceiverUserId()) || (status != memberRequest.getStatus())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

@@ -10,6 +10,14 @@
     finderArgs=new Object[]{field2,start,end,orderByComparator};
   }
   List<Foo> list=(List<Foo>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    Foo foo : list) {
+      if ((field2 != foo.getField2())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

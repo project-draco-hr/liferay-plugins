@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,this);
   }
+  if (result instanceof CalendarResource) {
+    CalendarResource calendarResource=(CalendarResource)result;
+    if ((classNameId != calendarResource.getClassNameId()) || (classPK != calendarResource.getClassPK())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_CALENDARRESOURCE_WHERE);

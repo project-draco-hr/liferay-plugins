@@ -10,6 +10,14 @@
     finderArgs=new Object[]{kaleoClassName,kaleoClassPK,executionType,start,end,orderByComparator};
   }
   List<KaleoAction> list=(List<KaleoAction>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    KaleoAction kaleoAction : list) {
+      if (!Validator.equals(kaleoClassName,kaleoAction.getKaleoClassName()) || (kaleoClassPK != kaleoAction.getKaleoClassPK()) || !Validator.equals(executionType,kaleoAction.getExecutionType())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

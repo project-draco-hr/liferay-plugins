@@ -10,6 +10,14 @@
     finderArgs=new Object[]{accountId,start,end,orderByComparator};
   }
   List<Folder> list=(List<Folder>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    Folder folder : list) {
+      if ((accountId != folder.getAccountId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

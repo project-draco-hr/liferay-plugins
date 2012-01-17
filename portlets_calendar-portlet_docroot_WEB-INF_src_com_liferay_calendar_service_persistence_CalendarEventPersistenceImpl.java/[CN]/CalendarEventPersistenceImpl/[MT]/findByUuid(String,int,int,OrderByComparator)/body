@@ -10,6 +10,14 @@
     finderArgs=new Object[]{uuid,start,end,orderByComparator};
   }
   List<CalendarEvent> list=(List<CalendarEvent>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    CalendarEvent calendarEvent : list) {
+      if (!Validator.equals(uuid,calendarEvent.getUuid())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

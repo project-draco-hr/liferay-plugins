@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,this);
   }
+  if (result instanceof KBArticle) {
+    KBArticle kbArticle=(KBArticle)result;
+    if ((resourcePrimKey != kbArticle.getResourcePrimKey()) || (version != kbArticle.getVersion())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_KBARTICLE_WHERE);

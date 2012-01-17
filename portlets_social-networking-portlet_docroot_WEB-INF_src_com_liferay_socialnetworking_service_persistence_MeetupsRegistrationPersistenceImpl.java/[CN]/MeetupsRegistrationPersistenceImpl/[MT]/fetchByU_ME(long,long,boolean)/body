@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_ME,finderArgs,this);
   }
+  if (result instanceof MeetupsRegistration) {
+    MeetupsRegistration meetupsRegistration=(MeetupsRegistration)result;
+    if ((userId != meetupsRegistration.getUserId()) || (meetupsEntryId != meetupsRegistration.getMeetupsEntryId())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_MEETUPSREGISTRATION_WHERE);

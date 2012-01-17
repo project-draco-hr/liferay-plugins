@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_N_V,finderArgs,this);
   }
+  if (result instanceof KaleoDefinition) {
+    KaleoDefinition kaleoDefinition=(KaleoDefinition)result;
+    if ((companyId != kaleoDefinition.getCompanyId()) || !Validator.equals(name,kaleoDefinition.getName()) || (version != kaleoDefinition.getVersion())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(5);
     query.append(_SQL_SELECT_KALEODEFINITION_WHERE);

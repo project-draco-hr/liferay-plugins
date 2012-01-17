@@ -10,6 +10,14 @@
     finderArgs=new Object[]{meetupsEntryId,start,end,orderByComparator};
   }
   List<MeetupsRegistration> list=(List<MeetupsRegistration>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    MeetupsRegistration meetupsRegistration : list) {
+      if ((meetupsEntryId != meetupsRegistration.getMeetupsEntryId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

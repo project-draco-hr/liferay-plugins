@@ -10,6 +10,14 @@
     finderArgs=new Object[]{resourceBlockId,start,end,orderByComparator};
   }
   List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    CalendarResource calendarResource : list) {
+      if ((resourceBlockId != calendarResource.getResourceBlockId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

@@ -10,6 +10,14 @@
     finderArgs=new Object[]{projectId,assigneeJiraUserId,status,start,end,orderByComparator};
   }
   List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    JIRAIssue jiraIssue : list) {
+      if ((projectId != jiraIssue.getProjectId()) || !Validator.equals(assigneeJiraUserId,jiraIssue.getAssigneeJiraUserId()) || !Validator.equals(status,jiraIssue.getStatus())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

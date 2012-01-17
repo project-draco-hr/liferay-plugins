@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_KITI_KTI,finderArgs,this);
   }
+  if (result instanceof KaleoTimerInstanceToken) {
+    KaleoTimerInstanceToken kaleoTimerInstanceToken=(KaleoTimerInstanceToken)result;
+    if ((kaleoInstanceTokenId != kaleoTimerInstanceToken.getKaleoInstanceTokenId()) || (kaleoTimerId != kaleoTimerInstanceToken.getKaleoTimerId())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_KALEOTIMERINSTANCETOKEN_WHERE);

@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_A_C,finderArgs,this);
   }
+  if (result instanceof Module) {
+    Module module=(Module)result;
+    if ((appId != module.getAppId()) || !Validator.equals(contextName,module.getContextName())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(3);
     query.append(_SQL_SELECT_MODULE_WHERE);

@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,this);
   }
+  if (result instanceof OAuthToken) {
+    OAuthToken oAuthToken=(OAuthToken)result;
+    if ((userId != oAuthToken.getUserId()) || !Validator.equals(gadgetKey,oAuthToken.getGadgetKey()) || !Validator.equals(serviceName,oAuthToken.getServiceName())|| (moduleId != oAuthToken.getModuleId())|| !Validator.equals(tokenName,oAuthToken.getTokenName())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(6);
     query.append(_SQL_SELECT_OAUTHTOKEN_WHERE);

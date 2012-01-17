@@ -10,6 +10,14 @@
     finderArgs=new Object[]{projectId,start,end,orderByComparator};
   }
   List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    JIRAIssue jiraIssue : list) {
+      if ((projectId != jiraIssue.getProjectId())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

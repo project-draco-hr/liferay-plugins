@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_C_C,finderArgs,this);
   }
+  if (result instanceof KBComment) {
+    KBComment kbComment=(KBComment)result;
+    if ((userId != kbComment.getUserId()) || (classNameId != kbComment.getClassNameId()) || (classPK != kbComment.getClassPK())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(5);
     query.append(_SQL_SELECT_KBCOMMENT_WHERE);

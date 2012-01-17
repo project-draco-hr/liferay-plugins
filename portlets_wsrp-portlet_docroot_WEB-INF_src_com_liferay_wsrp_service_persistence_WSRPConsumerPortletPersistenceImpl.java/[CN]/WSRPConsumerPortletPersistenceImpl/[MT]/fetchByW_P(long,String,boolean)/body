@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,this);
   }
+  if (result instanceof WSRPConsumerPortlet) {
+    WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)result;
+    if ((wsrpConsumerId != wsrpConsumerPortlet.getWsrpConsumerId()) || !Validator.equals(portletHandle,wsrpConsumerPortlet.getPortletHandle())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_WSRPCONSUMERPORTLET_WHERE);

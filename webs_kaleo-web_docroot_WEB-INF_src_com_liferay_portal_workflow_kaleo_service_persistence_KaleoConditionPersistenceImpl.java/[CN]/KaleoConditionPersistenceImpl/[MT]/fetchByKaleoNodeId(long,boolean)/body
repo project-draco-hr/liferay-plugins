@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_KALEONODEID,finderArgs,this);
   }
+  if (result instanceof KaleoCondition) {
+    KaleoCondition kaleoCondition=(KaleoCondition)result;
+    if ((kaleoNodeId != kaleoCondition.getKaleoNodeId())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(3);
     query.append(_SQL_SELECT_KALEOCONDITION_WHERE);

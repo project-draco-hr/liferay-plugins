@@ -8,6 +8,14 @@
     finderArgs=new Object[]{StringUtil.merge(parentResourcePrimKeies),latest,start,end,orderByComparator};
   }
   List<KBArticle> list=(List<KBArticle>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    KBArticle kbArticle : list) {
+      if (!ArrayUtil.contains(parentResourcePrimKeies,kbArticle.getParentResourcePrimKey()) || (latest != kbArticle.getLatest())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_SELECT_KBARTICLE_WHERE);

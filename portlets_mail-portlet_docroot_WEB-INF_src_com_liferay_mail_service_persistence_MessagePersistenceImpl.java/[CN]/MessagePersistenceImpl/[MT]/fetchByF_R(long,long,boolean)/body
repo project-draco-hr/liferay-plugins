@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,this);
   }
+  if (result instanceof Message) {
+    Message message=(Message)result;
+    if ((folderId != message.getFolderId()) || (remoteMessageId != message.getRemoteMessageId())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_MESSAGE_WHERE);

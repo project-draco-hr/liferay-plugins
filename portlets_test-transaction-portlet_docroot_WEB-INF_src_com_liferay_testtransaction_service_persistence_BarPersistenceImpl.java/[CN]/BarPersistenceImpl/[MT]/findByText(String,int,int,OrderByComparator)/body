@@ -10,6 +10,14 @@
     finderArgs=new Object[]{text,start,end,orderByComparator};
   }
   List<Bar> list=(List<Bar>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    Bar bar : list) {
+      if (!Validator.equals(text,bar.getText())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

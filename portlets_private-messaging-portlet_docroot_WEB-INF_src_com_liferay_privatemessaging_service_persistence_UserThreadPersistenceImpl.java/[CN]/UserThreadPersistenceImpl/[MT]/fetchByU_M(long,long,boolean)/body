@@ -4,6 +4,12 @@
   if (retrieveFromCache) {
     result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_M,finderArgs,this);
   }
+  if (result instanceof UserThread) {
+    UserThread userThread=(UserThread)result;
+    if ((userId != userThread.getUserId()) || (mbThreadId != userThread.getMbThreadId())) {
+      result=null;
+    }
+  }
   if (result == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_USERTHREAD_WHERE);

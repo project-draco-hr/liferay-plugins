@@ -10,6 +10,14 @@
     finderArgs=new Object[]{gadgetKey,start,end,orderByComparator};
   }
   List<OAuthConsumer> list=(List<OAuthConsumer>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    OAuthConsumer oAuthConsumer : list) {
+      if (!Validator.equals(gadgetKey,oAuthConsumer.getGadgetKey())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {

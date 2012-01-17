@@ -10,6 +10,14 @@
     finderArgs=new Object[]{type,start,end,orderByComparator};
   }
   List<JIRAAction> list=(List<JIRAAction>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  if ((list != null) && !list.isEmpty()) {
+    for (    JIRAAction jiraAction : list) {
+      if (!Validator.equals(type,jiraAction.getType())) {
+        list=null;
+        break;
+      }
+    }
+  }
   if (list == null) {
     StringBundler query=null;
     if (orderByComparator != null) {
