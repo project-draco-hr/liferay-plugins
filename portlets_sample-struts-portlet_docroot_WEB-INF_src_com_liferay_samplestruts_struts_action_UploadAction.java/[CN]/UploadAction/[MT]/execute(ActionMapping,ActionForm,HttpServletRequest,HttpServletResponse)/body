@@ -1,21 +1,19 @@
 {
-  Hashtable<String,FormFile> fileElements=form.getMultipartRequestHandler().getFileElements();
-  Set<Entry<String,FormFile>> entrySet=fileElements.entrySet();
-  Iterator<Entry<String,FormFile>> itr=entrySet.iterator();
-  String itemName=StringPool.BLANK;
-  while (itr.hasNext()) {
-    Entry<String,FormFile> entry=itr.next();
+  MultipartRequestHandler multipartRequestHandler=form.getMultipartRequestHandler();
+  Hashtable<String,FormFile> fileElements=multipartRequestHandler.getFileElements();
+  String fileName=StringPool.BLANK;
+  for (  Map.Entry<String,FormFile> entry : fileElements.entrySet()) {
     if (_log.isInfoEnabled()) {
       _log.info("Field name " + entry.getKey());
     }
-    FormFile item=entry.getValue();
-    itemName=item.getFileName();
+    FormFile formFile=entry.getValue();
+    fileName=formFile.getFileName();
     if (_log.isInfoEnabled()) {
-      _log.info("Name " + itemName);
-      _log.info("Content type " + item.getContentType());
-      _log.info("Size " + item.getFileSize());
+      _log.info("Name " + fileName);
+      _log.info("Content type " + formFile.getContentType());
+      _log.info("Size " + formFile.getFileSize());
     }
   }
-  request.setAttribute("file_name",itemName);
+  request.setAttribute("file_name",fileName);
   return mapping.findForward("/sample_struts_portlet/upload_success");
 }
