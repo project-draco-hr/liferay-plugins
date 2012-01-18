@@ -1,6 +1,8 @@
 {
   LayoutSetPrototype layoutSetPrototype=addLayoutSetPrototype(companyId,"Default Social Office Site");
   ExpandoValueLocalServiceUtil.addValue(companyId,LayoutSetPrototype.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"socialOfficeDefault",layoutSetPrototype.getLayoutSetPrototypeId(),true);
+  Role role=RoleLocalServiceUtil.getRole(layoutSetPrototype.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+  ResourcePermissionLocalServiceUtil.setResourcePermissions(layoutSetPrototype.getCompanyId(),LayoutSetPrototype.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,String.valueOf(layoutSetPrototype.getPrimaryKey()),role.getRoleId(),new String[]{ActionKeys.VIEW});
   Group group=layoutSetPrototype.getGroup();
   ServiceContext serviceContext=new ServiceContext();
   LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,serviceContext);
