@@ -17,7 +17,9 @@
  else {
     publicLayoutSetPrototypeId=layoutSetPrototypeId;
   }
-  PortalClassInvoker.invoke(true,_applyLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId,serviceContext);
+  PortalClassInvoker.invoke(true,_updateLayoutSetPrototypesMethodKey,group,publicLayoutSetPrototypeId,privateLayoutSetPrototypeId,!privateLayout,privateLayout);
+  LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
+  PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
   long[] deleteLayoutIds=getLongArray(actionRequest,"deleteLayoutIds");
   List<Layout> layouts=new ArrayList<Layout>(deleteLayoutIds.length);
   for (  long deleteLayoutId : deleteLayoutIds) {
@@ -27,4 +29,5 @@
   for (  Layout layout : layouts) {
     LayoutLocalServiceUtil.deleteLayout(layout,true,serviceContext);
   }
+  setCustomJspServletContextName(group);
 }
