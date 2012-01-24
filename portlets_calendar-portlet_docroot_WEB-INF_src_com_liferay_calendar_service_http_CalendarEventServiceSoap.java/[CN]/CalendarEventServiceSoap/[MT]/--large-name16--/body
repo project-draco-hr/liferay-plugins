@@ -1,0 +1,12 @@
+{
+  try {
+    Map<Locale,String> titleMap=LocalizationUtil.getLocalizationMap(titleMapLanguageIds,titleMapValues);
+    Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,descriptionMapValues);
+    com.liferay.calendar.model.CalendarEvent returnValue=CalendarEventServiceUtil.addCaledarEvent(titleMap,descriptionMap,location,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,durationHour,durationMinute,allDay,recurrence,type,remindBy,firstReminder,secondReminder,serviceContext);
+    return com.liferay.calendar.model.CalendarEventSoap.toSoapModel(returnValue);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+    throw new RemoteException(e.getMessage());
+  }
+}
