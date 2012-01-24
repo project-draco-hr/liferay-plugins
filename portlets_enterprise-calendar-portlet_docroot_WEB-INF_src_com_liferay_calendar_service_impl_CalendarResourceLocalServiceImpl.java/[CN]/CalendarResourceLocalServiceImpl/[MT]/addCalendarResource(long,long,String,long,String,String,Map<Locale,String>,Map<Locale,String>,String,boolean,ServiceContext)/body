@@ -1,0 +1,33 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  validate(className,classPK);
+  long globalUserId=0;
+  if (CalendarResourceUtil.isGlobalResource(className,classPK)) {
+    globalUserId=CalendarResourceUtil.getGlobalResourceUserId(className,classPK);
+  }
+  if (globalUserId > 0) {
+    userId=globalUserId;
+  }
+  long calendarResourceId=counterLocalService.increment();
+  CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
+  calendarResource.setUuid(serviceContext.getUuid());
+  calendarResource.setGroupId(groupId);
+  calendarResource.setCompanyId(user.getCompanyId());
+  calendarResource.setResourceBlockId(0);
+  calendarResource.setUserId(user.getUserId());
+  calendarResource.setUserName(user.getFullName());
+  calendarResource.setCreateDate(serviceContext.getCreateDate(now));
+  calendarResource.setModifiedDate(serviceContext.getModifiedDate(now));
+  calendarResource.setClassName(className);
+  calendarResource.setClassPK(classPK);
+  calendarResource.setClassUuid(classUuid);
+  calendarResource.setCode(code);
+  calendarResource.setNameMap(nameMap);
+  calendarResource.setDescriptionMap(descriptionMap);
+  calendarResource.setActive(active);
+  calendarResource.setType(type);
+  calendarResourcePersistence.update(calendarResource,false);
+  resourceLocalService.addModelResources(calendarResource,serviceContext);
+  return calendarResource;
+}
