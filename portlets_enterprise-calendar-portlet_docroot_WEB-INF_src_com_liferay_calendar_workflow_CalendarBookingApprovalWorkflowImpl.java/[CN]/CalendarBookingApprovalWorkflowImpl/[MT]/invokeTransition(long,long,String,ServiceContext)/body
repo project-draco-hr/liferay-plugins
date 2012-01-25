@@ -1,0 +1,15 @@
+{
+  int status=CalendarBookingWorkflowConstants.toStatus(transitionName);
+  if (status == CalendarBookingWorkflowConstants.STATUS_PENDING) {
+    CalendarBooking calendarBooking=CalendarBookingLocalServiceUtil.getCalendarBooking(calendarBookingId);
+    if (isAutoApproveCalendarBooking(userId,calendarBooking)) {
+      CalendarBookingLocalServiceUtil.updateStatus(userId,calendarBookingId,CalendarBookingWorkflowConstants.STATUS_APPROVED,serviceContext);
+    }
+ else {
+      CalendarBookingLocalServiceUtil.updateStatus(userId,calendarBooking.getCalendarBookingId(),CalendarBookingWorkflowConstants.STATUS_PENDING,serviceContext);
+    }
+  }
+ else {
+    CalendarBookingLocalServiceUtil.updateStatus(userId,calendarBookingId,status,serviceContext);
+  }
+}
