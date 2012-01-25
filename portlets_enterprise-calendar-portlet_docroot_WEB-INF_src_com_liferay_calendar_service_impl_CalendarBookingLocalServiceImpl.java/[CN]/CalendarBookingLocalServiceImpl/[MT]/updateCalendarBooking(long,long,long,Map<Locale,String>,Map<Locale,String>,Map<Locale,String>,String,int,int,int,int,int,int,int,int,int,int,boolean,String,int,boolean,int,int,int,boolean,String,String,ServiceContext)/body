@@ -1,0 +1,60 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  if (allDay) {
+    startDateHour=0;
+    startDateMinute=0;
+    endDateHour=23;
+    endDateMinute=59;
+  }
+  Locale locale=LocaleUtil.getDefault();
+  validate(titleMap,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,locale,recurrence);
+  TimeZone timeZone=TimeZoneUtil.getDefault();
+  CalendarBooking calendarBooking=calendarBookingPersistence.fetchByPrimaryKey(calendarBookingId);
+  java.util.Calendar startDate=CalendarFactoryUtil.getCalendar(timeZone,locale);
+  startDate.set(java.util.Calendar.MONTH,startDateMonth);
+  startDate.set(java.util.Calendar.DATE,startDateDay);
+  startDate.set(java.util.Calendar.YEAR,startDateYear);
+  startDate.set(java.util.Calendar.HOUR_OF_DAY,startDateHour);
+  startDate.set(java.util.Calendar.MINUTE,startDateMinute);
+  startDate.set(java.util.Calendar.SECOND,0);
+  startDate.set(java.util.Calendar.MILLISECOND,0);
+  java.util.Calendar endDate=CalendarFactoryUtil.getCalendar(timeZone,locale);
+  endDate.set(java.util.Calendar.MONTH,endDateMonth);
+  endDate.set(java.util.Calendar.DATE,endDateDay);
+  endDate.set(java.util.Calendar.YEAR,endDateYear);
+  endDate.set(java.util.Calendar.HOUR_OF_DAY,endDateHour);
+  endDate.set(java.util.Calendar.MINUTE,endDateMinute);
+  endDate.set(java.util.Calendar.SECOND,0);
+  endDate.set(java.util.Calendar.MILLISECOND,0);
+  if (firstReminder < secondReminder) {
+    int tmp=secondReminder;
+    secondReminder=firstReminder;
+    firstReminder=tmp;
+  }
+  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarBooking.setCalendarId(calendarId);
+  calendarBooking.setTitleMap(titleMap);
+  calendarBooking.setDescriptionMap(descriptionMap);
+  calendarBooking.setLocationMap(locationMap);
+  calendarBooking.setType(type);
+  calendarBooking.setStartDate(startDate.getTime());
+  calendarBooking.setEndDate(endDate.getTime());
+  calendarBooking.setAllDay(allDay);
+  calendarBooking.setRecurrence(recurrence);
+  calendarBooking.setPriority(priority);
+  calendarBooking.setOutOfOffice(outOfOffice);
+  calendarBooking.setRemindBy(remindBy);
+  calendarBooking.setFirstReminder(firstReminder);
+  calendarBooking.setSecondReminder(secondReminder);
+  calendarBooking.setRequired(required);
+  calendarBooking.setRequestMessage(requestMessage);
+  calendarBooking.setResponseMessage(responseMessage);
+  calendarBooking.setExpandoBridgeAttributes(serviceContext);
+  if (!calendarBooking.isPending()) {
+    calendarBooking.setStatus(WorkflowConstants.STATUS_DRAFT);
+  }
+  calendarBookingPersistence.update(calendarBooking,false);
+  resourceLocalService.updateModelResources(calendarBooking,serviceContext);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),calendarBooking.getGroupId(),userId,CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId(),calendarBooking,serviceContext);
+  return calendarBooking;
+}

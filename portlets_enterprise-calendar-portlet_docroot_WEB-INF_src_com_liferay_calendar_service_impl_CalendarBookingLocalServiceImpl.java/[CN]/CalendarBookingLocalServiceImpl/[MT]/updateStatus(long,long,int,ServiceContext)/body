@@ -1,0 +1,12 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
+  calendarBooking.setStatus(status);
+  calendarBooking.setStatusByUserId(user.getUserId());
+  calendarBooking.setStatusByUserName(user.getFullName());
+  calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
+  calendarBookingPersistence.update(calendarBooking,false);
+  return calendarBooking;
+}
