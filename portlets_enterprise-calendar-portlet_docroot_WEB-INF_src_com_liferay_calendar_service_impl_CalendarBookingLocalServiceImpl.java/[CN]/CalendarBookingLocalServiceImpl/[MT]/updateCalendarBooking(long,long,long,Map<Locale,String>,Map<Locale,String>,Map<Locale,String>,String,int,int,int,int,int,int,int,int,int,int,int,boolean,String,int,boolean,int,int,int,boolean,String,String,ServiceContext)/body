@@ -31,6 +31,9 @@
     secondReminder=firstReminder;
     firstReminder=tmp;
   }
+  calendarBooking.setCompanyId(user.getCompanyId());
+  calendarBooking.setUserId(user.getUserId());
+  calendarBooking.setUserName(user.getFullName());
   calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
   calendarBooking.setCalendarId(calendarId);
   calendarBooking.setTitleMap(titleMap);
@@ -49,12 +52,8 @@
   calendarBooking.setRequired(required);
   calendarBooking.setRequestMessage(requestMessage);
   calendarBooking.setResponseMessage(responseMessage);
-  calendarBooking.setExpandoBridgeAttributes(serviceContext);
-  if (!calendarBooking.isPending()) {
-    calendarBooking.setStatus(WorkflowConstants.STATUS_DRAFT);
-  }
   calendarBookingPersistence.update(calendarBooking,false);
   resourceLocalService.updateModelResources(calendarBooking,serviceContext);
-  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),calendarBooking.getGroupId(),userId,CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId(),calendarBooking,serviceContext);
+  calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
   return calendarBooking;
 }

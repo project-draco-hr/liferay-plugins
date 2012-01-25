@@ -62,9 +62,8 @@
   calendarBooking.setResponseMessage(responseMessage);
   calendarBooking.setStatus(WorkflowConstants.STATUS_DRAFT);
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
-  calendarBooking.setExpandoBridgeAttributes(serviceContext);
   calendarBookingPersistence.update(calendarBooking,false);
   resourceLocalService.addModelResources(calendarBooking,serviceContext);
-  WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),calendar.getGroupId(),userId,CalendarBooking.class.getName(),calendarBookingId,calendarBooking,serviceContext);
+  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId,serviceContext);
   return calendarBooking;
 }
