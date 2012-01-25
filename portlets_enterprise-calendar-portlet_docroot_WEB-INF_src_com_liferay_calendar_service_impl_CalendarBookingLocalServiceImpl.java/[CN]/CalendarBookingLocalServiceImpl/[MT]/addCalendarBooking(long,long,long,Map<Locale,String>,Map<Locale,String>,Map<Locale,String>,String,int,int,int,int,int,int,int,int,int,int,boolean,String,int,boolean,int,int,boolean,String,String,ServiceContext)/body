@@ -1,5 +1,7 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
+  Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
+  Date now=new Date();
   if (allDay) {
     startDateHour=0;
     startDateMinute=0;
@@ -9,7 +11,6 @@
   Locale locale=LocaleUtil.getDefault();
   validate(titleMap,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,locale,recurrence);
   TimeZone timeZone=TimeZoneUtil.getDefault();
-  CalendarBooking calendarBooking=calendarBookingPersistence.fetchByPrimaryKey(calendarBookingId);
   java.util.Calendar startDate=CalendarFactoryUtil.getCalendar(timeZone,locale);
   startDate.set(java.util.Calendar.MONTH,startDateMonth);
   startDate.set(java.util.Calendar.DATE,startDateDay);
@@ -31,11 +32,18 @@
     secondReminder=firstReminder;
     firstReminder=tmp;
   }
+  long calendarBookingId=counterLocalService.increment();
+  CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
+  calendarBooking.setUuid(serviceContext.getUuid());
+  calendarBooking.setGroupId(calendar.getGroupId());
   calendarBooking.setCompanyId(user.getCompanyId());
   calendarBooking.setUserId(user.getUserId());
   calendarBooking.setUserName(user.getFullName());
-  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarBooking.setCreateDate(serviceContext.getCreateDate(now));
+  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
   calendarBooking.setCalendarId(calendarId);
+  calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
+  calendarBooking.setCalendarResourceId(calendar.getCalendarResourceId());
   calendarBooking.setTitleMap(titleMap);
   calendarBooking.setDescriptionMap(descriptionMap);
   calendarBooking.setLocationMap(locationMap);
@@ -46,14 +54,15 @@
   calendarBooking.setRecurrence(recurrence);
   calendarBooking.setPriority(priority);
   calendarBooking.setOutOfOffice(outOfOffice);
-  calendarBooking.setRemindBy(remindBy);
   calendarBooking.setFirstReminder(firstReminder);
   calendarBooking.setSecondReminder(secondReminder);
   calendarBooking.setRequired(required);
   calendarBooking.setRequestMessage(requestMessage);
   calendarBooking.setResponseMessage(responseMessage);
+  calendarBooking.setStatus(WorkflowConstants.STATUS_DRAFT);
+  calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking,false);
-  resourceLocalService.updateModelResources(calendarBooking,serviceContext);
-  calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
+  resourceLocalService.addModelResources(calendarBooking,serviceContext);
+  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId,serviceContext);
   return calendarBooking;
 }
