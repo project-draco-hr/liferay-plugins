@@ -1,10 +1,19 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  long userId=ParamUtil.getLong(actionRequest,"userId");
+  long[] userIds=getUserIds(actionRequest);
   int type=ParamUtil.getInteger(actionRequest,"type");
-  if (SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
-    return;
+  for (  long userId : userIds) {
+    try {
+      if (userId == themeDisplay.getUserId()) {
+        continue;
+      }
+      if (SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
+        continue;
+      }
+      SocialRequest socialRequest=SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),type,StringPool.BLANK,userId);
+      sendNotificationEvent(socialRequest,themeDisplay);
+    }
+ catch (    PortalException pe) {
+    }
   }
-  SocialRequest socialRequest=SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),type,StringPool.BLANK,userId);
-  sendNotificationEvent(socialRequest,themeDisplay);
 }
