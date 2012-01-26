@@ -1,0 +1,22 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  validate(nameMap);
+  long calendarId=counterLocalService.increment();
+  Calendar calendar=calendarPersistence.create(calendarId);
+  calendar.setUuid(serviceContext.getUuid());
+  calendar.setGroupId(groupId);
+  calendar.setCompanyId(user.getCompanyId());
+  calendar.setUserId(user.getUserId());
+  calendar.setUserName(user.getFullName());
+  calendar.setCreateDate(serviceContext.getCreateDate(now));
+  calendar.setModifiedDate(serviceContext.getModifiedDate(now));
+  calendar.setCalendarResourceId(calendarResourceId);
+  calendar.setNameMap(nameMap);
+  calendar.setDescriptionMap(descriptionMap);
+  calendar.setColor(color);
+  calendar.setDefaultCalendar(defaultCalendar);
+  calendarPersistence.update(calendar,false);
+  resourceLocalService.addModelResources(calendar,serviceContext);
+  return calendar;
+}

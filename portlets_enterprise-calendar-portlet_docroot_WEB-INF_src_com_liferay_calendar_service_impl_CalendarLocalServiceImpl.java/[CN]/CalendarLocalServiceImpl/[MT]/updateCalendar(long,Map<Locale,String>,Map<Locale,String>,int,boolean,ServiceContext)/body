@@ -1,0 +1,12 @@
+{
+  Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
+  validate(nameMap);
+  calendar.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendar.setNameMap(nameMap);
+  calendar.setDescriptionMap(descriptionMap);
+  calendar.setColor(color);
+  calendar.setDefaultCalendar(defaultCalendar);
+  calendarPersistence.update(calendar,false);
+  resourceLocalService.updateModelResources(calendar,serviceContext);
+  return calendar;
+}
