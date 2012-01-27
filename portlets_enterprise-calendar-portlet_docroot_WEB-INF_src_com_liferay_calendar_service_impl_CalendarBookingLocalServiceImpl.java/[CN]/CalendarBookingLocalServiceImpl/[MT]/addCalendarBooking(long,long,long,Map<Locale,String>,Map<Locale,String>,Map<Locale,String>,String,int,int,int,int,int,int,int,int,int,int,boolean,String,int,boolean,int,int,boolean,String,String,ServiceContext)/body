@@ -8,29 +8,13 @@
     endDateHour=23;
     endDateMinute=59;
   }
-  Locale locale=LocaleUtil.getDefault();
-  validate(titleMap,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,locale,recurrence);
-  TimeZone timeZone=TimeZoneUtil.getDefault();
-  java.util.Calendar startDate=CalendarFactoryUtil.getCalendar(timeZone,locale);
-  startDate.set(java.util.Calendar.MONTH,startDateMonth);
-  startDate.set(java.util.Calendar.DATE,startDateDay);
-  startDate.set(java.util.Calendar.YEAR,startDateYear);
-  startDate.set(java.util.Calendar.HOUR_OF_DAY,startDateHour);
-  startDate.set(java.util.Calendar.MINUTE,startDateMinute);
-  startDate.set(java.util.Calendar.SECOND,0);
-  startDate.set(java.util.Calendar.MILLISECOND,0);
-  java.util.Calendar endDate=CalendarFactoryUtil.getCalendar(timeZone,locale);
-  endDate.set(java.util.Calendar.MONTH,endDateMonth);
-  endDate.set(java.util.Calendar.DATE,endDateDay);
-  endDate.set(java.util.Calendar.YEAR,endDateYear);
-  endDate.set(java.util.Calendar.HOUR_OF_DAY,endDateHour);
-  endDate.set(java.util.Calendar.MINUTE,endDateMinute);
-  endDate.set(java.util.Calendar.SECOND,0);
-  endDate.set(java.util.Calendar.MILLISECOND,0);
+  java.util.Calendar startDateJCalendar=getJCalendar(startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute);
+  java.util.Calendar endDateJCalendar=getJCalendar(endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute);
+  validate(titleMap,startDateMonth,startDateDay,startDateYear,startDateHour,startDateMinute,startDateJCalendar,endDateMonth,endDateDay,endDateYear,endDateHour,endDateMinute,endDateJCalendar,recurrence);
   if (firstReminder < secondReminder) {
-    int tmp=secondReminder;
+    int originalSecondReminder=secondReminder;
     secondReminder=firstReminder;
-    firstReminder=tmp;
+    firstReminder=originalSecondReminder;
   }
   long calendarBookingId=counterLocalService.increment();
   CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
@@ -42,14 +26,14 @@
   calendarBooking.setCreateDate(serviceContext.getCreateDate(now));
   calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
   calendarBooking.setCalendarId(calendarId);
-  calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
   calendarBooking.setCalendarResourceId(calendar.getCalendarResourceId());
+  calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
   calendarBooking.setTitleMap(titleMap);
   calendarBooking.setDescriptionMap(descriptionMap);
   calendarBooking.setLocationMap(locationMap);
   calendarBooking.setType(type);
-  calendarBooking.setStartDate(startDate.getTime());
-  calendarBooking.setEndDate(endDate.getTime());
+  calendarBooking.setStartDate(startDateJCalendar.getTime());
+  calendarBooking.setEndDate(endDateJCalendar.getTime());
   calendarBooking.setAllDay(allDay);
   calendarBooking.setRecurrence(recurrence);
   calendarBooking.setPriority(priority);
