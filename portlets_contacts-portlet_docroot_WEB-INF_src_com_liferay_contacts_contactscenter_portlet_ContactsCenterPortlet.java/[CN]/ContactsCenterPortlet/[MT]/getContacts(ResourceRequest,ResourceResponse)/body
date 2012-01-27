@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String keywords=ParamUtil.getString(resourceRequest,"keywords");
   int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
   int start=ParamUtil.getInteger(resourceRequest,"start");
@@ -10,7 +11,6 @@
   optionsJSONObject.put("socialRelationType",socialRelationType);
   optionsJSONObject.put("start",start);
   jsonObject.put("options",optionsJSONObject);
-  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   Group group=themeDisplay.getScopeGroup();
   Layout layout=themeDisplay.getLayout();
   LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
@@ -23,7 +23,6 @@
   List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
   int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
   jsonObject.put("count",usersCount);
-  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  User user : users) {
     JSONObject userJSONObject=JSONFactoryUtil.createJSONObject();
@@ -34,6 +33,7 @@
     userJSONObject.put("lastName",user.getLastName());
     userJSONObject.put("portraitURL",user.getPortraitURL(themeDisplay));
     userJSONObject.put("userId",String.valueOf(user.getUserId()));
+    LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
     PortletURL viewSummaryURL=liferayPortletResponse.createRenderURL();
     viewSummaryURL.setWindowState(LiferayWindowState.EXCLUSIVE);
     viewSummaryURL.setParameter("mvcPath","/contacts_center/view_resources.jsp");

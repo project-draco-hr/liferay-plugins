@@ -3,17 +3,13 @@
   long[] userIds=getUserIds(actionRequest);
   int type=ParamUtil.getInteger(actionRequest,"type");
   for (  long userId : userIds) {
-    try {
-      if (userId == themeDisplay.getUserId()) {
-        continue;
-      }
-      if (SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
-        continue;
-      }
-      SocialRequest socialRequest=SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),type,StringPool.BLANK,userId);
-      sendNotificationEvent(socialRequest,themeDisplay);
+    if (userId == themeDisplay.getUserId()) {
+      continue;
     }
- catch (    PortalException pe) {
+    if (SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
+      continue;
     }
+    SocialRequest socialRequest=SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),type,StringPool.BLANK,userId);
+    sendNotificationEvent(socialRequest,themeDisplay);
   }
 }

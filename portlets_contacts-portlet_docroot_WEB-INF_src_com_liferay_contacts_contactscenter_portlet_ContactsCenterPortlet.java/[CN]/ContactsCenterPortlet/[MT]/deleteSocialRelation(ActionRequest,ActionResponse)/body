@@ -3,13 +3,13 @@
   long[] userIds=getUserIds(actionRequest);
   int type=ParamUtil.getInteger(actionRequest,"type");
   for (  long userId : userIds) {
+    if (userId == themeDisplay.getUserId()) {
+      continue;
+    }
     try {
-      if (userId == themeDisplay.getUserId()) {
-        continue;
-      }
       SocialRelationLocalServiceUtil.deleteRelation(themeDisplay.getUserId(),userId,type);
     }
- catch (    PortalException pe) {
+ catch (    NoSuchRelationException nsre) {
     }
   }
 }
