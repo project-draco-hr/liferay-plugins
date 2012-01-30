@@ -8,11 +8,11 @@
   receiverUserIds.add(tasksEntry.getUserId());
   receiverUserIds.add(tasksEntry.getAssigneeUserId());
   receiverUserIds.remove(serviceContext.getUserId());
-  JSONObject notificationEventJSON=JSONFactoryUtil.createJSONObject();
-  notificationEventJSON.put("body",tasksEntry.getTitle());
-  notificationEventJSON.put("entryId",tasksEntry.getTasksEntryId());
-  notificationEventJSON.put("portletId",PortletKeys.TASKS);
-  notificationEventJSON.put("userId",serviceContext.getUserId());
+  JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
+  notificationEventJSONObject.put("body",tasksEntry.getTitle());
+  notificationEventJSONObject.put("entryId",tasksEntry.getTasksEntryId());
+  notificationEventJSONObject.put("portletId",PortletKeys.TASKS);
+  notificationEventJSONObject.put("userId",serviceContext.getUserId());
   for (  long receiverUserId : receiverUserIds) {
     String title=StringPool.BLANK;
     if (oldStatus == TasksEntryConstants.STATUS_ALL) {
@@ -33,8 +33,8 @@
  else {
       title="x-modified-the-task";
     }
-    notificationEventJSON.put("title",title);
-    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSON);
+    notificationEventJSONObject.put("title",title);
+    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
     notificationEvent.setDeliveryRequired(0);
     ChannelHubManagerUtil.sendNotificationEvent(tasksEntry.getCompanyId(),receiverUserId,notificationEvent);
   }
