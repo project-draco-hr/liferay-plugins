@@ -2,7 +2,11 @@
   long[] userIds=StringUtil.split(ParamUtil.getString(resourceRequest,"userIds"),0L);
   List<User> users=new ArrayList<User>();
   for (  long userId : userIds) {
-    users.add(UserLocalServiceUtil.getUser(userId));
+    try {
+      users.add(UserServiceUtil.getUserById(userId));
+    }
+ catch (    PortalException pe) {
+    }
   }
   String vCards=ContactsUtil.getVCards(users);
   HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
