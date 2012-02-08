@@ -1,7 +1,9 @@
 {
-  long userId=ParamUtil.getLong(resourceRequest,"userId");
-  int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
-  List<User> users=UserLocalServiceUtil.getSocialUsers(userId,socialRelationType,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  long[] userIds=StringUtil.split(ParamUtil.getString(resourceRequest,"userIds"),0L);
+  List<User> users=new ArrayList<User>();
+  for (  long userId : userIds) {
+    users.add(UserLocalServiceUtil.getUser(userId));
+  }
   String vCards=ContactsUtil.getVCards(users);
   HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
   HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
