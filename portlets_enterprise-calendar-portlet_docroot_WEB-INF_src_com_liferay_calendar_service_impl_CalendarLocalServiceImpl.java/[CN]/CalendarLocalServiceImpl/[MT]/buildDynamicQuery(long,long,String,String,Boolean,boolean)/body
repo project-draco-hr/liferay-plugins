@@ -1,0 +1,40 @@
+{
+  Junction junction=null;
+  if (andOperator) {
+    junction=RestrictionsFactoryUtil.conjunction();
+  }
+ else {
+    junction=RestrictionsFactoryUtil.disjunction();
+  }
+  Map<String,String> terms=new HashMap<String,String>();
+  if (Validator.isNotNull(name)) {
+    terms.put("name",name);
+  }
+  if (Validator.isNotNull(description)) {
+    terms.put("description",description);
+  }
+  for (  Map.Entry<String,String> entry : terms.entrySet()) {
+    String key=entry.getKey();
+    String value=entry.getValue();
+    Disjunction disjunction=RestrictionsFactoryUtil.disjunction();
+    for (    String keyword : CalendarUtil.splitKeywords(value)) {
+      Criterion criterion=RestrictionsFactoryUtil.ilike(key,StringUtil.quote(keyword,StringPool.PERCENT));
+      disjunction.add(criterion);
+    }
+    junction.add(disjunction);
+  }
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Calendar.class,getClass().getClassLoader());
+  if (groupId > 0) {
+    Property property=PropertyFactoryUtil.forName("groupId");
+    dynamicQuery.add(property.eq(groupId));
+  }
+  if (calendarResourceId > 0) {
+    Property property=PropertyFactoryUtil.forName("calendarResourceId");
+    dynamicQuery.add(property.eq(calendarResourceId));
+  }
+  if (defaultCalendar != null) {
+    Property property=PropertyFactoryUtil.forName("defaultCalendar");
+    dynamicQuery.add(property.eq(defaultCalendar));
+  }
+  return dynamicQuery.add(junction);
+}
