@@ -1,0 +1,40 @@
+{
+  if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+    return countByG_C_A(groupId,code,active);
+  }
+  StringBundler query=new StringBundler(4);
+  query.append(_SQL_COUNT_CALENDARRESOURCE_WHERE);
+  query.append(_FINDER_COLUMN_G_C_A_GROUPID_2);
+  if (code == null) {
+    query.append(_FINDER_COLUMN_G_C_A_CODE_1);
+  }
+ else {
+    if (code.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_G_C_A_CODE_3);
+    }
+ else {
+      query.append(_FINDER_COLUMN_G_C_A_CODE_2);
+    }
+  }
+  query.append(_FINDER_COLUMN_G_C_A_ACTIVE_2);
+  String sql=InlineSQLHelperUtil.replacePermissionCheck(query.toString(),CalendarResource.class.getName(),_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN,_FILTER_ENTITY_TABLE_FILTER_USERID_COLUMN,groupId);
+  Session session=null;
+  try {
+    session=openSession();
+    Query q=session.createQuery(sql);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(groupId);
+    if (code != null) {
+      qPos.add(code);
+    }
+    qPos.add(active);
+    Long count=(Long)q.uniqueResult();
+    return count.intValue();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
