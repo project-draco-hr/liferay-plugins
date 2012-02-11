@@ -1,5 +1,12 @@
 {
-  WSRPProducer wsrpProducer=getWSRPProducer();
+  WSRPProducer wsrpProducer=null;
+  try {
+    wsrpProducer=getWSRPProducer();
+  }
+ catch (  NoSuchProducerException e) {
+    _log.warn(e.getMessage());
+    return null;
+  }
   ServiceDescription serviceDescription=new ServiceDescription();
   serviceDescription.setOfferedPortlets(getPortletDescriptions(wsrpProducer));
   serviceDescription.setRequiresInitCookie(_cookieProtocol);

@@ -1,5 +1,9 @@
 {
-  long wsrpConsumerId=ParamUtil.getLong(actionRequest,"wsrpConsumerId");
-  String userToken=WSRPConsumerManager.getUserToken(actionRequest);
-  WSRPConsumerLocalServiceUtil.restartConsumer(wsrpConsumerId,userToken);
+  checkPermissions(actionRequest);
+  try {
+    doRestartConsumer(actionRequest,actionResponse);
+  }
+ catch (  PortalException pe) {
+    SessionErrors.add(actionRequest,"restartConsumer");
+  }
 }
