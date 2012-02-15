@@ -1,0 +1,22 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  long groupId=ParamUtil.getLong(actionRequest,"groupId");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    GroupServiceUtil.getGroup(groupId);
+  }
+ catch (  Exception e) {
+    jsonObject.put("result","failure");
+    writeJSON(actionRequest,actionResponse,jsonObject);
+    return;
+  }
+  if (cmd.equals(Constants.ADD)) {
+    FavoriteSiteLocalServiceUtil.addFavoriteSite(themeDisplay.getUserId(),groupId);
+  }
+ else   if (cmd.equals(Constants.DELETE)) {
+    FavoriteSiteLocalServiceUtil.deleteFavoriteSite(themeDisplay.getUserId(),groupId);
+  }
+  jsonObject.put("result","success");
+  writeJSON(actionRequest,actionResponse,jsonObject);
+}

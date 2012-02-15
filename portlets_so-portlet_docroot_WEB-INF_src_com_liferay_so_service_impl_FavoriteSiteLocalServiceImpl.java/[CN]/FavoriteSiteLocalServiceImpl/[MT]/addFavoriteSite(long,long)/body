@@ -1,0 +1,10 @@
+{
+  User user=userLocalService.getUserById(userId);
+  long favoriteSiteId=counterLocalService.increment();
+  FavoriteSite favoriteSite=favoriteSitePersistence.create(favoriteSiteId);
+  favoriteSite.setCompanyId(user.getCompanyId());
+  favoriteSite.setUserId(userId);
+  favoriteSite.setGroupId(groupId);
+  favoriteSitePersistence.update(favoriteSite,false);
+  return favoriteSite;
+}

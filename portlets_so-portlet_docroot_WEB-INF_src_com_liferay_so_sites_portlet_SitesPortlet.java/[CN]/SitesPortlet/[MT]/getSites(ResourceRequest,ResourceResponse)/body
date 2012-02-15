@@ -34,13 +34,9 @@
     groupsCount=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
   }
  else {
-    if (searchTab.equals("my-favorites")) {
-      groups=SitesUtil.getStarredSites(themeDisplay,name);
-      groupsCount=groups.size();
-    }
- else     if (searchTab.equals("my-sites")) {
-      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true,maxResultSize);
-      groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true);
+    if (searchTab.equals("my-sites")) {
+      groups=SitesUtil.getFavoriteSitesGroups(themeDisplay.getUserId(),keywords,maxResultSize);
+      groupsCount=SitesUtil.getFavoriteSitesGroupsCount(themeDisplay.getUserId(),keywords);
     }
  else {
       groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false,maxResultSize);
@@ -90,19 +86,18 @@
       deletePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
       groupJSONObject.put("deleteURL",deletePortletURL.toString());
     }
-    PortletURL starPortletURL=resourceResponse.createActionURL();
-    starPortletURL.setWindowState(WindowState.NORMAL);
-    starPortletURL.setParameter(ActionRequest.ACTION_NAME,"updateStars");
-    starPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
-    starPortletURL.setParameter("starredGroupId",String.valueOf(group.getGroupId()));
-    String starredGroupIds=SitesUtil.getStarredGroupIds(themeDisplay.getUserId());
-    if (!StringUtil.contains(starredGroupIds,String.valueOf(group.getGroupId()))) {
-      starPortletURL.setParameter(Constants.CMD,Constants.ADD);
-      groupJSONObject.put("starURL",starPortletURL.toString());
+    PortletURL favoritePortletURL=resourceResponse.createActionURL();
+    favoritePortletURL.setWindowState(WindowState.NORMAL);
+    favoritePortletURL.setParameter(ActionRequest.ACTION_NAME,"updateFavorites");
+    favoritePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+    favoritePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+    if (!FavoriteSiteLocalServiceUtil.isFavoriteSite(themeDisplay.getUserId(),group.getGroupId())) {
+      favoritePortletURL.setParameter(Constants.CMD,Constants.ADD);
+      groupJSONObject.put("favoriteURL",favoritePortletURL.toString());
     }
  else {
-      starPortletURL.setParameter(Constants.CMD,Constants.DELETE);
-      groupJSONObject.put("unstarURL",starPortletURL.toString());
+      favoritePortletURL.setParameter(Constants.CMD,Constants.DELETE);
+      groupJSONObject.put("unfavoriteURL",favoritePortletURL.toString());
     }
     jsonArray.put(groupJSONObject);
   }

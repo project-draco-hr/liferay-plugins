@@ -1,0 +1,33 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(COUNT_BY_U_N);
+    sql=StringUtil.replace(sql,"[$JOIN_BY_USERS_GROUP$]",_joinByUsersGroupsSQL);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(userId);
+    qPos.add(StringPool.PERCENT + name + StringPool.PERCENT);
+    qPos.add(realName);
+    qPos.add(name);
+    qPos.add(userId);
+    qPos.add(StringPool.PERCENT + name + StringPool.PERCENT);
+    qPos.add(realName);
+    qPos.add(name);
+    Iterator<Long> itr=q.iterate();
+    if (itr.hasNext()) {
+      Long count=itr.next();
+      if (count != null) {
+        return count.intValue();
+      }
+    }
+    return 0;
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
