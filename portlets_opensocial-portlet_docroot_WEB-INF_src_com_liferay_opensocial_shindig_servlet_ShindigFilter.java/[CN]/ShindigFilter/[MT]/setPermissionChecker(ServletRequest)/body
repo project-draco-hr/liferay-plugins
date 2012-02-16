@@ -6,7 +6,10 @@
   long companyId=GetterUtil.getLong(companyIdString);
   String userUUID=StringPool.BLANK;
   try {
-    Company company=CompanyLocalServiceUtil.getCompany(companyId);
+    Company company=CompanyLocalServiceUtil.fetchCompany(companyId);
+    if (Validator.isNull(company)) {
+      return false;
+    }
     String userUUIDString=CookieUtil.get((HttpServletRequest)servletRequest,CookieKeys.USER_UUID);
     if (Validator.isNull(userUUIDString)) {
       return false;
