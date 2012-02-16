@@ -1,0 +1,28 @@
+{
+  FavoriteSite favoriteSite=(FavoriteSite)EntityCacheUtil.getResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,favoriteSiteId);
+  if (favoriteSite == _nullFavoriteSite) {
+    return null;
+  }
+  if (favoriteSite == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      favoriteSite=(FavoriteSite)session.get(FavoriteSiteImpl.class,Long.valueOf(favoriteSiteId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (favoriteSite != null) {
+        cacheResult(favoriteSite);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,favoriteSiteId,_nullFavoriteSite);
+      }
+      closeSession(session);
+    }
+  }
+  return favoriteSite;
+}

@@ -1,0 +1,16 @@
+{
+  favoriteSite=toUnwrappedModel(favoriteSite);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,favoriteSite);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  clearCache(favoriteSite);
+  return favoriteSite;
+}
