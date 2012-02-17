@@ -1,0 +1,18 @@
+{
+  FavoriteSite favoriteSite=findByPrimaryKey(favoriteSiteId);
+  Session session=null;
+  try {
+    session=openSession();
+    FavoriteSite[] array=new FavoriteSiteImpl[3];
+    array[0]=getByG_U_PrevAndNext(session,favoriteSite,groupId,userId,orderByComparator,true);
+    array[1]=favoriteSite;
+    array[2]=getByG_U_PrevAndNext(session,favoriteSite,groupId,userId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
