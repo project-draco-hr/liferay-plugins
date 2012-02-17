@@ -1,0 +1,10 @@
+{
+  injector=(Injector)context.getAttribute(INJECTOR_ATTRIBUTE);
+  if (injector == null) {
+    injector=(Injector)context.getAttribute(INJECTOR_NAME);
+    if (injector == null) {
+      throw new UnavailableException("Guice Injector not found! Make sure you registered " + GuiceServletContextListener.class.getName() + " as a listener");
+    }
+  }
+  injector.injectMembers(this);
+}
