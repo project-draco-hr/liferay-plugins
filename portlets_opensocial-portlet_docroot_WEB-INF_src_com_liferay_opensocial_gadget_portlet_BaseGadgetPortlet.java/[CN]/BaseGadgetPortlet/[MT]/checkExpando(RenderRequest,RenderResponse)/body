@@ -6,11 +6,11 @@
   ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(expandoTable.getTableId(),columnName);
   if (expandoColumn == null) {
     expandoColumn=ExpandoColumnLocalServiceUtil.addColumn(expandoTable.getTableId(),columnName,ExpandoColumnConstants.STRING);
-    HashMap<Long,String[]> roleIdsToActionIds=new HashMap<Long,String[]>();
-    Role userRole=RoleLocalServiceUtil.getRole(expandoColumn.getCompanyId(),RoleConstants.USER);
-    roleIdsToActionIds.put(userRole.getRoleId(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});
+    Map<Long,String[]> roleIdsToActionIds=new HashMap<Long,String[]>();
     Role guestRole=RoleLocalServiceUtil.getRole(expandoColumn.getCompanyId(),RoleConstants.GUEST);
     roleIdsToActionIds.put(guestRole.getRoleId(),new String[]{ActionKeys.VIEW});
+    Role userRole=RoleLocalServiceUtil.getRole(expandoColumn.getCompanyId(),RoleConstants.USER);
+    roleIdsToActionIds.put(userRole.getRoleId(),new String[]{ActionKeys.UPDATE,ActionKeys.VIEW});
     ResourcePermissionLocalServiceUtil.setResourcePermissions(expandoColumn.getCompanyId(),ExpandoColumn.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,String.valueOf(expandoColumn.getColumnId()),roleIdsToActionIds);
   }
 }
