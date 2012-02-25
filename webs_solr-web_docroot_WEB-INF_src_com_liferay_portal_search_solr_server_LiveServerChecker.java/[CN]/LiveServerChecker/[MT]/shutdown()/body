@@ -1,16 +1,17 @@
 {
-  Collection<SolrServerWrapper> solrServerWrappers=_solrServerFactory.getDeadServers();
-  solrServerWrappers.addAll(_solrServerFactory.getLiveServers());
-  for (  SolrServerWrapper solrServerWrapper : solrServerWrappers) {
+  List<SolrServerWrapper> allSolrServerWrappers=new ArrayList<SolrServerWrapper>();
+  List<SolrServerWrapper> deadSolrServerWrappers=_solrServerFactory.getDeadServers();
+  allSolrServerWrappers.addAll(deadSolrServerWrappers);
+  deadSolrServerWrappers.clear();
+  List<SolrServerWrapper> liveSolrServerWrappers=_solrServerFactory.getLiveServers();
+  allSolrServerWrappers.addAll(liveSolrServerWrappers);
+  liveSolrServerWrappers.clear();
+  for (  SolrServerWrapper solrServerWrapper : allSolrServerWrappers) {
     SolrServer solrServer=solrServerWrapper.getServer();
     if (solrServer == null) {
       continue;
     }
     _solrServerFactory.killServer(solrServerWrapper);
   }
-  List<SolrServerWrapper> deadSolrServerWrappers=_solrServerFactory.getDeadServers();
-  deadSolrServerWrappers.clear();
-  List<SolrServerWrapper> liveSolrServerWrappers=_solrServerFactory.getLiveServers();
-  liveSolrServerWrappers.clear();
   _scheduledExecutorService.shutdownNow();
 }
