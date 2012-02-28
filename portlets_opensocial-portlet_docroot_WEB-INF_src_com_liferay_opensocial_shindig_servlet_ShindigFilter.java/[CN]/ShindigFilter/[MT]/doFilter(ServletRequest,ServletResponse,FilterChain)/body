@@ -1,13 +1,15 @@
 {
   if (injector == null) {
-    HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
-    _init(httpServletRequest.getSession().getServletContext());
+    HttpServletRequest request=(HttpServletRequest)servletRequest;
+    HttpSession session=request.getSession();
+    _init(session.getServletContext());
   }
   PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
   if (permissionChecker == null) {
     setPermissionChecker(servletRequest);
   }
-  String host=servletRequest.getServerName().concat(StringPool.COLON).concat(String.valueOf(servletRequest.getServerPort()));
+  String serverName=servletRequest.getServerName();
+  String host=serverName.concat(StringPool.COLON).concat(String.valueOf(servletRequest.getServerPort()));
   ShindigUtil.setHost(host);
   filterChain.doFilter(servletRequest,servletResponse);
 }
