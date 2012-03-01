@@ -1,4 +1,9 @@
 {
+  long calendarResourceId=counterLocalService.increment();
+  if (Validator.isNull(className)) {
+    className=CalendarResource.class.getName();
+    classPK=calendarResourceId;
+  }
   long globalUserId=0;
   if (CalendarResourceUtil.isGlobalResource(className,classPK)) {
     globalUserId=CalendarResourceUtil.getGlobalResourceUserId(className,classPK);
@@ -10,7 +15,6 @@
   long classNameId=PortalUtil.getClassNameId(className);
   Date now=new Date();
   validate(classNameId,classPK);
-  long calendarResourceId=counterLocalService.increment();
   CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
   calendarResource.setUuid(serviceContext.getUuid());
   calendarResource.setGroupId(groupId);
