@@ -20,6 +20,9 @@
  else   if (socialRelationType != 0) {
     params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
   }
+  if (showOnlySiteMembers) {
+    params.put("usersGroups",new Long(group.getGroupId()));
+  }
   List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
   int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
   jsonObject.put("count",usersCount);
