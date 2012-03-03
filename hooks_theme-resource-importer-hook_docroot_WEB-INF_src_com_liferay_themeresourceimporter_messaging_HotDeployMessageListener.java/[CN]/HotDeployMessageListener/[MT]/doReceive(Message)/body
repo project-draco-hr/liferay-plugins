@@ -1,0 +1,25 @@
+{
+  String command=message.getString("command");
+  String servletContextName=message.getString("servletContextName");
+  if (!command.equals("deploy") || !servletContextName.endsWith("-theme")) {
+    return;
+  }
+  ServletContext servletContext=ServletContextPool.get(servletContextName);
+  File resourceDir=new File(servletContext.getRealPath("/WEB-INF/classes/resources"));
+  if (!resourceDir.exists()) {
+    return;
+  }
+  _log.info("Importing resources from " + servletContextName);
+  String name=TextFormatter.format(servletContextName,TextFormatter.J);
+  File lar=new File(resourceDir,"/archive.lar");
+  if (!lar.exists()) {
+    return;
+  }
+  List<Company> companies=CompanyLocalServiceUtil.getCompanies();
+  for (  Company company : companies) {
+    if (hasLayoutSetPrototype(company.getCompanyId(),name)) {
+      continue;
+    }
+    LarImporter.importResource(company.getCompanyId(),name,lar);
+  }
+}
