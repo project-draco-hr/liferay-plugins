@@ -1,0 +1,19 @@
+{
+  try {
+    CalendarResource calendarResource=null;
+    long calendarResourceId=ParamUtil.getLong(renderRequest,"calendarResourceId");
+    if (calendarResourceId > 0) {
+      calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
+    }
+    renderRequest.setAttribute(WebKeys.ENTERPRISE_CALENDAR_RESOURCE,calendarResource);
+  }
+ catch (  Exception e) {
+    if (e instanceof NoSuchResourceException) {
+      SessionErrors.add(renderRequest,e.getClass().getName());
+    }
+ else {
+      throw new PortletException(e);
+    }
+  }
+  super.render(renderRequest,renderResponse);
+}
