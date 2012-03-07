@@ -20,7 +20,9 @@
  else   if (socialRelationType != 0) {
     params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
   }
-  if (_showOnlySiteMembers) {
+  PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
+  String portletName=portletDisplay.getPortletName();
+  if (portletName.equals(PortletKeys.MEMBERS)) {
     params.put("usersGroups",new Long(group.getGroupId()));
   }
   List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
