@@ -1,0 +1,37 @@
+{
+  String command=message.getString("command");
+  if (!command.equals("deploy")) {
+    return;
+  }
+  String servletContextName=message.getString("servletContextName");
+  ServletContext servletContext=ServletContextPool.get(servletContextName);
+  File resourcesDir=new File(servletContext.getRealPath("/WEB-INF/classes/resources-importer"));
+  if (!resourcesDir.exists()) {
+    return;
+  }
+  if (_log.isInfoEnabled()) {
+    _log.info("Importing resources from " + servletContextName);
+  }
+  String layoutSetPrototypeName=TextFormatter.format(servletContextName,TextFormatter.J);
+  File larFile=new File(resourcesDir,"/archive.lar");
+  List<Company> companies=CompanyLocalServiceUtil.getCompanies();
+  for (  Company company : companies) {
+    if (hasLayoutSetPrototype(company.getCompanyId(),layoutSetPrototypeName)) {
+      if (_log.isInfoEnabled()) {
+        _log.info("Layout set prototype already exists for company " + company.getWebId());
+      }
+      continue;
+    }
+    Map<Locale,String> layoutSetPrototypeNameMap=new HashMap<Locale,String>();
+    Locale locale=LocaleUtil.getDefault();
+    layoutSetPrototypeNameMap.put(locale,layoutSetPrototypeName);
+    if (larFile.exists()) {
+      LARImporter larImporter=getLARImporter();
+      larImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,larFile);
+    }
+ else {
+      FileSystemImporter fileSystemImporter=getFileSystemImporter();
+      fileSystemImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,resourcesDir);
+    }
+  }
+}

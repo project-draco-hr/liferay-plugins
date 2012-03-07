@@ -1,0 +1,14 @@
+{
+  File[] files=listFiles(dir);
+  for (  File file : files) {
+    String name=getName(file.getName());
+    Map<Locale,String> nameMap=getNameMap(name);
+    String xsl=new String(FileUtil.getBytes(file));
+    JournalTemplate journalTemplate=JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,StringPool.BLANK,true,journalStructureId,nameMap,null,xsl,true,JournalTemplateConstants.LANG_TYPE_VM,false,false,StringPool.BLANK,null,new ServiceContext());
+    File resourcesDir=getResourcesDir(dir);
+    File journalArticlesDir=new File(resourcesDir,"/journal/articles/" + name);
+    if (journalArticlesDir.exists() && journalArticlesDir.isDirectory()) {
+      createJournalArticles(userId,groupId,journalStructureId,journalTemplate.getTemplateId(),journalArticlesDir);
+    }
+  }
+}
