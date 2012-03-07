@@ -1,10 +1,9 @@
 {
-  long layoutSetPrototypeClassNameId=PortalUtil.getClassNameId(LayoutSetPrototype.class.getName());
-  int count=GroupLocalServiceUtil.searchCount(companyId,new long[]{layoutSetPrototypeClassNameId},name,StringPool.BLANK,null);
-  if (count > 0) {
-    return true;
+  List<LayoutSetPrototype> layoutSetPrototypes=LayoutSetPrototypeLocalServiceUtil.search(companyId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  for (  LayoutSetPrototype layoutSetPrototype : layoutSetPrototypes) {
+    if (name.equals(layoutSetPrototype.getName(Locale.US))) {
+      return true;
+    }
   }
- else {
-    return false;
-  }
+  return false;
 }

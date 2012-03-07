@@ -12,14 +12,16 @@
   _log.info("Importing resources from " + servletContextName);
   String name=TextFormatter.format(servletContextName,TextFormatter.J);
   File lar=new File(resourceDir,"/archive.lar");
-  if (!lar.exists()) {
-    return;
-  }
   List<Company> companies=CompanyLocalServiceUtil.getCompanies();
   for (  Company company : companies) {
     if (hasLayoutSetPrototype(company.getCompanyId(),name)) {
       continue;
     }
-    LarImporter.importResource(company.getCompanyId(),name,lar);
+    if (lar.exists()) {
+      LarImporter.importResource(company.getCompanyId(),name,lar);
+    }
+ else {
+      FileImporter.importResource(company.getCompanyId(),name,resourceDir);
+    }
   }
 }
