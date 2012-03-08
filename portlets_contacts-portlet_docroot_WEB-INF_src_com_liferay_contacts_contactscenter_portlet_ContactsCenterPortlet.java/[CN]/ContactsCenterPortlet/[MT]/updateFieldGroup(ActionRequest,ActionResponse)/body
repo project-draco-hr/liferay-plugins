@@ -31,7 +31,6 @@
     jsonObject.put("success",true);
   }
  catch (  Exception e) {
-    jsonObject.put("success",false);
     String message="your-request-failed-to-complete";
     if (e instanceof AddressCityException) {
       message="please-enter-a-valid-city";
@@ -65,6 +64,7 @@
     }
     ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
     jsonObject.put("message",LanguageUtil.get(themeDisplay.getLocale(),message));
+    jsonObject.put("success",false);
   }
   writeJSON(actionRequest,actionResponse,jsonObject);
 }
