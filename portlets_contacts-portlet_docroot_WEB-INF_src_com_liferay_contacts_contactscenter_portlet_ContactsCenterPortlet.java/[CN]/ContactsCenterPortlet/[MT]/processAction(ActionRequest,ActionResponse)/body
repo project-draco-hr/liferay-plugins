@@ -1,5 +1,4 @@
 {
-  boolean redirect=true;
   try {
     String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
     if (cmd.equals("addSocialRelation")) {
@@ -13,13 +12,11 @@
     }
  else     if (cmd.equals("updateFieldGroup")) {
       updateFieldGroup(actionRequest,actionResponse);
-      redirect=false;
+      return;
     }
   }
  catch (  Exception e) {
     throw new PortletException(e);
   }
-  if (redirect) {
-    sendRedirect(actionRequest,actionResponse);
-  }
+  sendRedirect(actionRequest,actionResponse);
 }
