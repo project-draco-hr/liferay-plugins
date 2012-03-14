@@ -1,16 +1,16 @@
 {
   long calendarResourceId=ParamUtil.getLong(actionRequest,"calendarResourceId");
+  long defaultCalendarId=ParamUtil.getLong(actionRequest,"defaultCalendarId");
   String code=ParamUtil.getString(actionRequest,"code");
   Map<Locale,String> nameMap=LocalizationUtil.getLocalizationMap(actionRequest,"name");
   Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(actionRequest,"description");
   String type=ParamUtil.getString(actionRequest,"type");
   boolean active=ParamUtil.getBoolean(actionRequest,"active");
-  String cmd=ParamUtil.get(actionRequest,Constants.CMD,StringPool.BLANK);
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarResource.class.getName(),actionRequest);
-  if (cmd.equals(Constants.UPDATE)) {
-    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,code,nameMap,descriptionMap,type,active,serviceContext);
+  if (calendarResourceId > 0) {
+    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
   }
  else {
-    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),code,nameMap,descriptionMap,type,active,serviceContext);
+    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
   }
 }
