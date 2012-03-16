@@ -9,17 +9,16 @@
   LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypeByUuid(layoutSetPrototypeUuid);
   Group group=layoutSetPrototype.getGroup();
-  List<Layout> layoutSetPrototypeLayouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),true);
-  String[] prototypeLayoutUuids=new String[layoutSetPrototypeLayouts.size()];
-  for (int i=0; i < layoutSetPrototypeLayouts.size(); i++) {
-    Layout layoutSetPrototypeLayout=layoutSetPrototypeLayouts.get(i);
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),true);
+  String[] prototypeLayoutUuids=new String[layouts.size()];
+  for (int i=0; i < layouts.size(); i++) {
+    Layout layoutSetPrototypeLayout=layouts.get(i);
     prototypeLayoutUuids[i]=layoutSetPrototypeLayout.getUuid();
   }
   List<Layout> userLayouts=LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(),privateLayout);
-  ServiceContext serviceContext=new ServiceContext();
   for (  Layout userLayout : userLayouts) {
     if (ArrayUtil.contains(prototypeLayoutUuids,userLayout.getSourcePrototypeLayoutUuid())) {
-      LayoutLocalServiceUtil.deleteLayout(userLayout.getGroupId(),privateLayout,userLayout.getLayoutId(),serviceContext);
+      LayoutLocalServiceUtil.deleteLayout(userLayout.getGroupId(),privateLayout,userLayout.getLayoutId(),new ServiceContext());
     }
   }
 }

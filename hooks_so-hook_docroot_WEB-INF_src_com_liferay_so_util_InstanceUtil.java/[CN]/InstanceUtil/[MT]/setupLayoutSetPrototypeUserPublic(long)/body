@@ -4,8 +4,7 @@
   Role role=RoleLocalServiceUtil.getRole(layoutSetPrototype.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
   ResourcePermissionLocalServiceUtil.setResourcePermissions(layoutSetPrototype.getCompanyId(),LayoutSetPrototype.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,String.valueOf(layoutSetPrototype.getPrimaryKey()),role.getRoleId(),new String[]{ActionKeys.VIEW});
   Group group=layoutSetPrototype.getGroup();
-  ServiceContext serviceContext=new ServiceContext();
-  LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,serviceContext);
+  LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,new ServiceContext());
   LayoutSetLocalServiceUtil.updateLookAndFeel(group.getGroupId(),"so_WAR_sotheme","01","",false);
   Layout layout=LayoutUtil.addLayout(group,true,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,"Profile","1_2_columns_ii");
   LayoutUtil.addPortlets(group,layout,"/profile",PortletPropsKeys.USER_PUBLIC_LAYOUT_PORTLETS);
