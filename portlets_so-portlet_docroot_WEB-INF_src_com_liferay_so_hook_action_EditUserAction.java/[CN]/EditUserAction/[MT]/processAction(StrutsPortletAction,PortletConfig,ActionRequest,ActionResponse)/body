@@ -20,6 +20,27 @@
   }
  else {
     updateProjectsEntries(actionRequest,actionResponse);
-    originalStrutsPortletAction.processAction(portletConfig,actionRequest,actionResponse);
+    DynamicActionRequest dynamicActionRequest=new DynamicActionRequest(actionRequest);
+    if (cmd.equals(Constants.UPDATE)) {
+      User user=PortalUtil.getSelectedUser(actionRequest);
+      List<Role> curRoles=user.getRoles();
+      Role socialOfficeRole=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+      long[] roleIds=getLongArray(actionRequest,"rolesSearchContainerPrimaryKeys");
+      boolean containsSocialOfficeRole=ArrayUtil.contains(roleIds,socialOfficeRole.getRoleId());
+      if (containsSocialOfficeRole && !curRoles.contains(socialOfficeRole)) {
+        LayoutSetPrototype[] layoutSetPrototypes=LayoutSetPrototypeUtil.getLayoutSetPrototypes(user);
+        dynamicActionRequest.setParameter("publicLayoutSetPrototypeId",String.valueOf(layoutSetPrototypes[0].getLayoutSetPrototypeId()));
+        dynamicActionRequest.setParameter("privateLayoutSetPrototypeId",String.valueOf(layoutSetPrototypes[1].getLayoutSetPrototypeId()));
+        dynamicActionRequest.setParameter("publicLayoutSetPrototypeLinkEnabled",String.valueOf(true));
+        dynamicActionRequest.setParameter("privateLayoutSetPrototypeLinkEnabled",String.valueOf(true));
+      }
+ else       if (!containsSocialOfficeRole && curRoles.contains(socialOfficeRole)) {
+        dynamicActionRequest.setParameter("publicLayoutSetPrototypeId",StringPool.BLANK);
+        dynamicActionRequest.setParameter("privateLayoutSetPrototypeId",StringPool.BLANK);
+        dynamicActionRequest.setParameter("publicLayoutSetPrototypeLinkEnabled",String.valueOf(false));
+        dynamicActionRequest.setParameter("privateLayoutSetPrototypeLinkEnabled",String.valueOf(false));
+      }
+    }
+    originalStrutsPortletAction.processAction(portletConfig,dynamicActionRequest,actionResponse);
   }
 }
