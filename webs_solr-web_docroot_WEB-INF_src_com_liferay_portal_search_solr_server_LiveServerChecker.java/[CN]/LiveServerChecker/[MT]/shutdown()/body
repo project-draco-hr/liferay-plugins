@@ -12,6 +12,11 @@
       continue;
     }
     _solrServerFactory.killServer(solrServerWrapper);
+    if (solrServer instanceof StoppableSolrServer) {
+      StoppableSolrServer stoppableSolrServer=(StoppableSolrServer)solrServer;
+      stoppableSolrServer.stop();
+    }
   }
   _scheduledExecutorService.shutdownNow();
+  MultiThreadedHttpConnectionManager.shutdownAll();
 }

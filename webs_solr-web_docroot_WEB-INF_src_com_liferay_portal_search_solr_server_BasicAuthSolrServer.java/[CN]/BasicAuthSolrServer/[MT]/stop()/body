@@ -1,0 +1,19 @@
+{
+  _stopped=true;
+  int i=0;
+  while ((i=_connectionManager.getConnectionsInPool()) > 0) {
+    if (_log.isDebugEnabled()) {
+      _log.debug("[" + toString() + "] Waiting on "+ i+ " connections...");
+    }
+    _connectionManager.closeIdleConnections(200);
+    try {
+      Thread.sleep(200);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+  _connectionManager.shutdown();
+  if (_log.isDebugEnabled()) {
+    _log.debug("[" + toString() + "] I'm shutdown!");
+  }
+}
