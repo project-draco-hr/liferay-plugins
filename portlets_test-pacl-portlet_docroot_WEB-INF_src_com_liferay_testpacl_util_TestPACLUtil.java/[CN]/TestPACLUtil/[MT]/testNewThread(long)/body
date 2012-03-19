@@ -1,0 +1,17 @@
+{
+  final Map<String,Boolean> results=new HashMap<String,Boolean>();
+  Thread thread=new Thread(){
+    @Override public void run(){
+      results.putAll(testCurrentThread(userId));
+    }
+  }
+;
+  thread.start();
+  try {
+    thread.join();
+  }
+ catch (  InterruptedException ie) {
+    _log.error(ie,ie);
+  }
+  return results;
+}
