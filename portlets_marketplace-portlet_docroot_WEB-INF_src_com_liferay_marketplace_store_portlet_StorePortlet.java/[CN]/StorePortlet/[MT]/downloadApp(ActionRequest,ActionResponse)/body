@@ -4,14 +4,8 @@
   long remoteAppId=ParamUtil.getLong(actionRequest,"appId");
   String url=ParamUtil.getString(actionRequest,"url");
   String version=ParamUtil.getString(actionRequest,"version");
-  String encodedClientId=MarketplaceUtil.encodeClientId(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token);
-  StringBundler sb=new StringBundler(5);
-  sb.append(url);
-  sb.append(StringPool.SLASH);
-  sb.append(encodedClientId);
-  sb.append(StringPool.SLASH);
-  sb.append(token);
-  URL urlObj=new URL(sb.toString());
+  url=getRemoteAppPackageURL(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token,url);
+  URL urlObj=new URL(url);
   InputStream inputStream=urlObj.openStream();
   App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
   if (app == null) {
