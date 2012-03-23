@@ -9,9 +9,14 @@
     if (name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
       long userId=(Long)classPK;
       User user=UserLocalServiceUtil.getUser(userId);
+      Group group=user.getGroup();
       LayoutSetPrototype[] layoutSetPrototypes=LayoutSetPrototypeUtil.getLayoutSetPrototypes(user);
-      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(user.getGroup().getGroupId(),false,true,layoutSetPrototypes[0].getUuid());
-      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(user.getGroup().getGroupId(),true,true,layoutSetPrototypes[1].getUuid());
+      long[] publicPlids=getUserLayoutPlids(group,false);
+      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,layoutSetPrototypes[0].getUuid());
+      orderLayouts(publicPlids);
+      long[] privatePlids=getUserLayoutPlids(group,true);
+      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,layoutSetPrototypes[1].getUuid());
+      orderLayouts(privatePlids);
     }
   }
  catch (  Exception e) {
