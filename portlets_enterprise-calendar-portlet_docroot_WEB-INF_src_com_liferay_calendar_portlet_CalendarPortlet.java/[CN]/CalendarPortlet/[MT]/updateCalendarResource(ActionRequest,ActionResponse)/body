@@ -7,10 +7,10 @@
   String type=ParamUtil.getString(actionRequest,"type");
   boolean active=ParamUtil.getBoolean(actionRequest,"active");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarResource.class.getName(),actionRequest);
-  if (calendarResourceId > 0) {
-    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
+  if (calendarResourceId <= 0) {
+    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
   }
  else {
-    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
+    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
   }
 }
