@@ -1,0 +1,12 @@
+{
+  if (_service == null) {
+    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),SocialOfficeService.class.getName());
+    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,SocialOfficeService.class.getName(),portletClassLoader);
+    _service=new SocialOfficeServiceClp(classLoaderProxy);
+    ClpSerializer.setClassLoader(portletClassLoader);
+    ReferenceRegistry.registerReference(SocialOfficeServiceUtil.class,"_service");
+    MethodCache.remove(SocialOfficeService.class);
+  }
+  return _service;
+}
