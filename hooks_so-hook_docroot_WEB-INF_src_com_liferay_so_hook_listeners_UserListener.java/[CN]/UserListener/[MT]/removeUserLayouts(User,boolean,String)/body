@@ -7,17 +7,18 @@
   layoutSet.setLayoutSetPrototypeLinkEnabled(false);
   layoutSet.setLayoutSetPrototypeUuid(StringPool.BLANK);
   LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
+  LayoutSetLocalServiceUtil.updateLookAndFeel(userGroup.getGroupId(),null,null,"",false);
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypeByUuid(layoutSetPrototypeUuid);
   Group group=layoutSetPrototype.getGroup();
   List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),true);
-  String[] prototypeLayoutUuids=new String[layouts.size()];
+  String[] layoutUuids=new String[layouts.size()];
   for (int i=0; i < layouts.size(); i++) {
-    Layout layoutSetPrototypeLayout=layouts.get(i);
-    prototypeLayoutUuids[i]=layoutSetPrototypeLayout.getUuid();
+    Layout curLayout=layouts.get(i);
+    layoutUuids[i]=curLayout.getUuid();
   }
   List<Layout> userLayouts=LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(),privateLayout);
   for (  Layout userLayout : userLayouts) {
-    if (ArrayUtil.contains(prototypeLayoutUuids,userLayout.getSourcePrototypeLayoutUuid())) {
+    if (ArrayUtil.contains(layoutUuids,userLayout.getSourcePrototypeLayoutUuid())) {
       LayoutLocalServiceUtil.deleteLayout(userLayout.getGroupId(),privateLayout,userLayout.getLayoutId(),new ServiceContext());
     }
   }

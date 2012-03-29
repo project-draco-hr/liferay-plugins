@@ -13,9 +13,13 @@
       LayoutSetPrototype[] layoutSetPrototypes=LayoutSetPrototypeUtil.getLayoutSetPrototypes(user);
       long[] publicPlids=getUserLayoutPlids(group,false);
       LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,layoutSetPrototypes[0].getUuid());
+      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false);
+      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
       orderLayouts(publicPlids);
       long[] privatePlids=getUserLayoutPlids(group,true);
       LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,layoutSetPrototypes[1].getUuid());
+      layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true);
+      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
       orderLayouts(privatePlids);
     }
   }
