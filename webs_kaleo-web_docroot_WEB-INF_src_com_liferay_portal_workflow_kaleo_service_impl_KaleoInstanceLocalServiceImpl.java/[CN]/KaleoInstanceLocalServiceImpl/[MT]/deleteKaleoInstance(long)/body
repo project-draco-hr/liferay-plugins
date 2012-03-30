@@ -1,12 +1,14 @@
 {
+  KaleoInstance kaleoInstance=null;
   try {
-    kaleoInstancePersistence.remove(kaleoInstanceId);
+    kaleoInstance=kaleoInstancePersistence.remove(kaleoInstanceId);
   }
  catch (  NoSuchInstanceException nsie) {
-    return;
+    return null;
   }
   kaleoInstanceTokenLocalService.deleteKaleoInstanceKaleoInstanceTokens(kaleoInstanceId);
   kaleoLogLocalService.deleteKaleoInstanceKaleoLogs(kaleoInstanceId);
   kaleoTaskInstanceTokenLocalService.deleteKaleoInstanceKaleoTaskInstanceTokens(kaleoInstanceId);
   kaleoTimerInstanceTokenLocalService.deleteKaleoTimerInstanceTokens(kaleoInstanceId);
+  return kaleoInstance;
 }
