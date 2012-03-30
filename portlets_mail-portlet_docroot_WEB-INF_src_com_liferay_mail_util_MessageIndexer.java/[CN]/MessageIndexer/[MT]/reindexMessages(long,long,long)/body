@@ -1,0 +1,17 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(Message.class,PortalClassLoaderUtil.getClassLoader());
+  Property property=PropertyFactoryUtil.forName("messageId");
+  dynamicQuery.add(property.ge(startMessageId));
+  dynamicQuery.add(property.lt(endMessageId));
+  addReindexCriteria(dynamicQuery,companyId);
+  List<Message> messages=MessageLocalServiceUtil.dynamicQuery(dynamicQuery);
+  if (messages.isEmpty()) {
+    return;
+  }
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  Message message : messages) {
+    Document document=getDocument(message);
+    documents.add(document);
+  }
+  SearchEngineUtil.updateDocuments(getSearchEngineId(),companyId,documents);
+}

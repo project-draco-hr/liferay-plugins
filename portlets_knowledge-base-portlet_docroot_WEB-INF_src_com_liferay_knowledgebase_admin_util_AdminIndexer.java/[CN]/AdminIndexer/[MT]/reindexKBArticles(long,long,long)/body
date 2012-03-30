@@ -1,0 +1,17 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KBArticle.class,PortalClassLoaderUtil.getClassLoader());
+  Property property=PropertyFactoryUtil.forName("kbArticleId");
+  dynamicQuery.add(property.ge(startKBArticleId));
+  dynamicQuery.add(property.lt(endKBArticleId));
+  addReindexCriteria(dynamicQuery,companyId);
+  List<KBArticle> kbArticles=KBArticleLocalServiceUtil.dynamicQuery(dynamicQuery);
+  if (kbArticles.isEmpty()) {
+    return;
+  }
+  Collection<Document> documents=new ArrayList<Document>();
+  for (  KBArticle kbArticle : kbArticles) {
+    Document document=getDocument(kbArticle);
+    documents.add(document);
+  }
+  SearchEngineUtil.updateDocuments(getSearchEngineId(),companyId,documents);
+}
