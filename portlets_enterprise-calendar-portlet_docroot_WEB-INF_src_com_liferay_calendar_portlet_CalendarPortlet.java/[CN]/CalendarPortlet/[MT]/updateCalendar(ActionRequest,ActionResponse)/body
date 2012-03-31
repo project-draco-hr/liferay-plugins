@@ -1,0 +1,15 @@
+{
+  long calendarId=ParamUtil.getLong(actionRequest,"calendarId",0);
+  long calendarResourceId=ParamUtil.getLong(actionRequest,"calendarResourceId",0);
+  Map<Locale,String> nameMap=LocalizationUtil.getLocalizationMap(actionRequest,"name");
+  Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(actionRequest,"description");
+  int color=ParamUtil.getInteger(actionRequest,"color",255);
+  boolean defaultCalendar=ParamUtil.getBoolean(actionRequest,"defaultCalendar",false);
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarResource.class.getName(),actionRequest);
+  if (calendarId <= 0) {
+    CalendarServiceUtil.addCalendar(serviceContext.getScopeGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,serviceContext);
+  }
+ else {
+    CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,serviceContext);
+  }
+}

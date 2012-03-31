@@ -1,10 +1,16 @@
 {
   try {
+    Calendar calendar=null;
     CalendarResource calendarResource=null;
+    long calendarId=ParamUtil.getLong(renderRequest,"calendarId");
     long calendarResourceId=ParamUtil.getLong(renderRequest,"calendarResourceId");
+    if (calendarId > 0) {
+      calendar=CalendarServiceUtil.getCalendar(calendarId);
+    }
     if (calendarResourceId > 0) {
       calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
     }
+    renderRequest.setAttribute(WebKeys.CALENDAR,calendar);
     renderRequest.setAttribute(WebKeys.CALENDAR_RESOURCE,calendarResource);
   }
  catch (  Exception e) {
