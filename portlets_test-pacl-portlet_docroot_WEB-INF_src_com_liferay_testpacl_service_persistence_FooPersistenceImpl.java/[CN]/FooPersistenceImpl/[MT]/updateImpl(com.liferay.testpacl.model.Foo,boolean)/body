@@ -1,0 +1,22 @@
+{
+  foo=toUnwrappedModel(foo);
+  boolean isNew=foo.isNew();
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.update(session,foo,merge);
+    foo.setNew(false);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,foo.getPrimaryKey(),foo);
+  return foo;
+}

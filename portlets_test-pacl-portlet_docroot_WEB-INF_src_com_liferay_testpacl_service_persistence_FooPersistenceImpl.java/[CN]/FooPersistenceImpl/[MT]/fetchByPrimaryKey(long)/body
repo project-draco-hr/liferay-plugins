@@ -1,0 +1,28 @@
+{
+  Foo foo=(Foo)EntityCacheUtil.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,fooId);
+  if (foo == _nullFoo) {
+    return null;
+  }
+  if (foo == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      foo=(Foo)session.get(FooImpl.class,Long.valueOf(fooId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (foo != null) {
+        cacheResult(foo);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,fooId,_nullFoo);
+      }
+      closeSession(session);
+    }
+  }
+  return foo;
+}
