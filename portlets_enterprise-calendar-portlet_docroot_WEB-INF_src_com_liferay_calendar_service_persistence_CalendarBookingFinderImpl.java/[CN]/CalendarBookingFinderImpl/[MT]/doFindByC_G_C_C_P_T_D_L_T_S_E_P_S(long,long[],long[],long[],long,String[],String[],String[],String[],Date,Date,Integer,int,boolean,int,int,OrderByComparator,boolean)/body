@@ -1,18 +1,4 @@
 {
-  String[] calendarIdsString=null;
-  if (calendarIds == null) {
-    calendarIdsString=new String[]{null};
-  }
- else {
-    calendarIdsString=ArrayUtil.toStringArray(calendarIds);
-  }
-  String[] calendarResourceIdsString=null;
-  if (calendarResourceIds == null) {
-    calendarResourceIdsString=new String[]{null};
-  }
- else {
-    calendarResourceIdsString=ArrayUtil.toStringArray(calendarResourceIds);
-  }
   titles=CustomSQLUtil.keywords(titles);
   descriptions=CustomSQLUtil.keywords(descriptions,false);
   locations=CustomSQLUtil.keywords(locations);
@@ -27,8 +13,8 @@
       sql=InlineSQLHelperUtil.replacePermissionCheck(sql,CalendarBooking.class.getName(),"CalendarBooking.CalendarBookingId",groupIds);
     }
     sql=StringUtil.replace(sql,"[$GROUP_ID$]",getGroupIds(groupIds));
-    sql=CustomSQLUtil.replaceKeywords(sql,"calendarId",StringPool.EQUAL,false,calendarIdsString);
-    sql=CustomSQLUtil.replaceKeywords(sql,"calendarResourceId",StringPool.EQUAL,false,calendarResourceIdsString);
+    sql=StringUtil.replace(sql,"[$CALENDAR_ID$]",getCalendarIds(calendarIds));
+    sql=StringUtil.replace(sql,"[$CALENDAR_RESOURCE_ID$]",getCalendarResourceIds(calendarResourceIds));
     if (parentCalendarBookingId < 0) {
       sql=StringUtil.replace(sql,"(parentCalendarBookingId = ?) AND",StringPool.BLANK);
     }
@@ -48,8 +34,12 @@
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(companyId);
     qPos.add(groupIds);
-    qPos.add(calendarIdsString,2);
-    qPos.add(calendarResourceIdsString,2);
+    if (calendarIds != null && calendarIds.length > 0) {
+      qPos.add(calendarIds);
+    }
+    if (calendarResourceIds != null && calendarResourceIds.length > 0) {
+      qPos.add(calendarResourceIds);
+    }
     if (parentCalendarBookingId >= 0) {
       qPos.add(parentCalendarBookingId);
     }
