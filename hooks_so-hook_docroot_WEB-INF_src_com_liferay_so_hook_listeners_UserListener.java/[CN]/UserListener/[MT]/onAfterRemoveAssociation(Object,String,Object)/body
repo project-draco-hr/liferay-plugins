@@ -9,9 +9,10 @@
     if (name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
       long userId=(Long)classPK;
       User user=UserLocalServiceUtil.getUser(userId);
-      LayoutSetPrototype[] layoutSetPrototypes=LayoutSetPrototypeUtil.getLayoutSetPrototypes(user);
-      removeUserLayouts(user,false,layoutSetPrototypes[0].getUuid());
-      removeUserLayouts(user,true,layoutSetPrototypes[1].getUuid());
+      LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
+      removeUserLayouts(user,false,publicLayoutSetPrototype.getUuid());
+      LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
+      removeUserLayouts(user,true,privateLayoutSetPrototype.getUuid());
     }
   }
  catch (  Exception e) {
