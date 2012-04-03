@@ -3,17 +3,16 @@
     if (!associationClassName.equals(Role.class.getName())) {
       return;
     }
-    long roleId=(Long)associationClassPK;
-    Role role=RoleLocalServiceUtil.getRole(roleId);
+    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
     String name=role.getName();
-    if (name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
-      long userId=(Long)classPK;
-      User user=UserLocalServiceUtil.getUser(userId);
-      LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
-      removeUserLayouts(user,false,publicLayoutSetPrototype.getUuid());
-      LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
-      removeUserLayouts(user,true,privateLayoutSetPrototype.getUuid());
+    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
+      return;
     }
+    User user=UserLocalServiceUtil.getUser((Long)classPK);
+    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
+    removeUserLayouts(user,false,publicLayoutSetPrototype.getUuid());
+    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
+    removeUserLayouts(user,true,privateLayoutSetPrototype.getUuid());
   }
  catch (  Exception e) {
     throw new ModelListenerException(e);

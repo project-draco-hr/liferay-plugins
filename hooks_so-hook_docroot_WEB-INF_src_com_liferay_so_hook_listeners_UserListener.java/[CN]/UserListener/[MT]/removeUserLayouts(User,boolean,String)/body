@@ -1,25 +1,25 @@
 {
-  Group userGroup=user.getGroup();
-  LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(userGroup.getGroupId(),privateLayout);
+  Group group=user.getGroup();
+  LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
   UnicodeProperties settingsProperties=layoutSet.getSettingsProperties();
   settingsProperties.remove("last-merge-time");
   layoutSet.setSettingsProperties(settingsProperties);
   layoutSet.setLayoutSetPrototypeLinkEnabled(false);
   layoutSet.setLayoutSetPrototypeUuid(StringPool.BLANK);
   LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
-  LayoutSetLocalServiceUtil.updateLookAndFeel(userGroup.getGroupId(),null,null,"",false);
+  LayoutSetLocalServiceUtil.updateLookAndFeel(group.getGroupId(),null,null,StringPool.BLANK,false);
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypeByUuid(layoutSetPrototypeUuid);
-  Group group=layoutSetPrototype.getGroup();
-  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),true);
+  Group layoutSetPrototypeGroup=layoutSetPrototype.getGroup();
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(layoutSetPrototypeGroup.getGroupId(),true);
   String[] layoutUuids=new String[layouts.size()];
   for (int i=0; i < layouts.size(); i++) {
     Layout curLayout=layouts.get(i);
     layoutUuids[i]=curLayout.getUuid();
   }
-  List<Layout> userLayouts=LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(),privateLayout);
-  for (  Layout userLayout : userLayouts) {
-    if (ArrayUtil.contains(layoutUuids,userLayout.getSourcePrototypeLayoutUuid())) {
-      LayoutLocalServiceUtil.deleteLayout(userLayout.getGroupId(),privateLayout,userLayout.getLayoutId(),new ServiceContext());
+  layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
+  for (  Layout layout : layouts) {
+    if (ArrayUtil.contains(layoutUuids,layout.getSourcePrototypeLayoutUuid())) {
+      LayoutLocalServiceUtil.deleteLayout(layout.getGroupId(),privateLayout,layout.getLayoutId(),new ServiceContext());
     }
   }
 }

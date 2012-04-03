@@ -3,27 +3,26 @@
     if (!associationClassName.equals(Role.class.getName())) {
       return;
     }
-    long roleId=(Long)associationClassPK;
-    Role role=RoleLocalServiceUtil.getRole(roleId);
+    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
     String name=role.getName();
-    if (name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
-      long userId=(Long)classPK;
-      User user=UserLocalServiceUtil.getUser(userId);
-      Group group=user.getGroup();
-      LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
-      if (publicLayoutSetPrototype != null) {
-        LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,publicLayoutSetPrototype.getUuid());
-        LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false);
-        PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
-        orderLayouts(getUserLayoutPlids(group,false));
-      }
-      LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
-      if (privateLayoutSetPrototype != null) {
-        LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,privateLayoutSetPrototype.getUuid());
-        LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true);
-        PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
-        orderLayouts(getUserLayoutPlids(group,true));
-      }
+    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
+      return;
+    }
+    User user=UserLocalServiceUtil.getUser((Long)classPK);
+    Group group=user.getGroup();
+    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
+    if (publicLayoutSetPrototype != null) {
+      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,publicLayoutSetPrototype.getUuid());
+      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false);
+      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
+      orderUserLayouts(group,false);
+    }
+    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
+    if (privateLayoutSetPrototype != null) {
+      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,privateLayoutSetPrototype.getUuid());
+      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true);
+      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
+      orderUserLayouts(group,true);
     }
   }
  catch (  Exception e) {
