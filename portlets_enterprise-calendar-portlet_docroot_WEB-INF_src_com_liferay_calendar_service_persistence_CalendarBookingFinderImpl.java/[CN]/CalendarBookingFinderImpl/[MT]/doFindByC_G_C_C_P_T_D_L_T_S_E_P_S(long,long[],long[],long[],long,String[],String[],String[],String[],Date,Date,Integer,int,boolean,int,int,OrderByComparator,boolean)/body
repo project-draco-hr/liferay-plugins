@@ -23,7 +23,7 @@
     sql=CustomSQLUtil.replaceKeywords(sql,"lower(location)",StringPool.LIKE,false,locations);
     sql=CustomSQLUtil.replaceKeywords(sql,"type_",StringPool.LIKE,true,types);
     sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
-    if (priority == null || priority < 0) {
+    if (priority == null) {
       sql=StringUtil.replace(sql,"(priority = ? ) AND","");
     }
     if (status == WorkflowConstants.STATUS_ANY) {
@@ -34,10 +34,10 @@
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(companyId);
     qPos.add(groupIds);
-    if (calendarIds != null && calendarIds.length > 0) {
+    if ((calendarIds != null) && (calendarIds.length > 0)) {
       qPos.add(calendarIds);
     }
-    if (calendarResourceIds != null && calendarResourceIds.length > 0) {
+    if ((calendarResourceIds != null) && (calendarResourceIds.length > 0)) {
       qPos.add(calendarResourceIds);
     }
     if (parentCalendarBookingId >= 0) {
@@ -47,7 +47,7 @@
     qPos.add(descriptions,2);
     qPos.add(locations,2);
     qPos.add(types,2);
-    if (priority != null && priority >= 0) {
+    if (priority != null) {
       qPos.add(priority);
     }
     if (status != WorkflowConstants.STATUS_ANY) {
