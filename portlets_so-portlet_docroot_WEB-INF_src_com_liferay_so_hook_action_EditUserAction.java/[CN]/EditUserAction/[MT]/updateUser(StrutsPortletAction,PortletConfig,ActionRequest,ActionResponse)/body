@@ -1,0 +1,33 @@
+{
+  updateProjectsEntries(actionRequest,actionResponse);
+  DynamicActionRequest dynamicActionRequest=new DynamicActionRequest(actionRequest);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    originalStrutsPortletAction.processAction(portletConfig,dynamicActionRequest,actionResponse);
+    return;
+  }
+  User user=PortalUtil.getSelectedUser(actionRequest);
+  Role role=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+  long[] roleIds=getLongArray(actionRequest,"rolesSearchContainerPrimaryKeys");
+  boolean newSocialOfficeUser=ArrayUtil.contains(roleIds,role.getRoleId());
+  List<Role> roles=user.getRoles();
+  if (newSocialOfficeUser && !roles.contains(role)) {
+    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
+    if (publicLayoutSetPrototype != null) {
+      dynamicActionRequest.setParameter("publicLayoutSetPrototypeId",String.valueOf(publicLayoutSetPrototype.getLayoutSetPrototypeId()));
+      dynamicActionRequest.setParameter("publicLayoutSetPrototypeLinkEnabled",Boolean.TRUE.toString());
+    }
+    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
+    if (privateLayoutSetPrototype != null) {
+      dynamicActionRequest.setParameter("privateLayoutSetPrototypeId",String.valueOf(privateLayoutSetPrototype.getLayoutSetPrototypeId()));
+      dynamicActionRequest.setParameter("privateLayoutSetPrototypeLinkEnabled",Boolean.TRUE.toString());
+    }
+  }
+ else   if (!newSocialOfficeUser && roles.contains(role)) {
+    dynamicActionRequest.setParameter("publicLayoutSetPrototypeId",StringPool.BLANK);
+    dynamicActionRequest.setParameter("publicLayoutSetPrototypeLinkEnabled",Boolean.FALSE.toString());
+    dynamicActionRequest.setParameter("privateLayoutSetPrototypeId",StringPool.BLANK);
+    dynamicActionRequest.setParameter("privateLayoutSetPrototypeLinkEnabled",Boolean.FALSE.toString());
+  }
+  originalStrutsPortletAction.processAction(portletConfig,dynamicActionRequest,actionResponse);
+}
