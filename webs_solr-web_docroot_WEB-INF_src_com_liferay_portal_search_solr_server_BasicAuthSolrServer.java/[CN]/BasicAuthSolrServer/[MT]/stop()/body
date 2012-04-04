@@ -1,19 +1,22 @@
 {
   _stopped=true;
-  int i=0;
-  while ((i=_connectionManager.getConnectionsInPool()) > 0) {
-    if (_log.isDebugEnabled()) {
-      _log.debug("[" + toString() + "] Waiting on "+ i+ " connections...");
+  while (true) {
+    int connectionsInPool=_multiThreadedHttpConnectionManager.getConnectionsInPool();
+    if (connectionsInPool <= 0) {
+      break;
     }
-    _connectionManager.closeIdleConnections(200);
+    if (_log.isDebugEnabled()) {
+      _log.debug(toString() + " waiting on " + connectionsInPool+ " connections");
+    }
+    _multiThreadedHttpConnectionManager.closeIdleConnections(200);
     try {
       Thread.sleep(200);
     }
- catch (    InterruptedException e) {
+ catch (    InterruptedException ie) {
     }
   }
-  _connectionManager.shutdown();
+  _multiThreadedHttpConnectionManager.shutdown();
   if (_log.isDebugEnabled()) {
-    _log.debug("[" + toString() + "] I'm shutdown!");
+    _log.debug(toString() + " is shutdown");
   }
 }
