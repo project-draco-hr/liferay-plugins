@@ -39,5 +39,9 @@
   calendarResource.setActive(active);
   calendarResourcePersistence.update(calendarResource,false);
   resourceLocalService.addModelResources(calendarResource,serviceContext);
+  if (defaultCalendarId <= 0) {
+    Calendar calendar=calendarLocalService.addCalendar(userId,groupId,calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_DEFAULT_COLOR,true,serviceContext);
+    updateDefaultCalendarId(calendarResourceId,calendar.getCalendarId());
+  }
   return calendarResource;
 }

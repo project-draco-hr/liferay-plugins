@@ -14,11 +14,18 @@
   calendar.setCalendarResourceId(calendarResourceId);
   calendar.setNameMap(nameMap);
   calendar.setDescriptionMap(descriptionMap);
+  if (color <= 0) {
+    color=PortletPropsValues.CALENDAR_DEFAULT_COLOR;
+  }
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
   resourceLocalService.addModelResources(calendar,serviceContext);
   if (defaultCalendar) {
+    List<Calendar> resourceCalendars=getResourceCalendars(groupId,calendarResourceId);
+    for (    Calendar resourceCalendar : resourceCalendars) {
+      updateDefaultCalendar(resourceCalendar,calendar.equals(resourceCalendar));
+    }
     calendarResourceLocalService.updateDefaultCalendarId(calendarResourceId,calendarId);
   }
   return calendar;

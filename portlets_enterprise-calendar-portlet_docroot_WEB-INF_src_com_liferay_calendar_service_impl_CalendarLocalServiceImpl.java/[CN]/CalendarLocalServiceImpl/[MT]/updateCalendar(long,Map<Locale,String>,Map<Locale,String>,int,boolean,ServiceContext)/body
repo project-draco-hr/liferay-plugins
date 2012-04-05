@@ -4,10 +4,17 @@
   calendar.setModifiedDate(serviceContext.getModifiedDate(null));
   calendar.setNameMap(nameMap);
   calendar.setDescriptionMap(descriptionMap);
+  if (color <= 0) {
+    color=PortletPropsValues.CALENDAR_DEFAULT_COLOR;
+  }
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
   if (defaultCalendar) {
+    List<Calendar> resourceCalendars=getResourceCalendars(calendar.getGroupId(),calendar.getCalendarResourceId());
+    for (    Calendar resourceCalendar : resourceCalendars) {
+      updateDefaultCalendar(resourceCalendar,calendar.equals(resourceCalendar));
+    }
     calendarResourceLocalService.updateDefaultCalendarId(calendar.getCalendarResourceId(),calendarId);
   }
   resourceLocalService.updateModelResources(calendar,serviceContext);
