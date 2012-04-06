@@ -1,5 +1,8 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
+  if (color <= 0) {
+    color=PortletPropsValues.CALENDAR_COLOR_DEFAULT;
+  }
   Date now=new Date();
   validate(nameMap);
   long calendarId=counterLocalService.increment();
@@ -14,17 +17,14 @@
   calendar.setCalendarResourceId(calendarResourceId);
   calendar.setNameMap(nameMap);
   calendar.setDescriptionMap(descriptionMap);
-  if (color <= 0) {
-    color=PortletPropsValues.CALENDAR_DEFAULT_COLOR;
-  }
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
   resourceLocalService.addModelResources(calendar,serviceContext);
   if (defaultCalendar) {
-    List<Calendar> resourceCalendars=getResourceCalendars(groupId,calendarResourceId);
-    for (    Calendar resourceCalendar : resourceCalendars) {
-      updateDefaultCalendar(resourceCalendar,calendar.equals(resourceCalendar));
+    List<Calendar> calendarResourceCalendars=getCalendarResourceCalendars(groupId,calendarResourceId);
+    for (    Calendar calendarResourceCalendar : calendarResourceCalendars) {
+      updateDefaultCalendar(calendarResourceCalendar,calendar.equals(calendarResourceCalendar));
     }
     calendarResourceLocalService.updateDefaultCalendarId(calendarResourceId,calendarId);
   }
