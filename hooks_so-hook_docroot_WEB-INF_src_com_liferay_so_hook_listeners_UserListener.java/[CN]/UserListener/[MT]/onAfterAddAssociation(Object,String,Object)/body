@@ -13,16 +13,10 @@
     LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
     if (publicLayoutSetPrototype != null) {
       LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,publicLayoutSetPrototype.getUuid());
-      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false);
-      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
-      orderUserLayouts(group,false);
     }
     LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
     if (privateLayoutSetPrototype != null) {
       LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,privateLayoutSetPrototype.getUuid());
-      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true);
-      PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
-      orderUserLayouts(group,true);
     }
   }
  catch (  Exception e) {
