@@ -1,12 +1,13 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),FooLocalService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,FooLocalService.class.getName(),portletClassLoader);
-    _service=new FooLocalServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),FooLocalService.class.getName());
+    if (invokableLocalService instanceof FooLocalService) {
+      _service=(FooLocalService)invokableLocalService;
+    }
+ else {
+      _service=new FooLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(FooLocalServiceUtil.class,"_service");
-    MethodCache.remove(FooLocalService.class);
   }
   return _service;
 }

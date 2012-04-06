@@ -1,22 +1,6 @@
 {
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
-  try {
-    currentThread.setContextClassLoader(_classLoader);
-    try {
-      FooClp newModel=new FooClp();
-      Class<?> oldModelClass=oldModel.getClass();
-      Method method0=oldModelClass.getMethod("getFooId");
-      Long value0=(Long)method0.invoke(oldModel,(Object[])null);
-      newModel.setFooId(value0);
-      return newModel;
-    }
- catch (    Exception e) {
-      _log.error(e,e);
-    }
-  }
-  finally {
-    currentThread.setContextClassLoader(contextClassLoader);
-  }
-  return oldModel;
+  FooClp newModel=new FooClp();
+  newModel.setModelAttributes(oldModel.getModelAttributes());
+  newModel.setFooRemoteModel(oldModel);
+  return newModel;
 }
