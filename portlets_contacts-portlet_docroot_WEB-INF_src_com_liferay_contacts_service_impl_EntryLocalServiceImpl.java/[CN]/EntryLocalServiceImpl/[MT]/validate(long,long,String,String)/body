@@ -1,0 +1,20 @@
+{
+  if (Validator.isNull(fullName)) {
+    throw new ContactFullNameException();
+  }
+  if (Validator.isNull(emailAddress)) {
+    throw new RequiredEntryEmailAddressException();
+  }
+  if (!Validator.isEmailAddress(emailAddress)) {
+    throw new EntryEmailAddressException();
+  }
+  if (entryId > 0) {
+    Entry entry=entryPersistence.findByPrimaryKey(entryId);
+    if (!emailAddress.equalsIgnoreCase(entry.getEmailAddress())) {
+      validateEmailAddress(userId,emailAddress);
+    }
+  }
+ else {
+    validateEmailAddress(userId,emailAddress);
+  }
+}
