@@ -1,0 +1,50 @@
+{
+  fullNames=CustomSQLUtil.keywords(fullNames,true);
+  emailAddresses=CustomSQLUtil.keywords(emailAddresses,true);
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(COUNT_BY_C_U_FN_EA);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(User_.firstName)",StringPool.LIKE,false,fullNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(User_.middleName)",StringPool.LIKE,false,fullNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(User_.lastName)",StringPool.LIKE,false,fullNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(User_.screenName)",StringPool.LIKE,false,fullNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(User_.emailAddress)",StringPool.LIKE,true,emailAddresses);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(Contacts_Entry.fullName)",StringPool.LIKE,false,fullNames);
+    sql=CustomSQLUtil.replaceKeywords(sql,"lower(Contacts_Entry.emailAddress)",StringPool.LIKE,true,emailAddresses);
+    sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar("id",Type.LONG);
+    q.addScalar("name",Type.STRING);
+    q.addScalar("portalUser",Type.INTEGER);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    qPos.add(fullNames,8);
+    qPos.add(emailAddresses,2);
+    qPos.add(userId);
+    qPos.add(fullNames,2);
+    qPos.add(emailAddresses,2);
+    List<BaseModel<?>> models=new ArrayList<BaseModel<?>>();
+    Iterator<Object[]> itr=(Iterator<Object[]>)QueryUtil.iterate(q,getDialect(),start,end);
+    while (itr.hasNext()) {
+      Object[] array=itr.next();
+      long id=(Long)array[0];
+      int portalUser=(Integer)array[2];
+      BaseModel<?> model=null;
+      if (portalUser == 1) {
+        model=UserLocalServiceUtil.getUser(id);
+      }
+ else {
+        model=EntryLocalServiceUtil.getEntry(id);
+      }
+      models.add(model);
+    }
+    return models;
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,16 @@
+{
+  entry=toUnwrappedModel(entry);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,entry);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  clearCache(entry);
+  return entry;
+}

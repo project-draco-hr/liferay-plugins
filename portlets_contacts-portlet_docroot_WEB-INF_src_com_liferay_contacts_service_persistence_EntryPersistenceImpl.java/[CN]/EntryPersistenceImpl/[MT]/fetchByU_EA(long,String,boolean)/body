@@ -1,0 +1,72 @@
+{
+  Object[] finderArgs=new Object[]{userId,emailAddress};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,this);
+  }
+  if (result instanceof Entry) {
+    Entry entry=(Entry)result;
+    if ((userId != entry.getUserId()) || !Validator.equals(emailAddress,entry.getEmailAddress())) {
+      result=null;
+    }
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_SELECT_ENTRY_WHERE);
+    query.append(_FINDER_COLUMN_U_EA_USERID_2);
+    if (emailAddress == null) {
+      query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_1);
+    }
+ else {
+      if (emailAddress.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_2);
+      }
+    }
+    query.append(EntryModelImpl.ORDER_BY_JPQL);
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(userId);
+      if (emailAddress != null) {
+        qPos.add(emailAddress);
+      }
+      List<Entry> list=q.list();
+      result=list;
+      Entry entry=null;
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,list);
+      }
+ else {
+        entry=list.get(0);
+        cacheResult(entry);
+        if ((entry.getUserId() != userId) || (entry.getEmailAddress() == null) || !entry.getEmailAddress().equals(emailAddress)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,entry);
+        }
+      }
+      return entry;
+    }
+ catch (    Exception e) {
+      throw processException(e);
+    }
+ finally {
+      if (result == null) {
+        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs);
+      }
+      closeSession(session);
+    }
+  }
+ else {
+    if (result instanceof List<?>) {
+      return null;
+    }
+ else {
+      return (Entry)result;
+    }
+  }
+}
