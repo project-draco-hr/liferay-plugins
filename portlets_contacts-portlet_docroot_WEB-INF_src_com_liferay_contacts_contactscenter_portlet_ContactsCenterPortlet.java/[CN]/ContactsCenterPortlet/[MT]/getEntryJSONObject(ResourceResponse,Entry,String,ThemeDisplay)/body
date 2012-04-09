@@ -1,0 +1,17 @@
+{
+  JSONObject contactJSONObject=JSONFactoryUtil.createJSONObject();
+  contactJSONObject.put("entryId",String.valueOf(entry.getEntryId()));
+  contactJSONObject.put("emailAddress",entry.getEmailAddress());
+  contactJSONObject.put("fullName",entry.getFullName());
+  contactJSONObject.put("registeredUser",false);
+  contactJSONObject.put("portraitURL",themeDisplay.getPathImage() + "/user_male_portrait?img_id=0");
+  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
+  PortletURL viewSummaryURL=liferayPortletResponse.createRenderURL();
+  viewSummaryURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+  viewSummaryURL.setParameter("mvcPath","/contacts_center/view_resources.jsp");
+  viewSummaryURL.setParameter("redirect",redirect);
+  viewSummaryURL.setParameter("entryId",String.valueOf(entry.getEntryId()));
+  viewSummaryURL.setParameter("registeredUser",Boolean.FALSE.toString());
+  contactJSONObject.put("viewSummaryURL",viewSummaryURL.toString());
+  return contactJSONObject;
+}

@@ -4,6 +4,7 @@
   int socialRelationType=ParamUtil.getInteger(resourceRequest,"socialRelationType");
   int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
+  String redirect=ParamUtil.getString(resourceRequest,"redirect");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
   optionsJSONObject.put("end",end);
@@ -11,40 +12,49 @@
   optionsJSONObject.put("socialRelationType",socialRelationType);
   optionsJSONObject.put("start",start);
   jsonObject.put("options",optionsJSONObject);
-  Group group=themeDisplay.getScopeGroup();
-  Layout layout=themeDisplay.getLayout();
-  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
-  if (group.isUser() && layout.isPublicLayout()) {
-    params.put("socialRelation",new Long[]{group.getClassPK()});
-  }
- else   if (socialRelationType != 0) {
-    params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
-  }
   PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
   String portletName=portletDisplay.getPortletName();
-  if (portletName.equals(PortletKeys.MEMBERS)) {
-    params.put("usersGroups",group.getGroupId());
-  }
-  List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
-  int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
-  jsonObject.put("count",usersCount);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  for (  User user : users) {
-    JSONObject userJSONObject=JSONFactoryUtil.createJSONObject();
-    userJSONObject.put("emailAddress",user.getEmailAddress());
-    userJSONObject.put("firstName",user.getFirstName());
-    userJSONObject.put("fullName",user.getFullName());
-    userJSONObject.put("jobTitle",user.getJobTitle());
-    userJSONObject.put("lastName",user.getLastName());
-    userJSONObject.put("portraitURL",user.getPortraitURL(themeDisplay));
-    userJSONObject.put("userId",String.valueOf(user.getUserId()));
-    LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
-    PortletURL viewSummaryURL=liferayPortletResponse.createRenderURL();
-    viewSummaryURL.setWindowState(LiferayWindowState.EXCLUSIVE);
-    viewSummaryURL.setParameter("mvcPath","/contacts_center/view_resources.jsp");
-    viewSummaryURL.setParameter("userId",String.valueOf(user.getUserId()));
-    userJSONObject.put("viewSummaryURL",viewSummaryURL.toString());
-    jsonArray.put(userJSONObject);
+  if ((socialRelationType == 0) && !portletName.equals(PortletKeys.MEMBERS)) {
+    List<BaseModel<?>> contacts=EntryLocalServiceUtil.searchUsersAndContacts(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,start,end);
+    for (    BaseModel<?> contact : contacts) {
+      JSONObject contactJSONObject=null;
+      if (contact instanceof User) {
+        contactJSONObject=getUserJSONObject(resourceResponse,(User)contact,themeDisplay);
+      }
+ else {
+        contactJSONObject=getEntryJSONObject(resourceResponse,(Entry)contact,redirect,themeDisplay);
+      }
+      jsonArray.put(contactJSONObject);
+    }
+  }
+ else   if ((socialRelationType == SocialRelationConstants.TYPE_MY_CONTACTS) && !portletName.equals(PortletKeys.MEMBERS)) {
+    List<Entry> entries=EntryLocalServiceUtil.search(themeDisplay.getUserId(),keywords,start,end);
+    for (    Entry entry : entries) {
+      JSONObject contactJSONObject=getEntryJSONObject(resourceResponse,entry,redirect,themeDisplay);
+      jsonArray.put(contactJSONObject);
+    }
+  }
+ else {
+    Group group=themeDisplay.getScopeGroup();
+    Layout layout=themeDisplay.getLayout();
+    LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+    if (group.isUser() && layout.isPublicLayout()) {
+      params.put("socialRelation",new Long[]{group.getClassPK()});
+    }
+ else     if (socialRelationType != 0) {
+      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),new Long(socialRelationType)});
+    }
+    if (portletName.equals(PortletKeys.MEMBERS)) {
+      params.put("usersGroups",group.getGroupId());
+    }
+    List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
+    int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
+    jsonObject.put("count",usersCount);
+    for (    User user : users) {
+      JSONObject userJSONObject=getUserJSONObject(resourceResponse,user,themeDisplay);
+      jsonArray.put(userJSONObject);
+    }
   }
   jsonObject.put("users",jsonArray);
   writeJSON(resourceRequest,resourceResponse,jsonObject);
