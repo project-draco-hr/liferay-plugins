@@ -10,17 +10,17 @@
   }
   _bibles=new LinkedHashMap<String,Bible>();
   _verses=new ArrayList<String>();
-  Element root=doc.getRootElement();
-  Iterator<Element> itr=root.element("bibles").elements("bible").iterator();
-  while (itr.hasNext()) {
-    Element bible=itr.next();
-    _bibles.put(bible.attributeValue("language"),new Bible(bible.attributeValue("language"),bible.attributeValue("language-name"),bible.attributeValue("version-id")));
+  Element rootElement=doc.getRootElement();
+  Element biblesElement=rootElement.element("bibles");
+  List<Element> bibleElements=biblesElement.elements("bible");
+  for (  Element bibleElement : bibleElements) {
+    _bibles.put(bibleElement.attributeValue("language"),new Bible(bibleElement.attributeValue("language"),bibleElement.attributeValue("language-name"),bibleElement.attributeValue("version-id")));
   }
   _bibles=Collections.unmodifiableMap(_bibles);
-  itr=root.element("verses").elements("verse").iterator();
-  while (itr.hasNext()) {
-    Element verse=itr.next();
-    _verses.add(verse.attributeValue("location"));
+  Element versesElement=rootElement.element("verses");
+  List<Element> verseElements=versesElement.elements("verse");
+  for (  Element verseElement : verseElements) {
+    _verses.add(verseElement.attributeValue("location"));
   }
   _verses=new UnmodifiableList<String>(_verses);
 }

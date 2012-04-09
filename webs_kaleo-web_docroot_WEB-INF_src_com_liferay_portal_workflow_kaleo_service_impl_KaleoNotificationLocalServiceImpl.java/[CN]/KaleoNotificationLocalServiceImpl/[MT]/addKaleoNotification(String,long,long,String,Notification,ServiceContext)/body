@@ -19,16 +19,13 @@
   kaleoNotification.setTemplateLanguage(notification.getTemplateLanguage().getValue());
   Set<NotificationType> notificationTypes=notification.getNotificationTypes();
   if (!notificationTypes.isEmpty()) {
-    StringBundler bundler=new StringBundler(notificationTypes.size() * 2);
-    Iterator<NotificationType> itr=notificationTypes.iterator();
-    while (itr.hasNext()) {
-      NotificationType notificationType=itr.next();
-      bundler.append(notificationType.getValue());
-      if (itr.hasNext()) {
-        bundler.append(StringPool.COMMA);
-      }
+    StringBundler sb=new StringBundler(notificationTypes.size() * 2);
+    for (    NotificationType notificationType : notificationTypes) {
+      sb.append(notificationType.getValue());
+      sb.append(StringPool.COMMA);
     }
-    kaleoNotification.setNotificationTypes(bundler.toString());
+    sb.setIndex(sb.index() - 1);
+    kaleoNotification.setNotificationTypes(sb.toString());
   }
   kaleoNotificationPersistence.update(kaleoNotification,false);
   Set<Recipient> recipients=notification.getRecipients();

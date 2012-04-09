@@ -18,14 +18,14 @@
     long startRevision=svnRepository.getRevisionNumber() + 1;
     long endRevision=-1;
     Collection<SVNLogEntry> svnLogEntries=repository.log(null,null,startRevision,endRevision,false,true);
-    Iterator<SVNLogEntry> itr=svnLogEntries.iterator();
-    while (itr.hasNext()) {
-      SVNLogEntry svnLogEntry=itr.next();
-      svnRevisionLocalService.addSVNRevision(svnLogEntry.getAuthor(),svnLogEntry.getDate(),svnRepository.getSvnRepositoryId(),svnLogEntry.getRevision(),svnLogEntry.getMessage());
-      if (!itr.hasNext()) {
-        svnRepository.setRevisionNumber(svnLogEntry.getRevision());
-        svnRepositoryPersistence.update(svnRepository,false);
+    if (!svnLogEntries.isEmpty()) {
+      SVNLogEntry lastSvnLogEntry=null;
+      for (      SVNLogEntry svnLogEntry : svnLogEntries) {
+        svnRevisionLocalService.addSVNRevision(svnLogEntry.getAuthor(),svnLogEntry.getDate(),svnRepository.getSvnRepositoryId(),svnLogEntry.getRevision(),svnLogEntry.getMessage());
+        lastSvnLogEntry=svnLogEntry;
       }
+      svnRepository.setRevisionNumber(lastSvnLogEntry.getRevision());
+      svnRepositoryPersistence.update(svnRepository,false);
     }
   }
  catch (  SVNException svne) {
