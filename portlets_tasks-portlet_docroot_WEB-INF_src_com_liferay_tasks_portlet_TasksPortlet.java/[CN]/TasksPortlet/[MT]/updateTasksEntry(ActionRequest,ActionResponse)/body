@@ -18,16 +18,23 @@
   int status=ParamUtil.getInteger(actionRequest,"status");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(TasksEntry.class.getName(),actionRequest);
   TasksEntry taskEntry=null;
-  if (tasksEntryId <= 0) {
-    taskEntry=TasksEntryServiceUtil.addTasksEntry(title,priority,assigneeUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,serviceContext);
-  }
+  try {
+    if (tasksEntryId <= 0) {
+      taskEntry=TasksEntryServiceUtil.addTasksEntry(title,priority,assigneeUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,serviceContext);
+    }
  else {
-    taskEntry=TasksEntryServiceUtil.updateTasksEntry(tasksEntryId,title,priority,assigneeUserId,resolverUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,status,serviceContext);
+      taskEntry=TasksEntryServiceUtil.updateTasksEntry(tasksEntryId,title,priority,assigneeUserId,resolverUserId,dueDateMonth,dueDateDay,dueDateYear,dueDateHour,dueDateMinute,neverDue,status,serviceContext);
+    }
+    Layout layout=themeDisplay.getLayout();
+    PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.TASKS,layout.getPlid(),PortletRequest.RENDER_PHASE);
+    portletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+    portletURL.setParameter("mvcPath","/tasks/view_task.jsp");
+    portletURL.setParameter("tasksEntryId",String.valueOf(taskEntry.getTasksEntryId()));
+    actionResponse.sendRedirect(portletURL.toString());
   }
-  Layout layout=themeDisplay.getLayout();
-  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.TASKS,layout.getPlid(),PortletRequest.RENDER_PHASE);
-  portletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
-  portletURL.setParameter("mvcPath","/tasks/view_task.jsp");
-  portletURL.setParameter("tasksEntryId",String.valueOf(taskEntry.getTasksEntryId()));
-  actionResponse.sendRedirect(portletURL.toString());
+ catch (  AssetTagException ate) {
+    actionResponse.setRenderParameter("mvcPath","/tasks/edit_task.jsp");
+    actionResponse.setRenderParameters(actionRequest.getParameterMap());
+    SessionErrors.add(actionRequest,ate.getClass().getName(),ate);
+  }
 }
