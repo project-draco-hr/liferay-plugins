@@ -1,7 +1,8 @@
 {
+  Object returnObj=null;
   MethodHandler methodHandler=new MethodHandler(_deleteEntryMethodKey3,ClpSerializer.translateInput(entry));
   try {
-    _classLoaderProxy.invoke(methodHandler);
+    returnObj=_classLoaderProxy.invoke(methodHandler);
   }
  catch (  Throwable t) {
     if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
@@ -14,4 +15,5 @@
       throw new RuntimeException(t.getClass().getName() + " is not a valid exception");
     }
   }
+  return (com.liferay.contacts.model.Entry)ClpSerializer.translateOutput(returnObj);
 }
