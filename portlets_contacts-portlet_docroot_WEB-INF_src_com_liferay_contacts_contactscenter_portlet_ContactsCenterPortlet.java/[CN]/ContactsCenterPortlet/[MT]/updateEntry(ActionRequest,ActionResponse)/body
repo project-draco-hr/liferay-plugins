@@ -1,10 +1,9 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long entryId=ParamUtil.getLong(actionRequest,"entryId");
-  String emailAddress=ParamUtil.getString(actionRequest,"emailAddress");
   String fullName=ParamUtil.getString(actionRequest,"fullName");
+  String emailAddress=ParamUtil.getString(actionRequest,"emailAddress");
   String comments=ParamUtil.getString(actionRequest,"comments");
-  PortletConfig portletConfig=(PortletConfig)actionRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   try {
     Entry entry=null;
@@ -19,8 +18,7 @@
     }
     jsonObject.put("entryId",entry.getEntryId());
     jsonObject.put("success",true);
-    message=LanguageUtil.get(portletConfig,themeDisplay.getLocale(),message);
-    SessionMessages.add(actionRequest,"request_processed",message);
+    SessionMessages.add(actionRequest,"request_processed",themeDisplay.translate(message));
   }
  catch (  Exception e) {
     String message=null;
@@ -36,8 +34,7 @@
  else {
       message="an-error-occurred-while-processing-the-requested-resource";
     }
-    message=LanguageUtil.get(portletConfig,themeDisplay.getLocale(),message);
-    jsonObject.put("message",message);
+    jsonObject.put("message",themeDisplay.translate(message));
     jsonObject.put("success",false);
   }
   writeJSON(actionRequest,actionResponse,jsonObject);
