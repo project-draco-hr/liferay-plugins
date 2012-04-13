@@ -43,13 +43,13 @@
       params.put("socialRelation",new Long[]{group.getClassPK()});
     }
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_TYPE)) {
-      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),ContactsConstants.getSocialRelationType(filterBy)});
+      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),ContactsUtil.getSocialRelationType(filterBy)});
     }
     if (portletName.equals(PortletKeys.MEMBERS)) {
       params.put("usersGroups",group.getGroupId());
     }
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_GROUP)) {
-      params.put("usersGroups",ContactsConstants.getGroupId(filterBy));
+      params.put("usersGroups",ContactsUtil.getGroupId(filterBy));
     }
     List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
     int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
