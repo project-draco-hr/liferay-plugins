@@ -4,17 +4,7 @@
   validate(recordSetId,actionRequest);
   DDLRecordSet recordSet=DDLRecordSetLocalServiceUtil.getRecordSet(recordSetId);
   DDMStructure ddmStructure=recordSet.getDDMStructure();
-  Set<String> fieldNames=ddmStructure.getFieldNames();
-  Fields fields=new Fields();
-  for (  String fieldName : fieldNames) {
-    Field field=new Field();
-    field.setName(fieldName);
-    String fieldDataType=ddmStructure.getFieldDataType(fieldName);
-    String fieldValue=ParamUtil.getString(actionRequest,fieldName);
-    Serializable fieldValueSerializable=FieldConstants.getSerializable(fieldDataType,fieldValue);
-    field.setValue(fieldValueSerializable);
-    fields.put(field);
-  }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(DDLRecord.class.getName(),actionRequest);
+  Fields fields=DDMUtil.getFields(ddmStructure.getStructureId(),serviceContext);
   DDLRecordServiceUtil.addRecord(themeDisplay.getScopeGroupId(),recordSetId,0,fields,serviceContext);
 }
