@@ -1,5 +1,10 @@
 {
   KBComment kbComment=KBCommentLocalServiceUtil.getKBComment(activity.getClassPK());
+  String groupName=StringPool.BLANK;
+  if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+    groupName=getGroupName(activity.getGroupId(),themeDisplay);
+  }
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   KBArticle kbArticle=null;
   KBTemplate kbTemplate=null;
   String className=kbComment.getClassName();
@@ -13,21 +18,32 @@
   if (kbArticle != null) {
     link=KnowledgeBaseUtil.getKBArticleURL(themeDisplay.getPlid(),kbArticle.getResourcePrimKey(),kbArticle.getStatus(),themeDisplay.getPortalURL(),false);
   }
-  String key=StringPool.BLANK;
+  String titlePattern=null;
   if (activity.getType() == AdminActivityKeys.ADD_KB_COMMENT) {
-    key="activity-knowledge-base-admin-add-kb-comment";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-add-kb-comment";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-add-kb-comment-in";
+    }
   }
  else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_COMMENT) {
-    key="activity-knowledge-base-admin-update-kb-comment";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-update-kb-comment";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-update-kb-comment-in";
+    }
   }
-  String content=StringPool.BLANK;
+  String entityTitle=null;
   if (kbArticle != null) {
-    content=kbArticle.getTitle();
+    entityTitle=wrapLink(link,HtmlUtil.escape(cleanContent(kbArticle.getTitle())));
   }
  else   if (kbTemplate != null) {
-    content=kbTemplate.getTitle();
+    entityTitle=HtmlUtil.escape(cleanContent(kbTemplate.getTitle()));
   }
-  String title=getTitle(activity,key,content,link,themeDisplay);
+  Object[] titleArguments={creatorUserName,entityTitle,groupName};
+  String title=themeDisplay.translate(titlePattern,titleArguments);
   String body=StringPool.BLANK;
   return new SocialActivityFeedEntry(link,title,body);
 }

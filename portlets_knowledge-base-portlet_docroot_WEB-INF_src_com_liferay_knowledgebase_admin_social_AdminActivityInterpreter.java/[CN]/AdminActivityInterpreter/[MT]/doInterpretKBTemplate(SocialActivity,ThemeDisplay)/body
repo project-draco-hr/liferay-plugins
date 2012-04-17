@@ -4,15 +4,32 @@
   if (!KBTemplatePermission.contains(permissionChecker,kbTemplate,ActionKeys.VIEW)) {
     return null;
   }
+  String groupName=StringPool.BLANK;
+  if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+    groupName=getGroupName(activity.getGroupId(),themeDisplay);
+  }
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   String link=StringPool.BLANK;
-  String key=StringPool.BLANK;
+  String titlePattern=null;
   if (activity.getType() == AdminActivityKeys.ADD_KB_TEMPLATE) {
-    key="activity-knowledge-base-admin-add-kb-template";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-add-kb-template";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-add-kb-template-in";
+    }
   }
  else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_TEMPLATE) {
-    key="activity-knowledge-base-admin-update-kb-template";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-update-kb-template";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-update-kb-template-in";
+    }
   }
-  String title=getTitle(activity,key,kbTemplate.getTitle(),link,themeDisplay);
+  String articleTitle=HtmlUtil.escape(cleanContent(kbTemplate.getTitle()));
+  Object[] titleArguments={creatorUserName,articleTitle,groupName};
+  String title=themeDisplay.translate(titlePattern,titleArguments);
   String body=StringPool.BLANK;
   return new SocialActivityFeedEntry(link,title,body);
 }

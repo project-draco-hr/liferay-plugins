@@ -4,18 +4,40 @@
   if (!KBArticlePermission.contains(permissionChecker,kbArticle,ActionKeys.VIEW)) {
     return null;
   }
+  String groupName=StringPool.BLANK;
+  if (activity.getGroupId() != themeDisplay.getScopeGroupId()) {
+    groupName=getGroupName(activity.getGroupId(),themeDisplay);
+  }
+  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
   String link=KnowledgeBaseUtil.getKBArticleURL(themeDisplay.getPlid(),kbArticle.getResourcePrimKey(),kbArticle.getStatus(),themeDisplay.getPortalURL(),false);
-  String key=StringPool.BLANK;
+  String titlePattern=null;
   if (activity.getType() == AdminActivityKeys.ADD_KB_ARTICLE) {
-    key="activity-knowledge-base-admin-add-kb-article";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-add-kb-article";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-add-kb-article-in";
+    }
   }
  else   if (activity.getType() == AdminActivityKeys.MOVE_KB_ARTICLE) {
-    key="activity-knowledge-base-admin-move-kb-article";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-move-kb-article";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-move-kb-article-in";
+    }
   }
  else   if (activity.getType() == AdminActivityKeys.UPDATE_KB_ARTICLE) {
-    key="activity-knowledge-base-admin-update-kb-article";
+    if (Validator.isNull(groupName)) {
+      titlePattern="activity-knowledge-base-admin-update-kb-article";
+    }
+ else {
+      titlePattern="activity-knowledge-base-admin-update-kb-article-in";
+    }
   }
-  String title=getTitle(activity,key,kbArticle.getTitle(),link,themeDisplay);
+  String articleTitle=wrapLink(link,HtmlUtil.escape(cleanContent(kbArticle.getTitle())));
+  Object[] titleArguments={creatorUserName,articleTitle,groupName};
+  String title=themeDisplay.translate(titlePattern,titleArguments);
   String body=StringPool.BLANK;
   return new SocialActivityFeedEntry(link,title,body);
 }
