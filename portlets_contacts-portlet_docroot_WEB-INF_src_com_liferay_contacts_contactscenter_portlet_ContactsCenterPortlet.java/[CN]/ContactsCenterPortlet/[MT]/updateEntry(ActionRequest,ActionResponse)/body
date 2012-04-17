@@ -1,13 +1,14 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long entryId=ParamUtil.getLong(actionRequest,"entryId");
-  String fullName=ParamUtil.getString(actionRequest,"fullName");
-  String emailAddress=ParamUtil.getString(actionRequest,"emailAddress");
   String comments=ParamUtil.getString(actionRequest,"comments");
+  String emailAddress=ParamUtil.getString(actionRequest,"emailAddress");
+  String fullName=ParamUtil.getString(actionRequest,"fullName");
+  String redirect=ParamUtil.getString(actionRequest,"redirect");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  String message=null;
   try {
     Entry entry=null;
-    String message=StringPool.BLANK;
     if (entryId > 0) {
       entry=EntryLocalServiceUtil.updateEntry(entryId,fullName,emailAddress,comments);
       message="you-have-successfully-updated-the-contact";
@@ -16,12 +17,16 @@
       entry=EntryLocalServiceUtil.addEntry(themeDisplay.getUserId(),fullName,emailAddress,comments);
       message="you-have-successfully-added-a-new-contact";
     }
-    jsonObject.put("entryId",entry.getEntryId());
+    jsonObject.put("contact",getEntryJSONObject((LiferayPortletResponse)actionResponse,entry,redirect,themeDisplay));
+    String keywords=ParamUtil.getString(actionRequest,"keywords");
+    String filterBy=ParamUtil.getString(actionRequest,"filterBy");
+    int start=ParamUtil.getInteger(actionRequest,"start");
+    int end=ParamUtil.getInteger(actionRequest,"end");
+    JSONObject jsonContactListJSON=getContactListJSON(filterBy,keywords,redirect,themeDisplay,(LiferayPortletResponse)actionResponse,start,end);
+    jsonObject.put("contactList",jsonContactListJSON);
     jsonObject.put("success",true);
-    SessionMessages.add(actionRequest,"request_processed",themeDisplay.translate(message));
   }
  catch (  Exception e) {
-    String message=null;
     if (e instanceof EntryEmailAddressException) {
       message="please-enter-a-valid-email-address";
     }
@@ -34,8 +39,9 @@
  else {
       message="an-error-occurred-while-processing-the-requested-resource";
     }
-    jsonObject.put("message",themeDisplay.translate(message));
     jsonObject.put("success",false);
   }
+  PortletConfig portletConfig=(PortletConfig)actionRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
+  jsonObject.put("message",LanguageUtil.get(portletConfig,themeDisplay.getLocale(),message));
   writeJSON(actionRequest,actionResponse,jsonObject);
 }

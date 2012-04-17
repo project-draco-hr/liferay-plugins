@@ -1,7 +1,20 @@
 {
   try {
     String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
-    if (actionName.equals("deleteEntry")) {
+    boolean jsonFormat=ParamUtil.getBoolean(actionRequest,"jsonFormat");
+    if (actionName.equals("addSocialRelation") && jsonFormat) {
+      addSocialRelation(actionRequest,actionResponse);
+      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
+    }
+ else     if (actionName.equals("deleteSocialRelation") && jsonFormat) {
+      deleteSocialRelation(actionRequest,actionResponse);
+      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
+    }
+ else     if (actionName.equals("requestSocialRelation") && jsonFormat) {
+      requestSocialRelation(actionRequest,actionResponse);
+      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
+    }
+ else     if (actionName.equals("deleteEntry")) {
       deleteEntry(actionRequest,actionResponse);
     }
  else     if (actionName.equals("updateEntry")) {

@@ -5,60 +5,6 @@
   String keywords=ParamUtil.getString(resourceRequest,"keywords");
   int start=ParamUtil.getInteger(resourceRequest,"start");
   int end=ParamUtil.getInteger(resourceRequest,"end");
-  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  JSONObject optionsJSONObject=JSONFactoryUtil.createJSONObject();
-  optionsJSONObject.put("end",end);
-  optionsJSONObject.put("filterBy",filterBy);
-  optionsJSONObject.put("keywords",keywords);
-  optionsJSONObject.put("start",start);
-  jsonObject.put("options",optionsJSONObject);
-  PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
-  String portletName=portletDisplay.getPortletName();
-  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  if (filterBy.equals(ContactsConstants.FILTER_BY_DEFAULT) && !portletName.equals(PortletKeys.MEMBERS)) {
-    List<BaseModel<?>> contacts=EntryLocalServiceUtil.searchUsersAndContacts(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,start,end);
-    for (    BaseModel<?> contact : contacts) {
-      JSONObject contactJSONObject=null;
-      if (contact instanceof User) {
-        contactJSONObject=getUserJSONObject(resourceResponse,(User)contact,themeDisplay);
-      }
- else {
-        contactJSONObject=getEntryJSONObject(resourceResponse,(Entry)contact,redirect,themeDisplay);
-      }
-      jsonArray.put(contactJSONObject);
-    }
-  }
- else   if (filterBy.equals(ContactsConstants.FILTER_BY_TYPE_MY_CONTACTS) && !portletName.equals(PortletKeys.MEMBERS)) {
-    List<Entry> entries=EntryLocalServiceUtil.search(themeDisplay.getUserId(),keywords,start,end);
-    for (    Entry entry : entries) {
-      JSONObject contactJSONObject=getEntryJSONObject(resourceResponse,entry,redirect,themeDisplay);
-      jsonArray.put(contactJSONObject);
-    }
-  }
- else {
-    Group group=themeDisplay.getScopeGroup();
-    Layout layout=themeDisplay.getLayout();
-    LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
-    if (group.isUser() && layout.isPublicLayout()) {
-      params.put("socialRelation",new Long[]{group.getClassPK()});
-    }
- else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_TYPE)) {
-      params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),ContactsUtil.getSocialRelationType(filterBy)});
-    }
-    if (portletName.equals(PortletKeys.MEMBERS)) {
-      params.put("usersGroups",group.getGroupId());
-    }
- else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_GROUP)) {
-      params.put("usersGroups",ContactsUtil.getGroupId(filterBy));
-    }
-    List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
-    int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
-    jsonObject.put("count",usersCount);
-    for (    User user : users) {
-      JSONObject userJSONObject=getUserJSONObject(resourceResponse,user,themeDisplay);
-      jsonArray.put(userJSONObject);
-    }
-  }
-  jsonObject.put("users",jsonArray);
-  writeJSON(resourceRequest,resourceResponse,jsonObject);
+  JSONObject jsonContactListJSON=getContactListJSON(filterBy,keywords,redirect,themeDisplay,(LiferayPortletResponse)resourceResponse,start,end);
+  writeJSON(resourceRequest,resourceResponse,jsonContactListJSON);
 }

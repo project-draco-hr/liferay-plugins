@@ -1,0 +1,25 @@
+{
+  int type=ParamUtil.getInteger(actionRequest,"type");
+  String messageType=StringPool.BLANK;
+  if (type == SocialRelationConstants.TYPE_BI_CONNECTION) {
+    messageType="connection";
+  }
+ else   if (type == SocialRelationConstants.TYPE_UNI_FOLLOWER) {
+    messageType="follower";
+  }
+ else   if (type == SocialRelationConstants.TYPE_UNI_ENEMY) {
+    messageType="block";
+  }
+  String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
+  String messageAction=StringPool.BLANK;
+  if (actionName.equals("addSocialRelation")) {
+    messageAction="added";
+  }
+ else   if (actionName.equals("deleteSocialRelation")) {
+    messageAction="deleted";
+  }
+ else   if (actionName.equals("requestSocialRelation")) {
+    messageAction="requested";
+  }
+  return messageAction + StringPool.DASH + messageType;
+}

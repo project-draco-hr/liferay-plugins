@@ -66,7 +66,8 @@
       message="please-enter-a-valid-url";
     }
     ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    jsonObject.put("message",themeDisplay.translate(message));
+    PortletConfig portletConfig=(PortletConfig)actionRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
+    jsonObject.put("message",LanguageUtil.get(portletConfig,themeDisplay.getLocale(),message));
     jsonObject.put("success",false);
   }
   writeJSON(actionRequest,actionResponse,jsonObject);
