@@ -2,17 +2,18 @@
   try {
     String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
     boolean jsonFormat=ParamUtil.getBoolean(actionRequest,"jsonFormat");
-    if (actionName.equals("addSocialRelation") && jsonFormat) {
-      addSocialRelation(actionRequest,actionResponse);
-      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
-    }
- else     if (actionName.equals("deleteSocialRelation") && jsonFormat) {
-      deleteSocialRelation(actionRequest,actionResponse);
-      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
-    }
- else     if (actionName.equals("requestSocialRelation") && jsonFormat) {
-      requestSocialRelation(actionRequest,actionResponse);
-      writeObjectContactsJSON(actionRequest,actionResponse,getRelationMessage(actionRequest));
+    if (jsonFormat) {
+      if (actionName.equals("addSocialRelation")) {
+        addSocialRelation(actionRequest,actionResponse);
+      }
+ else       if (actionName.equals("deleteSocialRelation")) {
+        deleteSocialRelation(actionRequest,actionResponse);
+      }
+ else       if (actionName.equals("requestSocialRelation")) {
+        requestSocialRelation(actionRequest,actionResponse);
+      }
+      JSONObject jsonObject=getContactsDisplayJSONObject(actionRequest,actionResponse);
+      writeJSON(actionRequest,actionResponse,jsonObject);
     }
  else     if (actionName.equals("deleteEntry")) {
       deleteEntry(actionRequest,actionResponse);
