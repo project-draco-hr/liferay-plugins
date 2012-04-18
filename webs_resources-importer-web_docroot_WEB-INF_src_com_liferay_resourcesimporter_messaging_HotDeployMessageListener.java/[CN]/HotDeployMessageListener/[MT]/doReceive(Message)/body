@@ -22,16 +22,23 @@
       }
       continue;
     }
-    Map<Locale,String> layoutSetPrototypeNameMap=new HashMap<Locale,String>();
-    Locale locale=LocaleUtil.getDefault();
-    layoutSetPrototypeNameMap.put(locale,layoutSetPrototypeName);
-    if (larFile.exists()) {
-      LARImporter larImporter=getLARImporter();
-      larImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,larFile);
-    }
+    long companyId=CompanyThreadLocal.getCompanyId();
+    try {
+      CompanyThreadLocal.setCompanyId(company.getCompanyId());
+      Map<Locale,String> layoutSetPrototypeNameMap=new HashMap<Locale,String>();
+      Locale locale=LocaleUtil.getDefault();
+      layoutSetPrototypeNameMap.put(locale,layoutSetPrototypeName);
+      if (larFile.exists()) {
+        LARImporter larImporter=getLARImporter();
+        larImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,larFile);
+      }
  else {
-      FileSystemImporter fileSystemImporter=getFileSystemImporter();
-      fileSystemImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,resourcesDir);
+        FileSystemImporter fileSystemImporter=getFileSystemImporter();
+        fileSystemImporter.importResources(company.getCompanyId(),layoutSetPrototypeNameMap,resourcesDir);
+      }
+    }
+  finally {
+      CompanyThreadLocal.setCompanyId(companyId);
     }
   }
 }
