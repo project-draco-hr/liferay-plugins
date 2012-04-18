@@ -9,11 +9,7 @@
     if (contextClassLoader != portalClassLoader) {
       currentThread.setContextClassLoader(portalClassLoader);
     }
-    Locale[] locales=LanguageUtil.getAvailableLocales();
-    for (    Locale locale : locales) {
-      String name=nameMap.get(locale);
-      setName(name,locale,defaultLocale);
-    }
+    setName(LocalizationUtil.updateLocalization(nameMap,getName(),"Name",LocaleUtil.toLanguageId(defaultLocale)));
   }
   finally {
     if (contextClassLoader != portalClassLoader) {
