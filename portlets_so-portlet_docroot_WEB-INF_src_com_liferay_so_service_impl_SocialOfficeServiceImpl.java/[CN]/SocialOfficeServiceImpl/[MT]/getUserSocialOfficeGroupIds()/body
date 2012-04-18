@@ -1,0 +1,15 @@
+{
+  List<Group> groups=GroupServiceUtil.getUserSites();
+  List<Group> socialOfficeGroups=new ArrayList<Group>(groups.size());
+  for (  Group group : groups) {
+    if (isSocialOfficeGroup(group.getGroupId())) {
+      socialOfficeGroups.add(group);
+    }
+  }
+  long[] groupIds=new long[socialOfficeGroups.size()];
+  for (int i=0; i < socialOfficeGroups.size(); i++) {
+    Group group=socialOfficeGroups.get(i);
+    groupIds[i]=group.getGroupId();
+  }
+  return groupIds;
+}
