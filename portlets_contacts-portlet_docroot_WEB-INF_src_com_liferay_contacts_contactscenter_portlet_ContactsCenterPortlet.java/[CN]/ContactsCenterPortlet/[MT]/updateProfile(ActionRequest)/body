@@ -1,0 +1,33 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  User user=themeDisplay.getUser();
+  boolean deleteLogo=ParamUtil.getBoolean(actionRequest,"deleteLogo");
+  if (deleteLogo) {
+    UserServiceUtil.deletePortrait(user.getUserId());
+  }
+  String comments=BeanParamUtil.getString(user,actionRequest,"comments");
+  String firstName=BeanParamUtil.getString(user,actionRequest,"firstName");
+  String jobTitle=BeanParamUtil.getString(user,actionRequest,"jobTitle");
+  String middleName=BeanParamUtil.getString(user,actionRequest,"middleName");
+  String lastName=BeanParamUtil.getString(user,actionRequest,"lastName");
+  Contact contact=user.getContact();
+  String aimSn=BeanParamUtil.getString(contact,actionRequest,"aimSn");
+  String facebookSn=BeanParamUtil.getString(contact,actionRequest,"facebookSn");
+  String icqSn=BeanParamUtil.getString(contact,actionRequest,"icqSn");
+  String jabberSn=BeanParamUtil.getString(contact,actionRequest,"jabberSn");
+  String msnSn=BeanParamUtil.getString(contact,actionRequest,"msnSn");
+  String mySpaceSn=BeanParamUtil.getString(contact,actionRequest,"mySpaceSn");
+  String skypeSn=BeanParamUtil.getString(contact,actionRequest,"skypeSn");
+  String smsSn=BeanParamUtil.getString(contact,actionRequest,"smsSn");
+  String twitterSn=BeanParamUtil.getString(contact,actionRequest,"twitterSn");
+  String ymSn=BeanParamUtil.getString(contact,actionRequest,"ymSn");
+  Calendar cal=CalendarFactoryUtil.getCalendar();
+  cal.setTime(user.getBirthday());
+  int birthdayDay=cal.get(Calendar.DATE);
+  int birthdayMonth=cal.get(Calendar.MONTH);
+  int birthdayYear=cal.get(Calendar.YEAR);
+  List<UserGroupRole> userGroupRoles=UsersAdminUtil.getUserGroupRoles(actionRequest);
+  List<EmailAddress> emailAddresses=UsersAdminUtil.getEmailAddresses(actionRequest);
+  List<AnnouncementsDelivery> announcementsDeliveries=AnnouncementsDeliveryLocalServiceUtil.getUserDeliveries(user.getUserId());
+  UserServiceUtil.updateUser(user.getUserId(),user.getPasswordUnencrypted(),user.getPasswordUnencrypted(),user.getPasswordUnencrypted(),user.getPasswordReset(),user.getReminderQueryQuestion(),user.getReminderQueryAnswer(),user.getScreenName(),user.getEmailAddress(),user.getFacebookId(),user.getOpenId(),user.getLanguageId(),user.getTimeZoneId(),user.getGreeting(),comments,firstName,middleName,lastName,contact.getPrefixId(),contact.getSuffixId(),user.isMale(),birthdayMonth,birthdayDay,birthdayYear,smsSn,aimSn,facebookSn,icqSn,jabberSn,msnSn,mySpaceSn,skypeSn,twitterSn,ymSn,jobTitle,user.getGroupIds(),user.getOrganizationIds(),user.getRoleIds(),userGroupRoles,user.getUserGroupIds(),user.getAddresses(),emailAddresses,user.getPhones(),user.getWebsites(),announcementsDeliveries,new ServiceContext());
+}
