@@ -1,0 +1,16 @@
+{
+  String name=layoutJSONObject.getString("name");
+  String title=layoutJSONObject.getString("title");
+  String friendlyURL=layoutJSONObject.getString("friendlyURL");
+  Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,true,parentLayoutId,name,title,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,false,friendlyURL,new ServiceContext());
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
+  if (Validator.isNotNull(layoutTemplateId)) {
+    layoutTypePortlet.setLayoutTemplateId(userId,layoutTemplateId,false);
+  }
+  JSONArray columnsJSONArray=layoutJSONObject.getJSONArray("columns");
+  addLayoutColumns(layout,columnsJSONArray);
+  LayoutLocalServiceUtil.updateLayout(groupId,layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+  JSONArray layoutsJSONArray=layoutJSONObject.getJSONArray("layouts");
+  addLayouts(layout.getParentLayoutId(),layoutsJSONArray);
+}
