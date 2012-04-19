@@ -1,13 +1,21 @@
 {
-  FreeMarkerEngine freeMarkerEngine=FreeMarkerEngineUtil.getFreeMarkerEngine();
-  FreeMarkerContext freeMarketContext=FreeMarkerEngineUtil.getWrappedRestrictedToolsContext();
+  StringBundler sb=new StringBundler();
+  sb.append(notificationName);
+  sb.append(kaleoClassName);
+  sb.append(kaleoClassPK);
+  Template template=TemplateManagerUtil.getTemplate(TemplateManager.FREEMARKER,sb.toString(),TemplateContextType.RESTRICTED);
   try {
-    populateContextVariables(freeMarketContext,executionContext);
+    populateContextVariables(template,executionContext);
     StringWriter stringWriter=new StringWriter();
-    freeMarkerEngine.mergeTemplate(notificationName + kaleoClassName + kaleoClassPK,notificationTemplate,freeMarketContext,stringWriter);
+    template.processTemplate(stringWriter);
     return stringWriter.toString();
   }
  catch (  Exception e) {
-    throw new NotificationMessageGenerationException("Unable to generate notification message",e);
+    if (e instanceof NotificationMessageGenerationException) {
+      throw new NotificationMessageGenerationException("Unable to generate notification message",e);
+    }
+ else {
+      throw e;
+    }
   }
 }

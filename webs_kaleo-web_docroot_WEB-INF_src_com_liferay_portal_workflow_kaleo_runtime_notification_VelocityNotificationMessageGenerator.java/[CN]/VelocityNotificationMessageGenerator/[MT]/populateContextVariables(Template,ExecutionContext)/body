@@ -6,18 +6,18 @@
     workflowContext=WorkflowContextUtil.convert(kaleoInstance.getWorkflowContext());
   }
   for (  Map.Entry<String,Serializable> entry : workflowContext.entrySet()) {
-    velocityContext.put(entry.getKey(),entry.getValue());
+    template.put(entry.getKey(),entry.getValue());
   }
   KaleoTaskInstanceToken kaleoTaskInstanceToken=executionContext.getKaleoTaskInstanceToken();
   if (kaleoTaskInstanceToken != null) {
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
-    velocityContext.put("taskName",kaleoTask.getName());
-    velocityContext.put("userId",kaleoTaskInstanceToken.getUserId());
+    template.put("taskName",kaleoTask.getName());
+    template.put("userId",kaleoTaskInstanceToken.getUserId());
     List<WorkflowTaskAssignee> workflowTaskAssignees=KaleoTaskAssignmentInstanceUtil.getWorkflowTaskAssignees(kaleoTaskInstanceToken);
-    velocityContext.put("workflowTaskAssignees",workflowTaskAssignees);
+    template.put("workflowTaskAssignees",workflowTaskAssignees);
   }
  else {
     KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
-    velocityContext.put("userId",kaleoInstanceToken.getUserId());
+    template.put("userId",kaleoInstanceToken.getUserId());
   }
 }
