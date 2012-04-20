@@ -17,6 +17,8 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   if (filterBy.equals(ContactsConstants.FILTER_BY_DEFAULT) && !portletName.equals(PortletKeys.MEMBERS)) {
     List<BaseModel<?>> contacts=EntryLocalServiceUtil.searchUsersAndContacts(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,start,end);
+    int contactsCount=EntryLocalServiceUtil.searchUsersAndContactsCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
+    jsonObject.put("count",contactsCount);
     for (    BaseModel<?> contact : contacts) {
       JSONObject contactJSONObject=null;
       if (contact instanceof User) {
@@ -30,6 +32,8 @@
   }
  else   if (filterBy.equals(ContactsConstants.FILTER_BY_TYPE_MY_CONTACTS) && !portletName.equals(PortletKeys.MEMBERS)) {
     List<Entry> entries=EntryLocalServiceUtil.search(themeDisplay.getUserId(),keywords,start,end);
+    int entriesCount=EntryLocalServiceUtil.searchCount(themeDisplay.getUserId(),keywords);
+    jsonObject.put("count",entriesCount);
     for (    Entry entry : entries) {
       JSONObject contactJSONObject=getEntryJSONObject(portletResponse,themeDisplay,entry,redirect);
       jsonArray.put(contactJSONObject);
