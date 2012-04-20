@@ -67,9 +67,8 @@
       portletURL.setParameter("privateLayout",String.valueOf(!group.hasPublicLayouts()));
       groupJSONObject.put("url",portletURL.toString());
     }
-    ExpandoBridge expandoBridge=group.getExpandoBridge();
-    boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
-    groupJSONObject.put("socialOfficeEnabled",socialOfficeEnabled);
+    boolean socialOfficeGroup=SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId());
+    groupJSONObject.put("socialOfficeGroup",socialOfficeGroup);
     Layout layout=themeDisplay.getLayout();
     PortletURL siteAssignmentsPortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
     siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
