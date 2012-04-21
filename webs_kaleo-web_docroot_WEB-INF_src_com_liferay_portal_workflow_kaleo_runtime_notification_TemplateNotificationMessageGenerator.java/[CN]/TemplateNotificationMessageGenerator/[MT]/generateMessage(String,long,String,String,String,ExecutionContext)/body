@@ -1,0 +1,17 @@
+{
+  String templateManagerName=_templateLanguageMapping.get(notificationTemplateLanguage);
+  if (Validator.isNull(templateManagerName)) {
+    throw new NotificationMessageGenerationException("Invalid notification template language: " + notificationTemplateLanguage + ". Supported languages are: "+ _templateLanguageMapping.keySet().toString());
+  }
+  try {
+    String templateId=notificationName + kaleoClassName + kaleoClassPK;
+    Template template=TemplateManagerUtil.getTemplate(templateManagerName,templateId,notificationTemplate,TemplateContextType.RESTRICTED);
+    populateContextVariables(template,executionContext);
+    StringWriter stringWriter=new StringWriter();
+    template.processTemplate(stringWriter);
+    return stringWriter.toString();
+  }
+ catch (  Exception e) {
+    throw new NotificationMessageGenerationException("Unable to generate notification message",e);
+  }
+}
