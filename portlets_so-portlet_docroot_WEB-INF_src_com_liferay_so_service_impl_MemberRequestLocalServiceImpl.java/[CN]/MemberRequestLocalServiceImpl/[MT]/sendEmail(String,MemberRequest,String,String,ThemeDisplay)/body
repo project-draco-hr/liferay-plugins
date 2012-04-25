@@ -21,9 +21,15 @@
  else {
     body=StringUtil.read(getClassLoader(),"com/liferay/so/invitemembers/dependencies/" + "new_user_body.tmpl");
   }
-  String createAccountURL=getCreateAccountURL(memberRequest.getKey(),themeDisplay);
-  String loginURL=getLoginURL(memberRequest.getKey(),themeDisplay);
   subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(themeDisplay.getLocale()),user.getFullName()});
+  if (Validator.isNull(createAccountURL)) {
+    createAccountURL=themeDisplay.getPortalURL();
+  }
+  createAccountURL=HttpUtil.addParameter(createAccountURL,"key",memberRequest.getKey());
+  if (Validator.isNull(loginURL)) {
+    loginURL=themeDisplay.getPortalURL();
+  }
+  createAccountURL=HttpUtil.addParameter(loginURL,"key",memberRequest.getKey());
   body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,createAccountURL,group.getDescriptiveName(themeDisplay.getLocale()),loginURL,user.getFullName()});
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);

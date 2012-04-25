@@ -1,0 +1,10 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  HttpServletRequest httpServletRequest=PortalUtil.getHttpServletRequest(actionRequest);
+  String createAccountURL=PortalUtil.getCreateAccountURL(httpServletRequest,themeDisplay);
+  String redirect=getRedirectURL(actionRequest);
+  if (Validator.isNotNull(redirect)) {
+    createAccountURL=HttpUtil.addParameter(createAccountURL,"redirect",redirect);
+  }
+  return createAccountURL;
+}
