@@ -1,20 +1,20 @@
 {
   boolean deleteFolder=true;
-  List<FileEntry> fileEntries=DLAppLocalServiceUtil.getFileEntries(groupId,rootFolderId);
-  for (  FileEntry fileEntry : fileEntries) {
+  List<DLFileEntry> dlFileEntries=DLFileEntryLocalServiceUtil.getFileEntries(groupId,rootFolderId);
+  for (  DLFileEntry dlFileEntry : dlFileEntries) {
     ServiceContext serviceContext=new ServiceContext();
     try {
-      DLAppLocalServiceUtil.moveFileEntry(fileEntry.getUserId(),fileEntry.getFileEntryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,serviceContext);
+      DLAppLocalServiceUtil.moveFileEntry(dlFileEntry.getUserId(),dlFileEntry.getFileEntryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,serviceContext);
     }
  catch (    Exception e) {
       deleteFolder=false;
     }
   }
-  List<Folder> folders=DLAppLocalServiceUtil.getFolders(groupId,rootFolderId);
-  for (  Folder folder : folders) {
+  List<DLFolder> dlFolders=DLFolderLocalServiceUtil.getFolders(groupId,rootFolderId);
+  for (  DLFolder dlFolder : dlFolders) {
     ServiceContext serviceContext=new ServiceContext();
     try {
-      DLAppLocalServiceUtil.updateFolder(folder.getFolderId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,folder.getName(),folder.getDescription(),serviceContext);
+      DLAppLocalServiceUtil.updateFolder(dlFolder.getFolderId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,dlFolder.getName(),dlFolder.getDescription(),serviceContext);
     }
  catch (    Exception e) {
       deleteFolder=false;
