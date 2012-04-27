@@ -21,16 +21,18 @@
  else {
     body=StringUtil.read(getClassLoader(),"com/liferay/so/invitemembers/dependencies/" + "new_user_body.tmpl");
   }
-  subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(themeDisplay.getLocale()),user.getFullName()});
+  subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(serviceContext.getLocale()),user.getFullName()});
+  String createAccountURL=(String)serviceContext.getAttribute("createAccountURL");
   if (Validator.isNull(createAccountURL)) {
-    createAccountURL=themeDisplay.getPortalURL();
+    createAccountURL=serviceContext.getPortalURL();
   }
   createAccountURL=HttpUtil.addParameter(createAccountURL,"key",memberRequest.getKey());
+  String loginURL=(String)serviceContext.getAttribute("loginURL");
   if (Validator.isNull(loginURL)) {
-    loginURL=themeDisplay.getPortalURL();
+    loginURL=serviceContext.getPortalURL();
   }
-  createAccountURL=HttpUtil.addParameter(loginURL,"key",memberRequest.getKey());
-  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,createAccountURL,group.getDescriptiveName(themeDisplay.getLocale()),loginURL,user.getFullName()});
+  loginURL=HttpUtil.addParameter(loginURL,"key",memberRequest.getKey());
+  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,createAccountURL,group.getDescriptiveName(serviceContext.getLocale()),loginURL,user.getFullName()});
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
