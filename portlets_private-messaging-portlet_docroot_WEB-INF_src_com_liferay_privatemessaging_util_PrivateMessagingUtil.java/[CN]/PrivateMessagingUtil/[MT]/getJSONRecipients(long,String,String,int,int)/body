@@ -1,0 +1,34 @@
+{
+  User user=UserLocalServiceUtil.getUser(userId);
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  if (type.equals("site")) {
+    List<Group> usersGroups=GroupLocalServiceUtil.getUserGroups(userId,true);
+    long[] usersGroupsIds=new long[usersGroups.size()];
+    for (int i=0; i < usersGroups.size(); i++) {
+      Group group=usersGroups.get(i);
+      usersGroupsIds[i]=group.getGroupId();
+    }
+    params.put("usersGroups",usersGroupsIds);
+  }
+ else   if (!type.equals("all")) {
+    params.put("socialRelationType",new Long[]{userId,new Long(SocialRelationConstants.TYPE_BI_CONNECTION)});
+  }
+  List<User> users=UserLocalServiceUtil.search(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserFirstNameComparator(true));
+  int total=UserLocalServiceUtil.searchCount(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  for (  User curUser : users) {
+    JSONObject userJsonObject=JSONFactoryUtil.createJSONObject();
+    StringBuilder sb=new StringBuilder();
+    sb.append(curUser.getFullName());
+    sb.append(CharPool.SPACE);
+    sb.append(CharPool.LESS_THAN);
+    sb.append(curUser.getScreenName());
+    sb.append(CharPool.GREATER_THAN);
+    userJsonObject.put("name",sb.toString());
+    jsonArray.put(userJsonObject);
+  }
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("total",total);
+  jsonObject.put("users",jsonArray);
+  return jsonObject;
+}

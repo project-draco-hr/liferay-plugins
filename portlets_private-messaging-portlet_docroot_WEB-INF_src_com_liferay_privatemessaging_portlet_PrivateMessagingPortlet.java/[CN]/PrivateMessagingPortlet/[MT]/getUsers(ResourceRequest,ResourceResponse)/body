@@ -1,0 +1,10 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String keywords=ParamUtil.getString(resourceRequest,"keywords");
+  String autocompleteRecipientType=PortletProps.get("autocomplete.recipient.type");
+  int autocompleteRecipientMax=GetterUtil.getInteger(PortletProps.get("autocomplete.recipient.max"),20);
+  JSONObject jsonObject=PrivateMessagingUtil.getJSONRecipients(themeDisplay.getUserId(),autocompleteRecipientType,keywords,0,autocompleteRecipientMax);
+  JSONObject results=JSONFactoryUtil.createJSONObject();
+  results.put("results",jsonObject);
+  writeJSON(resourceRequest,resourceResponse,results);
+}
