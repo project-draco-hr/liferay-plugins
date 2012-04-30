@@ -6,14 +6,12 @@
       themeId=null;
     }
   }
-  System.out.println("## themeId 1 " + themeId);
   if (Validator.isNull(themeId)) {
     int pos=servletContextName.indexOf("-theme");
     if (pos != -1) {
       themeId=servletContextName.substring(0,pos) + PortletConstants.WAR_SEPARATOR + servletContextName;
       themeId=PortalUtil.getJsSafePortletId(themeId);
       Theme theme=ThemeLocalServiceUtil.fetchTheme(companyId,themeId);
-      System.out.println("## themeId 2 " + themeId + " "+ theme);
       if (theme == null) {
         themeId=null;
       }
