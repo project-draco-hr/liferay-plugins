@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBCommentLocalService.class.getName());
-    _service=new KBCommentLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof KBCommentLocalService) {
+      _service=(KBCommentLocalService)invokableLocalService;
+    }
+ else {
+      _service=new KBCommentLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(KBCommentLocalServiceUtil.class,"_service");
     MethodCache.remove(KBCommentLocalService.class);
   }

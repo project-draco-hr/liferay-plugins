@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KaleoTaskAssignmentLocalService.class.getName());
-    _service=new KaleoTaskAssignmentLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof KaleoTaskAssignmentLocalService) {
+      _service=(KaleoTaskAssignmentLocalService)invokableLocalService;
+    }
+ else {
+      _service=new KaleoTaskAssignmentLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(KaleoTaskAssignmentLocalServiceUtil.class,"_service");
     MethodCache.remove(KaleoTaskAssignmentLocalService.class);
   }

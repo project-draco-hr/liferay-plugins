@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),MeetupsRegistrationLocalService.class.getName());
-    _service=new MeetupsRegistrationLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof MeetupsRegistrationLocalService) {
+      _service=(MeetupsRegistrationLocalService)invokableLocalService;
+    }
+ else {
+      _service=new MeetupsRegistrationLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(MeetupsRegistrationLocalServiceUtil.class,"_service");
     MethodCache.remove(MeetupsRegistrationLocalService.class);
   }

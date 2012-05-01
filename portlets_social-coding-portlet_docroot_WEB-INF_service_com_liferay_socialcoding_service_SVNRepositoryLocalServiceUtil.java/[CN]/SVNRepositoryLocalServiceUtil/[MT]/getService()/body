@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),SVNRepositoryLocalService.class.getName());
-    _service=new SVNRepositoryLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof SVNRepositoryLocalService) {
+      _service=(SVNRepositoryLocalService)invokableLocalService;
+    }
+ else {
+      _service=new SVNRepositoryLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(SVNRepositoryLocalServiceUtil.class,"_service");
     MethodCache.remove(SVNRepositoryLocalService.class);
   }

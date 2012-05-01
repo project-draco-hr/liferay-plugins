@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),WSRPConsumerLocalService.class.getName());
-    _service=new WSRPConsumerLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof WSRPConsumerLocalService) {
+      _service=(WSRPConsumerLocalService)invokableLocalService;
+    }
+ else {
+      _service=new WSRPConsumerLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(WSRPConsumerLocalServiceUtil.class,"_service");
     MethodCache.remove(WSRPConsumerLocalService.class);
   }

@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),MicroblogsEntryLocalService.class.getName());
-    _service=new MicroblogsEntryLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof MicroblogsEntryLocalService) {
+      _service=(MicroblogsEntryLocalService)invokableLocalService;
+    }
+ else {
+      _service=new MicroblogsEntryLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(MicroblogsEntryLocalServiceUtil.class,"_service");
     MethodCache.remove(MicroblogsEntryLocalService.class);
   }

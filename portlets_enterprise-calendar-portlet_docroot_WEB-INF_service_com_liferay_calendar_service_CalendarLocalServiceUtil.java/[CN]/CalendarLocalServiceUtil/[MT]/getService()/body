@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),CalendarLocalService.class.getName());
-    _service=new CalendarLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof CalendarLocalService) {
+      _service=(CalendarLocalService)invokableLocalService;
+    }
+ else {
+      _service=new CalendarLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(CalendarLocalServiceUtil.class,"_service");
     MethodCache.remove(CalendarLocalService.class);
   }

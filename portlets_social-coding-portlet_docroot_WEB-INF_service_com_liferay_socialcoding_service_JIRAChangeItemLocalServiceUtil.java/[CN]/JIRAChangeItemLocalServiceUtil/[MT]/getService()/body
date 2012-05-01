@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),JIRAChangeItemLocalService.class.getName());
-    _service=new JIRAChangeItemLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof JIRAChangeItemLocalService) {
+      _service=(JIRAChangeItemLocalService)invokableLocalService;
+    }
+ else {
+      _service=new JIRAChangeItemLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(JIRAChangeItemLocalServiceUtil.class,"_service");
     MethodCache.remove(JIRAChangeItemLocalService.class);
   }

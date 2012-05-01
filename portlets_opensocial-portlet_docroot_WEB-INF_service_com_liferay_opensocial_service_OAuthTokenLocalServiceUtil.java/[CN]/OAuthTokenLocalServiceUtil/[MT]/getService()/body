@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),OAuthTokenLocalService.class.getName());
-    _service=new OAuthTokenLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof OAuthTokenLocalService) {
+      _service=(OAuthTokenLocalService)invokableLocalService;
+    }
+ else {
+      _service=new OAuthTokenLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(OAuthTokenLocalServiceUtil.class,"_service");
     MethodCache.remove(OAuthTokenLocalService.class);
   }

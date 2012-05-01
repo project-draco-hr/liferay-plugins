@@ -1,7 +1,12 @@
 {
   if (_service == null) {
     InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),FeedLocalService.class.getName());
-    _service=new FeedLocalServiceClp(invokableLocalService);
+    if (invokableLocalService instanceof FeedLocalService) {
+      _service=(FeedLocalService)invokableLocalService;
+    }
+ else {
+      _service=new FeedLocalServiceClp(invokableLocalService);
+    }
     ReferenceRegistry.registerReference(FeedLocalServiceUtil.class,"_service");
     MethodCache.remove(FeedLocalService.class);
   }
