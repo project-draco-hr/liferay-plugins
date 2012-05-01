@@ -1,10 +1,10 @@
 {
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
-  String portletId=portletJSONObject.getString("portletId");
-  if (Validator.isNull(portletId)) {
+  String rootPortletId=portletJSONObject.getString("portletId");
+  if (Validator.isNull(rootPortletId)) {
     throw new ImporterException("portletId is not specified");
   }
-  portletId=layoutTypePortlet.addPortletId(userId,portletId,columnId,-1,false);
+  String portletId=layoutTypePortlet.addPortletId(userId,rootPortletId,columnId,-1,false);
   JSONObject portletPreferencesJSONObject=portletJSONObject.getJSONObject("portletPreferences");
   if ((portletPreferencesJSONObject == null) || (portletPreferencesJSONObject.length() == 0)) {
     return;
@@ -14,7 +14,7 @@
   while (iterator.hasNext()) {
     String key=iterator.next();
     String value=portletPreferencesJSONObject.getString(key);
-    if (portletId.startsWith(PortletKeys.JOURNAL_CONTENT) && key.equals("articleId")) {
+    if (rootPortletId.equals(PortletKeys.JOURNAL_CONTENT) && key.equals("articleId")) {
       value=getJournalArticleId(value);
     }
     portletSetup.setValue(key,value);
