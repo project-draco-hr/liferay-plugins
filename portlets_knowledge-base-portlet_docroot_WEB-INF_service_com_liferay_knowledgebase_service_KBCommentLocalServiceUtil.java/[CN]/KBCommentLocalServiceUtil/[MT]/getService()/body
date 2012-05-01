@@ -1,10 +1,7 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBCommentLocalService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,KBCommentLocalService.class.getName(),portletClassLoader);
-    _service=new KBCommentLocalServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBCommentLocalService.class.getName());
+    _service=new KBCommentLocalServiceClp(invokableLocalService);
     ReferenceRegistry.registerReference(KBCommentLocalServiceUtil.class,"_service");
     MethodCache.remove(KBCommentLocalService.class);
   }

@@ -1,50 +1,6 @@
 {
-  AssetClp oldCplModel=(AssetClp)oldModel;
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
-  try {
-    currentThread.setContextClassLoader(_classLoader);
-    try {
-      Class<?> newModelClass=Class.forName("com.liferay.ams.model.impl.AssetImpl",true,_classLoader);
-      Object newModel=newModelClass.newInstance();
-      Method method0=newModelClass.getMethod("setAssetId",new Class[]{Long.TYPE});
-      Long value0=new Long(oldCplModel.getAssetId());
-      method0.invoke(newModel,value0);
-      Method method1=newModelClass.getMethod("setCompanyId",new Class[]{Long.TYPE});
-      Long value1=new Long(oldCplModel.getCompanyId());
-      method1.invoke(newModel,value1);
-      Method method2=newModelClass.getMethod("setUserId",new Class[]{Long.TYPE});
-      Long value2=new Long(oldCplModel.getUserId());
-      method2.invoke(newModel,value2);
-      Method method3=newModelClass.getMethod("setUserName",new Class[]{String.class});
-      String value3=oldCplModel.getUserName();
-      method3.invoke(newModel,value3);
-      Method method4=newModelClass.getMethod("setCreateDate",new Class[]{Date.class});
-      Date value4=oldCplModel.getCreateDate();
-      method4.invoke(newModel,value4);
-      Method method5=newModelClass.getMethod("setModifiedDate",new Class[]{Date.class});
-      Date value5=oldCplModel.getModifiedDate();
-      method5.invoke(newModel,value5);
-      Method method6=newModelClass.getMethod("setDefinitionId",new Class[]{Long.TYPE});
-      Long value6=new Long(oldCplModel.getDefinitionId());
-      method6.invoke(newModel,value6);
-      Method method7=newModelClass.getMethod("setSerialNumber",new Class[]{String.class});
-      String value7=oldCplModel.getSerialNumber();
-      method7.invoke(newModel,value7);
-      Method method8=newModelClass.getMethod("setInactiveDate",new Class[]{Date.class});
-      Date value8=oldCplModel.getInactiveDate();
-      method8.invoke(newModel,value8);
-      Method method9=newModelClass.getMethod("setActive",new Class[]{Boolean.TYPE});
-      Boolean value9=new Boolean(oldCplModel.getActive());
-      method9.invoke(newModel,value9);
-      return newModel;
-    }
- catch (    Exception e) {
-      _log.error(e,e);
-    }
-  }
-  finally {
-    currentThread.setContextClassLoader(contextClassLoader);
-  }
-  return oldModel;
+  AssetClp oldClpModel=(AssetClp)oldModel;
+  BaseModel<?> newModel=oldClpModel.getAssetRemoteModel();
+  newModel.setModelAttributes(oldClpModel.getModelAttributes());
+  return newModel;
 }

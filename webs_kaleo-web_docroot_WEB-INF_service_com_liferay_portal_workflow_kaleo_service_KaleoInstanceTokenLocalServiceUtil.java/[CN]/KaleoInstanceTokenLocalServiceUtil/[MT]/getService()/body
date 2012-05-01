@@ -1,10 +1,7 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KaleoInstanceTokenLocalService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,KaleoInstanceTokenLocalService.class.getName(),portletClassLoader);
-    _service=new KaleoInstanceTokenLocalServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KaleoInstanceTokenLocalService.class.getName());
+    _service=new KaleoInstanceTokenLocalServiceClp(invokableLocalService);
     ReferenceRegistry.registerReference(KaleoInstanceTokenLocalServiceUtil.class,"_service");
     MethodCache.remove(KaleoInstanceTokenLocalService.class);
   }

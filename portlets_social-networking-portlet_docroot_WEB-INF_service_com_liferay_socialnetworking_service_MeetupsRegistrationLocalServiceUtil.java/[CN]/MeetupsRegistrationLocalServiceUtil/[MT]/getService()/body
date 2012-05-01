@@ -1,10 +1,7 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),MeetupsRegistrationLocalService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,MeetupsRegistrationLocalService.class.getName(),portletClassLoader);
-    _service=new MeetupsRegistrationLocalServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),MeetupsRegistrationLocalService.class.getName());
+    _service=new MeetupsRegistrationLocalServiceClp(invokableLocalService);
     ReferenceRegistry.registerReference(MeetupsRegistrationLocalServiceUtil.class,"_service");
     MethodCache.remove(MeetupsRegistrationLocalService.class);
   }

@@ -1,44 +1,6 @@
 {
-  StatusClp oldCplModel=(StatusClp)oldModel;
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
-  try {
-    currentThread.setContextClassLoader(_classLoader);
-    try {
-      Class<?> newModelClass=Class.forName("com.liferay.chat.model.impl.StatusImpl",true,_classLoader);
-      Object newModel=newModelClass.newInstance();
-      Method method0=newModelClass.getMethod("setStatusId",new Class[]{Long.TYPE});
-      Long value0=new Long(oldCplModel.getStatusId());
-      method0.invoke(newModel,value0);
-      Method method1=newModelClass.getMethod("setUserId",new Class[]{Long.TYPE});
-      Long value1=new Long(oldCplModel.getUserId());
-      method1.invoke(newModel,value1);
-      Method method2=newModelClass.getMethod("setModifiedDate",new Class[]{Long.TYPE});
-      Long value2=new Long(oldCplModel.getModifiedDate());
-      method2.invoke(newModel,value2);
-      Method method3=newModelClass.getMethod("setOnline",new Class[]{Boolean.TYPE});
-      Boolean value3=new Boolean(oldCplModel.getOnline());
-      method3.invoke(newModel,value3);
-      Method method4=newModelClass.getMethod("setAwake",new Class[]{Boolean.TYPE});
-      Boolean value4=new Boolean(oldCplModel.getAwake());
-      method4.invoke(newModel,value4);
-      Method method5=newModelClass.getMethod("setActivePanelId",new Class[]{String.class});
-      String value5=oldCplModel.getActivePanelId();
-      method5.invoke(newModel,value5);
-      Method method6=newModelClass.getMethod("setMessage",new Class[]{String.class});
-      String value6=oldCplModel.getMessage();
-      method6.invoke(newModel,value6);
-      Method method7=newModelClass.getMethod("setPlaySound",new Class[]{Boolean.TYPE});
-      Boolean value7=new Boolean(oldCplModel.getPlaySound());
-      method7.invoke(newModel,value7);
-      return newModel;
-    }
- catch (    Exception e) {
-      _log.error(e,e);
-    }
-  }
-  finally {
-    currentThread.setContextClassLoader(contextClassLoader);
-  }
-  return oldModel;
+  StatusClp oldClpModel=(StatusClp)oldModel;
+  BaseModel<?> newModel=oldClpModel.getStatusRemoteModel();
+  newModel.setModelAttributes(oldClpModel.getModelAttributes());
+  return newModel;
 }

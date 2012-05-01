@@ -1,10 +1,7 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),GadgetService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,GadgetService.class.getName(),portletClassLoader);
-    _service=new GadgetServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableService invokableService=(InvokableService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),GadgetService.class.getName());
+    _service=new GadgetServiceClp(invokableService);
     ReferenceRegistry.registerReference(GadgetServiceUtil.class,"_service");
     MethodCache.remove(GadgetService.class);
   }

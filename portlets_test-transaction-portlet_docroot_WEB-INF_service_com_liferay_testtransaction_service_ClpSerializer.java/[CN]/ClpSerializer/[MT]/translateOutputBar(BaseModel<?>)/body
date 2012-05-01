@@ -1,25 +1,6 @@
 {
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
-  try {
-    currentThread.setContextClassLoader(_classLoader);
-    try {
-      BarClp newModel=new BarClp();
-      Class<?> oldModelClass=oldModel.getClass();
-      Method method0=oldModelClass.getMethod("getBarId");
-      Long value0=(Long)method0.invoke(oldModel,(Object[])null);
-      newModel.setBarId(value0);
-      Method method1=oldModelClass.getMethod("getText");
-      String value1=(String)method1.invoke(oldModel,(Object[])null);
-      newModel.setText(value1);
-      return newModel;
-    }
- catch (    Exception e) {
-      _log.error(e,e);
-    }
-  }
-  finally {
-    currentThread.setContextClassLoader(contextClassLoader);
-  }
-  return oldModel;
+  BarClp newModel=new BarClp();
+  newModel.setModelAttributes(oldModel.getModelAttributes());
+  newModel.setBarRemoteModel(oldModel);
+  return newModel;
 }

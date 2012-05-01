@@ -1,10 +1,7 @@
 {
   if (_service == null) {
-    Object object=PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBTemplateService.class.getName());
-    ClassLoader portletClassLoader=(ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-    ClassLoaderProxy classLoaderProxy=new ClassLoaderProxy(object,KBTemplateService.class.getName(),portletClassLoader);
-    _service=new KBTemplateServiceClp(classLoaderProxy);
-    ClpSerializer.setClassLoader(portletClassLoader);
+    InvokableService invokableService=(InvokableService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),KBTemplateService.class.getName());
+    _service=new KBTemplateServiceClp(invokableService);
     ReferenceRegistry.registerReference(KBTemplateServiceUtil.class,"_service");
     MethodCache.remove(KBTemplateService.class);
   }
