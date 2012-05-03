@@ -1,0 +1,31 @@
+{
+  Matcher fileEntryMatcher=_fileEntryPattern.matcher(content);
+  while (fileEntryMatcher.find()) {
+    String fileName=fileEntryMatcher.group(1);
+    FileEntry fileEntry=_fileEntriesMap.get(fileName);
+    String fileEntryURL=StringPool.BLANK;
+    if (fileEntry != null) {
+      fileEntryURL=DLUtil.getPreviewURL(fileEntry,fileEntry.getFileVersion(),null,StringPool.BLANK);
+    }
+    content=fileEntryMatcher.replaceFirst(fileEntryURL);
+    fileEntryMatcher.reset(content);
+  }
+  if (content.contains("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
+    return content;
+  }
+  StringBundler sb=new StringBundler(13);
+  sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+  sb.append("<root available-locales=\"");
+  sb.append(LocaleUtil.getDefault());
+  sb.append("\" default-locale=\"");
+  sb.append(LocaleUtil.getDefault());
+  sb.append("\">");
+  sb.append("<static-content language-id=\"");
+  sb.append(LocaleUtil.getDefault());
+  sb.append("\">");
+  sb.append("<![CDATA[");
+  sb.append(content);
+  sb.append("]]>");
+  sb.append("</static-content></root>");
+  return sb.toString();
+}
