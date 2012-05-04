@@ -3,10 +3,30 @@
   if (!servletContextName.equals("welcome-theme")) {
     return;
   }
-  long groupId=message.getLong("groupId");
-  Group group=GroupLocalServiceUtil.getGroup(groupId);
-  Group guestGroup=GroupLocalServiceUtil.getGroup(group.getCompanyId(),GroupConstants.GUEST);
-  if (_log.isInfoEnabled()) {
-    _log.info("Apply content and pages from group " + groupId + " onto the Guest group");
+  long companyId=message.getLong("companyId");
+  Group group=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
+  if (group.getPublicLayoutsPageCount() != 1) {
+    return;
   }
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),false);
+  Layout layout=layouts.get(0);
+  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+  List<String> portletIds=layoutTypePortlet.getPortletIds();
+  if (portletIds.size() != 2) {
+    return;
+  }
+  for (  String portletId : portletIds) {
+    if (!portletId.equals("47") && !portletId.equals("58")) {
+      return;
+    }
+  }
+  long layoutSetPrototypeId=message.getLong("layoutSetPrototypeId");
+  if (_log.isInfoEnabled()) {
+    _log.info("Apply content and pages from layoutSetPrototype " + layoutSetPrototypeId + " onto the Guest group");
+  }
+  LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),false,null);
+  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
+  LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,layoutSetPrototype.getUuid());
+  PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,group.getPublicLayoutSet());
+  LayoutLocalServiceUtil.getLayouts(group.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 }
