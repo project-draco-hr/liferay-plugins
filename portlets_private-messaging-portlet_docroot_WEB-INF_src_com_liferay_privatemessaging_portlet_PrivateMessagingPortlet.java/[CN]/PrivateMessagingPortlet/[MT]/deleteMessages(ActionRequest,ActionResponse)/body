@@ -3,5 +3,10 @@
   long[] mbThreadIds=ParamUtil.getLongValues(actionRequest,"mbThreadIds");
   for (  long mbThreadId : mbThreadIds) {
     UserThreadLocalServiceUtil.deleteUserThread(themeDisplay.getUserId(),mbThreadId);
+    try {
+      removeNotification(themeDisplay.getCompanyId(),mbThreadId,themeDisplay.getUserId());
+    }
+ catch (    ChannelException ce) {
+    }
   }
 }

@@ -1,0 +1,20 @@
+{
+  List<NotificationEvent> notificationEvents=null;
+  try {
+    notificationEvents=ChannelHubManagerUtil.getNotificationEvents(companyId,userId,true);
+  }
+ catch (  UnknownChannelException e) {
+    Channel channel=ChannelHubManagerUtil.getChannel(companyId,userId,true);
+    notificationEvents=channel.getNotificationEvents();
+  }
+  for (  NotificationEvent notificationEvent : notificationEvents) {
+    JSONObject notificationEventJSONObject=notificationEvent.getPayload();
+    String portletId=notificationEventJSONObject.getString("portletId");
+    long entryId=notificationEventJSONObject.getLong("entryId");
+    if (portletId.equals(PortletKeys.SO_PRIVATE_MESSAGING) && (entryId == mbThreadId)) {
+      String uuid=notificationEvent.getUuid();
+      ChannelHubManagerUtil.confirmDelivery(companyId,userId,uuid,true);
+      ChannelHubManagerUtil.deleteUserNotificiationEvent(companyId,userId,uuid);
+    }
+  }
+}
