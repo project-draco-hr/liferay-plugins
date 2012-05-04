@@ -1,0 +1,12 @@
+{
+  String servletContextName=message.getString("servletContextName");
+  if (!servletContextName.equals("welcome-theme")) {
+    return;
+  }
+  long groupId=message.getLong("groupId");
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  Group guestGroup=GroupLocalServiceUtil.getGroup(group.getCompanyId(),GroupConstants.GUEST);
+  if (_log.isInfoEnabled()) {
+    _log.info("Apply content and pages from group " + groupId + " onto the Guest group");
+  }
+}
