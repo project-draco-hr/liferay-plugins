@@ -1,26 +1,15 @@
 {
   try {
-    if (!associationClassName.equals(Role.class.getName())) {
-      return;
-    }
-    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
-    String name=role.getName();
-    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
-      return;
-    }
     User user=UserLocalServiceUtil.getUser((Long)classPK);
+    boolean hasRole=UserLocalServiceUtil.hasRoleUser(user.getCompanyId(),"Social Office User",user.getUserId(),true);
     Group group=user.getGroup();
-    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
-    if (publicLayoutSetPrototype != null) {
-      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,publicLayoutSetPrototype.getUuid());
-      LayoutLocalServiceUtil.updatePriorities(group.getGroupId(),false);
+    ExpandoBridge expandoBridge=group.getExpandoBridge();
+    boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
+    if (hasRole && !socialOfficeEnabled) {
+      LayoutSetPrototypeUtil.updateLayoutStePrototype(group,false);
+      LayoutSetPrototypeUtil.updateLayoutStePrototype(group,true);
+      enableSocialOffice(group);
     }
-    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
-    if (privateLayoutSetPrototype != null) {
-      LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),true,true,privateLayoutSetPrototype.getUuid());
-      LayoutLocalServiceUtil.updatePriorities(group.getGroupId(),true);
-    }
-    enableSocialOffice(group);
   }
  catch (  Exception e) {
     throw new ModelListenerException(e);

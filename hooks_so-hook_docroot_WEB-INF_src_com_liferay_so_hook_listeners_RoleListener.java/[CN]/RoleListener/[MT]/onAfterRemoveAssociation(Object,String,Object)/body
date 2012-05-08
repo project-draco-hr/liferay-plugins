@@ -1,0 +1,34 @@
+{
+  try {
+    Role role=RoleLocalServiceUtil.getRole((Long)classPK);
+    String name=role.getName();
+    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
+      return;
+    }
+    if (associationClassName.equals(Group.class.getName())) {
+      Group group=GroupLocalServiceUtil.getGroup((Long)associationClassPK);
+      List<User> users=null;
+      String className=group.getClassName();
+      if (className.equals(UserGroup.class.getName())) {
+        users=UserLocalServiceUtil.getUserGroupUsers(group.getClassPK());
+      }
+ else       if (className.equals(Organization.class.getName())) {
+        users=UserLocalServiceUtil.getOrganizationUsers(group.getClassPK());
+      }
+ else       if (className.equals(Group.class.getName())) {
+        users=UserLocalServiceUtil.getGroupUsers(group.getClassPK());
+      }
+      if (users != null) {
+        for (        User user : users) {
+          Group userGroup=user.getGroup();
+          LayoutSetPrototypeUtil.removeLayoutSetPrototype(userGroup,false);
+          LayoutSetPrototypeUtil.removeLayoutSetPrototype(userGroup,true);
+          disableSocialOffice(userGroup);
+        }
+      }
+    }
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}

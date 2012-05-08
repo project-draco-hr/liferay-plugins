@@ -1,24 +1,17 @@
 {
   try {
-    if (!associationClassName.equals(Role.class.getName())) {
-      return;
-    }
-    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
-    String name=role.getName();
-    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
-      return;
-    }
     User user=UserLocalServiceUtil.getUser((Long)classPK);
-    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
-    removeUserLayouts(user,false,publicLayoutSetPrototype.getUuid());
-    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
-    removeUserLayouts(user,true,privateLayoutSetPrototype.getUuid());
-    disableSocialOffice(user.getGroup());
+    boolean hasRole=UserLocalServiceUtil.hasRoleUser(user.getCompanyId(),"Social Office User",user.getUserId(),true);
+    Group group=user.getGroup();
+    ExpandoBridge expandoBridge=group.getExpandoBridge();
+    boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
+    if (!hasRole && socialOfficeEnabled) {
+      LayoutSetPrototypeUtil.removeLayoutSetPrototype(group,false);
+      LayoutSetPrototypeUtil.removeLayoutSetPrototype(group,true);
+      disableSocialOffice(group);
+    }
   }
- catch (  NoSuchGroupException nsge) {
-    return;
-  }
-catch (  Exception e) {
+ catch (  Exception e) {
     throw new ModelListenerException(e);
   }
 }

@@ -1,5 +1,4 @@
 {
-  Group group=user.getGroup();
   LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
   UnicodeProperties settingsProperties=layoutSet.getSettingsProperties();
   settingsProperties.remove("last-merge-time");
@@ -8,7 +7,7 @@
   layoutSet.setLayoutSetPrototypeLinkEnabled(false);
   LayoutSetLocalServiceUtil.updateLayoutSet(layoutSet);
   LayoutSetLocalServiceUtil.updateLookAndFeel(group.getGroupId(),null,null,StringPool.BLANK,false);
-  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypeByUuid(layoutSetPrototypeUuid);
+  LayoutSetPrototype layoutSetPrototype=fetchLayoutSetPrototype(group.getCompanyId(),privateLayout);
   Group layoutSetPrototypeGroup=layoutSetPrototype.getGroup();
   List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(layoutSetPrototypeGroup.getGroupId(),true);
   String[] layoutUuids=new String[layouts.size()];
