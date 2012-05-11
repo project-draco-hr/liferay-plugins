@@ -11,9 +11,8 @@
     JSONObject notificationEventJSONObject=notificationEvent.getPayload();
     String portletId=notificationEventJSONObject.getString("portletId");
     long entryId=notificationEventJSONObject.getLong("entryId");
-    if (portletId.equals(PortletKeys.SO_PRIVATE_MESSAGING) && (entryId == mbThreadId)) {
-      String uuid=notificationEvent.getUuid();
-      ChannelHubManagerUtil.deleteUserNotificiationEvent(companyId,userId,uuid);
+    if (portletId.equals(PortletKeys.PRIVATE_MESSAGING) && (entryId == mbThreadId)) {
+      ChannelHubManagerUtil.deleteUserNotificiationEvent(companyId,userId,notificationEvent.getUuid());
     }
   }
 }
