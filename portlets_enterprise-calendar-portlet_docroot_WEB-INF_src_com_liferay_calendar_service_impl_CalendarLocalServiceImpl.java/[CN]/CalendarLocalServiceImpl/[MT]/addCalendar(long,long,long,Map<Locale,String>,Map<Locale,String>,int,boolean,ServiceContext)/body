@@ -1,8 +1,5 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
-  if (color <= 0) {
-    color=PortletPropsValues.CALENDAR_COLOR_DEFAULT;
-  }
   Date now=new Date();
   validate(nameMap);
   long calendarId=counterLocalService.increment();
@@ -17,6 +14,9 @@
   calendar.setCalendarResourceId(calendarResourceId);
   calendar.setNameMap(nameMap);
   calendar.setDescriptionMap(descriptionMap);
+  if (color <= 0) {
+    color=PortletPropsValues.CALENDAR_COLOR_DEFAULT;
+  }
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
@@ -26,7 +26,11 @@
     for (    Calendar calendarResourceCalendar : calendarResourceCalendars) {
       updateDefaultCalendar(calendarResourceCalendar,calendar.equals(calendarResourceCalendar));
     }
-    calendarResourceLocalService.updateDefaultCalendarId(calendarResourceId,calendarId);
+    CalendarResource calendarResource=calendarResourceLocalService.fetchCalendarResource(calendarResourceId);
+    if (calendarResource != null) {
+      calendarResource.setDefaultCalendarId(calendarId);
+      calendarResourcePersistence.update(calendarResource,false);
+    }
   }
   return calendar;
 }

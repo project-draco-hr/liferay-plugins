@@ -1,0 +1,34 @@
+{
+  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  User user=userPersistence.findByPrimaryKey(userId);
+  TimeZone timeZone=user.getTimeZone();
+  java.util.Calendar startDateCal=CalendarUtil.getCalendar(startDate,timeZone);
+  java.util.Calendar endDateCal=CalendarUtil.getCalendar(endDate,timeZone);
+  if (allDay) {
+    startDateCal=CalendarUtil.toMidnight(startDateCal);
+    endDateCal=CalendarUtil.toLastHour(endDateCal);
+  }
+  validate(titleMap,startDateCal,endDateCal);
+  if (firstReminder < secondReminder) {
+    int originalSecondReminder=secondReminder;
+    secondReminder=firstReminder;
+    firstReminder=originalSecondReminder;
+  }
+  calendarBooking.setCompanyId(user.getCompanyId());
+  calendarBooking.setUserId(user.getUserId());
+  calendarBooking.setUserName(user.getFullName());
+  calendarBooking.setModifiedDate(serviceContext.getModifiedDate(null));
+  calendarBooking.setCalendarId(calendarId);
+  calendarBooking.setTitleMap(titleMap);
+  calendarBooking.setDescriptionMap(descriptionMap);
+  calendarBooking.setLocation(location);
+  calendarBooking.setStartDate(startDateCal.getTime());
+  calendarBooking.setEndDate(endDateCal.getTime());
+  calendarBooking.setAllDay(allDay);
+  calendarBooking.setRecurrence(recurrence);
+  calendarBooking.setFirstReminder(firstReminder);
+  calendarBooking.setSecondReminder(secondReminder);
+  calendarBookingPersistence.update(calendarBooking,false);
+  calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
+  return calendarBooking;
+}

@@ -4,15 +4,16 @@
     className=CalendarResource.class.getName();
     classPK=calendarResourceId;
   }
+  long classNameId=PortalUtil.getClassNameId(className);
   long globalUserId=0;
-  if (CalendarResourceUtil.isGlobalResource(className)) {
-    globalUserId=CalendarResourceUtil.getGlobalResourceUserId(className,classPK);
+  if (isGlobalResource(classNameId)) {
+    globalUserId=getGlobalResourceUserId(classNameId,classPK);
+    groupId=getGlobalResourceGroupId(serviceContext.getCompanyId());
   }
   if (globalUserId > 0) {
     userId=globalUserId;
   }
   User user=userPersistence.findByPrimaryKey(userId);
-  long classNameId=PortalUtil.getClassNameId(className);
   Date now=new Date();
   validate(classNameId,classPK);
   CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
@@ -31,6 +32,10 @@
     calendarResource.setClassPK(classPK);
   }
   calendarResource.setClassUuid(classUuid);
+  if (defaultCalendarId <= 0) {
+    Calendar calendar=calendarLocalService.addCalendar(userId,groupId,calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,serviceContext);
+    defaultCalendarId=calendar.getCalendarId();
+  }
   calendarResource.setDefaultCalendarId(defaultCalendarId);
   calendarResource.setCode(code);
   calendarResource.setNameMap(nameMap);
@@ -39,9 +44,5 @@
   calendarResource.setActive(active);
   calendarResourcePersistence.update(calendarResource,false);
   resourceLocalService.addModelResources(calendarResource,serviceContext);
-  if (defaultCalendarId <= 0) {
-    Calendar calendar=calendarLocalService.addCalendar(userId,groupId,calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,serviceContext);
-    updateDefaultCalendarId(calendarResourceId,calendar.getCalendarId());
-  }
   return calendarResource;
 }

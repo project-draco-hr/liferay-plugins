@@ -1,5 +1,8 @@
 {
   calendarBookingPersistence.remove(calendarBooking);
-  resourceLocalService.deleteResource(calendarBooking,ResourceConstants.SCOPE_INDIVIDUAL);
+  List<CalendarBooking> invitedBookings=getByParentCalendarBookingId(calendarBooking.getCalendarBookingId());
+  for (  CalendarBooking invitedBooking : invitedBookings) {
+    deleteCalendarBooking(invitedBooking);
+  }
   return calendarBooking;
 }
