@@ -1,25 +1,25 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
-  Date now=new Date();
   TimeZone timeZone=user.getTimeZone();
   if (parentCalendarBookingId > 0) {
     CalendarBooking parentCalendarBooking=CalendarBookingLocalServiceUtil.getCalendarBooking(parentCalendarBookingId);
     User creatorUser=userPersistence.findByPrimaryKey(parentCalendarBooking.getUserId());
     timeZone=creatorUser.getTimeZone();
   }
-  java.util.Calendar startDateCal=CalendarUtil.getCalendar(startDate,timeZone);
-  java.util.Calendar endDateCal=CalendarUtil.getCalendar(endDate,timeZone);
+  java.util.Calendar startDateJCalendar=JCalendarUtil.getJCalendar(startDate,timeZone);
+  java.util.Calendar endDateJCalendar=JCalendarUtil.getJCalendar(endDate,timeZone);
   if (allDay) {
-    startDateCal=CalendarUtil.toMidnight(startDateCal);
-    endDateCal=CalendarUtil.toLastHour(endDateCal);
+    startDateJCalendar=toMidnightJCalendar(startDateJCalendar);
+    endDateJCalendar=toLastHourJCalendar(endDateJCalendar);
   }
-  validate(titleMap,startDateCal,endDateCal);
   if (firstReminder < secondReminder) {
     int originalSecondReminder=secondReminder;
     secondReminder=firstReminder;
     firstReminder=originalSecondReminder;
   }
+  Date now=new Date();
+  validate(titleMap,startDateJCalendar,endDateJCalendar);
   long calendarBookingId=counterLocalService.increment();
   CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
   calendarBooking.setUuid(serviceContext.getUuid());
@@ -31,21 +31,25 @@
   calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
   calendarBooking.setCalendarId(calendarId);
   calendarBooking.setCalendarResourceId(calendar.getCalendarResourceId());
-  int status=CalendarBookingWorkflowConstants.STATUS_PENDING;
-  if (parentCalendarBookingId == 0) {
-    parentCalendarBookingId=calendarBookingId;
-    status=CalendarBookingWorkflowConstants.STATUS_APPROVED;
+  if (parentCalendarBookingId > 0) {
+    calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
   }
-  calendarBooking.setParentCalendarBookingId(parentCalendarBookingId);
+ else {
+    calendarBooking.setParentCalendarBookingId(calendarBookingId);
+  }
   calendarBooking.setTitleMap(titleMap);
   calendarBooking.setDescriptionMap(descriptionMap);
   calendarBooking.setLocation(location);
-  calendarBooking.setStartDate(startDateCal.getTime());
-  calendarBooking.setEndDate(endDateCal.getTime());
+  calendarBooking.setStartDate(startDateJCalendar.getTime());
+  calendarBooking.setEndDate(endDateJCalendar.getTime());
   calendarBooking.setAllDay(allDay);
   calendarBooking.setRecurrence(recurrence);
   calendarBooking.setFirstReminder(firstReminder);
   calendarBooking.setSecondReminder(secondReminder);
+  int status=CalendarBookingWorkflowConstants.STATUS_PENDING;
+  if (parentCalendarBookingId == 0) {
+    status=CalendarBookingWorkflowConstants.STATUS_APPROVED;
+  }
   calendarBooking.setStatus(status);
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking,false);

@@ -1,13 +1,12 @@
 {
-  long userId=0;
-  long userClassNameId=PortalUtil.getClassNameId(User.class);
   long groupClassNameId=PortalUtil.getClassNameId(Group.class);
   if (classNameId == groupClassNameId) {
     Group group=GroupLocalServiceUtil.getGroup(classPK);
-    userId=group.getCreatorUserId();
+    return group.getCreatorUserId();
   }
- else   if (classNameId == userClassNameId) {
-    userId=classPK;
+  long userClassNameId=PortalUtil.getClassNameId(User.class);
+  if (classNameId == userClassNameId) {
+    return classPK;
   }
-  return userId;
+  return 0;
 }

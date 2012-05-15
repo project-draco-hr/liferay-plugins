@@ -1,19 +1,18 @@
 {
-  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
   User user=userPersistence.findByPrimaryKey(userId);
-  TimeZone timeZone=user.getTimeZone();
-  java.util.Calendar startDateCal=CalendarUtil.getCalendar(startDate,timeZone);
-  java.util.Calendar endDateCal=CalendarUtil.getCalendar(endDate,timeZone);
+  CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  java.util.Calendar startDateJCalendar=JCalendarUtil.getJCalendar(startDate,user.getTimeZone());
+  java.util.Calendar endDateJCalendar=JCalendarUtil.getJCalendar(endDate,user.getTimeZone());
   if (allDay) {
-    startDateCal=CalendarUtil.toMidnight(startDateCal);
-    endDateCal=CalendarUtil.toLastHour(endDateCal);
+    startDateJCalendar=toMidnightJCalendar(startDateJCalendar);
+    endDateJCalendar=toLastHourJCalendar(endDateJCalendar);
   }
-  validate(titleMap,startDateCal,endDateCal);
   if (firstReminder < secondReminder) {
     int originalSecondReminder=secondReminder;
     secondReminder=firstReminder;
     firstReminder=originalSecondReminder;
   }
+  validate(titleMap,startDateJCalendar,endDateJCalendar);
   calendarBooking.setCompanyId(user.getCompanyId());
   calendarBooking.setUserId(user.getUserId());
   calendarBooking.setUserName(user.getFullName());
@@ -22,8 +21,8 @@
   calendarBooking.setTitleMap(titleMap);
   calendarBooking.setDescriptionMap(descriptionMap);
   calendarBooking.setLocation(location);
-  calendarBooking.setStartDate(startDateCal.getTime());
-  calendarBooking.setEndDate(endDateCal.getTime());
+  calendarBooking.setStartDate(startDateJCalendar.getTime());
+  calendarBooking.setEndDate(endDateJCalendar.getTime());
   calendarBooking.setAllDay(allDay);
   calendarBooking.setRecurrence(recurrence);
   calendarBooking.setFirstReminder(firstReminder);

@@ -1,0 +1,16 @@
+{
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  if (group.isUser()) {
+    return null;
+  }
+  long classNameId=PortalUtil.getClassNameId(Group.class);
+  CalendarResource calendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResource(classNameId,groupId);
+  if (calendarResource != null) {
+    return calendarResource;
+  }
+  Map<Locale,String> nameMap=new HashMap<Locale,String>();
+  nameMap.put(LocaleUtil.getDefault(),group.getName());
+  Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+  return CalendarResourceLocalServiceUtil.addCalendarResource(serviceContext.getUserId(),0,Group.class.getName(),groupId,null,0,group.getName(),nameMap,descriptionMap,null,true,serviceContext);
+}

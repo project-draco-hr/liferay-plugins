@@ -1,12 +1,12 @@
 {
   Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
+  if (color <= 0) {
+    color=PortletPropsValues.CALENDAR_COLOR_DEFAULT;
+  }
   validate(nameMap);
   calendar.setModifiedDate(serviceContext.getModifiedDate(null));
   calendar.setNameMap(nameMap);
   calendar.setDescriptionMap(descriptionMap);
-  if (color <= 0) {
-    color=PortletPropsValues.CALENDAR_COLOR_DEFAULT;
-  }
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
