@@ -55,6 +55,14 @@
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CALENDARRESOURCEID,args);
       FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CALENDARRESOURCEID,args);
     }
+    if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PARENTCALENDARBOOKINGID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalParentCalendarBookingId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PARENTCALENDARBOOKINGID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PARENTCALENDARBOOKINGID,args);
+      args=new Object[]{Long.valueOf(calendarBookingModelImpl.getParentCalendarBookingId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PARENTCALENDARBOOKINGID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PARENTCALENDARBOOKINGID,args);
+    }
     if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_S.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalCalendarResourceId()),Integer.valueOf(calendarBookingModelImpl.getOriginalStatus())};
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S,args);
@@ -71,10 +79,19 @@
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_S_E,args);
       FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_S_E,args);
     }
+    if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_S.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalParentCalendarBookingId()),Integer.valueOf(calendarBookingModelImpl.getOriginalStatus())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_S,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_S,args);
+      args=new Object[]{Long.valueOf(calendarBookingModelImpl.getParentCalendarBookingId()),Integer.valueOf(calendarBookingModelImpl.getStatus())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_P_S,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_S,args);
+    }
   }
   EntityCacheUtil.putResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBooking.getPrimaryKey(),calendarBooking);
   if (isNew) {
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBooking.getUuid(),Long.valueOf(calendarBooking.getGroupId())},calendarBooking);
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_P,new Object[]{Long.valueOf(calendarBooking.getCalendarId()),Long.valueOf(calendarBooking.getParentCalendarBookingId())},calendarBooking);
   }
  else {
     if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
@@ -82,6 +99,12 @@
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
       FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{calendarBooking.getUuid(),Long.valueOf(calendarBooking.getGroupId())},calendarBooking);
+    }
+    if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_C_P.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(calendarBookingModelImpl.getOriginalCalendarId()),Long.valueOf(calendarBookingModelImpl.getOriginalParentCalendarBookingId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_C_P,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_P,args);
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_P,new Object[]{Long.valueOf(calendarBooking.getCalendarId()),Long.valueOf(calendarBooking.getParentCalendarBookingId())},calendarBooking);
     }
   }
   return calendarBooking;
