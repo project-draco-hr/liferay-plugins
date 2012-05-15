@@ -1,0 +1,26 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  Locale locale=themeDisplay.getLocale();
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    CalendarResource calendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResource(calendar.getCalendarResourceId());
+    jsonObject.put("calendarId",calendar.getCalendarId());
+    jsonObject.put("calendarResourceId",calendarResource.getCalendarResourceId());
+    jsonObject.put("calendarResourceName",calendarResource.getName(locale));
+    jsonObject.put("color",ColorUtil.toHexString(calendar.getColor()));
+    jsonObject.put("defaultCalendar",calendar.isDefaultCalendar());
+    jsonObject.put("classNameId",calendarResource.getClassNameId());
+    jsonObject.put("classPK",calendarResource.getClassPK());
+    jsonObject.put("global",calendarResource.isGlobal());
+    jsonObject.put("name",calendar.getName(locale));
+    JSONObject permissionsJSONObject=JSONFactoryUtil.createJSONObject();
+    permissionsJSONObject.put("VIEW",CalendarPermission.contains(permissionChecker,calendar,ActionKeys.VIEW));
+    permissionsJSONObject.put("VIEW_BOOKING_DETAILS",CalendarPermission.contains(permissionChecker,calendar,ActionKeys.VIEW_BOOKING_DETAILS));
+    permissionsJSONObject.put("MANAGE_BOOKINGS",CalendarPermission.contains(permissionChecker,calendar,ActionKeys.MANAGE_BOOKINGS));
+    jsonObject.put("permissions",permissionsJSONObject);
+  }
+ catch (  Exception e) {
+  }
+  return jsonObject;
+}

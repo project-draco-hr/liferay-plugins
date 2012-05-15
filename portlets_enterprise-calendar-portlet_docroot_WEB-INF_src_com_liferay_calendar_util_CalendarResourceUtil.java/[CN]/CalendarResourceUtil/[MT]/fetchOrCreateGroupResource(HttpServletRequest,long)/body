@@ -1,0 +1,24 @@
+{
+  CalendarResource calendarResource=null;
+  try {
+    Group group=GroupLocalServiceUtil.getGroup(groupId);
+    if (group.isUser()) {
+      return null;
+    }
+    long classNameId=PortalUtil.getClassNameId(Group.class);
+    calendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResource(classNameId,groupId);
+    if (calendarResource == null) {
+      ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+      Map<Locale,String> nameMap=new HashMap<Locale,String>();
+      nameMap.put(LocaleUtil.getDefault(),group.getName());
+      Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+      calendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(serviceContext.getUserId(),0,Group.class.getName(),groupId,null,0,group.getName(),nameMap,descriptionMap,null,true,serviceContext);
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Unable to create calendar resource for groupId: " + groupId);
+    }
+  }
+  return calendarResource;
+}

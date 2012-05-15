@@ -1,0 +1,21 @@
+{
+  CalendarResource calendarResource=null;
+  try {
+    long classNameId=PortalUtil.getClassNameId(User.class);
+    calendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResource(classNameId,userId);
+    if (calendarResource == null) {
+      User user=UserLocalServiceUtil.getUser(userId);
+      ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+      Map<Locale,String> nameMap=new HashMap<Locale,String>();
+      nameMap.put(LocaleUtil.getDefault(),user.getFullName());
+      Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+      calendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(serviceContext.getUserId(),0,User.class.getName(),userId,null,0,user.getFirstName(),nameMap,descriptionMap,null,true,serviceContext);
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Unable to create calendar resource for userId: " + userId);
+    }
+  }
+  return calendarResource;
+}
