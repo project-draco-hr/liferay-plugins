@@ -1,10 +1,12 @@
 {
-  super(portletRequest,new CalendarResourceDisplayTerms(portletRequest),new CalendarResourceSearchTerms(portletRequest),DEFAULT_CUR_PARAM,DEFAULT_DELTA,iteratorURL,null,EMPTY_RESULTS_MESSAGE);
+  super(portletRequest,new CalendarResourceDisplayTerms(portletRequest),new CalendarResourceSearchTerms(portletRequest),curParam,DEFAULT_DELTA,iteratorURL,null,EMPTY_RESULTS_MESSAGE);
   CalendarResourceDisplayTerms displayTerms=(CalendarResourceDisplayTerms)getDisplayTerms();
   iteratorURL.setParameter(CalendarResourceDisplayTerms.ACTIVE,String.valueOf(displayTerms.isActive()));
   iteratorURL.setParameter(CalendarResourceDisplayTerms.CODE,displayTerms.getCode());
   iteratorURL.setParameter(CalendarResourceDisplayTerms.DESCRIPTION,displayTerms.getDescription());
   iteratorURL.setParameter(CalendarResourceDisplayTerms.NAME,displayTerms.getName());
+  iteratorURL.setParameter(CalendarResourceDisplayTerms.SCOPE,String.valueOf(displayTerms.getScope()));
+  iteratorURL.setParameter(CalendarResourceDisplayTerms.TYPE,displayTerms.getType());
   try {
     PortalPreferences preferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
     String orderByCol=ParamUtil.getString(portletRequest,"orderByCol");

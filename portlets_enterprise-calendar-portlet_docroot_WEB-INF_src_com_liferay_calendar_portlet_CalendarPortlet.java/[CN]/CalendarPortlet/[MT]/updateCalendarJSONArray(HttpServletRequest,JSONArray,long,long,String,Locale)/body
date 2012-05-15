@@ -1,0 +1,14 @@
+{
+  CalendarResource calendarResource=CalendarResourceUtil.fetchOrCreateResource(request,classNameId,classPK);
+  if (calendarResource != null) {
+    ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+    PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+    List<Calendar> calendars=CalendarLocalServiceUtil.getCalendarResourceCalendars(calendarResource.getGroupId(),calendarResource.getCalendarResourceId());
+    for (    Calendar calendar : calendars) {
+      if (CalendarPermission.contains(permissionChecker,calendar,ActionKeys.VIEW)) {
+        JSONObject jsonObject=CalendarUtil.toCalendarJSONObject(request,calendar);
+        jsonArray.put(jsonObject);
+      }
+    }
+  }
+}

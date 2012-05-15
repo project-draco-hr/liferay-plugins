@@ -1,0 +1,26 @@
+{
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  Locale locale=themeDisplay.getLocale();
+  long companyId=PortalUtil.getCompanyId(resourceRequest);
+  String keywords=ParamUtil.getString(resourceRequest,"keywords");
+  JSONArray resourcesJSONArray=JSONFactoryUtil.createJSONArray();
+  long classNameId=PortalUtil.getClassNameId(CalendarResource.class);
+  List<CalendarResource> calendarResources=CalendarResourceServiceUtil.search(companyId,new long[]{},new long[]{classNameId},keywords,true,true,0,SearchContainer.DEFAULT_DELTA,new CalendarResourceNameComparator());
+  for (  CalendarResource calendarResource : calendarResources) {
+    updateCalendarJSONArray(request,resourcesJSONArray,calendarResource.getClassNameId(),calendarResource.getClassPK(),calendarResource.getName(locale),locale);
+  }
+  long userClassNameId=PortalUtil.getClassNameId(User.class);
+  List<User> users=UserLocalServiceUtil.search(companyId,keywords,0,null,0,SearchContainer.DEFAULT_DELTA,new UserFirstNameComparator());
+  for (  User user : users) {
+    updateCalendarJSONArray(request,resourcesJSONArray,userClassNameId,user.getUserId(),user.getFullName(),locale);
+  }
+  long groupClassNameId=PortalUtil.getClassNameId(Group.class);
+  String[] params=new String[]{"usersGroups:" + themeDisplay.getUserId() + ":long"};
+  String name=StringUtil.merge(CustomSQLUtil.keywords(keywords),StringPool.BLANK);
+  List<Group> groups=GroupServiceUtil.search(companyId,name,null,params,0,SearchContainer.DEFAULT_DELTA);
+  for (  Group group : groups) {
+    updateCalendarJSONArray(request,resourcesJSONArray,groupClassNameId,group.getGroupId(),group.getName(),locale);
+  }
+  writeJSON(resourceRequest,resourceResponse,resourcesJSONArray);
+}
