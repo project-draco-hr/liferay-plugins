@@ -1,13 +1,13 @@
 {
   long[] invitedCalendarIds=ParamUtil.getLongValues(actionRequest,"invitedCalendarIds");
-  List<CalendarBooking> calendarBookings=CalendarBookingServiceUtil.getByParentCalendarBookingId(parentCalendarBooking.getCalendarBookingId());
+  List<CalendarBooking> calendarBookings=CalendarBookingServiceUtil.getChildCalendarBookings(parentCalendarBooking.getCalendarBookingId());
   for (  CalendarBooking calendarBooking : calendarBookings) {
     if (!ArrayUtil.contains(invitedCalendarIds,calendarBooking.getCalendarId())) {
       CalendarBookingServiceUtil.deleteCalendarBooking(calendarBooking.getCalendarBookingId());
     }
   }
   for (  long calendarId : invitedCalendarIds) {
-    int total=CalendarBookingLocalServiceUtil.countByParentCalendarBookingId(calendarId,parentCalendarBooking.getCalendarBookingId());
+    int total=CalendarBookingLocalServiceUtil.getCalendarBookingsCount(calendarId,parentCalendarBooking.getCalendarBookingId());
     if (total == 0) {
       CalendarBookingLocalServiceUtil.addCalendarBooking(parentCalendarBooking.getUserId(),calendarId,parentCalendarBooking.getCalendarBookingId(),parentCalendarBooking.getTitleMap(),parentCalendarBooking.getDescriptionMap(),parentCalendarBooking.getLocation(),parentCalendarBooking.getUTCStartDate(),parentCalendarBooking.getUTCEndDate(),parentCalendarBooking.getAllDay(),parentCalendarBooking.getRecurrence(),parentCalendarBooking.getFirstReminder(),parentCalendarBooking.getSecondReminder(),serviceContext);
     }

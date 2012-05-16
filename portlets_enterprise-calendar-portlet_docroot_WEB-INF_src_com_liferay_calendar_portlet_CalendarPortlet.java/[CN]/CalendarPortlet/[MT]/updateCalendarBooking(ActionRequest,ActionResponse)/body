@@ -19,7 +19,7 @@
   if (startDateAmPm == java.util.Calendar.PM) {
     startDateHour+=12;
   }
-  java.util.Calendar startDate=CalendarUtil.getCalendar(utcTimeZone,startDateYear,startDateMonth,startDateDay,startDateHour,startDateMinute,0,0);
+  java.util.Calendar startDate=JCalendarUtil.getJCalendar(utcTimeZone,startDateYear,startDateMonth,startDateDay,startDateHour,startDateMinute,0,0);
   int endDateMonth=ParamUtil.getInteger(actionRequest,"endDateMonth");
   int endDateDay=ParamUtil.getInteger(actionRequest,"endDateDay");
   int endDateYear=ParamUtil.getInteger(actionRequest,"endDateYear");
@@ -29,13 +29,13 @@
   if (endDateAmPm == java.util.Calendar.PM) {
     endDateHour+=12;
   }
-  java.util.Calendar endDate=CalendarUtil.getCalendar(utcTimeZone,endDateYear,endDateMonth,endDateDay,endDateHour,endDateMinute,0,0);
+  java.util.Calendar endDate=JCalendarUtil.getJCalendar(utcTimeZone,endDateYear,endDateMonth,endDateDay,endDateHour,endDateMinute,0,0);
   CalendarBooking calendarBooking=null;
   if (calendarBookingId > 0) {
-    calendarBooking=CalendarBookingServiceUtil.updateCalendarBooking(user.getUserId(),calendarBookingId,calendarId,titleMap,descriptionMap,location,status,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
+    calendarBooking=CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,titleMap,descriptionMap,location,status,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
   }
  else {
-    calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(user.getUserId(),calendarId,titleMap,descriptionMap,location,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
+    calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,titleMap,descriptionMap,location,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
   }
   if (calendarBooking.isMasterBooking()) {
     updateCalendarBookingInvitedCalendars(actionRequest,actionResponse,calendarBooking,serviceContext);
