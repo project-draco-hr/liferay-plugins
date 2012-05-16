@@ -1,32 +1,12 @@
 {
   try {
-    Calendar calendar=null;
-    long calendarId=ParamUtil.getLong(renderRequest,"calendarId");
-    if (calendarId > 0) {
-      calendar=CalendarServiceUtil.getCalendar(calendarId);
-    }
-    renderRequest.setAttribute(WebKeys.CALENDAR,calendar);
-    CalendarBooking calendarBooking=null;
-    long calendarBookingId=ParamUtil.getLong(renderRequest,"calendarBookingId");
-    if (calendarBookingId > 0) {
-      calendarBooking=CalendarBookingServiceUtil.getCalendarBooking(calendarBookingId);
-    }
-    renderRequest.setAttribute(WebKeys.CALENDAR_BOOKING,calendarBooking);
-    CalendarResource calendarResource=null;
-    long calendarResourceId=ParamUtil.getLong(renderRequest,"calendarResourceId");
-    long classNameId=ParamUtil.getLong(renderRequest,"classNameId");
-    long classPK=ParamUtil.getLong(renderRequest,"classPK");
-    if (calendarResourceId > 0) {
-      calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
-    }
- else     if ((classNameId > 0) && (classPK > 0)) {
-      calendarResource=CalendarResourceUtil.getCalendarResource(PortalUtil.getHttpServletRequest(renderRequest),classNameId,classPK);
-    }
-    renderRequest.setAttribute(WebKeys.CALENDAR_RESOURCE,calendarResource);
+    getCalendar(renderRequest);
+    getCalendarBooking(renderRequest);
+    getCalendarResource(renderRequest);
   }
  catch (  Exception e) {
     if (e instanceof NoSuchResourceException) {
-      SessionErrors.add(renderRequest,e.getClass().getName());
+      SessionErrors.add(renderRequest,e.getClass());
     }
  else {
       throw new PortletException(e);

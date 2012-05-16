@@ -1,43 +1,20 @@
 {
-  ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
-  User user=PortalUtil.getUser(actionRequest);
-  TimeZone utcTimeZone=TimeZoneUtil.getTimeZone(StringPool.UTC);
-  long calendarId=ParamUtil.getLong(actionRequest,"calendarId");
   long calendarBookingId=ParamUtil.getLong(actionRequest,"calendarBookingId");
+  long calendarId=ParamUtil.getLong(actionRequest,"calendarId");
+  long[] childCalendarIds=ParamUtil.getLongValues(actionRequest,"childCalendarIds");
   Map<Locale,String> titleMap=LocalizationUtil.getLocalizationMap(actionRequest,"title");
   Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(actionRequest,"description");
   String location=ParamUtil.getString(actionRequest,"location");
+  java.util.Calendar startDateJCalendar=getJCalendar(actionRequest,"startDate");
+  java.util.Calendar endDateJCalendar=getJCalendar(actionRequest,"endDate");
   boolean allDay=ParamUtil.getBoolean(actionRequest,"allDay");
   String recurrence=ParamUtil.getString(actionRequest,"recurrence");
   int status=ParamUtil.getInteger(actionRequest,"status");
-  int startDateMonth=ParamUtil.getInteger(actionRequest,"startDateMonth");
-  int startDateDay=ParamUtil.getInteger(actionRequest,"startDateDay");
-  int startDateYear=ParamUtil.getInteger(actionRequest,"startDateYear");
-  int startDateHour=ParamUtil.getInteger(actionRequest,"startDateHour");
-  int startDateMinute=ParamUtil.getInteger(actionRequest,"startDateMinute");
-  int startDateAmPm=ParamUtil.getInteger(actionRequest,"startDateAmPm");
-  if (startDateAmPm == java.util.Calendar.PM) {
-    startDateHour+=12;
-  }
-  java.util.Calendar startDate=JCalendarUtil.getJCalendar(utcTimeZone,startDateYear,startDateMonth,startDateDay,startDateHour,startDateMinute,0,0);
-  int endDateMonth=ParamUtil.getInteger(actionRequest,"endDateMonth");
-  int endDateDay=ParamUtil.getInteger(actionRequest,"endDateDay");
-  int endDateYear=ParamUtil.getInteger(actionRequest,"endDateYear");
-  int endDateHour=ParamUtil.getInteger(actionRequest,"endDateHour");
-  int endDateMinute=ParamUtil.getInteger(actionRequest,"endDateMinute");
-  int endDateAmPm=ParamUtil.getInteger(actionRequest,"endDateAmPm");
-  if (endDateAmPm == java.util.Calendar.PM) {
-    endDateHour+=12;
-  }
-  java.util.Calendar endDate=JCalendarUtil.getJCalendar(utcTimeZone,endDateYear,endDateMonth,endDateDay,endDateHour,endDateMinute,0,0);
-  CalendarBooking calendarBooking=null;
-  if (calendarBookingId > 0) {
-    calendarBooking=CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,titleMap,descriptionMap,location,status,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
+  if (calendarBookingId <= 0) {
+    CalendarBookingServiceUtil.addCalendarBooking(calendarId,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,childCalendarIds,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,0,0,serviceContext);
   }
  else {
-    calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,titleMap,descriptionMap,location,startDate.getTime(),endDate.getTime(),allDay,recurrence,0,0,serviceContext);
-  }
-  if (calendarBooking.isMasterBooking()) {
-    updateCalendarBookingInvitedCalendars(actionRequest,actionResponse,calendarBooking,serviceContext);
+    CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,0,0,status,serviceContext);
   }
 }
