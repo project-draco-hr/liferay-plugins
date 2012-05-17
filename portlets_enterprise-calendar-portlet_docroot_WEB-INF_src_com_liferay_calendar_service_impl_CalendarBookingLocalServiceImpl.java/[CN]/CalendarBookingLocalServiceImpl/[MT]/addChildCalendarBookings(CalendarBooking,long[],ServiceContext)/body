@@ -4,7 +4,7 @@
   }
   List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBooking.getCalendarBookingId());
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
-    if (ArrayUtil.contains(childCalendarIds,childCalendarBooking.getCalendarId())) {
+    if (childCalendarBooking.isMasterBooking() || ArrayUtil.contains(childCalendarIds,childCalendarBooking.getCalendarId())) {
       continue;
     }
     deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
