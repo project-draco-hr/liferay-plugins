@@ -1,0 +1,9 @@
+{
+  List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBookingId);
+  long[] childCalendarIds=new long[childCalendarBookings.size()];
+  for (int i=0; i < childCalendarIds.length; i++) {
+    CalendarBooking calendarBooking=childCalendarBookings.get(i);
+    childCalendarIds[i]=calendarBooking.getCalendarId();
+  }
+  return updateCalendarBooking(userId,calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDate,endDate,allDay,recurrence,firstReminder,secondReminder,status,serviceContext);
+}
