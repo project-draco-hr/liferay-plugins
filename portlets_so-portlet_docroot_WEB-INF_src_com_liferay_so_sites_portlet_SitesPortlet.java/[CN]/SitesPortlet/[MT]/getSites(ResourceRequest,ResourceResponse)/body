@@ -17,39 +17,17 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   List<Group> groups=null;
   int groupsCount=0;
-  if (directory) {
-    if (searchTab.equals("my-favorites")) {
-      groups=SitesUtil.getFavoriteSitesGroups(themeDisplay.getUserId(),keywords,start,end);
-      groupsCount=SitesUtil.getFavoriteSitesGroupsCount(themeDisplay.getUserId(),keywords);
-    }
- else {
-      LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
-      if (searchTab.equals("my-sites")) {
-        params.put("usersGroups",themeDisplay.getUserId());
-      }
- else {
-        List<Integer> types=new ArrayList<Integer>();
-        types.add(GroupConstants.TYPE_SITE_OPEN);
-        types.add(GroupConstants.TYPE_SITE_RESTRICTED);
-        params.put("types",types);
-      }
-      groups=GroupLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,null,params,start,end,new GroupNameComparator(true));
-      groupsCount=GroupLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,null,params);
-    }
+  if (searchTab.equals("my-sites")) {
+    groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true,maxResultSize);
+    groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true);
+  }
+ else   if (searchTab.equals("my-favorites")) {
+    groups=SitesUtil.getFavoriteSitesGroups(themeDisplay.getUserId(),keywords,0,maxResultSize);
+    groupsCount=SitesUtil.getFavoriteSitesGroupsCount(themeDisplay.getUserId(),keywords);
   }
  else {
-    if (searchTab.equals("my-sites")) {
-      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true,maxResultSize);
-      groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,true);
-    }
- else     if (searchTab.equals("my-favorites")) {
-      groups=SitesUtil.getFavoriteSitesGroups(themeDisplay.getUserId(),keywords,0,maxResultSize);
-      groupsCount=SitesUtil.getFavoriteSitesGroupsCount(themeDisplay.getUserId(),keywords);
-    }
- else {
-      groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false,maxResultSize);
-      groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false);
-    }
+    groups=SitesUtil.getVisibleSites(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false,maxResultSize);
+    groupsCount=SitesUtil.getVisibleSitesCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,false);
   }
   jsonObject.put("count",groupsCount);
   LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
@@ -82,7 +60,23 @@
       siteAssignmentsPortletURL.setParameter("addUserIds",String.valueOf(themeDisplay.getUserId()));
       groupJSONObject.put("joinUrl",siteAssignmentsPortletURL.toString());
     }
- else     if (member && ((group.getType() != GroupConstants.TYPE_SITE_PRIVATE) || GroupPermissionUtil.contains(permissionChecker,group.getGroupId(),ActionKeys.ASSIGN_MEMBERS))) {
+ else     if (!GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId()) && (group.getType() == GroupConstants.TYPE_SITE_RESTRICTED)) {
+      if (!MembershipRequestLocalServiceUtil.hasMembershipRequest(themeDisplay.getUserId(),group.getGroupId(),MembershipRequestConstants.STATUS_PENDING)) {
+        PortletURL membershipRequestURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
+        membershipRequestURL.setWindowState(WindowState.NORMAL);
+        membershipRequestURL.setParameter("struts_action","/sites_admin/post_membership_request");
+        membershipRequestURL.setParameter("redirect",themeDisplay.getURLCurrent());
+        membershipRequestURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+        User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+        String comments=LanguageUtil.format(themeDisplay.getLocale(),"x-wishes-to-join-x",new Object[]{user.getFullName(),group.getDescriptiveName()});
+        membershipRequestURL.setParameter("comments",comments);
+        groupJSONObject.put("requestUrl",membershipRequestURL.toString());
+      }
+ else {
+        groupJSONObject.put("membershipRequested",true);
+      }
+    }
+ else     if (GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId())) {
       siteAssignmentsPortletURL.setParameter("removeUserIds",String.valueOf(themeDisplay.getUserId()));
       groupJSONObject.put("leaveUrl",siteAssignmentsPortletURL.toString());
     }
