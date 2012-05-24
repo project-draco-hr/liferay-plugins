@@ -39,21 +39,21 @@
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
       Layout layout=themeDisplay.getLayout();
       PortletURL portletURL=liferayPortletResponse.createActionURL(PortletKeys.SITE_REDIRECTOR);
-      portletURL.setWindowState(WindowState.NORMAL);
       portletURL.setParameter("struts_action","/my_sites/view");
       portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
       portletURL.setParameter("privateLayout",String.valueOf(!group.hasPublicLayouts()));
+      portletURL.setWindowState(WindowState.NORMAL);
       groupJSONObject.put("url",portletURL.toString());
     }
     boolean socialOfficeGroup=SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId());
     groupJSONObject.put("socialOfficeGroup",socialOfficeGroup);
     Layout layout=themeDisplay.getLayout();
     PortletURL siteAssignmentsPortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
-    siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
     siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
     siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");
     siteAssignmentsPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
     siteAssignmentsPortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+    siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
     boolean member=GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId());
     PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
     if (!member && (group.getType() == GroupConstants.TYPE_SITE_OPEN)) {
@@ -63,13 +63,13 @@
  else     if (!member && (group.getType() == GroupConstants.TYPE_SITE_RESTRICTED)) {
       if (!MembershipRequestLocalServiceUtil.hasMembershipRequest(themeDisplay.getUserId(),group.getGroupId(),MembershipRequestConstants.STATUS_PENDING)) {
         PortletURL membershipRequestURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
-        membershipRequestURL.setWindowState(WindowState.NORMAL);
         membershipRequestURL.setParameter("struts_action","/sites_admin/post_membership_request");
         membershipRequestURL.setParameter("redirect",themeDisplay.getURLCurrent());
         membershipRequestURL.setParameter("groupId",String.valueOf(group.getGroupId()));
         User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
         String comments=LanguageUtil.format(themeDisplay.getLocale(),"x-wishes-to-join-x",new Object[]{user.getFullName(),group.getDescriptiveName()});
         membershipRequestURL.setParameter("comments",comments);
+        membershipRequestURL.setWindowState(WindowState.NORMAL);
         groupJSONObject.put("requestUrl",membershipRequestURL.toString());
       }
  else {
