@@ -10,11 +10,18 @@
   boolean allDay=ParamUtil.getBoolean(actionRequest,"allDay");
   String recurrence=ParamUtil.getString(actionRequest,"recurrence");
   int status=ParamUtil.getInteger(actionRequest,"status");
+  boolean reminder=ParamUtil.getBoolean(actionRequest,"reminder");
+  int firstReminder=ParamUtil.getInteger(actionRequest,"firstReminder");
+  int secondReminder=ParamUtil.getInteger(actionRequest,"secondReminder");
+  if (!reminder) {
+    firstReminder=0;
+    secondReminder=0;
+  }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
   if (calendarBookingId <= 0) {
-    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,0,0,serviceContext);
+    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,firstReminder,secondReminder,serviceContext);
   }
  else {
-    CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,0,0,status,serviceContext);
+    CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDateJCalendar.getTime(),endDateJCalendar.getTime(),allDay,recurrence,firstReminder,secondReminder,status,serviceContext);
   }
 }

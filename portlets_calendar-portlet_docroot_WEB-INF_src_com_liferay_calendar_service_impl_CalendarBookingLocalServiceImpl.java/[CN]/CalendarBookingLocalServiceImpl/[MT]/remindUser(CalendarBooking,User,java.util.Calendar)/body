@@ -1,0 +1,30 @@
+{
+  try {
+    long ownerId=calendarBooking.getGroupId();
+    int ownerType=PortletKeys.PREFS_OWNER_TYPE_GROUP;
+    long plid=PortletKeys.PREFS_PLID_SHARED;
+    String portletId=PortletKeys.CALENDAR;
+    PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(calendarBooking.getCompanyId(),ownerId,ownerType,plid,portletId);
+    if (!CalendarUtil.getEmailBookingReminderEnabled(preferences)) {
+      return;
+    }
+    Company company=CompanyLocalServiceUtil.getCompany(user.getCompanyId());
+    String portletName=LanguageUtil.get(user.getLocale(),PortalUtil.getPortletTitle(PortletKeys.CALENDAR,user));
+    String fromName=CalendarUtil.getEmailFromName(preferences,calendarBooking.getCompanyId());
+    String fromAddress=CalendarUtil.getEmailFromAddress(preferences,calendarBooking.getCompanyId());
+    String toName=user.getFullName();
+    String toAddress=user.getEmailAddress();
+    String subject=CalendarUtil.getEmailBookingReminderSubject(preferences);
+    String body=CalendarUtil.getEmailBookingReminderBody(preferences);
+    Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),user.getTimeZone());
+    subject=StringUtil.replace(subject,new String[]{"[$BOOKING_LOCATION$]","[$BOOKING_START_DATE$]","[$BOOKING_TITLE$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{calendarBooking.getLocation(),dateFormatDateTime.format(startDate.getTime()),calendarBooking.getTitle(),fromAddress,fromName,company.getPortalURL(calendarBooking.getGroupId()),portletName,HtmlUtil.escape(toAddress),HtmlUtil.escape(toName)});
+    body=StringUtil.replace(body,new String[]{"[$BOOKING_LOCATION$]","[$BOOKING_START_DATE$]","[$BOOKING_TITLE$]","[$FROM_ADDRESS$]","[$FROM_NAME$]","[$PORTAL_URL$]","[$PORTLET_NAME$]","[$TO_ADDRESS$]","[$TO_NAME$]"},new String[]{calendarBooking.getLocation(),dateFormatDateTime.format(startDate.getTime()),calendarBooking.getTitle(user.getLocale()),fromAddress,fromName,company.getPortalURL(calendarBooking.getGroupId()),portletName,HtmlUtil.escape(toAddress),HtmlUtil.escape(toName)});
+    InternetAddress from=new InternetAddress(fromAddress,fromName);
+    InternetAddress to=new InternetAddress(toAddress,toName);
+    MailMessage message=new MailMessage(from,to,subject,body,true);
+    mailService.sendEmail(message);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
+}

@@ -1,0 +1,18 @@
+{
+  List<CalendarBooking> calendarBookings=calendarBookingFinder.findByFutureReminders();
+  for (  CalendarBooking calendarBooking : calendarBookings) {
+    Calendar calendar=calendarPersistence.findByPrimaryKey(calendarBooking.getCalendarId());
+    CalendarResource calendarResource=calendarResourcePersistence.findByPrimaryKey(calendar.getCalendarResourceId());
+    if (calendarResource.getClassNameId() != PortalUtil.getClassNameId(User.class)) {
+      return;
+    }
+    User user=userPersistence.fetchByPrimaryKey(calendarResource.getUserId());
+    if (user == null) {
+      deleteCalendarBooking(calendarBooking);
+      return;
+    }
+    java.util.Calendar now=CalendarFactoryUtil.getCalendar(user.getTimeZone());
+    java.util.Calendar startDate=JCalendarUtil.getJCalendar(calendarBooking.getStartDate(),user.getTimeZone());
+    remindUser(calendarBooking,user,startDate,now);
+  }
+}

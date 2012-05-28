@@ -1,0 +1,13 @@
+{
+  Date startDate=startCalendar.getTime();
+  long startTime=startDate.getTime();
+  Date nowDate=nowCalendar.getTime();
+  long nowTime=nowDate.getTime();
+  if (startTime < nowTime) {
+    return;
+  }
+  long diff=(startTime - nowTime) / _CALENDAR_BOOKING_CHECK_INTERVAL;
+  if ((diff == (calendarBooking.getFirstReminder() / _CALENDAR_BOOKING_CHECK_INTERVAL)) || (diff == (calendarBooking.getSecondReminder() / _CALENDAR_BOOKING_CHECK_INTERVAL))) {
+    remindUser(calendarBooking,user,startCalendar);
+  }
+}
