@@ -1,5 +1,7 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String portletId=PortalUtil.getPortletId(resourceRequest);
+  PortletPermissionUtil.check(themeDisplay.getPermissionChecker(),themeDisplay.getPlid(),portletId,ActionKeys.CONFIGURATION);
   PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(resourceRequest);
   String databaseTableName=preferences.getValue("databaseTableName",StringPool.BLANK);
   String title=preferences.getValue("title","no-title");
