@@ -2,16 +2,17 @@
   if (permissionChecker.getUserId() == kbComment.getUserId()) {
     return true;
   }
-  if (actionId.equals(ActionKeys.DELETE)) {
-    String className=kbComment.getClassName();
-    if (className.equals(KBArticle.class.getName())) {
-      KBArticle kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_ANY);
-      return permissionChecker.hasPermission(kbArticle.getGroupId(),KBArticle.class.getName(),kbArticle.getPrimaryKey(),ActionKeys.UPDATE);
-    }
- else     if (className.equals(KBTemplate.class.getName())) {
-      KBTemplate kbTemplate=KBTemplateLocalServiceUtil.getKBTemplate(kbComment.getClassPK());
-      return permissionChecker.hasPermission(kbTemplate.getGroupId(),KBTemplate.class.getName(),kbTemplate.getPrimaryKey(),ActionKeys.UPDATE);
-    }
+  if (!actionId.equals(ActionKeys.DELETE)) {
+    return false;
+  }
+  String className=kbComment.getClassName();
+  if (className.equals(KBArticle.class.getName())) {
+    KBArticle kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_ANY);
+    return permissionChecker.hasPermission(kbArticle.getGroupId(),KBArticle.class.getName(),kbArticle.getPrimaryKey(),ActionKeys.UPDATE);
+  }
+ else   if (className.equals(KBTemplate.class.getName())) {
+    KBTemplate kbTemplate=KBTemplateLocalServiceUtil.getKBTemplate(kbComment.getClassPK());
+    return permissionChecker.hasPermission(kbTemplate.getGroupId(),KBTemplate.class.getName(),kbTemplate.getPrimaryKey(),ActionKeys.UPDATE);
   }
   return false;
 }
