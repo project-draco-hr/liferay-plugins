@@ -6,8 +6,6 @@
   notificationEventJSONObject.put("portletId",PortletKeys.ANNOUNCEMENTS);
   notificationEventJSONObject.put("title","x-sent-a-new-announcement");
   notificationEventJSONObject.put("userId",announcementEntry.getUserId());
-  NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
-  notificationEvent.setDeliveryRequired(0);
   List<User> users=Collections.emptyList();
   if (announcementEntry.getClassNameId() == 0) {
     users=UserLocalServiceUtil.getUsers(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
@@ -28,6 +26,8 @@
     }
   }
   for (  User user : users) {
+    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
+    notificationEvent.setDeliveryRequired(0);
     ChannelHubManagerUtil.sendNotificationEvent(user.getCompanyId(),user.getUserId(),notificationEvent);
   }
 }
