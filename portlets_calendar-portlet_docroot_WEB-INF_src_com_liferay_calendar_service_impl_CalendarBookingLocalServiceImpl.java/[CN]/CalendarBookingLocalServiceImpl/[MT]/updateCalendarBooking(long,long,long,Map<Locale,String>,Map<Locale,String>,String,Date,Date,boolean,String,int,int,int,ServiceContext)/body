@@ -3,12 +3,13 @@
   List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBookingId);
   long[] childCalendarIds=new long[childCalendarBookings.size()];
   for (int i=0; i < childCalendarIds.length; i++) {
-    CalendarBooking curCalendarBooking=childCalendarBookings.get(i);
-    long curCalendarBookingId=curCalendarBooking.getCalendarId();
-    if (curCalendarBookingId == calendarBooking.getCalendarId()) {
-      curCalendarBookingId=calendarId;
+    CalendarBooking childCalendarBooking=childCalendarBookings.get(i);
+    if (childCalendarBooking.getCalendarId() == calendarBooking.getCalendarId()) {
+      childCalendarIds[i]=calendarId;
     }
-    childCalendarIds[i]=curCalendarBookingId;
+ else {
+      childCalendarIds[i]=childCalendarBooking.getCalendarId();
+    }
   }
   return updateCalendarBooking(userId,calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDate,endDate,allDay,recurrence,firstReminder,secondReminder,status,serviceContext);
 }
