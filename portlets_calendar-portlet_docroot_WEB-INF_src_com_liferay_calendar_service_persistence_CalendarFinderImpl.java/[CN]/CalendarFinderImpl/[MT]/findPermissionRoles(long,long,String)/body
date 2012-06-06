@@ -1,0 +1,32 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(FIND_PERMISSION_ROLES);
+    SQLQuery q=session.createSQLQuery(sql);
+    q.addScalar("roleId",Type.LONG);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(companyId);
+    qPos.add(Calendar.class.getName());
+    qPos.add(resourceBlockId);
+    qPos.add(actionId);
+    List<Role> roles=new ArrayList<Role>();
+    Iterator<Long> itr=q.iterate();
+    Role role;
+    Long roleId;
+    while (itr.hasNext()) {
+      roleId=itr.next();
+      if (roleId != null) {
+        role=RoleLocalServiceUtil.getRole(roleId.longValue());
+        roles.add(role);
+      }
+    }
+    return roles;
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
