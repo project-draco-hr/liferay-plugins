@@ -1,0 +1,22 @@
+{
+  portletDataContext.importPermissions("com.liferay.portlet.dynamicdatalist",portletDataContext.getSourceGroupId(),portletDataContext.getScopeGroupId());
+  if (Validator.isNull(data)) {
+    return null;
+  }
+  Document document=SAXReaderUtil.read(data);
+  Element rootElement=document.getRootElement();
+  Element recordSetElement=rootElement.element("record-set");
+  if (recordSetElement != null) {
+    DDLPortletDataHandler ddlPortletDataHandler=DDLPortletDataHandlerUtil.getDDLPortletDataHandler();
+    ddlPortletDataHandler.importRecordSet(portletDataContext,recordSetElement);
+  }
+  long importedRecordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null));
+  long importedDetailDDMTemplateId=GetterUtil.getLong(portletPreferences.getValue("detailDDMTemplateId",null));
+  Map<Long,Long> recordSetIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDLRecordSet.class);
+  long recordSetId=MapUtil.getLong(recordSetIds,importedRecordSetId,importedRecordSetId);
+  Map<Long,Long> templateIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDMTemplate.class);
+  long detailDDMTemplateId=MapUtil.getLong(templateIds,importedDetailDDMTemplateId,importedDetailDDMTemplateId);
+  portletPreferences.setValue("recordSetId",String.valueOf(recordSetId));
+  portletPreferences.setValue("detailDDMTemplateId",String.valueOf(detailDDMTemplateId));
+  return portletPreferences;
+}
