@@ -1,0 +1,35 @@
+{
+  if (Validator.isNull(highlights)) {
+    return StringPool.BLANK;
+  }
+  String key=(String)solrDocument.getFieldValue(Field.UID);
+  Locale defaultLocale=LocaleUtil.getDefault();
+  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
+  String queryLanguageId=LocaleUtil.toLanguageId(queryConfig.getLocale());
+  boolean isLocalizedSearch=true;
+  if (queryLanguageId.equals(defaultLanguageId)) {
+    isLocalizedSearch=false;
+  }
+  String snippetField=Field.CONTENT;
+  if (isLocalizedSearch) {
+    String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
+    if (solrDocument.containsKey(localizedName)) {
+      snippetField=localizedName;
+    }
+  }
+  List<String> snippets=highlights.get(key).get(snippetField);
+  String snippet=StringUtil.merge(snippets,"...");
+  if (Validator.isNotNull(snippet)) {
+    snippet=snippet + "...";
+  }
+ else {
+    snippet=StringPool.BLANK;
+  }
+  Matcher matcher=Pattern.compile("<em>(.*?)</em>").matcher(snippet);
+  while (matcher.find()) {
+    queryTerms.add(matcher.group(1));
+  }
+  snippet=StringUtil.replace(snippet,"<em>","");
+  snippet=StringUtil.replace(snippet,"</em>","");
+  return snippet;
+}

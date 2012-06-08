@@ -8,17 +8,13 @@
     queryResponse=_solrServer.query(solrQuery);
     return subset(solrQuery,query,queryConfig,queryResponse,false);
   }
-  float maxScore=1;
-  if (queryConfig.isScoreEnabled()) {
-    maxScore=solrDocumentList.getMaxScore();
-  }
-  int subsetTotal=solrDocumentList.size();
-  Document[] documents=new DocumentImpl[subsetTotal];
-  String[] snippets=new String[subsetTotal];
-  float[] scores=new float[subsetTotal];
-  int j=0;
-  Set<String> queryTerms=new HashSet<String>();
   Map<String,Map<String,List<String>>> highlights=queryResponse.getHighlighting();
+  List<Document> listDocuments=new ArrayList<Document>();
+  List<Float> listScores=new ArrayList<Float>();
+  List<String> listSnippets=new ArrayList<String>();
+  float maxScore=-1;
+  Set<String> queryTerms=new HashSet<String>();
+  int subsetTotal=0;
   for (  SolrDocument solrDocument : solrDocumentList) {
     Document document=new DocumentImpl();
     Collection<String> names=solrDocument.getFieldNames();
@@ -31,19 +27,35 @@
     if (queryConfig.isScoreEnabled()) {
       score=GetterUtil.getFloat(String.valueOf(solrDocument.getFieldValue("score")));
     }
-    documents[j]=document;
+    String snippet;
     if (queryConfig.isHighlightEnabled()) {
-      snippets[j]=getSnippet(solrDocument,queryTerms,highlights);
+      snippet=getSnippet(solrDocument,queryTerms,highlights,queryConfig);
+      if (snippet.equals(StringPool.BLANK)) {
+        continue;
+      }
     }
  else {
-      snippets[j]=StringPool.BLANK;
+      snippet=StringPool.BLANK;
     }
-    scores[j]=score / maxScore;
-    j++;
+    listDocuments.add(document);
+    listScores.add(score);
+    listSnippets.add(snippet);
+    if (score > maxScore) {
+      maxScore=score;
+    }
+    subsetTotal++;
   }
+  Document[] documents=listDocuments.toArray(new Document[subsetTotal]);
+  if (queryConfig.isScoreEnabled() && (subsetTotal > 0)) {
+    for (    Float score : listScores) {
+      score=score / maxScore;
+    }
+  }
+  Float[] scores=listScores.toArray(new Float[subsetTotal]);
+  String[] snippets=listSnippets.toArray(new String[subsetTotal]);
   float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
   hits.setDocs(documents);
-  hits.setLength((int)total);
+  hits.setLength(documents.length);
   hits.setQuery(query);
   hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
   hits.setScores(scores);
