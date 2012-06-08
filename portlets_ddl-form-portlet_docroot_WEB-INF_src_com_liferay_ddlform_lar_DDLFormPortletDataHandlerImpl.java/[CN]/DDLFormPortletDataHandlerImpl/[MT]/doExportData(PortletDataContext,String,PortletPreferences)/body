@@ -1,14 +1,11 @@
 {
   portletDataContext.addPermissions("com.liferay.portlet.dynamicdatalist",portletDataContext.getScopeGroupId());
-  long recordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null),0);
+  long recordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null));
   if (recordSetId == 0) {
-    if (_log.isDebugEnabled()) {
-      _log.debug("No record set found for " + portletId);
-    }
     return StringPool.BLANK;
   }
   Document document=SAXReaderUtil.createDocument();
-  Element rootElement=document.addElement("record-set-data");
+  Element rootElement=document.addElement("record-sets");
   DDLRecordSet recordSet=DDLRecordSetLocalServiceUtil.getRecordSet(recordSetId);
   DDLPortletDataHandler ddlPortletDataHandler=DDLPortletDataHandlerUtil.getDDLPortletDataHandler();
   ddlPortletDataHandler.exportRecordSet(portletDataContext,rootElement,recordSet);

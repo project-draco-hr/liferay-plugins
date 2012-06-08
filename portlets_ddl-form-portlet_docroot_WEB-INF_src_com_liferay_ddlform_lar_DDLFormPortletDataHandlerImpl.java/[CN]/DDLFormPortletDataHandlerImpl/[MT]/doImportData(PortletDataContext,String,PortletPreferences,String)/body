@@ -10,13 +10,13 @@
     DDLPortletDataHandler ddlPortletDataHandler=DDLPortletDataHandlerUtil.getDDLPortletDataHandler();
     ddlPortletDataHandler.importRecordSet(portletDataContext,recordSetElement);
   }
-  long importedRecordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null));
+  Map<Long,Long> templateIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDMTemplate.class);
   long importedDetailDDMTemplateId=GetterUtil.getLong(portletPreferences.getValue("detailDDMTemplateId",null));
+  long detailDDMTemplateId=MapUtil.getLong(templateIds,importedDetailDDMTemplateId,importedDetailDDMTemplateId);
+  portletPreferences.setValue("detailDDMTemplateId",String.valueOf(detailDDMTemplateId));
+  long importedRecordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null));
   Map<Long,Long> recordSetIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDLRecordSet.class);
   long recordSetId=MapUtil.getLong(recordSetIds,importedRecordSetId,importedRecordSetId);
-  Map<Long,Long> templateIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDMTemplate.class);
-  long detailDDMTemplateId=MapUtil.getLong(templateIds,importedDetailDDMTemplateId,importedDetailDDMTemplateId);
   portletPreferences.setValue("recordSetId",String.valueOf(recordSetId));
-  portletPreferences.setValue("detailDDMTemplateId",String.valueOf(detailDDMTemplateId));
   return portletPreferences;
 }
