@@ -23,44 +23,38 @@
       Field field=new Field(name,ArrayUtil.toStringArray(fieldValues.toArray(new Object[fieldValues.size()])));
       document.add(field);
     }
-    float score=1;
-    if (queryConfig.isScoreEnabled()) {
-      score=GetterUtil.getFloat(String.valueOf(solrDocument.getFieldValue("score")));
-    }
-    String snippet;
+    String snippet=StringPool.BLANK;
     if (queryConfig.isHighlightEnabled()) {
       snippet=getSnippet(solrDocument,queryTerms,highlights,queryConfig);
-      if (snippet.equals(StringPool.BLANK)) {
+      if (Validator.isNull(snippet)) {
         continue;
       }
     }
- else {
-      snippet=StringPool.BLANK;
-    }
     listDocuments.add(document);
-    listScores.add(score);
-    listSnippets.add(snippet);
-    if (score > maxScore) {
-      maxScore=score;
+    if (queryConfig.isScoreEnabled()) {
+      float score=GetterUtil.getFloat(String.valueOf(solrDocument.getFieldValue("score")));
+      if (score > maxScore) {
+        maxScore=score;
+      }
+      listScores.add(score);
     }
+    listSnippets.add(snippet);
     subsetTotal++;
   }
-  Document[] documents=listDocuments.toArray(new Document[subsetTotal]);
-  if (queryConfig.isScoreEnabled() && (subsetTotal > 0)) {
-    for (    Float score : listScores) {
-      score=score / maxScore;
-    }
-  }
-  Float[] scores=listScores.toArray(new Float[subsetTotal]);
-  String[] snippets=listSnippets.toArray(new String[subsetTotal]);
-  float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
-  hits.setDocs(documents);
-  hits.setLength(documents.length);
+  hits.setDocs(listDocuments.toArray(new Document[subsetTotal]));
+  hits.setLength(subsetTotal);
   hits.setQuery(query);
   hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
+  Float[] scores=listScores.toArray(new Float[subsetTotal]);
+  if (queryConfig.isScoreEnabled() && (subsetTotal > 0) && (maxScore > 0)) {
+    for (int i=0; i < scores.length; i++) {
+      scores[i]=scores[i] / maxScore;
+    }
+  }
   hits.setScores(scores);
+  float searchTime=(float)(System.currentTimeMillis() - startTime) / Time.SECOND;
   hits.setSearchTime(searchTime);
-  hits.setSnippets(snippets);
+  hits.setSnippets(listSnippets.toArray(new String[subsetTotal]));
   hits.setStart(startTime);
   return hits;
 }
