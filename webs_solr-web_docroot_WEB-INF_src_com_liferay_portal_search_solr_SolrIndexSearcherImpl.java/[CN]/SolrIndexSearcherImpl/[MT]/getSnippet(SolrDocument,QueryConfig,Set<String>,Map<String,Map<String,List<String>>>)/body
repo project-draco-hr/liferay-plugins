@@ -2,10 +2,12 @@
   if (Validator.isNull(highlights)) {
     return StringPool.BLANK;
   }
+  String key=(String)solrDocument.getFieldValue(Field.UID);
+  Map<String,List<String>> uidHighlights=highlights.get(key);
+  boolean localizedSearch=true;
   String defaultLanguageId=LocaleUtil.toLanguageId(LocaleUtil.getDefault());
   String queryLanguageId=LocaleUtil.toLanguageId(queryConfig.getLocale());
-  boolean localizedSearch=true;
-  if (queryLanguageId.equals(defaultLanguageId)) {
+  if (defaultLanguageId.equals(queryLanguageId)) {
     localizedSearch=false;
   }
   String snippetField=StringPool.BLANK;
@@ -18,8 +20,7 @@
  else {
     snippetField=Field.CONTENT;
   }
-  String key=(String)solrDocument.getFieldValue(Field.UID);
-  List<String> snippets=highlights.get(key).get(snippetField);
+  List<String> snippets=uidHighlights.get(snippetField);
   String snippet=StringUtil.merge(snippets,"...");
   if (Validator.isNotNull(snippet)) {
     snippet=snippet + "...";
@@ -27,7 +28,8 @@
  else {
     snippet=StringPool.BLANK;
   }
-  Matcher matcher=Pattern.compile("<em>(.*?)</em>").matcher(snippet);
+  Pattern pattern=Pattern.compile("<em>(.*?)</em>");
+  Matcher matcher=pattern.matcher(snippet);
   while (matcher.find()) {
     queryTerms.add(matcher.group(1));
   }

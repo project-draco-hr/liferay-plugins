@@ -5,6 +5,8 @@
   solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
   solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
   solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
+  String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
+  solrQuery.setParam("hl.fl",Field.CONTENT,localizedName);
   QueryTranslatorUtil.translateForSolr(query);
   String queryString=query.toString();
   StringBundler sb=new StringBundler(6);
@@ -15,8 +17,6 @@
   sb.append(StringPool.COLON);
   sb.append(companyId);
   solrQuery.setQuery(sb.toString());
-  String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
-  solrQuery.setParam("hl.fl",Field.CONTENT,localizedName);
   if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
     solrQuery.setRows(0);
   }
