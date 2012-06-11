@@ -7,21 +7,24 @@
     AddressRecipient addressRecipient=new AddressRecipient(addressRecipientElement.getText());
     notification.addRecipients(addressRecipient);
   }
-  List<Element> roleReceipientElements=recipientsElement.elements("role");
-  for (  Element roleAssignmentElement : roleReceipientElements) {
-    long roleId=GetterUtil.getLong(roleAssignmentElement.elementText("role-id"));
-    String roleType=roleAssignmentElement.elementText("role-type");
-    String name=roleAssignmentElement.elementText("name");
-    RoleRecipient roleRecipient=null;
-    if (roleId > 0) {
-      roleRecipient=new RoleRecipient(roleId,roleType);
-    }
+  Element rolesElement=recipientsElement.element("roles");
+  if (rolesElement != null) {
+    List<Element> roleReceipientElements=rolesElement.elements("role");
+    for (    Element roleReceipientElement : roleReceipientElements) {
+      long roleId=GetterUtil.getLong(roleReceipientElement.elementText("role-id"));
+      String roleType=roleReceipientElement.elementText("role-type");
+      String name=roleReceipientElement.elementText("name");
+      RoleRecipient roleRecipient=null;
+      if (roleId > 0) {
+        roleRecipient=new RoleRecipient(roleId,roleType);
+      }
  else {
-      roleRecipient=new RoleRecipient(name,roleType);
-      boolean autoCreate=GetterUtil.getBoolean(roleAssignmentElement.elementText("auto-create"),true);
-      roleRecipient.setAutoCreate(autoCreate);
+        roleRecipient=new RoleRecipient(name,roleType);
+        boolean autoCreate=GetterUtil.getBoolean(roleReceipientElement.elementText("auto-create"),true);
+        roleRecipient.setAutoCreate(autoCreate);
+      }
+      notification.addRecipients(roleRecipient);
     }
-    notification.addRecipients(roleRecipient);
   }
   List<Element> userRecipientElements=recipientsElement.elements("user");
   for (  Element userRecipientElement : userRecipientElements) {
