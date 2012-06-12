@@ -1,10 +1,13 @@
 {
+  AutoDeploymentContext autoDeploymentContext=new AutoDeploymentContext();
+  String context=arguments.poll();
+  autoDeploymentContext.setContext(context);
   File tempFile=getTempFile(request,responseJSONObject);
   if (tempFile == null) {
     return;
   }
-  String context=arguments.poll();
-  DeployManagerUtil.deploy(tempFile,context);
+  autoDeploymentContext.setFile(tempFile);
+  DeployManagerUtil.deploy(autoDeploymentContext);
   boolean success=FileUtils.deleteQuietly(tempFile.getParentFile());
   if (success) {
     return;
