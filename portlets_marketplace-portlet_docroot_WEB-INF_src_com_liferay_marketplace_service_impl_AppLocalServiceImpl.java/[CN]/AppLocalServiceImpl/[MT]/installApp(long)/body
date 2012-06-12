@@ -18,7 +18,10 @@
       File pluginPackageFile=new File(tmpDir + StringPool.SLASH + fileName);
       FileUtil.write(pluginPackageFile,inputStream);
       String contextName=getContextName(fileName);
-      DeployManagerUtil.deploy(pluginPackageFile,contextName);
+      AutoDeploymentContext autoDeploymentContext=new AutoDeploymentContext();
+      autoDeploymentContext.setContext(contextName);
+      autoDeploymentContext.setFileToDeploy(pluginPackageFile);
+      DeployManagerUtil.deploy(autoDeploymentContext);
       moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
     }
   }
