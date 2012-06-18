@@ -1,7 +1,7 @@
 {
-  String dirName="knowledgebase/temp/attachments/" + counterLocalService.increment();
+  String dirName=_TEMP_DIR_NAME_PREFIX.concat(StringPool.SLASH).concat(String.valueOf(counterLocalService.increment()));
   DLStoreUtil.addDirectory(companyId,CompanyConstants.SYSTEM,dirName);
-  String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,"knowledgebase/temp/attachments");
+  String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX);
   Arrays.sort(fileNames);
   for (int i=0; i < fileNames.length - 50; i++) {
     DLStoreUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM,fileNames[i]);

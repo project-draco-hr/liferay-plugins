@@ -1,0 +1,16 @@
+{
+  String key=StringUtil.extractLast(s,StringPool.SLASH);
+  if (key == null) {
+    return false;
+  }
+  Ticket ticket=ticketLocalService.fetchTicket(key);
+  if (ticket == null) {
+    return false;
+  }
+  if (!Validator.equals(ticket.getExtraInfo(),s)) {
+    return false;
+  }
+  ticket.setExpirationDate(getTicketExpirationDate());
+  ticket=ticketLocalService.updateTicket(ticket);
+  return true;
+}
