@@ -1,0 +1,39 @@
+{
+  boolean repeat=ParamUtil.getBoolean(actionRequest,"repeat");
+  if (repeat == false) {
+    return null;
+  }
+  Frequency frequency=Frequency.parse(ParamUtil.getString(actionRequest,"frequency"));
+  int interval=ParamUtil.getInteger(actionRequest,"interval");
+  String ends=ParamUtil.getString(actionRequest,"ends");
+  int count=0;
+  if (Validator.equals(ends,"after")) {
+    count=ParamUtil.getInteger(actionRequest,"count");
+  }
+  java.util.Calendar until=null;
+  if (Validator.equals(ends,"on")) {
+    int untilDateDay=ParamUtil.getInteger(actionRequest,"untilDateDay");
+    int untilDateMonth=ParamUtil.getInteger(actionRequest,"untilDateMonth");
+    int untilDateYear=ParamUtil.getInteger(actionRequest,"untilDateYear");
+    until=CalendarFactoryUtil.getCalendar();
+    until.set(java.util.Calendar.DATE,untilDateDay);
+    until.set(java.util.Calendar.MONTH,untilDateMonth);
+    until.set(java.util.Calendar.YEAR,untilDateYear);
+  }
+  List<Weekday> weekdays=new ArrayList<Weekday>();
+  if (frequency == Frequency.WEEKLY) {
+    for (    Weekday weekday : Weekday.values()) {
+      boolean checked=ParamUtil.getBoolean(actionRequest,weekday.getValue());
+      if (checked) {
+        weekdays.add(weekday);
+      }
+    }
+  }
+  Recurrence recurrence=new Recurrence();
+  recurrence.setFrequency(frequency);
+  recurrence.setInterval(interval);
+  recurrence.setWeekdays(weekdays);
+  recurrence.setCount(count);
+  recurrence.setUntil(until);
+  return RecurrenceSerializer.serialize(recurrence);
+}

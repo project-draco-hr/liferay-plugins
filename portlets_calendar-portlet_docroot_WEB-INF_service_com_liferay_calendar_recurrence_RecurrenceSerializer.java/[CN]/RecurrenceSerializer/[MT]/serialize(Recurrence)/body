@@ -1,0 +1,20 @@
+{
+  RRule rrule=new RRule();
+  com.google.ical.values.Frequency freq=com.google.ical.values.Frequency.valueOf(String.valueOf(recurrence.getFrequency()));
+  rrule.setFreq(freq);
+  rrule.setInterval(recurrence.getInterval());
+  rrule.setCount(recurrence.getCount());
+  Calendar until=recurrence.getUntil();
+  if (until != null) {
+    DateValue dateValue=new DateValueImpl(until.get(Calendar.YEAR),until.get(Calendar.MONTH),until.get(Calendar.DATE));
+    rrule.setUntil(dateValue);
+  }
+  List<WeekdayNum> byDay=new ArrayList<WeekdayNum>();
+  for (  Weekday weekday : recurrence.getWeekdays()) {
+    com.google.ical.values.Weekday wday=_weekdaysMap.get(weekday);
+    WeekdayNum weekdayNum=new WeekdayNum(weekday.getPosition(),wday);
+    byDay.add(weekdayNum);
+  }
+  rrule.setByDay(byDay);
+  return rrule.toIcal();
+}
