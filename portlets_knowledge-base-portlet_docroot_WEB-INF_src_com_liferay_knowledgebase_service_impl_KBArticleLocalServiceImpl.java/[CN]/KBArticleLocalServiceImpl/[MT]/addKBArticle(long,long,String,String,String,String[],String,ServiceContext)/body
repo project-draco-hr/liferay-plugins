@@ -29,7 +29,12 @@
   kbArticle.setMain(false);
   kbArticle.setStatus(WorkflowConstants.STATUS_DRAFT);
   kbArticlePersistence.update(kbArticle,false);
-  resourceLocalService.addModelResources(kbArticle,serviceContext);
+  if (serviceContext.isAddGroupPermissions() || serviceContext.isAddGuestPermissions()) {
+    addKBArticleResources(kbArticle,serviceContext.isAddGroupPermissions(),serviceContext.isAddGuestPermissions());
+  }
+ else {
+    addKBArticleResources(kbArticle,serviceContext.getGroupPermissions(),serviceContext.getGuestPermissions());
+  }
   updateKBArticleAsset(userId,kbArticle,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   addKBArticleAttachments(kbArticle,dirName,serviceContext);
   WorkflowHandlerRegistryUtil.startWorkflowInstance(user.getCompanyId(),groupId,userId,KBArticle.class.getName(),resourcePrimKey,kbArticle,serviceContext);
