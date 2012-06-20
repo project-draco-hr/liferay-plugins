@@ -1,0 +1,20 @@
+{
+  VerificationResult result=new VerificationResult();
+  String keyFromConfiguration=configuration.getProperty("key");
+  String keyFromRequest=ParamUtil.get(authenticationContext.getHttpServletRequest(),"key",StringPool.BLANK);
+  if (!keyFromConfiguration.equals(keyFromRequest)) {
+    return result;
+  }
+  long companyId=PortalUtil.getCompanyId(authenticationContext.getHttpServletRequest());
+  try {
+    Role adminRole=RoleLocalServiceUtil.getRole(companyId,"Administrator");
+    long[] adminIds=UserLocalServiceUtil.getRoleUserIds(adminRole.getRoleId());
+    long adminId=adminIds.length > 0 ? adminIds[0] : 0;
+    result.setState(VerificationResult.State.SUCCESS);
+    result.setUserId(adminId);
+  }
+ catch (  Exception e) {
+    throw new AuthException(e.getMessage(),e);
+  }
+  return result;
+}
