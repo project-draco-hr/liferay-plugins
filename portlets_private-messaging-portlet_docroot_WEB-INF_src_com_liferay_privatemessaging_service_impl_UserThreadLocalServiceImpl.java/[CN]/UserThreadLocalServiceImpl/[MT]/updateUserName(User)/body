@@ -1,7 +1,10 @@
 {
+  String userName=user.getFullName();
   List<UserThread> userThreads=userThreadPersistence.findByUserId(user.getUserId());
   for (  UserThread userThread : userThreads) {
-    userThread.setUserName(user.getFullName());
-    userThreadPersistence.update(userThread,false);
+    if (!userName.equals(userThread.getUserName())) {
+      userThread.setUserName(userName);
+      userThreadPersistence.update(userThread,false);
+    }
   }
 }
