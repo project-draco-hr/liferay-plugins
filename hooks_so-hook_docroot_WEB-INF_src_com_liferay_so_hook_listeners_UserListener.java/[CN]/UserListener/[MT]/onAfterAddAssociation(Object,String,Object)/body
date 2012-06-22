@@ -2,14 +2,18 @@
   try {
     User user=UserLocalServiceUtil.getUser((Long)classPK);
     boolean hasRole=UserLocalServiceUtil.hasRoleUser(user.getCompanyId(),"Social Office User",user.getUserId(),true);
+    if (!hasRole) {
+      return;
+    }
     Group group=user.getGroup();
     ExpandoBridge expandoBridge=group.getExpandoBridge();
     boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
-    if (hasRole && !socialOfficeEnabled) {
-      LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC,false);
-      LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE,true);
-      SocialOfficeUtil.enableSocialOffice(group);
+    if (socialOfficeEnabled) {
+      return;
     }
+    LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
+    LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,true,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
+    SocialOfficeUtil.enableSocialOffice(group);
   }
  catch (  NoSuchGroupException nsge) {
   }

@@ -1,14 +1,19 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String currentURL=PortalUtil.getCurrentURL(request);
-  User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
-  if (currentURL.equals("/user") && user.hasPrivateLayouts()) {
-    PortletURL portletURL=PortletURLFactoryUtil.create(request,PortletKeys.SITE_REDIRECTOR,themeDisplay.getPlid(),PortletRequest.ACTION_PHASE);
-    portletURL.setParameter("struts_action","/my_sites/view");
-    portletURL.setParameter("groupId",String.valueOf(user.getGroup().getGroupId()));
-    portletURL.setParameter("privateLayout",String.valueOf(true));
-    portletURL.setPortletMode(PortletMode.VIEW);
-    portletURL.setWindowState(WindowState.NORMAL);
-    response.sendRedirect(portletURL.toString());
+  if (!currentURL.equals("/user")) {
+    return;
   }
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  User user=themeDisplay.getUser();
+  if (!user.hasPrivateLayouts()) {
+    return;
+  }
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,PortletKeys.SITE_REDIRECTOR,themeDisplay.getPlid(),PortletRequest.ACTION_PHASE);
+  portletURL.setParameter("struts_action","/my_sites/view");
+  Group group=user.getGroup();
+  portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+  portletURL.setParameter("privateLayout",Boolean.TRUE.toString());
+  portletURL.setPortletMode(PortletMode.VIEW);
+  portletURL.setWindowState(WindowState.NORMAL);
+  response.sendRedirect(portletURL.toString());
 }

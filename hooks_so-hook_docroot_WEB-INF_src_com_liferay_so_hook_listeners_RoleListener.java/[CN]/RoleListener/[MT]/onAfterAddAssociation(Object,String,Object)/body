@@ -5,27 +5,29 @@
     if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
       return;
     }
-    if (associationClassName.equals(Group.class.getName())) {
-      Group group=GroupLocalServiceUtil.getGroup((Long)associationClassPK);
-      List<User> users=null;
-      String className=group.getClassName();
-      if (className.equals(UserGroup.class.getName())) {
-        users=UserLocalServiceUtil.getUserGroupUsers(group.getClassPK());
-      }
- else       if (className.equals(Organization.class.getName())) {
-        users=UserLocalServiceUtil.getOrganizationUsers(group.getClassPK());
-      }
- else       if (className.equals(Group.class.getName())) {
-        users=UserLocalServiceUtil.getGroupUsers(group.getClassPK());
-      }
-      if (users != null) {
-        for (        User user : users) {
-          Group userGroup=user.getGroup();
-          LayoutSetPrototypeUtil.updateLayoutSetPrototype(userGroup,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC,false);
-          LayoutSetPrototypeUtil.updateLayoutSetPrototype(userGroup,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE,true);
-          SocialOfficeUtil.enableSocialOffice(userGroup);
-        }
-      }
+    if (!associationClassName.equals(Group.class.getName())) {
+      return;
+    }
+    Group group=GroupLocalServiceUtil.getGroup((Long)associationClassPK);
+    List<User> users=null;
+    String className=group.getClassName();
+    if (className.equals(UserGroup.class.getName())) {
+      users=UserLocalServiceUtil.getUserGroupUsers(group.getClassPK());
+    }
+ else     if (className.equals(Organization.class.getName())) {
+      users=UserLocalServiceUtil.getOrganizationUsers(group.getClassPK());
+    }
+ else     if (className.equals(Group.class.getName())) {
+      users=UserLocalServiceUtil.getGroupUsers(group.getClassPK());
+    }
+    if (users == null) {
+      return;
+    }
+    for (    User user : users) {
+      Group userGroup=user.getGroup();
+      LayoutSetPrototypeUtil.updateLayoutSetPrototype(userGroup,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
+      LayoutSetPrototypeUtil.updateLayoutSetPrototype(userGroup,true,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
+      SocialOfficeUtil.enableSocialOffice(userGroup);
     }
   }
  catch (  Exception e) {
