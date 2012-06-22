@@ -1,0 +1,30 @@
+{
+  long companyId=calendarBooking.getCompanyId();
+  Company company=CompanyLocalServiceUtil.getCompany(companyId);
+  NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
+  notificationTemplateContext.setCompanyId(companyId);
+  notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
+  Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),user.getTimeZone());
+  Date endDate=calendarBooking.getEndDate();
+  Date startDate=calendarBooking.getStartDate();
+  notificationTemplateContext.setAttribute("endDate",dateFormatDateTime.format(endDate.getTime()));
+  notificationTemplateContext.setAttribute("location",calendarBooking.getLocation());
+  notificationTemplateContext.setAttribute("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
+  notificationTemplateContext.setAttribute("startDate",dateFormatDateTime.format(startDate.getTime()));
+  notificationTemplateContext.setAttribute("title",calendarBooking.getTitle(user.getLocale()));
+  notificationTemplateContext.setAttribute("toAddress",user.getEmailAddress());
+  notificationTemplateContext.setAttribute("toName",user.getFullName());
+  notificationTemplateContext.setAttribute("portletName",LanguageUtil.get(getPortletConfig(),user.getLocale(),"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
+  PortletPreferences preferences=PortletPreferencesLocalServiceUtil.getPreferences(companyId,calendarBooking.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.CALENDAR,null);
+  String fromAddress=NotificationUtil.getEmailFromAddress(preferences,companyId);
+  String fromName=NotificationUtil.getEmailFromName(preferences,companyId);
+  notificationTemplateContext.setAttribute("fromAddress",fromAddress);
+  notificationTemplateContext.setAttribute("fromName",fromName);
+  Enumeration<String> enu=preferences.getNames();
+  while (enu.hasMoreElements()) {
+    String name=enu.nextElement();
+    String value=GetterUtil.getString(preferences.getValue(name,StringPool.BLANK));
+    notificationTemplateContext.setAttribute(name,value);
+  }
+  return notificationTemplateContext;
+}

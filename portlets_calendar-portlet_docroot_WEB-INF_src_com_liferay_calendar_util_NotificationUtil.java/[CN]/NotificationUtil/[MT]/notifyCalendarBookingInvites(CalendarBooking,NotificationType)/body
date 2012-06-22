@@ -1,0 +1,9 @@
+{
+  NotificationSender notificationSender=NotificationSenderFactory.getNotificationSender(notificationType.toString());
+  List<NotificationRecipient> notificationRecipients=getCalendarBookingRecipients(calendarBooking);
+  for (  NotificationRecipient notificationRecipient : notificationRecipients) {
+    User user=notificationRecipient.getUser();
+    NotificationTemplateContext notificationTemplateContext=NotificationTemplateContextFactory.getInstance(calendarBooking,user);
+    notificationSender.sendNotification(notificationRecipient,NotificationTemplateType.INVITE,notificationTemplateContext);
+  }
+}

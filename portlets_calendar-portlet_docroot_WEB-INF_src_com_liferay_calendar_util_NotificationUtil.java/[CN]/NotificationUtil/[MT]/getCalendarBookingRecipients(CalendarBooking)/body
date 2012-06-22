@@ -1,0 +1,27 @@
+{
+  Calendar calendar=calendarBooking.getCalendar();
+  CalendarResource calendarResource=calendarBooking.getCalendarResource();
+  List<Role> roles=RoleLocalServiceUtil.getResourceBlockRoles(calendar.getResourceBlockId(),Calendar.class.getName(),ActionKeys.MANAGE_BOOKINGS);
+  List<NotificationRecipient> manageBookingUsers=new ArrayList<NotificationRecipient>();
+  for (  Role role : roles) {
+    if (role.getName().equals(RoleConstants.OWNER)) {
+      User calendarResourceUser=UserLocalServiceUtil.getUser(calendarResource.getUserId());
+      manageBookingUsers.add(new NotificationRecipient(calendarResourceUser));
+      User calendarUser=UserLocalServiceUtil.getUser(calendar.getUserId());
+      if (calendarResourceUser.getUserId() != calendarUser.getUserId()) {
+        manageBookingUsers.add(new NotificationRecipient(calendarUser));
+      }
+    }
+ else {
+      List<User> roleUsers=UserLocalServiceUtil.getRoleUsers(role.getRoleId());
+      for (      User roleUser : roleUsers) {
+        PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(roleUser);
+        if (!CalendarPermission.contains(permissionChecker,calendar,ActionKeys.MANAGE_BOOKINGS)) {
+          continue;
+        }
+        manageBookingUsers.add(new NotificationRecipient(roleUser));
+      }
+    }
+  }
+  return manageBookingUsers;
+}

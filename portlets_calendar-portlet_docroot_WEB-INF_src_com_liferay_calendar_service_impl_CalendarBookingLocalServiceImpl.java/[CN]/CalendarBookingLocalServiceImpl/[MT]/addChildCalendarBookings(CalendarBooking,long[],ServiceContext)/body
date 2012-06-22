@@ -14,7 +14,12 @@
     if (count > 0) {
       continue;
     }
-    CalendarBooking childCalendarBooking=addCalendarBooking(calendarBooking.getUserId(),calendarId,new long[0],calendarBooking.getCalendarBookingId(),calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getUTCStartDate(),calendarBooking.getUTCEndDate(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getSecondReminder(),serviceContext);
-    sendBookingNotifications(childCalendarBooking,calendarId,serviceContext);
+    CalendarBooking childCalendarBooking=addCalendarBooking(calendarBooking.getUserId(),calendarId,new long[0],calendarBooking.getCalendarBookingId(),calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getUTCStartDate(),calendarBooking.getUTCEndDate(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
+    try {
+      NotificationType notificationType=NotificationType.parse(PortletPropsValues.CALENDAR_NOTIFICATION_DEFAULT_TYPE);
+      NotificationUtil.notifyCalendarBookingInvites(childCalendarBooking,notificationType);
+    }
+ catch (    Exception e) {
+    }
   }
 }
