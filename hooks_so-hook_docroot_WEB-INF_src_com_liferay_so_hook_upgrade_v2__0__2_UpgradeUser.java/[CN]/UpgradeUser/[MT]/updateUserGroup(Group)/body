@@ -1,0 +1,11 @@
+{
+  LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),false,new ServiceContext());
+  LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC,false);
+  LayoutSet publicLayoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false);
+  PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,publicLayoutSet);
+  LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),true,new ServiceContext());
+  LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE,true);
+  LayoutSet privateLayoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true);
+  PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,privateLayoutSet);
+  SocialOfficeUtil.enableSocialOffice(group);
+}

@@ -1,0 +1,11 @@
+{
+  List<ExpandoValue> expandoValues=ExpandoValueLocalServiceUtil.getColumnValues(companyId,LayoutSetPrototype.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  ExpandoValue expandoValue : expandoValues) {
+    String curLayoutSetPrototypeKey=expandoValue.getString();
+    if (curLayoutSetPrototypeKey.equals(layoutSetPrototypeKey)) {
+      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(expandoValue.getClassPK());
+      return layoutSetPrototype;
+    }
+  }
+  return null;
+}

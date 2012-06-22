@@ -1,14 +1,23 @@
 {
   List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  Group group : groups) {
-    List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),group.hasPrivateLayouts());
-    for (    Layout layout : layouts) {
-      String friendlyURL=layout.getFriendlyURL();
-      if (friendlyURL.equals("/home")) {
-        continue;
-      }
-      updatePortlets(group,layout);
-      updateLayouts(group);
+    if (!group.isRegularSite()) {
+      continue;
     }
+    boolean privateLayout=group.hasPrivateLayouts();
+    LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
+    String themeId=layoutSet.getThemeId();
+    if (!themeId.equals("so_WAR_sotheme")) {
+      continue;
+    }
+    String friendlyURL=group.getFriendlyURL();
+    if (friendlyURL.equals("/guest")) {
+      continue;
+    }
+    LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),privateLayout,new ServiceContext());
+    LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_SITE,privateLayout);
+    layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
+    PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
+    SocialOfficeUtil.enableSocialOffice(group);
   }
 }

@@ -1,18 +1,14 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String currentURL=PortalUtil.getCurrentURL(request);
-  if (Validator.isNotNull(themeDisplay.getI18nLanguageId())) {
-    int x=currentURL.indexOf(StringPool.SLASH,1);
-    currentURL=currentURL.substring(x);
-  }
-  String redirect=null;
-  if (isMyPlacesView(themeDisplay,currentURL)) {
-    redirect=getRedirect(themeDisplay,request);
-  }
- else   if (isDirectoryView(request,currentURL)) {
-    redirect=getUserRedirect(request,ParamUtil.getLong(request,"_11_p_u_i_d"),themeDisplay.getPlid(),true);
-  }
-  if (Validator.isNotNull(redirect)) {
-    response.sendRedirect(redirect);
+  User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+  if (currentURL.equals("/user") && user.hasPrivateLayouts()) {
+    PortletURL portletURL=PortletURLFactoryUtil.create(request,PortletKeys.SITE_REDIRECTOR,themeDisplay.getPlid(),PortletRequest.ACTION_PHASE);
+    portletURL.setParameter("struts_action","/my_sites/view");
+    portletURL.setParameter("groupId",String.valueOf(user.getGroup().getGroupId()));
+    portletURL.setParameter("privateLayout",String.valueOf(true));
+    portletURL.setPortletMode(PortletMode.VIEW);
+    portletURL.setWindowState(WindowState.NORMAL);
+    response.sendRedirect(portletURL.toString());
   }
 }
