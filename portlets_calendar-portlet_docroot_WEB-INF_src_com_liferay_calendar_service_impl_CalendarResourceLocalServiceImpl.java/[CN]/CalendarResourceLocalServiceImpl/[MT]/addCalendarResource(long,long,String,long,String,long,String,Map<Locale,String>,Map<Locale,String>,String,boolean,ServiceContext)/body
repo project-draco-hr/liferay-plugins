@@ -1,16 +1,18 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   long calendarResourceId=counterLocalService.increment();
-  code=code.trim().toUpperCase();
   if (Validator.isNull(className)) {
     className=CalendarResource.class.getName();
     classPK=calendarResourceId;
   }
   long classNameId=PortalUtil.getClassNameId(className);
-  validate(groupId,classNameId,classPK,code,autoGenerateCode);
-  if (autoGenerateCode) {
-    code=String.valueOf(counterLocalService.increment());
+  if (Validator.isNull(code)) {
+    code=String.valueOf(calendarResourceId);
   }
+ else {
+    code=code.trim().toUpperCase();
+  }
+  validate(groupId,classNameId,classPK,code);
   long globalUserId=0;
   if (isGlobalResource(classNameId)) {
     globalUserId=getGlobalResourceUserId(classNameId,classPK);
