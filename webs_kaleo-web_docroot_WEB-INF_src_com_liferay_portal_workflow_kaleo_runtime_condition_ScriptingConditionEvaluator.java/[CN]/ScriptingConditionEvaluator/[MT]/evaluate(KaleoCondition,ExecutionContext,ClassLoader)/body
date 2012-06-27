@@ -1,0 +1,9 @@
+{
+  Map<String,Object> inputObjects=ScriptingContextBuilder.buildScriptingContext(executionContext);
+  Map<String,Object> results=ScriptingUtil.eval(null,inputObjects,_outputNames,kaleoCondition.getScriptLanguage(),kaleoCondition.getScript(),classLoaders);
+  String returnValue=(String)results.get(_RETURN_VALUE);
+  if (returnValue != null) {
+    return returnValue;
+  }
+  throw new IllegalStateException("Conditional did not return value for script " + kaleoCondition.getScript());
+}

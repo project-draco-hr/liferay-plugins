@@ -1,0 +1,15 @@
+{
+  String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
+  TaskAssignmentSelector taskAssignmentSelector=null;
+  if (assigneeClassName.equals(ResourceAction.class.getName())) {
+    taskAssignmentSelector=_taskAssignmentSelectors.get(assigneeClassName);
+  }
+ else {
+    String assigneeScriptLanguage=kaleoTaskAssignment.getAssigneeScriptLanguage();
+    taskAssignmentSelector=_taskAssignmentSelectors.get(assigneeScriptLanguage);
+  }
+  if (taskAssignmentSelector == null) {
+    throw new IllegalArgumentException("No task assignment selector found for " + kaleoTaskAssignment.toXmlString());
+  }
+  return taskAssignmentSelector.calculateTaskAssignments(kaleoTaskAssignment,executionContext,classLoaders);
+}

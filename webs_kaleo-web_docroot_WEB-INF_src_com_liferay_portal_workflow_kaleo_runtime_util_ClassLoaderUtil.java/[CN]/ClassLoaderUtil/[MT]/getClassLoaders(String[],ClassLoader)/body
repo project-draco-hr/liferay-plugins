@@ -1,0 +1,11 @@
+{
+  List<ClassLoader> classLoaders=new ArrayList<ClassLoader>(scriptRequiredContexts.length + 2);
+  classLoaders.add(contextClassLoader);
+  classLoaders.add(PortalClassLoaderUtil.getClassLoader());
+  for (  String scriptRequiredContext : scriptRequiredContexts) {
+    ServletContext servletContext=ServletContextPool.get(scriptRequiredContext);
+    ClassLoader pluginClassLoader=(ClassLoader)servletContext.getAttribute(PluginContextListener.PLUGIN_CLASS_LOADER);
+    classLoaders.add(pluginClassLoader);
+  }
+  return classLoaders.toArray(new ClassLoader[classLoaders.size()]);
+}
