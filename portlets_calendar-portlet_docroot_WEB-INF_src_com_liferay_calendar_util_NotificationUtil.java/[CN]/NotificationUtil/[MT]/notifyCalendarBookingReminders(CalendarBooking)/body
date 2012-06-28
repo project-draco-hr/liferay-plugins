@@ -1,12 +1,12 @@
 {
-  List<NotificationRecipient> notificationRecipients=getCalendarBookingRecipients(calendarBooking);
+  List<NotificationRecipient> notificationRecipients=_getNotificationRecipients(calendarBooking);
   for (  NotificationRecipient notificationRecipient : notificationRecipients) {
     User user=notificationRecipient.getUser();
     java.util.Calendar now=CalendarFactoryUtil.getCalendar(user.getTimeZone(),user.getLocale());
     long nowTime=now.getTimeInMillis();
     java.util.Calendar startDate=CalendarFactoryUtil.getCalendar(user.getTimeZone(),user.getLocale());
     long startTime=startDate.getTimeInMillis();
-    if (startTime < nowTime) {
+    if (nowTime > startTime) {
       return;
     }
     NotificationTemplateContext notificationTemplateContext=NotificationTemplateContextFactory.getInstance(calendarBooking,user);

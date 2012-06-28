@@ -2,14 +2,15 @@
   Calendar calendar=calendarBooking.getCalendar();
   CalendarResource calendarResource=calendarBooking.getCalendarResource();
   List<Role> roles=RoleLocalServiceUtil.getResourceBlockRoles(calendar.getResourceBlockId(),Calendar.class.getName(),ActionKeys.MANAGE_BOOKINGS);
-  List<NotificationRecipient> manageBookingUsers=new ArrayList<NotificationRecipient>();
+  List<NotificationRecipient> notificationRecipients=new ArrayList<NotificationRecipient>();
   for (  Role role : roles) {
-    if (role.getName().equals(RoleConstants.OWNER)) {
+    String name=role.getName();
+    if (name.equals(RoleConstants.OWNER)) {
       User calendarResourceUser=UserLocalServiceUtil.getUser(calendarResource.getUserId());
-      manageBookingUsers.add(new NotificationRecipient(calendarResourceUser));
+      notificationRecipients.add(new NotificationRecipient(calendarResourceUser));
       User calendarUser=UserLocalServiceUtil.getUser(calendar.getUserId());
       if (calendarResourceUser.getUserId() != calendarUser.getUserId()) {
-        manageBookingUsers.add(new NotificationRecipient(calendarUser));
+        notificationRecipients.add(new NotificationRecipient(calendarUser));
       }
     }
  else {
@@ -19,9 +20,9 @@
         if (!CalendarPermission.contains(permissionChecker,calendar,ActionKeys.MANAGE_BOOKINGS)) {
           continue;
         }
-        manageBookingUsers.add(new NotificationRecipient(roleUser));
+        notificationRecipients.add(new NotificationRecipient(roleUser));
       }
     }
   }
-  return manageBookingUsers;
+  return notificationRecipients;
 }

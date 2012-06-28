@@ -1,13 +1,13 @@
 {
   try {
-    InternetAddress from=new InternetAddress(fromAddress,fromName);
-    MailMessage mailMessage=new MailMessage(from,subject,notificationMessage,true);
-    InternetAddress internetAddress=new InternetAddress(notificationRecipient.getEmail());
-    mailMessage.setTo(internetAddress);
+    InternetAddress fromInternetAddress=new InternetAddress(fromAddress,fromName);
+    MailMessage mailMessage=new MailMessage(fromInternetAddress,subject,notificationMessage,true);
     mailMessage.setHTMLFormat(notificationRecipient.isHTMLFormat());
+    InternetAddress toInternetAddress=new InternetAddress(notificationRecipient.getEmail());
+    mailMessage.setTo(toInternetAddress);
     MailServiceUtil.sendEmail(mailMessage);
   }
  catch (  Exception e) {
-    throw new NotificationMessageSenderException("Unable to send mail message",e);
+    throw new NotificationSenderException("Unable to send mail message",e);
   }
 }
