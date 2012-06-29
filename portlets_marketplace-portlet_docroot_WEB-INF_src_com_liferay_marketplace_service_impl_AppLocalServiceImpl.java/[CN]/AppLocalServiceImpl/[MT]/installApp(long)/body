@@ -25,7 +25,11 @@
       moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
     }
   }
- catch (  Exception e) {
+ catch (  ZipException ze) {
+    _log.error("Deleting corrupt package from app " + app.getAppId(),ze);
+    deleteApp(app);
+  }
+catch (  Exception e) {
     _log.error(e,e);
   }
  finally {
