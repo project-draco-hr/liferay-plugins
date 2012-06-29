@@ -1,0 +1,16 @@
+{
+  File sitemapJSONFile=new File(_resourcesDir,siteMapName);
+  if (!sitemapJSONFile.exists() || sitemapJSONFile.isDirectory() || !sitemapJSONFile.canRead()) {
+    return;
+  }
+  InputStream inputStream=null;
+  try {
+    inputStream=new BufferedInputStream(new FileInputStream(sitemapJSONFile));
+    doAddLayouts(inputStream);
+  }
+  finally {
+    if (inputStream != null) {
+      inputStream.close();
+    }
+  }
+}

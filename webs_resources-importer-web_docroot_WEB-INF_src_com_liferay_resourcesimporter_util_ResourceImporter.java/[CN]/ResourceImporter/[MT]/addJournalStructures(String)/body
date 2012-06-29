@@ -1,0 +1,19 @@
+{
+  Set<String> resourcePaths=servletContext.getResourcePaths(resourcesDir.concat(structuresDirName));
+  if (resourcePaths == null) {
+    return;
+  }
+  for (  String resourcePath : resourcePaths) {
+    URL resourceURL=servletContext.getResource(resourcePath);
+    if (resourceURL.getPath().endsWith(StringPool.SLASH)) {
+      continue;
+    }
+    URLConnection urlConnection=resourceURL.openConnection();
+    String name=resourceURL.getFile();
+    int pos=name.lastIndexOf(StringPool.SLASH);
+    if (pos != -1) {
+      name=name.substring(pos + 1);
+    }
+    doAddJournalStructures(name,urlConnection.getInputStream());
+  }
+}

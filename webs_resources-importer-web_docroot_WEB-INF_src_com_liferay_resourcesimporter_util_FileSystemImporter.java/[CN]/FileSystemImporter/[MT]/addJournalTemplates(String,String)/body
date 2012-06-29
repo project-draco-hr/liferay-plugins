@@ -1,0 +1,19 @@
+{
+  File journalTemplatesDir=new File(_resourcesDir,templatesDirName);
+  if (!journalTemplatesDir.exists() || !journalTemplatesDir.isDirectory() || !journalTemplatesDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(journalTemplatesDir);
+  for (  File file : files) {
+    InputStream inputStream=null;
+    try {
+      inputStream=new BufferedInputStream(new FileInputStream(file));
+      doAddJournalTemplates(journalStructureId,file.getName(),inputStream);
+    }
+  finally {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  File journalStructuresDir=new File(_resourcesDir,structuresDirName);
+  if (!journalStructuresDir.exists() || !journalStructuresDir.isDirectory() || !journalStructuresDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(journalStructuresDir);
+  for (  File file : files) {
+    InputStream inputStream=null;
+    try {
+      inputStream=new BufferedInputStream(new FileInputStream(file));
+      doAddJournalStructures(file.getName(),inputStream);
+    }
+  finally {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+    }
+  }
+}

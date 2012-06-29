@@ -1,0 +1,19 @@
+{
+  File dlDocumentsDir=new File(_resourcesDir,fileEntriesDir);
+  if (!dlDocumentsDir.exists() || !dlDocumentsDir.isDirectory() || !dlDocumentsDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(dlDocumentsDir);
+  for (  File file : files) {
+    InputStream inputStream=null;
+    try {
+      inputStream=new BufferedInputStream(new FileInputStream(file));
+      doAddDLFileEntries(file.getName(),inputStream,file.length());
+    }
+  finally {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+    }
+  }
+}

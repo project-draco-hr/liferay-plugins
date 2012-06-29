@@ -1,0 +1,19 @@
+{
+  File journalArticlesDir=new File(_resourcesDir,articlesDirName);
+  if (!journalArticlesDir.exists() || !journalArticlesDir.isDirectory() || !journalArticlesDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(journalArticlesDir);
+  for (  File file : files) {
+    InputStream inputStream=null;
+    try {
+      inputStream=new BufferedInputStream(new FileInputStream(file));
+      doAddJournalArticles(journalStructureId,journalTemplateId,file.getName(),inputStream);
+    }
+  finally {
+      if (inputStream != null) {
+        inputStream.close();
+      }
+    }
+  }
+}
