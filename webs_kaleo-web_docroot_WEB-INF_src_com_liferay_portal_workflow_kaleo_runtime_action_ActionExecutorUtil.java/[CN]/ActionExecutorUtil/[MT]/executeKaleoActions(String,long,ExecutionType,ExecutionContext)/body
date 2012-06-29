@@ -1,18 +1,18 @@
 {
   List<KaleoAction> kaleoActions=KaleoActionLocalServiceUtil.getKaleoActions(kaleoClassName,kaleoClassPK,executionType.getValue());
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
   for (  KaleoAction kaleoAction : kaleoActions) {
     long startTime=System.currentTimeMillis();
     String comment=_COMMENT_ACTION_SUCCESS;
-    String[] scriptRequiredContexts=StringUtil.split(kaleoAction.getScriptRequiredContexts());
-    ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(scriptRequiredContexts,contextClassLoader);
     try {
+      String[] scriptRequiredContexts=StringUtil.split(kaleoAction.getScriptRequiredContexts());
+      ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(scriptRequiredContexts);
       ActionExecutor actionExecutor=ActionExecutorFactory.getActionExecutor(kaleoAction.getScriptLanguage());
       actionExecutor.execute(kaleoAction,executionContext,classLoaders);
     }
  catch (    Exception e) {
-      e.printStackTrace();
+      if (_log.isDebugEnabled()) {
+        _log.debug(e,e);
+      }
       comment=e.getMessage();
     }
  finally {

@@ -3,10 +3,8 @@
   ServiceContext serviceContext=executionContext.getServiceContext();
   KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
   KaleoCondition kaleoCondition=kaleoConditionLocalService.getKaleoNodeKaleoCondition(currentKaleoNode.getKaleoNodeId());
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
   String[] scriptRequiredContexts=StringUtil.split(kaleoCondition.getScriptRequiredContexts());
-  ClassLoader[] classloaders=ClassLoaderUtil.getClassLoaders(scriptRequiredContexts,contextClassLoader);
+  ClassLoader[] classloaders=ClassLoaderUtil.getClassLoaders(scriptRequiredContexts);
   String transitionName=_conditionEvaluator.evaluate(kaleoCondition,executionContext,classloaders);
   KaleoTransition kaleoTransition=currentKaleoNode.getKaleoTransition(transitionName);
   ExecutionContext newExecutionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);

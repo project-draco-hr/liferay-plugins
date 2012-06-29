@@ -1,9 +1,8 @@
 {
   List<KaleoTaskAssignment> reassignedKaleoTaskAssignments=new ArrayList<KaleoTaskAssignment>();
-  ClassLoader contextClassLoader=Thread.currentThread().getContextClassLoader();
   for (  KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
     String[] assigneeScriptRequiredContexts=StringUtil.split(kaleoTaskAssignment.getAssigneeScriptRequiredContexts());
-    ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(assigneeScriptRequiredContexts,contextClassLoader);
+    ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(assigneeScriptRequiredContexts);
     Collection<KaleoTaskAssignment> calculatedKaleoTaskAssignments=_taskAssignmentSelector.calculateTaskAssignments(kaleoTaskAssignment,executionContext,classLoaders);
     reassignedKaleoTaskAssignments.addAll(calculatedKaleoTaskAssignments);
   }
