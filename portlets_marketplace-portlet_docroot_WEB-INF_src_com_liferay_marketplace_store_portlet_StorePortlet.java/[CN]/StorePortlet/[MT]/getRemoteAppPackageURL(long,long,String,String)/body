@@ -1,10 +1,6 @@
 {
   String encodedClientId=MarketplaceUtil.encodeClientId(companyId,userId,token);
-  StringBundler sb=new StringBundler(5);
-  sb.append(url);
-  sb.append(StringPool.SLASH);
-  sb.append(encodedClientId);
-  sb.append(StringPool.SLASH);
-  sb.append(token);
-  return sb.toString();
+  url=HttpUtil.addParameter(url,_PORTLET_NAMESPACE.concat("clientId"),encodedClientId);
+  url=HttpUtil.addParameter(url,_PORTLET_NAMESPACE.concat("token"),token);
+  return url;
 }
