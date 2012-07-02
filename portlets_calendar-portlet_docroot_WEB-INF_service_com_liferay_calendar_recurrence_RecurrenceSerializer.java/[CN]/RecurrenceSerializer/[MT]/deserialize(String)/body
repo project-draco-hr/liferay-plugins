@@ -1,20 +1,20 @@
 {
   try {
     Recurrence recurrence=new Recurrence();
-    RRule rrule=new RRule(data);
-    recurrence.setCount(rrule.getCount());
-    recurrence.setFrequency(Frequency.parse(String.valueOf(rrule.getFreq())));
-    recurrence.setInterval(rrule.getInterval());
-    DateValue dateValue=rrule.getUntil();
+    RRule rRule=new RRule(data);
+    recurrence.setCount(rRule.getCount());
+    recurrence.setFrequency(Frequency.parse(String.valueOf(rRule.getFreq())));
+    recurrence.setInterval(rRule.getInterval());
+    DateValue dateValue=rRule.getUntil();
     if (dateValue != null) {
-      Calendar until=CalendarFactoryUtil.getCalendar();
-      until.set(Calendar.DATE,dateValue.day());
-      until.set(Calendar.MONTH,dateValue.month());
-      until.set(Calendar.YEAR,dateValue.year());
-      recurrence.setUntil(until);
+      Calendar jCalendar=CalendarFactoryUtil.getCalendar();
+      jCalendar.set(Calendar.DATE,dateValue.day());
+      jCalendar.set(Calendar.MONTH,dateValue.month());
+      jCalendar.set(Calendar.YEAR,dateValue.year());
+      recurrence.setUntil(jCalendar);
     }
     List<Weekday> weekdays=new ArrayList<Weekday>();
-    for (    WeekdayNum weekdayNum : rrule.getByDay()) {
+    for (    WeekdayNum weekdayNum : rRule.getByDay()) {
       Weekday weekday=Weekday.parse(weekdayNum.wday.toString());
       weekday.setPosition(weekdayNum.num);
       weekdays.add(weekday);
