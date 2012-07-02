@@ -6,7 +6,7 @@
     _wsdlNamespace=_getWsdlNamespace(root);
     List<Element> serviceElements=root.elements(_getWsdlQName("service"));
     ServiceHandler serviceHandler=new ServiceHandler(forwardCookies,userToken,_isV2(serviceElements));
-    _service=(WSRP_v2_Service)Proxy.newProxyInstance(WSRP_v2_Service.class.getClassLoader(),new Class[]{WSRP_v2_Service.class},serviceHandler);
+    _service=(WSRP_v2_Service)ProxyUtil.newProxyInstance(WSRP_v2_Service.class.getClassLoader(),new Class[]{WSRP_v2_Service.class},serviceHandler);
     _readServiceElements(serviceElements);
     updateServiceDescription(registrationContext);
   }
