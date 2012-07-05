@@ -1,0 +1,8 @@
+{
+  long calendarId=ParamUtil.getLong(resourceRequest,"calendarId");
+  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(resourceRequest);
+  File file=uploadPortletRequest.getFile("file");
+  String data=FileUtil.read(file);
+  CalendarDataHandler calendarDataHandler=CalendarDataHandlerFactory.getCalendarDataHandler(CalendarDataFormat.ICAL);
+  calendarDataHandler.importCalendar(calendarId,data);
+}

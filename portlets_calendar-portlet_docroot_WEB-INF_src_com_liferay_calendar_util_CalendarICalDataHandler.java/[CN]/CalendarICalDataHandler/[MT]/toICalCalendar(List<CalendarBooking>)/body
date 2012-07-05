@@ -1,0 +1,14 @@
+{
+  net.fortuna.ical4j.model.Calendar iCal=new net.fortuna.ical4j.model.Calendar();
+  ProdId prodId=new ProdId("-//Liferay Inc//Liferay Portal " + ReleaseInfo.getVersion() + "//EN");
+  PropertyList propertiesList=iCal.getProperties();
+  propertiesList.add(prodId);
+  propertiesList.add(Version.VERSION_2_0);
+  propertiesList.add(CalScale.GREGORIAN);
+  propertiesList.add(Method.PUBLISH);
+  List<VEvent> components=iCal.getComponents();
+  for (  CalendarBooking calendarBooking : calendarBookings) {
+    components.add(toICalEvent(calendarBooking));
+  }
+  return iCal;
+}
