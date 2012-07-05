@@ -1,8 +1,17 @@
 {
-  long calendarId=ParamUtil.getLong(resourceRequest,"calendarId");
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PortletConfig portletConfig=(PortletConfig)resourceRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
   UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(resourceRequest);
+  long calendarId=ParamUtil.getLong(resourceRequest,"calendarId");
   File file=uploadPortletRequest.getFile("file");
   String data=FileUtil.read(file);
-  CalendarDataHandler calendarDataHandler=CalendarDataHandlerFactory.getCalendarDataHandler(CalendarDataFormat.ICAL);
-  calendarDataHandler.importCalendar(calendarId,data);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  if (Validator.isNotNull(data)) {
+    CalendarDataHandler calendarDataHandler=CalendarDataHandlerFactory.getCalendarDataHandler(CalendarDataFormat.ICAL);
+    calendarDataHandler.importCalendar(calendarId,data);
+  }
+ else {
+    jsonObject.put("error",LanguageUtil.get(portletConfig,themeDisplay.getLocale(),"failed-to-import-events-empty-uploaded-file"));
+  }
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
 }
