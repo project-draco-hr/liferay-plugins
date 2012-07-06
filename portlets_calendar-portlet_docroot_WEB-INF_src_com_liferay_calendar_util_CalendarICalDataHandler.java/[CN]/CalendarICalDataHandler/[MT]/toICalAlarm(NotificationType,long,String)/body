@@ -1,16 +1,16 @@
 {
   Dur dur=toICalDur(reminder);
-  VAlarm alarm=new VAlarm(dur);
-  PropertyList alarmProps=alarm.getProperties();
+  VAlarm vAlarm=new VAlarm(dur);
+  PropertyList propertyList=vAlarm.getProperties();
   Action action=Action.DISPLAY;
   if (notificationType == NotificationType.EMAIL) {
     URI uri=URI.create("mailto:".concat(emailAddress));
     Attendee attendee=new Attendee(uri);
     action=Action.EMAIL;
-    alarmProps.add(attendee);
-    alarmProps.add(new Summary("Alarm notification"));
+    propertyList.add(attendee);
+    propertyList.add(new Summary("Alarm Notification"));
   }
-  alarmProps.add(action);
-  alarmProps.add(new Description("This is an event reminder"));
-  return alarm;
+  propertyList.add(action);
+  propertyList.add(new Description("This is an event reminder."));
+  return vAlarm;
 }

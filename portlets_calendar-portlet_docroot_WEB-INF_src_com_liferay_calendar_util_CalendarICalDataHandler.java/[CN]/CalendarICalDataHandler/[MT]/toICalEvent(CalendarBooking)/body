@@ -1,54 +1,50 @@
 {
-  User owner=UserLocalServiceUtil.getUser(calendarBooking.getUserId());
-  Locale locale=owner.getLocale();
   VEvent vEvent=new VEvent();
-  PropertyList eventProps=vEvent.getProperties();
+  PropertyList propertyList=vEvent.getProperties();
   Uid uid=new Uid(calendarBooking.getUuid());
-  eventProps.add(uid);
+  propertyList.add(uid);
   if (calendarBooking.isAllDay()) {
     DtStart dtStart=new DtStart(new Date(calendarBooking.getStartDate()));
-    eventProps.add(dtStart);
+    propertyList.add(dtStart);
   }
  else {
     DtStart dtStart=new DtStart(toICalDateTime(calendarBooking.getStartDate()));
-    eventProps.add(dtStart);
+    propertyList.add(dtStart);
     DtEnd dtEnd=new DtEnd(toICalDateTime(calendarBooking.getEndDate()));
-    eventProps.add(dtEnd);
+    propertyList.add(dtEnd);
   }
-  Summary summary=new Summary(calendarBooking.getTitle(locale));
-  eventProps.add(summary);
-  Description description=new Description(calendarBooking.getDescription(locale));
-  eventProps.add(description);
+  User user=UserLocalServiceUtil.getUser(calendarBooking.getUserId());
+  Summary summary=new Summary(calendarBooking.getTitle(user.getLocale()));
+  propertyList.add(summary);
+  Description description=new Description(calendarBooking.getDescription(user.getLocale()));
+  propertyList.add(description);
   Location location=new Location(calendarBooking.getLocation());
-  eventProps.add(location);
+  propertyList.add(location);
   if (calendarBooking.isRecurring()) {
-    String value=StringUtil.replace(calendarBooking.getRecurrence(),_rRulePart,StringPool.BLANK);
+    String value=StringUtil.replace(calendarBooking.getRecurrence(),_RRULE,StringPool.BLANK);
     RRule rRule=new RRule(value);
-    eventProps.add(rRule);
+    propertyList.add(rRule);
   }
-  ComponentList alarms=vEvent.getAlarms();
+  ComponentList componentList=vEvent.getAlarms();
   long firstReminder=calendarBooking.getFirstReminder();
   if (firstReminder > 0) {
-    VAlarm alarm=toICalAlarm(calendarBooking.getFirstReminderNotificationType(),firstReminder,owner.getEmailAddress());
-    alarms.add(alarm);
+    VAlarm vAlarm=toICalAlarm(calendarBooking.getFirstReminderNotificationType(),firstReminder,user.getEmailAddress());
+    componentList.add(vAlarm);
   }
   long secondReminder=calendarBooking.getSecondReminder();
   if (secondReminder > 0) {
-    VAlarm alarm=toICalAlarm(calendarBooking.getSecondReminderNotificationType(),secondReminder,owner.getEmailAddress());
-    alarms.add(alarm);
+    VAlarm alarm=toICalAlarm(calendarBooking.getSecondReminderNotificationType(),secondReminder,user.getEmailAddress());
+    componentList.add(alarm);
   }
   List<CalendarBooking> childCalendarBookings=calendarBooking.getChildCalendarBookings();
-  long userClassNameId=PortalUtil.getClassNameId(User.class);
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
     CalendarResource calResource=childCalendarBooking.getCalendarResource();
-    long classNameId=calResource.getClassNameId();
-    long classPK=calResource.getClassPK();
-    if ((classNameId != userClassNameId) || (calendarBooking.getCalendarBookingId() == childCalendarBooking.getCalendarBookingId())) {
+    if (!calResource.isUser() || (calendarBooking.getCalendarBookingId() == childCalendarBooking.getCalendarBookingId())) {
       continue;
     }
-    User user=UserLocalServiceUtil.getUser(classPK);
-    Attendee attendee=toICalAttendee(user.getFullName(),user.getEmailAddress(),childCalendarBooking.getStatus());
-    eventProps.add(attendee);
+    User calResourceUser=UserLocalServiceUtil.getUser(calResource.getClassPK());
+    Attendee attendee=toICalAttendee(calResourceUser.getFullName(),calResourceUser.getEmailAddress(),childCalendarBooking.getStatus());
+    propertyList.add(attendee);
   }
   return vEvent;
 }

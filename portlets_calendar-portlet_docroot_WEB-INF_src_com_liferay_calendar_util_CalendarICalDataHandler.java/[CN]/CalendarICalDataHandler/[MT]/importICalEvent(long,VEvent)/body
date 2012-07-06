@@ -1,42 +1,41 @@
 {
   Calendar calendar=CalendarLocalServiceUtil.getCalendar(calendarId);
-  long companyId=calendar.getCompanyId();
-  long groupId=calendar.getGroupId();
-  User owner=UserLocalServiceUtil.getUser(calendar.getUserId());
-  Locale locale=owner.getLocale();
+  User user=UserLocalServiceUtil.getUser(calendar.getUserId());
   Map<Locale,String> titleMap=new HashMap<Locale,String>();
-  Summary summary=event.getSummary();
+  Summary summary=vEvent.getSummary();
   if (summary != null) {
     String title=ModelHintsUtil.trimString(CalendarBooking.class.getName(),"title",summary.getValue());
-    titleMap.put(locale,title);
+    titleMap.put(user.getLocale(),title);
   }
   Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
-  Description description=event.getDescription();
+  Description description=vEvent.getDescription();
   if (description != null) {
-    descriptionMap.put(locale,description.getValue());
+    descriptionMap.put(user.getLocale(),description.getValue());
   }
-  String location=StringPool.BLANK;
-  if (event.getLocation() != null) {
-    location=event.getLocation().getValue();
+  String locationString=StringPool.BLANK;
+  Location location=vEvent.getLocation();
+  if (location != null) {
+    locationString=location.getValue();
   }
-  Date startDate=event.getStartDate().getDate();
-  Date endDate=event.getEndDate().getDate();
+  DtStart dtStart=vEvent.getStartDate();
+  Date startDate=dtStart.getDate();
+  DtEnd dtEnd=vEvent.getEndDate();
+  Date endDate=dtEnd.getDate();
   boolean allDay=false;
-  if (isICalDateOnly(event.getStartDate())) {
+  if (isICalDateOnly(dtStart)) {
     allDay=true;
   }
-  RRule rrule=(RRule)event.getProperty(Property.RRULE);
+  RRule rrule=(RRule)vEvent.getProperty(Property.RRULE);
   String recurrence=StringPool.BLANK;
   if (rrule != null) {
     recurrence=StringUtil.trim(rrule.toString());
   }
-  ComponentList alarms=event.getAlarms();
-  int remindersSize=alarms.size();
-  long[] reminders=new long[remindersSize];
-  String[] reminderTypes=new String[remindersSize];
+  ComponentList componentList=vEvent.getAlarms();
+  long[] reminders=new long[componentList.size()];
+  String[] reminderTypes=new String[componentList.size()];
   int i=0;
-  for (Iterator<VAlarm> it=alarms.iterator(); it.hasNext(); i++) {
-    VAlarm vAlarm=it.next();
+  for (Iterator<VAlarm> iterator=componentList.iterator(); iterator.hasNext(); i++) {
+    VAlarm vAlarm=iterator.next();
     Action action=vAlarm.getAction();
     String value=StringUtil.lowerCase(action.getValue());
     if (!isActionSupported(value)) {
@@ -45,60 +44,65 @@
     reminderTypes[i]=value;
     Trigger trigger=vAlarm.getTrigger();
     Dur dur=trigger.getDuration();
-    long time=(dur.getWeeks() * Time.WEEK) + (dur.getDays() * Time.DAY) + (dur.getHours() * Time.HOUR)+ (dur.getMinutes() * Time.MINUTE)+ (dur.getSeconds() * Time.SECOND);
+    long time=0;
+    time+=dur.getWeeks() * Time.WEEK;
+    time+=dur.getDays() * Time.DAY;
+    time+=dur.getHours() * Time.HOUR;
+    time+=dur.getMinutes() * Time.MINUTE;
+    time+=dur.getSeconds() * Time.SECOND;
     reminders[i]=time;
   }
-  PropertyList attendees=event.getProperties(Property.ATTENDEE);
+  long firstReminder=0;
+  String firstReminderType=null;
+  long secondReminder=0;
+  String secondReminderType=null;
+  if (!componentList.isEmpty()) {
+    firstReminder=reminders[0];
+    firstReminderType=reminderTypes[0];
+    if (componentList.size() > 1) {
+      secondReminder=reminders[1];
+      secondReminderType=reminderTypes[1];
+    }
+  }
+  PropertyList propertyList=vEvent.getProperties(Property.ATTENDEE);
   List<Long> childCalendarIds=new ArrayList<Long>();
-  for (Iterator<Attendee> it=attendees.iterator(); it.hasNext(); ) {
-    Attendee attendee=it.next();
-    URI calAddress=attendee.getCalAddress();
-    User user=UserLocalServiceUtil.fetchUserByEmailAddress(companyId,calAddress.getSchemeSpecificPart());
-    if ((user == null) || (calendar.getUserId() == user.getUserId())) {
+  for (Iterator<Attendee> iterator=propertyList.iterator(); iterator.hasNext(); ) {
+    Attendee attendee=iterator.next();
+    URI uri=attendee.getCalAddress();
+    User attendeeUser=UserLocalServiceUtil.fetchUserByEmailAddress(calendar.getCompanyId(),uri.getSchemeSpecificPart());
+    if ((attendeeUser == null) || (calendar.getUserId() == attendeeUser.getUserId())) {
       continue;
     }
     ServiceContext serviceContext=new ServiceContext();
-    serviceContext.setCompanyId(companyId);
-    serviceContext.setScopeGroupId(groupId);
-    CalendarResource calendarResource=CalendarResourceUtil.getUserCalendarResource(user.getUserId(),serviceContext);
+    serviceContext.setCompanyId(calendar.getCompanyId());
+    serviceContext.setScopeGroupId(calendar.getGroupId());
+    CalendarResource calendarResource=CalendarResourceUtil.getUserCalendarResource(attendeeUser.getUserId(),serviceContext);
     if (calendarResource == null) {
       continue;
     }
     childCalendarIds.add(calendarResource.getDefaultCalendarId());
   }
-  ServiceContext serviceContext=new ServiceContext();
-  serviceContext.setAddGroupPermissions(true);
-  serviceContext.setAddGuestPermissions(true);
-  serviceContext.setScopeGroupId(groupId);
-  String uuid=null;
+  long[] childCalendarIdsArray=ArrayUtil.toArray(childCalendarIds.toArray(new Long[childCalendarIds.size()]));
   CalendarBooking calendarBooking=null;
-  Uid uid=event.getUid();
+  String uuid=null;
+  Uid uid=vEvent.getUid();
   if (uid != null) {
     uuid=uid.getValue();
-    calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(uuid,groupId);
+    calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(uuid,calendar.getGroupId());
     if (calendarBooking == null) {
       uuid=PortalUUIDUtil.generate(uuid.getBytes());
       calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(uuid,calendar.getGroupId());
     }
   }
-  long[] childCalendarIdsArray=ArrayUtil.toArray(childCalendarIds.toArray(new Long[childCalendarIds.size()]));
-  long firstReminder=0;
-  String firstReminderType=null;
-  long secondReminder=0;
-  String secondReminderType=null;
-  if (remindersSize > 0) {
-    firstReminder=reminders[0];
-    firstReminderType=reminderTypes[0];
-    if (remindersSize > 1) {
-      secondReminder=reminders[1];
-      secondReminderType=reminderTypes[1];
-    }
-  }
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setAddGroupPermissions(true);
+  serviceContext.setAddGuestPermissions(true);
+  serviceContext.setScopeGroupId(calendar.getGroupId());
   if (calendarBooking == null) {
     serviceContext.setUuid(uuid);
-    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIdsArray,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,serviceContext);
+    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIdsArray,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,locationString,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,serviceContext);
   }
  else {
-    CalendarBookingServiceUtil.updateCalendarBooking(calendarBooking.getCalendarBookingId(),calendarId,childCalendarIdsArray,titleMap,descriptionMap,location,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,calendarBooking.getStatus(),serviceContext);
+    CalendarBookingServiceUtil.updateCalendarBooking(calendarBooking.getCalendarBookingId(),calendarId,childCalendarIdsArray,titleMap,descriptionMap,locationString,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,calendarBooking.getStatus(),serviceContext);
   }
 }

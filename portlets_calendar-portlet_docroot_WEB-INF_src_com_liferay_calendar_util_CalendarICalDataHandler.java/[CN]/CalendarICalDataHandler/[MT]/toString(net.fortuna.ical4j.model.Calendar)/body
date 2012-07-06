@@ -1,10 +1,11 @@
 {
-  UnsyncStringWriter unsyncStringWriter=new UnsyncStringWriter();
-  CalendarOutputter calOutput=new CalendarOutputter();
-  if (iCalCalendar.getComponents().isEmpty()) {
-    calOutput.setValidating(false);
+  CalendarOutputter calendarOutputter=new CalendarOutputter();
+  ComponentList componentList=iCalCalendar.getComponents();
+  if (componentList.isEmpty()) {
+    calendarOutputter.setValidating(false);
   }
-  calOutput.output(iCalCalendar,unsyncStringWriter);
+  UnsyncStringWriter unsyncStringWriter=new UnsyncStringWriter();
+  calendarOutputter.output(iCalCalendar,unsyncStringWriter);
   unsyncStringWriter.flush();
   return unsyncStringWriter.toString();
 }
