@@ -1,0 +1,9 @@
+{
+  CalendarBooking clone=(CalendarBooking)calendarBooking.clone();
+  Calendar jCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartDate());
+  Calendar startDateJCalendar=JCalendarUtil.getJCalendar(startDateValue.year(),startDateValue.month() - 1,startDateValue.day(),jCalendar.get(Calendar.HOUR_OF_DAY),jCalendar.get(Calendar.MINUTE),jCalendar.get(Calendar.SECOND),jCalendar.get(Calendar.MILLISECOND),TimeZone.getTimeZone(StringPool.UTC));
+  long startDateInMillis=startDateJCalendar.getTimeInMillis();
+  clone.setStartDate(startDateInMillis);
+  clone.setEndDate(startDateInMillis + calendarBooking.getDurationInMillis());
+  return clone;
+}
