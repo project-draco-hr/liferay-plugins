@@ -22,7 +22,9 @@
   tasksEntryPersistence.update(tasksEntry,false);
   resourceLocalService.addModelResources(tasksEntry,serviceContext);
   updateAsset(userId,tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
-  SocialActivityLocalServiceUtil.addActivity(userId,groupId,TasksEntry.class.getName(),tasksEntryId,TasksActivityKeys.ADD_ENTRY,StringPool.BLANK,assigneeUserId);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",tasksEntry.getTitle());
+  SocialActivityLocalServiceUtil.addActivity(userId,groupId,TasksEntry.class.getName(),tasksEntryId,TasksActivityKeys.ADD_ENTRY,extraDataJSONObject.toString(),assigneeUserId);
   sendNotificationEvent(tasksEntry,TasksEntryConstants.STATUS_ALL,assigneeUserId,serviceContext);
   return tasksEntry;
 }

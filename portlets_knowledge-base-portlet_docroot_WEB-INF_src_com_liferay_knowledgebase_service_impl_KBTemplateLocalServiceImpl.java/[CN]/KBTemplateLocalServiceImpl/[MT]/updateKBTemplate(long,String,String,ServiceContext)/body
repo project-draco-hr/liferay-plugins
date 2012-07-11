@@ -8,6 +8,8 @@
   if ((serviceContext.getGroupPermissions() != null) || (serviceContext.getGuestPermissions() != null)) {
     updateKBTemplateResources(kbTemplate,serviceContext.getGroupPermissions(),serviceContext.getGuestPermissions());
   }
-  socialActivityLocalService.addActivity(kbTemplate.getUserId(),kbTemplate.getGroupId(),KBTemplate.class.getName(),kbTemplateId,AdminActivityKeys.UPDATE_KB_TEMPLATE,StringPool.BLANK,0);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",kbTemplate.getTitle());
+  socialActivityLocalService.addActivity(kbTemplate.getUserId(),kbTemplate.getGroupId(),KBTemplate.class.getName(),kbTemplateId,AdminActivityKeys.UPDATE_KB_TEMPLATE,extraDataJSONObject.toString(),0);
   return kbTemplate;
 }

@@ -7,6 +7,8 @@
   kbComment.setContent(content);
   kbComment.setHelpful(helpful);
   kbCommentPersistence.update(kbComment,false);
-  socialActivityLocalService.addActivity(kbComment.getUserId(),kbComment.getGroupId(),KBComment.class.getName(),kbCommentId,AdminActivityKeys.UPDATE_KB_COMMENT,StringPool.BLANK,0);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  putExtraDataJSONObjectTitle(extraDataJSONObject,kbComment);
+  socialActivityLocalService.addActivity(kbComment.getUserId(),kbComment.getGroupId(),KBComment.class.getName(),kbCommentId,AdminActivityKeys.UPDATE_KB_COMMENT,extraDataJSONObject.toString(),0);
   return kbComment;
 }

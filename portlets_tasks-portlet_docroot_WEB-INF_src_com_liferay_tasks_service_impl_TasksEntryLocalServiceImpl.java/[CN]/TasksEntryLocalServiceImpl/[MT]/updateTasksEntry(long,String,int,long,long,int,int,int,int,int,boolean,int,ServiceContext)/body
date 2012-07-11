@@ -31,7 +31,9 @@
  else   if (status == TasksEntryConstants.STATUS_REOPENED) {
     activity=TasksActivityKeys.REOPEN_ENTRY;
   }
-  SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,StringPool.BLANK,assigneeUserId);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",tasksEntry.getTitle());
+  SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,extraDataJSONObject.toString(),assigneeUserId);
   sendNotificationEvent(tasksEntry,oldStatus,oldAssigneeUserId,serviceContext);
   return tasksEntry;
 }

@@ -16,6 +16,8 @@
   kbTemplate.setContent(content);
   kbTemplatePersistence.update(kbTemplate,false);
   resourceLocalService.addModelResources(kbTemplate,serviceContext);
-  socialActivityLocalService.addActivity(userId,groupId,KBTemplate.class.getName(),kbTemplateId,AdminActivityKeys.ADD_KB_TEMPLATE,StringPool.BLANK,0);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",kbTemplate.getTitle());
+  socialActivityLocalService.addActivity(userId,groupId,KBTemplate.class.getName(),kbTemplateId,AdminActivityKeys.ADD_KB_TEMPLATE,extraDataJSONObject.toString(),0);
   return kbTemplate;
 }

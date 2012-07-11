@@ -35,8 +35,8 @@
       titlePattern="activity-knowledge-base-admin-update-kb-article-in";
     }
   }
-  String articleTitle=wrapLink(link,HtmlUtil.escape(kbArticle.getTitle()));
-  Object[] titleArguments={creatorUserName,articleTitle,groupName};
+  String articleTitle=getValue(activity.getExtraData(),"title",kbArticle.getTitle());
+  Object[] titleArguments={creatorUserName,wrapLink(link,articleTitle),groupName};
   String title=themeDisplay.translate(titlePattern,titleArguments);
   String body=StringPool.BLANK;
   return new SocialActivityFeedEntry(link,title,body);

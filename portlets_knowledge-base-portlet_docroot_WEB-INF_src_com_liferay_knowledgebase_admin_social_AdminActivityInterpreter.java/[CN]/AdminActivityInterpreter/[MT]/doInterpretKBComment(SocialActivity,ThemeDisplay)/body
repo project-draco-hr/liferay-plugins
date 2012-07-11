@@ -37,12 +37,12 @@
   }
   String entityTitle=null;
   if (kbArticle != null) {
-    entityTitle=wrapLink(link,HtmlUtil.escape(kbArticle.getTitle()));
+    entityTitle=getValue(activity.getExtraData(),"title",kbArticle.getTitle());
   }
  else   if (kbTemplate != null) {
-    entityTitle=HtmlUtil.escape(kbTemplate.getTitle());
+    entityTitle=getValue(activity.getExtraData(),"title",kbTemplate.getTitle());
   }
-  Object[] titleArguments={creatorUserName,entityTitle,groupName};
+  Object[] titleArguments={creatorUserName,wrapLink(link,entityTitle),groupName};
   String title=themeDisplay.translate(titlePattern,titleArguments);
   String body=StringPool.BLANK;
   return new SocialActivityFeedEntry(link,title,body);

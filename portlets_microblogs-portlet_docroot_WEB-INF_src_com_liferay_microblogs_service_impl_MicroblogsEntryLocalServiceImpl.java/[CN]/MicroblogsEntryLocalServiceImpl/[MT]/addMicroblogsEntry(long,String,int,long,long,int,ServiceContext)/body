@@ -20,14 +20,16 @@
   microblogsEntryPersistence.update(microblogsEntry,false);
   resourceLocalService.addModelResources(microblogsEntry,serviceContext);
   updateAsset(microblogsEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
-  int actitivtyKey=MicroblogsActivityKeys.ADD_ENTRY;
+  int activityKey=MicroblogsActivityKeys.ADD_ENTRY;
   if (type == MicroblogsEntryConstants.TYPE_REPLY) {
-    actitivtyKey=MicroblogsActivityKeys.REPLY_ENTRY;
+    activityKey=MicroblogsActivityKeys.REPLY_ENTRY;
   }
  else   if (type == MicroblogsEntryConstants.TYPE_REPOST) {
-    actitivtyKey=MicroblogsActivityKeys.REPOST_ENTRY;
+    activityKey=MicroblogsActivityKeys.REPOST_ENTRY;
   }
-  SocialActivityLocalServiceUtil.addActivity(userId,0,MicroblogsEntry.class.getName(),microblogsEntryId,actitivtyKey,StringPool.BLANK,receiverUserId);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("content",microblogsEntry.getContent());
+  SocialActivityLocalServiceUtil.addActivity(userId,0,MicroblogsEntry.class.getName(),microblogsEntryId,activityKey,extraDataJSONObject.toString(),receiverUserId);
   if (type == MicroblogsEntryConstants.TYPE_REPLY) {
     sendNotificationEvent(microblogsEntry);
   }

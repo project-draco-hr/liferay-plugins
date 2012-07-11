@@ -8,7 +8,9 @@
     kbArticlePersistence.update(kbArticle,false);
   }
   KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",kbArticle.getTitle());
   if (kbArticle.isApproved() || !kbArticle.isFirstVersion()) {
-    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.MOVE_KB_ARTICLE,StringPool.BLANK,0);
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.MOVE_KB_ARTICLE,extraDataJSONObject.toString(),0);
   }
 }

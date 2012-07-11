@@ -25,11 +25,13 @@
   updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
   assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
   assetEntryLocalService.updateVisible(KBArticle.class.getName(),kbArticle.getResourcePrimKey(),true);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",kbArticle.getTitle());
   if (!kbArticle.isFirstVersion()) {
-    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_KB_ARTICLE,StringPool.BLANK,0);
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.UPDATE_KB_ARTICLE,extraDataJSONObject.toString(),0);
   }
  else {
-    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_KB_ARTICLE,StringPool.BLANK,0);
+    socialActivityLocalService.addActivity(userId,kbArticle.getGroupId(),KBArticle.class.getName(),resourcePrimKey,AdminActivityKeys.ADD_KB_ARTICLE,extraDataJSONObject.toString(),0);
   }
   Indexer indexer=IndexerRegistryUtil.getIndexer(KBArticle.class);
   indexer.reindex(kbArticle);
