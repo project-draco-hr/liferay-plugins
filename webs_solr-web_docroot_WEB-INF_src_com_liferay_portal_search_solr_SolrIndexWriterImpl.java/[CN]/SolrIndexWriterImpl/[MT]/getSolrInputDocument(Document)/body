@@ -15,13 +15,18 @@
  else {
       Map<Locale,String> localizedValues=field.getLocalizedValues();
       for (      Map.Entry<Locale,String> entry : localizedValues.entrySet()) {
-        Locale locale=entry.getKey();
         String value=entry.getValue();
         if (Validator.isNull(value)) {
           continue;
         }
-        name=name.concat(StringPool.UNDERLINE).concat(locale.getDisplayName());
-        solrInputDocument.addField(name,value.trim(),boost);
+        Locale locale=entry.getKey();
+        String languageId=LocaleUtil.toLanguageId(locale);
+        String defaultLanguageId=LocaleUtil.toLanguageId(LocaleUtil.getDefault());
+        if (languageId.equals(defaultLanguageId)) {
+          solrInputDocument.addField(name,value.trim(),boost);
+        }
+        String localizedName=DocumentImpl.getLocalizedName(locale,name);
+        solrInputDocument.addField(localizedName,value.trim(),boost);
       }
     }
   }
