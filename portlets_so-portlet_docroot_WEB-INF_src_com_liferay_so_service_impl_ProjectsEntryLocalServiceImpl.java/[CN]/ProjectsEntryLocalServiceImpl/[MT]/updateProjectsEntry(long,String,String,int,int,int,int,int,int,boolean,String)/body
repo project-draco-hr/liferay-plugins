@@ -1,10 +1,10 @@
 {
   ProjectsEntry projectsEntry=projectsEntryPersistence.findByPrimaryKey(projectsEntryId);
   User user=userLocalService.getUserById(projectsEntry.getUserId());
-  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,user.getTimeZone(),new ProjectsEntryStartDateException());
+  Date startDate=PortalUtil.getDate(startDateMonth,startDateDay,startDateYear,user.getTimeZone(),ProjectsEntryStartDateException.class);
   Date endDate=null;
   if (!current) {
-    endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,user.getTimeZone(),new ProjectsEntryEndDateException());
+    endDate=PortalUtil.getDate(endDateMonth,endDateDay,endDateYear,user.getTimeZone(),ProjectsEntryEndDateException.class);
   }
   projectsEntry.setModifiedDate(new Date());
   projectsEntry.setTitle(title);
