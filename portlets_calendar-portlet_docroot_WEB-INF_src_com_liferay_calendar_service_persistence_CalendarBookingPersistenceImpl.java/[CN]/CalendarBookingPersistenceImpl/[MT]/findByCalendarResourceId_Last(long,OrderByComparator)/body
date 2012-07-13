@@ -1,15 +1,12 @@
 {
-  int count=countByCalendarResourceId(calendarResourceId);
-  List<CalendarBooking> list=findByCalendarResourceId(calendarResourceId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("calendarResourceId=");
-    msg.append(calendarResourceId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchBookingException(msg.toString());
+  CalendarBooking calendarBooking=fetchByCalendarResourceId_Last(calendarResourceId,orderByComparator);
+  if (calendarBooking != null) {
+    return calendarBooking;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("calendarResourceId=");
+  msg.append(calendarResourceId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchBookingException(msg.toString());
 }

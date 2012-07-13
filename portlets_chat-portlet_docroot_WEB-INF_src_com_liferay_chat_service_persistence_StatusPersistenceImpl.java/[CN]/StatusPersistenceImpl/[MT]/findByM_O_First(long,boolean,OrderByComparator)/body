@@ -1,16 +1,14 @@
 {
-  List<Status> list=findByM_O(modifiedDate,online,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("modifiedDate=");
-    msg.append(modifiedDate);
-    msg.append(", online=");
-    msg.append(online);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchStatusException(msg.toString());
+  Status status=fetchByM_O_First(modifiedDate,online,orderByComparator);
+  if (status != null) {
+    return status;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("modifiedDate=");
+  msg.append(modifiedDate);
+  msg.append(", online=");
+  msg.append(online);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchStatusException(msg.toString());
 }

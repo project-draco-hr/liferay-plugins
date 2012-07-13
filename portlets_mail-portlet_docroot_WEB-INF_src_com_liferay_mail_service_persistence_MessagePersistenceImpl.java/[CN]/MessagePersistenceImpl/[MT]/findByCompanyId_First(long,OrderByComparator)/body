@@ -1,14 +1,12 @@
 {
-  List<Message> list=findByCompanyId(companyId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("companyId=");
-    msg.append(companyId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchMessageException(msg.toString());
+  Message message=fetchByCompanyId_First(companyId,orderByComparator);
+  if (message != null) {
+    return message;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("companyId=");
+  msg.append(companyId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchMessageException(msg.toString());
 }

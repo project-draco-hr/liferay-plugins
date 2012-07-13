@@ -1,15 +1,12 @@
 {
-  int count=countByOnline(online);
-  List<Status> list=findByOnline(online,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("online=");
-    msg.append(online);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchStatusException(msg.toString());
+  Status status=fetchByOnline_Last(online,orderByComparator);
+  if (status != null) {
+    return status;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("online=");
+  msg.append(online);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchStatusException(msg.toString());
 }

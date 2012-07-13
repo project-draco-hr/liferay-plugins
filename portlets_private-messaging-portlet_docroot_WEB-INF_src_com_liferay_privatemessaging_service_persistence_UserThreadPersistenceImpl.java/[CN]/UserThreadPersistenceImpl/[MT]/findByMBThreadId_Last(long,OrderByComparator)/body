@@ -1,15 +1,12 @@
 {
-  int count=countByMBThreadId(mbThreadId);
-  List<UserThread> list=findByMBThreadId(mbThreadId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("mbThreadId=");
-    msg.append(mbThreadId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchUserThreadException(msg.toString());
+  UserThread userThread=fetchByMBThreadId_Last(mbThreadId,orderByComparator);
+  if (userThread != null) {
+    return userThread;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("mbThreadId=");
+  msg.append(mbThreadId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchUserThreadException(msg.toString());
 }

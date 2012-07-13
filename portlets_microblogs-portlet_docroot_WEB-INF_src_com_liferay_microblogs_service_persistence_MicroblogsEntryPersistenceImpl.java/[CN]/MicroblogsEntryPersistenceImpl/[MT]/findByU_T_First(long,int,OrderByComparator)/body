@@ -1,16 +1,14 @@
 {
-  List<MicroblogsEntry> list=findByU_T(userId,type,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("userId=");
-    msg.append(userId);
-    msg.append(", type=");
-    msg.append(type);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchEntryException(msg.toString());
+  MicroblogsEntry microblogsEntry=fetchByU_T_First(userId,type,orderByComparator);
+  if (microblogsEntry != null) {
+    return microblogsEntry;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("userId=");
+  msg.append(userId);
+  msg.append(", type=");
+  msg.append(type);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchEntryException(msg.toString());
 }

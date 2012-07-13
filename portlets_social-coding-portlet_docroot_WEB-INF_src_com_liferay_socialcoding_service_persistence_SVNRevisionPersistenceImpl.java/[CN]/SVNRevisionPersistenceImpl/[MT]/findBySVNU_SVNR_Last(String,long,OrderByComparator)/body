@@ -1,17 +1,14 @@
 {
-  int count=countBySVNU_SVNR(svnUserId,svnRepositoryId);
-  List<SVNRevision> list=findBySVNU_SVNR(svnUserId,svnRepositoryId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("svnUserId=");
-    msg.append(svnUserId);
-    msg.append(", svnRepositoryId=");
-    msg.append(svnRepositoryId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchSVNRevisionException(msg.toString());
+  SVNRevision svnRevision=fetchBySVNU_SVNR_Last(svnUserId,svnRepositoryId,orderByComparator);
+  if (svnRevision != null) {
+    return svnRevision;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("svnUserId=");
+  msg.append(svnUserId);
+  msg.append(", svnRepositoryId=");
+  msg.append(svnRepositoryId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchSVNRevisionException(msg.toString());
 }

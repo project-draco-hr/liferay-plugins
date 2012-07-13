@@ -1,15 +1,12 @@
 {
-  int count=countByKaleoInstanceId(kaleoInstanceId);
-  List<KaleoTaskInstanceToken> list=findByKaleoInstanceId(kaleoInstanceId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoInstanceId=");
-    msg.append(kaleoInstanceId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchTaskInstanceTokenException(msg.toString());
+  KaleoTaskInstanceToken kaleoTaskInstanceToken=fetchByKaleoInstanceId_Last(kaleoInstanceId,orderByComparator);
+  if (kaleoTaskInstanceToken != null) {
+    return kaleoTaskInstanceToken;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoInstanceId=");
+  msg.append(kaleoInstanceId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchTaskInstanceTokenException(msg.toString());
 }

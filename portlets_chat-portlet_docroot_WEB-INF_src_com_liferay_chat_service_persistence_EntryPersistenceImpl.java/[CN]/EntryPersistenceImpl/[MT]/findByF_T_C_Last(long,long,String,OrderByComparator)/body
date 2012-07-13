@@ -1,19 +1,16 @@
 {
-  int count=countByF_T_C(fromUserId,toUserId,content);
-  List<Entry> list=findByF_T_C(fromUserId,toUserId,content,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("fromUserId=");
-    msg.append(fromUserId);
-    msg.append(", toUserId=");
-    msg.append(toUserId);
-    msg.append(", content=");
-    msg.append(content);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchEntryException(msg.toString());
+  Entry entry=fetchByF_T_C_Last(fromUserId,toUserId,content,orderByComparator);
+  if (entry != null) {
+    return entry;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("fromUserId=");
+  msg.append(fromUserId);
+  msg.append(", toUserId=");
+  msg.append(toUserId);
+  msg.append(", content=");
+  msg.append(content);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchEntryException(msg.toString());
 }

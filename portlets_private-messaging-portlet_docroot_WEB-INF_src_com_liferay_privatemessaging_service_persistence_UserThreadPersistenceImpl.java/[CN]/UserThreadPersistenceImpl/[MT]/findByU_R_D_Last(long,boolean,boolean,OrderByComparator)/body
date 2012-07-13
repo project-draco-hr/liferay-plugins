@@ -1,19 +1,16 @@
 {
-  int count=countByU_R_D(userId,read,deleted);
-  List<UserThread> list=findByU_R_D(userId,read,deleted,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("userId=");
-    msg.append(userId);
-    msg.append(", read=");
-    msg.append(read);
-    msg.append(", deleted=");
-    msg.append(deleted);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchUserThreadException(msg.toString());
+  UserThread userThread=fetchByU_R_D_Last(userId,read,deleted,orderByComparator);
+  if (userThread != null) {
+    return userThread;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("userId=");
+  msg.append(userId);
+  msg.append(", read=");
+  msg.append(read);
+  msg.append(", deleted=");
+  msg.append(deleted);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchUserThreadException(msg.toString());
 }

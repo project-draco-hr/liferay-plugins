@@ -1,16 +1,14 @@
 {
-  List<KBArticle> list=findByR_G(resourcePrimKey,groupId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("resourcePrimKey=");
-    msg.append(resourcePrimKey);
-    msg.append(", groupId=");
-    msg.append(groupId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchArticleException(msg.toString());
+  KBArticle kbArticle=fetchByR_G_First(resourcePrimKey,groupId,orderByComparator);
+  if (kbArticle != null) {
+    return kbArticle;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("resourcePrimKey=");
+  msg.append(resourcePrimKey);
+  msg.append(", groupId=");
+  msg.append(groupId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchArticleException(msg.toString());
 }

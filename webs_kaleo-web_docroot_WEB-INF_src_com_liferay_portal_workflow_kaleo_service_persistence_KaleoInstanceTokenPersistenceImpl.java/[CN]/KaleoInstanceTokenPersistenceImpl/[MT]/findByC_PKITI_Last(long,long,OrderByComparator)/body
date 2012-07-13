@@ -1,17 +1,14 @@
 {
-  int count=countByC_PKITI(companyId,parentKaleoInstanceTokenId);
-  List<KaleoInstanceToken> list=findByC_PKITI(companyId,parentKaleoInstanceTokenId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("companyId=");
-    msg.append(companyId);
-    msg.append(", parentKaleoInstanceTokenId=");
-    msg.append(parentKaleoInstanceTokenId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchInstanceTokenException(msg.toString());
+  KaleoInstanceToken kaleoInstanceToken=fetchByC_PKITI_Last(companyId,parentKaleoInstanceTokenId,orderByComparator);
+  if (kaleoInstanceToken != null) {
+    return kaleoInstanceToken;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("companyId=");
+  msg.append(companyId);
+  msg.append(", parentKaleoInstanceTokenId=");
+  msg.append(parentKaleoInstanceTokenId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchInstanceTokenException(msg.toString());
 }

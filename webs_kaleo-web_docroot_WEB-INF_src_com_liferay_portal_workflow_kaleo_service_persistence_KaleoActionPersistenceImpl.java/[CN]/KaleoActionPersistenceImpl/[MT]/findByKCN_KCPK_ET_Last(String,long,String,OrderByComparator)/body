@@ -1,19 +1,16 @@
 {
-  int count=countByKCN_KCPK_ET(kaleoClassName,kaleoClassPK,executionType);
-  List<KaleoAction> list=findByKCN_KCPK_ET(kaleoClassName,kaleoClassPK,executionType,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoClassName=");
-    msg.append(kaleoClassName);
-    msg.append(", kaleoClassPK=");
-    msg.append(kaleoClassPK);
-    msg.append(", executionType=");
-    msg.append(executionType);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchActionException(msg.toString());
+  KaleoAction kaleoAction=fetchByKCN_KCPK_ET_Last(kaleoClassName,kaleoClassPK,executionType,orderByComparator);
+  if (kaleoAction != null) {
+    return kaleoAction;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoClassName=");
+  msg.append(kaleoClassName);
+  msg.append(", kaleoClassPK=");
+  msg.append(kaleoClassPK);
+  msg.append(", executionType=");
+  msg.append(executionType);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchActionException(msg.toString());
 }

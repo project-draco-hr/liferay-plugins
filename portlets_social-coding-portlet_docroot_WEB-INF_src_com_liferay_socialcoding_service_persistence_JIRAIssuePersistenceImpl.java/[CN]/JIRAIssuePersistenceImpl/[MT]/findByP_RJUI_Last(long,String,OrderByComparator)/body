@@ -1,17 +1,14 @@
 {
-  int count=countByP_RJUI(projectId,reporterJiraUserId);
-  List<JIRAIssue> list=findByP_RJUI(projectId,reporterJiraUserId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("projectId=");
-    msg.append(projectId);
-    msg.append(", reporterJiraUserId=");
-    msg.append(reporterJiraUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAIssueException(msg.toString());
+  JIRAIssue jiraIssue=fetchByP_RJUI_Last(projectId,reporterJiraUserId,orderByComparator);
+  if (jiraIssue != null) {
+    return jiraIssue;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("projectId=");
+  msg.append(projectId);
+  msg.append(", reporterJiraUserId=");
+  msg.append(reporterJiraUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAIssueException(msg.toString());
 }

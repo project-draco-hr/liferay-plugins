@@ -1,17 +1,14 @@
 {
-  int count=countByP_S(parentCalendarBookingId,status);
-  List<CalendarBooking> list=findByP_S(parentCalendarBookingId,status,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("parentCalendarBookingId=");
-    msg.append(parentCalendarBookingId);
-    msg.append(", status=");
-    msg.append(status);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchBookingException(msg.toString());
+  CalendarBooking calendarBooking=fetchByP_S_Last(parentCalendarBookingId,status,orderByComparator);
+  if (calendarBooking != null) {
+    return calendarBooking;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("parentCalendarBookingId=");
+  msg.append(parentCalendarBookingId);
+  msg.append(", status=");
+  msg.append(status);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchBookingException(msg.toString());
 }

@@ -1,14 +1,12 @@
 {
-  List<JIRAAction> list=findByJiraUserId(jiraUserId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("jiraUserId=");
-    msg.append(jiraUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAActionException(msg.toString());
+  JIRAAction jiraAction=fetchByJiraUserId_First(jiraUserId,orderByComparator);
+  if (jiraAction != null) {
+    return jiraAction;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("jiraUserId=");
+  msg.append(jiraUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAActionException(msg.toString());
 }

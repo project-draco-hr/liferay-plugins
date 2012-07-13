@@ -1,17 +1,14 @@
 {
-  int count=countByC_C(classNameId,classPK);
-  List<KBComment> list=findByC_C(classNameId,classPK,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("classNameId=");
-    msg.append(classNameId);
-    msg.append(", classPK=");
-    msg.append(classPK);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchCommentException(msg.toString());
+  KBComment kbComment=fetchByC_C_Last(classNameId,classPK,orderByComparator);
+  if (kbComment != null) {
+    return kbComment;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("classNameId=");
+  msg.append(classNameId);
+  msg.append(", classPK=");
+  msg.append(classPK);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchCommentException(msg.toString());
 }

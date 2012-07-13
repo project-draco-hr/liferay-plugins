@@ -1,18 +1,16 @@
 {
-  List<JIRAIssue> list=findByMD_P_RJUI(modifiedDate,projectId,reporterJiraUserId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("modifiedDate=");
-    msg.append(modifiedDate);
-    msg.append(", projectId=");
-    msg.append(projectId);
-    msg.append(", reporterJiraUserId=");
-    msg.append(reporterJiraUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAIssueException(msg.toString());
+  JIRAIssue jiraIssue=fetchByMD_P_RJUI_First(modifiedDate,projectId,reporterJiraUserId,orderByComparator);
+  if (jiraIssue != null) {
+    return jiraIssue;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("modifiedDate=");
+  msg.append(modifiedDate);
+  msg.append(", projectId=");
+  msg.append(projectId);
+  msg.append(", reporterJiraUserId=");
+  msg.append(reporterJiraUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAIssueException(msg.toString());
 }

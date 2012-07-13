@@ -1,16 +1,14 @@
 {
-  List<KaleoTimer> list=findByKCN_KCPK(kaleoClassName,kaleoClassPK,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoClassName=");
-    msg.append(kaleoClassName);
-    msg.append(", kaleoClassPK=");
-    msg.append(kaleoClassPK);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchTimerException(msg.toString());
+  KaleoTimer kaleoTimer=fetchByKCN_KCPK_First(kaleoClassName,kaleoClassPK,orderByComparator);
+  if (kaleoTimer != null) {
+    return kaleoTimer;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoClassName=");
+  msg.append(kaleoClassName);
+  msg.append(", kaleoClassPK=");
+  msg.append(kaleoClassPK);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchTimerException(msg.toString());
 }

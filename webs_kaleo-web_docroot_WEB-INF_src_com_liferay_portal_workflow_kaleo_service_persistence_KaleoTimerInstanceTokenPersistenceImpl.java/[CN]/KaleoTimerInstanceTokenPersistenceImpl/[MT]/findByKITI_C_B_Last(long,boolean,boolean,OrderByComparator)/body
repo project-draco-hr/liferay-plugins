@@ -1,19 +1,16 @@
 {
-  int count=countByKITI_C_B(kaleoInstanceTokenId,completed,blocking);
-  List<KaleoTimerInstanceToken> list=findByKITI_C_B(kaleoInstanceTokenId,completed,blocking,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoInstanceTokenId=");
-    msg.append(kaleoInstanceTokenId);
-    msg.append(", completed=");
-    msg.append(completed);
-    msg.append(", blocking=");
-    msg.append(blocking);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchTimerInstanceTokenException(msg.toString());
+  KaleoTimerInstanceToken kaleoTimerInstanceToken=fetchByKITI_C_B_Last(kaleoInstanceTokenId,completed,blocking,orderByComparator);
+  if (kaleoTimerInstanceToken != null) {
+    return kaleoTimerInstanceToken;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoInstanceTokenId=");
+  msg.append(kaleoInstanceTokenId);
+  msg.append(", completed=");
+  msg.append(completed);
+  msg.append(", blocking=");
+  msg.append(blocking);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchTimerInstanceTokenException(msg.toString());
 }

@@ -1,16 +1,14 @@
 {
-  List<KaleoNode> list=findByC_KDI(companyId,kaleoDefinitionId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("companyId=");
-    msg.append(companyId);
-    msg.append(", kaleoDefinitionId=");
-    msg.append(kaleoDefinitionId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchNodeException(msg.toString());
+  KaleoNode kaleoNode=fetchByC_KDI_First(companyId,kaleoDefinitionId,orderByComparator);
+  if (kaleoNode != null) {
+    return kaleoNode;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("companyId=");
+  msg.append(companyId);
+  msg.append(", kaleoDefinitionId=");
+  msg.append(kaleoDefinitionId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchNodeException(msg.toString());
 }

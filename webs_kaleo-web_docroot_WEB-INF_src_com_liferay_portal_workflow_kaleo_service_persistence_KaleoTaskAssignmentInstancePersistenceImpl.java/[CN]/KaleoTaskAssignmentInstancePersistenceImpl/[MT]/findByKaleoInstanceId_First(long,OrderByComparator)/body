@@ -1,14 +1,12 @@
 {
-  List<KaleoTaskAssignmentInstance> list=findByKaleoInstanceId(kaleoInstanceId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoInstanceId=");
-    msg.append(kaleoInstanceId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchTaskAssignmentInstanceException(msg.toString());
+  KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance=fetchByKaleoInstanceId_First(kaleoInstanceId,orderByComparator);
+  if (kaleoTaskAssignmentInstance != null) {
+    return kaleoTaskAssignmentInstance;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoInstanceId=");
+  msg.append(kaleoInstanceId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchTaskAssignmentInstanceException(msg.toString());
 }

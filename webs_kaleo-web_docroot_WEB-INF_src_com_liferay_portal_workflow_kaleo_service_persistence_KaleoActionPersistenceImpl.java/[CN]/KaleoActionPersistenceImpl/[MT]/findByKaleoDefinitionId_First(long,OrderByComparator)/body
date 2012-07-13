@@ -1,14 +1,12 @@
 {
-  List<KaleoAction> list=findByKaleoDefinitionId(kaleoDefinitionId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoDefinitionId=");
-    msg.append(kaleoDefinitionId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchActionException(msg.toString());
+  KaleoAction kaleoAction=fetchByKaleoDefinitionId_First(kaleoDefinitionId,orderByComparator);
+  if (kaleoAction != null) {
+    return kaleoAction;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoDefinitionId=");
+  msg.append(kaleoDefinitionId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchActionException(msg.toString());
 }

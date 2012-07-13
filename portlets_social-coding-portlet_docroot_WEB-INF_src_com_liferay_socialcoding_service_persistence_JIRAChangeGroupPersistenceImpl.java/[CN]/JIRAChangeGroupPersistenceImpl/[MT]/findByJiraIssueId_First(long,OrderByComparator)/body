@@ -1,14 +1,12 @@
 {
-  List<JIRAChangeGroup> list=findByJiraIssueId(jiraIssueId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("jiraIssueId=");
-    msg.append(jiraIssueId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAChangeGroupException(msg.toString());
+  JIRAChangeGroup jiraChangeGroup=fetchByJiraIssueId_First(jiraIssueId,orderByComparator);
+  if (jiraChangeGroup != null) {
+    return jiraChangeGroup;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("jiraIssueId=");
+  msg.append(jiraIssueId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAChangeGroupException(msg.toString());
 }

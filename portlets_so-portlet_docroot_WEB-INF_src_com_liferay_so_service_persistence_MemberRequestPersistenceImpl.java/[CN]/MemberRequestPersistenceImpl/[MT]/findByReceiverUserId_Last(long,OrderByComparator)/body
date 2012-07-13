@@ -1,15 +1,12 @@
 {
-  int count=countByReceiverUserId(receiverUserId);
-  List<MemberRequest> list=findByReceiverUserId(receiverUserId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("receiverUserId=");
-    msg.append(receiverUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchMemberRequestException(msg.toString());
+  MemberRequest memberRequest=fetchByReceiverUserId_Last(receiverUserId,orderByComparator);
+  if (memberRequest != null) {
+    return memberRequest;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("receiverUserId=");
+  msg.append(receiverUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchMemberRequestException(msg.toString());
 }

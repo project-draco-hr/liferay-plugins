@@ -1,17 +1,14 @@
 {
-  int count=countByC_L(companyId,latest);
-  List<KBArticle> list=findByC_L(companyId,latest,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("companyId=");
-    msg.append(companyId);
-    msg.append(", latest=");
-    msg.append(latest);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchArticleException(msg.toString());
+  KBArticle kbArticle=fetchByC_L_Last(companyId,latest,orderByComparator);
+  if (kbArticle != null) {
+    return kbArticle;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("companyId=");
+  msg.append(companyId);
+  msg.append(", latest=");
+  msg.append(latest);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchArticleException(msg.toString());
 }

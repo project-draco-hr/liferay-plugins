@@ -1,14 +1,12 @@
 {
-  List<JIRAIssue> list=findByReporterJiraUserId(reporterJiraUserId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("reporterJiraUserId=");
-    msg.append(reporterJiraUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAIssueException(msg.toString());
+  JIRAIssue jiraIssue=fetchByReporterJiraUserId_First(reporterJiraUserId,orderByComparator);
+  if (jiraIssue != null) {
+    return jiraIssue;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("reporterJiraUserId=");
+  msg.append(reporterJiraUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAIssueException(msg.toString());
 }

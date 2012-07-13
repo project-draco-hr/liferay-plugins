@@ -1,19 +1,16 @@
 {
-  int count=countByG_C_D(groupId,calendarResourceId,defaultCalendar);
-  List<Calendar> list=findByG_C_D(groupId,calendarResourceId,defaultCalendar,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("groupId=");
-    msg.append(groupId);
-    msg.append(", calendarResourceId=");
-    msg.append(calendarResourceId);
-    msg.append(", defaultCalendar=");
-    msg.append(defaultCalendar);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchCalendarException(msg.toString());
+  Calendar calendar=fetchByG_C_D_Last(groupId,calendarResourceId,defaultCalendar,orderByComparator);
+  if (calendar != null) {
+    return calendar;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("groupId=");
+  msg.append(groupId);
+  msg.append(", calendarResourceId=");
+  msg.append(calendarResourceId);
+  msg.append(", defaultCalendar=");
+  msg.append(defaultCalendar);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchCalendarException(msg.toString());
 }

@@ -1,18 +1,16 @@
 {
-  List<JIRAIssue> list=findByP_AJUI_S(projectId,assigneeJiraUserId,status,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("projectId=");
-    msg.append(projectId);
-    msg.append(", assigneeJiraUserId=");
-    msg.append(assigneeJiraUserId);
-    msg.append(", status=");
-    msg.append(status);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAIssueException(msg.toString());
+  JIRAIssue jiraIssue=fetchByP_AJUI_S_First(projectId,assigneeJiraUserId,status,orderByComparator);
+  if (jiraIssue != null) {
+    return jiraIssue;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("projectId=");
+  msg.append(projectId);
+  msg.append(", assigneeJiraUserId=");
+  msg.append(assigneeJiraUserId);
+  msg.append(", status=");
+  msg.append(status);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAIssueException(msg.toString());
 }

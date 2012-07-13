@@ -1,20 +1,18 @@
 {
-  List<KBArticle> list=findByG_P_S_M(groupId,parentResourcePrimKey,sections,main,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(10);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("groupId=");
-    msg.append(groupId);
-    msg.append(", parentResourcePrimKey=");
-    msg.append(parentResourcePrimKey);
-    msg.append(", sections=");
-    msg.append(sections);
-    msg.append(", main=");
-    msg.append(main);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchArticleException(msg.toString());
+  KBArticle kbArticle=fetchByG_P_S_M_First(groupId,parentResourcePrimKey,sections,main,orderByComparator);
+  if (kbArticle != null) {
+    return kbArticle;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(10);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("groupId=");
+  msg.append(groupId);
+  msg.append(", parentResourcePrimKey=");
+  msg.append(parentResourcePrimKey);
+  msg.append(", sections=");
+  msg.append(sections);
+  msg.append(", main=");
+  msg.append(main);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchArticleException(msg.toString());
 }

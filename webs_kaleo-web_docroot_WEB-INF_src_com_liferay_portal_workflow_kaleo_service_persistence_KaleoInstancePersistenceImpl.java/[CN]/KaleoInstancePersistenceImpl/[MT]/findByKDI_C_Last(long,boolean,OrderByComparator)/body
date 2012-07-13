@@ -1,17 +1,14 @@
 {
-  int count=countByKDI_C(kaleoDefinitionId,completed);
-  List<KaleoInstance> list=findByKDI_C(kaleoDefinitionId,completed,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoDefinitionId=");
-    msg.append(kaleoDefinitionId);
-    msg.append(", completed=");
-    msg.append(completed);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchInstanceException(msg.toString());
+  KaleoInstance kaleoInstance=fetchByKDI_C_Last(kaleoDefinitionId,completed,orderByComparator);
+  if (kaleoInstance != null) {
+    return kaleoInstance;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoDefinitionId=");
+  msg.append(kaleoDefinitionId);
+  msg.append(", completed=");
+  msg.append(completed);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchInstanceException(msg.toString());
 }

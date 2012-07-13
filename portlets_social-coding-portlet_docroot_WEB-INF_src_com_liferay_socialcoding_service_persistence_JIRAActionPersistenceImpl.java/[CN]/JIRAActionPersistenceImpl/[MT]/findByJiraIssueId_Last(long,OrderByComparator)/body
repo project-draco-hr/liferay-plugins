@@ -1,15 +1,12 @@
 {
-  int count=countByJiraIssueId(jiraIssueId);
-  List<JIRAAction> list=findByJiraIssueId(jiraIssueId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("jiraIssueId=");
-    msg.append(jiraIssueId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchJIRAActionException(msg.toString());
+  JIRAAction jiraAction=fetchByJiraIssueId_Last(jiraIssueId,orderByComparator);
+  if (jiraAction != null) {
+    return jiraAction;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("jiraIssueId=");
+  msg.append(jiraIssueId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchJIRAActionException(msg.toString());
 }

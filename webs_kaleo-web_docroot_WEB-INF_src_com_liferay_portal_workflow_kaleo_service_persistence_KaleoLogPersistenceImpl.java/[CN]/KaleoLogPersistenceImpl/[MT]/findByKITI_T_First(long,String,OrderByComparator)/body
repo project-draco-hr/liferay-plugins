@@ -1,16 +1,14 @@
 {
-  List<KaleoLog> list=findByKITI_T(kaleoInstanceTokenId,type,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("kaleoInstanceTokenId=");
-    msg.append(kaleoInstanceTokenId);
-    msg.append(", type=");
-    msg.append(type);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchLogException(msg.toString());
+  KaleoLog kaleoLog=fetchByKITI_T_First(kaleoInstanceTokenId,type,orderByComparator);
+  if (kaleoLog != null) {
+    return kaleoLog;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("kaleoInstanceTokenId=");
+  msg.append(kaleoInstanceTokenId);
+  msg.append(", type=");
+  msg.append(type);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchLogException(msg.toString());
 }

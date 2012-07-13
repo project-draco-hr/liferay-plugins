@@ -1,17 +1,14 @@
 {
-  int count=countByP_S(parentResourcePrimKey,status);
-  List<KBArticle> list=findByP_S(parentResourcePrimKey,status,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("parentResourcePrimKey=");
-    msg.append(parentResourcePrimKey);
-    msg.append(", status=");
-    msg.append(status);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchArticleException(msg.toString());
+  KBArticle kbArticle=fetchByP_S_Last(parentResourcePrimKey,status,orderByComparator);
+  if (kbArticle != null) {
+    return kbArticle;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("parentResourcePrimKey=");
+  msg.append(parentResourcePrimKey);
+  msg.append(", status=");
+  msg.append(status);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchArticleException(msg.toString());
 }

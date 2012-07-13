@@ -1,14 +1,12 @@
 {
-  List<OAuthConsumer> list=findByGadgetKey(gadgetKey,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("gadgetKey=");
-    msg.append(gadgetKey);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchOAuthConsumerException(msg.toString());
+  OAuthConsumer oAuthConsumer=fetchByGadgetKey_First(gadgetKey,orderByComparator);
+  if (oAuthConsumer != null) {
+    return oAuthConsumer;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("gadgetKey=");
+  msg.append(gadgetKey);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchOAuthConsumerException(msg.toString());
 }

@@ -1,19 +1,16 @@
 {
-  int count=countByC_C_A(companyId,code,active);
-  List<CalendarResource> list=findByC_C_A(companyId,code,active,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("companyId=");
-    msg.append(companyId);
-    msg.append(", code=");
-    msg.append(code);
-    msg.append(", active=");
-    msg.append(active);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchResourceException(msg.toString());
+  CalendarResource calendarResource=fetchByC_C_A_Last(companyId,code,active,orderByComparator);
+  if (calendarResource != null) {
+    return calendarResource;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("companyId=");
+  msg.append(companyId);
+  msg.append(", code=");
+  msg.append(code);
+  msg.append(", active=");
+  msg.append(active);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchResourceException(msg.toString());
 }

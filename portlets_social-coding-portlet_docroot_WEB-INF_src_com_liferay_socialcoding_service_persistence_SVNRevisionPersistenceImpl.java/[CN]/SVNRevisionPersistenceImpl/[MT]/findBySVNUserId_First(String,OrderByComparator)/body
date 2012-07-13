@@ -1,14 +1,12 @@
 {
-  List<SVNRevision> list=findBySVNUserId(svnUserId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("svnUserId=");
-    msg.append(svnUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchSVNRevisionException(msg.toString());
+  SVNRevision svnRevision=fetchBySVNUserId_First(svnUserId,orderByComparator);
+  if (svnRevision != null) {
+    return svnRevision;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("svnUserId=");
+  msg.append(svnUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchSVNRevisionException(msg.toString());
 }

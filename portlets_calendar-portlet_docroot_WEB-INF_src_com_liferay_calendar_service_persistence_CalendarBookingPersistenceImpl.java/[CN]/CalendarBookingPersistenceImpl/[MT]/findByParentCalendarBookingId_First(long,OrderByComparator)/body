@@ -1,14 +1,12 @@
 {
-  List<CalendarBooking> list=findByParentCalendarBookingId(parentCalendarBookingId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("parentCalendarBookingId=");
-    msg.append(parentCalendarBookingId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchBookingException(msg.toString());
+  CalendarBooking calendarBooking=fetchByParentCalendarBookingId_First(parentCalendarBookingId,orderByComparator);
+  if (calendarBooking != null) {
+    return calendarBooking;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("parentCalendarBookingId=");
+  msg.append(parentCalendarBookingId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchBookingException(msg.toString());
 }

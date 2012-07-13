@@ -1,14 +1,12 @@
 {
-  List<Module> list=findByContextName(contextName,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("contextName=");
-    msg.append(contextName);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchModuleException(msg.toString());
+  Module module=fetchByContextName_First(contextName,orderByComparator);
+  if (module != null) {
+    return module;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("contextName=");
+  msg.append(contextName);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchModuleException(msg.toString());
 }

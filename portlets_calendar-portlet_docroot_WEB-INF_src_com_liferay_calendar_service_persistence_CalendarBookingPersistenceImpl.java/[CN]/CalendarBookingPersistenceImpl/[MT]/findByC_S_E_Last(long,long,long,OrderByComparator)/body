@@ -1,19 +1,16 @@
 {
-  int count=countByC_S_E(calendarId,startDate,endDate);
-  List<CalendarBooking> list=findByC_S_E(calendarId,startDate,endDate,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(8);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("calendarId=");
-    msg.append(calendarId);
-    msg.append(", startDate=");
-    msg.append(startDate);
-    msg.append(", endDate=");
-    msg.append(endDate);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchBookingException(msg.toString());
+  CalendarBooking calendarBooking=fetchByC_S_E_Last(calendarId,startDate,endDate,orderByComparator);
+  if (calendarBooking != null) {
+    return calendarBooking;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(8);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("calendarId=");
+  msg.append(calendarId);
+  msg.append(", startDate=");
+  msg.append(startDate);
+  msg.append(", endDate=");
+  msg.append(endDate);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchBookingException(msg.toString());
 }

@@ -1,16 +1,14 @@
 {
-  List<MicroblogsEntry> list=findByT_RMEI(type,receiverMicroblogsEntryId,0,1,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(6);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("type=");
-    msg.append(type);
-    msg.append(", receiverMicroblogsEntryId=");
-    msg.append(receiverMicroblogsEntryId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchEntryException(msg.toString());
+  MicroblogsEntry microblogsEntry=fetchByT_RMEI_First(type,receiverMicroblogsEntryId,orderByComparator);
+  if (microblogsEntry != null) {
+    return microblogsEntry;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(6);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("type=");
+  msg.append(type);
+  msg.append(", receiverMicroblogsEntryId=");
+  msg.append(receiverMicroblogsEntryId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchEntryException(msg.toString());
 }

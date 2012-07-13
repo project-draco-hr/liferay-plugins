@@ -1,15 +1,12 @@
 {
-  int count=countByText(text);
-  List<Bar> list=findByText(text,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("text=");
-    msg.append(text);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchBarException(msg.toString());
+  Bar bar=fetchByText_Last(text,orderByComparator);
+  if (bar != null) {
+    return bar;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("text=");
+  msg.append(text);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchBarException(msg.toString());
 }

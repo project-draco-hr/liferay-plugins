@@ -1,15 +1,12 @@
 {
-  int count=countByAssigneeUserId(assigneeUserId);
-  List<TasksEntry> list=findByAssigneeUserId(assigneeUserId,count - 1,count,orderByComparator);
-  if (list.isEmpty()) {
-    StringBundler msg=new StringBundler(4);
-    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-    msg.append("assigneeUserId=");
-    msg.append(assigneeUserId);
-    msg.append(StringPool.CLOSE_CURLY_BRACE);
-    throw new NoSuchTasksEntryException(msg.toString());
+  TasksEntry tasksEntry=fetchByAssigneeUserId_Last(assigneeUserId,orderByComparator);
+  if (tasksEntry != null) {
+    return tasksEntry;
   }
- else {
-    return list.get(0);
-  }
+  StringBundler msg=new StringBundler(4);
+  msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+  msg.append("assigneeUserId=");
+  msg.append(assigneeUserId);
+  msg.append(StringPool.CLOSE_CURLY_BRACE);
+  throw new NoSuchTasksEntryException(msg.toString());
 }
