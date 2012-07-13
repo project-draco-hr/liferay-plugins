@@ -2,6 +2,11 @@
   LayoutSetPrototype layoutSetPrototype=fetchLayoutSetPrototype(group.getCompanyId(),layoutSetPrototypeKey);
   if (layoutSetPrototype != null) {
     LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),privateLayout,true,layoutSetPrototype.getUuid());
+    LayoutSet layoutSet=group.getPublicLayoutSet();
+    if (privateLayout) {
+      layoutSet=group.getPrivateLayoutSet();
+    }
+    PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
     LayoutLocalServiceUtil.updatePriorities(group.getGroupId(),privateLayout);
   }
 }
