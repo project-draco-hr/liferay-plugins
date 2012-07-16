@@ -2,8 +2,10 @@
   if (roleType == RoleConstants.TYPE_REGULAR) {
     List<User> users=UserLocalServiceUtil.getRoleUsers(roleId);
     for (    User user : users) {
-      InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
-      internetAddresses.add(internetAddress);
+      if (user.isActive()) {
+        InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
+        internetAddresses.add(internetAddress);
+      }
     }
   }
  else {
@@ -11,8 +13,10 @@
     List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),roleId);
     for (    UserGroupRole userGroupRole : userGroupRoles) {
       User user=userGroupRole.getUser();
-      InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
-      internetAddresses.add(internetAddress);
+      if (user.isActive()) {
+        InternetAddress internetAddress=new InternetAddress(user.getEmailAddress(),user.getFullName());
+        internetAddresses.add(internetAddress);
+      }
     }
   }
 }
