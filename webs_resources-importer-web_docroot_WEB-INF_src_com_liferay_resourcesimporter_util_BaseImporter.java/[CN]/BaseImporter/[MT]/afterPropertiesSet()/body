@@ -2,16 +2,16 @@
   User user=UserLocalServiceUtil.getDefaultUser(companyId);
   userId=user.getUserId();
   Group group=null;
-  if (destinationClassName.equals(LayoutSetPrototype.class.getName())) {
-    if (!hasLayoutSetPrototype(companyId,destinationName)) {
-      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,getDestinationNameMap(),StringPool.BLANK,true,true,new ServiceContext());
+  if (targetClassName.equals(LayoutSetPrototype.class.getName())) {
+    if (!hasLayoutSetPrototype(companyId,targetValue)) {
+      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,getTargetValueMap(),StringPool.BLANK,true,true,new ServiceContext());
       group=layoutSetPrototype.getGroup();
-      destinationClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
       privateLayout=true;
+      targetClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
     }
   }
- else   if (destinationClassName.equals(Group.class.getName())) {
-    if (destinationName.equals(GroupConstants.GUEST)) {
+ else   if (targetClassName.equals(Group.class.getName())) {
+    if (targetValue.equals(GroupConstants.GUEST)) {
       Group guestGroup=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
       List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(guestGroup.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,false,0,1);
       if (!layouts.isEmpty()) {
@@ -29,12 +29,12 @@
       }
       group=guestGroup;
     }
- else     if (!hasGroup(companyId,destinationName)) {
-      group=GroupLocalServiceUtil.addGroup(userId,0,StringPool.BLANK,0,destinationName,StringPool.BLANK,GroupConstants.TYPE_SITE_OPEN,null,true,true,new ServiceContext());
+ else     if (!hasGroup(companyId,targetValue)) {
+      group=GroupLocalServiceUtil.addGroup(userId,0,StringPool.BLANK,0,targetValue,StringPool.BLANK,GroupConstants.TYPE_SITE_OPEN,null,true,true,new ServiceContext());
     }
     if (group != null) {
-      destinationClassPK=group.getGroupId();
       privateLayout=false;
+      targetClassPK=group.getGroupId();
     }
   }
   if (group == null) {
