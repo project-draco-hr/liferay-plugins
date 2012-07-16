@@ -2,9 +2,10 @@
   String tabs2=ParamUtil.get(actionRequest,"tabs2","gadget");
   if (tabs2.equals("manage-oauth")) {
     ShindigUtil.updateOAuthConsumers(actionRequest,actionResponse);
+    LiferayPortletConfig liferayPortletConfig=(LiferayPortletConfig)portletConfig;
     String portletResource=ParamUtil.getString(actionRequest,"portletResource");
-    SessionMessages.add(actionRequest,portletConfig.getPortletName() + SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,portletResource);
-    SessionMessages.add(actionRequest,portletConfig.getPortletName() + SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
+    SessionMessages.add(actionRequest,liferayPortletConfig.getPortletId() + SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,portletResource);
+    SessionMessages.add(actionRequest,liferayPortletConfig.getPortletId() + SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
   }
  else   if (tabs2.equals("preferences")) {
     doProcessAction(portletConfig,actionRequest,actionResponse);
