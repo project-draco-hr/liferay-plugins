@@ -1,8 +1,44 @@
 {
   User user=UserLocalServiceUtil.getDefaultUser(companyId);
   userId=user.getUserId();
-  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,layoutSetPrototypeNameMap,StringPool.BLANK,true,true,new ServiceContext());
-  Group group=layoutSetPrototype.getGroup();
+  Group group=null;
+  if (destinationClassName.equals(LayoutSetPrototype.class.getName())) {
+    if (!hasLayoutSetPrototype(companyId,destinationName)) {
+      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,getDestinationNameMap(),StringPool.BLANK,true,true,new ServiceContext());
+      group=layoutSetPrototype.getGroup();
+      destinationClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
+      privateLayout=true;
+    }
+  }
+ else   if (destinationClassName.equals(Group.class.getName())) {
+    if (destinationName.equals(GroupConstants.GUEST)) {
+      Group guestGroup=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
+      List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(guestGroup.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,false,0,1);
+      if (!layouts.isEmpty()) {
+        Layout layout=layouts.get(0);
+        LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+        List<String> portletIds=layoutTypePortlet.getPortletIds();
+        if (portletIds.size() != 2) {
+          return;
+        }
+        for (        String portletId : portletIds) {
+          if (!portletId.equals("47") && !portletId.equals("58")) {
+            return;
+          }
+        }
+      }
+      group=guestGroup;
+    }
+ else     if (!hasGroup(companyId,destinationName)) {
+      group=GroupLocalServiceUtil.addGroup(userId,0,StringPool.BLANK,0,destinationName,StringPool.BLANK,GroupConstants.TYPE_SITE_OPEN,null,true,true,new ServiceContext());
+    }
+    if (group != null) {
+      destinationClassPK=group.getGroupId();
+      privateLayout=false;
+    }
+  }
+  if (group == null) {
+    return;
+  }
   groupId=group.getGroupId();
-  layoutSetPrototypeId=layoutSetPrototype.getLayoutSetPrototypeId();
 }

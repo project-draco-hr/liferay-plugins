@@ -9,17 +9,21 @@
   if (resourcesDirURL == null) {
     return;
   }
+  Properties pluginProperties=getPluginProperties(servletContext);
+  String destinationClassName=pluginProperties.getProperty("resources-importer-destination-class-name");
+  if (Validator.isNull(destinationClassName)) {
+    destinationClassName=LayoutSetPrototype.class.getName();
+  }
+  String destinationName=pluginProperties.getProperty("resources-importer-destination-name");
+  if (Validator.isNull(destinationName)) {
+    destinationName=TextFormatter.format(servletContextName,TextFormatter.J);
+  }
+  String resourcesDir=pluginProperties.getProperty("resources-importer-external-dir");
   String layoutSetPrototypeName=TextFormatter.format(servletContextName,TextFormatter.J);
   Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
   URL larURL=servletContext.getResource(_RESOURCES_DIR.concat("archive.lar"));
   List<Company> companies=CompanyLocalServiceUtil.getCompanies();
   for (  Company company : companies) {
-    if (hasLayoutSetPrototype(company.getCompanyId(),layoutSetPrototypeName)) {
-      if (_log.isInfoEnabled()) {
-        _log.info("Layout set prototype already exists for company " + company.getWebId());
-      }
-      continue;
-    }
     long companyId=CompanyThreadLocal.getCompanyId();
     try {
       CompanyThreadLocal.setCompanyId(company.getCompanyId());
@@ -30,46 +34,52 @@
         larImporter.setLARInputStream(urlConnection.getInputStream());
         importer=larImporter;
       }
- else       if ((resourcePaths != null) && !resourcePaths.isEmpty() && (larURL == null)) {
+ else       if ((resourcePaths != null) && !resourcePaths.isEmpty()) {
         importer=getResourceImporter();
         importer.setResourcesDir(_RESOURCES_DIR);
       }
  else {
-        Properties pluginProperties=getPluginProperties(servletContext);
-        String resourcesDir=pluginProperties.getProperty("resources-importer-external-dir");
         if (Validator.isNotNull(resourcesDir)) {
           importer=getFileSystemImporter();
           importer.setResourcesDir(resourcesDir);
         }
       }
       if (importer == null) {
-        Message newMessage=new Message();
-        newMessage.put("companyId",company.getCompanyId());
-        newMessage.put("error","No valid importer found");
-        newMessage.put("layoutSetPrototypeId",0);
-        newMessage.put("servletContextName",servletContextName);
-        MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
-        return;
+        throw new ImporterException("No valid importer found");
       }
       importer.setCompanyId(company.getCompanyId());
-      Map<Locale,String> layoutSetPrototypeNameMap=new HashMap<Locale,String>();
-      Locale locale=LocaleUtil.getDefault();
-      layoutSetPrototypeNameMap.put(locale,layoutSetPrototypeName);
-      importer.setLayoutSetPrototypeNameMap(layoutSetPrototypeNameMap);
+      importer.setDestinationClassName(destinationClassName);
+      importer.setDestinationName(destinationName);
       importer.setServletContext(servletContext);
       importer.setServletContextName(servletContextName);
       importer.afterPropertiesSet();
+      if (importer.getGroupId() == 0) {
+        if (_log.isInfoEnabled()) {
+          _log.info("Group or layout set prototype already exists for" + " company " + company.getWebId());
+        }
+        continue;
+      }
       if (_log.isInfoEnabled()) {
         _log.info("Importing resources from " + servletContextName + " to group "+ importer.getGroupId());
       }
       importer.importResources();
       Message newMessage=new Message();
       newMessage.put("companyId",company.getCompanyId());
-      newMessage.put("layoutSetPrototypeId",importer.getLayoutSetPrototypeId());
+      newMessage.put("destinationClassName",destinationClassName);
+      newMessage.put("destinationClassPK",importer.getDestinationClassPK());
       newMessage.put("servletContextName",servletContextName);
       MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
     }
-  finally {
+ catch (    ImporterException ie) {
+      Message newMessage=new Message();
+      newMessage.put("companyId",company.getCompanyId());
+      newMessage.put("error",ie.getMessage());
+      newMessage.put("destinationClassName",destinationClassName);
+      newMessage.put("destinationClassPK",0);
+      newMessage.put("servletContextName",servletContextName);
+      MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
+    }
+ finally {
       CompanyThreadLocal.setCompanyId(companyId);
     }
   }
