@@ -3,14 +3,8 @@
   if (!servletContextName.equals("so-welcome-theme")) {
     return;
   }
-  long companyId=message.getLong("companyId");
-  Group group=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
-  long layoutSetPrototypeId=message.getLong("layoutSetPrototypeId");
-  if (_log.isInfoEnabled()) {
-    _log.info("Apply content and pages from layout set prototype " + layoutSetPrototypeId + " onto the Guest group");
-  }
-  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
-  LayoutSetLocalServiceUtil.updateLayoutSetPrototypeLinkEnabled(group.getGroupId(),false,true,layoutSetPrototype.getUuid());
-  LayoutLocalServiceUtil.updatePriorities(group.getGroupId(),false);
-  PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,group.getPublicLayoutSet());
+  Group group=GroupLocalServiceUtil.getGroup(message.getLong("companyId"),GroupConstants.GUEST);
+  UnicodeProperties typeSettingsProperties=group.getTypeSettingsProperties();
+  typeSettingsProperties.setProperty("customJspServletContextName","so-hook");
+  GroupLocalServiceUtil.updateGroup(group.getGroupId(),typeSettingsProperties.toString());
 }
