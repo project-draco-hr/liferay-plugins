@@ -14,6 +14,14 @@
  else   if (!type.equals("all")) {
     params.put("socialRelationType",new Long[]{userId,new Long(SocialRelationConstants.TYPE_BI_CONNECTION)});
   }
+  try {
+    Role role=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+    if (role != null) {
+      params.put("usersRoles",new Long(role.getRoleId()));
+    }
+  }
+ catch (  NoSuchRoleException nsre) {
+  }
   int total=UserLocalServiceUtil.searchCount(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
   jsonObject.put("total",total);
   List<User> users=UserLocalServiceUtil.search(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserFirstNameComparator(true));
