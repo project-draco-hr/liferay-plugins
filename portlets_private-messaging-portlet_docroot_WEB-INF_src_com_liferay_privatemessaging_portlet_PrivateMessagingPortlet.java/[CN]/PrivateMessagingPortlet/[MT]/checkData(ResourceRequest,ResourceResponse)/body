@@ -1,0 +1,23 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(resourceRequest);
+  String to=ParamUtil.getString(uploadPortletRequest,"to");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    validateTo(to,themeDisplay);
+    for (int i=1; i <= 3; i++) {
+      String fileName=uploadPortletRequest.getFileName("msgFile" + i);
+      InputStream inputStream=uploadPortletRequest.getFileAsStream("msgFile" + i);
+      if (inputStream == null) {
+        continue;
+      }
+      validateAttachment(fileName,inputStream);
+    }
+    jsonObject.put("success",true);
+  }
+ catch (  Exception e) {
+    jsonObject.put("message",getMessage(resourceRequest,e));
+    jsonObject.put("success",false);
+  }
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}

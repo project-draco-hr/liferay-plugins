@@ -1,6 +1,8 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String[] recipients=StringUtil.split(ParamUtil.getString(resourceRequest,"recipients"));
+  if (Validator.isNull(to)) {
+    return;
+  }
+  String[] recipients=StringUtil.split(to);
   List<String> failedRecipients=new ArrayList<String>();
   for (  String recipient : recipients) {
     recipient=recipient.trim();
@@ -16,17 +18,11 @@
       failedRecipients.add(recipient);
     }
   }
-  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   if (!failedRecipients.isEmpty()) {
     StringBundler sb=new StringBundler(3);
     sb.append(StringPool.APOSTROPHE);
     sb.append(StringUtil.merge(failedRecipients,"', '"));
     sb.append(StringPool.APOSTROPHE);
-    jsonObject.put("message",sb.toString());
-    jsonObject.put("success",false);
+    throw new UserScreenNameException(sb.toString());
   }
- else {
-    jsonObject.put("success",true);
-  }
-  writeJSON(resourceRequest,resourceResponse,jsonObject);
 }

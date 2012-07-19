@@ -14,6 +14,7 @@
       if (inputStream == null) {
         continue;
       }
+      validateAttachment(fileName,inputStream);
       try {
         ObjectValuePair<String,InputStream> inputStreamOVP=new ObjectValuePair<String,InputStream>(fileName,inputStream);
         inputStreamOVPs.add(inputStreamOVP);
@@ -24,8 +25,13 @@
     }
     UserThreadLocalServiceUtil.addPrivateMessage(userId,mbThreadId,to,subject,body,inputStreamOVPs,themeDisplay);
   }
- catch (  IOException ioe) {
-    throw new PortalException("Unable to process attachment",ioe);
+ catch (  Exception e) {
+    if (e instanceof IOException) {
+      throw new PortalException("Unable to process attachment",e);
+    }
+ else     if (e instanceof FileExtensionException || e instanceof FileNameException || e instanceof FileSizeException|| e instanceof UserScreenNameException) {
+      SessionErrors.add(actionRequest,e.getClass());
+    }
   }
  finally {
     for (    ObjectValuePair<String,InputStream> inputStreamOVP : inputStreamOVPs) {
