@@ -1,8 +1,11 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long requestId=ParamUtil.getLong(actionRequest,"requestId");
-  int status=ParamUtil.getInteger(actionRequest,"status");
   SocialRequest socialRequest=SocialRequestLocalServiceUtil.getSocialRequest(requestId);
+  if (socialRequest.getUserId() != themeDisplay.getUserId()) {
+    return;
+  }
+  int status=ParamUtil.getInteger(actionRequest,"status");
   if (SocialRelationLocalServiceUtil.hasRelation(socialRequest.getReceiverUserId(),socialRequest.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
     status=SocialRequestConstants.STATUS_IGNORE;
   }

@@ -10,8 +10,11 @@
   try {
     Entry entry=null;
     if (entryId > 0) {
-      entry=EntryLocalServiceUtil.updateEntry(entryId,fullName,emailAddress,comments);
-      message="you-have-successfully-updated-the-contact";
+      entry=EntryLocalServiceUtil.getEntry(entryId);
+      if (entry.getUserId() == themeDisplay.getUserId()) {
+        entry=EntryLocalServiceUtil.updateEntry(entryId,fullName,emailAddress,comments);
+        message="you-have-successfully-updated-the-contact";
+      }
     }
  else {
       entry=EntryLocalServiceUtil.addEntry(themeDisplay.getUserId(),fullName,emailAddress,comments);
