@@ -1,17 +1,21 @@
 {
-  User user=userPersistence.findByPrimaryKey(userId);
+  User user=userPersistence.fetchByPrimaryKey(userId);
   Date now=new Date();
   validate(remoteAppId,version);
   long appId=counterLocalService.increment();
   App app=appPersistence.create(appId);
-  app.setCompanyId(user.getCompanyId());
-  app.setUserId(user.getUserId());
-  app.setUserName(user.getFullName());
+  if (user != null) {
+    app.setCompanyId(user.getCompanyId());
+    app.setUserId(user.getUserId());
+    app.setUserName(user.getFullName());
+  }
   app.setCreateDate(now);
   app.setModifiedDate(now);
   app.setRemoteAppId(remoteAppId);
   app.setVersion(version);
   appPersistence.update(app,false);
-  DLStoreUtil.addFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath(),false,inputStream);
+  if (inputStream != null) {
+    DLStoreUtil.addFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath(),false,inputStream);
+  }
   return app;
 }
