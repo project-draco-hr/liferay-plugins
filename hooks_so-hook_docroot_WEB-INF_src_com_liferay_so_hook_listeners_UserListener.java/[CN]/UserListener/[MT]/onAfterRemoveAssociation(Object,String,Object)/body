@@ -1,5 +1,13 @@
 {
   try {
+    if (!associationClassPK.equals(Role.class.getName())) {
+      return;
+    }
+    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
+    String name=role.getName();
+    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
+      return;
+    }
     User user=UserLocalServiceUtil.getUser((Long)classPK);
     Group group=user.getGroup();
     ExpandoBridge expandoBridge=group.getExpandoBridge();
