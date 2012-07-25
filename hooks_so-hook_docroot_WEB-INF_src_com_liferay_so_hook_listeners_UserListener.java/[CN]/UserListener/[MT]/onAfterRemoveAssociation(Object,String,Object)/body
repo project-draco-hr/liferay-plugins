@@ -1,27 +1,31 @@
 {
   try {
-    if (!associationClassPK.equals(Role.class.getName())) {
-      return;
-    }
-    Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
-    String name=role.getName();
-    if (!name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
-      return;
-    }
     User user=UserLocalServiceUtil.getUser((Long)classPK);
-    Group group=user.getGroup();
-    ExpandoBridge expandoBridge=group.getExpandoBridge();
-    boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
-    if (!socialOfficeEnabled) {
-      return;
+    if (associationClassName.equals(Organization.class.getName()) || associationClassName.equals(UserGroup.class.getName()) || associationClassName.equals(Group.class.getName())) {
+      Role role=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+      Group group=null;
+      if (associationClassName.equals(Organization.class.getName())) {
+        group=GroupLocalServiceUtil.getOrganizationGroup(user.getCompanyId(),(Long)associationClassPK);
+      }
+ else       if (associationClassName.equals(UserGroup.class.getName())) {
+        group=GroupLocalServiceUtil.getUserGroupGroup(user.getCompanyId(),(Long)associationClassPK);
+      }
+ else       if (associationClassName.equals(Group.class.getName())) {
+        group=GroupLocalServiceUtil.getGroup((Long)associationClassPK);
+      }
+      if (GroupLocalServiceUtil.hasRoleGroup(role.getRoleId(),group.getGroupId())) {
+        disableSocialOffice(user.getGroup());
+      }
     }
-    LayoutSetPrototypeUtil.removeLayoutSetPrototype(group,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
-    LayoutSetPrototypeUtil.removeLayoutSetPrototype(group,true,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
-    SocialOfficeUtil.disableSocialOffice(group);
+ else     if (associationClassName.equals(Role.class.getName())) {
+      Role role=RoleLocalServiceUtil.getRole((Long)associationClassPK);
+      String name=role.getName();
+      if (name.equals(RoleConstants.SOCIAL_OFFICE_USER)) {
+        disableSocialOffice(user.getGroup());
+      }
+    }
   }
- catch (  NoSuchGroupException nsge) {
-  }
-catch (  Exception e) {
+ catch (  Exception e) {
     throw new ModelListenerException(e);
   }
 }

@@ -1,0 +1,10 @@
+{
+  ExpandoBridge expandoBridge=group.getExpandoBridge();
+  boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
+  if (socialOfficeEnabled) {
+    return;
+  }
+  LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
+  LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,true,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
+  SocialOfficeUtil.enableSocialOffice(group);
+}
