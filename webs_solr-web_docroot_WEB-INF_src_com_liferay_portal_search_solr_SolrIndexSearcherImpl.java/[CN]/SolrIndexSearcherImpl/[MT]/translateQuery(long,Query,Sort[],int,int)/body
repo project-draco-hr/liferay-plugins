@@ -5,8 +5,9 @@
     solrQuery.setHighlight(true);
     solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
     solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
-    String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
-    solrQuery.setParam("hl.fl",Field.CONTENT,localizedName);
+    String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
+    String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
+    solrQuery.setParam("hl.fl",Field.CONTENT,localizedContentName,Field.TITLE,localizedTitleName);
   }
   solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   QueryTranslatorUtil.translateForSolr(query);

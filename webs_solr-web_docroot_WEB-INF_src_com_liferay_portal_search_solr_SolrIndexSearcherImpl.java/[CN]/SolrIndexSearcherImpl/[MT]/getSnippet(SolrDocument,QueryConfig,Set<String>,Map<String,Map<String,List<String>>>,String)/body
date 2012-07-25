@@ -10,17 +10,13 @@
   if (defaultLanguageId.equals(queryLanguageId)) {
     localizedSearch=false;
   }
-  String snippetField=StringPool.BLANK;
   if (localizedSearch) {
-    String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
+    String localizedName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),field);
     if (solrDocument.containsKey(localizedName)) {
-      snippetField=localizedName;
+      field=localizedName;
     }
   }
- else {
-    snippetField=Field.CONTENT;
-  }
-  List<String> snippets=uidHighlights.get(snippetField);
+  List<String> snippets=uidHighlights.get(field);
   String snippet=StringUtil.merge(snippets,"...");
   if (Validator.isNotNull(snippet)) {
     snippet=snippet + "...";
