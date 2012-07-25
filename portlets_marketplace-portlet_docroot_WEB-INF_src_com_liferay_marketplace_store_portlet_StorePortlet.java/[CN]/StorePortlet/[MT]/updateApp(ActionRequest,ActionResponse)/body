@@ -10,9 +10,16 @@
   try {
     inputStream=urlObj.openStream();
     App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-    AppServiceUtil.updateApp(app.getAppId(),version,inputStream);
+    if (app == null) {
+      app=AppServiceUtil.addApp(remoteAppId,version,inputStream);
+    }
+ else {
+      app=AppServiceUtil.updateApp(app.getAppId(),version,inputStream);
+    }
     AppServiceUtil.installApp(remoteAppId);
     JSONObject jsonObject=getAppJSONObject(remoteAppId);
+    jsonObject.put("cmd","updateApp");
+    jsonObject.put("message","success");
     writeJSON(actionRequest,actionResponse,jsonObject);
   }
   finally {

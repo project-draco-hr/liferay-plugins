@@ -6,16 +6,22 @@
   String version=ParamUtil.getString(actionRequest,"version");
   url=getRemoteAppPackageURL(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token,url);
   URL urlObj=new URL(url);
-  InputStream inputStream=urlObj.openStream();
-  App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-  if (app == null) {
-    app=AppServiceUtil.addApp(remoteAppId,version,inputStream);
-  }
+  InputStream inputStream=null;
+  try {
+    inputStream=urlObj.openStream();
+    App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
+    if (app == null) {
+      app=AppServiceUtil.addApp(remoteAppId,version,inputStream);
+    }
  else {
-    app=AppServiceUtil.updateApp(app.getAppId(),version,inputStream);
+      app=AppServiceUtil.updateApp(app.getAppId(),version,inputStream);
+    }
+    JSONObject jsonObject=getAppJSONObject(app.getRemoteAppId());
+    jsonObject.put("cmd","downloadApp");
+    jsonObject.put("message","success");
+    writeJSON(actionRequest,actionResponse,jsonObject);
   }
-  JSONObject jsonObject=getAppJSONObject(app.getRemoteAppId());
-  jsonObject.put("cmd","downloadApp");
-  jsonObject.put("message","success");
-  writeJSON(actionRequest,actionResponse,jsonObject);
+  finally {
+    StreamUtil.cleanUp(inputStream);
+  }
 }
