@@ -4,25 +4,42 @@
     throw new NoSuchFileException();
   }
   String tmpDir=SystemProperties.get(SystemProperties.TMP_DIR) + StringPool.SLASH + Time.getTimestamp();
+  ZipFile zipFile=null;
   try {
     File liferayPackageFile=DLStoreUtil.getFile(app.getCompanyId(),CompanyConstants.SYSTEM,app.getFilePath());
-    ZipFile zipFile=new ZipFile(liferayPackageFile);
+    zipFile=new ZipFile(liferayPackageFile);
     Enumeration<ZipEntry> enu=(Enumeration<ZipEntry>)zipFile.entries();
     while (enu.hasMoreElements()) {
       ZipEntry zipEntry=enu.nextElement();
       AutoDeploymentContext autoDeploymentContext=new AutoDeploymentContext();
       String fileName=zipEntry.getName();
+      if (!fileName.endsWith(".war") && !fileName.endsWith(".xml") && !fileName.endsWith(".zip")&& !fileName.equals("liferay-marketplace.properties")) {
+        continue;
+      }
       String contextName=getContextName(fileName);
       autoDeploymentContext.setContext(contextName);
       if (_log.isInfoEnabled()) {
         _log.info("Extracting " + fileName + " from app "+ app.getAppId());
       }
-      InputStream inputStream=zipFile.getInputStream(zipEntry);
-      File pluginPackageFile=new File(tmpDir + StringPool.SLASH + fileName);
-      FileUtil.write(pluginPackageFile,inputStream);
-      autoDeploymentContext.setFile(pluginPackageFile);
-      DeployManagerUtil.deploy(autoDeploymentContext);
-      moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
+      InputStream inputStream=null;
+      try {
+        inputStream=zipFile.getInputStream(zipEntry);
+        if (fileName.equals("liferay-marketplace.properties")) {
+          String propertiesString=StringUtil.read(inputStream);
+          Properties properties=PropertiesUtil.load(propertiesString);
+          processMarketplaceProperties(properties);
+        }
+ else {
+          File pluginPackageFile=new File(tmpDir + StringPool.SLASH + fileName);
+          FileUtil.write(pluginPackageFile,inputStream);
+          autoDeploymentContext.setFile(pluginPackageFile);
+          DeployManagerUtil.deploy(autoDeploymentContext);
+          moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
+        }
+      }
+  finally {
+        StreamUtil.cleanUp(inputStream);
+      }
     }
   }
  catch (  ZipException ze) {
@@ -36,5 +53,12 @@ catch (  Exception e) {
   }
  finally {
     FileUtil.deltree(tmpDir);
+    if (zipFile != null) {
+      try {
+        zipFile.close();
+      }
+ catch (      IOException ioe) {
+      }
+    }
   }
 }
