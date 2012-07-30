@@ -3,6 +3,12 @@
   if (!_resourcesDir.exists() || !_resourcesDir.isDirectory() || !_resourcesDir.canRead()) {
     throw new IllegalArgumentException("Unaccessible resource directory " + resourcesDir);
   }
+  serviceContext=new ServiceContext();
+  serviceContext.setAddGroupPermissions(true);
+  if (!privateLayout) {
+    serviceContext.setAddGuestPermissions(true);
+  }
+  serviceContext.setScopeGroupId(groupId);
   addDLFileEntries("/document_library/documents");
   addJournalArticles(StringPool.BLANK,StringPool.BLANK,"/journal/articles");
   addJournalStructures("/journal/structures");
