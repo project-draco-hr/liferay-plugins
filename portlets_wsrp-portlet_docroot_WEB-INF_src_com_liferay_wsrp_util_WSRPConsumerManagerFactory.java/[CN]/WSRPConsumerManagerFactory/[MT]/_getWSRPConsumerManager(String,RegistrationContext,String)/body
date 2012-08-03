@@ -2,12 +2,12 @@
   HttpSession session=getSession();
   Map<String,WSRPConsumerManager> wsrpConsumerManagers=_wsrpConsumerManagers;
   if (session != null) {
-    WSRPConsumerSessionHolder wsrpConsumerSessionHolder=(WSRPConsumerSessionHolder)session.getAttribute(WebKeys.WSRP_CONSUMER_MANAGERS);
-    if (wsrpConsumerSessionHolder == null) {
-      wsrpConsumerSessionHolder=new WSRPConsumerSessionHolder();
-      session.setAttribute(WebKeys.WSRP_CONSUMER_MANAGERS,wsrpConsumerManagers);
+    NonSerializableObjectHandler nonSerializableObjectHandler=(NonSerializableObjectHandler)session.getAttribute(WebKeys.WSRP_CONSUMER_MANAGERS);
+    if (nonSerializableObjectHandler == null) {
+      nonSerializableObjectHandler=new NonSerializableObjectHandler(new ConcurrentHashMap<String,WSRPConsumerManager>());
+      session.setAttribute(WebKeys.WSRP_CONSUMER_MANAGERS,nonSerializableObjectHandler);
     }
-    wsrpConsumerManagers=wsrpConsumerSessionHolder.getWsrpConsumerManagers();
+    wsrpConsumerManagers=(Map<String,WSRPConsumerManager>)nonSerializableObjectHandler.getValue();
   }
   WSRPConsumerManager wsrpConsumerManager=wsrpConsumerManagers.get(url);
   if (wsrpConsumerManager == null) {
