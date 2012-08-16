@@ -3,6 +3,10 @@
   JSONObject sitemapJSONObject=JSONFactoryUtil.createJSONObject(sitemapJSON);
   LayoutLocalServiceUtil.deleteLayouts(groupId,privateLayout,new ServiceContext());
   _defaultLayoutTemplateId=sitemapJSONObject.getString("layoutTemplateId",StringPool.BLANK);
+  String layoutSetPrototypeSettings=sitemapJSONObject.getString("layoutSetPrototypeSettings",StringPool.BLANK);
+  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(getTargetClassPK());
+  layoutSetPrototype.setSettings(layoutSetPrototypeSettings);
+  LayoutSetPrototypeLocalServiceUtil.updateLayoutSetPrototype(layoutSetPrototype);
   updateLayoutSetThemeId(sitemapJSONObject);
   JSONArray layoutsJSONArray=sitemapJSONObject.getJSONArray("layouts");
   addLayouts(LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layoutsJSONArray);
