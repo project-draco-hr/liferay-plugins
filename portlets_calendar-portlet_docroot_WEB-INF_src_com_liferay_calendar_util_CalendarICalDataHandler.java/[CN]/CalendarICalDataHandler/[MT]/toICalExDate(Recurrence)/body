@@ -1,0 +1,14 @@
+{
+  List<java.util.Calendar> exceptionDates=recurrence.getExceptionDates();
+  if (exceptionDates.isEmpty()) {
+    return null;
+  }
+  DateList dateList=new DateList();
+  dateList.setUtc(true);
+  for (  java.util.Calendar exceptionDate : exceptionDates) {
+    DateTime dateTime=toICalDateTime(exceptionDate.getTimeInMillis());
+    dateList.add(dateTime);
+  }
+  ExDate exDate=new ExDate(dateList);
+  return exDate;
+}

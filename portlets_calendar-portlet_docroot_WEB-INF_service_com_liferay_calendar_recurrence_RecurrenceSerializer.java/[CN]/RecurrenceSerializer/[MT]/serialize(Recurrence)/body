@@ -13,8 +13,20 @@
   rRule.setInterval(recurrence.getInterval());
   Calendar jCalendar=recurrence.getUntil();
   if (jCalendar != null) {
-    DateValue dateValue=new DateValueImpl(jCalendar.get(Calendar.YEAR),jCalendar.get(Calendar.MONTH) + 1,jCalendar.get(Calendar.DATE));
+    DateValue dateValue=_toDateValue(jCalendar);
     rRule.setUntil(dateValue);
   }
-  return rRule.toIcal();
+  String data=rRule.toIcal();
+  List<Calendar> exceptionDates=recurrence.getExceptionDates();
+  if (!exceptionDates.isEmpty()) {
+    DateValue[] dateValues=new DateValue[exceptionDates.size()];
+    for (int i=0; i < exceptionDates.size(); i++) {
+      dateValues[i]=_toDateValue(exceptionDates.get(i));
+    }
+    RDateList rDateList=new RDateList(TimeZone.getTimeZone(StringPool.UTC));
+    rDateList.setName(_EXDATE);
+    rDateList.setDatesUtc(dateValues);
+    data=data.concat(StringPool.NEW_LINE).concat(rDateList.toIcal());
+  }
+  return data;
 }

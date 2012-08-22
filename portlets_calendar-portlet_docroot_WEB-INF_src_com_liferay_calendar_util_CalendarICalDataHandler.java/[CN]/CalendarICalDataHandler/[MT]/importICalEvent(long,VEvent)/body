@@ -29,6 +29,33 @@
   String recurrence=StringPool.BLANK;
   if (rrule != null) {
     recurrence=StringUtil.trim(rrule.toString());
+    PropertyList propertyList=vEvent.getProperties(Property.EXDATE);
+    if (!propertyList.isEmpty()) {
+      StringBundler sb=new StringBundler();
+      for (Iterator<ExDate> iterator=propertyList.iterator(); iterator.hasNext(); ) {
+        ExDate exDate=iterator.next();
+        DateList dateList=exDate.getDates();
+        ListIterator<Date> listIterator=dateList.listIterator();
+        while (listIterator.hasNext()) {
+          Date date=listIterator.next();
+          java.util.Calendar jCalendar=JCalendarUtil.getJCalendar(date.getTime());
+          int year=jCalendar.get(java.util.Calendar.YEAR);
+          int month=jCalendar.get(java.util.Calendar.MONTH) + 1;
+          int day=jCalendar.get(java.util.Calendar.DATE);
+          int hour=jCalendar.get(java.util.Calendar.HOUR_OF_DAY);
+          int minute=jCalendar.get(java.util.Calendar.MINUTE);
+          int second=jCalendar.get(java.util.Calendar.SECOND);
+          sb.append(String.format(_EXDATE_FORMAT,year,month,day,hour,minute,second));
+          if (listIterator.hasNext()) {
+            sb.append(StringPool.COMMA);
+          }
+        }
+        if (iterator.hasNext()) {
+          sb.append(StringPool.COMMA);
+        }
+      }
+      recurrence=recurrence.concat(StringPool.NEW_LINE).concat(_EXDATE).concat(sb.toString());
+    }
   }
   ComponentList componentList=vEvent.getAlarms();
   long[] reminders=new long[componentList.size()];

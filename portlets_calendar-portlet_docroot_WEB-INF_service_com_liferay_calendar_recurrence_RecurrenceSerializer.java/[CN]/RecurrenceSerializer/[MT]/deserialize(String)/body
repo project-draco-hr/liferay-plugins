@@ -1,16 +1,23 @@
 {
   try {
     Recurrence recurrence=new Recurrence();
+    int index=data.indexOf(StringPool.NEW_LINE);
+    if (index != -1) {
+      String exceptionDates=data.substring(index + 1,data.length());
+      RDateList rDateList=new RDateList(exceptionDates,TimeZone.getTimeZone(StringPool.UTC));
+      for (      DateValue dateValue : rDateList.getDatesUtc()) {
+        Calendar jCalendar=_toJCalendar(dateValue);
+        recurrence.addExceptionDate(jCalendar);
+      }
+      data=data.substring(0,index);
+    }
     RRule rRule=new RRule(data);
     recurrence.setCount(rRule.getCount());
     recurrence.setFrequency(Frequency.parse(String.valueOf(rRule.getFreq())));
     recurrence.setInterval(rRule.getInterval());
     DateValue dateValue=rRule.getUntil();
     if (dateValue != null) {
-      Calendar jCalendar=CalendarFactoryUtil.getCalendar();
-      jCalendar.set(Calendar.DATE,dateValue.day());
-      jCalendar.set(Calendar.MONTH,dateValue.month() - 1);
-      jCalendar.set(Calendar.YEAR,dateValue.year());
+      Calendar jCalendar=_toJCalendar(dateValue);
       recurrence.setUntil(jCalendar);
     }
     List<Weekday> weekdays=new ArrayList<Weekday>();

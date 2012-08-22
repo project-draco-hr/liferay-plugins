@@ -21,9 +21,18 @@
   Location location=new Location(calendarBooking.getLocation());
   propertyList.add(location);
   if (calendarBooking.isRecurring()) {
-    String value=StringUtil.replace(calendarBooking.getRecurrence(),_RRULE,StringPool.BLANK);
+    String recurrence=calendarBooking.getRecurrence();
+    int index=recurrence.indexOf(StringPool.NEW_LINE);
+    if (index != 0) {
+      recurrence=recurrence.substring(0,index);
+    }
+    String value=StringUtil.replace(recurrence,_RRULE,StringPool.BLANK);
     RRule rRule=new RRule(value);
     propertyList.add(rRule);
+    ExDate exDate=toICalExDate(calendarBooking.getRecurrenceObj());
+    if (exDate != null) {
+      propertyList.add(exDate);
+    }
   }
   ComponentList componentList=vEvent.getAlarms();
   long firstReminder=calendarBooking.getFirstReminder();
