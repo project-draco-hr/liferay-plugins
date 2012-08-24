@@ -1,0 +1,21 @@
+{
+  JSONSerializer jsonSerializer=new JSONSerializer();
+  jsonSerializer.registerDefaultSerializers();
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getConnection();
+    ps=con.prepareStatement("select " + uniqueId + ", workflowContext from "+ tableName+ " where workflowContext is not null and "+ "workflowContext !='' and workflowContext "+ "not like '%serializable%'");
+    rs=ps.executeQuery();
+    while (rs.next()) {
+      long Id=rs.getLong(uniqueId);
+      String workflowContext=rs.getString("workflowContext");
+      String newWorkflowContext=WorkflowContextUtil.convert((Map<String,Serializable>)jsonSerializer.fromJSON(workflowContext));
+      upgradeWorkflowContext(uniqueId,tableName,newWorkflowContext,Id);
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+}
