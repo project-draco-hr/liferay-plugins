@@ -1,0 +1,10 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long[] calendarIds=ParamUtil.getLongValues(resourceRequest,"calendarIds");
+  int[] statuses=new int[]{CalendarBookingWorkflowConstants.STATUS_APPROVED,CalendarBookingWorkflowConstants.STATUS_MAYBE,CalendarBookingWorkflowConstants.STATUS_PENDING};
+  long startDate=ParamUtil.getLong(resourceRequest,"startDate");
+  long endDate=ParamUtil.getLong(resourceRequest,"endDate");
+  String ruleName=ParamUtil.getString(resourceRequest,"ruleName");
+  JSONObject jsonObject=CalendarUtil.getCalendarRenderingRules(themeDisplay,calendarIds,statuses,startDate,endDate,ruleName);
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}
