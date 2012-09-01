@@ -1,0 +1,22 @@
+{
+  AuthVerifierResult authVerifierResult=new AuthVerifierResult();
+  String configurationSecretKey=GetterUtil.getString(configuration.getProperty("secret.key"));
+  HttpServletRequest request=accessControlContext.getRequest();
+  String requestSecretKey=ParamUtil.getString(request,"secretKey");
+  if (!configurationSecretKey.equals(requestSecretKey)) {
+    return authVerifierResult;
+  }
+  try {
+    authVerifierResult.setState(AuthVerifierResult.State.SUCCESS);
+    long companyId=PortalUtil.getCompanyId(request);
+    Role role=RoleLocalServiceUtil.getRole(companyId,RoleConstants.ADMINISTRATOR);
+    long[] userIds=UserLocalServiceUtil.getRoleUserIds(role.getRoleId());
+    if (userIds.length > 0) {
+      authVerifierResult.setUserId(userIds[0]);
+    }
+  }
+ catch (  Exception e) {
+    throw new AuthException(e.getMessage(),e);
+  }
+  return authVerifierResult;
+}
