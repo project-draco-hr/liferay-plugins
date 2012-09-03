@@ -1,0 +1,33 @@
+{
+  long userId=portletDataContext.getUserId(calendarBooking.getUserUuid());
+  Map<Long,Long> calendarIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(Calendar.class);
+  long calendarId=MapUtil.getLong(calendarIds,calendarBooking.getCalendarId(),calendarBooking.getCalendarId());
+  Calendar calendar=CalendarLocalServiceUtil.getCalendar(calendarId);
+  long groupId=calendar.getGroupId();
+  Map<Long,Long> calendarBookingIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarBooking.class);
+  long parentCalendarBookingId=0;
+  if (calendarBooking.getParentCalendarBookingId() != calendarBooking.getCalendarBookingId()) {
+    String importCalendarBookingPath=getImportCalendarBookingPath(portletDataContext,calendarBooking.getParentCalendarBookingId());
+    if (portletDataContext.isPathNotProcessed(path)) {
+      CalendarBooking parentCalendarBooking=(CalendarBooking)portletDataContext.getZipEntryAsObject(path);
+      importCalendarBooking(portletDataContext,importCalendarBookingPath,calendarBookingElement,parentCalendarBooking);
+      parentCalendarBookingId=MapUtil.getLong(calendarBookingIds,calendarBooking.getParentCalendarBookingId(),calendarBooking.getParentCalendarBookingId());
+    }
+  }
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarBookingElement,calendarBooking,_NAMESPACE);
+  CalendarBooking importedCalendarBooking=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    CalendarBooking existingCalendarBooking=CalendarBookingUtil.fetchByUUID_G(calendarBooking.getUuid(),groupId);
+    if (existingCalendarBooking == null) {
+      serviceContext.setUuid(calendarBooking.getUuid());
+      importedCalendarBooking=CalendarBookingLocalServiceUtil.addCalendarBooking(userId,calendarId,new long[0],parentCalendarBookingId,calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartDate(),calendarBooking.getEndDate(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
+    }
+ else {
+      importedCalendarBooking=CalendarBookingLocalServiceUtil.updateCalendarBooking(userId,existingCalendarBooking.getCalendarBookingId(),calendarId,new long[0],calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartDate(),calendarBooking.getEndDate(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),calendarBooking.getStatus(),serviceContext);
+    }
+  }
+ else {
+    importedCalendarBooking=CalendarBookingLocalServiceUtil.addCalendarBooking(userId,calendarId,new long[0],parentCalendarBookingId,calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartDate(),calendarBooking.getEndDate(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
+  }
+  portletDataContext.importClassedModel(calendarBooking,importedCalendarBooking,_NAMESPACE);
+}

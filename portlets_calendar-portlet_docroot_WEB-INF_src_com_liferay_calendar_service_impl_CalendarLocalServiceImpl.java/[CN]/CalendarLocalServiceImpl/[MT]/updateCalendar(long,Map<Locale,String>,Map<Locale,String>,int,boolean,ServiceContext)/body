@@ -10,15 +10,7 @@
   calendar.setColor(color);
   calendar.setDefaultCalendar(defaultCalendar);
   calendarPersistence.update(calendar,false);
+  checkDefaultCalendar(calendar);
   resourceLocalService.updateModelResources(calendar,serviceContext);
-  if (defaultCalendar) {
-    List<Calendar> calendarResourceCalendars=getCalendarResourceCalendars(calendar.getGroupId(),calendar.getCalendarResourceId());
-    for (    Calendar calendarResourceCalendar : calendarResourceCalendars) {
-      updateDefaultCalendar(calendarResourceCalendar,calendar.equals(calendarResourceCalendar));
-    }
-    CalendarResource calendarResource=calendar.getCalendarResource();
-    calendarResource.setDefaultCalendarId(calendarId);
-    calendarResourcePersistence.update(calendarResource,false);
-  }
   return calendar;
 }

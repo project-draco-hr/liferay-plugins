@@ -1,0 +1,12 @@
+{
+  String path=getCalendarResourcePath(portletDataContext,calendarResource);
+  if (!portletDataContext.isPathNotProcessed(path)) {
+    return;
+  }
+  List<Calendar> calendars=calendarResource.getCalendars();
+  for (  Calendar calendar : calendars) {
+    exportCalendar(portletDataContext,calendarsElement,calendarBookingsElement,calendar);
+  }
+  Element resourceElement=calendarResourcesElement.addElement("calendar-resource");
+  portletDataContext.addClassedModel(resourceElement,path,calendarResource,_NAMESPACE);
+}

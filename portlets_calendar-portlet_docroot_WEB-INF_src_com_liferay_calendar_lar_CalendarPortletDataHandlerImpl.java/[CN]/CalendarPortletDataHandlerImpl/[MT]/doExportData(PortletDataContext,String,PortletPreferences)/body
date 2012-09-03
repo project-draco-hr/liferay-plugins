@@ -1,0 +1,16 @@
+{
+  portletDataContext.addPermissions("com.liferay.portlet.calendar",portletDataContext.getScopeGroupId());
+  Document document=SAXReaderUtil.createDocument();
+  Element rootElement=document.addElement("calendar-data");
+  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
+  Element calendarsElement=rootElement.addElement("calendars");
+  Element calendarBookingsElement=rootElement.addElement("calendar-bookings");
+  Element calendarResourcesElement=rootElement.addElement("calendar-resources");
+  List<CalendarResource> calendarResources=CalendarResourceLocalServiceUtil.getCalendarResources(portletDataContext.getScopeGroupId());
+  for (  CalendarResource calendarResource : calendarResources) {
+    if (portletDataContext.isWithinDateRange(calendarResource.getModifiedDate())) {
+      exportCalendarResource(portletDataContext,calendarsElement,calendarBookingsElement,calendarResourcesElement,calendarResource);
+    }
+  }
+  return document.formattedString();
+}

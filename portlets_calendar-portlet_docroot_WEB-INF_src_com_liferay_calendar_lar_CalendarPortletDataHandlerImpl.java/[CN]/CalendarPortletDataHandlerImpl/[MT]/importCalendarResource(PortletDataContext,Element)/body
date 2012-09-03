@@ -1,0 +1,24 @@
+{
+  String path=calendarResourceElement.attributeValue("path");
+  if (!portletDataContext.isPathNotProcessed(path)) {
+    return;
+  }
+  CalendarResource calendarResource=(CalendarResource)portletDataContext.getZipEntryAsObject(path);
+  long userId=portletDataContext.getUserId(calendarResource.getUserUuid());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResourceElement,calendarResource,_NAMESPACE);
+  CalendarResource importedCalendarResource=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    CalendarResource existingCalendarResource=CalendarResourceUtil.fetchByUUID_G(calendarResource.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingCalendarResource == null) {
+      serviceContext.setUuid(calendarResource.getUuid());
+      importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassName(),0,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.getType(),calendarResource.getActive(),serviceContext);
+    }
+ else {
+      importedCalendarResource=CalendarResourceLocalServiceUtil.updateCalendarResource(existingCalendarResource.getCalendarResourceId(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.getType(),calendarResource.getActive(),serviceContext);
+    }
+  }
+ else {
+    importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassName(),0,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.getType(),calendarResource.getActive(),serviceContext);
+  }
+  portletDataContext.importClassedModel(calendarResource,importedCalendarResource,_NAMESPACE);
+}

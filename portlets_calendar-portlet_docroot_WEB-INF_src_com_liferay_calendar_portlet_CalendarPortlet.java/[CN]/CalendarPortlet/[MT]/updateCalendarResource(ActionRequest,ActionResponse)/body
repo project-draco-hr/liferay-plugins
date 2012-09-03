@@ -8,9 +8,12 @@
   boolean active=ParamUtil.getBoolean(actionRequest,"active");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarResource.class.getName(),actionRequest);
   if (calendarResourceId <= 0) {
-    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),defaultCalendarId,code,nameMap,descriptionMap,type,active,serviceContext);
+    CalendarResourceServiceUtil.addCalendarResource(serviceContext.getScopeGroupId(),null,0,PortalUUIDUtil.generate(),code,nameMap,descriptionMap,type,active,serviceContext);
   }
  else {
-    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,defaultCalendarId,nameMap,descriptionMap,type,active,serviceContext);
+    CalendarResourceServiceUtil.updateCalendarResource(calendarResourceId,nameMap,descriptionMap,type,active,serviceContext);
+    if (defaultCalendarId > 0) {
+      CalendarLocalServiceUtil.updateCalendar(defaultCalendarId,true);
+    }
   }
 }

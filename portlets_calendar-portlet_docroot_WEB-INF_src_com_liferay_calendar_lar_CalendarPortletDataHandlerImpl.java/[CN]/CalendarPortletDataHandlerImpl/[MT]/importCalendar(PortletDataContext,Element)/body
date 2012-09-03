@@ -1,0 +1,33 @@
+{
+  String path=calendarElement.attributeValue("path");
+  if (!portletDataContext.isPathNotProcessed(path)) {
+    return;
+  }
+  Calendar calendar=(Calendar)portletDataContext.getZipEntryAsObject(path);
+  long userId=portletDataContext.getUserId(calendar.getUserUuid());
+  Map<Long,Long> calendarResourceIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarResource.class);
+  long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
+  CalendarResource calendarResource=CalendarResourceLocalServiceUtil.getCalendarResource(calendarResourceId);
+  long groupId=calendarResource.getGroupId();
+  ServiceContext serviceContext=portletDataContext.createServiceContext(path,calendar,_NAMESPACE);
+  Calendar importedCalendar=null;
+  if (calendar.isDefaultCalendar()) {
+    importedCalendar=CalendarLocalServiceUtil.updateCalendar(calendarResource.getDefaultCalendarId(),calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),serviceContext);
+  }
+ else {
+    if (portletDataContext.isDataStrategyMirror()) {
+      Calendar existingCalendar=CalendarUtil.fetchByUUID_G(calendar.getUuid(),groupId);
+      if (existingCalendar == null) {
+        serviceContext.setUuid(calendar.getUuid());
+        importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,groupId,calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.getDefaultCalendar(),serviceContext);
+      }
+ else {
+        importedCalendar=CalendarLocalServiceUtil.updateCalendar(existingCalendar.getCalendarId(),calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),serviceContext);
+      }
+    }
+ else {
+      importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,groupId,calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.getDefaultCalendar(),serviceContext);
+    }
+  }
+  portletDataContext.importClassedModel(calendar,importedCalendar,_NAMESPACE);
+}

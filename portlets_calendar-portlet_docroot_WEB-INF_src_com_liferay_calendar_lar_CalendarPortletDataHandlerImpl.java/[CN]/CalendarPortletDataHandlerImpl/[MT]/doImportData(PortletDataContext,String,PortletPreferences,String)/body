@@ -1,0 +1,23 @@
+{
+  portletDataContext.importPermissions("com.liferay.portlet.calendar",portletDataContext.getSourceGroupId(),portletDataContext.getScopeGroupId());
+  Document document=SAXReaderUtil.read(data);
+  Element rootElement=document.getRootElement();
+  Element calendarResourcesElement=rootElement.element("calendar-resources");
+  List<Element> calendarResourceElements=calendarResourcesElement.elements("calendar-resource");
+  for (  Element calendarResourceElement : calendarResourceElements) {
+    importCalendarResource(portletDataContext,calendarResourceElement);
+  }
+  Element calendarsElement=rootElement.element("calendars");
+  List<Element> calendarElements=calendarsElement.elements("calendar");
+  for (  Element calendarElement : calendarElements) {
+    importCalendar(portletDataContext,calendarElement);
+  }
+  if (portletDataContext.getBooleanParameter(_NAMESPACE,"bookings")) {
+    Element calendarBookingsElement=rootElement.element("calendar-bookings");
+    List<Element> calendarBookingElements=calendarBookingsElement.elements("calendar-booking");
+    for (    Element calendarBookingElement : calendarBookingElements) {
+      importCalendarBooking(portletDataContext,calendarBookingElement);
+    }
+  }
+  return portletPreferences;
+}
