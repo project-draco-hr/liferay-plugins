@@ -11,21 +11,21 @@
   com.google.ical.values.Frequency frequency=com.google.ical.values.Frequency.valueOf(String.valueOf(recurrence.getFrequency()));
   rRule.setFreq(frequency);
   rRule.setInterval(recurrence.getInterval());
-  Calendar jCalendar=recurrence.getUntil();
+  Calendar jCalendar=recurrence.getUntilJCalendar();
   if (jCalendar != null) {
     DateValue dateValue=_toDateValue(jCalendar);
     rRule.setUntil(dateValue);
   }
   String data=rRule.toIcal();
-  List<Calendar> exceptionDates=recurrence.getExceptionDates();
-  if (!exceptionDates.isEmpty()) {
-    DateValue[] dateValues=new DateValue[exceptionDates.size()];
-    for (int i=0; i < exceptionDates.size(); i++) {
-      dateValues[i]=_toDateValue(exceptionDates.get(i));
+  List<Calendar> exceptionJCalendars=recurrence.getExceptionJCalendars();
+  if (!exceptionJCalendars.isEmpty()) {
+    DateValue[] dateValues=new DateValue[exceptionJCalendars.size()];
+    for (int i=0; i < exceptionJCalendars.size(); i++) {
+      dateValues[i]=_toDateValue(exceptionJCalendars.get(i));
     }
     RDateList rDateList=new RDateList(TimeZone.getTimeZone(StringPool.UTC));
-    rDateList.setName(_EXDATE);
     rDateList.setDatesUtc(dateValues);
+    rDateList.setName(_EXDATE);
     data=data.concat(StringPool.NEW_LINE).concat(rDateList.toIcal());
   }
   return data;
