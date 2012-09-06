@@ -27,21 +27,21 @@
     solrQuery.setRows(end - start);
     solrQuery.setStart(start);
   }
-  if ((sorts != null) && (sorts.length > 0)) {
+  if (sorts != null) {
     for (    Sort sort : sorts) {
       if (sort == null) {
         continue;
       }
       String sortFieldName=sort.getFieldName();
-      if (ArrayUtil.contains(PortletPropsValues.SOLR_SORTABLE_TEXT_FIELDS,sortFieldName)) {
-        sortFieldName=GetterUtil.getString(PortletProps.get(PortletPropsKeys.SOLR_COPY_FIELDS,new Filter(sortFieldName)));
+      if (DocumentImpl.isSortableTextField(sortFieldName)) {
+        sortFieldName=DocumentImpl.getSortableFieldName(sortFieldName);
       }
       ORDER order=ORDER.asc;
-      if (sortFieldName == null) {
+      if (Validator.isNull(sortFieldName) || !sortFieldName.endsWith("sortable")) {
         sortFieldName="score";
         order=ORDER.desc;
       }
- else       if (sort.isReverse()) {
+      if (sort.isReverse()) {
         order=ORDER.desc;
       }
       solrQuery.addSortField(sortFieldName,order);
