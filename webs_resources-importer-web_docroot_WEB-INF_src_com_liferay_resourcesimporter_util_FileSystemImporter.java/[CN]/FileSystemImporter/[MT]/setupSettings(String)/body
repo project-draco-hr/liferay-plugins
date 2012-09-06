@@ -1,0 +1,16 @@
+{
+  File settingsJSONFile=new File(_resourcesDir,settingsName);
+  if (!settingsJSONFile.exists() || settingsJSONFile.isDirectory() || !settingsJSONFile.canRead()) {
+    return;
+  }
+  InputStream inputStream=null;
+  try {
+    inputStream=new BufferedInputStream(new FileInputStream(settingsJSONFile));
+    doSetupSettings(inputStream);
+  }
+  finally {
+    if (inputStream != null) {
+      inputStream.close();
+    }
+  }
+}
