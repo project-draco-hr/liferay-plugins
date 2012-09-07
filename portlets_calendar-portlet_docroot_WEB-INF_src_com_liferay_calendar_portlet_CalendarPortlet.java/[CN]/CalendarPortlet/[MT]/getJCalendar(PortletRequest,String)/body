@@ -1,5 +1,12 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PortletPreferences preferences=portletRequest.getPreferences();
+  User user=themeDisplay.getUser();
+  String timeZoneId=preferences.getValue("timeZoneId",user.getTimeZoneId());
+  if (Validator.isNull(timeZoneId)) {
+    timeZoneId=user.getTimeZoneId();
+  }
+  TimeZone timeZone=TimeZone.getTimeZone(timeZoneId);
   int month=ParamUtil.getInteger(portletRequest,name + "Month");
   int day=ParamUtil.getInteger(portletRequest,name + "Day");
   int year=ParamUtil.getInteger(portletRequest,name + "Year");
@@ -9,5 +16,5 @@
   if (amPm == java.util.Calendar.PM) {
     hour+=12;
   }
-  return JCalendarUtil.getJCalendar(year,month,day,hour,minute,0,0,themeDisplay.getTimeZone());
+  return JCalendarUtil.getJCalendar(year,month,day,hour,minute,0,0,timeZone);
 }
