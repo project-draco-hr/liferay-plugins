@@ -3,11 +3,11 @@
   String title=layoutJSONObject.getString("title");
   boolean hidden=layoutJSONObject.getBoolean("hidden");
   String friendlyURL=layoutJSONObject.getString("friendlyURL");
-  String typeSettings=layoutJSONObject.getString("typeSettings");
   if (Validator.isNotNull(friendlyURL) && !friendlyURL.startsWith(StringPool.SLASH)) {
     friendlyURL=StringPool.SLASH + friendlyURL;
   }
   Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,name,title,StringPool.BLANK,LayoutConstants.TYPE_PORTLET,hidden,friendlyURL,serviceContext);
+  String typeSettings=layoutJSONObject.getString("typeSettings");
   layout.setTypeSettings(typeSettings);
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
