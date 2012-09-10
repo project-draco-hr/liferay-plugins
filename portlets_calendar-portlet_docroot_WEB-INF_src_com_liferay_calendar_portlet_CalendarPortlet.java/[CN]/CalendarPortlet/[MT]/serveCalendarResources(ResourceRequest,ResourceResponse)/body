@@ -2,9 +2,8 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String keywords=ParamUtil.getString(resourceRequest,"keywords");
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  long[] groupIds=new long[]{themeDisplay.getCompanyGroupId(),themeDisplay.getScopeGroupId()};
   long classNameId=PortalUtil.getClassNameId(CalendarResource.class);
-  List<CalendarResource> calendarResources=CalendarResourceServiceUtil.search(themeDisplay.getCompanyId(),groupIds,new long[]{classNameId},keywords,true,true,0,SearchContainer.DEFAULT_DELTA,new CalendarResourceNameComparator());
+  List<CalendarResource> calendarResources=CalendarResourceServiceUtil.search(themeDisplay.getCompanyId(),new long[]{themeDisplay.getCompanyGroupId(),themeDisplay.getScopeGroupId()},new long[]{classNameId},keywords,true,true,0,SearchContainer.DEFAULT_DELTA,new CalendarResourceNameComparator());
   for (  CalendarResource calendarResource : calendarResources) {
     addCalendarJSONObject(resourceRequest,jsonArray,calendarResource.getClassNameId(),calendarResource.getClassPK());
   }
