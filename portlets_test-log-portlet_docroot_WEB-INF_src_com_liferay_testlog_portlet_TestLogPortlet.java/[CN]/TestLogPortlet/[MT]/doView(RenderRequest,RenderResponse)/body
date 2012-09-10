@@ -1,7 +1,13 @@
 {
   PrintWriter printWriter=renderResponse.getWriter();
   _log.info("Execute Test");
-  if (_log.isInfoEnabled()) {
+  if (!_log.isInfoEnabled()) {
+    printWriter.write("FAILED");
+    printWriter.close();
+    return;
+  }
+  File file=new File(PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/logs/test-log-portlet." + _simpleDateFormat.format(new Date())+ ".log");
+  if (file.exists()) {
     printWriter.write("PASSED");
   }
  else {
