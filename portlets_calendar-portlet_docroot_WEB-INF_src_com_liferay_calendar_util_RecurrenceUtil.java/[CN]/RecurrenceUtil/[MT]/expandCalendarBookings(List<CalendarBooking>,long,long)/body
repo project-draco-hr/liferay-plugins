@@ -1,5 +1,6 @@
 {
   List<CalendarBooking> expandedCalendarBookings=new ArrayList<CalendarBooking>();
+  DateValue startDateValue=_toDateValue(startDate);
   DateValue endDateValue=_toDateValue(endDate);
   try {
     for (    CalendarBooking calendarBooking : calendarBookings) {
@@ -7,10 +8,12 @@
         expandedCalendarBookings.add(calendarBooking);
         continue;
       }
-      DateValue startDateValue=_toDateValue(calendarBooking.getStartDate());
-      RecurrenceIterator recurrenceIterator=RecurrenceIteratorFactory.createRecurrenceIterator(calendarBooking.getRecurrence(),startDateValue,TimeUtils.utcTimezone());
+      RecurrenceIterator recurrenceIterator=RecurrenceIteratorFactory.createRecurrenceIterator(calendarBooking.getRecurrence(),_toDateValue(calendarBooking.getStartDate()),TimeUtils.utcTimezone());
       while (recurrenceIterator.hasNext()) {
         DateValue dateValue=recurrenceIterator.next();
+        if (dateValue.compareTo(startDateValue) < 0) {
+          continue;
+        }
         if (dateValue.compareTo(endDateValue) > 0) {
           break;
         }
