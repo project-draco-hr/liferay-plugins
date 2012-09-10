@@ -1,17 +1,17 @@
 {
   PrintWriter printWriter=renderResponse.getWriter();
-  _log.info("Execute Test");
-  if (!_log.isInfoEnabled()) {
-    printWriter.write("FAILED");
-    printWriter.close();
-    return;
-  }
-  File file=new File(PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/logs/test-log-portlet." + _simpleDateFormat.format(new Date())+ ".log");
-  if (file.exists()) {
-    printWriter.write("PASSED");
+  if (_log.isInfoEnabled()) {
+    printWriter.write("Log#isEnabled=PASSED\n");
   }
  else {
-    printWriter.write("FAILED");
+    printWriter.write("Log#isEnabled=FAILED\n");
+  }
+  File file=new File(PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/logs/test-log-portlet." + _format.format(new Date())+ ".log");
+  if (file.exists()) {
+    printWriter.write(file + "=PASSED\n");
+  }
+ else {
+    printWriter.write(file + "=FAILED\n");
   }
   printWriter.close();
 }
