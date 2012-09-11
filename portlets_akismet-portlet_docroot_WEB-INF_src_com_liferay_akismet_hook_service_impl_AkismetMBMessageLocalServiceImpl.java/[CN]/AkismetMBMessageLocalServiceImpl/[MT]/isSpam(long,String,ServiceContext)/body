@@ -1,14 +1,13 @@
 {
-  long companyId=serviceContext.getCompanyId();
-  if (!AkismetUtil.isEnabled(companyId)) {
+  User user=UserLocalServiceUtil.getUser(userId);
+  if (!AkismetUtil.isEnabled(user.getCompanyId())) {
     return false;
   }
-  User user=UserLocalServiceUtil.getUser(userId);
   String ipAddress=serviceContext.getRemoteAddr();
   Map<String,String> headers=serviceContext.getHeaders();
   String userAgent=headers.get(HttpHeaders.USER_AGENT.toLowerCase());
   String referrer=headers.get("referer");
-  if (AkismetUtil.isSpam(companyId,ipAddress,userAgent,referrer,StringPool.BLANK,AkismetConstants.TYPE_COMMENT,user.getFullName(),user.getEmailAddress(),body)) {
+  if (AkismetUtil.isSpam(user.getCompanyId(),ipAddress,userAgent,referrer,StringPool.BLANK,AkismetConstants.TYPE_COMMENT,user.getFullName(),user.getEmailAddress(),body)) {
     return true;
   }
  else {
