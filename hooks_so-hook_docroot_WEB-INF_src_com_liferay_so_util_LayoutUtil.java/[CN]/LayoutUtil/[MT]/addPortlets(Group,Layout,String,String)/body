@@ -11,11 +11,7 @@
       Filter filter=new Filter(name);
       portletIds=PortletProps.getArray(keyPrefix + column,filter);
     }
-    String portlets=StringPool.BLANK;
-    for (    String portletId : portletIds) {
-      portlets=StringUtil.add(portlets,portletId);
-    }
-    layoutTypePortlet.setPortletIds(column,portlets);
+    layoutTypePortlet.addPortletIds(0,portletIds,column,false);
   }
   LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
   List<String> portletIds=layoutTypePortlet.getPortletIds();
