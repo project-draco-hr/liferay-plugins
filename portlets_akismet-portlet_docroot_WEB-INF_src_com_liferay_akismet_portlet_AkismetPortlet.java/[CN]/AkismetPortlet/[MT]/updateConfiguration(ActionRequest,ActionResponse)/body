@@ -1,0 +1,12 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  boolean enabled=ParamUtil.getBoolean(actionRequest,"enabled");
+  String apiKey=ParamUtil.getString(actionRequest,"apiKey");
+  PortletPreferences preferences=PrefsPortletPropsUtil.getPortletPreferences(themeDisplay.getCompanyId());
+  preferences.setValue("enabled",String.valueOf(enabled));
+  preferences.setValue(PortletPropsKeys.AKISMET_API_KEY,apiKey);
+  preferences.store();
+  if (!AkismetUtil.verifyApiKey(themeDisplay.getCompanyId(),apiKey)) {
+    SessionErrors.add(actionRequest,"apiKeyError");
+  }
+}
