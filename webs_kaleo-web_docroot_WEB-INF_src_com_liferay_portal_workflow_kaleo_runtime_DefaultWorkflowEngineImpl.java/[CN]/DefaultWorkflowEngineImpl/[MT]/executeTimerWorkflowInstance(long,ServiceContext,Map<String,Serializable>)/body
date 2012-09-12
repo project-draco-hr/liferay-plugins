@@ -2,12 +2,19 @@
   try {
     KaleoTimerInstanceToken kaleoTimerInstanceToken=kaleoTimerInstanceTokenLocalService.getKaleoTimerInstanceToken(kaleoTimerInstanceTokenId);
     KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
-    ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,kaleoTimerInstanceToken,workflowContext,serviceContext);
+    final ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,kaleoTimerInstanceToken,workflowContext,serviceContext);
     KaleoTaskInstanceToken kaleoTaskInstanceToken=kaleoTimerInstanceToken.getKaleoTaskInstanceToken();
     executionContext.setKaleoTaskInstanceToken(kaleoTaskInstanceToken);
-    KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
+    final KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
     NodeExecutor nodeExecutor=NodeExecutorFactory.getNodeExecutor(NodeType.valueOf(currentKaleoNode.getType()));
     nodeExecutor.executeTimer(currentKaleoNode,executionContext);
+    TransactionCommitCallbackRegistryUtil.registerCallback(new Callable<Void>(){
+      public Void call() throws Exception {
+        _kaleoSignaler.signalExecute(currentKaleoNode,executionContext);
+        return null;
+      }
+    }
+);
     return executionContext;
   }
  catch (  Exception e) {

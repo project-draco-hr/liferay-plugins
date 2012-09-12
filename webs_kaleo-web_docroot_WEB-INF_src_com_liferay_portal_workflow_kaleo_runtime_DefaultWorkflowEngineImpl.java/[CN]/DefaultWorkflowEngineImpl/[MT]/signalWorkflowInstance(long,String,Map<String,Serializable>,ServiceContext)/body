@@ -7,6 +7,19 @@
       currentKaleoNode.getKaleoTransition(transitionName);
     }
     serviceContext.setScopeGroupId(kaleoInstanceToken.getGroupId());
+    final ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
+    TransactionCommitCallbackRegistryUtil.registerCallback(new Callable<Void>(){
+      public Void call() throws Exception {
+        try {
+          _kaleoSignaler.signalExit(transitionName,executionContext);
+        }
+ catch (        Exception e) {
+          throw new WorkflowException("Unable to signal next transition",e);
+        }
+        return null;
+      }
+    }
+);
     return new WorkflowInstanceAdapter(kaleoInstance,kaleoInstanceToken,workflowContext);
   }
  catch (  Exception e) {

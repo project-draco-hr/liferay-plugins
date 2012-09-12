@@ -4,13 +4,5 @@
   serviceContext.setScopeGroupId(groupId);
   serviceContext.setUserId(userId);
   WorkflowInstanceAdapter workflowInstanceAdapter=(WorkflowInstanceAdapter)_workflowEngine.startWorkflowInstance(workflowDefinitionName,workflowDefinitionVersion,transitionName,workflowContext,serviceContext);
-  KaleoInstanceToken kaleoInstanceToken=workflowInstanceAdapter.getKaleoInstanceToken();
-  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
-  try {
-    _kaleoSignaler.signalEntry(transitionName,executionContext);
-  }
- catch (  Exception e) {
-    throw new WorkflowException("Unable to start workflow",e);
-  }
   return workflowInstanceAdapter;
 }

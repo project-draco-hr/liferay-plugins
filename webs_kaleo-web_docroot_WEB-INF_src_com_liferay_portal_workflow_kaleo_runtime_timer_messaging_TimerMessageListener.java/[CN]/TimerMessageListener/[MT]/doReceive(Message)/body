@@ -4,10 +4,7 @@
     KaleoTimerInstanceToken kaleoTimerInstanceToken=getKaleoTimerInstanceToken(message);
     Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTimerInstanceToken.getWorkflowContext());
     ServiceContext serviceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
-    KaleoInstanceToken kaleoInstanceToken=kaleoTimerInstanceToken.getKaleoInstanceToken();
-    KaleoNode currentKaleoNode=kaleoInstanceToken.getCurrentKaleoNode();
-    ExecutionContext executionContext=_workflowEngine.executeTimerWorkflowInstance(kaleoTimerInstanceTokenId,serviceContext,workflowContext);
-    _kaleoSignaler.signalExecute(currentKaleoNode,executionContext);
+    _workflowEngine.executeTimerWorkflowInstance(kaleoTimerInstanceTokenId,serviceContext,workflowContext);
   }
  catch (  Exception e) {
     if (_log.isWarnEnabled()) {

@@ -20,6 +20,19 @@
     KaleoInstanceToken rootKaleoInstanceToken=kaleoInstance.getRootKaleoInstanceToken(workflowContext,serviceContext);
     rootKaleoInstanceToken.setCurrentKaleoNode(kaleoStartNode);
     kaleoLogLocalService.addWorkflowInstanceStartKaleoLog(rootKaleoInstanceToken,serviceContext);
+    final ExecutionContext executionContext=new ExecutionContext(rootKaleoInstanceToken,workflowContext,serviceContext);
+    TransactionCommitCallbackRegistryUtil.registerCallback(new Callable<Void>(){
+      public Void call() throws Exception {
+        try {
+          _kaleoSignaler.signalEntry(transitionName,executionContext);
+        }
+ catch (        Exception e) {
+          throw new WorkflowException("Unable to start workflow",e);
+        }
+        return null;
+      }
+    }
+);
     return new WorkflowInstanceAdapter(kaleoInstance,rootKaleoInstanceToken,workflowContext);
   }
  catch (  Exception e) {
