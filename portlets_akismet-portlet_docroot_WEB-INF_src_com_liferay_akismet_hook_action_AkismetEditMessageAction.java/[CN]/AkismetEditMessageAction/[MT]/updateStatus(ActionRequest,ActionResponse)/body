@@ -1,0 +1,19 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  checkPermission(themeDisplay.getScopeGroupId());
+  long messageId=ParamUtil.getLong(actionRequest,"messageId");
+  boolean spam=ParamUtil.getBoolean(actionRequest,"spam");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
+  if (spam) {
+    MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_DENIED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
+      AkismetUtil.submitSpam(messageId);
+    }
+  }
+ else {
+    MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_APPROVED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
+      AkismetUtil.submitHam(messageId);
+    }
+  }
+}

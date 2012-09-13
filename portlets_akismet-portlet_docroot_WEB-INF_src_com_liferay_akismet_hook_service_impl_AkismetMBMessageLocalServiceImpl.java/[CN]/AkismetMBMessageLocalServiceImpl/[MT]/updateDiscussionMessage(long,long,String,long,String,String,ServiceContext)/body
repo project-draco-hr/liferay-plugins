@@ -1,6 +1,16 @@
 {
-  if (isSpam(userId,body,serviceContext)) {
-    throw new MessageBodyException();
+  boolean enabled=isDiscussionsEnabled(userId);
+  if (enabled) {
+    serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
   }
-  return super.updateDiscussionMessage(userId,messageId,className,classPK,subject,body,serviceContext);
+  MBMessage message=super.updateDiscussionMessage(userId,messageId,className,classPK,subject,body,serviceContext);
+  AkismetData akismetData=updateAkismetData(message,serviceContext);
+  if (!enabled) {
+    return message;
+  }
+  int status=WorkflowConstants.STATUS_APPROVED;
+  if (isSpam(userId,subject,body,akismetData)) {
+    status=WorkflowConstants.STATUS_DENIED;
+  }
+  return super.updateStatus(userId,message.getMessageId(),status,serviceContext);
 }

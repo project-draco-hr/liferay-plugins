@@ -1,0 +1,10 @@
+{
+  AkismetData akismetData=AkismetDataLocalServiceUtil.fetchAkismetData(mbMessageId);
+  if (akismetData == null) {
+    return;
+  }
+  MBMessage message=MBMessageLocalServiceUtil.getMBMessage(mbMessageId);
+  User user=UserLocalServiceUtil.getUser(message.getUserId());
+  String content=message.getSubject() + "\n\n" + message.getBody();
+  submitSpam(message.getCompanyId(),akismetData.getUserIP(),akismetData.getUserAgent(),akismetData.getReferrer(),akismetData.getPermalink(),akismetData.getType(),user.getFullName(),user.getEmailAddress(),content);
+}

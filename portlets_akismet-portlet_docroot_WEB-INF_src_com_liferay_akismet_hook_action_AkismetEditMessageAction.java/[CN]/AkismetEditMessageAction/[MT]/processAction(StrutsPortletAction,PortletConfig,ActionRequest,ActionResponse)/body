@@ -1,0 +1,19 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (cmd.equals("updateStatus")) {
+    try {
+      updateStatus(actionRequest,actionResponse);
+      String redirect=PortalUtil.escapeRedirect(ParamUtil.getString(actionRequest,"redirect"));
+      actionResponse.sendRedirect(redirect);
+    }
+ catch (    PrincipalException pe) {
+      throw pe;
+    }
+catch (    Exception e) {
+      SessionErrors.add(actionRequest,e.getClass().getName());
+    }
+  }
+ else {
+    originalStrutsPortletAction.processAction(portletConfig,actionRequest,actionResponse);
+  }
+}

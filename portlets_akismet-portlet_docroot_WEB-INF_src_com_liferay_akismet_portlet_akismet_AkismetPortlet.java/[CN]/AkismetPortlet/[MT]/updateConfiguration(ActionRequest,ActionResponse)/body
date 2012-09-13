@@ -1,0 +1,16 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  boolean messageBoardsEnabled=ParamUtil.getBoolean(actionRequest,"messageBoardsEnabled");
+  boolean discussionsEnabled=ParamUtil.getBoolean(actionRequest,"discussionsEnabled");
+  String apiKey=ParamUtil.getString(actionRequest,"apiKey");
+  int allowReportMessageTime=ParamUtil.getInteger(actionRequest,"allowReportMessageTime");
+  PortletPreferences preferences=PrefsPortletPropsUtil.getPortletPreferences(themeDisplay.getCompanyId());
+  preferences.setValue(PortletPropsKeys.AKISMET_MESSAGE_BOARDS_CHECK_ENABLED,String.valueOf(messageBoardsEnabled));
+  preferences.setValue(PortletPropsKeys.AKISMET_DISCUSSIONS_CHECK_ENABLED,String.valueOf(discussionsEnabled));
+  preferences.setValue(PortletPropsKeys.AKISMET_API_KEY,apiKey);
+  preferences.setValue(PortletPropsKeys.AKISMET_ALLOW_REPORT_MESSAGE_TIME,String.valueOf(allowReportMessageTime));
+  preferences.store();
+  if (!AkismetUtil.verifyApiKey(themeDisplay.getCompanyId(),apiKey)) {
+    SessionErrors.add(actionRequest,"apiKeyError");
+  }
+}

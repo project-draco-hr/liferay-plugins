@@ -1,0 +1,17 @@
+{
+  AkismetData akismetData=akismetDataPersistence.fetchByMBMessageId(mbMessageId);
+  if (akismetData == null) {
+    long akismetDataId=counterLocalService.increment();
+    akismetData=akismetDataPersistence.create(akismetDataId);
+  }
+  akismetData.setModifiedDate(new Date());
+  akismetData.setMbMessageId(mbMessageId);
+  akismetData.setType(type);
+  akismetData.setPermalink(permalink);
+  akismetData.setReferrer(referrer);
+  akismetData.setUserAgent(userAgent);
+  akismetData.setUserIP(userIP);
+  akismetData.setUserURL(userURL);
+  akismetDataPersistence.update(akismetData,false);
+  return akismetData;
+}

@@ -1,0 +1,17 @@
+{
+  int retainSpamTime=PortletPropsValues.RETAIN_SPAM_TIME;
+  Date clearBeforeDate=new Date(System.currentTimeMillis() - (retainSpamTime * Time.DAY));
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(MBMessage.class,PortalClassLoaderUtil.getClassLoader());
+  Property property=PropertyFactoryUtil.forName("status");
+  dynamicQuery.add(property.eq(WorkflowConstants.STATUS_DENIED));
+  property=PropertyFactoryUtil.forName("statusDate");
+  dynamicQuery.add(property.lt(clearBeforeDate));
+  List<MBMessage> messages=MBMessageLocalServiceUtil.dynamicQuery(dynamicQuery);
+  for (  MBMessage message : messages) {
+    try {
+      MBMessageLocalServiceUtil.deleteMBMessage(message.getMessageId());
+    }
+ catch (    NoSuchMessageException nsme) {
+    }
+  }
+}
