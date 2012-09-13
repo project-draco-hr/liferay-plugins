@@ -1,6 +1,10 @@
 {
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  java.util.Calendar startDateJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartDate());
   java.util.Calendar jCalendar=JCalendarUtil.getJCalendar(startDate);
+  jCalendar.set(java.util.Calendar.HOUR_OF_DAY,startDateJCalendar.get(java.util.Calendar.HOUR_OF_DAY));
+  jCalendar.set(java.util.Calendar.MINUTE,startDateJCalendar.get(java.util.Calendar.MINUTE));
+  jCalendar.set(java.util.Calendar.SECOND,startDateJCalendar.get(java.util.Calendar.SECOND));
   Recurrence recurrenceObj=calendarBooking.getRecurrenceObj();
   if (allFollowing) {
     jCalendar.add(java.util.Calendar.DATE,-1);

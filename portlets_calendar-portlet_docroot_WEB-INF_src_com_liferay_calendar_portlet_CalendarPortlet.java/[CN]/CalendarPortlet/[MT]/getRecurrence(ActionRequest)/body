@@ -35,5 +35,9 @@
     }
   }
   recurrence.setWeekdays(weekdays);
+  String[] exceptionDates=StringUtil.split(ParamUtil.getString(actionRequest,"exceptionDates"));
+  for (  String exceptionDate : exceptionDates) {
+    recurrence.addExceptionDate(JCalendarUtil.getJCalendar(Long.valueOf(exceptionDate)));
+  }
   return RecurrenceSerializer.serialize(recurrence);
 }
