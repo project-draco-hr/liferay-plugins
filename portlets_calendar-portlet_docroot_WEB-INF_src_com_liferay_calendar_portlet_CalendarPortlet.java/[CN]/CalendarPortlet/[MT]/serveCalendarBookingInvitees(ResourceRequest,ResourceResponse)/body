@@ -1,10 +1,10 @@
 {
   long parentCalendarBookingId=ParamUtil.getLong(resourceRequest,"parentCalendarBookingId");
-  List<CalendarBooking> childCalendarBookings=CalendarBookingServiceUtil.getChildCalendarBookings(parentCalendarBookingId);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  List<CalendarBooking> childCalendarBookings=CalendarBookingServiceUtil.getChildCalendarBookings(parentCalendarBookingId);
   for (  CalendarBooking calendarBooking : childCalendarBookings) {
-    CalendarResource resource=calendarBooking.getCalendarResource();
-    addCalendarJSONObject(resourceRequest,jsonArray,resource.getClassNameId(),resource.getClassPK());
+    CalendarResource calendarResource=calendarBooking.getCalendarResource();
+    addCalendarJSONObject(resourceRequest,jsonArray,calendarResource.getClassNameId(),calendarResource.getClassPK());
   }
   writeJSON(resourceRequest,resourceResponse,jsonArray);
 }
