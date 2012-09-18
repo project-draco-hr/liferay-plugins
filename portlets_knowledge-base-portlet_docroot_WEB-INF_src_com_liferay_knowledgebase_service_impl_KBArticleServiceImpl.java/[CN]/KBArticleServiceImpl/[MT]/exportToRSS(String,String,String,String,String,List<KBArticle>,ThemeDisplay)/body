@@ -34,7 +34,12 @@
   }
   String feedType=RSSUtil.getFeedType(RSSUtil.getFormatType(rssFormat),RSSUtil.getFormatVersion(rssFormat));
   syndFeed.setFeedType(feedType);
-  syndFeed.setLink(feedURL);
+  List<SyndLink> syndLinks=new ArrayList<SyndLink>();
+  syndFeed.setLinks(syndLinks);
+  SyndLink selfSyndLink=new SyndLinkImpl();
+  syndLinks.add(selfSyndLink);
+  selfSyndLink.setHref(feedURL);
+  selfSyndLink.setRel("self");
   syndFeed.setPublishedDate(new Date());
   syndFeed.setTitle(name);
   syndFeed.setUri(feedURL);
