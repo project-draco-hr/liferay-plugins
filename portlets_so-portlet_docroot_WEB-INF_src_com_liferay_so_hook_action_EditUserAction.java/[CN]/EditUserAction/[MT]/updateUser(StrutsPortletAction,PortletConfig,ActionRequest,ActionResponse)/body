@@ -12,12 +12,12 @@
   boolean newSocialOfficeUser=ArrayUtil.contains(roleIds,role.getRoleId());
   List<Role> roles=user.getRoles();
   if (newSocialOfficeUser && !roles.contains(role)) {
-    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,false);
+    LayoutSetPrototype publicLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user.getCompanyId(),SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
     if (publicLayoutSetPrototype != null) {
       dynamicActionRequest.setParameter("publicLayoutSetPrototypeId",String.valueOf(publicLayoutSetPrototype.getLayoutSetPrototypeId()));
       dynamicActionRequest.setParameter("publicLayoutSetPrototypeLinkEnabled",Boolean.TRUE.toString());
     }
-    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user,true);
+    LayoutSetPrototype privateLayoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(user.getCompanyId(),SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
     if (privateLayoutSetPrototype != null) {
       dynamicActionRequest.setParameter("privateLayoutSetPrototypeId",String.valueOf(privateLayoutSetPrototype.getLayoutSetPrototypeId()));
       dynamicActionRequest.setParameter("privateLayoutSetPrototypeLinkEnabled",Boolean.TRUE.toString());
