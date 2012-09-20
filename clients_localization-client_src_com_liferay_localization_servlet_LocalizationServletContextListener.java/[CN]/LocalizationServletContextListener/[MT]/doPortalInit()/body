@@ -1,18 +1,6 @@
 {
-  Class<?> clazz=getClass();
-  ClassLoader classLoader=clazz.getClassLoader();
-  InputStream inputStream=classLoader.getResourceAsStream("/resources/data/sql.xml");
-  String xml=new String(FileUtil.getBytes(inputStream));
-  Document document=SAXReaderUtil.read(xml);
-  Element rootElement=document.getRootElement();
-  List<Element> batchElements=rootElement.elements("batch");
-  for (  Element batchElement : batchElements) {
-    String testSQL=batchElement.elementText("test-sql");
-    int count=getCount(testSQL);
-    if (count > 0) {
-      continue;
-    }
-    String[] importSQLs=StringUtil.split(batchElement.elementText("import-sql"),StringPool.SEMICOLON);
-    runSQL(importSQLs);
+  importSQL();
+  for (  Company company : CompanyLocalServiceUtil.getCompanies()) {
+    InstanceUtil.localizeRoleNames(company.getCompanyId());
   }
 }
