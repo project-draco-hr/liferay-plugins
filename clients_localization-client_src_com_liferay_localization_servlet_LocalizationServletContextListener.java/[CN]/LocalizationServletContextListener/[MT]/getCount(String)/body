@@ -1,0 +1,17 @@
+{
+  Connection connection=null;
+  PreparedStatement preparedStatement=null;
+  ResultSet resultSet=null;
+  try {
+    connection=DataAccess.getUpgradeOptimizedConnection();
+    preparedStatement=connection.prepareStatement(sql);
+    resultSet=preparedStatement.executeQuery();
+    if (resultSet.next()) {
+      return resultSet.getInt(1);
+    }
+    return 0;
+  }
+  finally {
+    DataAccess.cleanUp(connection,preparedStatement,resultSet);
+  }
+}
