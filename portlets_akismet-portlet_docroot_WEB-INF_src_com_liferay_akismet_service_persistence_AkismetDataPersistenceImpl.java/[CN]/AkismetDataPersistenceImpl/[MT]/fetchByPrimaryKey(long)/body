@@ -1,0 +1,28 @@
+{
+  AkismetData akismetData=(AkismetData)EntityCacheUtil.getResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,akismetDataId);
+  if (akismetData == _nullAkismetData) {
+    return null;
+  }
+  if (akismetData == null) {
+    Session session=null;
+    boolean hasException=false;
+    try {
+      session=openSession();
+      akismetData=(AkismetData)session.get(AkismetDataImpl.class,Long.valueOf(akismetDataId));
+    }
+ catch (    Exception e) {
+      hasException=true;
+      throw processException(e);
+    }
+ finally {
+      if (akismetData != null) {
+        cacheResult(akismetData);
+      }
+ else       if (!hasException) {
+        EntityCacheUtil.putResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,akismetDataId,_nullAkismetData);
+      }
+      closeSession(session);
+    }
+  }
+  return akismetData;
+}

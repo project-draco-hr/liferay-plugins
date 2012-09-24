@@ -1,0 +1,16 @@
+{
+  akismetData=toUnwrappedModel(akismetData);
+  Session session=null;
+  try {
+    session=openSession();
+    BatchSessionUtil.delete(session,akismetData);
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  clearCache(akismetData);
+  return akismetData;
+}

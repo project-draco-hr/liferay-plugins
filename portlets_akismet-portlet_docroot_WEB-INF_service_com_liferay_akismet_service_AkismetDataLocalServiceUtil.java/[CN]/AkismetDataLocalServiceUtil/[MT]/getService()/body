@@ -1,0 +1,13 @@
+{
+  if (_service == null) {
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),AkismetDataLocalService.class.getName());
+    if (invokableLocalService instanceof AkismetDataLocalService) {
+      _service=(AkismetDataLocalService)invokableLocalService;
+    }
+ else {
+      _service=new AkismetDataLocalServiceClp(invokableLocalService);
+    }
+    ReferenceRegistry.registerReference(AkismetDataLocalServiceUtil.class,"_service");
+  }
+  return _service;
+}
