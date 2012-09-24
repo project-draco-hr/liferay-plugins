@@ -1,0 +1,15 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(MBMessage.class,PortalClassLoaderUtil.getClassLoader());
+  Property statusProperty=PropertyFactoryUtil.forName("status");
+  dynamicQuery.add(statusProperty.eq(WorkflowConstants.STATUS_DENIED));
+  Property statusDateProperty=PropertyFactoryUtil.forName("statusDate");
+  dynamicQuery.add(statusDateProperty.lt(AkismetUtil.getRetainSpamTime()));
+  List<MBMessage> mbMessages=MBMessageLocalServiceUtil.dynamicQuery(dynamicQuery);
+  for (  MBMessage mbMessage : mbMessages) {
+    try {
+      MBMessageLocalServiceUtil.deleteMBMessage(mbMessage.getMessageId());
+    }
+ catch (    NoSuchMessageException nsme) {
+    }
+  }
+}
