@@ -1,0 +1,16 @@
+{
+  try {
+    Class<?> clazz=getClass();
+    InputStream inputStream=clazz.getResourceAsStream("dependencies/zh_CN-to-zh_TW.txt");
+    String[] lines=StringUtil.split(StringUtil.read(inputStream),StringPool.NEW_LINE);
+    for (    String line : lines) {
+      char simplifiedChar=line.charAt(0);
+      char traditionalChar=line.charAt(2);
+      _simplifiedCharactersToTraditionalCharactersMap.put(simplifiedChar,traditionalChar);
+      _traditionalCharactersToSimplifiedCharactersMap.put(traditionalChar,simplifiedChar);
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+}
