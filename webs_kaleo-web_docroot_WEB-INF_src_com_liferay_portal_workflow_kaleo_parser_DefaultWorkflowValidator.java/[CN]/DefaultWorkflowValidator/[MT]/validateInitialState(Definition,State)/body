@@ -1,0 +1,11 @@
+{
+  if (!Validator.equals(definition.getInitialState(),state)) {
+    throw new WorkflowException("Multiple initial states defined {" + state.getName() + ", "+ definition.getInitialState().getName()+ "}");
+  }
+  if (state.getIncomingTransitionsCount() > 0) {
+    throw new WorkflowException("Incoming transitions were found for initial state " + state.getName());
+  }
+  if (state.getOutgoingTransitionsCount() == 0) {
+    throw new WorkflowException("No outgoing transition found for initial state " + state.getName());
+  }
+}

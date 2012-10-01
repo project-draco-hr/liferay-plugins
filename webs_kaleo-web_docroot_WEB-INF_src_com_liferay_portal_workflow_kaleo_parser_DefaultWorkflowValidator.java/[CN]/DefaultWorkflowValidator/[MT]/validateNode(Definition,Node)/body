@@ -1,6 +1,18 @@
 {
-  if (node instanceof State) {
+  if (node instanceof Condition) {
+    validateCondition((Condition)node);
+  }
+ else   if (node instanceof Fork) {
+    validateFork((Fork)node);
+  }
+ else   if (node instanceof Join) {
+    validateJoin((Join)node);
+  }
+ else   if (node instanceof State) {
     validateState(definition,(State)node);
   }
-  validateTransitions(node.getTransitions());
+ else   if (node instanceof Task) {
+    validateTask((Task)node);
+  }
+  validateTransitions(node.getOutgoingTransitions());
 }

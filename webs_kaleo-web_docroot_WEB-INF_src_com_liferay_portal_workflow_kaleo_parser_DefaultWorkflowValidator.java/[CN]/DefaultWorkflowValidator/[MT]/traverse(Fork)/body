@@ -1,0 +1,42 @@
+{
+  Join join=null;
+  int joinIncomingTransitions=fork.getOutgoingTransitionsCount();
+  List<Node> targetNodes=new ArrayList<Node>();
+  targetNodes.add(fork);
+  for (  Transition transition : fork.getOutgoingTransitionsEntries()) {
+    targetNodes.add(transition.getTargetNode());
+  }
+  for (int i=1; i < targetNodes.size(); i++) {
+    Node targetNode=targetNodes.get(i);
+    if (targetNode instanceof Fork) {
+      Join localJoin=traverse((Fork)targetNode);
+      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,localJoin.getOutgoingTransitionsEntries());
+      if (unvisitedTargetNodes.size() > 1) {
+        joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
+      }
+      targetNodes.addAll(unvisitedTargetNodes);
+    }
+ else     if (targetNode instanceof Join) {
+      if (Validator.isNull(join)) {
+        join=(Join)targetNode;
+      }
+ else       if (!Validator.equals(join,targetNode)) {
+        throw new WorkflowException("Fork and Join are not in pair {" + fork.getName() + ", "+ targetNode.getName()+ "}");
+      }
+    }
+ else {
+      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,targetNode.getOutgoingTransitionsEntries());
+      if (unvisitedTargetNodes.size() > 1) {
+        joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
+      }
+      targetNodes.addAll(unvisitedTargetNodes);
+    }
+  }
+  if (join == null) {
+    throw new WorkflowException("No matching join found for fork " + fork.getName());
+  }
+ else   if (join.getIncomingTransitionsCount() != joinIncomingTransitions) {
+    throw new WorkflowException("Incorrect number of incoming transitions for join " + join.getName());
+  }
+  return join;
+}
