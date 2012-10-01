@@ -1,0 +1,11 @@
+{
+  Map<ClassLoader,Object> paclPolicies=_cachedPaclPolicies;
+  for (  Map.Entry<ClassLoader,Object> paclPolicy : paclPolicies.entrySet()) {
+    if (_paclPolicyManagerRegisterMethod == null) {
+      Class<?> clazz=_getPACLPolicyManagerClass();
+      _paclPolicyManagerRegisterMethod=clazz.getMethod("register",ClassLoader.class,_getPACLPolicyClass());
+    }
+    _paclPolicyManagerRegisterMethod.invoke(null,paclPolicy.getKey(),paclPolicy.getValue());
+  }
+  _cachedPaclPolicies.clear();
+}

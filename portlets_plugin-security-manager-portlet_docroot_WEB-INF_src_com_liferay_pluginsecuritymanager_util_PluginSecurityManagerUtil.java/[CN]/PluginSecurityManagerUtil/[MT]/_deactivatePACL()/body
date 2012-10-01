@@ -1,0 +1,12 @@
+{
+  Map<ClassLoader,Object> paclPolicies=_getPACLPolicies();
+  for (  ClassLoader classLoader : paclPolicies.keySet()) {
+    if (_paclPolicyManagerUnregisterMethod == null) {
+      Class<?> clazz=_getPACLPolicyManagerClass();
+      _paclPolicyManagerUnregisterMethod=clazz.getMethod("unregister",ClassLoader.class);
+    }
+    _paclPolicyManagerUnregisterMethod.invoke(null,classLoader);
+    _cachedPaclPolicies.clear();
+    _cachedPaclPolicies.putAll(paclPolicies);
+  }
+}
