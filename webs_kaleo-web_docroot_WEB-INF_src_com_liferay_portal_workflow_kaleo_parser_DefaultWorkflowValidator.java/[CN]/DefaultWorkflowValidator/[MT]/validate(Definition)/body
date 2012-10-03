@@ -7,15 +7,12 @@
   if (terminalStates.isEmpty()) {
     throw new WorkflowException("No terminal states defined");
   }
-  Collection<Node> nodes=definition.getNodes();
-  for (  Node node : nodes) {
-    validateNode(definition,node);
-  }
   if (definition.getForksCount() != definition.getJoinsCount()) {
     throw new WorkflowException("There are unbalanced fork and join nodes");
   }
-  List<Fork> forks=definition.getForks();
-  for (  Fork fork : forks) {
-    traverse(fork);
+  Collection<Node> nodes=definition.getNodes();
+  for (  Node node : nodes) {
+    NodeValidator nodeValidator=_nodeValidatorRegistry.getValidator(node.getNodeType());
+    nodeValidator.validate(definition,node);
   }
 }
