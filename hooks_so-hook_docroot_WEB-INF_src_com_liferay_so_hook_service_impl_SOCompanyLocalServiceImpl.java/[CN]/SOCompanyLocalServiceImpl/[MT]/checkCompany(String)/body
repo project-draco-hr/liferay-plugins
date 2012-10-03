@@ -1,0 +1,16 @@
+{
+  Company company=super.checkCompany(webId);
+  boolean strict=PortletPreferencesThreadLocal.isStrict();
+  try {
+    PortletPreferencesThreadLocal.setStrict(false);
+    InstanceUtil.initRuntime(company.getCompanyId());
+    if (InstanceUtil.isInitialized(company.getCompanyId())) {
+      return company;
+    }
+    InstanceUtil.initInstance(company.getCompanyId());
+  }
+  finally {
+    PortletPreferencesThreadLocal.setStrict(strict);
+  }
+  return company;
+}
