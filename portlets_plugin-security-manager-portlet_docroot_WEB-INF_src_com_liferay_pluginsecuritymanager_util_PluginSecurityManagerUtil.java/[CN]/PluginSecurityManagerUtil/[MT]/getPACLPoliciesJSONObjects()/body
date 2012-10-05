@@ -1,0 +1,18 @@
+{
+  Comparator<JSONObject> comparator=new Comparator<JSONObject>(){
+    public int compare(    JSONObject jsonObject1,    JSONObject jsonObject2){
+      String servletContextName1=jsonObject1.getString("servletContextName");
+      String servletContextName2=jsonObject2.getString("servletContextName");
+      return servletContextName1.compareTo(servletContextName2);
+    }
+  }
+;
+  List<JSONObject> jsonObjects=new SortedArrayList<JSONObject>(comparator);
+  Map<ClassLoader,Object> paclPolicies=_getPACLPolicies();
+  for (  Map.Entry<ClassLoader,Object> entry : paclPolicies.entrySet()) {
+    Object value=entry.getValue();
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject(JSONFactoryUtil.serialize(value));
+    jsonObjects.add(jsonObject);
+  }
+  return jsonObjects;
+}
