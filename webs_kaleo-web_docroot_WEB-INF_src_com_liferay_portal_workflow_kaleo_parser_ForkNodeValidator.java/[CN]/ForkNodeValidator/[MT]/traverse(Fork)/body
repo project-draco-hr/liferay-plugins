@@ -3,14 +3,14 @@
   int joinIncomingTransitions=fork.getOutgoingTransitionsCount();
   List<Node> targetNodes=new ArrayList<Node>();
   targetNodes.add(fork);
-  for (  Transition transition : fork.getOutgoingTransitionsEntries()) {
+  for (  Transition transition : fork.getOutgoingTransitionsList()) {
     targetNodes.add(transition.getTargetNode());
   }
   for (int i=1; i < targetNodes.size(); i++) {
     Node targetNode=targetNodes.get(i);
     if (targetNode.getNodeType().equals(NodeType.FORK)) {
       Join localJoin=traverse((Fork)targetNode);
-      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,localJoin.getOutgoingTransitionsEntries());
+      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,localJoin.getOutgoingTransitionsList());
       if (unvisitedTargetNodes.size() > 1) {
         joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
       }
@@ -21,11 +21,11 @@
         join=(Join)targetNode;
       }
  else       if (!Validator.equals(join,targetNode)) {
-        throw new WorkflowException("Fork and Join are not in pair {" + fork.getName() + ", "+ targetNode.getName()+ "}");
+        throw new WorkflowException("Fork " + fork.getName() + " and join "+ targetNode.getName()+ " are not paired");
       }
     }
  else {
-      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,targetNode.getOutgoingTransitionsEntries());
+      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,targetNode.getOutgoingTransitionsList());
       if (unvisitedTargetNodes.size() > 1) {
         joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
       }
