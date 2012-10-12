@@ -1,9 +1,10 @@
 {
-  boolean enabled=isMessageBoardsEnabled(userId);
+  MBMessage message=super.getMBMessage(messageId);
+  boolean enabled=isMessageBoardsEnabled(userId,message.getGroupId());
   if (enabled) {
     serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
   }
-  MBMessage message=super.updateMessage(userId,messageId,subject,body,inputStreamOVPs,existingFiles,priority,allowPingbacks,serviceContext);
+  message=super.updateMessage(userId,messageId,subject,body,inputStreamOVPs,existingFiles,priority,allowPingbacks,serviceContext);
   AkismetData akismetData=updateAkismetData(message,serviceContext);
   if (!enabled) {
     return message;

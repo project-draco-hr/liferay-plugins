@@ -1,0 +1,14 @@
+{
+  User user=UserLocalServiceUtil.getUser(userId);
+  if (!AkismetUtil.isMessageBoardsEnabled(user.getCompanyId())) {
+    return false;
+  }
+  int checkThreshold=PrefsPortletPropsUtil.getInteger(user.getCompanyId(),PortletPropsKeys.AKISMET_CHECK_THRESHOLD);
+  if (checkThreshold > 0) {
+    int userMessagesCount=super.getGroupMessagesCount(groupId,userId,WorkflowConstants.STATUS_APPROVED);
+    if (userMessagesCount > checkThreshold) {
+      return false;
+    }
+  }
+  return true;
+}
