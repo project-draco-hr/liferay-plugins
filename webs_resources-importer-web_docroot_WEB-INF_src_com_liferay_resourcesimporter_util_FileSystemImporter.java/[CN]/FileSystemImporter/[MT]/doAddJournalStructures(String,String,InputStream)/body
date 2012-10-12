@@ -1,0 +1,10 @@
+{
+  name=getName(name);
+  Map<Locale,String> nameMap=getNameMap(name);
+  String xsd=StringUtil.read(inputStream);
+  JournalStructure journalStructure=JournalStructureLocalServiceUtil.addStructure(userId,groupId,StringPool.BLANK,true,parentStructureId,nameMap,null,xsd,serviceContext);
+  addJournalTemplates(journalStructure.getStructureId(),"/journal/templates/" + name);
+  if (Validator.isNull(parentStructureId)) {
+    addJournalStructures(journalStructure.getStructureId(),"/journal/structures/" + name);
+  }
+}
