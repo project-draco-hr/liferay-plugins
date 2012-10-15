@@ -55,14 +55,14 @@
         }
         continue;
       }
-      StopWatch stopWatch=null;
+      long startTime=0;
       if (_log.isInfoEnabled()) {
-        stopWatch=new StopWatch();
-        stopWatch.start();
+        startTime=System.currentTimeMillis();
       }
       importer.importResources();
       if (_log.isInfoEnabled()) {
-        _log.info("Importing resources from " + servletContextName + " to group "+ importer.getGroupId()+ " takes "+ stopWatch.getTime()+ " ms");
+        long endTime=System.currentTimeMillis() - startTime;
+        _log.info("Importing resources from " + servletContextName + " to group "+ importer.getGroupId()+ " takes "+ endTime+ " ms");
       }
       Message newMessage=new Message();
       newMessage.put("companyId",company.getCompanyId());
