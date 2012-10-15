@@ -7,7 +7,8 @@
     if (resourcePath.endsWith(StringPool.SLASH)) {
       continue;
     }
-    String name=getName(resourcePath);
+    int pos=resourcePath.lastIndexOf(StringPool.SLASH);
+    String name=resourcePath.substring(pos + 1);
     URL resourceURL=servletContext.getResource(resourcePath);
     URLConnection urlConnection=resourceURL.openConnection();
     doAddJournalArticles(journalStructureId,journalTemplateId,name,urlConnection.getInputStream());
