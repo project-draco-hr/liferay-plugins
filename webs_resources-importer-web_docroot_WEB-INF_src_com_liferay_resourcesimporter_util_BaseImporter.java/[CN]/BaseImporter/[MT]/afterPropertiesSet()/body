@@ -3,42 +3,48 @@
   userId=user.getUserId();
   Group group=null;
   if (targetClassName.equals(LayoutSetPrototype.class.getName())) {
-    if (!hasLayoutSetPrototype(companyId,targetValue)) {
-      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,getTargetValueMap(),StringPool.BLANK,true,true,new ServiceContext());
-      group=layoutSetPrototype.getGroup();
-      privateLayout=true;
-      targetClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
+    LayoutSetPrototype layoutSetPrototype=getLayoutSetPrototype(companyId,targetValue);
+    if (layoutSetPrototype != null) {
+      existing=true;
     }
+ else {
+      layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(userId,companyId,getTargetValueMap(),StringPool.BLANK,true,true,new ServiceContext());
+    }
+    group=layoutSetPrototype.getGroup();
+    privateLayout=true;
+    targetClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
   }
  else   if (targetClassName.equals(Group.class.getName())) {
     if (targetValue.equals(GroupConstants.GUEST)) {
-      Group guestGroup=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
-      List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(guestGroup.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,false,0,1);
+      group=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
+      List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,false,0,1);
       if (!layouts.isEmpty()) {
         Layout layout=layouts.get(0);
         LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
         List<String> portletIds=layoutTypePortlet.getPortletIds();
         if (portletIds.size() != 2) {
-          return;
+          existing=true;
         }
         for (        String portletId : portletIds) {
           if (!portletId.equals("47") && !portletId.equals("58")) {
-            return;
+            existing=true;
           }
         }
       }
-      group=guestGroup;
     }
- else     if (!hasGroup(companyId,targetValue)) {
-      group=GroupLocalServiceUtil.addGroup(userId,GroupConstants.DEFAULT_PARENT_GROUP_ID,StringPool.BLANK,0,targetValue,StringPool.BLANK,GroupConstants.TYPE_SITE_OPEN,null,true,true,new ServiceContext());
+ else {
+      group=GroupLocalServiceUtil.fetchGroup(companyId,targetValue);
+      if (group != null) {
+        existing=true;
+      }
+ else {
+        group=GroupLocalServiceUtil.addGroup(userId,GroupConstants.DEFAULT_PARENT_GROUP_ID,StringPool.BLANK,0,targetValue,StringPool.BLANK,GroupConstants.TYPE_SITE_OPEN,null,true,true,new ServiceContext());
+      }
     }
-    if (group != null) {
-      privateLayout=false;
-      targetClassPK=group.getGroupId();
-    }
+    privateLayout=false;
+    targetClassPK=group.getGroupId();
   }
-  if (group == null) {
-    return;
+  if (group != null) {
+    groupId=group.getGroupId();
   }
-  groupId=group.getGroupId();
 }
