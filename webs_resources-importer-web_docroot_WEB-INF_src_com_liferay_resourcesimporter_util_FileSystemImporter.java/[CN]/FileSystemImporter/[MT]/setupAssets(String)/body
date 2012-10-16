@@ -1,0 +1,26 @@
+{
+  RepositoryLocalServiceUtil.deleteRepositories(groupId);
+  JournalArticleLocalServiceUtil.deleteArticles(groupId);
+  JournalTemplateLocalServiceUtil.deleteTemplates(groupId);
+  JournalStructureLocalServiceUtil.deleteStructures(groupId);
+  JSONObject jsonObject=getJSONObject(jsonFileName);
+  if (jsonObject != null) {
+    JSONArray assetsJSONArray=jsonObject.getJSONArray("assets");
+    if (assetsJSONArray != null) {
+      for (int i=0; i < assetsJSONArray.length(); i++) {
+        JSONObject assetJSONObject=assetsJSONArray.getJSONObject(i);
+        String assetName=assetJSONObject.getString("name");
+        String[] assetTagNames=new String[0];
+        JSONArray assetTagJSONArray=assetJSONObject.getJSONArray("tags");
+        if (assetTagJSONArray != null) {
+          assetTagNames=ArrayUtil.toStringArray(assetTagJSONArray);
+        }
+        _assetTagsMap.put(assetName,assetTagNames);
+      }
+    }
+  }
+  addDLFileEntries(_DL_DOCUMENTS_DIR_NAME);
+  addJournalArticles(StringPool.BLANK,StringPool.BLANK,_JOURNAL_ARTICLES_DIR_NAME);
+  addJournalStructures(StringPool.BLANK,_JOURNAL_STRUCTURES_DIR_NAME);
+  addJournalTemplates(StringPool.BLANK,_JOURNAL_TEMPLATES_DIR_NAME);
+}

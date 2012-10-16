@@ -1,16 +1,13 @@
 {
-  File file=new File(_resourcesDir,settingsName);
-  if (!file.exists() || file.isDirectory() || !file.canRead()) {
+  if (targetClassName.equals(Group.class.getName())) {
     return;
   }
-  InputStream inputStream=null;
-  try {
-    inputStream=new BufferedInputStream(new FileInputStream(file));
-    setupSettings(inputStream);
+  JSONObject jsonObject=getJSONObject(jsonFileName);
+  if (jsonObject == null) {
+    return;
   }
-  finally {
-    if (inputStream != null) {
-      inputStream.close();
-    }
-  }
+  LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(getTargetClassPK());
+  String layoutSetPrototypeSettings=jsonObject.getString("layoutSetPrototypeSettings",StringPool.BLANK);
+  layoutSetPrototype.setSettings(layoutSetPrototypeSettings);
+  LayoutSetPrototypeLocalServiceUtil.updateLayoutSetPrototype(layoutSetPrototype);
 }

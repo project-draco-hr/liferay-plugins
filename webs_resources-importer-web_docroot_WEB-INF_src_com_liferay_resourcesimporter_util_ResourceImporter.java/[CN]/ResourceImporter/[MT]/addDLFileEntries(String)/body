@@ -7,7 +7,8 @@
     if (resourcePath.endsWith(StringPool.SLASH)) {
       continue;
     }
-    String name=getName(resourcePath);
+    int pos=resourcePath.lastIndexOf(StringPool.SLASH);
+    String name=resourcePath.substring(pos + 1);
     URL url=servletContext.getResource(resourcePath);
     URLConnection urlConnection=url.openConnection();
     doAddDLFileEntries(name,urlConnection.getInputStream(),urlConnection.getContentLength());

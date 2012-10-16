@@ -1,16 +1,11 @@
 {
-  File file=new File(_resourcesDir,sitemapName);
-  if (!file.exists() || file.isDirectory() || !file.canRead()) {
+  LayoutLocalServiceUtil.deleteLayouts(groupId,privateLayout,new ServiceContext());
+  JSONObject jsonObject=getJSONObject(jsonFileName);
+  if (jsonObject == null) {
     return;
   }
-  InputStream inputStream=null;
-  try {
-    inputStream=new BufferedInputStream(new FileInputStream(file));
-    setupSitemap(inputStream);
-  }
-  finally {
-    if (inputStream != null) {
-      inputStream.close();
-    }
-  }
+  _defaultLayoutTemplateId=jsonObject.getString("layoutTemplateId",StringPool.BLANK);
+  updateLayoutSetThemeId(jsonObject);
+  JSONArray layoutsJSONArray=jsonObject.getJSONArray("layouts");
+  addLayouts(LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layoutsJSONArray);
 }
