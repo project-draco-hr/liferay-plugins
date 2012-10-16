@@ -1,0 +1,45 @@
+{
+  String destinationName="liferay/deploy_listener/" + context;
+  if (!MessageBusUtil.hasMessageListener(destinationName)) {
+    return true;
+  }
+  for (int i=0; i < PortletPropsValues.MESSAGE_MAX_ATTEMPTS; i++) {
+    Message message=new Message();
+    message.put(MESSAGE_KEY_COMMAND,command);
+    message.put(MESSAGE_KEY_CONTEXT,context);
+    try {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Send message " + i + " for context "+ context+ " with command "+ command);
+      }
+      Object response=MessageBusUtil.sendSynchronousMessage(destinationName,message,PortletPropsValues.MESSAGE_TIMEOUT);
+      if (_log.isDebugEnabled()) {
+        _log.debug("Message " + i + " for context "+ context+ " with command "+ command+ " received response "+ response);
+      }
+      if (response.equals(MESSAGE_RESPONSE_SKIP)) {
+        return false;
+      }
+ else       if (response.equals(MESSAGE_RESPONSE_SUCCESS)) {
+        return true;
+      }
+ else       if (response.equals(MESSAGE_RESPONSE_WAIT)) {
+        continue;
+      }
+ else {
+        return true;
+      }
+    }
+ catch (    MessageBusException mbe) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(mbe.getMessage());
+      }
+    }
+    try {
+      Thread.sleep(PortletPropsValues.MESSAGE_TIMEOUT);
+    }
+ catch (    InterruptedException ie) {
+      _log.error(ie,ie);
+      return true;
+    }
+  }
+  return true;
+}

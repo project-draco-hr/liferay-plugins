@@ -1,0 +1,20 @@
+{
+  if (processThread == null) {
+    processThread=new ProcessThread();
+    processThread.setCommand(command);
+    processThread.setMessage(message);
+    processThread.run();
+  }
+  if (Validator.isNotNull(processMessageResponse)) {
+    message.setPayload(processMessageResponse);
+    if (!processMessageResponse.equals(MESSAGE_RESPONSE_WAIT)) {
+      processMessageResponse=null;
+      processThread.join();
+      processThread=null;
+    }
+  }
+ else {
+    message.setPayload(MESSAGE_RESPONSE_WAIT);
+  }
+  MessageBusUtil.sendMessage(message.getResponseDestinationName(),message);
+}
