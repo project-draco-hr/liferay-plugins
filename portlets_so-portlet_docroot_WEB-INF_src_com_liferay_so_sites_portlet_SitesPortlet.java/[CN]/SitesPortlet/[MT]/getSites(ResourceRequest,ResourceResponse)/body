@@ -3,7 +3,6 @@
   int end=ParamUtil.getInteger(resourceRequest,"end",10);
   String keywords=DAOParamUtil.getLike(resourceRequest,"keywords");
   int maxResultSize=ParamUtil.getInteger(resourceRequest,"maxResultSize",10);
-  String name=ParamUtil.getString(resourceRequest,"keywords");
   String searchTab=ParamUtil.getString(resourceRequest,"searchTab");
   int start=ParamUtil.getInteger(resourceRequest,"start");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
@@ -37,7 +36,6 @@
     groupJSONObject.put("description",group.getDescription());
     groupJSONObject.put("name",group.getDescriptiveName(themeDisplay.getLocale()));
     if (group.hasPrivateLayouts() || group.hasPublicLayouts()) {
-      Layout layout=themeDisplay.getLayout();
       PortletURL portletURL=liferayPortletResponse.createActionURL(PortletKeys.SITE_REDIRECTOR);
       portletURL.setParameter("struts_action","/my_sites/view");
       portletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
@@ -47,7 +45,6 @@
     }
     boolean socialOfficeGroup=SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId());
     groupJSONObject.put("socialOfficeGroup",socialOfficeGroup);
-    Layout layout=themeDisplay.getLayout();
     PortletURL siteAssignmentsPortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
     siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
     siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");
