@@ -3,21 +3,10 @@
   JournalArticleLocalServiceUtil.deleteArticles(groupId);
   JournalTemplateLocalServiceUtil.deleteTemplates(groupId);
   JournalStructureLocalServiceUtil.deleteStructures(groupId);
-  JSONObject jsonObject=getJSONObject(jsonFileName);
+  JSONObject jsonObject=getJSONObject(fileName);
   if (jsonObject != null) {
     JSONArray assetsJSONArray=jsonObject.getJSONArray("assets");
-    if (assetsJSONArray != null) {
-      for (int i=0; i < assetsJSONArray.length(); i++) {
-        JSONObject assetJSONObject=assetsJSONArray.getJSONObject(i);
-        String assetName=assetJSONObject.getString("name");
-        String[] assetTagNames=new String[0];
-        JSONArray assetTagJSONArray=assetJSONObject.getJSONArray("tags");
-        if (assetTagJSONArray != null) {
-          assetTagNames=ArrayUtil.toStringArray(assetTagJSONArray);
-        }
-        _assetTagsMap.put(assetName,assetTagNames);
-      }
-    }
+    setupAssets(assetsJSONArray);
   }
   addDLFileEntries(_DL_DOCUMENTS_DIR_NAME);
   addJournalArticles(StringPool.BLANK,StringPool.BLANK,_JOURNAL_ARTICLES_DIR_NAME);
