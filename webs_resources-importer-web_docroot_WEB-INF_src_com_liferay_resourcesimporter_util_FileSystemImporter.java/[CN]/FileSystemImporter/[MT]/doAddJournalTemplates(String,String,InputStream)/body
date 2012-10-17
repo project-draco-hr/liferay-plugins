@@ -1,7 +1,8 @@
 {
+  String name=FileUtil.stripExtension(fileName);
   Map<Locale,String> nameMap=getNameMap(name);
   String xsl=StringUtil.read(inputStream);
-  setServiceContext(name);
+  setServiceContext(fileName);
   JournalTemplate journalTemplate=JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,StringPool.BLANK,true,journalStructureId,nameMap,null,xsl,true,JournalTemplateConstants.LANG_TYPE_VM,false,false,StringPool.BLANK,null,serviceContext);
   addJournalArticles(journalStructureId,journalTemplate.getTemplateId(),_JOURNAL_ARTICLES_DIR_NAME + name);
 }
