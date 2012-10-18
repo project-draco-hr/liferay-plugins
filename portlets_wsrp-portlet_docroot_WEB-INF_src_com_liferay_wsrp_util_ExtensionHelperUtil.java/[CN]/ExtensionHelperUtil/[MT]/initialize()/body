@@ -1,0 +1,16 @@
+{
+  String extensionHelperClassName=PortletProps.get(_EXTENSION_HELPER_IMPL_PROPERTY);
+  try {
+    if (Validator.isNotNull(extensionHelperClassName)) {
+      _extensionHelper=(ExtensionHelper)InstanceFactory.newInstance(extensionHelperClassName);
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Unable to initialize ExtensionHelper",e);
+    }
+  }
+  if (_extensionHelper == null) {
+    _extensionHelper=new AttributeBasedExtensionHelper();
+  }
+}

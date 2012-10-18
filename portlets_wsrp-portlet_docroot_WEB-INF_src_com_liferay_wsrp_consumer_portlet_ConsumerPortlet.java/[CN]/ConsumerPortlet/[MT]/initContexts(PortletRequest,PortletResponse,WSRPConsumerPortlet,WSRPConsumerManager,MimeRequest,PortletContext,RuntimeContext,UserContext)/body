@@ -11,13 +11,13 @@
   while (enu.hasMoreElements()) {
     String name=enu.nextElement();
     String value=request.getHeader(name);
-    ExtensionUtil.addMessageElement(clientAttributes,name,value);
+    ExtensionHelperUtil.addMessageElement(clientAttributes,name,value);
   }
-  ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_EMAIL_ADDRESS,user.getEmailAddress());
-  ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_SCREEN_NAME,user.getScreenName());
-  ExtensionUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_USER_ID,String.valueOf(user.getUserId()));
+  ExtensionHelperUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_EMAIL_ADDRESS,user.getEmailAddress());
+  ExtensionHelperUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_SCREEN_NAME,user.getScreenName());
+  ExtensionHelperUtil.addMessageElement(clientAttributes,HttpHeaders.LIFERAY_USER_ID,String.valueOf(user.getUserId()));
   ConsumerRequestExtensionsHelper.addClientAttributes(clientAttributes);
-  clientData.setExtensions(ExtensionUtil.getExtensions(clientAttributes));
+  clientData.setExtensions(ExtensionHelperUtil.getExtensions(clientAttributes));
   mimeRequest.setClientData(clientData);
   List<Locale> locales=Collections.list(portletRequest.getLocales());
   String[] localesArray=new String[locales.size()];
