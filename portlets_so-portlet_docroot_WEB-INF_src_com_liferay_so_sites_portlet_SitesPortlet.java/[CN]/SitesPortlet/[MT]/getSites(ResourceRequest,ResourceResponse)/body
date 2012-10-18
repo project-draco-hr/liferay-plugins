@@ -75,7 +75,9 @@
     }
  else     if (GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),group.getGroupId())) {
       siteAssignmentsPortletURL.setParameter("removeUserIds",String.valueOf(themeDisplay.getUserId()));
-      groupJSONObject.put("leaveUrl",siteAssignmentsPortletURL.toString());
+      if ((group.getType() != GroupConstants.TYPE_SITE_PRIVATE) || GroupPermissionUtil.contains(permissionChecker,group.getGroupId(),ActionKeys.ASSIGN_MEMBERS)) {
+        groupJSONObject.put("leaveUrl",siteAssignmentsPortletURL.toString());
+      }
     }
     if (GroupPermissionUtil.contains(permissionChecker,group.getGroupId(),ActionKeys.DELETE)) {
       PortletURL deletePortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
