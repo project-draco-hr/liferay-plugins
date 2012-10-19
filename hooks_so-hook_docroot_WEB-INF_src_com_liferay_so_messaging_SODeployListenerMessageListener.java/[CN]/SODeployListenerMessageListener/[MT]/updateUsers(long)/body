@@ -1,0 +1,12 @@
+{
+  List<User> users=UserLocalServiceUtil.getCompanyUsers(companyId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  Role role=RoleLocalServiceUtil.fetchRole(companyId,"Social Office User");
+  if (role == null) {
+    return;
+  }
+  for (  User user : users) {
+    if (UserLocalServiceUtil.hasRoleUser(companyId,role.getName(),user.getUserId(),true)) {
+      UserLocalServiceUtil.unsetRoleUsers(role.getRoleId(),new long[]{user.getUserId()});
+    }
+  }
+}

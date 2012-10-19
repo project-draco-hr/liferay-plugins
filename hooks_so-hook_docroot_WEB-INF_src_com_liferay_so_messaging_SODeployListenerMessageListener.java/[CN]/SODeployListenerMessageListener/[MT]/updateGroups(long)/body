@@ -1,0 +1,16 @@
+{
+  List<Group> groups=GroupLocalServiceUtil.getCompanyGroups(companyId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    if (!group.isRegularSite()) {
+      continue;
+    }
+    if (SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId())) {
+      if (group.hasPublicLayouts()) {
+        updateLayoutSetPrototype(LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false));
+      }
+      if (group.hasPrivateLayouts()) {
+        updateLayoutSetPrototype(LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true));
+      }
+    }
+  }
+}

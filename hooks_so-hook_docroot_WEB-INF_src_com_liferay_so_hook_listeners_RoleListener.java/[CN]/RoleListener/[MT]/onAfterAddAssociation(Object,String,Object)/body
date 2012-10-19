@@ -25,9 +25,7 @@
     }
     for (    User user : users) {
       Group userGroup=user.getGroup();
-      ExpandoBridge expandoBridge=userGroup.getExpandoBridge();
-      boolean socialOfficeEnabled=GetterUtil.getBoolean(expandoBridge.getAttribute("socialOfficeEnabled"));
-      if (socialOfficeEnabled) {
+      if (SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId())) {
         continue;
       }
       LayoutSetPrototypeUtil.updateLayoutSetPrototype(userGroup,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
