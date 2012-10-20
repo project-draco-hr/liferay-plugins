@@ -1,15 +1,22 @@
 {
-  List<Group> groups=GroupLocalServiceUtil.getCompanyGroups(companyId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-  for (  Group group : groups) {
-    if (!group.isRegularSite()) {
-      continue;
-    }
-    if (SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId())) {
-      if (group.hasPublicLayouts()) {
-        updateLayoutSetPrototype(LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),false));
+  int count=GroupLocalServiceUtil.getCompanyGroupsCount(companyId);
+  int pages=count / Indexer.DEFAULT_INTERVAL;
+  for (int i=0; i <= pages; i++) {
+    int start=(i * Indexer.DEFAULT_INTERVAL);
+    int end=start + Indexer.DEFAULT_INTERVAL;
+    List<Group> groups=GroupLocalServiceUtil.getCompanyGroups(companyId,start,end);
+    for (    Group group : groups) {
+      if (!group.isRegularSite()) {
+        continue;
+      }
+      if (!SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId())) {
+        continue;
       }
       if (group.hasPrivateLayouts()) {
-        updateLayoutSetPrototype(LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),true));
+        updateLayoutSetPrototype(group.getGroupId(),true);
+      }
+      if (group.hasPublicLayouts()) {
+        updateLayoutSetPrototype(group.getGroupId(),false);
       }
     }
   }
