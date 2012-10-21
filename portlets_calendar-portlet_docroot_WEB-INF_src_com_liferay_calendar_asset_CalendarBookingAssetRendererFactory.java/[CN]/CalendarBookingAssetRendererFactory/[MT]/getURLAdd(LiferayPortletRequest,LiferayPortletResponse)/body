@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  PortletURL addAssetURL=null;
+  long plid=LayoutConstants.DEFAULT_PLID;
+  try {
+    plid=PortalUtil.getPlidFromPortletId(themeDisplay.getScopeGroupId(),PortletKeys.CALENDAR);
+  }
+ catch (  Exception e) {
+  }
+  if (plid != LayoutConstants.DEFAULT_PLID) {
+    addAssetURL=liferayPortletResponse.createLiferayPortletURL(plid,PortletKeys.CALENDAR,PortletRequest.RENDER_PHASE);
+  }
+ else {
+    addAssetURL=liferayPortletResponse.createRenderURL(PortletKeys.CALENDAR);
+  }
+  addAssetURL.setParameter("mvcPath","/edit_calendar_booking.jsp");
+  return addAssetURL;
+}

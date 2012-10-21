@@ -1,0 +1,20 @@
+{
+  PortletURL viewPortletURL;
+  long plid=LayoutConstants.DEFAULT_PLID;
+  try {
+    plid=PortalUtil.getPlidFromPortletId(_calendarBooking.getGroupId(),PortletKeys.CALENDAR);
+  }
+ catch (  Exception e) {
+  }
+  if (plid != LayoutConstants.DEFAULT_PLID) {
+    viewPortletURL=liferayPortletResponse.createLiferayPortletURL(plid,PortletKeys.CALENDAR,PortletRequest.RENDER_PHASE);
+  }
+ else {
+    viewPortletURL=liferayPortletResponse.createRenderURL(PortletKeys.CALENDAR);
+  }
+  String redirect=PortalUtil.getCurrentCompleteURL(liferayPortletRequest.getHttpServletRequest());
+  viewPortletURL.setParameter("mvcPath","/view_calendar_booking.jsp");
+  viewPortletURL.setParameter("calendarBookingId",String.valueOf(_calendarBooking.getCalendarBookingId()));
+  viewPortletURL.setParameter("redirect",redirect);
+  return viewPortletURL.toString();
+}

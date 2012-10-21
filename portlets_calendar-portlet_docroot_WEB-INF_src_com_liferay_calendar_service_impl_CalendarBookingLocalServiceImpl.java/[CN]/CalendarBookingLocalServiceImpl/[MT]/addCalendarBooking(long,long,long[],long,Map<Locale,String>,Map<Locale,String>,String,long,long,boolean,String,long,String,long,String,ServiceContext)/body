@@ -42,6 +42,7 @@
   calendarBooking.setFirstReminderType(firstReminderType);
   calendarBooking.setSecondReminder(secondReminder);
   calendarBooking.setSecondReminderType(secondReminderType);
+  calendarBooking.setExpandoBridgeAttributes(serviceContext);
   int status=CalendarBookingWorkflowConstants.STATUS_PENDING;
   if (parentCalendarBookingId == 0) {
     status=CalendarBookingWorkflowConstants.STATUS_APPROVED;
@@ -50,6 +51,7 @@
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
+  updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId,serviceContext);
   return calendarBooking;
 }
