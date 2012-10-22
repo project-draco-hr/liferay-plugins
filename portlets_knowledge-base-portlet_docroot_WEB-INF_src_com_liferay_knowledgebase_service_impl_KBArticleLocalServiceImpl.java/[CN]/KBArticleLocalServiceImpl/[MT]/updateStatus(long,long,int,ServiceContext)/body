@@ -12,14 +12,14 @@
   kbArticle.setStatusByUserId(user.getUserId());
   kbArticle.setStatusByUserName(user.getFullName());
   kbArticle.setStatusDate(serviceContext.getModifiedDate(now));
-  kbArticlePersistence.update(kbArticle,false);
+  kbArticlePersistence.update(kbArticle);
   if (status != WorkflowConstants.STATUS_APPROVED) {
     return kbArticle;
   }
   if (!kbArticle.isFirstVersion()) {
     KBArticle oldKBArticle=kbArticlePersistence.findByR_V(resourcePrimKey,kbArticle.getVersion() - 1);
     oldKBArticle.setMain(false);
-    kbArticlePersistence.update(oldKBArticle,false);
+    kbArticlePersistence.update(oldKBArticle);
   }
   AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
   updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
