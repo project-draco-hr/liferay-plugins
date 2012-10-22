@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,attachment);
+    if (attachment.isCachedModel()) {
+      attachment=(Attachment)session.get(AttachmentImpl.class,attachment.getPrimaryKeyObj());
+    }
+    session.delete(attachment);
   }
  catch (  Exception e) {
     throw processException(e);

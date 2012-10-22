@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,calendarBooking);
+    if (calendarBooking.isCachedModel()) {
+      calendarBooking=(CalendarBooking)session.get(CalendarBookingImpl.class,calendarBooking.getPrimaryKeyObj());
+    }
+    session.delete(calendarBooking);
   }
  catch (  Exception e) {
     throw processException(e);

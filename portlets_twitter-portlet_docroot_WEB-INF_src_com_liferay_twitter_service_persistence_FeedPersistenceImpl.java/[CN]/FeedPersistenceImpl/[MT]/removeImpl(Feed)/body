@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,feed);
+    if (feed.isCachedModel()) {
+      feed=(Feed)session.get(FeedImpl.class,feed.getPrimaryKeyObj());
+    }
+    session.delete(feed);
   }
  catch (  Exception e) {
     throw processException(e);

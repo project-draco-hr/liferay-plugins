@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,projectsEntry);
+    if (projectsEntry.isCachedModel()) {
+      projectsEntry=(ProjectsEntry)session.get(ProjectsEntryImpl.class,projectsEntry.getPrimaryKeyObj());
+    }
+    session.delete(projectsEntry);
   }
  catch (  Exception e) {
     throw processException(e);

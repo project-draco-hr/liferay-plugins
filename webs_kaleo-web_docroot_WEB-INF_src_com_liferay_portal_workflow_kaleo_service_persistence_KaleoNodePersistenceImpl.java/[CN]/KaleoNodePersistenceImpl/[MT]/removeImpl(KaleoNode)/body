@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,kaleoNode);
+    if (kaleoNode.isCachedModel()) {
+      kaleoNode=(KaleoNode)session.get(KaleoNodeImpl.class,kaleoNode.getPrimaryKeyObj());
+    }
+    session.delete(kaleoNode);
   }
  catch (  Exception e) {
     throw processException(e);

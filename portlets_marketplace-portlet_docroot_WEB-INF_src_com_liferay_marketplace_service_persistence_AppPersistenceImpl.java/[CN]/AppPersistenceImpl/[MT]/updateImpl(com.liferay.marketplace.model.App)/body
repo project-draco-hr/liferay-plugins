@@ -1,0 +1,69 @@
+{
+  app=toUnwrappedModel(app);
+  boolean isNew=app.isNew();
+  AppModelImpl appModelImpl=(AppModelImpl)app;
+  if (Validator.isNull(app.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    app.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (app.isNew()) {
+      session.save(app);
+      app.setNew(false);
+    }
+ else {
+      session.merge(app);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew || !AppModelImpl.COLUMN_BITMASK_ENABLED) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if ((appModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{appModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+      args=new Object[]{appModelImpl.getUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+    }
+    if ((appModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{appModelImpl.getOriginalUuid(),Long.valueOf(appModelImpl.getOriginalCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,args);
+      args=new Object[]{appModelImpl.getUuid(),Long.valueOf(appModelImpl.getCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_C,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID_C,args);
+    }
+    if ((appModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(appModelImpl.getOriginalCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,args);
+      args=new Object[]{Long.valueOf(appModelImpl.getCompanyId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,args);
+    }
+  }
+  EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey(),app);
+  if (isNew) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(app.getRemoteAppId())},app);
+  }
+ else {
+    if ((appModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_REMOTEAPPID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(appModelImpl.getOriginalRemoteAppId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_REMOTEAPPID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,args);
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,new Object[]{Long.valueOf(app.getRemoteAppId())},app);
+    }
+  }
+  return app;
+}

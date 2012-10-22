@@ -1,0 +1,73 @@
+{
+  userThread=toUnwrappedModel(userThread);
+  boolean isNew=userThread.isNew();
+  UserThreadModelImpl userThreadModelImpl=(UserThreadModelImpl)userThread;
+  Session session=null;
+  try {
+    session=openSession();
+    if (userThread.isNew()) {
+      session.save(userThread);
+      userThread.setNew(false);
+    }
+ else {
+      session.merge(userThread);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew || !UserThreadModelImpl.COLUMN_BITMASK_ENABLED) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if ((userThreadModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MBTHREADID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(userThreadModelImpl.getOriginalMbThreadId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MBTHREADID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MBTHREADID,args);
+      args=new Object[]{Long.valueOf(userThreadModelImpl.getMbThreadId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MBTHREADID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MBTHREADID,args);
+    }
+    if ((userThreadModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(userThreadModelImpl.getOriginalUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,args);
+      args=new Object[]{Long.valueOf(userThreadModelImpl.getUserId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,args);
+    }
+    if ((userThreadModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_D.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(userThreadModelImpl.getOriginalUserId()),Boolean.valueOf(userThreadModelImpl.getOriginalDeleted())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_D,args);
+      args=new Object[]{Long.valueOf(userThreadModelImpl.getUserId()),Boolean.valueOf(userThreadModelImpl.getDeleted())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_D,args);
+    }
+    if ((userThreadModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_R_D.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(userThreadModelImpl.getOriginalUserId()),Boolean.valueOf(userThreadModelImpl.getOriginalRead()),Boolean.valueOf(userThreadModelImpl.getOriginalDeleted())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_R_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_R_D,args);
+      args=new Object[]{Long.valueOf(userThreadModelImpl.getUserId()),Boolean.valueOf(userThreadModelImpl.getRead()),Boolean.valueOf(userThreadModelImpl.getDeleted())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_R_D,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_R_D,args);
+    }
+  }
+  EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThread.getPrimaryKey(),userThread);
+  if (isNew) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_M,new Object[]{Long.valueOf(userThread.getUserId()),Long.valueOf(userThread.getMbThreadId())},userThread);
+  }
+ else {
+    if ((userThreadModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_U_M.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(userThreadModelImpl.getOriginalUserId()),Long.valueOf(userThreadModelImpl.getOriginalMbThreadId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_M,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_M,args);
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_M,new Object[]{Long.valueOf(userThread.getUserId()),Long.valueOf(userThread.getMbThreadId())},userThread);
+    }
+  }
+  return userThread;
+}

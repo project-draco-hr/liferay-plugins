@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,wsrpProducer);
+    if (wsrpProducer.isCachedModel()) {
+      wsrpProducer=(WSRPProducer)session.get(WSRPProducerImpl.class,wsrpProducer.getPrimaryKeyObj());
+    }
+    session.delete(wsrpProducer);
   }
  catch (  Exception e) {
     throw processException(e);

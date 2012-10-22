@@ -1,0 +1,39 @@
+{
+  akismetData=toUnwrappedModel(akismetData);
+  boolean isNew=akismetData.isNew();
+  AkismetDataModelImpl akismetDataModelImpl=(AkismetDataModelImpl)akismetData;
+  Session session=null;
+  try {
+    session=openSession();
+    if (akismetData.isNew()) {
+      session.save(akismetData);
+      akismetData.setNew(false);
+    }
+ else {
+      session.merge(akismetData);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew || !AkismetDataModelImpl.COLUMN_BITMASK_ENABLED) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  EntityCacheUtil.putResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,akismetData.getPrimaryKey(),akismetData);
+  if (isNew) {
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,new Object[]{Long.valueOf(akismetData.getMbMessageId())},akismetData);
+  }
+ else {
+    if ((akismetDataModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_MBMESSAGEID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(akismetDataModelImpl.getOriginalMbMessageId())};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MBMESSAGEID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,args);
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,new Object[]{Long.valueOf(akismetData.getMbMessageId())},akismetData);
+    }
+  }
+  return akismetData;
+}

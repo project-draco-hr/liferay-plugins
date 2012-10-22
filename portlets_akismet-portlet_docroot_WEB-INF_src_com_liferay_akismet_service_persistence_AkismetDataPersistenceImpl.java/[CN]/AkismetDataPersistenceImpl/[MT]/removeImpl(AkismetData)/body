@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,akismetData);
+    if (akismetData.isCachedModel()) {
+      akismetData=(AkismetData)session.get(AkismetDataImpl.class,akismetData.getPrimaryKeyObj());
+    }
+    session.delete(akismetData);
   }
  catch (  Exception e) {
     throw processException(e);

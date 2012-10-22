@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,type);
+    if (type.isCachedModel()) {
+      type=(Type)session.get(TypeImpl.class,type.getPrimaryKeyObj());
+    }
+    session.delete(type);
   }
  catch (  Exception e) {
     throw processException(e);

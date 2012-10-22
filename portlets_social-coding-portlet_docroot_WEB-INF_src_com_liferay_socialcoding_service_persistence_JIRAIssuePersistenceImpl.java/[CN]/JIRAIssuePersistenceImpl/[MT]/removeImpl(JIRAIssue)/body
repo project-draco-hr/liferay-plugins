@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,jiraIssue);
+    if (jiraIssue.isCachedModel()) {
+      jiraIssue=(JIRAIssue)session.get(JIRAIssueImpl.class,jiraIssue.getPrimaryKeyObj());
+    }
+    session.delete(jiraIssue);
   }
  catch (  Exception e) {
     throw processException(e);

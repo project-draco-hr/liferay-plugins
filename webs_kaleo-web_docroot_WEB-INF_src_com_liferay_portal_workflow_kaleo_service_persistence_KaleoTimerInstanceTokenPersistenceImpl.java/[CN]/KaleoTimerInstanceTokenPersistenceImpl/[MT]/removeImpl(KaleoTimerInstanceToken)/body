@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,kaleoTimerInstanceToken);
+    if (kaleoTimerInstanceToken.isCachedModel()) {
+      kaleoTimerInstanceToken=(KaleoTimerInstanceToken)session.get(KaleoTimerInstanceTokenImpl.class,kaleoTimerInstanceToken.getPrimaryKeyObj());
+    }
+    session.delete(kaleoTimerInstanceToken);
   }
  catch (  Exception e) {
     throw processException(e);

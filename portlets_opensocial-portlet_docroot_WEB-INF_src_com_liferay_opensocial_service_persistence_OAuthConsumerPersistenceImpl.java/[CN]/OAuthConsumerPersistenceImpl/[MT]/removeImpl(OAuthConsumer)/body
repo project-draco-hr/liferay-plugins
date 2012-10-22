@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,oAuthConsumer);
+    if (oAuthConsumer.isCachedModel()) {
+      oAuthConsumer=(OAuthConsumer)session.get(OAuthConsumerImpl.class,oAuthConsumer.getPrimaryKeyObj());
+    }
+    session.delete(oAuthConsumer);
   }
  catch (  Exception e) {
     throw processException(e);

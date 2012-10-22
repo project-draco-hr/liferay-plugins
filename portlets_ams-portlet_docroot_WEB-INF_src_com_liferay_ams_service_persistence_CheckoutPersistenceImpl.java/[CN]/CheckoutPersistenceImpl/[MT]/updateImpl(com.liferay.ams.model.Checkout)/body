@@ -1,0 +1,27 @@
+{
+  checkout=toUnwrappedModel(checkout);
+  boolean isNew=checkout.isNew();
+  Session session=null;
+  try {
+    session=openSession();
+    if (checkout.isNew()) {
+      session.save(checkout);
+      checkout.setNew(false);
+    }
+ else {
+      session.merge(checkout);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  EntityCacheUtil.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,checkout.getPrimaryKey(),checkout);
+  return checkout;
+}

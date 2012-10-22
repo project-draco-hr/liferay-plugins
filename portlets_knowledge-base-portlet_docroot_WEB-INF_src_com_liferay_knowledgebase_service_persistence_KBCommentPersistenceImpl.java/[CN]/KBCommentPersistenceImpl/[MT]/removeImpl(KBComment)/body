@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,kbComment);
+    if (kbComment.isCachedModel()) {
+      kbComment=(KBComment)session.get(KBCommentImpl.class,kbComment.getPrimaryKeyObj());
+    }
+    session.delete(kbComment);
   }
  catch (  Exception e) {
     throw processException(e);

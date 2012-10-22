@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,meetupsEntry);
+    if (meetupsEntry.isCachedModel()) {
+      meetupsEntry=(MeetupsEntry)session.get(MeetupsEntryImpl.class,meetupsEntry.getPrimaryKeyObj());
+    }
+    session.delete(meetupsEntry);
   }
  catch (  Exception e) {
     throw processException(e);

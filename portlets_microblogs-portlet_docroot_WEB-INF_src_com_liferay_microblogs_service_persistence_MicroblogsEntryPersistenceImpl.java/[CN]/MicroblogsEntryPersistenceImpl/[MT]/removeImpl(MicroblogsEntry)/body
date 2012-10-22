@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,microblogsEntry);
+    if (microblogsEntry.isCachedModel()) {
+      microblogsEntry=(MicroblogsEntry)session.get(MicroblogsEntryImpl.class,microblogsEntry.getPrimaryKeyObj());
+    }
+    session.delete(microblogsEntry);
   }
  catch (  Exception e) {
     throw processException(e);

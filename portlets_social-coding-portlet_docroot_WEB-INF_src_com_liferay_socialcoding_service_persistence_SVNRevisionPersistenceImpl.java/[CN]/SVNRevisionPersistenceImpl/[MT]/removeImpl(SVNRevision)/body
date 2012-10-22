@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,svnRevision);
+    if (svnRevision.isCachedModel()) {
+      svnRevision=(SVNRevision)session.get(SVNRevisionImpl.class,svnRevision.getPrimaryKeyObj());
+    }
+    session.delete(svnRevision);
   }
  catch (  Exception e) {
     throw processException(e);

@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,svnRepository);
+    if (svnRepository.isCachedModel()) {
+      svnRepository=(SVNRepository)session.get(SVNRepositoryImpl.class,svnRepository.getPrimaryKeyObj());
+    }
+    session.delete(svnRepository);
   }
  catch (  Exception e) {
     throw processException(e);

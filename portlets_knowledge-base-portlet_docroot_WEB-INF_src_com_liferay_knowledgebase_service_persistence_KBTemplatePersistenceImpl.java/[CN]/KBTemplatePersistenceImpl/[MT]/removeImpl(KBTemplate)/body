@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,kbTemplate);
+    if (kbTemplate.isCachedModel()) {
+      kbTemplate=(KBTemplate)session.get(KBTemplateImpl.class,kbTemplate.getPrimaryKeyObj());
+    }
+    session.delete(kbTemplate);
   }
  catch (  Exception e) {
     throw processException(e);

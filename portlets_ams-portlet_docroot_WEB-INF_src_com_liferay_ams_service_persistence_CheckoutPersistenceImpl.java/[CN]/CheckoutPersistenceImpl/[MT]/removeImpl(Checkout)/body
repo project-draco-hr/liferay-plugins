@@ -3,7 +3,10 @@
   Session session=null;
   try {
     session=openSession();
-    BatchSessionUtil.delete(session,checkout);
+    if (checkout.isCachedModel()) {
+      checkout=(Checkout)session.get(CheckoutImpl.class,checkout.getPrimaryKeyObj());
+    }
+    session.delete(checkout);
   }
  catch (  Exception e) {
     throw processException(e);
