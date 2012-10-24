@@ -1,0 +1,14 @@
+{
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  if (!cmd.equals(Constants.UPDATE)) {
+    return;
+  }
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(actionRequest,portletResource);
+  updatePreferences(actionRequest,preferences);
+  if (SessionErrors.isEmpty(actionRequest)) {
+    preferences.store();
+    LiferayPortletConfig liferayPortletConfig=(LiferayPortletConfig)portletConfig;
+    SessionMessages.add(actionRequest,liferayPortletConfig.getPortletId() + SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
+  }
+}
