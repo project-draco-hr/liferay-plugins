@@ -70,7 +70,9 @@
       newMessage.put("targetClassName",targetClassName);
       newMessage.put("targetClassPK",importer.getTargetClassPK());
       if (message.getResponseId() != null) {
-        newMessage.setPayload(importer.getTargetClassPK());
+        Map<String,Object> responseMap=new HashMap<String,Object>();
+        responseMap.put("groupId",importer.getTargetClassPK());
+        newMessage.setPayload(responseMap);
         newMessage.setResponseId(message.getResponseId());
       }
       MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
