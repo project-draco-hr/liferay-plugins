@@ -1,9 +1,8 @@
 {
-  ExtensionHelperUtil.initialize();
-  try {
-    WSRPConsumerPortletLocalServiceUtil.initWSRPConsumerPortlets();
-  }
- catch (  Exception e) {
-    _log.error("Unable to initialize WSRP consumer portlets",e);
-  }
+  _destination=new SerialDestination();
+  _destination.setName(DestinationNames.HOT_DEPLOY);
+  _destination.afterPropertiesSet();
+  MessageBusUtil.addDestination(_destination);
+  _hotDeployMessageListener=new HotDeployMessageListener();
+  _destination.register(_hotDeployMessageListener);
 }
