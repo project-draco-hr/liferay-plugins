@@ -29,10 +29,10 @@
   calendarBooking.setFirstReminderType(firstReminderType);
   calendarBooking.setSecondReminder(secondReminder);
   calendarBooking.setSecondReminderType(secondReminderType);
-  calendarBooking.setExpandoBridgeAttributes(serviceContext);
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
-  updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
+  calendarBooking=fetchCalendarBooking(calendarBookingId);
+  updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
   return calendarBooking;
 }
