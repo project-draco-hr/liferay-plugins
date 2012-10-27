@@ -1,4 +1,10 @@
 {
-  _hotDeployMessageListener=new HotDeployMessageListener();
+  _hotDeployMessageListener=new HotDeployMessageListener(ClpSerializer.getServletContextName()){
+    @Override protected void onDeploy() throws Exception {
+      ExtensionHelperUtil.initialize();
+      WSRPConsumerPortletLocalServiceUtil.initWSRPConsumerPortlets();
+    }
+  }
+;
   MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_hotDeployMessageListener);
 }
