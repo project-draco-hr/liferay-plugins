@@ -9,17 +9,13 @@
     return;
   }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
-  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.SITE_REDIRECTOR,themeDisplay.getPlid(),PortletRequest.RENDER_PHASE);
-  portletURL.setParameter("struts_action","/my_sites/view");
-  portletURL.setParameter("groupId",String.valueOf(groupId));
-  Group group=GroupLocalServiceUtil.getGroup(groupId);
-  portletURL.setParameter("privateLayout",String.valueOf(!group.hasPublicLayouts()));
-  portletURL.setWindowState(LiferayWindowState.NORMAL);
-  String createAccountURL=PortalUtil.getCreateAccountURL(PortalUtil.getHttpServletRequest(actionRequest),themeDisplay);
-  createAccountURL=HttpUtil.addParameter(createAccountURL,"redirect",portletURL.toString());
+  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.SO_NOTIFICATION,themeDisplay.getPlid(),PortletRequest.RENDER_PHASE);
+  portletURL.setParameter("mvcPath","/notifications/view.jsp");
+  portletURL.setParameter("p_p_state",WindowState.MAXIMIZED.toString());
+  serviceContext.setAttribute("redirectURL",portletURL.toString());
+  String createAccountURL=getCreateAccountURL(PortalUtil.getHttpServletRequest(actionRequest),themeDisplay);
   serviceContext.setAttribute("createAccountURL",createAccountURL);
   String loginURL=themeDisplay.getPortalURL() + themeDisplay.getURLSignIn();
-  loginURL=HttpUtil.addParameter(loginURL,"redirect",portletURL.toString());
   serviceContext.setAttribute("loginURL",loginURL);
   MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverUserIds,invitedRoleId,invitedTeamId,serviceContext);
   MemberRequestLocalServiceUtil.addMemberRequests(themeDisplay.getUserId(),groupId,receiverEmailAddresses,invitedRoleId,invitedTeamId,serviceContext);
