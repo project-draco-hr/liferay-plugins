@@ -10,28 +10,12 @@
     if (!themeId.equals("so_WAR_sotheme")) {
       continue;
     }
-    Layout layout=LayoutLocalServiceUtil.fetchFirstLayout(group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-    PortletPreferences portletPreferences=null;
-    if (layout.getLayoutType() instanceof LayoutTypePortlet) {
-      try {
-        portletPreferences=PortletPreferencesFactoryUtil.getLayoutPortletSetup(layout,_OLD_WELCOME_PORTLET_ID);
-      }
- catch (      Exception e) {
-      }
-    }
+    PortletPreferences portletPreferences=getPortletPreferences(group.getGroupId(),privateLayout);
     LayoutLocalServiceUtil.deleteLayouts(group.getGroupId(),privateLayout,new ServiceContext());
     LayoutSetPrototypeUtil.updateLayoutSetPrototype(group,privateLayout,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_SITE);
     layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),privateLayout);
     PortalClassInvoker.invoke(true,_mergeLayoutSetProtypeLayoutsMethodKey,group,layoutSet);
-    layout=LayoutLocalServiceUtil.fetchFirstLayout(group.getGroupId(),privateLayout,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-    if (portletPreferences != null) {
-      try {
-        PortletPreferences newPortletPreferences=PortletPreferencesFactoryUtil.getLayoutPortletSetup(layout,_NEW_WELCOME_PORTLET_ID);
-        newPortletPreferences.setValue(_NEW_WELCOME_PORTLET_ID,portletPreferences.getValue("message",StringPool.BLANK));
-      }
- catch (      Exception e) {
-      }
-    }
+    updatePortletPreferences(group.getGroupId(),privateLayout,portletPreferences);
     SocialOfficeUtil.enableSocialOffice(group);
   }
 }
