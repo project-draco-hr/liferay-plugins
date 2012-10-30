@@ -1,15 +1,9 @@
 {
-  _hotDeployMessageListener=new HotDeployMessageListener(ClpSerializer.getServletContextName()){
-    @Override protected void onDeploy() throws Exception {
-      verifyGadgets();
-      List<Company> companies=CompanyLocalServiceUtil.getCompanies();
-      for (      Company company : companies) {
-        PortletLocalServiceUtil.addPortletCategory(company.getCompanyId(),_GADGETS_CATEGORY);
-      }
-      GadgetLocalServiceUtil.initGadgets();
-      checkExpando();
-    }
+  verifyGadgets();
+  List<Company> companies=CompanyLocalServiceUtil.getCompanies();
+  for (  Company company : companies) {
+    PortletLocalServiceUtil.addPortletCategory(company.getCompanyId(),_GADGETS_CATEGORY);
   }
-;
-  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_hotDeployMessageListener);
+  GadgetLocalServiceUtil.initGadgets();
+  checkExpando();
 }
