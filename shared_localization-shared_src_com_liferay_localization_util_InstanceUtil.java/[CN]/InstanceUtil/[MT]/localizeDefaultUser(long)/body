@@ -1,0 +1,18 @@
+{
+  User user=UserLocalServiceUtil.getDefaultUser(companyId);
+  ExpandoBridge expandoBridge=user.getExpandoBridge();
+  String attributeName="localizationUpdated_" + PortletPropsValues.COMPANY_DEFAULT_LOCALE;
+  boolean localizationUpdated=GetterUtil.getBoolean(expandoBridge.getAttribute(attributeName,false));
+  if (localizationUpdated) {
+    return;
+  }
+  try {
+    expandoBridge.addAttribute(attributeName,ExpandoColumnConstants.BOOLEAN,Boolean.FALSE,false);
+  }
+ catch (  DuplicateColumnNameException dcne) {
+  }
+  expandoBridge.setAttribute(attributeName,Boolean.TRUE,false);
+  user.setLanguageId(PortletPropsValues.COMPANY_DEFAULT_LOCALE);
+  user.setTimeZoneId(PortletPropsValues.COMPANY_DEFAULT_TIME_ZONE);
+  UserLocalServiceUtil.updateUser(user);
+}
