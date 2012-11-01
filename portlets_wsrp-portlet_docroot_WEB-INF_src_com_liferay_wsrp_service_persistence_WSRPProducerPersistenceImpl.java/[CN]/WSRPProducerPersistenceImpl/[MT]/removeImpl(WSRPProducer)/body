@@ -6,7 +6,9 @@
     if (wsrpProducer.isCachedModel()) {
       wsrpProducer=(WSRPProducer)session.get(WSRPProducerImpl.class,wsrpProducer.getPrimaryKeyObj());
     }
-    session.delete(wsrpProducer);
+    if (wsrpProducer != null) {
+      session.delete(wsrpProducer);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(wsrpProducer);
+  if (wsrpProducer != null) {
+    clearCache(wsrpProducer);
+  }
   return wsrpProducer;
 }

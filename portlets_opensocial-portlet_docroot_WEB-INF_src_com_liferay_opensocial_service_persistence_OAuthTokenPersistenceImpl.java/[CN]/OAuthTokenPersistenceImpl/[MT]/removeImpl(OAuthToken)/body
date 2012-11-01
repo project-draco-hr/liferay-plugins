@@ -6,7 +6,9 @@
     if (oAuthToken.isCachedModel()) {
       oAuthToken=(OAuthToken)session.get(OAuthTokenImpl.class,oAuthToken.getPrimaryKeyObj());
     }
-    session.delete(oAuthToken);
+    if (oAuthToken != null) {
+      session.delete(oAuthToken);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(oAuthToken);
+  if (oAuthToken != null) {
+    clearCache(oAuthToken);
+  }
   return oAuthToken;
 }

@@ -6,7 +6,9 @@
     if (kaleoNotificationRecipient.isCachedModel()) {
       kaleoNotificationRecipient=(KaleoNotificationRecipient)session.get(KaleoNotificationRecipientImpl.class,kaleoNotificationRecipient.getPrimaryKeyObj());
     }
-    session.delete(kaleoNotificationRecipient);
+    if (kaleoNotificationRecipient != null) {
+      session.delete(kaleoNotificationRecipient);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoNotificationRecipient);
+  if (kaleoNotificationRecipient != null) {
+    clearCache(kaleoNotificationRecipient);
+  }
   return kaleoNotificationRecipient;
 }

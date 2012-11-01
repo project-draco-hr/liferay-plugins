@@ -6,7 +6,9 @@
     if (status.isCachedModel()) {
       status=(Status)session.get(StatusImpl.class,status.getPrimaryKeyObj());
     }
-    session.delete(status);
+    if (status != null) {
+      session.delete(status);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(status);
+  if (status != null) {
+    clearCache(status);
+  }
   return status;
 }

@@ -6,7 +6,9 @@
     if (kaleoTransition.isCachedModel()) {
       kaleoTransition=(KaleoTransition)session.get(KaleoTransitionImpl.class,kaleoTransition.getPrimaryKeyObj());
     }
-    session.delete(kaleoTransition);
+    if (kaleoTransition != null) {
+      session.delete(kaleoTransition);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoTransition);
+  if (kaleoTransition != null) {
+    clearCache(kaleoTransition);
+  }
   return kaleoTransition;
 }

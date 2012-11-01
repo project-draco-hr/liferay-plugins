@@ -6,7 +6,9 @@
     if (calendarResource.isCachedModel()) {
       calendarResource=(CalendarResource)session.get(CalendarResourceImpl.class,calendarResource.getPrimaryKeyObj());
     }
-    session.delete(calendarResource);
+    if (calendarResource != null) {
+      session.delete(calendarResource);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(calendarResource);
+  if (calendarResource != null) {
+    clearCache(calendarResource);
+  }
   return calendarResource;
 }

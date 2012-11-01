@@ -6,7 +6,9 @@
     if (message.isCachedModel()) {
       message=(Message)session.get(MessageImpl.class,message.getPrimaryKeyObj());
     }
-    session.delete(message);
+    if (message != null) {
+      session.delete(message);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(message);
+  if (message != null) {
+    clearCache(message);
+  }
   return message;
 }

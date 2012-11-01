@@ -6,7 +6,9 @@
     if (akismetData.isCachedModel()) {
       akismetData=(AkismetData)session.get(AkismetDataImpl.class,akismetData.getPrimaryKeyObj());
     }
-    session.delete(akismetData);
+    if (akismetData != null) {
+      session.delete(akismetData);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(akismetData);
+  if (akismetData != null) {
+    clearCache(akismetData);
+  }
   return akismetData;
 }

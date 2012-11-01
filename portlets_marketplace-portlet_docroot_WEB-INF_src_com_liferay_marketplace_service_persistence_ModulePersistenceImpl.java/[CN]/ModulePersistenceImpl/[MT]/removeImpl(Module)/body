@@ -6,7 +6,9 @@
     if (module.isCachedModel()) {
       module=(Module)session.get(ModuleImpl.class,module.getPrimaryKeyObj());
     }
-    session.delete(module);
+    if (module != null) {
+      session.delete(module);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(module);
+  if (module != null) {
+    clearCache(module);
+  }
   return module;
 }

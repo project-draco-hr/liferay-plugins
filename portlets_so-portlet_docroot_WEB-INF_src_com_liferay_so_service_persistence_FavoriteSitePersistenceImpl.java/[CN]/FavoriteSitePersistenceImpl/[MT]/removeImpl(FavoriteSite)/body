@@ -6,7 +6,9 @@
     if (favoriteSite.isCachedModel()) {
       favoriteSite=(FavoriteSite)session.get(FavoriteSiteImpl.class,favoriteSite.getPrimaryKeyObj());
     }
-    session.delete(favoriteSite);
+    if (favoriteSite != null) {
+      session.delete(favoriteSite);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(favoriteSite);
+  if (favoriteSite != null) {
+    clearCache(favoriteSite);
+  }
   return favoriteSite;
 }

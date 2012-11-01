@@ -6,7 +6,9 @@
     if (kaleoDefinition.isCachedModel()) {
       kaleoDefinition=(KaleoDefinition)session.get(KaleoDefinitionImpl.class,kaleoDefinition.getPrimaryKeyObj());
     }
-    session.delete(kaleoDefinition);
+    if (kaleoDefinition != null) {
+      session.delete(kaleoDefinition);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoDefinition);
+  if (kaleoDefinition != null) {
+    clearCache(kaleoDefinition);
+  }
   return kaleoDefinition;
 }

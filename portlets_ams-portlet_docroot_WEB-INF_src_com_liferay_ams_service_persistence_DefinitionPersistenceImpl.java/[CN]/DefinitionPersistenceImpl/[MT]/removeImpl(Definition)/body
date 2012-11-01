@@ -6,7 +6,9 @@
     if (definition.isCachedModel()) {
       definition=(Definition)session.get(DefinitionImpl.class,definition.getPrimaryKeyObj());
     }
-    session.delete(definition);
+    if (definition != null) {
+      session.delete(definition);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(definition);
+  if (definition != null) {
+    clearCache(definition);
+  }
   return definition;
 }

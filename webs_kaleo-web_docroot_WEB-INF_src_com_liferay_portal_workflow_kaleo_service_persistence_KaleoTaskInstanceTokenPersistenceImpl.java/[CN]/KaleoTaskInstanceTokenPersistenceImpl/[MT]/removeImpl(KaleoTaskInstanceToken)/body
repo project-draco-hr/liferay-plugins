@@ -6,7 +6,9 @@
     if (kaleoTaskInstanceToken.isCachedModel()) {
       kaleoTaskInstanceToken=(KaleoTaskInstanceToken)session.get(KaleoTaskInstanceTokenImpl.class,kaleoTaskInstanceToken.getPrimaryKeyObj());
     }
-    session.delete(kaleoTaskInstanceToken);
+    if (kaleoTaskInstanceToken != null) {
+      session.delete(kaleoTaskInstanceToken);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoTaskInstanceToken);
+  if (kaleoTaskInstanceToken != null) {
+    clearCache(kaleoTaskInstanceToken);
+  }
   return kaleoTaskInstanceToken;
 }

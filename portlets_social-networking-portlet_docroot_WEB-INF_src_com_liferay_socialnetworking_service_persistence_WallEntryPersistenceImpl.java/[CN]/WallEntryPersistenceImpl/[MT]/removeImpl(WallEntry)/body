@@ -6,7 +6,9 @@
     if (wallEntry.isCachedModel()) {
       wallEntry=(WallEntry)session.get(WallEntryImpl.class,wallEntry.getPrimaryKeyObj());
     }
-    session.delete(wallEntry);
+    if (wallEntry != null) {
+      session.delete(wallEntry);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(wallEntry);
+  if (wallEntry != null) {
+    clearCache(wallEntry);
+  }
   return wallEntry;
 }

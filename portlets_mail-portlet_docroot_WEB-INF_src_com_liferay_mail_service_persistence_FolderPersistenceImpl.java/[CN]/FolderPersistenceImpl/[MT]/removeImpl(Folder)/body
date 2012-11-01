@@ -6,7 +6,9 @@
     if (folder.isCachedModel()) {
       folder=(Folder)session.get(FolderImpl.class,folder.getPrimaryKeyObj());
     }
-    session.delete(folder);
+    if (folder != null) {
+      session.delete(folder);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(folder);
+  if (folder != null) {
+    clearCache(folder);
+  }
   return folder;
 }

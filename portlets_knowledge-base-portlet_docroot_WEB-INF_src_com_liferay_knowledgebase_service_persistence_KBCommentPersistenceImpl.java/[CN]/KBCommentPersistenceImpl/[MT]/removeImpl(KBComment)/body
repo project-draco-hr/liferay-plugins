@@ -6,7 +6,9 @@
     if (kbComment.isCachedModel()) {
       kbComment=(KBComment)session.get(KBCommentImpl.class,kbComment.getPrimaryKeyObj());
     }
-    session.delete(kbComment);
+    if (kbComment != null) {
+      session.delete(kbComment);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kbComment);
+  if (kbComment != null) {
+    clearCache(kbComment);
+  }
   return kbComment;
 }

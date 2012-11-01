@@ -6,7 +6,9 @@
     if (oAuthConsumer.isCachedModel()) {
       oAuthConsumer=(OAuthConsumer)session.get(OAuthConsumerImpl.class,oAuthConsumer.getPrimaryKeyObj());
     }
-    session.delete(oAuthConsumer);
+    if (oAuthConsumer != null) {
+      session.delete(oAuthConsumer);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(oAuthConsumer);
+  if (oAuthConsumer != null) {
+    clearCache(oAuthConsumer);
+  }
   return oAuthConsumer;
 }

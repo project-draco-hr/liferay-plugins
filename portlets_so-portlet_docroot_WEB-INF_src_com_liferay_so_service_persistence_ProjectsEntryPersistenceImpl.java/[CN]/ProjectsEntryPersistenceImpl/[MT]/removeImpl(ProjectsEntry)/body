@@ -6,7 +6,9 @@
     if (projectsEntry.isCachedModel()) {
       projectsEntry=(ProjectsEntry)session.get(ProjectsEntryImpl.class,projectsEntry.getPrimaryKeyObj());
     }
-    session.delete(projectsEntry);
+    if (projectsEntry != null) {
+      session.delete(projectsEntry);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(projectsEntry);
+  if (projectsEntry != null) {
+    clearCache(projectsEntry);
+  }
   return projectsEntry;
 }

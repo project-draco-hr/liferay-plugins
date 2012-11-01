@@ -6,7 +6,9 @@
     if (jiraAction.isCachedModel()) {
       jiraAction=(JIRAAction)session.get(JIRAActionImpl.class,jiraAction.getPrimaryKeyObj());
     }
-    session.delete(jiraAction);
+    if (jiraAction != null) {
+      session.delete(jiraAction);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(jiraAction);
+  if (jiraAction != null) {
+    clearCache(jiraAction);
+  }
   return jiraAction;
 }

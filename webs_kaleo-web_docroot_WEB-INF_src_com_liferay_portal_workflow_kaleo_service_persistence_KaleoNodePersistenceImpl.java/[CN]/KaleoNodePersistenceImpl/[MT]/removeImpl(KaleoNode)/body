@@ -6,7 +6,9 @@
     if (kaleoNode.isCachedModel()) {
       kaleoNode=(KaleoNode)session.get(KaleoNodeImpl.class,kaleoNode.getPrimaryKeyObj());
     }
-    session.delete(kaleoNode);
+    if (kaleoNode != null) {
+      session.delete(kaleoNode);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoNode);
+  if (kaleoNode != null) {
+    clearCache(kaleoNode);
+  }
   return kaleoNode;
 }

@@ -6,7 +6,9 @@
     if (type.isCachedModel()) {
       type=(Type)session.get(TypeImpl.class,type.getPrimaryKeyObj());
     }
-    session.delete(type);
+    if (type != null) {
+      session.delete(type);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(type);
+  if (type != null) {
+    clearCache(type);
+  }
   return type;
 }

@@ -6,7 +6,9 @@
     if (calendarBooking.isCachedModel()) {
       calendarBooking=(CalendarBooking)session.get(CalendarBookingImpl.class,calendarBooking.getPrimaryKeyObj());
     }
-    session.delete(calendarBooking);
+    if (calendarBooking != null) {
+      session.delete(calendarBooking);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(calendarBooking);
+  if (calendarBooking != null) {
+    clearCache(calendarBooking);
+  }
   return calendarBooking;
 }

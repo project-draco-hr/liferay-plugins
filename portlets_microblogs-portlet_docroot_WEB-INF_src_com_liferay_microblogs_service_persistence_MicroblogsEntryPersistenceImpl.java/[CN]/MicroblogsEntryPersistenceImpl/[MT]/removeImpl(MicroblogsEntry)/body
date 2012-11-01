@@ -6,7 +6,9 @@
     if (microblogsEntry.isCachedModel()) {
       microblogsEntry=(MicroblogsEntry)session.get(MicroblogsEntryImpl.class,microblogsEntry.getPrimaryKeyObj());
     }
-    session.delete(microblogsEntry);
+    if (microblogsEntry != null) {
+      session.delete(microblogsEntry);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(microblogsEntry);
+  if (microblogsEntry != null) {
+    clearCache(microblogsEntry);
+  }
   return microblogsEntry;
 }

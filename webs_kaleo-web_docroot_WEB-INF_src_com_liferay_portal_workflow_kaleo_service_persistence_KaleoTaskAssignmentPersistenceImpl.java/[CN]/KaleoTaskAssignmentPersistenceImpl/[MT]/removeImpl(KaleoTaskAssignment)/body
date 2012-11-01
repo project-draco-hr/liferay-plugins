@@ -6,7 +6,9 @@
     if (kaleoTaskAssignment.isCachedModel()) {
       kaleoTaskAssignment=(KaleoTaskAssignment)session.get(KaleoTaskAssignmentImpl.class,kaleoTaskAssignment.getPrimaryKeyObj());
     }
-    session.delete(kaleoTaskAssignment);
+    if (kaleoTaskAssignment != null) {
+      session.delete(kaleoTaskAssignment);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoTaskAssignment);
+  if (kaleoTaskAssignment != null) {
+    clearCache(kaleoTaskAssignment);
+  }
   return kaleoTaskAssignment;
 }

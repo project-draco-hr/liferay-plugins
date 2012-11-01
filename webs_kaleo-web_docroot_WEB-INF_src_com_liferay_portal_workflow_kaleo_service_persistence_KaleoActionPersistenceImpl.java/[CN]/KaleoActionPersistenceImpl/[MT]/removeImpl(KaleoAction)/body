@@ -6,7 +6,9 @@
     if (kaleoAction.isCachedModel()) {
       kaleoAction=(KaleoAction)session.get(KaleoActionImpl.class,kaleoAction.getPrimaryKeyObj());
     }
-    session.delete(kaleoAction);
+    if (kaleoAction != null) {
+      session.delete(kaleoAction);
+    }
   }
  catch (  Exception e) {
     throw processException(e);
@@ -14,6 +16,8 @@
  finally {
     closeSession(session);
   }
-  clearCache(kaleoAction);
+  if (kaleoAction != null) {
+    clearCache(kaleoAction);
+  }
   return kaleoAction;
 }
