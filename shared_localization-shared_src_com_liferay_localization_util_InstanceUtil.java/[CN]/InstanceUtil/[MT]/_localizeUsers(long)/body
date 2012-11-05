@@ -1,6 +1,6 @@
 {
-  User user=UserLocalServiceUtil.getDefaultUser(companyId);
-  ExpandoBridge expandoBridge=user.getExpandoBridge();
+  Company company=CompanyLocalServiceUtil.getCompany(companyId);
+  ExpandoBridge expandoBridge=company.getExpandoBridge();
   String attributeName="localizationUpdated_" + PortletPropsValues.COMPANY_DEFAULT_LOCALE;
   boolean localizationUpdated=GetterUtil.getBoolean(expandoBridge.getAttribute(attributeName,false));
   if (localizationUpdated) {
@@ -12,7 +12,17 @@
  catch (  DuplicateColumnNameException dcne) {
   }
   expandoBridge.setAttribute(attributeName,Boolean.TRUE,false);
-  user.setLanguageId(PortletPropsValues.COMPANY_DEFAULT_LOCALE);
-  user.setTimeZoneId(PortletPropsValues.COMPANY_DEFAULT_TIME_ZONE);
-  UserLocalServiceUtil.updateUser(user);
+  CompanyLocalServiceUtil.updateCompany(company);
+  int count=UserLocalServiceUtil.getCompanyUsersCount(companyId);
+  int pages=count / Indexer.DEFAULT_INTERVAL;
+  for (int i=0; i <= pages; i++) {
+    int start=(i * Indexer.DEFAULT_INTERVAL);
+    int end=start + Indexer.DEFAULT_INTERVAL;
+    List<User> users=UserLocalServiceUtil.getCompanyUsers(companyId,start,end);
+    for (    User user : users) {
+      user.setLanguageId(PortletPropsValues.COMPANY_DEFAULT_LOCALE);
+      user.setTimeZoneId(PortletPropsValues.COMPANY_DEFAULT_TIME_ZONE);
+      UserLocalServiceUtil.updateUser(user);
+    }
+  }
 }
