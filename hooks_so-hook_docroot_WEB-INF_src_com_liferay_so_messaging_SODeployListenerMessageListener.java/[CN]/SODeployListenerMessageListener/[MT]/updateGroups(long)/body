@@ -1,16 +1,12 @@
 {
-  int count=GroupLocalServiceUtil.getCompanyGroupsCount(companyId);
-  int pages=count / Indexer.DEFAULT_INTERVAL;
-  for (int i=0; i <= pages; i++) {
-    int start=(i * Indexer.DEFAULT_INTERVAL);
-    int end=start + Indexer.DEFAULT_INTERVAL;
-    List<Group> groups=GroupLocalServiceUtil.getCompanyGroups(companyId,start,end);
-    for (    Group group : groups) {
+  ActionableDynamicQuery actionableDynamicQuery=new GroupActionableDynamicQuery(){
+    @Override protected void performAction(    Object object) throws PortalException, SystemException {
+      Group group=(Group)object;
       if (!group.isRegularSite()) {
-        continue;
+        return;
       }
       if (!SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId())) {
-        continue;
+        return;
       }
       if (group.hasPrivateLayouts()) {
         updateLayoutSetPrototype(group.getGroupId(),true);
@@ -20,4 +16,7 @@
       }
     }
   }
+;
+  actionableDynamicQuery.setCompanyId(companyId);
+  actionableDynamicQuery.performActions();
 }

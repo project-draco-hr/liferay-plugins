@@ -1,25 +1,18 @@
 {
-  Class<?> clazz=getClass();
-  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KBArticle.class,clazz.getClassLoader());
-  Projection minKBArticleIdProjection=ProjectionFactoryUtil.min("kbArticleId");
-  Projection maxKBArticleIdProjection=ProjectionFactoryUtil.max("kbArticleId");
-  ProjectionList projectionList=ProjectionFactoryUtil.projectionList();
-  projectionList.add(minKBArticleIdProjection);
-  projectionList.add(maxKBArticleIdProjection);
-  dynamicQuery.setProjection(projectionList);
-  addReindexCriteria(dynamicQuery,companyId);
-  List<Object[]> results=KBArticleLocalServiceUtil.dynamicQuery(dynamicQuery);
-  Object[] minAndMaxKBArticleIds=results.get(0);
-  if ((minAndMaxKBArticleIds[0] == null) || (minAndMaxKBArticleIds[1] == null)) {
-    return;
+  final Collection<Document> documents=new ArrayList<Document>();
+  ActionableDynamicQuery actionableDynamicQuery=new KBArticleActionableDynamicQuery(){
+    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+      Property property=PropertyFactoryUtil.forName("status");
+      dynamicQuery.add(property.eq(WorkflowConstants.STATUS_APPROVED));
+    }
+    @Override protected void performAction(    Object object) throws PortalException {
+      KBArticle kbArticle=(KBArticle)object;
+      Document document=getDocument(kbArticle);
+      documents.add(document);
+    }
   }
-  long minKBArticleId=(Long)minAndMaxKBArticleIds[0];
-  long maxKBArticleId=(Long)minAndMaxKBArticleIds[1];
-  long startKBArticleId=minKBArticleId;
-  long endKBArticleId=startKBArticleId + DEFAULT_INTERVAL;
-  while (startKBArticleId <= maxKBArticleId) {
-    reindexKBArticles(companyId,startKBArticleId,endKBArticleId);
-    startKBArticleId=endKBArticleId;
-    endKBArticleId+=DEFAULT_INTERVAL;
-  }
+;
+  actionableDynamicQuery.setCompanyId(companyId);
+  actionableDynamicQuery.performActions();
+  SearchEngineUtil.updateDocuments(getSearchEngineId(),companyId,documents);
 }
