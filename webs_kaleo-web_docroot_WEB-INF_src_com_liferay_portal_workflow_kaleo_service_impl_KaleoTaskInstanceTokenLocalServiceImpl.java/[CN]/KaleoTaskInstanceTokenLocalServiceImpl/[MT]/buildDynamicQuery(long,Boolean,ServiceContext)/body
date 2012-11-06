@@ -1,7 +1,9 @@
 {
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(KaleoTaskInstanceToken.class,getClassLoader());
-  dynamicQuery.add(PropertyFactoryUtil.forName("companyId").eq(serviceContext.getCompanyId()));
-  dynamicQuery.add(PropertyFactoryUtil.forName("kaleoInstanceId").eq(kaleoInstanceId));
+  Property companyIdProperty=PropertyFactoryUtil.forName("companyId");
+  dynamicQuery.add(companyIdProperty.eq(serviceContext.getCompanyId()));
+  Property kaleoInstanceIdProperty=PropertyFactoryUtil.forName("kaleoInstanceId");
+  dynamicQuery.add(kaleoInstanceIdProperty.eq(kaleoInstanceId));
   addCompletedCriterion(dynamicQuery,completed);
   return dynamicQuery;
 }
