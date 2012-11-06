@@ -1,12 +1,12 @@
 {
   User user=userLocalService.getUserById(userId);
-  Date now=new Date();
   try {
     User receiverUser=userLocalService.getUserByEmailAddress(serviceContext.getCompanyId(),receiverEmailAddress);
     receiverUserId=receiverUser.getUserId();
   }
- catch (  Exception e) {
+ catch (  NoSuchUserException nsue) {
   }
+  Date now=new Date();
   long memberRequestId=counterLocalService.increment();
   MemberRequest memberRequest=memberRequestPersistence.create(memberRequestId);
   memberRequest.setGroupId(groupId);

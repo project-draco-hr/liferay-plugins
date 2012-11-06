@@ -1,17 +1,13 @@
 {
   PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(themeDisplay.getDefaultUser());
-  boolean guestViewableGroup=LayoutPermissionUtil.contains(permissionChecker,themeDisplay.getLayout(),themeDisplay.getControlPanelCategory(),true,ActionKeys.VIEW);
-  boolean guestViewableLayout=LayoutPermissionUtil.contains(permissionChecker,themeDisplay.getLayout(),false,ActionKeys.VIEW);
-  if (guestViewableGroup && guestViewableLayout) {
+  if (LayoutPermissionUtil.contains(permissionChecker,themeDisplay.getLayout(),themeDisplay.getControlPanelCategory(),true,ActionKeys.VIEW) && LayoutPermissionUtil.contains(permissionChecker,themeDisplay.getLayout(),false,ActionKeys.VIEW)) {
     return PortalUtil.getCreateAccountURL(request,themeDisplay);
   }
- else {
-    Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(),GroupConstants.GUEST);
-    PortletURL createAccountURL=PortletURLFactoryUtil.create(request,com.liferay.portal.util.PortletKeys.LOGIN,group.getDefaultPublicPlid(),PortletRequest.RENDER_PHASE);
-    createAccountURL.setWindowState(WindowState.MAXIMIZED);
-    createAccountURL.setPortletMode(PortletMode.VIEW);
-    createAccountURL.setParameter("saveLastPath","0");
-    createAccountURL.setParameter("struts_action","/login/create_account");
-    return createAccountURL.toString();
-  }
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(),GroupConstants.GUEST);
+  PortletURL createAccountURL=PortletURLFactoryUtil.create(request,com.liferay.portal.util.PortletKeys.LOGIN,group.getDefaultPublicPlid(),PortletRequest.RENDER_PHASE);
+  createAccountURL.setParameter("saveLastPath","0");
+  createAccountURL.setParameter("struts_action","/login/create_account");
+  createAccountURL.setPortletMode(PortletMode.VIEW);
+  createAccountURL.setWindowState(WindowState.MAXIMIZED);
+  return createAccountURL.toString();
 }
