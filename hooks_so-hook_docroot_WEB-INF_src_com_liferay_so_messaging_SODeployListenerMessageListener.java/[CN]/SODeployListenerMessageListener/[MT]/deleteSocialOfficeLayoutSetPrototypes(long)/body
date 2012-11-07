@@ -2,7 +2,7 @@
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(companyId,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_SITE);
   if (layoutSetPrototype != null) {
     try {
-      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype);
+      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype.getLayoutSetPrototypeId());
     }
  catch (    Exception e) {
       _log.error(e,e);
@@ -11,7 +11,7 @@
   layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(companyId,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
   if (layoutSetPrototype != null) {
     try {
-      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype);
+      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype.getLayoutSetPrototypeId());
     }
  catch (    Exception e) {
       _log.error(e,e);
@@ -20,10 +20,17 @@
   layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(companyId,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
   if (layoutSetPrototype != null) {
     try {
-      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype);
+      LayoutSetPrototypeLocalServiceUtil.deleteLayoutSetPrototype(layoutSetPrototype.getLayoutSetPrototypeId());
     }
  catch (    Exception e) {
       _log.error(e,e);
     }
+  }
+  try {
+    ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(companyId,LayoutSetPrototype.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY);
+    ExpandoValueLocalServiceUtil.deleteColumnValues(expandoColumn.getColumnId());
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
   }
 }
