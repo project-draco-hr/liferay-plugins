@@ -1,8 +1,8 @@
 {
-  settings=new Properties();
+  settingsProperties=new Properties();
   try {
     InputStream inputStream=null;
-    Class clazz=getClass();
+    Class<?> clazz=getClass();
     if (clazz.isAssignableFrom(FileSystemImporter.class)) {
       inputStream=new FileInputStream(resourcesDir.concat("settings.properties"));
     }
@@ -10,8 +10,8 @@
       inputStream=servletContext.getResourceAsStream(resourcesDir.concat("settings.properties"));
     }
     if (inputStream != null) {
-      String propertiesString=StringUtil.read(inputStream);
-      PropertiesUtil.load(settings,propertiesString);
+      String settingsString=StringUtil.read(inputStream);
+      PropertiesUtil.load(settingsProperties,settingsString);
     }
   }
  catch (  IOException e) {
