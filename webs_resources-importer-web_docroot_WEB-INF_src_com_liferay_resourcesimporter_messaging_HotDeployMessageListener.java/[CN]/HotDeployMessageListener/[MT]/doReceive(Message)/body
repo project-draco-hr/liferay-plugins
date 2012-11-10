@@ -11,11 +11,6 @@
   }
   Properties pluginProperties=getPluginProperties(servletContext);
   String targetClassName=pluginProperties.getProperty("resources-importer-target-class-name",LayoutSetPrototype.class.getName());
-  String targetValue=pluginProperties.getProperty("resources-importer-target-value");
-  if (Validator.isNull(targetValue)) {
-    targetValue=TextFormatter.format(servletContextName,TextFormatter.J);
-  }
-  String resourcesDir=pluginProperties.getProperty("resources-importer-external-dir");
   Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
   URL larURL=servletContext.getResource(_RESOURCES_DIR.concat("archive.lar"));
   List<Company> companies=CompanyLocalServiceUtil.getCompanies();
@@ -29,12 +24,14 @@
         URLConnection urlConnection=larURL.openConnection();
         larImporter.setLARInputStream(urlConnection.getInputStream());
         importer=larImporter;
+        importer.setResourcesDir(_RESOURCES_DIR);
       }
  else       if ((resourcePaths != null) && !resourcePaths.isEmpty()) {
         importer=getResourceImporter();
         importer.setResourcesDir(_RESOURCES_DIR);
       }
  else {
+        String resourcesDir=pluginProperties.getProperty("resources-importer-external-dir");
         if (Validator.isNotNull(resourcesDir)) {
           importer=getFileSystemImporter();
           importer.setResourcesDir(resourcesDir);
@@ -47,9 +44,15 @@
       importer.setServletContext(servletContext);
       importer.setServletContextName(servletContextName);
       importer.setTargetClassName(targetClassName);
+      String targetValue=pluginProperties.getProperty("resources-importer-target-value");
+      if (Validator.isNull(targetValue)) {
+        targetValue=TextFormatter.format(servletContextName,TextFormatter.J);
+      }
       importer.setTargetValue(targetValue);
       importer.afterPropertiesSet();
-      if (!PortletPropsValues.DEVELOPER_MODE_ENABLED && importer.isExisting()) {
+      Properties settings=importer.getSettings();
+      boolean overrideResources=GetterUtil.getBoolean(settings.getProperty("override-resources"));
+      if (!overrideResources && importer.isExisting()) {
         if (_log.isInfoEnabled()) {
           _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
         }
