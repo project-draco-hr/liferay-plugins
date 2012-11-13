@@ -5,7 +5,7 @@
   JSONObject assetJSONObject=_assetJSONObjectMap.get(fileName);
   Map<Locale,String> descriptionMap=null;
   if (assetJSONObject != null) {
-    String abstractSummary=assetJSONObject.getString("abstract_summary");
+    String abstractSummary=assetJSONObject.getString("abstractSummary");
     descriptionMap=getMap(abstractSummary);
   }
   String content=StringUtil.read(inputStream);
@@ -13,10 +13,10 @@
   boolean smallImage=false;
   String smallImageURL=StringPool.BLANK;
   if (assetJSONObject != null) {
-    String smallImageName=assetJSONObject.getString("small_image");
-    if (Validator.isNotNull(smallImageName)) {
+    String smallImageFileName=assetJSONObject.getString("smallImage");
+    if (Validator.isNotNull(smallImageFileName)) {
       smallImage=true;
-      FileEntry fileEntry=_fileEntries.get(smallImageName);
+      FileEntry fileEntry=_fileEntries.get(smallImageFileName);
       if (fileEntry != null) {
         smallImageURL=DLUtil.getPreviewURL(fileEntry,fileEntry.getFileVersion(),null,StringPool.BLANK);
       }
