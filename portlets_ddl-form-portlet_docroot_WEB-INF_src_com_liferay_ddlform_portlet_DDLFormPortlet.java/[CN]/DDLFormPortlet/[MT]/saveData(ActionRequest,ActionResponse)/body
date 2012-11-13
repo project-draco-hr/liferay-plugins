@@ -1,10 +1,7 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  long recordSetId=ParamUtil.getLong(actionRequest,"recordSetId");
-  validate(recordSetId,actionRequest);
-  DDLRecordSet recordSet=DDLRecordSetLocalServiceUtil.getRecordSet(recordSetId);
-  DDMStructure ddmStructure=recordSet.getDDMStructure();
-  ServiceContext serviceContext=ServiceContextFactory.getInstance(DDLRecord.class.getName(),actionRequest);
-  Fields fields=DDMUtil.getFields(ddmStructure.getStructureId(),serviceContext);
-  DDLRecordServiceUtil.addRecord(themeDisplay.getScopeGroupId(),recordSetId,0,fields,serviceContext);
+  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  long recordSetId=ParamUtil.getLong(uploadPortletRequest,"recordSetId");
+  validate(recordSetId,uploadPortletRequest);
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(DDLRecord.class.getName(),uploadPortletRequest);
+  DDLUtil.updateRecord(0,recordSetId,false,serviceContext);
 }
