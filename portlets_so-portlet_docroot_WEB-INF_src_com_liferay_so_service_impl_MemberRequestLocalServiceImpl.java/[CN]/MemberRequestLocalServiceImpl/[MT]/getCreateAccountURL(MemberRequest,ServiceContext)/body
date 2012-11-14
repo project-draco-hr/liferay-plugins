@@ -1,0 +1,13 @@
+{
+  String redirectURL=(String)serviceContext.getAttribute("redirectURL");
+  if (Validator.isNull(redirectURL)) {
+    redirectURL=serviceContext.getCurrentURL();
+  }
+  String createAccountURL=(String)serviceContext.getAttribute("createAccountURL");
+  if (Validator.isNull(createAccountURL)) {
+    createAccountURL=serviceContext.getPortalURL();
+  }
+  redirectURL=HttpUtil.addParameter(redirectURL,"key",memberRequest.getKey());
+  createAccountURL=HttpUtil.addParameter(createAccountURL,"redirect",redirectURL);
+  return createAccountURL;
+}
