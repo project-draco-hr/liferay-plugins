@@ -30,7 +30,14 @@
     localesArray=ArrayUtil.append(new String[]{locale.toString(),locale.getLanguage()},localesArray);
   }
   mimeRequest.setLocales(localesArray);
-  mimeRequest.setMarkupCharacterSets(_CHAR_SETS);
+  String[] markupCharacterSets=null;
+  if (Validator.isNotNull(wsrpConsumer.getMarkupCharacterSets())) {
+    markupCharacterSets=StringUtil.split(wsrpConsumer.getMarkupCharacterSets());
+  }
+ else {
+    markupCharacterSets=_CHAR_SETS;
+  }
+  mimeRequest.setMarkupCharacterSets(markupCharacterSets);
   mimeRequest.setMimeTypes(_MIME_TYPES);
   mimeRequest.setMode(getWSRPMode(portletRequest.getPortletMode()));
   mimeRequest.setWindowState(getWSRPWindowState(portletRequest.getWindowState()));
