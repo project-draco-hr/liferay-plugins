@@ -1,3 +1,17 @@
 {
-  return findByG_U(groupId,userId,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  FavoriteSite favoriteSite=fetchByG_U(groupId,userId);
+  if (favoriteSite == null) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("groupId=");
+    msg.append(groupId);
+    msg.append(", userId=");
+    msg.append(userId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchFavoriteSiteException(msg.toString());
+  }
+  return favoriteSite;
 }
