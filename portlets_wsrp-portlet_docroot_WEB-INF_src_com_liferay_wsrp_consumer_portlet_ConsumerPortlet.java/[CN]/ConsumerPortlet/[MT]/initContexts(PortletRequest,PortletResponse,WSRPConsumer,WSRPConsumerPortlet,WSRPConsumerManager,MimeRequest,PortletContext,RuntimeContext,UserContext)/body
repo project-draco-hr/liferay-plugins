@@ -32,7 +32,9 @@
   mimeRequest.setLocales(localesArray);
   String[] markupCharacterSets=null;
   if (Validator.isNotNull(wsrpConsumer.getMarkupCharacterSets())) {
-    markupCharacterSets=StringUtil.split(wsrpConsumer.getMarkupCharacterSets());
+    String markupCharacterSetsString=wsrpConsumer.getMarkupCharacterSets();
+    markupCharacterSetsString=MarkupCharacterSetsUtil.getSupportedMarkupCharacterSets(markupCharacterSetsString);
+    markupCharacterSets=StringUtil.split(markupCharacterSetsString);
   }
  else {
     markupCharacterSets=_CHAR_SETS;
