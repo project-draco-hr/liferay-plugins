@@ -1,6 +1,7 @@
 {
+  FinderPath finderPath=FINDER_PATH_COUNT_BY_KCN_KCPK_ACN;
   Object[] finderArgs=new Object[]{kaleoClassName,kaleoClassPK,assigneeClassName};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_KCN_KCPK_ACN,finderArgs,this);
+  Long count=(Long)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_COUNT_KALEOTASKASSIGNMENT_WHERE);
@@ -41,15 +42,13 @@
         qPos.add(assigneeClassName);
       }
       count=(Long)q.uniqueResult();
+      FinderCacheUtil.putResult(finderPath,finderArgs,count);
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(finderPath,finderArgs);
       throw processException(e);
     }
  finally {
-      if (count == null) {
-        count=Long.valueOf(0);
-      }
-      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KCN_KCPK_ACN,finderArgs,count);
       closeSession(session);
     }
   }

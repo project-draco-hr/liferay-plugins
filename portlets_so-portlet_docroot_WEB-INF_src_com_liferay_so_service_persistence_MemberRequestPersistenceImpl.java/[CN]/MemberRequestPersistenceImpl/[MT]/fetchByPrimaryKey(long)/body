@@ -5,22 +5,21 @@
   }
   if (memberRequest == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       memberRequest=(MemberRequest)session.get(MemberRequestImpl.class,Long.valueOf(memberRequestId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (memberRequest != null) {
         cacheResult(memberRequest);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequestId,_nullMemberRequest);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequestId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

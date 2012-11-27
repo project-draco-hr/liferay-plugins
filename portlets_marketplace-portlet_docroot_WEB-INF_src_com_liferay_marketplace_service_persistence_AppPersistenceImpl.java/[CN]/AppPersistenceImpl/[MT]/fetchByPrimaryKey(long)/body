@@ -5,22 +5,21 @@
   }
   if (app == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       app=(App)session.get(AppImpl.class,Long.valueOf(appId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (app != null) {
         cacheResult(app);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,appId,_nullApp);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,appId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

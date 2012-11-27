@@ -24,7 +24,6 @@
         query.append(_FINDER_COLUMN_KEY_KEY_2);
       }
     }
-    query.append(MemberRequestModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -35,36 +34,33 @@
         qPos.add(key);
       }
       List<MemberRequest> list=q.list();
-      result=list;
-      MemberRequest memberRequest=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,finderArgs,list);
       }
  else {
-        memberRequest=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("MemberRequestPersistenceImpl.fetchByKey(String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        MemberRequest memberRequest=list.get(0);
+        result=memberRequest;
         cacheResult(memberRequest);
         if ((memberRequest.getKey() == null) || !memberRequest.getKey().equals(key)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,finderArgs,memberRequest);
         }
       }
-      return memberRequest;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (MemberRequest)result;
-    }
+    return (MemberRequest)result;
   }
 }

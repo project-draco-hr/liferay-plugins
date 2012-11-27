@@ -11,7 +11,7 @@
     }
   }
   if (result == null) {
-    StringBundler query=new StringBundler(2);
+    StringBundler query=new StringBundler(3);
     query.append(_SQL_SELECT_APP_WHERE);
     query.append(_FINDER_COLUMN_REMOTEAPPID_REMOTEAPPID_2);
     String sql=query.toString();
@@ -22,36 +22,33 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(remoteAppId);
       List<App> list=q.list();
-      result=list;
-      App app=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,finderArgs,list);
       }
  else {
-        app=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("AppPersistenceImpl.fetchByRemoteAppId(long, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        App app=list.get(0);
+        result=app;
         cacheResult(app);
         if ((app.getRemoteAppId() != remoteAppId)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,finderArgs,app);
         }
       }
-      return app;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_REMOTEAPPID,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (App)result;
-    }
+    return (App)result;
   }
 }

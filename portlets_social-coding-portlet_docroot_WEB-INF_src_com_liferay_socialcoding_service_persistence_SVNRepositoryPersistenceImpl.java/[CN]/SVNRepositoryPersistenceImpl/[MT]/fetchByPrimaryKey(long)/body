@@ -5,22 +5,21 @@
   }
   if (svnRepository == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       svnRepository=(SVNRepository)session.get(SVNRepositoryImpl.class,Long.valueOf(svnRepositoryId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (svnRepository != null) {
         cacheResult(svnRepository);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepositoryId,_nullSVNRepository);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepositoryId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

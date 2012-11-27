@@ -25,7 +25,6 @@
         query.append(_FINDER_COLUMN_U_A_ADDRESS_2);
       }
     }
-    query.append(AccountModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -37,36 +36,33 @@
         qPos.add(address);
       }
       List<Account> list=q.list();
-      result=list;
-      Account account=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,list);
       }
  else {
-        account=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("AccountPersistenceImpl.fetchByU_A(long, String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        Account account=list.get(0);
+        result=account;
         cacheResult(account);
         if ((account.getUserId() != userId) || (account.getAddress() == null) || !account.getAddress().equals(address)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,account);
         }
       }
-      return account;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_A,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_A,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (Account)result;
-    }
+    return (Account)result;
   }
 }

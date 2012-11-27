@@ -15,7 +15,6 @@
     query.append(_SQL_SELECT_MESSAGE_WHERE);
     query.append(_FINDER_COLUMN_F_R_FOLDERID_2);
     query.append(_FINDER_COLUMN_F_R_REMOTEMESSAGEID_2);
-    query.append(MessageModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -25,36 +24,33 @@
       qPos.add(folderId);
       qPos.add(remoteMessageId);
       List<Message> list=q.list();
-      result=list;
-      Message message=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,list);
       }
  else {
-        message=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("MessagePersistenceImpl.fetchByF_R(long, long, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        Message message=list.get(0);
+        result=message;
         cacheResult(message);
         if ((message.getFolderId() != folderId) || (message.getRemoteMessageId() != remoteMessageId)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_R,finderArgs,message);
         }
       }
-      return message;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (Message)result;
-    }
+    return (Message)result;
   }
 }

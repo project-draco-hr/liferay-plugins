@@ -5,22 +5,21 @@
   }
   if (feed == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       feed=(Feed)session.get(FeedImpl.class,Long.valueOf(feedId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (feed != null) {
         cacheResult(feed);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId,_nullFeed);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

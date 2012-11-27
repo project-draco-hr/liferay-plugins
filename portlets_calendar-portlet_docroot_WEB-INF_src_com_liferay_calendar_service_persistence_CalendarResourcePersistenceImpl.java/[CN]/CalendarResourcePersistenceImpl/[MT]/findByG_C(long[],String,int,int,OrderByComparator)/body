@@ -1,13 +1,17 @@
 {
-  FinderPath finderPath=FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C;
+  if ((groupIds != null) && (groupIds.length == 1)) {
+    return findByG_C(groupIds[0],code,start,end,orderByComparator);
+  }
+  boolean pagination=true;
   Object[] finderArgs=null;
   if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
+    pagination=false;
     finderArgs=new Object[]{StringUtil.merge(groupIds),code};
   }
  else {
     finderArgs=new Object[]{StringUtil.merge(groupIds),code,start,end,orderByComparator};
   }
-  List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
+  List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C,finderArgs,this);
   if ((list != null) && !list.isEmpty()) {
     for (    CalendarResource calendarResource : list) {
       if (!ArrayUtil.contains(groupIds,calendarResource.getGroupId()) || !Validator.equals(code,calendarResource.getCode())) {
@@ -52,7 +56,7 @@
     if (orderByComparator != null) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
     }
- else {
+ else     if (pagination) {
       query.append(CalendarResourceModelImpl.ORDER_BY_JPQL);
     }
     String sql=query.toString();
@@ -67,19 +71,22 @@
       if (code != null) {
         qPos.add(code);
       }
-      list=(List<CalendarResource>)QueryUtil.list(q,getDialect(),start,end);
+      if (!pagination) {
+        list=(List<CalendarResource>)QueryUtil.list(q,getDialect(),start,end,false);
+        Collections.sort(list);
+        list=new UnmodifiableList<CalendarResource>(list);
+      }
+ else {
+        list=(List<CalendarResource>)QueryUtil.list(q,getDialect(),start,end);
+      }
+      cacheResult(list);
+      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C,finderArgs,list);
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_FIND_BY_G_C,finderArgs);
       throw processException(e);
     }
  finally {
-      if (list == null) {
-        FinderCacheUtil.removeResult(finderPath,finderArgs);
-      }
- else {
-        cacheResult(list);
-        FinderCacheUtil.putResult(finderPath,finderArgs,list);
-      }
       closeSession(session);
     }
   }

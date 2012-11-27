@@ -5,22 +5,21 @@
   }
   if (kaleoInstanceToken == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       kaleoInstanceToken=(KaleoInstanceToken)session.get(KaleoInstanceTokenImpl.class,Long.valueOf(kaleoInstanceTokenId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (kaleoInstanceToken != null) {
         cacheResult(kaleoInstanceToken);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(KaleoInstanceTokenModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceTokenImpl.class,kaleoInstanceTokenId,_nullKaleoInstanceToken);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(KaleoInstanceTokenModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceTokenImpl.class,kaleoInstanceTokenId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

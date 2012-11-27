@@ -35,7 +35,6 @@
         query.append(_FINDER_COLUMN_G_S_SERVICENAME_2);
       }
     }
-    query.append(OAuthConsumerModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -49,36 +48,33 @@
         qPos.add(serviceName);
       }
       List<OAuthConsumer> list=q.list();
-      result=list;
-      OAuthConsumer oAuthConsumer=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,list);
       }
  else {
-        oAuthConsumer=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("OAuthConsumerPersistenceImpl.fetchByG_S(String, String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        OAuthConsumer oAuthConsumer=list.get(0);
+        result=oAuthConsumer;
         cacheResult(oAuthConsumer);
         if ((oAuthConsumer.getGadgetKey() == null) || !oAuthConsumer.getGadgetKey().equals(gadgetKey) || (oAuthConsumer.getServiceName() == null)|| !oAuthConsumer.getServiceName().equals(serviceName)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,oAuthConsumer);
         }
       }
-      return oAuthConsumer;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_S,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_S,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (OAuthConsumer)result;
-    }
+    return (OAuthConsumer)result;
   }
 }

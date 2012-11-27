@@ -5,22 +5,21 @@
   }
   if (meetupsEntry == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       meetupsEntry=(MeetupsEntry)session.get(MeetupsEntryImpl.class,Long.valueOf(meetupsEntryId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (meetupsEntry != null) {
         cacheResult(meetupsEntry);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(MeetupsEntryModelImpl.ENTITY_CACHE_ENABLED,MeetupsEntryImpl.class,meetupsEntryId,_nullMeetupsEntry);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(MeetupsEntryModelImpl.ENTITY_CACHE_ENABLED,MeetupsEntryImpl.class,meetupsEntryId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

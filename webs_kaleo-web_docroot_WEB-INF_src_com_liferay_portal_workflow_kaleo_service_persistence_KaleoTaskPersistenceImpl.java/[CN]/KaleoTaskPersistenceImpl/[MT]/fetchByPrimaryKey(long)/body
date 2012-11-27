@@ -5,22 +5,21 @@
   }
   if (kaleoTask == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       kaleoTask=(KaleoTask)session.get(KaleoTaskImpl.class,Long.valueOf(kaleoTaskId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (kaleoTask != null) {
         cacheResult(kaleoTask);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTaskId,_nullKaleoTask);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(KaleoTaskModelImpl.ENTITY_CACHE_ENABLED,KaleoTaskImpl.class,kaleoTaskId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

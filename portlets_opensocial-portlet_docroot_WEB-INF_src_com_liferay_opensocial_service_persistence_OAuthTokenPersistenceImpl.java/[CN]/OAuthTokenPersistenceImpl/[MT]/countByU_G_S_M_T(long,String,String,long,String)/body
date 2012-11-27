@@ -1,6 +1,7 @@
 {
+  FinderPath finderPath=FINDER_PATH_COUNT_BY_U_G_S_M_T;
   Object[] finderArgs=new Object[]{userId,gadgetKey,serviceName,moduleId,tokenName};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_U_G_S_M_T,finderArgs,this);
+  Long count=(Long)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler(6);
     query.append(_SQL_COUNT_OAUTHTOKEN_WHERE);
@@ -57,15 +58,13 @@
         qPos.add(tokenName);
       }
       count=(Long)q.uniqueResult();
+      FinderCacheUtil.putResult(finderPath,finderArgs,count);
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(finderPath,finderArgs);
       throw processException(e);
     }
  finally {
-      if (count == null) {
-        count=Long.valueOf(0);
-      }
-      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_G_S_M_T,finderArgs,count);
       closeSession(session);
     }
   }

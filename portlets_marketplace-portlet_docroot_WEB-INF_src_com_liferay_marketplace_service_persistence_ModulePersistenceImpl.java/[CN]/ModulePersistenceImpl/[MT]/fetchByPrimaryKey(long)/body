@@ -5,22 +5,21 @@
   }
   if (module == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       module=(Module)session.get(ModuleImpl.class,Long.valueOf(moduleId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (module != null) {
         cacheResult(module);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId,_nullModule);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

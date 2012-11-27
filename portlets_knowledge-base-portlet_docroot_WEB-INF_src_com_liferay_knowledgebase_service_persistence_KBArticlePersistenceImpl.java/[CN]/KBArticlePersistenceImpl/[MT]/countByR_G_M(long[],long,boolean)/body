@@ -41,15 +41,13 @@
       qPos.add(groupId);
       qPos.add(main);
       count=(Long)q.uniqueResult();
+      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_R_G_M,finderArgs,count);
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_R_G_M,finderArgs);
       throw processException(e);
     }
  finally {
-      if (count == null) {
-        count=Long.valueOf(0);
-      }
-      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_R_G_M,finderArgs,count);
       closeSession(session);
     }
   }

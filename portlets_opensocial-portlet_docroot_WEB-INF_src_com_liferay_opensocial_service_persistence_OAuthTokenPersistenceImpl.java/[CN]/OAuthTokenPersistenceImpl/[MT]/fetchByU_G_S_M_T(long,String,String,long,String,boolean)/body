@@ -11,7 +11,7 @@
     }
   }
   if (result == null) {
-    StringBundler query=new StringBundler(6);
+    StringBundler query=new StringBundler(7);
     query.append(_SQL_SELECT_OAUTHTOKEN_WHERE);
     query.append(_FINDER_COLUMN_U_G_S_M_T_USERID_2);
     if (gadgetKey == null) {
@@ -66,36 +66,33 @@
         qPos.add(tokenName);
       }
       List<OAuthToken> list=q.list();
-      result=list;
-      OAuthToken oAuthToken=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,list);
       }
  else {
-        oAuthToken=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("OAuthTokenPersistenceImpl.fetchByU_G_S_M_T(long, String, String, long, String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        OAuthToken oAuthToken=list.get(0);
+        result=oAuthToken;
         cacheResult(oAuthToken);
         if ((oAuthToken.getUserId() != userId) || (oAuthToken.getGadgetKey() == null) || !oAuthToken.getGadgetKey().equals(gadgetKey)|| (oAuthToken.getServiceName() == null)|| !oAuthToken.getServiceName().equals(serviceName)|| (oAuthToken.getModuleId() != moduleId)|| (oAuthToken.getTokenName() == null)|| !oAuthToken.getTokenName().equals(tokenName)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,oAuthToken);
         }
       }
-      return oAuthToken;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (OAuthToken)result;
-    }
+    return (OAuthToken)result;
   }
 }

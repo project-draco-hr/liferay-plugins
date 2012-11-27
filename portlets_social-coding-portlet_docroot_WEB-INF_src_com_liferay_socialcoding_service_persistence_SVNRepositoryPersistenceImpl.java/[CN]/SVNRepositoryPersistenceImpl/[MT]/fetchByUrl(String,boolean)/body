@@ -24,7 +24,6 @@
         query.append(_FINDER_COLUMN_URL_URL_2);
       }
     }
-    query.append(SVNRepositoryModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -35,36 +34,33 @@
         qPos.add(url);
       }
       List<SVNRepository> list=q.list();
-      result=list;
-      SVNRepository svnRepository=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,list);
       }
  else {
-        svnRepository=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("SVNRepositoryPersistenceImpl.fetchByUrl(String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        SVNRepository svnRepository=list.get(0);
+        result=svnRepository;
         cacheResult(svnRepository);
         if ((svnRepository.getUrl() == null) || !svnRepository.getUrl().equals(url)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,svnRepository);
         }
       }
-      return svnRepository;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_URL,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_URL,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (SVNRepository)result;
-    }
+    return (SVNRepository)result;
   }
 }

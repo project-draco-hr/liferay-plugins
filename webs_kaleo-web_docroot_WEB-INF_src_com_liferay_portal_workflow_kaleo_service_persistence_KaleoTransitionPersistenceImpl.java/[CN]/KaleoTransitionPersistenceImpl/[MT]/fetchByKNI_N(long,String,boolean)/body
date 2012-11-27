@@ -25,7 +25,6 @@
         query.append(_FINDER_COLUMN_KNI_N_NAME_2);
       }
     }
-    query.append(KaleoTransitionModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -37,36 +36,33 @@
         qPos.add(name);
       }
       List<KaleoTransition> list=q.list();
-      result=list;
-      KaleoTransition kaleoTransition=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KNI_N,finderArgs,list);
       }
  else {
-        kaleoTransition=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("KaleoTransitionPersistenceImpl.fetchByKNI_N(long, String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        KaleoTransition kaleoTransition=list.get(0);
+        result=kaleoTransition;
         cacheResult(kaleoTransition);
         if ((kaleoTransition.getKaleoNodeId() != kaleoNodeId) || (kaleoTransition.getName() == null) || !kaleoTransition.getName().equals(name)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KNI_N,finderArgs,kaleoTransition);
         }
       }
-      return kaleoTransition;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KNI_N,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KNI_N,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (KaleoTransition)result;
-    }
+    return (KaleoTransition)result;
   }
 }

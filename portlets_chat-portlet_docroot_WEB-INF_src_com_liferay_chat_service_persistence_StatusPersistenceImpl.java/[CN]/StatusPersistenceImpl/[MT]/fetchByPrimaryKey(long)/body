@@ -5,22 +5,21 @@
   }
   if (status == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       status=(Status)session.get(StatusImpl.class,Long.valueOf(statusId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (status != null) {
         cacheResult(status);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId,_nullStatus);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

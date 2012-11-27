@@ -5,22 +5,21 @@
   }
   if (gadget == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       gadget=(Gadget)session.get(GadgetImpl.class,Long.valueOf(gadgetId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (gadget != null) {
         cacheResult(gadget);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId,_nullGadget);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

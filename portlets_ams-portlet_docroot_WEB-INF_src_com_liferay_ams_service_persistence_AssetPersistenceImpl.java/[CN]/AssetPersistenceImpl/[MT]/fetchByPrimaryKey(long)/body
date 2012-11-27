@@ -5,22 +5,21 @@
   }
   if (asset == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       asset=(Asset)session.get(AssetImpl.class,Long.valueOf(assetId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (asset != null) {
         cacheResult(asset);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,assetId,_nullAsset);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,assetId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

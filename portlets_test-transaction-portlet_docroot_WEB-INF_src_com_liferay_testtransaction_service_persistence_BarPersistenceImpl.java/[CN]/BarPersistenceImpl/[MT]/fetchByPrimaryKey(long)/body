@@ -5,22 +5,21 @@
   }
   if (bar == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       bar=(Bar)session.get(BarImpl.class,Long.valueOf(barId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (bar != null) {
         cacheResult(bar);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(BarModelImpl.ENTITY_CACHE_ENABLED,BarImpl.class,barId,_nullBar);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(BarModelImpl.ENTITY_CACHE_ENABLED,BarImpl.class,barId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

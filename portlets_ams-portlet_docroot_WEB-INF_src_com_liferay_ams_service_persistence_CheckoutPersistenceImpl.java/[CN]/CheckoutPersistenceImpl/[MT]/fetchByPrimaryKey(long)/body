@@ -5,22 +5,21 @@
   }
   if (checkout == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       checkout=(Checkout)session.get(CheckoutImpl.class,Long.valueOf(checkoutId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (checkout != null) {
         cacheResult(checkout);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,checkoutId,_nullCheckout);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,checkoutId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

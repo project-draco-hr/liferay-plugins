@@ -5,22 +5,21 @@
   }
   if (wsrpConsumer == null) {
     Session session=null;
-    boolean hasException=false;
     try {
       session=openSession();
       wsrpConsumer=(WSRPConsumer)session.get(WSRPConsumerImpl.class,Long.valueOf(wsrpConsumerId));
-    }
- catch (    Exception e) {
-      hasException=true;
-      throw processException(e);
-    }
- finally {
       if (wsrpConsumer != null) {
         cacheResult(wsrpConsumer);
       }
- else       if (!hasException) {
+ else {
         EntityCacheUtil.putResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,wsrpConsumerId,_nullWSRPConsumer);
       }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,wsrpConsumerId);
+      throw processException(e);
+    }
+ finally {
       closeSession(session);
     }
   }

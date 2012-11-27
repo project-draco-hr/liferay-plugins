@@ -1,6 +1,7 @@
 {
+  FinderPath finderPath=FINDER_PATH_COUNT_BY_KITI_C_B;
   Object[] finderArgs=new Object[]{kaleoInstanceTokenId,completed,blocking};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_KITI_C_B,finderArgs,this);
+  Long count=(Long)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_COUNT_KALEOTIMERINSTANCETOKEN_WHERE);
@@ -17,15 +18,13 @@
       qPos.add(completed);
       qPos.add(blocking);
       count=(Long)q.uniqueResult();
+      FinderCacheUtil.putResult(finderPath,finderArgs,count);
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(finderPath,finderArgs);
       throw processException(e);
     }
  finally {
-      if (count == null) {
-        count=Long.valueOf(0);
-      }
-      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KITI_C_B,finderArgs,count);
       closeSession(session);
     }
   }

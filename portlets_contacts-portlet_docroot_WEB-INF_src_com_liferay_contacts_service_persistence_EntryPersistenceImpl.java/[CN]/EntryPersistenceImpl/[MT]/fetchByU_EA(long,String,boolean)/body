@@ -25,7 +25,6 @@
         query.append(_FINDER_COLUMN_U_EA_EMAILADDRESS_2);
       }
     }
-    query.append(EntryModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -37,36 +36,33 @@
         qPos.add(emailAddress);
       }
       List<Entry> list=q.list();
-      result=list;
-      Entry entry=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,list);
       }
  else {
-        entry=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("EntryPersistenceImpl.fetchByU_EA(long, String, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        Entry entry=list.get(0);
+        result=entry;
         cacheResult(entry);
         if ((entry.getUserId() != userId) || (entry.getEmailAddress() == null) || !entry.getEmailAddress().equals(emailAddress)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,entry);
         }
       }
-      return entry;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (Entry)result;
-    }
+    return (Entry)result;
   }
 }

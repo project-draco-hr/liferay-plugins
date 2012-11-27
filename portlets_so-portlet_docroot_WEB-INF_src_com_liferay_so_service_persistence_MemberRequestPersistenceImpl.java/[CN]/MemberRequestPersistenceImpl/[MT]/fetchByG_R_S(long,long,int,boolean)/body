@@ -16,7 +16,6 @@
     query.append(_FINDER_COLUMN_G_R_S_GROUPID_2);
     query.append(_FINDER_COLUMN_G_R_S_RECEIVERUSERID_2);
     query.append(_FINDER_COLUMN_G_R_S_STATUS_2);
-    query.append(MemberRequestModelImpl.ORDER_BY_JPQL);
     String sql=query.toString();
     Session session=null;
     try {
@@ -27,36 +26,33 @@
       qPos.add(receiverUserId);
       qPos.add(status);
       List<MemberRequest> list=q.list();
-      result=list;
-      MemberRequest memberRequest=null;
       if (list.isEmpty()) {
         FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,list);
       }
  else {
-        memberRequest=list.get(0);
+        if ((list.size() > 1) && _log.isWarnEnabled()) {
+          _log.warn("MemberRequestPersistenceImpl.fetchByG_R_S(long, long, int, boolean) with parameters (" + StringUtil.merge(finderArgs) + ") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+        }
+        MemberRequest memberRequest=list.get(0);
+        result=memberRequest;
         cacheResult(memberRequest);
         if ((memberRequest.getGroupId() != groupId) || (memberRequest.getReceiverUserId() != receiverUserId) || (memberRequest.getStatus() != status)) {
           FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,memberRequest);
         }
       }
-      return memberRequest;
     }
  catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs);
       throw processException(e);
     }
  finally {
-      if (result == null) {
-        FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs);
-      }
       closeSession(session);
     }
   }
+  if (result instanceof List<?>) {
+    return null;
+  }
  else {
-    if (result instanceof List<?>) {
-      return null;
-    }
- else {
-      return (MemberRequest)result;
-    }
+    return (MemberRequest)result;
   }
 }
