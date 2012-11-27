@@ -1,0 +1,9 @@
+{
+  boolean pluginsSecurityManagerAllowed=ParamUtil.getBoolean(actionRequest,"pluginsSecurityManagerAllowed");
+  PortletPreferences preferences=PluginsSecurityManagerUtil.getPreferences();
+  preferences.setValue(PortletPropsKeys.PLUGINS_SECURITY_MANAGER_ALLOWED,String.valueOf(pluginsSecurityManagerAllowed));
+  preferences.store();
+  PluginsSecurityManagerUtil.togglePACL();
+  String redirect=PortalUtil.escapeRedirect(ParamUtil.getString(actionRequest,"redirect"));
+  actionResponse.sendRedirect(redirect);
+}
