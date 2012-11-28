@@ -8,22 +8,19 @@
   if (Validator.isNull(dirName) || !DLStoreUtil.hasDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName)) {
     return;
   }
+  long groupId=serviceContext.getScopeGroupId();
   String[] fileNames=DLStoreUtil.getFileNames(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
+  if (fileNames.length > 0) {
+    PortletFileRepositoryUtil.deletePortletFileEntries(groupId,kbArticle.getAttachmentsFolderId());
+  }
   for (  String fileName : fileNames) {
     InputStream inputStream=null;
-    String attachmentsDirName=kbArticle.getAttachmentsDirName();
-    String fullFileName=attachmentsDirName.concat(StringPool.SLASH).concat(FileUtil.getShortFileName(fileName));
     try {
       inputStream=DLStoreUtil.getFileAsStream(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-      if (!DLStoreUtil.hasDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName)) {
-        DLStoreUtil.addDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
-      }
-      DLStoreUtil.addFile(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fullFileName,inputStream);
+      String shortFileName=FileUtil.getShortFileName(fileName);
+      PortletFileRepositoryUtil.addPortletFileEntry(groupId,userId,PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName);
     }
- catch (    DuplicateFileException dfe) {
-      _log.error("File already exists for " + dfe.getMessage());
-    }
- finally {
+  finally {
       StreamUtil.cleanUp(inputStream);
     }
   }
