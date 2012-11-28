@@ -2,13 +2,12 @@
   Element kbArticleAttachmentsElement=rootElement.addElement("kb-article-attachments");
   kbArticleAttachmentsElement.addAttribute("resource-prim-key",String.valueOf(kbArticle.getResourcePrimKey()));
   String rootPath=getPortletPath(portletDataContext) + "/kbarticles/attachments/" + kbArticle.getResourcePrimKey();
-  for (  String fileName : kbArticle.getAttachmentsFileNames()) {
-    String shortFileName=FileUtil.getShortFileName(fileName);
-    String path=rootPath + StringPool.SLASH + shortFileName;
-    byte[] bytes=DLStoreUtil.getFileAsBytes(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+  List<FileEntry> attachmentsFileEntries=kbArticle.getAttachmentsFileEntries();
+  for (  FileEntry fileEntry : attachmentsFileEntries) {
+    String path=rootPath + StringPool.SLASH + fileEntry.getTitle();
     Element fileElement=kbArticleAttachmentsElement.addElement("file");
     fileElement.addAttribute("path",path);
-    fileElement.addAttribute("short-file-name",shortFileName);
-    portletDataContext.addZipEntry(path,bytes);
+    fileElement.addAttribute("file-name",fileEntry.getTitle());
+    portletDataContext.addZipEntry(path,fileEntry.getContentStream());
   }
 }

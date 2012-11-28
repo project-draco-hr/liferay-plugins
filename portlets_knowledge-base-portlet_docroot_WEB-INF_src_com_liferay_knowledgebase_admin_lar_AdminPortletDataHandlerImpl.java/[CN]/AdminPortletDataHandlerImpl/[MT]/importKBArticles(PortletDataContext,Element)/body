@@ -1,20 +1,12 @@
 {
-  long importId=CounterLocalServiceUtil.increment();
   Map<String,String> dirNames=new HashMap<String,String>();
-  try {
-    DLStoreUtil.addDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
-    importKBArticleAttachments(portletDataContext,importId,dirNames,rootElement);
-    List<Element> kbArticleElements=rootElement.elements("kb-article");
-    for (    Element kbArticleElement : kbArticleElements) {
-      String path=kbArticleElement.attributeValue("path");
-      if (!portletDataContext.isPathNotProcessed(path)) {
-        continue;
-      }
-      KBArticle kbArticle=(KBArticle)portletDataContext.getZipEntryAsObject(path);
-      importKBArticle(portletDataContext,dirNames,kbArticleElement,kbArticle);
+  List<Element> kbArticleElements=rootElement.elements("kb-article");
+  for (  Element kbArticleElement : kbArticleElements) {
+    String path=kbArticleElement.attributeValue("path");
+    if (!portletDataContext.isPathNotProcessed(path)) {
+      continue;
     }
-  }
-  finally {
-    DLStoreUtil.deleteDirectory(portletDataContext.getCompanyId(),CompanyConstants.SYSTEM,"knowledgebase/temp/import/" + importId);
+    KBArticle kbArticle=(KBArticle)portletDataContext.getZipEntryAsObject(path);
+    importKBArticle(portletDataContext,dirNames,kbArticleElement,kbArticle);
   }
 }
