@@ -1,9 +1,5 @@
 {
-  long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
-  String fileName=ParamUtil.getString(resourceRequest,"fileName");
-  KBArticle kbArticle=KBArticleServiceUtil.getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
-  String shortFileName=FileUtil.getShortFileName(fileName);
-  InputStream is=DLStoreUtil.getFileAsStream(kbArticle.getCompanyId(),CompanyConstants.SYSTEM,fileName);
-  String contentType=MimeTypesUtil.getContentType(fileName);
-  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,shortFileName,is,contentType);
+  long fileEntryId=ParamUtil.getLong(resourceRequest,"fileEntryId");
+  FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(fileEntryId);
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,fileEntry.getTitle(),fileEntry.getContentStream(),fileEntry.getMimeType());
 }
