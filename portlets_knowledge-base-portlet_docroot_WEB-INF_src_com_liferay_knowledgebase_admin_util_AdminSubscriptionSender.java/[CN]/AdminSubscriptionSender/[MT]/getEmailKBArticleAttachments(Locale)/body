@@ -1,15 +1,14 @@
 {
-  String[] fileNames=_kbArticle.getAttachmentsFileNames();
-  if (fileNames.length <= 0) {
+  List<FileEntry> attachmentsFileEntries=_kbArticle.getAttachmentsFileEntries();
+  if (attachmentsFileEntries.size() <= 0) {
     return StringPool.BLANK;
   }
-  StringBundler sb=new StringBundler(fileNames.length * 5);
-  for (  String fileName : fileNames) {
-    long kb=DLStoreUtil.getFileSize(companyId,CompanyConstants.SYSTEM,fileName);
-    sb.append(FileUtil.getShortFileName(fileName));
+  StringBundler sb=new StringBundler(attachmentsFileEntries.size() * 5);
+  for (  FileEntry fileEntry : attachmentsFileEntries) {
+    sb.append(fileEntry.getTitle());
     sb.append(" (");
-    sb.append(TextFormatter.formatStorageSize(kb,locale));
-    sb.append("k)");
+    sb.append(TextFormatter.formatStorageSize(fileEntry.getSize(),locale));
+    sb.append(")");
     sb.append("<br />");
   }
   return sb.toString();
