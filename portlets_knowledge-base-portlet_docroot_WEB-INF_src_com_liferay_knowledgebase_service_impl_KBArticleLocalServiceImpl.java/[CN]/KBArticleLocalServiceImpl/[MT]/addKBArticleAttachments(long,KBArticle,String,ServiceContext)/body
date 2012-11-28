@@ -8,17 +8,16 @@
   if (Validator.isNull(dirName) || !DLStoreUtil.hasDirectory(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName)) {
     return;
   }
-  long groupId=serviceContext.getScopeGroupId();
   String[] fileNames=DLStoreUtil.getFileNames(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName);
   if (fileNames.length > 0) {
-    PortletFileRepositoryUtil.deletePortletFileEntries(groupId,kbArticle.getAttachmentsFolderId());
+    PortletFileRepositoryUtil.deletePortletFileEntries(serviceContext.getScopeGroupId(),kbArticle.getAttachmentsFolderId());
   }
   for (  String fileName : fileNames) {
     InputStream inputStream=null;
     try {
       inputStream=DLStoreUtil.getFileAsStream(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
       String shortFileName=FileUtil.getShortFileName(fileName);
-      PortletFileRepositoryUtil.addPortletFileEntry(groupId,userId,PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName);
+      PortletFileRepositoryUtil.addPortletFileEntry(serviceContext.getScopeGroupId(),userId,PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName);
     }
   finally {
       StreamUtil.cleanUp(inputStream);
