@@ -13,9 +13,9 @@
   optionsJSONObject.put("start",start);
   jsonObject.put("options",optionsJSONObject);
   PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
-  String portletName=portletDisplay.getPortletName();
+  String portletId=portletDisplay.getId();
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  if (filterBy.equals(ContactsConstants.FILTER_BY_DEFAULT) && !portletName.equals(PortletKeys.MEMBERS)) {
+  if (filterBy.equals(ContactsConstants.FILTER_BY_DEFAULT) && !portletId.equals(PortletKeys.MEMBERS)) {
     List<BaseModel<?>> contacts=EntryLocalServiceUtil.searchUsersAndContacts(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords,start,end);
     int contactsCount=EntryLocalServiceUtil.searchUsersAndContactsCount(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
     jsonObject.put("count",contactsCount);
@@ -30,7 +30,7 @@
       jsonArray.put(contactJSONObject);
     }
   }
- else   if (filterBy.equals(ContactsConstants.FILTER_BY_TYPE_MY_CONTACTS) && !portletName.equals(PortletKeys.MEMBERS)) {
+ else   if (filterBy.equals(ContactsConstants.FILTER_BY_TYPE_MY_CONTACTS) && !portletId.equals(PortletKeys.MEMBERS)) {
     List<Entry> entries=EntryLocalServiceUtil.search(themeDisplay.getUserId(),keywords,start,end);
     int entriesCount=EntryLocalServiceUtil.searchCount(themeDisplay.getUserId(),keywords);
     jsonObject.put("count",entriesCount);
@@ -49,7 +49,7 @@
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_TYPE)) {
       params.put("socialRelationType",new Long[]{themeDisplay.getUserId(),ContactsUtil.getSocialRelationType(filterBy)});
     }
-    if (portletName.equals(PortletKeys.MEMBERS)) {
+    if (portletId.equals(PortletKeys.MEMBERS)) {
       params.put("usersGroups",group.getGroupId());
     }
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_GROUP)) {
