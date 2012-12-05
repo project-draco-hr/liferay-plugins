@@ -1,0 +1,15 @@
+{
+  if (jiraIssue.isNew()) {
+    Object[] args=new Object[]{jiraIssue.getKey()};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KEY,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,args,jiraIssue);
+  }
+ else {
+    JIRAIssueModelImpl jiraIssueModelImpl=(JIRAIssueModelImpl)jiraIssue;
+    if ((jiraIssueModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{jiraIssue.getKey()};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_KEY,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_KEY,args,jiraIssue);
+    }
+  }
+}

@@ -1,3 +1,11 @@
 {
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,new Object[]{jiraIssue.getKey()});
+  JIRAIssueModelImpl jiraIssueModelImpl=(JIRAIssueModelImpl)jiraIssue;
+  Object[] args=new Object[]{jiraIssue.getKey()};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KEY,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,args);
+  if ((jiraIssueModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_KEY.getColumnBitmask()) != 0) {
+    args=new Object[]{jiraIssueModelImpl.getOriginalKey()};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KEY,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KEY,args);
+  }
 }

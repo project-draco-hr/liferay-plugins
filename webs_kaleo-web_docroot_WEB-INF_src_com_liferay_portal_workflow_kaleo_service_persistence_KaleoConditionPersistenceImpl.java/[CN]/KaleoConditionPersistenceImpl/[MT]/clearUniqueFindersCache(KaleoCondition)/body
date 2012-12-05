@@ -1,3 +1,11 @@
 {
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,new Object[]{Long.valueOf(kaleoCondition.getKaleoNodeId())});
+  KaleoConditionModelImpl kaleoConditionModelImpl=(KaleoConditionModelImpl)kaleoCondition;
+  Object[] args=new Object[]{Long.valueOf(kaleoCondition.getKaleoNodeId())};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KALEONODEID,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,args);
+  if ((kaleoConditionModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_KALEONODEID.getColumnBitmask()) != 0) {
+    args=new Object[]{Long.valueOf(kaleoConditionModelImpl.getOriginalKaleoNodeId())};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_KALEONODEID,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_KALEONODEID,args);
+  }
 }

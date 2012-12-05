@@ -1,3 +1,11 @@
 {
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,new Object[]{Long.valueOf(akismetData.getMbMessageId())});
+  AkismetDataModelImpl akismetDataModelImpl=(AkismetDataModelImpl)akismetData;
+  Object[] args=new Object[]{Long.valueOf(akismetData.getMbMessageId())};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MBMESSAGEID,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,args);
+  if ((akismetDataModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_MBMESSAGEID.getColumnBitmask()) != 0) {
+    args=new Object[]{Long.valueOf(akismetDataModelImpl.getOriginalMbMessageId())};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MBMESSAGEID,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MBMESSAGEID,args);
+  }
 }

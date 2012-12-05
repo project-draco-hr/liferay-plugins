@@ -34,16 +34,7 @@
     }
   }
   EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folder.getPrimaryKey(),folder);
-  if (isNew) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{Long.valueOf(folder.getAccountId()),folder.getFullName()},folder);
-  }
- else {
-    if ((folderModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_F.getColumnBitmask()) != 0) {
-      Object[] args=new Object[]{Long.valueOf(folderModelImpl.getOriginalAccountId()),folderModelImpl.getOriginalFullName()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_F,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_F,args);
-      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_F,new Object[]{Long.valueOf(folder.getAccountId()),folder.getFullName()},folder);
-    }
-  }
+  clearUniqueFindersCache(folder);
+  cacheUniqueFindersCache(folder);
   return folder;
 }

@@ -1,0 +1,23 @@
+{
+  if (kbComment.isNew()) {
+    Object[] args=new Object[]{kbComment.getUuid(),Long.valueOf(kbComment.getGroupId())};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,args,kbComment);
+    args=new Object[]{Long.valueOf(kbComment.getUserId()),Long.valueOf(kbComment.getClassNameId()),Long.valueOf(kbComment.getClassPK())};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,args,kbComment);
+  }
+ else {
+    KBCommentModelImpl kbCommentModelImpl=(KBCommentModelImpl)kbComment;
+    if ((kbCommentModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{kbComment.getUuid(),Long.valueOf(kbComment.getGroupId())};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_UUID_G,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,args,kbComment);
+    }
+    if ((kbCommentModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_U_C_C.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{Long.valueOf(kbComment.getUserId()),Long.valueOf(kbComment.getClassNameId()),Long.valueOf(kbComment.getClassPK())};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_C_C,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_C_C,args,kbComment);
+    }
+  }
+}

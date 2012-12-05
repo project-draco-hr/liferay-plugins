@@ -1,3 +1,11 @@
 {
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_C,new Object[]{Long.valueOf(module.getAppId()),module.getContextName()});
+  ModuleModelImpl moduleModelImpl=(ModuleModelImpl)module;
+  Object[] args=new Object[]{Long.valueOf(module.getAppId()),module.getContextName()};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_C,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_C,args);
+  if ((moduleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_C.getColumnBitmask()) != 0) {
+    args=new Object[]{Long.valueOf(moduleModelImpl.getOriginalAppId()),moduleModelImpl.getOriginalContextName()};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_A_C,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_A_C,args);
+  }
 }

@@ -42,16 +42,7 @@
     }
   }
   EntityCacheUtil.putResult(MeetupsRegistrationModelImpl.ENTITY_CACHE_ENABLED,MeetupsRegistrationImpl.class,meetupsRegistration.getPrimaryKey(),meetupsRegistration);
-  if (isNew) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistration.getUserId()),Long.valueOf(meetupsRegistration.getMeetupsEntryId())},meetupsRegistration);
-  }
- else {
-    if ((meetupsRegistrationModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_U_ME.getColumnBitmask()) != 0) {
-      Object[] args=new Object[]{Long.valueOf(meetupsRegistrationModelImpl.getOriginalUserId()),Long.valueOf(meetupsRegistrationModelImpl.getOriginalMeetupsEntryId())};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_ME,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_ME,args);
-      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_ME,new Object[]{Long.valueOf(meetupsRegistration.getUserId()),Long.valueOf(meetupsRegistration.getMeetupsEntryId())},meetupsRegistration);
-    }
-  }
+  clearUniqueFindersCache(meetupsRegistration);
+  cacheUniqueFindersCache(meetupsRegistration);
   return meetupsRegistration;
 }

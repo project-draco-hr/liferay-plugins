@@ -206,23 +206,7 @@
     }
   }
   EntityCacheUtil.putResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticle.getPrimaryKey(),kbArticle);
-  if (isNew) {
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticle.getUuid(),Long.valueOf(kbArticle.getGroupId())},kbArticle);
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticle.getResourcePrimKey()),Integer.valueOf(kbArticle.getVersion())},kbArticle);
-  }
- else {
-    if ((kbArticleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
-      Object[] args=new Object[]{kbArticleModelImpl.getOriginalUuid(),Long.valueOf(kbArticleModelImpl.getOriginalGroupId())};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
-      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,new Object[]{kbArticle.getUuid(),Long.valueOf(kbArticle.getGroupId())},kbArticle);
-    }
-    if ((kbArticleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_R_V.getColumnBitmask()) != 0) {
-      Object[] args=new Object[]{Long.valueOf(kbArticleModelImpl.getOriginalResourcePrimKey()),Integer.valueOf(kbArticleModelImpl.getOriginalVersion())};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_V,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,args);
-      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,new Object[]{Long.valueOf(kbArticle.getResourcePrimKey()),Integer.valueOf(kbArticle.getVersion())},kbArticle);
-    }
-  }
+  clearUniqueFindersCache(kbArticle);
+  cacheUniqueFindersCache(kbArticle);
   return kbArticle;
 }

@@ -1,3 +1,11 @@
 {
-  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,new Object[]{Long.valueOf(favoriteSite.getGroupId()),Long.valueOf(favoriteSite.getUserId())});
+  FavoriteSiteModelImpl favoriteSiteModelImpl=(FavoriteSiteModelImpl)favoriteSite;
+  Object[] args=new Object[]{Long.valueOf(favoriteSite.getGroupId()),Long.valueOf(favoriteSite.getUserId())};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,args);
+  if ((favoriteSiteModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_G_U.getColumnBitmask()) != 0) {
+    args=new Object[]{Long.valueOf(favoriteSiteModelImpl.getOriginalGroupId()),Long.valueOf(favoriteSiteModelImpl.getOriginalUserId())};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G_U,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_U,args);
+  }
 }
