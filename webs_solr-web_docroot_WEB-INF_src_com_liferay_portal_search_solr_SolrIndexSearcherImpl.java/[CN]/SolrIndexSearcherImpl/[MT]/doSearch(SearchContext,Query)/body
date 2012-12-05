@@ -23,6 +23,12 @@
  else {
       solrQuery.addFacetField(facetConfiguration.getFieldName());
     }
+    String facetSort=FacetParams.FACET_SORT_COUNT;
+    String facetOrder=facetConfiguration.getOrder();
+    if (facetOrder.equals("OrderValueAsc")) {
+      facetSort=FacetParams.FACET_SORT_INDEX;
+    }
+    solrQuery.add("f." + facetConfiguration.getFieldName() + ".facet.sort",facetSort);
   }
   solrQuery.setFacetLimit(-1);
   QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
