@@ -2,10 +2,9 @@
   List<NotificationRecipient> notificationRecipients=_getNotificationRecipients(calendarBooking);
   for (  NotificationRecipient notificationRecipient : notificationRecipients) {
     User user=notificationRecipient.getUser();
-    java.util.Calendar now=CalendarFactoryUtil.getCalendar(user.getTimeZone(),user.getLocale());
+    java.util.Calendar now=CalendarFactoryUtil.getCalendar(TimeZoneUtil.getTimeZone(StringPool.UTC));
     long nowTime=now.getTimeInMillis();
-    java.util.Calendar startDate=CalendarFactoryUtil.getCalendar(user.getTimeZone(),user.getLocale());
-    long startTime=startDate.getTimeInMillis();
+    long startTime=calendarBooking.getStartDate();
     if (nowTime > startTime) {
       return;
     }
