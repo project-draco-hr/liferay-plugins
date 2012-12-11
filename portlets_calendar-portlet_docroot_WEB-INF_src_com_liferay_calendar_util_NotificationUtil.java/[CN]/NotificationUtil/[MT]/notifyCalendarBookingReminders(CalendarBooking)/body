@@ -17,7 +17,9 @@
  else     if (diff == (calendarBooking.getSecondReminder() / _CHECK_INTERVAL)) {
       notificationType=calendarBooking.getSecondReminderNotificationType();
     }
-    NotificationSender notificationSender=NotificationSenderFactory.getNotificationSender(notificationType.toString());
-    notificationSender.sendNotification(notificationRecipient,NotificationTemplateType.REMINDER,notificationTemplateContext);
+    if (notificationType != null) {
+      NotificationSender notificationSender=NotificationSenderFactory.getNotificationSender(notificationType.toString());
+      notificationSender.sendNotification(notificationRecipient,NotificationTemplateType.REMINDER,notificationTemplateContext);
+    }
   }
 }
