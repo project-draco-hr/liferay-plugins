@@ -1,6 +1,8 @@
 {
   Date now=new Date();
   List<CalendarBooking> calendarBookings=calendarBookingFinder.findByFutureReminders(now.getTime());
+  long endDate=now.getTime() + Time.MONTH;
+  calendarBookings=RecurrenceUtil.expandCalendarBookings(calendarBookings,now.getTime(),endDate,1);
   for (  CalendarBooking calendarBooking : calendarBookings) {
     try {
       NotificationUtil.notifyCalendarBookingReminders(calendarBooking);

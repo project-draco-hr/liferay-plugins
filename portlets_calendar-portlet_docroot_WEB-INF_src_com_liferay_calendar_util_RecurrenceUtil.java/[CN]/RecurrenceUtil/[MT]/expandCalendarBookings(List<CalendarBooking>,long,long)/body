@@ -1,29 +1,3 @@
 {
-  List<CalendarBooking> expandedCalendarBookings=new ArrayList<CalendarBooking>();
-  DateValue startDateValue=_toDateValue(startDate);
-  DateValue endDateValue=_toDateValue(endDate);
-  try {
-    for (    CalendarBooking calendarBooking : calendarBookings) {
-      if (!calendarBooking.isRecurring()) {
-        expandedCalendarBookings.add(calendarBooking);
-        continue;
-      }
-      RecurrenceIterator recurrenceIterator=RecurrenceIteratorFactory.createRecurrenceIterator(calendarBooking.getRecurrence(),_toDateValue(calendarBooking.getStartDate()),TimeUtils.utcTimezone());
-      while (recurrenceIterator.hasNext()) {
-        DateValue dateValue=recurrenceIterator.next();
-        if (dateValue.compareTo(startDateValue) < 0) {
-          continue;
-        }
-        if (dateValue.compareTo(endDateValue) > 0) {
-          break;
-        }
-        CalendarBooking clone=_copyCalendarBooking(calendarBooking,dateValue);
-        expandedCalendarBookings.add(clone);
-      }
-    }
-  }
- catch (  ParseException pe) {
-    _log.error("Unable to parse data ",pe);
-  }
-  return expandedCalendarBookings;
+  return expandCalendarBookings(calendarBookings,startDate,endDate,0);
 }
