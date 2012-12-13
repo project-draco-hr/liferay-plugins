@@ -1,18 +1,13 @@
 {
-  User user=userPersistence.findByPrimaryKey(userId);
   long calendarResourceId=counterLocalService.increment();
   if (Validator.isNull(className)) {
     className=CalendarResource.class.getName();
     classPK=calendarResourceId;
   }
   long classNameId=PortalUtil.getClassNameId(className);
-  long globalUserId=0;
   if (isGlobalResource(classNameId)) {
-    globalUserId=getGlobalResourceUserId(classNameId,classPK);
+    userId=getGlobalResourceUserId(classNameId,classPK);
     groupId=getGlobalResourceGroupId(serviceContext.getCompanyId());
-  }
-  if (globalUserId > 0) {
-    userId=globalUserId;
   }
   if (PortletPropsValues.CALENDAR_RESOURCE_FORCE_AUTOGENERATE_CODE || Validator.isNull(code)) {
     code=String.valueOf(calendarResourceId);
@@ -23,6 +18,7 @@
   }
   Date now=new Date();
   validate(groupId,classNameId,classPK,code);
+  User user=userPersistence.findByPrimaryKey(userId);
   CalendarResource calendarResource=calendarResourcePersistence.create(calendarResourceId);
   calendarResource.setUuid(serviceContext.getUuid());
   calendarResource.setGroupId(groupId);
