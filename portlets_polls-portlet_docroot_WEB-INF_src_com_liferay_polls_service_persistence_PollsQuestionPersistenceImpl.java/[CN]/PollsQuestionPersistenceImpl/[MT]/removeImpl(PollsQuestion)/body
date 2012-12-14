@@ -1,0 +1,23 @@
+{
+  pollsQuestion=toUnwrappedModel(pollsQuestion);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(pollsQuestion)) {
+      pollsQuestion=(PollsQuestion)session.get(PollsQuestionImpl.class,pollsQuestion.getPrimaryKeyObj());
+    }
+    if (pollsQuestion != null) {
+      session.delete(pollsQuestion);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (pollsQuestion != null) {
+    clearCache(pollsQuestion);
+  }
+  return pollsQuestion;
+}

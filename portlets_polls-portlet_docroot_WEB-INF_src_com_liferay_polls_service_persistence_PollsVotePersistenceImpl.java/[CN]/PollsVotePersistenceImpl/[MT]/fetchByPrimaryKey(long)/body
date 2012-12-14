@@ -1,0 +1,27 @@
+{
+  PollsVote pollsVote=(PollsVote)EntityCacheUtil.getResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,PollsVoteImpl.class,pollsVoteId);
+  if (pollsVote == _nullPollsVote) {
+    return null;
+  }
+  if (pollsVote == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      pollsVote=(PollsVote)session.get(PollsVoteImpl.class,Long.valueOf(pollsVoteId));
+      if (pollsVote != null) {
+        cacheResult(pollsVote);
+      }
+ else {
+        EntityCacheUtil.putResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,PollsVoteImpl.class,pollsVoteId,_nullPollsVote);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(PollsVoteModelImpl.ENTITY_CACHE_ENABLED,PollsVoteImpl.class,pollsVoteId);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return pollsVote;
+}

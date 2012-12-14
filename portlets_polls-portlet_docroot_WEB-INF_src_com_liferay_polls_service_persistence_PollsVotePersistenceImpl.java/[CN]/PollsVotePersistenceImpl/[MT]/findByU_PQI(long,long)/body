@@ -1,0 +1,17 @@
+{
+  PollsVote pollsVote=fetchByU_PQI(userId,pollsQuestionId);
+  if (pollsVote == null) {
+    StringBundler msg=new StringBundler(6);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("userId=");
+    msg.append(userId);
+    msg.append(", pollsQuestionId=");
+    msg.append(pollsQuestionId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchVoteException(msg.toString());
+  }
+  return pollsVote;
+}

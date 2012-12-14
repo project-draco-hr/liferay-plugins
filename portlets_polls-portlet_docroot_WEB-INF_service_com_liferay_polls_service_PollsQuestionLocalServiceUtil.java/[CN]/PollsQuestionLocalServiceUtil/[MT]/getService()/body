@@ -1,0 +1,13 @@
+{
+  if (_service == null) {
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),PollsQuestionLocalService.class.getName());
+    if (invokableLocalService instanceof PollsQuestionLocalService) {
+      _service=(PollsQuestionLocalService)invokableLocalService;
+    }
+ else {
+      _service=new PollsQuestionLocalServiceClp(invokableLocalService);
+    }
+    ReferenceRegistry.registerReference(PollsQuestionLocalServiceUtil.class,"_service");
+  }
+  return _service;
+}

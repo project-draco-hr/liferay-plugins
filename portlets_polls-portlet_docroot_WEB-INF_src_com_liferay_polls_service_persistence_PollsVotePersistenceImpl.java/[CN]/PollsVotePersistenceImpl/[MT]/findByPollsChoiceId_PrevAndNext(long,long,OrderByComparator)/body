@@ -1,0 +1,18 @@
+{
+  PollsVote pollsVote=findByPrimaryKey(pollsVoteId);
+  Session session=null;
+  try {
+    session=openSession();
+    PollsVote[] array=new PollsVoteImpl[3];
+    array[0]=getByPollsChoiceId_PrevAndNext(session,pollsVote,pollsChoiceId,orderByComparator,true);
+    array[1]=pollsVote;
+    array[2]=getByPollsChoiceId_PrevAndNext(session,pollsVote,pollsChoiceId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

@@ -1,0 +1,11 @@
+{
+  PollsChoiceModelImpl pollsChoiceModelImpl=(PollsChoiceModelImpl)pollsChoice;
+  Object[] args=new Object[]{Long.valueOf(pollsChoice.getPollsQuestionId()),pollsChoice.getName()};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PQI_N,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PQI_N,args);
+  if ((pollsChoiceModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_PQI_N.getColumnBitmask()) != 0) {
+    args=new Object[]{Long.valueOf(pollsChoiceModelImpl.getOriginalPollsQuestionId()),pollsChoiceModelImpl.getOriginalName()};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PQI_N,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PQI_N,args);
+  }
+}

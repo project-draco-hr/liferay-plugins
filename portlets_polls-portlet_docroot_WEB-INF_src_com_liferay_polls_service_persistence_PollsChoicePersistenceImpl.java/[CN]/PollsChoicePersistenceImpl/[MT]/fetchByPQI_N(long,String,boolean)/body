@@ -1,0 +1,65 @@
+{
+  Object[] finderArgs=new Object[]{pollsQuestionId,name};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_PQI_N,finderArgs,this);
+  }
+  if (result instanceof PollsChoice) {
+    PollsChoice pollsChoice=(PollsChoice)result;
+    if ((pollsQuestionId != pollsChoice.getPollsQuestionId()) || !Validator.equals(name,pollsChoice.getName())) {
+      result=null;
+    }
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(4);
+    query.append(_SQL_SELECT_POLLSCHOICE_WHERE);
+    query.append(_FINDER_COLUMN_PQI_N_POLLSQUESTIONID_2);
+    if (name == null) {
+      query.append(_FINDER_COLUMN_PQI_N_NAME_1);
+    }
+ else {
+      if (name.equals(StringPool.BLANK)) {
+        query.append(_FINDER_COLUMN_PQI_N_NAME_3);
+      }
+ else {
+        query.append(_FINDER_COLUMN_PQI_N_NAME_2);
+      }
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(pollsQuestionId);
+      if (name != null) {
+        qPos.add(name);
+      }
+      List<PollsChoice> list=q.list();
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PQI_N,finderArgs,list);
+      }
+ else {
+        PollsChoice pollsChoice=list.get(0);
+        result=pollsChoice;
+        cacheResult(pollsChoice);
+        if ((pollsChoice.getPollsQuestionId() != pollsQuestionId) || (pollsChoice.getName() == null) || !pollsChoice.getName().equals(name)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_PQI_N,finderArgs,pollsChoice);
+        }
+      }
+    }
+ catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_PQI_N,finderArgs);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  if (result instanceof List<?>) {
+    return null;
+  }
+ else {
+    return (PollsChoice)result;
+  }
+}
