@@ -1,28 +1,28 @@
 {
-  List<CalendarBooking> calendarBookings=CalendarBookingLocalServiceUtil.search(themeDisplay.getCompanyId(),new long[]{0,themeDisplay.getCompanyGroupId(),themeDisplay.getScopeGroupId()},calendarIds,new long[0],-1,null,startDate,endDate,true,statuses,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+  List<CalendarBooking> calendarBookings=CalendarBookingLocalServiceUtil.search(themeDisplay.getCompanyId(),new long[]{0,themeDisplay.getCompanyGroupId(),themeDisplay.getScopeGroupId()},calendarIds,new long[0],-1,null,startTime,endTime,true,statuses,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
   Map<Integer,Map<Integer,List<Integer>>> rulesMap=new HashMap<Integer,Map<Integer,List<Integer>>>();
   for (  CalendarBooking calendarBooking : calendarBookings) {
-    java.util.Calendar startDateJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartDate());
-    java.util.Calendar endDateJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getEndDate());
-    long days=JCalendarUtil.getDaysBetween(startDateJCalendar,endDateJCalendar);
+    java.util.Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartTime());
+    java.util.Calendar endTimeJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getEndTime());
+    long days=JCalendarUtil.getDaysBetween(startTimeJCalendar,endTimeJCalendar);
     for (int i=0; i <= days; i++) {
-      int year=startDateJCalendar.get(java.util.Calendar.YEAR);
+      int year=startTimeJCalendar.get(java.util.Calendar.YEAR);
       Map<Integer,List<Integer>> rulesMonth=rulesMap.get(year);
       if (rulesMonth == null) {
         rulesMonth=new HashMap<Integer,List<Integer>>();
         rulesMap.put(year,rulesMonth);
       }
-      int month=startDateJCalendar.get(java.util.Calendar.MONTH);
+      int month=startTimeJCalendar.get(java.util.Calendar.MONTH);
       List<Integer> rulesDay=rulesMonth.get(month);
       if (rulesDay == null) {
         rulesDay=new ArrayList<Integer>();
         rulesMonth.put(month,rulesDay);
       }
-      int day=startDateJCalendar.get(java.util.Calendar.DAY_OF_MONTH);
+      int day=startTimeJCalendar.get(java.util.Calendar.DAY_OF_MONTH);
       if (!rulesDay.contains(day)) {
         rulesDay.add(day);
       }
-      startDateJCalendar.add(java.util.Calendar.DATE,1);
+      startTimeJCalendar.add(java.util.Calendar.DATE,1);
     }
   }
   Set<Integer> years=rulesMap.keySet();

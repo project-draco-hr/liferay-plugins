@@ -5,9 +5,9 @@
   Map<Locale,String> titleMap=LocalizationUtil.getLocalizationMap(actionRequest,"title");
   Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(actionRequest,"description");
   String location=ParamUtil.getString(actionRequest,"location");
-  java.util.Calendar startDateJCalendar=getJCalendar(actionRequest,"startDate");
-  java.util.Calendar endDateJCalendar=getJCalendar(actionRequest,"endDate");
-  long oldStartDate=ParamUtil.getLong(actionRequest,"oldStartDate");
+  java.util.Calendar startTimeJCalendar=getJCalendar(actionRequest,"startTime");
+  java.util.Calendar endTimeJCalendar=getJCalendar(actionRequest,"endTime");
+  long oldStartTime=ParamUtil.getLong(actionRequest,"oldStartTime");
   boolean allDay=ParamUtil.getBoolean(actionRequest,"allDay");
   String recurrence=getRecurrence(actionRequest);
   long[] reminders=getReminders(actionRequest);
@@ -15,27 +15,27 @@
   int status=ParamUtil.getInteger(actionRequest,"status");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
   if (calendarBookingId <= 0) {
-    CalendarBooking calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startDateJCalendar.getTimeInMillis(),endDateJCalendar.getTimeInMillis(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],serviceContext);
+    CalendarBooking calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],serviceContext);
     calendarBookingId=calendarBooking.getCalendarBookingId();
   }
  else {
     boolean updateCalendarBookingInstance=ParamUtil.getBoolean(actionRequest,"updateCalendarBookingInstance");
     if (updateCalendarBookingInstance) {
       boolean allFollowing=ParamUtil.getBoolean(actionRequest,"allFollowing");
-      CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startDateJCalendar.getTimeInMillis(),endDateJCalendar.getTimeInMillis(),allDay,recurrence,allFollowing,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
+      CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,allFollowing,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
     }
  else {
       CalendarBooking calendarBooking=CalendarBookingServiceUtil.getCalendarBooking(calendarBookingId);
-      long duration=(endDateJCalendar.getTimeInMillis() - startDateJCalendar.getTimeInMillis());
-      long offset=(startDateJCalendar.getTimeInMillis() - oldStartDate);
-      CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,(calendarBooking.getStartDate() + offset),(calendarBooking.getStartDate() + offset + duration),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
+      long duration=(endTimeJCalendar.getTimeInMillis() - startTimeJCalendar.getTimeInMillis());
+      long offset=(startTimeJCalendar.getTimeInMillis() - oldStartTime);
+      CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,(calendarBooking.getStartTime() + offset),(calendarBooking.getStartTime() + offset + duration),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
     }
   }
   String redirect=ParamUtil.getString(actionRequest,"redirect");
   redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "calendarBookingId",calendarBookingId);
   redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "calendarId",calendarId);
-  redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "startDate");
-  redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "endDate");
+  redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "startTime");
+  redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "endTime");
   redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "allDay");
   redirect=HttpUtil.removeParameter(redirect,actionResponse.getNamespace() + "repeat");
   actionRequest.setAttribute(WebKeys.REDIRECT,redirect);
