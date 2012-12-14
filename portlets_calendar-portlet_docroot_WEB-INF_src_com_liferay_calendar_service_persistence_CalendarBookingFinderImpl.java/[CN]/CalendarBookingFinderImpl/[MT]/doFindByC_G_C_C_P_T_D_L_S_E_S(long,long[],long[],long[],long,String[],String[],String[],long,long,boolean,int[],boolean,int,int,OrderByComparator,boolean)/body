@@ -12,7 +12,7 @@
     sql=StringUtil.replace(sql,"[$GROUP_ID$]",getGroupIds(groupIds));
     sql=StringUtil.replace(sql,"[$CALENDAR_ID$]",getCalendarIds(calendarIds));
     sql=StringUtil.replace(sql,"[$CALENDAR_RESOURCE_ID$]",getCalendarResourceIds(calendarResourceIds));
-    sql=StringUtil.replace(sql,"[$DATE_RANGE$]",getDateRange(startDate,endDate,recurring));
+    sql=StringUtil.replace(sql,"[$DATE_RANGE$]",getDateRange(startTime,endTime,recurring));
     sql=StringUtil.replace(sql,"[$STATUS$]",getStatuses(statuses));
     if (parentCalendarBookingId < 0) {
       sql=StringUtil.replace(sql,"(parentCalendarBookingId = ?) AND",StringPool.BLANK);
@@ -43,13 +43,13 @@
     qPos.add(titles,2);
     qPos.add(descriptions,2);
     qPos.add(locations,2);
-    qPos.add(startDate);
-    qPos.add(startDate);
-    qPos.add(endDate);
-    qPos.add(endDate);
+    qPos.add(startTime);
+    qPos.add(startTime);
+    qPos.add(endTime);
+    qPos.add(endTime);
     if (recurring) {
-      qPos.add(endDate);
-      qPos.add(endDate);
+      qPos.add(endTime);
+      qPos.add(endTime);
     }
     if ((statuses != null) && (statuses.length > 0)) {
       qPos.add(statuses);

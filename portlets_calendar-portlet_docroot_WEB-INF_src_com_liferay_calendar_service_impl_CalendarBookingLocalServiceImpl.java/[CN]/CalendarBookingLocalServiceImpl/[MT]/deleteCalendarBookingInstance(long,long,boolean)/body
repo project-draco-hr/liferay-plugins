@@ -1,20 +1,20 @@
 {
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
-  java.util.Calendar newStartDateJCalendar=JCalendarUtil.getJCalendar(startDate);
-  java.util.Calendar oldStartDateJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartDate());
-  newStartDateJCalendar.set(java.util.Calendar.HOUR_OF_DAY,oldStartDateJCalendar.get(java.util.Calendar.HOUR_OF_DAY));
-  newStartDateJCalendar.set(java.util.Calendar.MINUTE,oldStartDateJCalendar.get(java.util.Calendar.MINUTE));
-  newStartDateJCalendar.set(java.util.Calendar.SECOND,oldStartDateJCalendar.get(java.util.Calendar.SECOND));
+  java.util.Calendar newStartTimeJCalendar=JCalendarUtil.getJCalendar(startTime);
+  java.util.Calendar oldStartTimeJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartTime());
+  newStartTimeJCalendar.set(java.util.Calendar.HOUR_OF_DAY,oldStartTimeJCalendar.get(java.util.Calendar.HOUR_OF_DAY));
+  newStartTimeJCalendar.set(java.util.Calendar.MINUTE,oldStartTimeJCalendar.get(java.util.Calendar.MINUTE));
+  newStartTimeJCalendar.set(java.util.Calendar.SECOND,oldStartTimeJCalendar.get(java.util.Calendar.SECOND));
   Recurrence recurrenceObj=calendarBooking.getRecurrenceObj();
   if (allFollowing) {
     if (recurrenceObj.getCount() > 0) {
       recurrenceObj.setCount(0);
     }
-    newStartDateJCalendar.add(java.util.Calendar.DATE,-1);
-    recurrenceObj.setUntilJCalendar(newStartDateJCalendar);
+    newStartTimeJCalendar.add(java.util.Calendar.DATE,-1);
+    recurrenceObj.setUntilJCalendar(newStartTimeJCalendar);
   }
  else {
-    recurrenceObj.addExceptionDate(newStartDateJCalendar);
+    recurrenceObj.addExceptionDate(newStartTimeJCalendar);
   }
   calendarBooking.setRecurrence(RecurrenceSerializer.serialize(recurrenceObj));
   calendarBookingPersistence.update(calendarBooking);

@@ -1,11 +1,11 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
-  java.util.Calendar startDateJCalendar=JCalendarUtil.getJCalendar(startDate);
-  java.util.Calendar endDateJCalendar=JCalendarUtil.getJCalendar(endDate);
+  java.util.Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(startTime);
+  java.util.Calendar endTimeJCalendar=JCalendarUtil.getJCalendar(endTime);
   if (allDay) {
-    startDateJCalendar=JCalendarUtil.toMidnightJCalendar(startDateJCalendar);
-    endDateJCalendar=JCalendarUtil.toLastHourJCalendar(endDateJCalendar);
+    startTimeJCalendar=JCalendarUtil.toMidnightJCalendar(startTimeJCalendar);
+    endTimeJCalendar=JCalendarUtil.toLastHourJCalendar(endTimeJCalendar);
   }
   if (firstReminder < secondReminder) {
     long originalSecondReminder=secondReminder;
@@ -13,7 +13,7 @@
     firstReminder=originalSecondReminder;
   }
   Date now=new Date();
-  validate(titleMap,startDateJCalendar,endDateJCalendar);
+  validate(titleMap,startTimeJCalendar,endTimeJCalendar);
   long calendarBookingId=counterLocalService.increment();
   CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
   calendarBooking.setUuid(serviceContext.getUuid());
@@ -34,8 +34,8 @@
   calendarBooking.setTitleMap(titleMap);
   calendarBooking.setDescriptionMap(descriptionMap);
   calendarBooking.setLocation(location);
-  calendarBooking.setStartDate(startDateJCalendar.getTimeInMillis());
-  calendarBooking.setEndDate(endDateJCalendar.getTimeInMillis());
+  calendarBooking.setStartTime(startTimeJCalendar.getTimeInMillis());
+  calendarBooking.setEndTime(endTimeJCalendar.getTimeInMillis());
   calendarBooking.setAllDay(allDay);
   calendarBooking.setRecurrence(recurrence);
   calendarBooking.setFirstReminder(firstReminder);
