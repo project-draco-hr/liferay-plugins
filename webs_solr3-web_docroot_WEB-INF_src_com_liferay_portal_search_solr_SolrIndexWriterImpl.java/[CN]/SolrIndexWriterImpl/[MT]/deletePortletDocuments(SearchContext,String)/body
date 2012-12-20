@@ -1,0 +1,29 @@
+{
+  try {
+    long companyId=searchContext.getCompanyId();
+    StringBundler sb=null;
+    if (companyId > 0) {
+      sb=new StringBundler(9);
+      sb.append(StringPool.PLUS);
+      sb.append(Field.COMPANY_ID);
+      sb.append(StringPool.COLON);
+      sb.append(companyId);
+      sb.append(StringPool.SPACE);
+    }
+    if (sb == null) {
+      sb=new StringBundler(4);
+    }
+    sb.append(StringPool.PLUS);
+    sb.append(Field.PORTLET_ID);
+    sb.append(StringPool.COLON);
+    sb.append(portletId);
+    _solrServer.deleteByQuery(sb.toString());
+    if (_commit) {
+      _solrServer.commit();
+    }
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+    throw new SearchException(e.getMessage());
+  }
+}

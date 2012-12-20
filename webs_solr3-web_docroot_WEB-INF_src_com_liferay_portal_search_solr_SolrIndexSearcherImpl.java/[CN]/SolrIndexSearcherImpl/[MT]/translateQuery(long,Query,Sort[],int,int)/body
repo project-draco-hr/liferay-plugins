@@ -1,0 +1,51 @@
+{
+  QueryConfig queryConfig=query.getQueryConfig();
+  SolrQuery solrQuery=new SolrQuery();
+  if (queryConfig.isHighlightEnabled()) {
+    solrQuery.setHighlight(true);
+    solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
+    solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
+    String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
+    String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
+    solrQuery.setParam("hl.fl",Field.CONTENT,localizedContentName,Field.TITLE,localizedTitleName);
+  }
+  solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
+  QueryTranslatorUtil.translateForSolr(query);
+  String queryString=query.toString();
+  StringBundler sb=new StringBundler(6);
+  sb.append(queryString);
+  sb.append(StringPool.SPACE);
+  sb.append(StringPool.PLUS);
+  sb.append(Field.COMPANY_ID);
+  sb.append(StringPool.COLON);
+  sb.append(companyId);
+  solrQuery.setQuery(sb.toString());
+  if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+    solrQuery.setRows(0);
+  }
+ else {
+    solrQuery.setRows(end - start);
+    solrQuery.setStart(start);
+  }
+  if (sorts != null) {
+    for (    Sort sort : sorts) {
+      if (sort == null) {
+        continue;
+      }
+      String sortFieldName=sort.getFieldName();
+      if (DocumentImpl.isSortableTextField(sortFieldName)) {
+        sortFieldName=DocumentImpl.getSortableFieldName(sortFieldName);
+      }
+      ORDER order=ORDER.asc;
+      if (Validator.isNull(sortFieldName) || !sortFieldName.endsWith("sortable")) {
+        sortFieldName="score";
+        order=ORDER.desc;
+      }
+      if (sort.isReverse()) {
+        order=ORDER.desc;
+      }
+      solrQuery.addSortField(sortFieldName,order);
+    }
+  }
+  return solrQuery;
+}
