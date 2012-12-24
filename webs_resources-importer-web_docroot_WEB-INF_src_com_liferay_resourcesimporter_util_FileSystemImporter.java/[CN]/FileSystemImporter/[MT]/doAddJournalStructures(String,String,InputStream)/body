@@ -4,9 +4,10 @@
   Map<Locale,String> nameMap=getMap(name);
   String xsd=StringUtil.read(inputStream);
   setServiceContext(fileName);
-  JournalStructure journalStructure=JournalStructureLocalServiceUtil.addStructure(userId,groupId,journalStructureId,false,parentStructureId,nameMap,null,xsd,serviceContext);
-  addJournalTemplates(journalStructure.getStructureId(),_JOURNAL_TEMPLATES_DIR_NAME + name);
+  long classNameId=PortalUtil.getClassNameId(JournalArticle.class);
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentStructureId,classNameId,journalStructureId,nameMap,null,xsd,StorageType.XML.getValue(),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  addJournalTemplates(ddmStructure.getStructureKey(),_JOURNAL_TEMPLATES_DIR_NAME + name);
   if (Validator.isNull(parentStructureId)) {
-    addJournalStructures(journalStructure.getStructureId(),_JOURNAL_STRUCTURES_DIR_NAME + name);
+    addJournalStructures(ddmStructure.getStructureKey(),_JOURNAL_STRUCTURES_DIR_NAME + name);
   }
 }

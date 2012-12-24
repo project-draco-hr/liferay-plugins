@@ -5,6 +5,9 @@
   String xsl=StringUtil.read(inputStream);
   xsl=replaceFileEntryURL(xsl);
   setServiceContext(fileName);
-  JournalTemplate journalTemplate=JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,journalTemplateId,false,journalStructureId,nameMap,null,xsl,true,JournalTemplateConstants.LANG_TYPE_VM,false,false,StringPool.BLANK,null,serviceContext);
-  addJournalArticles(journalStructureId,journalTemplate.getTemplateId(),_JOURNAL_ARTICLES_DIR_NAME + name);
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,journalStructureId);
+  long classNameId=PortalUtil.getClassNameId(DDMStructure.class);
+  long classPK=ddmStructure.getStructureId();
+  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,classPK,journalTemplateId,nameMap,null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,DDMTemplateConstants.TEMPLATE_MODE_CREATE,"xsd",xsl,false,false,null,null,serviceContext);
+  addJournalArticles(journalStructureId,ddmTemplate.getTemplateKey(),_JOURNAL_ARTICLES_DIR_NAME + name);
 }
