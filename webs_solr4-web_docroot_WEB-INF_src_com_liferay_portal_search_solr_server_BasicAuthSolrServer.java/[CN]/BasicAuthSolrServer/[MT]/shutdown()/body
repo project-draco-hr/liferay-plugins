@@ -1,0 +1,23 @@
+{
+  _stopped=true;
+  while (true) {
+    PoolStats poolStats=_poolingClientConnectionManager.getTotalStats();
+    int availableConnections=poolStats.getAvailable();
+    if (availableConnections <= 0) {
+      break;
+    }
+    if (_log.isDebugEnabled()) {
+      _log.debug(toString() + " waiting on " + availableConnections+ " connections");
+    }
+    _poolingClientConnectionManager.closeIdleConnections(200,TimeUnit.MILLISECONDS);
+    try {
+      Thread.sleep(250);
+    }
+ catch (    InterruptedException ie) {
+    }
+  }
+  _poolingClientConnectionManager.shutdown();
+  if (_log.isDebugEnabled()) {
+    _log.debug(toString() + " is shutdown");
+  }
+}

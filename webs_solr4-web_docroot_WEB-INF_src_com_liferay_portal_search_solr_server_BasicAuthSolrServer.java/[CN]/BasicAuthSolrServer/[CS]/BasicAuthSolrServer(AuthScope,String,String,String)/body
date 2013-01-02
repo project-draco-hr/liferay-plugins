@@ -1,16 +1,14 @@
 {
   _username=username;
   _password=password;
-  _multiThreadedHttpConnectionManager=new MultiThreadedHttpConnectionManager();
-  HttpClient httpClient=new HttpClient(_multiThreadedHttpConnectionManager);
+  _poolingClientConnectionManager=new PoolingClientConnectionManager();
+  DefaultHttpClient httpClient=new DefaultHttpClient(_poolingClientConnectionManager);
   if ((_username != null) && (_password != null)) {
     if (authScope == null) {
       authScope=AuthScope.ANY;
     }
-    HttpState httpState=httpClient.getState();
-    httpState.setCredentials(authScope,new UsernamePasswordCredentials(_username,_password));
-    HttpClientParams httpClientParams=httpClient.getParams();
-    httpClientParams.setAuthenticationPreemptive(true);
+    CredentialsProvider credentialsProvider=httpClient.getCredentialsProvider();
+    credentialsProvider.setCredentials(authScope,new UsernamePasswordCredentials(_username,_password));
   }
-  _server=new CommonsHttpSolrServer(url,httpClient);
+  _server=new HttpSolrServer(url,httpClient);
 }
