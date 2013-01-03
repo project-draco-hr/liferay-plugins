@@ -1,0 +1,14 @@
+{
+  Http.Options options=new Http.Options();
+  options.addHeader(HttpHeaders.USER_AGENT,getRandomUserAgent());
+  options.setLocation(_URL + twitterScreenName);
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  try {
+    String html=HttpUtil.URLtoString(options);
+    jsonArray=doGetUserTimelineJSONArray(html,sinceId,jsonArray);
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return jsonArray;
+}

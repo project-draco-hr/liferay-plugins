@@ -4,11 +4,12 @@
   if (Validator.isNull(twitterScreenName)) {
     throw new FeedTwitterScreenNameException();
   }
-  Date now=new Date();
   Feed feed=feedPersistence.fetchByC_TSN(user.getCompanyId(),twitterScreenName);
   JSONArray jsonArray=null;
+  TimelineProcessor timelineProcessor=TimelineProcessorFactory.getInstance();
+  Date now=new Date();
   if (feed == null) {
-    jsonArray=getUserTimelineJSONArray(twitterScreenName,0);
+    jsonArray=timelineProcessor.getUserTimelineJSONArray(twitterScreenName,0);
     long feedId=counterLocalService.increment();
     feed=feedPersistence.create(feedId);
     feed.setCompanyId(user.getCompanyId());
@@ -23,7 +24,7 @@
     }
   }
   if (jsonArray == null) {
-    jsonArray=getUserTimelineJSONArray(twitterScreenName,feed.getLastStatusId());
+    jsonArray=timelineProcessor.getUserTimelineJSONArray(twitterScreenName,feed.getLastStatusId());
   }
   if ((jsonArray == null) || (jsonArray.length() == 0)) {
     return;
