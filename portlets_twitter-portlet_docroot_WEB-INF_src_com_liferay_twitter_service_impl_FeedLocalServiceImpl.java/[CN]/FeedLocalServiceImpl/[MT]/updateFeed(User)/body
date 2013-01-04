@@ -6,10 +6,9 @@
   }
   Feed feed=feedPersistence.fetchByC_TSN(user.getCompanyId(),twitterScreenName);
   JSONArray jsonArray=null;
-  TimelineProcessor timelineProcessor=TimelineProcessorFactory.getInstance();
   Date now=new Date();
   if (feed == null) {
-    jsonArray=timelineProcessor.getUserTimelineJSONArray(twitterScreenName,0);
+    jsonArray=TimelineProcessorUtil.getUserTimelineJSONArray(twitterScreenName,0);
     long feedId=counterLocalService.increment();
     feed=feedPersistence.create(feedId);
     feed.setCompanyId(user.getCompanyId());
@@ -24,34 +23,34 @@
     }
   }
   if (jsonArray == null) {
-    jsonArray=timelineProcessor.getUserTimelineJSONArray(twitterScreenName,feed.getLastStatusId());
+    jsonArray=TimelineProcessorUtil.getUserTimelineJSONArray(twitterScreenName,feed.getLastStatusId());
   }
   if ((jsonArray == null) || (jsonArray.length() == 0)) {
     return;
   }
   try {
     for (int i=0; i < jsonArray.length(); i++) {
-      JSONObject statusJSON=jsonArray.getJSONObject(i);
+      JSONObject statusJSONObject=jsonArray.getJSONObject(i);
       SimpleDateFormat sdf=new SimpleDateFormat("EEE MMM d hh:mm:ss Z yyyy");
       Date createDate=null;
       try {
-        createDate=sdf.parse(statusJSON.getString("created_at"));
+        createDate=sdf.parse(statusJSONObject.getString("created_at"));
       }
  catch (      ParseException pe) {
         throw new SystemException(pe);
       }
-      long statusId=statusJSON.getLong("id");
-      String text=statusJSON.getString("text");
+      long statusId=statusJSONObject.getLong("id");
+      String text=statusJSONObject.getString("text");
       if (feed.getTwitterUserId() <= 0) {
-        JSONObject userJSON=statusJSON.getJSONObject("user");
-        feed.setTwitterUserId(userJSON.getLong("id"));
+        JSONObject userJSONObject=statusJSONObject.getJSONObject("user");
+        feed.setTwitterUserId(userJSONObject.getLong("id"));
       }
       if (feed.getLastStatusId() < statusId) {
         feed.setLastStatusId(statusId);
       }
-      JSONObject extraData=JSONFactoryUtil.createJSONObject();
-      extraData.put("text",text);
-      SocialActivityLocalServiceUtil.addActivity(user.getUserId(),0,createDate,Feed.class.getName(),statusId,TwitterActivityKeys.ADD_STATUS,extraData.toString(),0);
+      JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+      extraDataJSONObject.put("text",text);
+      SocialActivityLocalServiceUtil.addActivity(user.getUserId(),0,createDate,Feed.class.getName(),statusId,TwitterActivityKeys.ADD_STATUS,extraDataJSONObject.toString(),0);
     }
   }
   finally {
