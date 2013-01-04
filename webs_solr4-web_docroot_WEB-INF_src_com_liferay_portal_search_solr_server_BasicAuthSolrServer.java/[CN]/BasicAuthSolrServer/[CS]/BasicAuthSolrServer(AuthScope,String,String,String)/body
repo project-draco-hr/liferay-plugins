@@ -2,13 +2,13 @@
   _username=username;
   _password=password;
   _poolingClientConnectionManager=new PoolingClientConnectionManager();
-  DefaultHttpClient httpClient=new DefaultHttpClient(_poolingClientConnectionManager);
+  DefaultHttpClient defaultHttpClient=new DefaultHttpClient(_poolingClientConnectionManager);
   if ((_username != null) && (_password != null)) {
     if (authScope == null) {
       authScope=AuthScope.ANY;
     }
-    CredentialsProvider credentialsProvider=httpClient.getCredentialsProvider();
+    CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
     credentialsProvider.setCredentials(authScope,new UsernamePasswordCredentials(_username,_password));
   }
-  _server=new HttpSolrServer(url,httpClient);
+  _server=new HttpSolrServer(url,defaultHttpClient);
 }
