@@ -9,7 +9,13 @@
     return;
   }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
-  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.SO_NOTIFICATION,themeDisplay.getPlid(),PortletRequest.RENDER_PHASE);
+  long plid=themeDisplay.getPlid();
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  if (layout.isPrivateLayout()) {
+    Group guestGroup=GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(),GroupConstants.GUEST);
+    plid=guestGroup.getDefaultPublicPlid();
+  }
+  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.SO_NOTIFICATION,plid,PortletRequest.RENDER_PHASE);
   portletURL.setParameter("mvcPath","/notifications/view.jsp");
   portletURL.setParameter("p_p_state",WindowState.MAXIMIZED.toString());
   serviceContext.setAttribute("redirectURL",portletURL.toString());
