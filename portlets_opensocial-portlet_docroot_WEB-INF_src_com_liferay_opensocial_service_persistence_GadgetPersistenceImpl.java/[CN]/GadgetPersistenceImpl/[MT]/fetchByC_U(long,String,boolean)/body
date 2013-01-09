@@ -14,16 +14,16 @@
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_GADGET_WHERE);
     query.append(_FINDER_COLUMN_C_U_COMPANYID_2);
+    boolean bindUrl=false;
     if (url == null) {
       query.append(_FINDER_COLUMN_C_U_URL_1);
     }
+ else     if (url.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_C_U_URL_3);
+    }
  else {
-      if (url.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_C_U_URL_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_C_U_URL_2);
-      }
+      bindUrl=true;
+      query.append(_FINDER_COLUMN_C_U_URL_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -32,7 +32,7 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(companyId);
-      if (url != null) {
+      if (bindUrl) {
         qPos.add(url);
       }
       List<Gadget> list=q.list();

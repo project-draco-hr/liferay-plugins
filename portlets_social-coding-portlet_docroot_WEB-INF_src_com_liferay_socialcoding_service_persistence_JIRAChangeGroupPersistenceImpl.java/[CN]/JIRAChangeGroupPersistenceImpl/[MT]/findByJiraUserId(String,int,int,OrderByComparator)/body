@@ -29,16 +29,16 @@
       query=new StringBundler(3);
     }
     query.append(_SQL_SELECT_JIRACHANGEGROUP_WHERE);
+    boolean bindJiraUserId=false;
     if (jiraUserId == null) {
       query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_1);
     }
+ else     if (jiraUserId.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_3);
+    }
  else {
-      if (jiraUserId.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_2);
-      }
+      bindJiraUserId=true;
+      query.append(_FINDER_COLUMN_JIRAUSERID_JIRAUSERID_2);
     }
     if (orderByComparator != null) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
@@ -52,7 +52,7 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (jiraUserId != null) {
+      if (bindJiraUserId) {
         qPos.add(jiraUserId);
       }
       if (!pagination) {

@@ -31,16 +31,16 @@
     query.append(_SQL_SELECT_ENTRY_WHERE);
     query.append(_FINDER_COLUMN_F_T_C_FROMUSERID_2);
     query.append(_FINDER_COLUMN_F_T_C_TOUSERID_2);
+    boolean bindContent=false;
     if (content == null) {
       query.append(_FINDER_COLUMN_F_T_C_CONTENT_1);
     }
+ else     if (content.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
+    }
  else {
-      if (content.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
-      }
+      bindContent=true;
+      query.append(_FINDER_COLUMN_F_T_C_CONTENT_2);
     }
     if (orderByComparator != null) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
@@ -56,7 +56,7 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(fromUserId);
       qPos.add(toUserId);
-      if (content != null) {
+      if (bindContent) {
         qPos.add(content);
       }
       if (!pagination) {

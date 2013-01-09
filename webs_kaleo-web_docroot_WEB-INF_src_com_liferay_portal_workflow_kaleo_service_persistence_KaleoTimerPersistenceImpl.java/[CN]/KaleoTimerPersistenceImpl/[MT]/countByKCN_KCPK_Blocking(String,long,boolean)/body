@@ -5,16 +5,16 @@
   if (count == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_COUNT_KALEOTIMER_WHERE);
+    boolean bindKaleoClassName=false;
     if (kaleoClassName == null) {
       query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSNAME_1);
     }
+ else     if (kaleoClassName.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSNAME_3);
+    }
  else {
-      if (kaleoClassName.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSNAME_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSNAME_2);
-      }
+      bindKaleoClassName=true;
+      query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSNAME_2);
     }
     query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_KALEOCLASSPK_2);
     query.append(_FINDER_COLUMN_KCN_KCPK_BLOCKING_BLOCKING_2);
@@ -24,7 +24,7 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (kaleoClassName != null) {
+      if (bindKaleoClassName) {
         qPos.add(kaleoClassName);
       }
       qPos.add(kaleoClassPK);

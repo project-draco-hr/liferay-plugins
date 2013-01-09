@@ -30,22 +30,24 @@
     }
     query.append(_SQL_SELECT_KALEOINSTANCE_WHERE);
     query.append(_FINDER_COLUMN_C_KDN_KDV_CD_COMPANYID_2);
+    boolean bindKaleoDefinitionName=false;
     if (kaleoDefinitionName == null) {
       query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONNAME_1);
     }
+ else     if (kaleoDefinitionName.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONNAME_3);
+    }
  else {
-      if (kaleoDefinitionName.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONNAME_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONNAME_2);
-      }
+      bindKaleoDefinitionName=true;
+      query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONNAME_2);
     }
     query.append(_FINDER_COLUMN_C_KDN_KDV_CD_KALEODEFINITIONVERSION_2);
+    boolean bindCompletionDate=false;
     if (completionDate == null) {
       query.append(_FINDER_COLUMN_C_KDN_KDV_CD_COMPLETIONDATE_1);
     }
  else {
+      bindCompletionDate=true;
       query.append(_FINDER_COLUMN_C_KDN_KDV_CD_COMPLETIONDATE_2);
     }
     if (orderByComparator != null) {
@@ -61,11 +63,11 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(companyId);
-      if (kaleoDefinitionName != null) {
+      if (bindKaleoDefinitionName) {
         qPos.add(kaleoDefinitionName);
       }
       qPos.add(kaleoDefinitionVersion);
-      if (completionDate != null) {
+      if (bindCompletionDate) {
         qPos.add(CalendarUtil.getTimestamp(completionDate));
       }
       if (!pagination) {

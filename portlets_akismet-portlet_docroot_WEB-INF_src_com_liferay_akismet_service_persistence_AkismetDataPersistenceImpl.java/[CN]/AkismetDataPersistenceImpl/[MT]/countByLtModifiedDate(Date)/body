@@ -5,10 +5,12 @@
   if (count == null) {
     StringBundler query=new StringBundler(2);
     query.append(_SQL_COUNT_AKISMETDATA_WHERE);
+    boolean bindModifiedDate=false;
     if (modifiedDate == null) {
       query.append(_FINDER_COLUMN_LTMODIFIEDDATE_MODIFIEDDATE_1);
     }
  else {
+      bindModifiedDate=true;
       query.append(_FINDER_COLUMN_LTMODIFIEDDATE_MODIFIEDDATE_2);
     }
     String sql=query.toString();
@@ -17,7 +19,7 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (modifiedDate != null) {
+      if (bindModifiedDate) {
         qPos.add(CalendarUtil.getTimestamp(modifiedDate));
       }
       count=(Long)q.uniqueResult();

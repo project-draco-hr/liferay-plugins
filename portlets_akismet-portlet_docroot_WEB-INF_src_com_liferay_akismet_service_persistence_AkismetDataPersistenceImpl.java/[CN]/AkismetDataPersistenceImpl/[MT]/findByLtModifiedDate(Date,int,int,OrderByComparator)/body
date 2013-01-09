@@ -22,10 +22,12 @@
       query=new StringBundler(3);
     }
     query.append(_SQL_SELECT_AKISMETDATA_WHERE);
+    boolean bindModifiedDate=false;
     if (modifiedDate == null) {
       query.append(_FINDER_COLUMN_LTMODIFIEDDATE_MODIFIEDDATE_1);
     }
  else {
+      bindModifiedDate=true;
       query.append(_FINDER_COLUMN_LTMODIFIEDDATE_MODIFIEDDATE_2);
     }
     if (orderByComparator != null) {
@@ -40,7 +42,7 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (modifiedDate != null) {
+      if (bindModifiedDate) {
         qPos.add(CalendarUtil.getTimestamp(modifiedDate));
       }
       if (!pagination) {

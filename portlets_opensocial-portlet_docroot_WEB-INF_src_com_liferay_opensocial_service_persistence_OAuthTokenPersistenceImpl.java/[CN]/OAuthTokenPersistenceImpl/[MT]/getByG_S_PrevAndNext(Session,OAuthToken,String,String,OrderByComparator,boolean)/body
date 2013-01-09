@@ -7,27 +7,27 @@
     query=new StringBundler(3);
   }
   query.append(_SQL_SELECT_OAUTHTOKEN_WHERE);
+  boolean bindGadgetKey=false;
   if (gadgetKey == null) {
     query.append(_FINDER_COLUMN_G_S_GADGETKEY_1);
   }
- else {
-    if (gadgetKey.equals(StringPool.BLANK)) {
-      query.append(_FINDER_COLUMN_G_S_GADGETKEY_3);
-    }
- else {
-      query.append(_FINDER_COLUMN_G_S_GADGETKEY_2);
-    }
+ else   if (gadgetKey.equals(StringPool.BLANK)) {
+    query.append(_FINDER_COLUMN_G_S_GADGETKEY_3);
   }
+ else {
+    bindGadgetKey=true;
+    query.append(_FINDER_COLUMN_G_S_GADGETKEY_2);
+  }
+  boolean bindServiceName=false;
   if (serviceName == null) {
     query.append(_FINDER_COLUMN_G_S_SERVICENAME_1);
   }
+ else   if (serviceName.equals(StringPool.BLANK)) {
+    query.append(_FINDER_COLUMN_G_S_SERVICENAME_3);
+  }
  else {
-    if (serviceName.equals(StringPool.BLANK)) {
-      query.append(_FINDER_COLUMN_G_S_SERVICENAME_3);
-    }
- else {
-      query.append(_FINDER_COLUMN_G_S_SERVICENAME_2);
-    }
+    bindServiceName=true;
+    query.append(_FINDER_COLUMN_G_S_SERVICENAME_2);
   }
   if (orderByComparator != null) {
     String[] orderByConditionFields=orderByComparator.getOrderByConditionFields();
@@ -85,10 +85,10 @@
   q.setFirstResult(0);
   q.setMaxResults(2);
   QueryPos qPos=QueryPos.getInstance(q);
-  if (gadgetKey != null) {
+  if (bindGadgetKey) {
     qPos.add(gadgetKey);
   }
-  if (serviceName != null) {
+  if (bindServiceName) {
     qPos.add(serviceName);
   }
   if (orderByComparator != null) {

@@ -5,16 +5,16 @@
   if (count == null) {
     StringBundler query=new StringBundler(2);
     query.append(_SQL_COUNT_SVNREPOSITORY_WHERE);
+    boolean bindUrl=false;
     if (url == null) {
       query.append(_FINDER_COLUMN_URL_URL_1);
     }
+ else     if (url.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_URL_URL_3);
+    }
  else {
-      if (url.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_URL_URL_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_URL_URL_2);
-      }
+      bindUrl=true;
+      query.append(_FINDER_COLUMN_URL_URL_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -22,7 +22,7 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (url != null) {
+      if (bindUrl) {
         qPos.add(url);
       }
       count=(Long)q.uniqueResult();

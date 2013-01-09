@@ -7,16 +7,16 @@
     query=new StringBundler(3);
   }
   query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+  boolean bindAssigneeJiraUserId=false;
   if (assigneeJiraUserId == null) {
     query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_1);
   }
+ else   if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+    query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_3);
+  }
  else {
-    if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-      query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_3);
-    }
- else {
-      query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_2);
-    }
+    bindAssigneeJiraUserId=true;
+    query.append(_FINDER_COLUMN_ASSIGNEEJIRAUSERID_ASSIGNEEJIRAUSERID_2);
   }
   if (orderByComparator != null) {
     String[] orderByConditionFields=orderByComparator.getOrderByConditionFields();
@@ -74,7 +74,7 @@
   q.setFirstResult(0);
   q.setMaxResults(2);
   QueryPos qPos=QueryPos.getInstance(q);
-  if (assigneeJiraUserId != null) {
+  if (bindAssigneeJiraUserId) {
     qPos.add(assigneeJiraUserId);
   }
   if (orderByComparator != null) {

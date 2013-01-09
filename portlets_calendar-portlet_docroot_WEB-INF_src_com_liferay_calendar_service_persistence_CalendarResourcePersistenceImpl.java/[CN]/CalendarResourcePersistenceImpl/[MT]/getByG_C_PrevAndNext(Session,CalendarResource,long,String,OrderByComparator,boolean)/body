@@ -8,16 +8,16 @@
   }
   query.append(_SQL_SELECT_CALENDARRESOURCE_WHERE);
   query.append(_FINDER_COLUMN_G_C_GROUPID_2);
+  boolean bindCode=false;
   if (code == null) {
     query.append(_FINDER_COLUMN_G_C_CODE_1);
   }
+ else   if (code.equals(StringPool.BLANK)) {
+    query.append(_FINDER_COLUMN_G_C_CODE_3);
+  }
  else {
-    if (code.equals(StringPool.BLANK)) {
-      query.append(_FINDER_COLUMN_G_C_CODE_3);
-    }
- else {
-      query.append(_FINDER_COLUMN_G_C_CODE_2);
-    }
+    bindCode=true;
+    query.append(_FINDER_COLUMN_G_C_CODE_2);
   }
   if (orderByComparator != null) {
     String[] orderByConditionFields=orderByComparator.getOrderByConditionFields();
@@ -76,7 +76,7 @@
   q.setMaxResults(2);
   QueryPos qPos=QueryPos.getInstance(q);
   qPos.add(groupId);
-  if (code != null) {
+  if (bindCode) {
     qPos.add(code);
   }
   if (orderByComparator != null) {

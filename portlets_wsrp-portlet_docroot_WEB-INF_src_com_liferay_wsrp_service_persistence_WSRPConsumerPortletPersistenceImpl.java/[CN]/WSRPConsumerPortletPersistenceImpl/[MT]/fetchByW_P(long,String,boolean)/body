@@ -14,16 +14,16 @@
     StringBundler query=new StringBundler(4);
     query.append(_SQL_SELECT_WSRPCONSUMERPORTLET_WHERE);
     query.append(_FINDER_COLUMN_W_P_WSRPCONSUMERID_2);
+    boolean bindPortletHandle=false;
     if (portletHandle == null) {
       query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_1);
     }
+ else     if (portletHandle.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_3);
+    }
  else {
-      if (portletHandle.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_2);
-      }
+      bindPortletHandle=true;
+      query.append(_FINDER_COLUMN_W_P_PORTLETHANDLE_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -32,7 +32,7 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(wsrpConsumerId);
-      if (portletHandle != null) {
+      if (bindPortletHandle) {
         qPos.add(portletHandle);
       }
       List<WSRPConsumerPortlet> list=q.list();

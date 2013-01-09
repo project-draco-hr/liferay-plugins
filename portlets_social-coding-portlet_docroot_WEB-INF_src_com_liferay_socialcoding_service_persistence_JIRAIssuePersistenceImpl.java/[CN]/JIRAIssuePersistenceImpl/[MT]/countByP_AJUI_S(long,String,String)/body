@@ -6,27 +6,27 @@
     StringBundler query=new StringBundler(4);
     query.append(_SQL_COUNT_JIRAISSUE_WHERE);
     query.append(_FINDER_COLUMN_P_AJUI_S_PROJECTID_2);
+    boolean bindAssigneeJiraUserId=false;
     if (assigneeJiraUserId == null) {
       query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_1);
     }
- else {
-      if (assigneeJiraUserId.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_2);
-      }
+ else     if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_3);
     }
+ else {
+      bindAssigneeJiraUserId=true;
+      query.append(_FINDER_COLUMN_P_AJUI_S_ASSIGNEEJIRAUSERID_2);
+    }
+    boolean bindStatus=false;
     if (status == null) {
       query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_1);
     }
+ else     if (status.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_3);
+    }
  else {
-      if (status.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_2);
-      }
+      bindStatus=true;
+      query.append(_FINDER_COLUMN_P_AJUI_S_STATUS_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -35,10 +35,10 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(projectId);
-      if (assigneeJiraUserId != null) {
+      if (bindAssigneeJiraUserId) {
         qPos.add(assigneeJiraUserId);
       }
-      if (status != null) {
+      if (bindStatus) {
         qPos.add(status);
       }
       count=(Long)q.uniqueResult();

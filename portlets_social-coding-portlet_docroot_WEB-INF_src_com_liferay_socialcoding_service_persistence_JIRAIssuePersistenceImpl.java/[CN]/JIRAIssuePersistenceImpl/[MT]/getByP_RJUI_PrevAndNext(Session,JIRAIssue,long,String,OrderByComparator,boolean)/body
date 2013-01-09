@@ -8,16 +8,16 @@
   }
   query.append(_SQL_SELECT_JIRAISSUE_WHERE);
   query.append(_FINDER_COLUMN_P_RJUI_PROJECTID_2);
+  boolean bindReporterJiraUserId=false;
   if (reporterJiraUserId == null) {
     query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_1);
   }
+ else   if (reporterJiraUserId.equals(StringPool.BLANK)) {
+    query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
+  }
  else {
-    if (reporterJiraUserId.equals(StringPool.BLANK)) {
-      query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_3);
-    }
- else {
-      query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
-    }
+    bindReporterJiraUserId=true;
+    query.append(_FINDER_COLUMN_P_RJUI_REPORTERJIRAUSERID_2);
   }
   if (orderByComparator != null) {
     String[] orderByConditionFields=orderByComparator.getOrderByConditionFields();
@@ -76,7 +76,7 @@
   q.setMaxResults(2);
   QueryPos qPos=QueryPos.getInstance(q);
   qPos.add(projectId);
-  if (reporterJiraUserId != null) {
+  if (bindReporterJiraUserId) {
     qPos.add(reporterJiraUserId);
   }
   if (orderByComparator != null) {

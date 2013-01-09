@@ -5,23 +5,25 @@
   if (count == null) {
     StringBundler query=new StringBundler(4);
     query.append(_SQL_COUNT_JIRAISSUE_WHERE);
+    boolean bindModifiedDate=false;
     if (modifiedDate == null) {
       query.append(_FINDER_COLUMN_MD_P_RJUI_MODIFIEDDATE_1);
     }
  else {
+      bindModifiedDate=true;
       query.append(_FINDER_COLUMN_MD_P_RJUI_MODIFIEDDATE_2);
     }
     query.append(_FINDER_COLUMN_MD_P_RJUI_PROJECTID_2);
+    boolean bindReporterJiraUserId=false;
     if (reporterJiraUserId == null) {
       query.append(_FINDER_COLUMN_MD_P_RJUI_REPORTERJIRAUSERID_1);
     }
+ else     if (reporterJiraUserId.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_MD_P_RJUI_REPORTERJIRAUSERID_3);
+    }
  else {
-      if (reporterJiraUserId.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_MD_P_RJUI_REPORTERJIRAUSERID_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_MD_P_RJUI_REPORTERJIRAUSERID_2);
-      }
+      bindReporterJiraUserId=true;
+      query.append(_FINDER_COLUMN_MD_P_RJUI_REPORTERJIRAUSERID_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -29,11 +31,11 @@
       session=openSession();
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
-      if (modifiedDate != null) {
+      if (bindModifiedDate) {
         qPos.add(CalendarUtil.getTimestamp(modifiedDate));
       }
       qPos.add(projectId);
-      if (reporterJiraUserId != null) {
+      if (bindReporterJiraUserId) {
         qPos.add(reporterJiraUserId);
       }
       count=(Long)q.uniqueResult();

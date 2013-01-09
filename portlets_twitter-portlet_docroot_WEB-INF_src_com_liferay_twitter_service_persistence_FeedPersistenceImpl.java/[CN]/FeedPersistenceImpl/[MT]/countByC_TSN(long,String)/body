@@ -6,16 +6,16 @@
     StringBundler query=new StringBundler(3);
     query.append(_SQL_COUNT_FEED_WHERE);
     query.append(_FINDER_COLUMN_C_TSN_COMPANYID_2);
+    boolean bindTwitterScreenName=false;
     if (twitterScreenName == null) {
       query.append(_FINDER_COLUMN_C_TSN_TWITTERSCREENNAME_1);
     }
+ else     if (twitterScreenName.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_C_TSN_TWITTERSCREENNAME_3);
+    }
  else {
-      if (twitterScreenName.equals(StringPool.BLANK)) {
-        query.append(_FINDER_COLUMN_C_TSN_TWITTERSCREENNAME_3);
-      }
- else {
-        query.append(_FINDER_COLUMN_C_TSN_TWITTERSCREENNAME_2);
-      }
+      bindTwitterScreenName=true;
+      query.append(_FINDER_COLUMN_C_TSN_TWITTERSCREENNAME_2);
     }
     String sql=query.toString();
     Session session=null;
@@ -24,7 +24,7 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(companyId);
-      if (twitterScreenName != null) {
+      if (bindTwitterScreenName) {
         qPos.add(twitterScreenName);
       }
       count=(Long)q.uniqueResult();
