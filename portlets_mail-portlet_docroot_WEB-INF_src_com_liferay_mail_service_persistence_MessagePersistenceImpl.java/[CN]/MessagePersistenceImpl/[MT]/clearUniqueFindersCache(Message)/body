@@ -1,10 +1,10 @@
 {
   MessageModelImpl messageModelImpl=(MessageModelImpl)message;
-  Object[] args=new Object[]{Long.valueOf(message.getFolderId()),Long.valueOf(message.getRemoteMessageId())};
+  Object[] args=new Object[]{message.getFolderId(),message.getRemoteMessageId()};
   FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_F_R,args);
   FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,args);
   if ((messageModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_F_R.getColumnBitmask()) != 0) {
-    args=new Object[]{Long.valueOf(messageModelImpl.getOriginalFolderId()),Long.valueOf(messageModelImpl.getOriginalRemoteMessageId())};
+    args=new Object[]{messageModelImpl.getOriginalFolderId(),messageModelImpl.getOriginalRemoteMessageId()};
     FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_F_R,args);
     FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_R,args);
   }
