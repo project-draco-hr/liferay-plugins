@@ -1,27 +1,3 @@
 {
-  Entry entry=(Entry)EntityCacheUtil.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,entryId);
-  if (entry == _nullEntry) {
-    return null;
-  }
-  if (entry == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      entry=(Entry)session.get(EntryImpl.class,Long.valueOf(entryId));
-      if (entry != null) {
-        cacheResult(entry);
-      }
- else {
-        EntityCacheUtil.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,entryId,_nullEntry);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,entryId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return entry;
+  return fetchByPrimaryKey((Serializable)entryId);
 }

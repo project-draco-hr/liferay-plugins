@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  JIRAAction jiraAction=(JIRAAction)EntityCacheUtil.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
+  if (jiraAction == _nullJIRAAction) {
+    return null;
+  }
+  if (jiraAction == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraAction=(JIRAAction)session.get(JIRAActionImpl.class,primaryKey);
+      if (jiraAction != null) {
+        cacheResult(jiraAction);
+      }
+ else {
+        EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey,_nullJIRAAction);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return jiraAction;
 }

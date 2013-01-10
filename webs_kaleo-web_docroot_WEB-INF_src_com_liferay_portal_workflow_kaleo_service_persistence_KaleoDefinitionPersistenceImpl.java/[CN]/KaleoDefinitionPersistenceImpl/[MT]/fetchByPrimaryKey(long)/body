@@ -1,27 +1,3 @@
 {
-  KaleoDefinition kaleoDefinition=(KaleoDefinition)EntityCacheUtil.getResult(KaleoDefinitionModelImpl.ENTITY_CACHE_ENABLED,KaleoDefinitionImpl.class,kaleoDefinitionId);
-  if (kaleoDefinition == _nullKaleoDefinition) {
-    return null;
-  }
-  if (kaleoDefinition == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      kaleoDefinition=(KaleoDefinition)session.get(KaleoDefinitionImpl.class,Long.valueOf(kaleoDefinitionId));
-      if (kaleoDefinition != null) {
-        cacheResult(kaleoDefinition);
-      }
- else {
-        EntityCacheUtil.putResult(KaleoDefinitionModelImpl.ENTITY_CACHE_ENABLED,KaleoDefinitionImpl.class,kaleoDefinitionId,_nullKaleoDefinition);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(KaleoDefinitionModelImpl.ENTITY_CACHE_ENABLED,KaleoDefinitionImpl.class,kaleoDefinitionId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return kaleoDefinition;
+  return fetchByPrimaryKey((Serializable)kaleoDefinitionId);
 }

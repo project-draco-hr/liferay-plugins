@@ -1,27 +1,3 @@
 {
-  CalendarBooking calendarBooking=(CalendarBooking)EntityCacheUtil.getResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBookingId);
-  if (calendarBooking == _nullCalendarBooking) {
-    return null;
-  }
-  if (calendarBooking == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      calendarBooking=(CalendarBooking)session.get(CalendarBookingImpl.class,Long.valueOf(calendarBookingId));
-      if (calendarBooking != null) {
-        cacheResult(calendarBooking);
-      }
- else {
-        EntityCacheUtil.putResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBookingId,_nullCalendarBooking);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(CalendarBookingModelImpl.ENTITY_CACHE_ENABLED,CalendarBookingImpl.class,calendarBookingId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return calendarBooking;
+  return fetchByPrimaryKey((Serializable)calendarBookingId);
 }

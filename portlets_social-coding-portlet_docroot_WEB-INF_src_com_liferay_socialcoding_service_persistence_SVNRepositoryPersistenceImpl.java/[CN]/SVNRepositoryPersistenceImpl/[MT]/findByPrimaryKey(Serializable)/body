@@ -1,3 +1,10 @@
 {
-  return findByPrimaryKey(((Long)primaryKey).longValue());
+  SVNRepository svnRepository=fetchByPrimaryKey(primaryKey);
+  if (svnRepository == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    throw new NoSuchSVNRepositoryException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+  }
+  return svnRepository;
 }

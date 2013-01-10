@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  JIRAIssue jiraIssue=(JIRAIssue)EntityCacheUtil.getResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
+  if (jiraIssue == _nullJIRAIssue) {
+    return null;
+  }
+  if (jiraIssue == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraIssue=(JIRAIssue)session.get(JIRAIssueImpl.class,primaryKey);
+      if (jiraIssue != null) {
+        cacheResult(jiraIssue);
+      }
+ else {
+        EntityCacheUtil.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey,_nullJIRAIssue);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return jiraIssue;
 }

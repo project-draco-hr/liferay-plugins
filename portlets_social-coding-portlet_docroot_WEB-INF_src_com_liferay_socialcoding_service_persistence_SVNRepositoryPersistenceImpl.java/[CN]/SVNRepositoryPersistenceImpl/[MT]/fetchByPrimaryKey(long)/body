@@ -1,27 +1,3 @@
 {
-  SVNRepository svnRepository=(SVNRepository)EntityCacheUtil.getResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepositoryId);
-  if (svnRepository == _nullSVNRepository) {
-    return null;
-  }
-  if (svnRepository == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      svnRepository=(SVNRepository)session.get(SVNRepositoryImpl.class,Long.valueOf(svnRepositoryId));
-      if (svnRepository != null) {
-        cacheResult(svnRepository);
-      }
- else {
-        EntityCacheUtil.putResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepositoryId,_nullSVNRepository);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepositoryId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return svnRepository;
+  return fetchByPrimaryKey((Serializable)svnRepositoryId);
 }

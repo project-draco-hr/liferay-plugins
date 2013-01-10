@@ -1,27 +1,3 @@
 {
-  Module module=(Module)EntityCacheUtil.getResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId);
-  if (module == _nullModule) {
-    return null;
-  }
-  if (module == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      module=(Module)session.get(ModuleImpl.class,Long.valueOf(moduleId));
-      if (module != null) {
-        cacheResult(module);
-      }
- else {
-        EntityCacheUtil.putResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId,_nullModule);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(ModuleModelImpl.ENTITY_CACHE_ENABLED,ModuleImpl.class,moduleId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return module;
+  return fetchByPrimaryKey((Serializable)moduleId);
 }

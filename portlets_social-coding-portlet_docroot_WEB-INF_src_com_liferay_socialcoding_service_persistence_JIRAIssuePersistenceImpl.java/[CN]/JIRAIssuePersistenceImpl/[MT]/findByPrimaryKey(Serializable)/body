@@ -1,3 +1,10 @@
 {
-  return findByPrimaryKey(((Long)primaryKey).longValue());
+  JIRAIssue jiraIssue=fetchByPrimaryKey(primaryKey);
+  if (jiraIssue == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    throw new NoSuchJIRAIssueException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+  }
+  return jiraIssue;
 }

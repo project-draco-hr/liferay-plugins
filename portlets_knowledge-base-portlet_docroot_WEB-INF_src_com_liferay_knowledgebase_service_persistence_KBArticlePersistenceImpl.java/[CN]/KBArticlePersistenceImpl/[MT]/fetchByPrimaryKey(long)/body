@@ -1,27 +1,3 @@
 {
-  KBArticle kbArticle=(KBArticle)EntityCacheUtil.getResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticleId);
-  if (kbArticle == _nullKBArticle) {
-    return null;
-  }
-  if (kbArticle == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      kbArticle=(KBArticle)session.get(KBArticleImpl.class,Long.valueOf(kbArticleId));
-      if (kbArticle != null) {
-        cacheResult(kbArticle);
-      }
- else {
-        EntityCacheUtil.putResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticleId,_nullKBArticle);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(KBArticleModelImpl.ENTITY_CACHE_ENABLED,KBArticleImpl.class,kbArticleId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return kbArticle;
+  return fetchByPrimaryKey((Serializable)kbArticleId);
 }

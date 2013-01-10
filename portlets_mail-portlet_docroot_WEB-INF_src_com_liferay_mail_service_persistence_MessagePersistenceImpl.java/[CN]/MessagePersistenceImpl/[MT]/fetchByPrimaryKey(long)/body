@@ -1,27 +1,3 @@
 {
-  Message message=(Message)EntityCacheUtil.getResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId);
-  if (message == _nullMessage) {
-    return null;
-  }
-  if (message == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      message=(Message)session.get(MessageImpl.class,Long.valueOf(messageId));
-      if (message != null) {
-        cacheResult(message);
-      }
- else {
-        EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId,_nullMessage);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,messageId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return message;
+  return fetchByPrimaryKey((Serializable)messageId);
 }

@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  UserThread userThread=(UserThread)EntityCacheUtil.getResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,primaryKey);
+  if (userThread == _nullUserThread) {
+    return null;
+  }
+  if (userThread == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      userThread=(UserThread)session.get(UserThreadImpl.class,primaryKey);
+      if (userThread != null) {
+        cacheResult(userThread);
+      }
+ else {
+        EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,primaryKey,_nullUserThread);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return userThread;
 }

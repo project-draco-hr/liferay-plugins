@@ -1,3 +1,10 @@
 {
-  return findByPrimaryKey(((Long)primaryKey).longValue());
+  KaleoNotificationRecipient kaleoNotificationRecipient=fetchByPrimaryKey(primaryKey);
+  if (kaleoNotificationRecipient == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    throw new NoSuchNotificationRecipientException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+  }
+  return kaleoNotificationRecipient;
 }

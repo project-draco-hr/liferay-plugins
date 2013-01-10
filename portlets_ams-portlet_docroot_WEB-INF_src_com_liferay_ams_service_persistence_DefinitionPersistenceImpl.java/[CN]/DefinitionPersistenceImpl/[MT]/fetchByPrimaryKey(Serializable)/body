@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  Definition definition=(Definition)EntityCacheUtil.getResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,primaryKey);
+  if (definition == _nullDefinition) {
+    return null;
+  }
+  if (definition == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      definition=(Definition)session.get(DefinitionImpl.class,primaryKey);
+      if (definition != null) {
+        cacheResult(definition);
+      }
+ else {
+        EntityCacheUtil.putResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,primaryKey,_nullDefinition);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return definition;
 }

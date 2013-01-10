@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  SVNRevision svnRevision=(SVNRevision)EntityCacheUtil.getResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
+  if (svnRevision == _nullSVNRevision) {
+    return null;
+  }
+  if (svnRevision == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      svnRevision=(SVNRevision)session.get(SVNRevisionImpl.class,primaryKey);
+      if (svnRevision != null) {
+        cacheResult(svnRevision);
+      }
+ else {
+        EntityCacheUtil.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey,_nullSVNRevision);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return svnRevision;
 }

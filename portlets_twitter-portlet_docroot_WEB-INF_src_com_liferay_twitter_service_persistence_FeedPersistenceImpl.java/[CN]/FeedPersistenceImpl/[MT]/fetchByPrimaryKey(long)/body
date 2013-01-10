@@ -1,27 +1,3 @@
 {
-  Feed feed=(Feed)EntityCacheUtil.getResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId);
-  if (feed == _nullFeed) {
-    return null;
-  }
-  if (feed == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      feed=(Feed)session.get(FeedImpl.class,Long.valueOf(feedId));
-      if (feed != null) {
-        cacheResult(feed);
-      }
- else {
-        EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId,_nullFeed);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feedId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return feed;
+  return fetchByPrimaryKey((Serializable)feedId);
 }

@@ -1,27 +1,3 @@
 {
-  KaleoNotificationRecipient kaleoNotificationRecipient=(KaleoNotificationRecipient)EntityCacheUtil.getResult(KaleoNotificationRecipientModelImpl.ENTITY_CACHE_ENABLED,KaleoNotificationRecipientImpl.class,kaleoNotificationRecipientId);
-  if (kaleoNotificationRecipient == _nullKaleoNotificationRecipient) {
-    return null;
-  }
-  if (kaleoNotificationRecipient == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      kaleoNotificationRecipient=(KaleoNotificationRecipient)session.get(KaleoNotificationRecipientImpl.class,Long.valueOf(kaleoNotificationRecipientId));
-      if (kaleoNotificationRecipient != null) {
-        cacheResult(kaleoNotificationRecipient);
-      }
- else {
-        EntityCacheUtil.putResult(KaleoNotificationRecipientModelImpl.ENTITY_CACHE_ENABLED,KaleoNotificationRecipientImpl.class,kaleoNotificationRecipientId,_nullKaleoNotificationRecipient);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(KaleoNotificationRecipientModelImpl.ENTITY_CACHE_ENABLED,KaleoNotificationRecipientImpl.class,kaleoNotificationRecipientId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return kaleoNotificationRecipient;
+  return fetchByPrimaryKey((Serializable)kaleoNotificationRecipientId);
 }

@@ -1,27 +1,3 @@
 {
-  Attachment attachment=(Attachment)EntityCacheUtil.getResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachmentId);
-  if (attachment == _nullAttachment) {
-    return null;
-  }
-  if (attachment == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      attachment=(Attachment)session.get(AttachmentImpl.class,Long.valueOf(attachmentId));
-      if (attachment != null) {
-        cacheResult(attachment);
-      }
- else {
-        EntityCacheUtil.putResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachmentId,_nullAttachment);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(AttachmentModelImpl.ENTITY_CACHE_ENABLED,AttachmentImpl.class,attachmentId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return attachment;
+  return fetchByPrimaryKey((Serializable)attachmentId);
 }

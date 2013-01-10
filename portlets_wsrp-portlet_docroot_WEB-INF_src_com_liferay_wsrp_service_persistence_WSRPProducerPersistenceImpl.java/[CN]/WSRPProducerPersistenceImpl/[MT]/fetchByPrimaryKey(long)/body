@@ -1,27 +1,3 @@
 {
-  WSRPProducer wsrpProducer=(WSRPProducer)EntityCacheUtil.getResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducerId);
-  if (wsrpProducer == _nullWSRPProducer) {
-    return null;
-  }
-  if (wsrpProducer == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      wsrpProducer=(WSRPProducer)session.get(WSRPProducerImpl.class,Long.valueOf(wsrpProducerId));
-      if (wsrpProducer != null) {
-        cacheResult(wsrpProducer);
-      }
- else {
-        EntityCacheUtil.putResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducerId,_nullWSRPProducer);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(WSRPProducerModelImpl.ENTITY_CACHE_ENABLED,WSRPProducerImpl.class,wsrpProducerId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return wsrpProducer;
+  return fetchByPrimaryKey((Serializable)wsrpProducerId);
 }

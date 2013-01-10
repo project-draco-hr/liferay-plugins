@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  OAuthConsumer oAuthConsumer=(OAuthConsumer)EntityCacheUtil.getResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey);
+  if (oAuthConsumer == _nullOAuthConsumer) {
+    return null;
+  }
+  if (oAuthConsumer == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      oAuthConsumer=(OAuthConsumer)session.get(OAuthConsumerImpl.class,primaryKey);
+      if (oAuthConsumer != null) {
+        cacheResult(oAuthConsumer);
+      }
+ else {
+        EntityCacheUtil.putResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey,_nullOAuthConsumer);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return oAuthConsumer;
 }

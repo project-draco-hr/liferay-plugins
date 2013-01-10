@@ -1,27 +1,3 @@
 {
-  Gadget gadget=(Gadget)EntityCacheUtil.getResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId);
-  if (gadget == _nullGadget) {
-    return null;
-  }
-  if (gadget == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      gadget=(Gadget)session.get(GadgetImpl.class,Long.valueOf(gadgetId));
-      if (gadget != null) {
-        cacheResult(gadget);
-      }
- else {
-        EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId,_nullGadget);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadgetId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return gadget;
+  return fetchByPrimaryKey((Serializable)gadgetId);
 }

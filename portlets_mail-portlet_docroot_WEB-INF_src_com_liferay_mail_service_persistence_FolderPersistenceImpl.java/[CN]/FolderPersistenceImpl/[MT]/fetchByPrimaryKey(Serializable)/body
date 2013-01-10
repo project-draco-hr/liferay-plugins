@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  Folder folder=(Folder)EntityCacheUtil.getResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,primaryKey);
+  if (folder == _nullFolder) {
+    return null;
+  }
+  if (folder == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      folder=(Folder)session.get(FolderImpl.class,primaryKey);
+      if (folder != null) {
+        cacheResult(folder);
+      }
+ else {
+        EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,primaryKey,_nullFolder);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return folder;
 }

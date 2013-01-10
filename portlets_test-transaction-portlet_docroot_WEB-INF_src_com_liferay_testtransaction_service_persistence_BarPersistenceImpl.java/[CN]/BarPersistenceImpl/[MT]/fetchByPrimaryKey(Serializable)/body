@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  Bar bar=(Bar)EntityCacheUtil.getResult(BarModelImpl.ENTITY_CACHE_ENABLED,BarImpl.class,primaryKey);
+  if (bar == _nullBar) {
+    return null;
+  }
+  if (bar == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      bar=(Bar)session.get(BarImpl.class,primaryKey);
+      if (bar != null) {
+        cacheResult(bar);
+      }
+ else {
+        EntityCacheUtil.putResult(BarModelImpl.ENTITY_CACHE_ENABLED,BarImpl.class,primaryKey,_nullBar);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(BarModelImpl.ENTITY_CACHE_ENABLED,BarImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return bar;
 }

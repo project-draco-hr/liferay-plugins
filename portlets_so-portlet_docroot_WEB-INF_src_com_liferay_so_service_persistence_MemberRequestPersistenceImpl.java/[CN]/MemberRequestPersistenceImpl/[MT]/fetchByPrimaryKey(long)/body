@@ -1,27 +1,3 @@
 {
-  MemberRequest memberRequest=(MemberRequest)EntityCacheUtil.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequestId);
-  if (memberRequest == _nullMemberRequest) {
-    return null;
-  }
-  if (memberRequest == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      memberRequest=(MemberRequest)session.get(MemberRequestImpl.class,Long.valueOf(memberRequestId));
-      if (memberRequest != null) {
-        cacheResult(memberRequest);
-      }
- else {
-        EntityCacheUtil.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequestId,_nullMemberRequest);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequestId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return memberRequest;
+  return fetchByPrimaryKey((Serializable)memberRequestId);
 }

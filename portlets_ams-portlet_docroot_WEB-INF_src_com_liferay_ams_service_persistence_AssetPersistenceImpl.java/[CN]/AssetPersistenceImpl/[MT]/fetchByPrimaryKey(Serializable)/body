@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  Asset asset=(Asset)EntityCacheUtil.getResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
+  if (asset == _nullAsset) {
+    return null;
+  }
+  if (asset == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      asset=(Asset)session.get(AssetImpl.class,primaryKey);
+      if (asset != null) {
+        cacheResult(asset);
+      }
+ else {
+        EntityCacheUtil.putResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey,_nullAsset);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return asset;
 }

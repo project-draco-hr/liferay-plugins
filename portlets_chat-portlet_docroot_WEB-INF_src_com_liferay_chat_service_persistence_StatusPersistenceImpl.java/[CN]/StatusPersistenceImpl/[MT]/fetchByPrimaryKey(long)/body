@@ -1,27 +1,3 @@
 {
-  Status status=(Status)EntityCacheUtil.getResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId);
-  if (status == _nullStatus) {
-    return null;
-  }
-  if (status == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      status=(Status)session.get(StatusImpl.class,Long.valueOf(statusId));
-      if (status != null) {
-        cacheResult(status);
-      }
- else {
-        EntityCacheUtil.putResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId,_nullStatus);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,statusId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return status;
+  return fetchByPrimaryKey((Serializable)statusId);
 }

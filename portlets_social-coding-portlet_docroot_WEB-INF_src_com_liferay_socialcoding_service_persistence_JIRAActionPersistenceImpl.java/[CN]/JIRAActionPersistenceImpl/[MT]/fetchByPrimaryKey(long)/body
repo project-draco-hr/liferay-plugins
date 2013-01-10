@@ -1,27 +1,3 @@
 {
-  JIRAAction jiraAction=(JIRAAction)EntityCacheUtil.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId);
-  if (jiraAction == _nullJIRAAction) {
-    return null;
-  }
-  if (jiraAction == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      jiraAction=(JIRAAction)session.get(JIRAActionImpl.class,Long.valueOf(jiraActionId));
-      if (jiraAction != null) {
-        cacheResult(jiraAction);
-      }
- else {
-        EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId,_nullJIRAAction);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,jiraActionId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return jiraAction;
+  return fetchByPrimaryKey((Serializable)jiraActionId);
 }

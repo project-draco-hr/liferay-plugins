@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  Checkout checkout=(Checkout)EntityCacheUtil.getResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey);
+  if (checkout == _nullCheckout) {
+    return null;
+  }
+  if (checkout == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      checkout=(Checkout)session.get(CheckoutImpl.class,primaryKey);
+      if (checkout != null) {
+        cacheResult(checkout);
+      }
+ else {
+        EntityCacheUtil.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey,_nullCheckout);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return checkout;
 }

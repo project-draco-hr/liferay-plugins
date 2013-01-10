@@ -1,27 +1,3 @@
 {
-  Foo foo=(Foo)EntityCacheUtil.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,fooId);
-  if (foo == _nullFoo) {
-    return null;
-  }
-  if (foo == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      foo=(Foo)session.get(FooImpl.class,Long.valueOf(fooId));
-      if (foo != null) {
-        cacheResult(foo);
-      }
- else {
-        EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,fooId,_nullFoo);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,fooId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return foo;
+  return fetchByPrimaryKey((Serializable)fooId);
 }

@@ -1,27 +1,3 @@
 {
-  KaleoInstance kaleoInstance=(KaleoInstance)EntityCacheUtil.getResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceImpl.class,kaleoInstanceId);
-  if (kaleoInstance == _nullKaleoInstance) {
-    return null;
-  }
-  if (kaleoInstance == null) {
-    Session session=null;
-    try {
-      session=openSession();
-      kaleoInstance=(KaleoInstance)session.get(KaleoInstanceImpl.class,Long.valueOf(kaleoInstanceId));
-      if (kaleoInstance != null) {
-        cacheResult(kaleoInstance);
-      }
- else {
-        EntityCacheUtil.putResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceImpl.class,kaleoInstanceId,_nullKaleoInstance);
-      }
-    }
- catch (    Exception e) {
-      EntityCacheUtil.removeResult(KaleoInstanceModelImpl.ENTITY_CACHE_ENABLED,KaleoInstanceImpl.class,kaleoInstanceId);
-      throw processException(e);
-    }
- finally {
-      closeSession(session);
-    }
-  }
-  return kaleoInstance;
+  return fetchByPrimaryKey((Serializable)kaleoInstanceId);
 }

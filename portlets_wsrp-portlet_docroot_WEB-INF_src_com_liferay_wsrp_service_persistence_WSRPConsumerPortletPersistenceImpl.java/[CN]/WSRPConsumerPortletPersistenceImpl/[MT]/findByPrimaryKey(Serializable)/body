@@ -1,3 +1,10 @@
 {
-  return findByPrimaryKey(((Long)primaryKey).longValue());
+  WSRPConsumerPortlet wsrpConsumerPortlet=fetchByPrimaryKey(primaryKey);
+  if (wsrpConsumerPortlet == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    throw new NoSuchConsumerPortletException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+  }
+  return wsrpConsumerPortlet;
 }

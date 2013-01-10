@@ -1,3 +1,27 @@
 {
-  return fetchByPrimaryKey(((Long)primaryKey).longValue());
+  TasksEntry tasksEntry=(TasksEntry)EntityCacheUtil.getResult(TasksEntryModelImpl.ENTITY_CACHE_ENABLED,TasksEntryImpl.class,primaryKey);
+  if (tasksEntry == _nullTasksEntry) {
+    return null;
+  }
+  if (tasksEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      tasksEntry=(TasksEntry)session.get(TasksEntryImpl.class,primaryKey);
+      if (tasksEntry != null) {
+        cacheResult(tasksEntry);
+      }
+ else {
+        EntityCacheUtil.putResult(TasksEntryModelImpl.ENTITY_CACHE_ENABLED,TasksEntryImpl.class,primaryKey,_nullTasksEntry);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(TasksEntryModelImpl.ENTITY_CACHE_ENABLED,TasksEntryImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return tasksEntry;
 }

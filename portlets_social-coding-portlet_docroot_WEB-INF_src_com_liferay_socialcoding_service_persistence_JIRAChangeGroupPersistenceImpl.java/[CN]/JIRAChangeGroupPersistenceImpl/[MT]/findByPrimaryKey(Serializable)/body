@@ -1,3 +1,10 @@
 {
-  return findByPrimaryKey(((Long)primaryKey).longValue());
+  JIRAChangeGroup jiraChangeGroup=fetchByPrimaryKey(primaryKey);
+  if (jiraChangeGroup == null) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    throw new NoSuchJIRAChangeGroupException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+  }
+  return jiraChangeGroup;
 }
