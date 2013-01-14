@@ -4,13 +4,13 @@
     session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_USERS_GROUPS);
     String replacement=null;
-    if (siteNames.length > 0) {
-      replacement=_buildSiteFilterQuery(siteNames);
+    if (groupNames.length > 0) {
+      replacement=_buildGroupFilterQuery(groupNames);
     }
  else {
       replacement=StringPool.BLANK;
     }
-    sql=StringUtil.replace(sql,"[$SITES_FILTER$]",replacement);
+    sql=StringUtil.replace(sql,"[$GROUPS_FILTER$]",replacement);
     SQLQuery q=session.createSQLQuery(sql);
     q.addScalar("userId",Type.LONG);
     q.addScalar("screenName",Type.STRING);
@@ -21,7 +21,7 @@
     q.addScalar("awake",Type.BOOLEAN);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
-    _setSiteNames(qPos,siteNames);
+    _setGroupNames(qPos,groupNames);
     qPos.add(modifiedDate);
     qPos.add(userId);
     return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
