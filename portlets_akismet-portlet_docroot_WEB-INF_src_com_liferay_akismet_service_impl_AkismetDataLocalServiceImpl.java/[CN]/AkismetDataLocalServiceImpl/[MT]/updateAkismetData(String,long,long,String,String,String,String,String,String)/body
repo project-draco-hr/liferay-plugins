@@ -1,11 +1,14 @@
 {
-  AkismetData akismetData=akismetDataPersistence.fetchByMBMessageId(mbMessageId);
+  long classNameId=PortalUtil.getClassNameId(className);
+  AkismetData akismetData=akismetDataPersistence.fetchByC_C(classNameId,classPK);
   if (akismetData == null) {
     long akismetDataId=counterLocalService.increment();
     akismetData=akismetDataPersistence.create(akismetDataId);
   }
   akismetData.setModifiedDate(new Date());
-  akismetData.setMbMessageId(mbMessageId);
+  akismetData.setClassNameId(classNameId);
+  akismetData.setClassPK(classPK);
+  akismetData.setClassRPK(classRPK);
   akismetData.setType(type);
   akismetData.setPermalink(permalink);
   akismetData.setReferrer(referrer);

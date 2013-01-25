@@ -7,13 +7,13 @@
   if (spam) {
     MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_DENIED,serviceContext);
     if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
-      AkismetUtil.submitSpam(messageId);
+      AkismetUtil.submitSpam(MBMessage.class.getName(),messageId);
     }
   }
  else {
     MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_APPROVED,serviceContext);
     if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
-      AkismetUtil.submitHam(messageId);
+      AkismetUtil.submitSpam(MBMessage.class.getName(),messageId);
     }
   }
 }

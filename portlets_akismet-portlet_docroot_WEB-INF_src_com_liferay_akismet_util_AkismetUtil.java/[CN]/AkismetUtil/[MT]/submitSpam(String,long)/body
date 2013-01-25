@@ -1,0 +1,22 @@
+{
+  AkismetData akismetData=AkismetDataLocalServiceUtil.fetchAkismetData(className,classPK);
+  if (akismetData == null) {
+    return;
+  }
+  Long companyId=null;
+  String content=null;
+  String emailAddress=null;
+  String fullName=null;
+  if (Validator.equals(className,MBMessage.class.getName())) {
+    MBMessage message=MBMessageLocalServiceUtil.getMBMessage(classPK);
+    User user=UserLocalServiceUtil.getUser(message.getUserId());
+    companyId=message.getCompanyId();
+    content=message.getSubject() + "\n\n" + message.getBody();
+    emailAddress=user.getEmailAddress();
+    fullName=user.getFullName();
+  }
+  if (companyId == null) {
+    return;
+  }
+  submitSpam(companyId,akismetData.getUserIP(),akismetData.getUserAgent(),akismetData.getReferrer(),akismetData.getPermalink(),akismetData.getType(),fullName,emailAddress,content);
+}
