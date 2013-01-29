@@ -1,0 +1,11 @@
+{
+  Calendar calendar=calendarLocalService.getCalendar(calendarId);
+  Locale locale=themeDisplay.getLocale();
+  String name=calendar.getName(locale);
+  String description=calendar.getDescription(locale);
+  String feedURL=PortalUtil.getLayoutFullURL(themeDisplay);
+  long startTime=(new Date()).getTime();
+  long endTime=startTime + rssTimeInterval;
+  List<CalendarBooking> calendarBookings=getCalendarBookings(calendarId,startTime,endTime,rssDelta);
+  return exportToRSS(rssDisplayStyle,rssFormat,name,description,feedURL,calendarBookings,themeDisplay);
+}
