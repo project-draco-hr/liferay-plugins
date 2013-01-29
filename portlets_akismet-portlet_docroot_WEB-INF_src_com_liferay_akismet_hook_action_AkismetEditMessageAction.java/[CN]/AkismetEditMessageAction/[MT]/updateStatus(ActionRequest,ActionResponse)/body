@@ -5,15 +5,15 @@
   boolean spam=ParamUtil.getBoolean(actionRequest,"spam");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
   if (spam) {
-    MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_DENIED,serviceContext);
-    if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
-      AkismetUtil.submitSpam(MBMessage.class.getName(),messageId);
+    MBMessage message=MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_DENIED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(message.getCompanyId())) {
+      AkismetUtil.submitSpam(message);
     }
   }
  else {
-    MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_APPROVED,serviceContext);
-    if (AkismetUtil.isMessageBoardsEnabled(themeDisplay.getCompanyId())) {
-      AkismetUtil.submitSpam(MBMessage.class.getName(),messageId);
+    MBMessage message=MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_APPROVED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(message.getCompanyId())) {
+      AkismetUtil.submitHam(message);
     }
   }
 }
