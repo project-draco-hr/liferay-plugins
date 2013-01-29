@@ -1,9 +1,9 @@
 {
-  AkismetData akismetData=AkismetDataLocalServiceUtil.fetchAkismetData(MBMessage.class.getName(),message.getMessageId());
+  AkismetData akismetData=AkismetDataLocalServiceUtil.fetchAkismetData(MBMessage.class.getName(),mbMessage.getMessageId());
   if (akismetData == null) {
     return;
   }
-  User user=UserLocalServiceUtil.getUser(message.getUserId());
-  String content=message.getSubject() + "\n\n" + message.getBody();
-  submitSpam(message.getCompanyId(),akismetData.getUserIP(),akismetData.getUserAgent(),akismetData.getReferrer(),akismetData.getPermalink(),akismetData.getType(),user.getFullName(),user.getEmailAddress(),content);
+  User user=UserLocalServiceUtil.getUser(mbMessage.getUserId());
+  String content=mbMessage.getSubject() + "\n\n" + mbMessage.getBody();
+  submitSpam(mbMessage.getCompanyId(),akismetData.getUserIP(),akismetData.getUserAgent(),akismetData.getReferrer(),akismetData.getPermalink(),akismetData.getType(),user.getFullName(),user.getEmailAddress(),content);
 }
