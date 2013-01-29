@@ -4,11 +4,14 @@
     return;
   }
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  int rssDelta=ParamUtil.getInteger(resourceRequest,"rssDelta");
-  String rssDisplayStyle=ParamUtil.getString(resourceRequest,"rssDisplayStyle");
-  String rssFormat=ParamUtil.getString(resourceRequest,"rssFormat");
-  long rssTimeInterval=ParamUtil.getLong(resourceRequest,"rssTimeInterval");
   long calendarId=ParamUtil.getLong(resourceRequest,"calendarId");
-  String rss=CalendarBookingServiceUtil.getCalendarBookingsRSS(calendarId,rssTimeInterval,rssDelta,rssDisplayStyle,rssFormat,themeDisplay);
+  int max=ParamUtil.getInteger(resourceRequest,"max",SearchContainer.DEFAULT_DELTA);
+  String type=ParamUtil.getString(resourceRequest,"type",RSSUtil.FORMAT_DEFAULT);
+  double version=ParamUtil.getDouble(resourceRequest,"version",RSSUtil.VERSION_DEFAULT);
+  String displayStyle=ParamUtil.getString(resourceRequest,"displayStyle",RSSUtil.DISPLAY_STYLE_DEFAULT);
+  long timeInterval=ParamUtil.getLong(resourceRequest,"timeInterval",RSSUtil.TIME_INTERVAL_DEFAULT);
+  long startTime=(new Date()).getTime();
+  long endTime=startTime + timeInterval;
+  String rss=CalendarBookingServiceUtil.getCalendarBookingsRSS(calendarId,startTime,endTime,max,displayStyle,type,version,themeDisplay);
   PortletResponseUtil.sendFile(resourceRequest,resourceResponse,null,rss.getBytes(),ContentTypes.TEXT_XML_UTF8);
 }

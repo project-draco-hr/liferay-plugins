@@ -10,7 +10,7 @@
     syndEntry.setAuthor(author);
     SyndContent syndContent=new SyndContentImpl();
     syndContent.setType(RSSUtil.ENTRY_TYPE_DEFAULT);
-    String value=CalendarBookingRSSUtil.getContent(calendarBooking,rssDisplayStyle,themeDisplay);
+    String value=RSSUtil.getContent(calendarBooking,displayStyle,themeDisplay);
     syndContent.setValue(value);
     syndEntry.setDescription(syndContent);
     String link=StringPool.BLANK;
@@ -21,8 +21,7 @@
     syndEntry.setUri(link);
     syndEntries.add(syndEntry);
   }
-  String feedType=RSSUtil.getFeedType(RSSUtil.getFormatType(rssFormat),RSSUtil.getFormatVersion(rssFormat));
-  syndFeed.setFeedType(feedType);
+  syndFeed.setFeedType(RSSUtil.getFeedType(type,version));
   List<SyndLink> syndLinks=new ArrayList<SyndLink>();
   syndFeed.setLinks(syndLinks);
   SyndLink selfSyndLink=new SyndLinkImpl();
