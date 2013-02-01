@@ -4,7 +4,7 @@
   long parentResourcePrimKey=MapUtil.getLong(kbArticlePKs,kbArticle.getParentResourcePrimKey());
   String[] sections=AdminUtil.unescapeSections(kbArticle.getSections());
   String dirName=MapUtil.getString(dirNames,String.valueOf(kbArticle.getResourcePrimKey()));
-  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticleElement,kbArticle,_NAMESPACE);
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticleElement,kbArticle,NAMESPACE);
   KBArticle importedKBArticle=null;
   if (portletDataContext.isDataStrategyMirror()) {
     KBArticle existingKBArticle=KBArticleUtil.fetchByUUID_G(kbArticle.getUuid(),portletDataContext.getScopeGroupId());
@@ -20,6 +20,6 @@
  else {
     importedKBArticle=importKBArticleVersions(portletDataContext,null,parentResourcePrimKey,dirName,kbArticleElement);
   }
-  portletDataContext.importClassedModel(kbArticle,importedKBArticle,_NAMESPACE);
+  portletDataContext.importClassedModel(kbArticle,importedKBArticle,NAMESPACE);
   importKBArticleAttachments(portletDataContext,CounterLocalServiceUtil.increment(),dirNames,kbArticleElement,importedKBArticle);
 }

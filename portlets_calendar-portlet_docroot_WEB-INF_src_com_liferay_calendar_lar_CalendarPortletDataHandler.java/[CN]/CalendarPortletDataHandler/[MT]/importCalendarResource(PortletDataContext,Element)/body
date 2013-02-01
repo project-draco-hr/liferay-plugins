@@ -5,7 +5,7 @@
   }
   CalendarResource calendarResource=(CalendarResource)portletDataContext.getZipEntryAsObject(path);
   long userId=portletDataContext.getUserId(calendarResource.getUserUuid());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResourceElement,calendarResource,_NAMESPACE);
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResourceElement,calendarResource,NAMESPACE);
   CalendarResource importedCalendarResource=null;
   if (portletDataContext.isDataStrategyMirror()) {
     CalendarResource existingCalendarResource=CalendarResourceUtil.fetchByUUID_G(calendarResource.getUuid(),portletDataContext.getScopeGroupId());
@@ -20,5 +20,5 @@
  else {
     importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassName(),0,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
   }
-  portletDataContext.importClassedModel(calendarResource,importedCalendarResource,_NAMESPACE);
+  portletDataContext.importClassedModel(calendarResource,importedCalendarResource,NAMESPACE);
 }

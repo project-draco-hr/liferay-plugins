@@ -9,7 +9,7 @@
   long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
   CalendarResource calendarResource=CalendarResourceLocalServiceUtil.getCalendarResource(calendarResourceId);
   long groupId=calendarResource.getGroupId();
-  ServiceContext serviceContext=portletDataContext.createServiceContext(path,calendar,_NAMESPACE);
+  ServiceContext serviceContext=portletDataContext.createServiceContext(path,calendar,NAMESPACE);
   Calendar importedCalendar=null;
   if (calendar.isDefaultCalendar()) {
     importedCalendar=CalendarLocalServiceUtil.updateCalendar(calendarResource.getDefaultCalendarId(),calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),serviceContext);
@@ -29,5 +29,5 @@
       importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,groupId,calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.getDefaultCalendar(),serviceContext);
     }
   }
-  portletDataContext.importClassedModel(calendar,importedCalendar,_NAMESPACE);
+  portletDataContext.importClassedModel(calendar,importedCalendar,NAMESPACE);
 }
