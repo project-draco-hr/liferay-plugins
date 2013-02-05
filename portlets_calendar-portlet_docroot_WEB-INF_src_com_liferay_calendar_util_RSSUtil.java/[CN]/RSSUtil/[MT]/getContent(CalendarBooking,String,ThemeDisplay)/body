@@ -1,17 +1,14 @@
 {
-  Locale locale=themeDisplay.getLocale();
-  String content=null;
   if (displayStyle.equals(DISPLAY_STYLE_ABSTRACT)) {
-    content=StringUtil.shorten(calendarBooking.getDescription(locale),200);
+    return StringUtil.shorten(calendarBooking.getDescription(themeDisplay.getLocale()),200);
   }
  else   if (displayStyle.equals(DISPLAY_STYLE_TITLE)) {
-    content=calendarBooking.getTitle(locale);
+    return calendarBooking.getTitle(themeDisplay.getLocale());
   }
  else {
-    TimeZone timeZone=themeDisplay.getTimeZone();
-    String rssEntryTemplate=ContentUtil.get(PortletProps.get(PortletPropsKeys.CALENDAR_RSS_TEMPLATE));
-    Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(locale,timeZone);
-    content=StringUtil.replace(rssEntryTemplate,new String[]{"[$BOOKING_LOCATION$]","[$BOOKING_START_DATE$]","[$BOOKING_END_DATE$]","[$BOOKING_TITLE$]","[$BOOKING_DESCRIPTION$]"},new String[]{calendarBooking.getLocation(),dateFormatDateTime.format(calendarBooking.getStartTime()),dateFormatDateTime.format(calendarBooking.getEndTime()),calendarBooking.getTitle(locale),calendarBooking.getDescription(locale)});
+    String content=ContentUtil.get(PortletProps.get(PortletPropsKeys.CALENDAR_RSS_TEMPLATE));
+    Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(themeDisplay.getLocale(),themeDisplay.getTimeZone());
+    content=StringUtil.replace(content,new String[]{"[$BOOKING_DESCRIPTION$]","[$BOOKING_END_DATE$]","[$BOOKING_LOCATION$]","[$BOOKING_START_DATE$]","[$BOOKING_TITLE$]"},new String[]{calendarBooking.getDescription(themeDisplay.getLocale()),dateFormatDateTime.format(calendarBooking.getEndTime()),calendarBooking.getLocation(),dateFormatDateTime.format(calendarBooking.getStartTime()),calendarBooking.getTitle(themeDisplay.getLocale())});
+    return content;
   }
-  return content;
 }
