@@ -6,12 +6,7 @@
   if (searchByUserRoles) {
     List<Long> roleIds=getSearchByUserRoleIds(kaleoTaskInstanceTokenQuery);
     List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
-    List<UserGroupGroupRole> userGroupGroupRoles=new ArrayList<UserGroupGroupRole>();
-    List<UserGroup> userGroups=UserGroupLocalServiceUtil.getUserUserGroups(kaleoTaskInstanceTokenQuery.getUserId());
-    for (    UserGroup userGroup : userGroups) {
-      List<UserGroupGroupRole> usreGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(userGroup.getUserGroupId());
-      userGroupGroupRoles.addAll(usreGroupGroupRoles);
-    }
+    List<UserGroupGroupRole> userGroupGroupRoles=getUserGroupGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
     if (roleIds.isEmpty() && userGroupRoles.isEmpty() && userGroupGroupRoles.isEmpty()) {
       return StringPool.BLANK;
     }

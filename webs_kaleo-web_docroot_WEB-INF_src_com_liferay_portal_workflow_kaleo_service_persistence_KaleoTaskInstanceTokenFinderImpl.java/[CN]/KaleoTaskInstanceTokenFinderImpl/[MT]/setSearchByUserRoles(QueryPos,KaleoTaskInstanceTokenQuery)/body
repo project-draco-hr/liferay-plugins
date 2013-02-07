@@ -7,13 +7,7 @@
     qPos.add(Role.class.getName());
     List<Long> roleIds=getSearchByUserRoleIds(kaleoTaskInstanceTokenQuery);
     List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
-    User user=UserLocalServiceUtil.getUser(kaleoTaskInstanceTokenQuery.getUserId());
-    long[] userGroupIds=user.getUserGroupIds();
-    List<UserGroupGroupRole> userGroupGroupRoles=new ArrayList<UserGroupGroupRole>();
-    for (    long userGroupId : userGroupIds) {
-      List<UserGroupGroupRole> roles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(userGroupId);
-      userGroupGroupRoles.addAll(roles);
-    }
+    List<UserGroupGroupRole> userGroupGroupRoles=getUserGroupGroupRoles(kaleoTaskInstanceTokenQuery.getUserId());
     if (roleIds.isEmpty() && userGroupRoles.isEmpty() && userGroupGroupRoles.isEmpty()) {
       return;
     }
