@@ -2,20 +2,23 @@
   if (Validator.isNotNull(title)) {
     return title;
   }
-  if (className.equals(BookmarksFolder.class.getName())) {
-    return BookmarksFolderLocalServiceUtil.getBookmarksFolder(classPK).getName();
-  }
- else   if (className.equals(BlogsEntry.class.getName())) {
+  if (className.equals(BlogsEntry.class.getName())) {
     title="Blog at ";
   }
+ else   if (className.equals(BookmarksFolder.class.getName())) {
+    BookmarksFolder bookmarksFolder=BookmarksFolderLocalServiceUtil.getBookmarksFolder(classPK);
+    return bookmarksFolder.getName();
+  }
  else   if (className.equals(Layout.class.getName())) {
-    return LayoutLocalServiceUtil.getLayout(classPK).getName(locale);
+    Layout layout=LayoutLocalServiceUtil.getLayout(classPK);
+    return layout.getName(locale);
   }
  else   if (className.equals(MBCategory.class.getName())) {
     title="Message Board at ";
   }
  else   if (className.equals(WikiNode.class.getName())) {
-    return WikiNodeLocalServiceUtil.getWikiNode(classPK).getName();
+    WikiNode wikiNode=WikiNodeLocalServiceUtil.getWikiNode(classPK);
+    return wikiNode.getName();
   }
   try {
     Group group=GroupLocalServiceUtil.getGroup(classPK);
