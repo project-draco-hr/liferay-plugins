@@ -16,29 +16,20 @@
     sb.append("AND (");
     for (int i=0; i < roleIds.size(); i++) {
       sb.append("(KaleoTaskAssignmentInstance.assigneeClassPK = ?)");
-      if ((i + 1) < roleIds.size()) {
-        sb.append(" OR ");
-      }
-    }
-    if (!roleIds.isEmpty() && !userGroupRoles.isEmpty()) {
       sb.append(" OR ");
     }
     for (int i=0; i < userGroupRoles.size(); i++) {
       sb.append("((KaleoTaskAssignmentInstance.groupId = ?) AND ");
       sb.append("(KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
-      if ((i + 1) < userGroupRoles.size()) {
-        sb.append(" OR ");
-      }
-    }
-    if ((!roleIds.isEmpty() || !userGroupRoles.isEmpty()) && !userGroupGroupRoles.isEmpty()) {
       sb.append(" OR ");
     }
     for (int i=0; i < userGroupGroupRoles.size(); i++) {
       sb.append("((KaleoTaskAssignmentInstance.groupId = ?) AND ");
       sb.append("(KaleoTaskAssignmentInstance.assigneeClassPK = ?))");
-      if ((i + 1) < userGroupGroupRoles.size()) {
-        sb.append(" OR ");
-      }
+      sb.append(" OR ");
+    }
+    if (!roleIds.isEmpty() || !userGroupRoles.isEmpty() || !userGroupGroupRoles.isEmpty()) {
+      sb.setIndex(sb.length() - 4);
     }
     sb.append("))");
     return sb.toString();
