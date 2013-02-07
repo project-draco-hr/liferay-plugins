@@ -4,9 +4,8 @@
   if (recordSetId == 0) {
     return StringPool.BLANK;
   }
-  Document document=SAXReaderUtil.createDocument();
-  Element rootElement=document.addElement("record-sets");
+  Element rootElement=addExportRootElement();
   DDLRecordSet recordSet=DDLRecordSetLocalServiceUtil.getRecordSet(recordSetId);
   StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,rootElement,recordSet);
-  return document.formattedString();
+  return rootElement.formattedString();
 }

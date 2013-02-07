@@ -1,6 +1,5 @@
 {
-  Document document=SAXReaderUtil.createDocument();
-  Element rootElement=document.addElement("wsrp-data");
+  Element rootElement=addExportRootElement();
   if (portletDataContext.getBooleanParameter(NAMESPACE,"wsrp-producers")) {
     Element wsrpProducersElement=rootElement.addElement("wsrp-producers");
     List<WSRPProducer> wsrpProducers=WSRPProducerLocalServiceUtil.getWSRPProducers(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
@@ -15,5 +14,5 @@
       exportWSRPConsumer(portletDataContext,wsrpConsumersElement,wsrpConsumer);
     }
   }
-  return document.formattedString();
+  return rootElement.formattedString();
 }
