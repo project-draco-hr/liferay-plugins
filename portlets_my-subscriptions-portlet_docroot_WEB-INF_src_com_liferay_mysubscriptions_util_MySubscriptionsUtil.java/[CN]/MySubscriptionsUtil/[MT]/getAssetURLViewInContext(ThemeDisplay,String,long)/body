@@ -8,5 +8,29 @@
   if (className.equals(MBCategory.class.getName())) {
     return PortalUtil.getLayoutFullURL(classPK,PortletKeys.MESSAGE_BOARDS);
   }
+  if (className.equals(WikiNode.class.getName())) {
+    long wikiPlid;
+    wikiPlid=PortalUtil.getPlidFromPortletId(themeDisplay.getScopeGroupId(),PortletKeys.WIKI);
+    if (wikiPlid == 0) {
+      wikiPlid=PortalUtil.getPlidFromPortletId(themeDisplay.getScopeGroupId(),PortletKeys.WIKI_DISPLAY);
+    }
+    Layout wikiLayout=null;
+    if (wikiPlid != 0) {
+      wikiLayout=LayoutLocalServiceUtil.getLayout(wikiPlid);
+      String layoutFullURL=PortalUtil.getLayoutFullURL(wikiLayout,themeDisplay);
+      StringBuilder wikiNodeURL=new StringBuilder();
+      wikiNodeURL.append(layoutFullURL);
+      wikiNodeURL.append(Portal.FRIENDLY_URL_SEPARATOR);
+      wikiNodeURL.append("wiki");
+      wikiNodeURL.append(StringPool.SLASH);
+      wikiNodeURL.append(classPK);
+      wikiNodeURL.append(StringPool.SLASH);
+      wikiNodeURL.append("all_pages");
+      return wikiNodeURL.toString();
+    }
+ else {
+      return "";
+    }
+  }
   return null;
 }

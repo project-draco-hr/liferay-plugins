@@ -2,7 +2,10 @@
   if (Validator.isNotNull(title)) {
     return title;
   }
-  if (className.equals(BlogsEntry.class.getName())) {
+  if (className.equals(BookmarksFolder.class.getName())) {
+    return BookmarksFolderLocalServiceUtil.getBookmarksFolder(classPK).getName();
+  }
+ else   if (className.equals(BlogsEntry.class.getName())) {
     title="Blog at ";
   }
  else   if (className.equals(Layout.class.getName())) {
@@ -10,6 +13,9 @@
   }
  else   if (className.equals(MBCategory.class.getName())) {
     title="Message Board at ";
+  }
+ else   if (className.equals(WikiNode.class.getName())) {
+    return WikiNodeLocalServiceUtil.getWikiNode(classPK).getName();
   }
   try {
     Group group=GroupLocalServiceUtil.getGroup(classPK);
