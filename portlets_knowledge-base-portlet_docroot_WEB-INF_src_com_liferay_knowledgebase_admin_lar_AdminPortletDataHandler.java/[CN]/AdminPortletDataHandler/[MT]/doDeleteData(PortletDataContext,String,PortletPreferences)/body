@@ -1,7 +1,8 @@
 {
-  if (!portletDataContext.addPrimaryKey(AdminPortletDataHandler.class,"deleteData")) {
-    KBArticleLocalServiceUtil.deleteGroupKBArticles(portletDataContext.getScopeGroupId());
-    KBTemplateLocalServiceUtil.deleteGroupKBTemplates(portletDataContext.getScopeGroupId());
+  if (portletDataContext.addPrimaryKey(AdminPortletDataHandler.class,"deleteData")) {
+    return portletPreferences;
   }
-  return null;
+  KBArticleLocalServiceUtil.deleteGroupKBArticles(portletDataContext.getScopeGroupId());
+  KBTemplateLocalServiceUtil.deleteGroupKBTemplates(portletDataContext.getScopeGroupId());
+  return portletPreferences;
 }
