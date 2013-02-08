@@ -9,7 +9,8 @@
   for (  Element fileElement : fileElements) {
     String fileName=fileElement.attributeValue("file-name");
     InputStream inputStream=portletDataContext.getZipEntryAsInputStream(fileElement.attributeValue("path"));
-    PortletFileRepositoryUtil.addPortletFileEntry(portletDataContext.getScopeGroupId(),portletDataContext.getUserId(kbArticle.getUserUuid()),KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ADMIN,kbArticle.getAttachmentsFolderId(),inputStream,fileName);
+    String mimeType=MimeTypesUtil.getContentType(inputStream,fileName);
+    PortletFileRepositoryUtil.addPortletFileEntry(portletDataContext.getScopeGroupId(),portletDataContext.getUserId(kbArticle.getUserUuid()),KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ADMIN,kbArticle.getAttachmentsFolderId(),inputStream,fileName,mimeType);
   }
   dirNames.put(resourcePrimKey,dirName);
 }

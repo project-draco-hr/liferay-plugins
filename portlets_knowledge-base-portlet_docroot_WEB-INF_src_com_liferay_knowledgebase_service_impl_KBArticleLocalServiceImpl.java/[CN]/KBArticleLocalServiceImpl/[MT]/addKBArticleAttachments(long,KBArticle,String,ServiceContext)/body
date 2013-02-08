@@ -17,7 +17,8 @@
     try {
       inputStream=DLStoreUtil.getFileAsStream(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
       String shortFileName=FileUtil.getShortFileName(fileName);
-      PortletFileRepositoryUtil.addPortletFileEntry(serviceContext.getScopeGroupId(),userId,KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName);
+      String mimeType=MimeTypesUtil.getContentType(inputStream,fileName);
+      PortletFileRepositoryUtil.addPortletFileEntry(serviceContext.getScopeGroupId(),userId,KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName,mimeType);
     }
   finally {
       StreamUtil.cleanUp(inputStream);
