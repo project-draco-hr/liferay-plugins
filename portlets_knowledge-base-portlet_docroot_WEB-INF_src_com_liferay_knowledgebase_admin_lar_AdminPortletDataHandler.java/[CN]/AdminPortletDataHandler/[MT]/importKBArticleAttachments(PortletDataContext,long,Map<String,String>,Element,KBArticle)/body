@@ -7,8 +7,8 @@
   serviceContext.setCompanyId(portletDataContext.getCompanyId());
   serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
   for (  Element fileElement : fileElements) {
-    String fileName=fileElement.attributeValue("file-name");
     InputStream inputStream=portletDataContext.getZipEntryAsInputStream(fileElement.attributeValue("path"));
+    String fileName=fileElement.attributeValue("file-name");
     String mimeType=MimeTypesUtil.getContentType(inputStream,fileName);
     PortletFileRepositoryUtil.addPortletFileEntry(portletDataContext.getScopeGroupId(),portletDataContext.getUserId(kbArticle.getUserUuid()),KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ADMIN,kbArticle.getAttachmentsFolderId(),inputStream,fileName,mimeType);
   }
