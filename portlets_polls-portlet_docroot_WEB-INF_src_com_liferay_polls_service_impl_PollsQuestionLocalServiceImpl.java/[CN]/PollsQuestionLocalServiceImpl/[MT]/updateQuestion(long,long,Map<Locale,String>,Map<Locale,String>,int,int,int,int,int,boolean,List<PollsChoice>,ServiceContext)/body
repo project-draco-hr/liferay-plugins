@@ -2,7 +2,7 @@
   User user=userPersistence.findByPrimaryKey(userId);
   Date expirationDate=null;
   if (!neverExpire) {
-    expirationDate=PortalUtil.getDate(expirationDateMonth,expirationDateDay,expirationDateYear,expirationDateHour,expirationDateMinute,user.getTimeZone(),QuestionExpirationDateException.class);
+    expirationDate=PortalUtil.getDate(expirationDateMonth,expirationDateDay,expirationDateYear,expirationDateHour,expirationDateMinute,user.getTimeZone(),PollsQuestionExpirationDateException.class);
   }
   validate(titleMap,descriptionMap,choices);
   PollsQuestion question=pollsQuestionPersistence.findByPrimaryKey(questionId);
@@ -12,19 +12,19 @@
   question.setExpirationDate(expirationDate);
   pollsQuestionPersistence.update(question);
   if (choices != null) {
-    int oldChoicesCount=pollsChoicePersistence.countByQuestionId(questionId);
+    int oldChoicesCount=pollsChoicePersistence.countByPollsQuestionId(questionId);
     if (oldChoicesCount > choices.size()) {
-      throw new QuestionChoiceException();
+      throw new PollsQuestionChoiceException();
     }
     for (    PollsChoice choice : choices) {
       String choiceName=choice.getName();
       String choiceDescription=choice.getDescription();
-      choice=pollsChoicePersistence.fetchByQ_N(questionId,choiceName);
+      choice=pollsChoicePersistence.fetchByPQI_N(questionId,choiceName);
       if (choice == null) {
         pollsChoiceLocalService.addChoice(questionId,choiceName,choiceDescription,new ServiceContext());
       }
  else {
-        pollsChoiceLocalService.updateChoice(choice.getChoiceId(),questionId,choiceName,choiceDescription);
+        pollsChoiceLocalService.updateChoice(choice.getPollsChoiceId(),questionId,choiceName,choiceDescription);
       }
     }
   }
