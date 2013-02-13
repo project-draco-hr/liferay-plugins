@@ -8,8 +8,9 @@
   if (!enabled) {
     return message;
   }
+  String content=subject + "\n\n" + body;
   int status=WorkflowConstants.STATUS_APPROVED;
-  if (isSpam(userId,subject,body,akismetData)) {
+  if (AkismetUtil.isSpam(userId,content,akismetData)) {
     status=WorkflowConstants.STATUS_DENIED;
   }
   return super.updateStatus(userId,message.getMessageId(),status,serviceContext);
