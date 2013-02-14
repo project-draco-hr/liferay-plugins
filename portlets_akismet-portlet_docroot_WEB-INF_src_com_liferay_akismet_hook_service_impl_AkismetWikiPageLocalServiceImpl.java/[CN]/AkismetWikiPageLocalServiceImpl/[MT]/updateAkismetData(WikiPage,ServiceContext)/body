@@ -1,0 +1,11 @@
+{
+  if (!AkismetUtil.hasRequiredInfo(serviceContext)) {
+    return null;
+  }
+  String permalink=getPermalink(page,serviceContext);
+  Map<String,String> headers=serviceContext.getHeaders();
+  String referrer=headers.get("referer");
+  String userAgent=headers.get(HttpHeaders.USER_AGENT.toLowerCase());
+  String userIP=serviceContext.getRemoteAddr();
+  return AkismetDataLocalServiceUtil.updateAkismetData(WikiPage.class.getName(),page.getPageId(),AkismetConstants.TYPE_WIKI,permalink,referrer,userAgent,userIP,StringPool.BLANK);
+}

@@ -1,0 +1,17 @@
+{
+  boolean enabled=isWikiEnabled(userId,nodeId,serviceContext);
+  if (enabled) {
+    serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
+  }
+  WikiPage page=super.addPage(userId,nodeId,title,version,content,summary,minorEdit,format,head,parentTitle,redirectTitle,serviceContext);
+  AkismetData akismetData=updateAkismetData(page,serviceContext);
+  if (!enabled) {
+    return page;
+  }
+  String akismetContent=page.getTitle() + "\n\n" + page.getContent();
+  int status=WorkflowConstants.STATUS_APPROVED;
+  if (AkismetUtil.isSpam(userId,akismetContent,akismetData)) {
+    status=WorkflowConstants.STATUS_DENIED;
+  }
+  return super.updateStatus(userId,page.getResourcePrimKey(),status,serviceContext);
+}

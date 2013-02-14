@@ -1,0 +1,17 @@
+{
+  if (!AkismetUtil.hasRequiredInfo(serviceContext)) {
+    return false;
+  }
+  User user=UserLocalServiceUtil.getUser(userId);
+  if (!AkismetUtil.isWikiEnabled(user.getCompanyId())) {
+    return false;
+  }
+  int checkThreshold=PrefsPortletPropsUtil.getInteger(user.getCompanyId(),PortletPropsKeys.AKISMET_CHECK_THRESHOLD);
+  if (checkThreshold > 0) {
+    int count=super.getPagesCount(userId,nodeId,WorkflowConstants.STATUS_APPROVED);
+    if (count > checkThreshold) {
+      return false;
+    }
+  }
+  return true;
+}

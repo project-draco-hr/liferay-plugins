@@ -1,0 +1,11 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  checkWikiPagePermission(themeDisplay.getScopeGroupId());
+  long[] wikiPageIds=ParamUtil.getLongValues(actionRequest,"spamWikiPageIds");
+  for (  long wikiPageId : wikiPageIds) {
+    WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(wikiPageId);
+    wikiPage.setStatus(WorkflowConstants.STATUS_DENIED);
+    wikiPage.setSummary(AkismetConstants.WIKI_PAGE_SPAM);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+  }
+}

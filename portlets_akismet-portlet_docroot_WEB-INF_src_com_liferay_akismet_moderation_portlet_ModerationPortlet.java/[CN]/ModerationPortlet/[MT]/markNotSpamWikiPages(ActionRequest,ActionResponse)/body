@@ -1,0 +1,47 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  checkWikiPagePermission(themeDisplay.getScopeGroupId());
+  long[] wikiPageIds=ParamUtil.getLongValues(actionRequest,"notSpamWikiPageIds");
+  List<String> wikiPageLinks=new ArrayList<String>();
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
+  for (  long wikiPageId : wikiPageIds) {
+    WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(wikiPageId);
+    WikiPage latestVersionWikiPage=getWikiPage(wikiPage,false);
+    String latestContent=null;
+    if (latestVersionWikiPage != null) {
+      latestContent=latestVersionWikiPage.getContent();
+    }
+    WikiPage previousVersionWikiPage=getWikiPage(wikiPage,true);
+    String previousContent=null;
+    if (previousVersionWikiPage != null) {
+      previousContent=previousVersionWikiPage.getContent();
+    }
+    if ((latestContent != null) && (previousContent != null) && latestContent.equals(previousContent)) {
+      WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),serviceContext);
+    }
+ else {
+      StringBundler sb=new StringBundler(5);
+      sb.append("<a href=\"");
+      long plid=PortalUtil.getPlidFromPortletId(wikiPage.getGroupId(),PortletKeys.WIKI);
+      LiferayPortletURL liferayPortletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.WIKI,plid,PortletRequest.RENDER_PHASE);
+      liferayPortletURL.setParameter("struts_action","/wiki/view");
+      liferayPortletURL.setParameter("nodeName",wikiPage.getNode().getName());
+      liferayPortletURL.setParameter("title",wikiPage.getTitle());
+      liferayPortletURL.setParameter("version",String.valueOf(wikiPage.getVersion()));
+      sb.append(liferayPortletURL.toString());
+      sb.append("\" target=\"_blank\">");
+      sb.append(wikiPage.getTitle());
+      sb.append("</a>");
+      wikiPageLinks.add(sb.toString());
+    }
+    wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
+    wikiPage.setSummary(StringPool.BLANK);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+    AkismetUtil.submitHam(wikiPage);
+  }
+  if (!wikiPageLinks.isEmpty()) {
+    SessionMessages.add(actionRequest,"request_processed");
+    SessionMessages.add(actionRequest,"anotherUserHasMadeChangesToThesePages",StringUtil.merge(wikiPageLinks,"<br />"));
+    super.sendRedirect(actionRequest,actionResponse);
+  }
+}

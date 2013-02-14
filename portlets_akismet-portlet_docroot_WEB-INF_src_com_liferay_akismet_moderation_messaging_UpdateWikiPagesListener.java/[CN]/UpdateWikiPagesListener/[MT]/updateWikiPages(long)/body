@@ -1,0 +1,15 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(WikiPage.class,PortalClassLoaderUtil.getClassLoader());
+  Property summaryProperty=PropertyFactoryUtil.forName("summary");
+  dynamicQuery.add(summaryProperty.eq(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL));
+  Property statusProperty=PropertyFactoryUtil.forName("status");
+  dynamicQuery.add(statusProperty.eq(WorkflowConstants.STATUS_DENIED));
+  Property statusDateProperty=PropertyFactoryUtil.forName("statusDate");
+  dynamicQuery.add(statusDateProperty.lt(AkismetUtil.getRetainSpamTime()));
+  List<WikiPage> wikiPages=WikiPageLocalServiceUtil.dynamicQuery(dynamicQuery);
+  for (  WikiPage wikiPage : wikiPages) {
+    wikiPage.setStatus(WorkflowConstants.STATUS_DENIED);
+    wikiPage.setSummary(AkismetConstants.WIKI_PAGE_SPAM);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+  }
+}

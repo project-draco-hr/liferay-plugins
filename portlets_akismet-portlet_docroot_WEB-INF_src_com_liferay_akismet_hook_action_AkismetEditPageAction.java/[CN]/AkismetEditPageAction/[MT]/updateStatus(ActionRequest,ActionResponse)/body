@@ -1,0 +1,57 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  checkPermission(themeDisplay.getScopeGroupId());
+  long pageId=ParamUtil.getLong(actionRequest,"pageId");
+  boolean spam=ParamUtil.getBoolean(actionRequest,"spam");
+  WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(pageId);
+  WikiPage latestVersionWikiPage=getWikiPage(wikiPage,false);
+  String latestContent=null;
+  double latestVersion=-1;
+  if (latestVersionWikiPage != null) {
+    latestContent=latestVersionWikiPage.getContent();
+    latestVersion=latestVersionWikiPage.getVersion();
+  }
+  WikiPage previousVersionWikiPage=getWikiPage(wikiPage,true);
+  String previousContent=null;
+  double previousVersion=-1;
+  if (previousVersionWikiPage != null) {
+    previousContent=previousVersionWikiPage.getContent();
+    previousVersion=previousVersionWikiPage.getVersion();
+  }
+  String pattern=StringPool.BLANK;
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
+  if (spam) {
+    if ((wikiPage.getVersion() >= latestVersion) && wikiPage.isApproved()) {
+      if (previousVersionWikiPage != null) {
+        WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),previousVersion,serviceContext);
+      }
+ else {
+        WikiPageLocalServiceUtil.updatePage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),latestVersion,null,StringPool.BLANK,true,wikiPage.getFormat(),wikiPage.getParentTitle(),wikiPage.getRedirectTitle(),serviceContext);
+      }
+    }
+    wikiPage.setStatus(WorkflowConstants.STATUS_DENIED);
+    wikiPage.setSummary(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+    pattern="version-x-was-marked-as-spam";
+    if (AkismetUtil.isWikiEnabled(themeDisplay.getCompanyId())) {
+      AkismetUtil.submitSpam(wikiPage);
+    }
+  }
+ else {
+    if ((latestContent != null) && (previousContent != null) && latestContent.equals(previousContent)) {
+      WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),serviceContext);
+    }
+ else {
+      SessionMessages.add(actionRequest,"anotherUserHasMadeChanges");
+    }
+    wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
+    wikiPage.setSummary(StringPool.BLANK);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
+    pattern="version-x-was-marked-as-not-spam";
+    if (AkismetUtil.isWikiEnabled(themeDisplay.getCompanyId())) {
+      AkismetUtil.submitHam(wikiPage);
+    }
+  }
+  String value=LanguageUtil.format(themeDisplay.getLocale(),pattern,wikiPage.getVersion());
+  SessionMessages.add(actionRequest,"request_processed",value);
+}

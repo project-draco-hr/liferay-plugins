@@ -1,0 +1,9 @@
+{
+  AkismetData akismetData=AkismetDataLocalServiceUtil.fetchAkismetData(WikiPage.class.getName(),wikiPage.getPageId());
+  if (akismetData == null) {
+    return;
+  }
+  User user=UserLocalServiceUtil.getUser(wikiPage.getUserId());
+  String content=wikiPage.getTitle() + "\n\n" + wikiPage.getContent();
+  submitSpam(wikiPage.getCompanyId(),akismetData.getUserIP(),akismetData.getUserAgent(),akismetData.getReferrer(),akismetData.getPermalink(),akismetData.getType(),user.getFullName(),user.getEmailAddress(),content);
+}
