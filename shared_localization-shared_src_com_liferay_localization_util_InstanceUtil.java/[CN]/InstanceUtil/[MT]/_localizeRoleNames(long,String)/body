@@ -1,4 +1,5 @@
 {
+  ServiceContext serviceContext=new ServiceContext();
   for (  String name : PortalUtil.getSystemRoles()) {
     Role role=RoleLocalServiceUtil.loadGetRole(companyId,name);
     Map<Locale,String> descriptionMap=role.getDescriptionMap();
@@ -23,7 +24,7 @@
       _putMap(descriptionMap,languageId,ROLE_USER_DESCRIPTION);
       _putMap(titleMap,languageId,ROLE_USER_NAME);
     }
-    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_REGULAR_LABEL);
+    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_REGULAR_LABEL,serviceContext);
   }
   for (  String name : PortalUtil.getSystemOrganizationRoles()) {
     Role role=RoleLocalServiceUtil.loadGetRole(companyId,name);
@@ -41,7 +42,7 @@
       _putMap(descriptionMap,languageId,ROLE_ORGANIZATION_USER_DESCRIPTION);
       _putMap(titleMap,languageId,ROLE_ORGANIZATION_USER_NAME);
     }
-    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_ORGANIZATION_LABEL);
+    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_ORGANIZATION_LABEL,serviceContext);
   }
   for (  String name : PortalUtil.getSystemSiteRoles()) {
     Role role=RoleLocalServiceUtil.loadGetRole(companyId,name);
@@ -59,6 +60,6 @@
       _putMap(descriptionMap,languageId,ROLE_SITE_OWNER_DESCRIPTION);
       _putMap(titleMap,languageId,ROLE_SITE_OWNER_NAME);
     }
-    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_SITE_LABEL);
+    RoleLocalServiceUtil.updateRole(role.getRoleId(),name,titleMap,descriptionMap,RoleConstants.TYPE_SITE_LABEL,serviceContext);
   }
 }
