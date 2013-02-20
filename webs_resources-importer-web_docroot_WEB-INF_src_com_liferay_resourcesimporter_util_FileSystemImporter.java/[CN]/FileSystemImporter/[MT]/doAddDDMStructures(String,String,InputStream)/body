@@ -3,6 +3,9 @@
   String name=FileUtil.stripExtension(fileName);
   Map<Locale,String> nameMap=getMap(name);
   String xsd=StringUtil.read(inputStream);
+  if (isJournalStructureXSD(xsd)) {
+    xsd=JournalConverterUtil.getDDMXSD(xsd);
+  }
   setServiceContext(fileName);
   DDMStructure ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),ddmStructureKey,nameMap,null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
   addDDMTemplates(ddmStructure.getStructureKey(),_JOURNAL_DDM_TEMPLATES_DIR_NAME + name);
