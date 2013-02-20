@@ -1,4 +1,7 @@
 {
+  if (!tableHasColumn("Akismet_AkismetData","mbMessageId")) {
+    return;
+  }
   runSQL("alter table Akismet_AkismetData add column classNameId LONG");
   runSQL("alter table Akismet_AkismetData add column classPK LONG");
   runSQL("update Akismet_AkismetData set classNameId = (select " + "classNameId from ClassName_ where value = " + "'com.liferay.portlet.messageboards.model.MBMessage')");
