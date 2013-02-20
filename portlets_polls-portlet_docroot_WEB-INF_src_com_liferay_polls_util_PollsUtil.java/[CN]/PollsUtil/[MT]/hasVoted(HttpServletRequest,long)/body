@@ -2,13 +2,13 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   if (themeDisplay.isSignedIn()) {
     try {
-      PollsVoteLocalServiceUtil.getVote(questionId,themeDisplay.getUserId());
+      PollsVoteLocalServiceUtil.getPollsVote(pollsQuestionId,themeDisplay.getUserId());
     }
  catch (    NoSuchVoteException nsve) {
       return false;
     }
     return true;
   }
-  String cookie=CookieKeys.getCookie(request,_getCookieName(questionId));
+  String cookie=CookieKeys.getCookie(request,_getCookieName(pollsQuestionId));
   return GetterUtil.getBoolean(cookie);
 }
