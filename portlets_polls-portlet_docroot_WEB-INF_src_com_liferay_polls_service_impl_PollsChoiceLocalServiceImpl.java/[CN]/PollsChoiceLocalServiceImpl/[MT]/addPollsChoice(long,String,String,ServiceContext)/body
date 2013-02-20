@@ -1,0 +1,12 @@
+{
+  validate(name,description);
+  pollsQuestionPersistence.findByPrimaryKey(pollsQuestionId);
+  long pollsChoiceId=counterLocalService.increment();
+  PollsChoice pollsChoice=pollsChoicePersistence.create(pollsChoiceId);
+  pollsChoice.setUuid(serviceContext.getUuid());
+  pollsChoice.setPollsQuestionId(pollsQuestionId);
+  pollsChoice.setName(name);
+  pollsChoice.setDescription(description);
+  pollsChoicePersistence.update(pollsChoice);
+  return pollsChoice;
+}
