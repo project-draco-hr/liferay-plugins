@@ -20,12 +20,7 @@
   pollsQuestion.setDescriptionMap(descriptionMap);
   pollsQuestion.setExpirationDate(expirationDate);
   pollsQuestionPersistence.update(pollsQuestion);
-  if (serviceContext.isAddGroupPermissions() || serviceContext.isAddGuestPermissions()) {
-    addPollsQuestionResources(pollsQuestion,serviceContext.isAddGroupPermissions(),serviceContext.isAddGuestPermissions());
-  }
- else {
-    addPollsQuestionResources(pollsQuestion,serviceContext.getGroupPermissions(),serviceContext.getGuestPermissions());
-  }
+  resourceLocalService.addModelResources(pollsQuestion,serviceContext);
   if (pollsChoices != null) {
     for (    PollsChoice pollsChoice : pollsChoices) {
       pollsChoiceLocalService.addPollsChoice(pollsQuestionId,pollsChoice.getName(),pollsChoice.getDescription(),new ServiceContext());
