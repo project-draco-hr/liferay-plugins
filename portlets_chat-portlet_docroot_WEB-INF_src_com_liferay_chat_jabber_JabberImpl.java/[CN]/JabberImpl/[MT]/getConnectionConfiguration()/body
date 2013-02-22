@@ -2,7 +2,22 @@
   if (_connectionConfiguration != null) {
     return _connectionConfiguration;
   }
-  _connectionConfiguration=new ConnectionConfiguration(PortletPropsValues.JABBER_HOST,PortletPropsValues.JABBER_PORT,PortletPropsValues.JABBER_SERVICE_NAME);
+  if (Validator.isIPAddress(PortletPropsValues.JABBER_HOST)) {
+    _connectionConfiguration=new ConnectionConfiguration(PortletPropsValues.JABBER_HOST,PortletPropsValues.JABBER_PORT,PortletPropsValues.JABBER_SERVICE_NAME);
+  }
+ else {
+    try {
+      InetAddress inetAddress=InetAddress.getByName(PortletPropsValues.JABBER_HOST);
+      String jabberServerIPAddress=inetAddress.getHostAddress();
+      _connectionConfiguration=new ConnectionConfiguration(jabberServerIPAddress,PortletPropsValues.JABBER_PORT,PortletPropsValues.JABBER_SERVICE_NAME);
+    }
+ catch (    UnknownHostException uhe) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unable to resolve Jabber host " + PortletPropsValues.JABBER_HOST);
+      }
+      throw new UnknownHostException();
+    }
+  }
   _connectionConfiguration.setSendPresence(false);
   SmackConfiguration.setLocalSocks5ProxyEnabled(PortletPropsValues.JABBER_SOCK5_PROXY_ENABLED);
   SmackConfiguration.setLocalSocks5ProxyPort(PortletPropsValues.JABBER_SOCK5_PROXY_PORT);
