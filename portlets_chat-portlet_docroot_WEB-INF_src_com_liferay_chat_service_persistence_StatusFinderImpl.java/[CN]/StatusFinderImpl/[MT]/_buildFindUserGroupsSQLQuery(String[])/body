@@ -1,0 +1,12 @@
+{
+  String sql=CustomSQLUtil.get(FIND_BY_USERS_GROUPS);
+  String filterReplacement=StringPool.BLANK;
+  String joinReplacement=StringPool.BLANK;
+  if (groupNames.length > 0) {
+    filterReplacement="AND Group_.name NOT IN (?)";
+    joinReplacement="INNER JOIN Group_ ON Group_.groupId = Users_Groups.groupId";
+  }
+  sql=StringUtil.replace(sql,"[$GROUPS_FILTER$]",filterReplacement);
+  sql=StringUtil.replace(sql,"[$GROUPS_JOIN$]",joinReplacement);
+  return sql;
+}

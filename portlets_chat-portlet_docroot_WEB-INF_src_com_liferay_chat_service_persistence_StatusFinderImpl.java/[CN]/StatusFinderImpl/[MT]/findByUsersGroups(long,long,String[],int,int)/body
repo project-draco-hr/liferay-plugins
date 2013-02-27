@@ -2,8 +2,7 @@
   Session session=null;
   try {
     session=openSession();
-    String sql=CustomSQLUtil.get(FIND_BY_USERS_GROUPS);
-    sql=sql.concat(buildExcludeGroupsSQL(groupNames));
+    String sql=_buildFindUserGroupsSQLQuery(groupNames);
     SQLQuery q=session.createSQLQuery(sql);
     q.addScalar("userId",Type.LONG);
     q.addScalar("screenName",Type.STRING);
@@ -14,9 +13,9 @@
     q.addScalar("awake",Type.BOOLEAN);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
+    qPos.add(groupNames);
     qPos.add(modifiedDate);
     qPos.add(userId);
-    qPos.add(groupNames);
     return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
