@@ -1,11 +1,18 @@
 {
   Activity activity=null;
-  if (socialActivity.getClassName().equals(Activity.class.getName())) {
+  String className=socialActivity.getClassName();
+  if (className.equals(Activity.class.getName())) {
     activity=getExternalActivity(socialActivity);
   }
  else {
     activity=new ActivityImpl(String.valueOf(socialActivity.getClassPK()),String.valueOf(socialActivity.getUserId()));
-    SocialActivityFeedEntry socialActivityFeedEntry=SocialActivityInterpreterLocalServiceUtil.interpret(socialActivity,themeDisplay);
+    HttpServletRequest request=HttpServletRequestThreadLocal.getHttpServletRequest();
+    request.setAttribute(WebKeys.THEME_DISPLAY,themeDisplay);
+    ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+    serviceContext.setCompanyId(themeDisplay.getCompanyId());
+    serviceContext.setUserId(themeDisplay.getUserId());
+    SocialActivityFeedEntry socialActivityFeedEntry=null;
+    SocialActivityInterpreterLocalServiceUtil.interpret(StringPool.BLANK,socialActivity,serviceContext);
     activity.setBody(socialActivityFeedEntry.getBody());
     activity.setTitle(socialActivityFeedEntry.getTitle());
     activity.setUrl(socialActivityFeedEntry.getLink());
