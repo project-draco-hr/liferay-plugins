@@ -15,6 +15,11 @@
     status.setAwake((awake == 1) ? true : false);
   }
   if (activePanelId != null) {
+    List<Entry> entries=entryPersistence.findByF_T(GetterUtil.getLong(activePanelId),userId);
+    for (    Entry entry : entries) {
+      entry.setFlag(ChatEntryConstants.READ);
+      entryPersistence.updateImpl(entry);
+    }
     status.setActivePanelId(activePanelId);
   }
   if (message != null) {

@@ -1,8 +1,8 @@
 {
   Status status=StatusLocalServiceUtil.getUserStatus(pollerRequest.getUserId());
-  long createDate=status.getModifiedDate();
+  long createDate=-1;
   if (pollerRequest.isInitialRequest()) {
-    createDate=createDate - Time.DAY;
+    createDate=status.getModifiedDate() - Time.DAY;
   }
   List<Entry> entries=EntryLocalServiceUtil.getNewEntries(pollerRequest.getUserId(),createDate,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
   entries=ListUtil.copy(entries);
@@ -25,6 +25,7 @@
     }
     entryJSON.put("toUserId",entry.getToUserId());
     entryJSON.put("content",HtmlUtil.escape(entry.getContent()));
+    entryJSON.put("flag",entry.getFlag());
     entriesJSON.put(entryJSON);
   }
   pollerResponse.setParameter("entries",entriesJSON);

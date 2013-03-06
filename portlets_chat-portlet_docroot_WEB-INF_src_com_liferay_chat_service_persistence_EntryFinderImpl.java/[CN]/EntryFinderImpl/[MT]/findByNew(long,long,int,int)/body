@@ -3,12 +3,20 @@
   try {
     session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_NEW);
+    if (createDate > 0) {
+      sql=StringUtil.replace(sql,_FLAG_SQL,_CREATE_DATE_SQL);
+    }
     SQLQuery q=session.createSQLQuery(sql);
     q.addEntity("Chat_Entry",EntryImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
     qPos.add(userId);
-    qPos.add(createDate);
+    if (createDate > 0) {
+      qPos.add(createDate);
+    }
+ else {
+      qPos.add(ChatEntryConstants.UNREAD);
+    }
     return (List<Entry>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
