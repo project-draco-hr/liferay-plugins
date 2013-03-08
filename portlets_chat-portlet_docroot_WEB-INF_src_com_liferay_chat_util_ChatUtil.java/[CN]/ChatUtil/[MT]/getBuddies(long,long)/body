@@ -1,31 +1,3 @@
 {
-  long modifiedDate=System.currentTimeMillis() - ONLINE_DELTA;
-  List<Object[]> buddies=null;
-  if (PortletPropsValues.BUDDY_LIST_STRATEGY.equals("all")) {
-    buddies=StatusLocalServiceUtil.getAllStatuses(companyId,userId,modifiedDate,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
-  }
- else   if (PortletPropsValues.BUDDY_LIST_STRATEGY.equals("communities") || PortletPropsValues.BUDDY_LIST_STRATEGY.equals("sites")) {
-    buddies=StatusLocalServiceUtil.getGroupStatuses(userId,modifiedDate,PortletPropsValues.BUDDY_LIST_SITE_EXCLUDES,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
-  }
- else   if (PortletPropsValues.BUDDY_LIST_STRATEGY.equals("friends")) {
-    buddies=StatusLocalServiceUtil.getSocialStatuses(userId,SocialRelationConstants.TYPE_BI_FRIEND,modifiedDate,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
-  }
- else   if (PortletPropsValues.BUDDY_LIST_STRATEGY.equals("communities,friends") || PortletPropsValues.BUDDY_LIST_STRATEGY.equals("friends,sites")) {
-    List<Object[]> groupBuddies=StatusLocalServiceUtil.getGroupStatuses(userId,modifiedDate,PortletPropsValues.BUDDY_LIST_SITE_EXCLUDES,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
-    List<Object[]> socialBuddies=StatusLocalServiceUtil.getSocialStatuses(userId,SocialRelationConstants.TYPE_BI_FRIEND,modifiedDate,0,PortletPropsValues.BUDDY_LIST_MAX_BUDDIES);
-    buddies=new ArrayList<Object[]>(groupBuddies.size() + socialBuddies.size());
-    buddies.addAll(groupBuddies);
-    BuddyComparator buddyComparator=new BuddyComparator(true);
-    for (    Object[] socialBuddy : socialBuddies) {
-      if (Collections.binarySearch(groupBuddies,socialBuddy,buddyComparator) < 0) {
-        buddies.add(socialBuddy);
-      }
-    }
-    Collections.sort(buddies,buddyComparator);
-  }
- else {
-    buddies=new ArrayList<Object[]>();
-  }
-  buddies=JabberUtil.getStatuses(companyId,userId,buddies);
-  return buddies;
+  return getBuddiesFinder().getBuddies(companyId,userId);
 }
