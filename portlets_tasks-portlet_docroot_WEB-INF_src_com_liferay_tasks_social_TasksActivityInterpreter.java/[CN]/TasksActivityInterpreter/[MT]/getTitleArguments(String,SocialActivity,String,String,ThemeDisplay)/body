@@ -1,0 +1,13 @@
+{
+  int activityType=activity.getType();
+  long userId=activity.getUserId();
+  long receiverUserId=activity.getReceiverUserId();
+  if (activityType == TasksActivityKeys.RESOLVE_ENTRY) {
+    TasksEntry tasksEntry=TasksEntryLocalServiceUtil.getTasksEntry(activity.getClassPK());
+    userId=tasksEntry.getResolverUserId();
+    receiverUserId=tasksEntry.getUserId();
+  }
+  String creatorUserName=getUserName(userId,themeDisplay);
+  String receiverUserName=getUserName(receiverUserId,themeDisplay);
+  return new Object[]{creatorUserName,receiverUserName};
+}

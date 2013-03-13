@@ -1,0 +1,14 @@
+{
+  int activityType=activity.getType();
+  if (activityType != MembersActivityKeys.ADD_MEMBER) {
+    return StringPool.BLANK;
+  }
+  User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
+  StringBundler sb=new StringBundler(5);
+  sb.append(themeDisplay.getPortalURL());
+  sb.append(themeDisplay.getPathFriendlyURLPublic());
+  sb.append(StringPool.SLASH);
+  sb.append(HtmlUtil.escapeURL(creatorUser.getScreenName()));
+  sb.append("/profile");
+  return sb.toString();
+}
