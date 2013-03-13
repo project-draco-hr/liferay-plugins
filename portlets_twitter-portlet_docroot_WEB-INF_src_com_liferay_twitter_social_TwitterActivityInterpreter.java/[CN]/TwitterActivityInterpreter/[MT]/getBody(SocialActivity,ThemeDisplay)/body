@@ -1,13 +1,10 @@
 {
   User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
   JSONObject extraData=JSONFactoryUtil.createJSONObject(activity.getExtraData());
-  StringBundler sb=new StringBundler();
-  sb.append("<a href=\"http://twitter.com/");
+  StringBundler sb=new StringBundler(4);
+  sb.append("http://twitter.com/");
   sb.append(HtmlUtil.escapeURL(creatorUser.getContact().getTwitterSn()));
   sb.append("/statuses/");
   sb.append(activity.getClassPK());
-  sb.append("\" target=\"_blank\">");
-  sb.append(HtmlUtil.escape(extraData.getString("text")));
-  sb.append("</a>");
-  return sb.toString();
+  return wrapLink(sb.toString(),HtmlUtil.escape(extraData.getString("text")));
 }
