@@ -1,17 +1,13 @@
 {
-  int activityType=activity.getType();
-  JSONObject extraData=null;
-  if (Validator.isNotNull(activity.getExtraData())) {
-    extraData=JSONFactoryUtil.createJSONObject(activity.getExtraData());
-  }
-  JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
   StringBundler sb=new StringBundler(4);
   sb.append("http://support.liferay.com/browse/");
+  JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
   sb.append(jiraIssue.getKey());
+  int activityType=activity.getType();
   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
-    long jiraActionId=extraData.getLong("jiraActionId");
-    JIRAAction jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
     sb.append("#action_");
+    long jiraActionId=GetterUtil.getLong(getJSONValue(activity.getExtraData(),"jiraActionId"));
+    JIRAAction jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
     sb.append(jiraAction.getJiraActionId());
   }
   return sb.toString();

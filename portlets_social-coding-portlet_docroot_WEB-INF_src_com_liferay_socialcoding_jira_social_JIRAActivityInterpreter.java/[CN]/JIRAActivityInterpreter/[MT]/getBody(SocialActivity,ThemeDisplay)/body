@@ -1,16 +1,13 @@
 {
-  int activityType=activity.getType();
-  JSONObject extraData=null;
-  if (Validator.isNotNull(activity.getExtraData())) {
-    extraData=JSONFactoryUtil.createJSONObject(activity.getExtraData());
-  }
   String link=getLink(activity,themeDisplay);
   String text=StringPool.BLANK;
+  int activityType=activity.getType();
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
-    text=interpretJIRAChangeItems(extraData.getJSONArray("jiraChangeItems"),themeDisplay);
+    JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activity.getExtraData());
+    text=interpretJIRAChangeItems(extraDataJSONObject.getJSONArray("jiraChangeItems"),themeDisplay);
   }
  else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
-    long jiraActionId=extraData.getLong("jiraActionId");
+    long jiraActionId=GetterUtil.getLong(getJSONValue(activity.getExtraData(),"jiraActionId"));
     JIRAAction jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
     text=HtmlUtil.escape(jiraAction.getBody());
   }
