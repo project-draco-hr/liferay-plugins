@@ -1,5 +1,8 @@
 {
-  validate(groupId,code);
+  validate(classNameId,classPK,code,nameMap);
+  if (calendarResourcePersistence.countByG_C(groupId,code) > 0) {
+    throw new DuplicateCalendarResourceException();
+  }
   CalendarResource calendarResource=calendarResourcePersistence.fetchByC_C(classNameId,classPK);
   if (calendarResource != null) {
     throw new DuplicateCalendarResourceException();
