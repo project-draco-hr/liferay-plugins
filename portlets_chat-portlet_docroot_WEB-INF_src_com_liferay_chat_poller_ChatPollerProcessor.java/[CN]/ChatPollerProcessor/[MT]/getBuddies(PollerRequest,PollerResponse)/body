@@ -1,6 +1,6 @@
 {
   List<Object[]> buddies=BuddyFinderUtil.getBuddies(pollerRequest.getCompanyId(),pollerRequest.getUserId());
-  JSONArray buddiesJSON=JSONFactoryUtil.createJSONArray();
+  JSONArray buddiesJSONArray=JSONFactoryUtil.createJSONArray();
   for (  Object[] buddy : buddies) {
     long userId=(Long)buddy[0];
     String screenName=(String)buddy[1];
@@ -13,14 +13,14 @@
     Status buddyStatus=StatusLocalServiceUtil.getUserStatus(userId);
     awake=buddyStatus.getAwake();
     String statusMessage=buddyStatus.getMessage();
-    JSONObject curUserJSON=JSONFactoryUtil.createJSONObject();
-    curUserJSON.put("userId",userId);
-    curUserJSON.put("screenName",screenName);
-    curUserJSON.put("fullName",fullName);
-    curUserJSON.put("portraitId",portraitId);
-    curUserJSON.put("awake",awake);
-    curUserJSON.put("statusMessage",statusMessage);
-    buddiesJSON.put(curUserJSON);
+    JSONObject curUserJSONObject=JSONFactoryUtil.createJSONObject();
+    curUserJSONObject.put("userId",userId);
+    curUserJSONObject.put("screenName",screenName);
+    curUserJSONObject.put("fullName",fullName);
+    curUserJSONObject.put("portraitId",portraitId);
+    curUserJSONObject.put("awake",awake);
+    curUserJSONObject.put("statusMessage",statusMessage);
+    buddiesJSONArray.put(curUserJSONObject);
   }
-  pollerResponse.setParameter("buddies",buddiesJSON);
+  pollerResponse.setParameter("buddies",buddiesJSONArray);
 }
