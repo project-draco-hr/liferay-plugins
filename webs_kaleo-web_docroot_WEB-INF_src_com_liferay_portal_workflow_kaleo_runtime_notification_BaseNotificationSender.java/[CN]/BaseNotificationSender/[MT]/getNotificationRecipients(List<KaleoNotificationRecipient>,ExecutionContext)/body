@@ -1,0 +1,23 @@
+{
+  Set<NotificationRecipient> notificationRecipients=new HashSet<NotificationRecipient>();
+  if (kaleoNotificationRecipients.isEmpty()) {
+    getAssignedRecipients(notificationRecipients,executionContext);
+  }
+ else {
+    for (    KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
+      if (Validator.isNotNull(kaleoNotificationRecipient.getAddress())) {
+        notificationRecipients.add(new NotificationRecipient((kaleoNotificationRecipient.getAddress())));
+      }
+ else {
+        String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
+        if (recipientClassName.equals(User.class.getName())) {
+          getNotificationRecipient(kaleoNotificationRecipient.getRecipientClassPK(),notificationRecipients,executionContext);
+        }
+ else {
+          getRoleRecipientAddresses(kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),notificationRecipients,executionContext);
+        }
+      }
+    }
+  }
+  return notificationRecipients;
+}

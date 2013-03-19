@@ -1,0 +1,20 @@
+{
+  if (roleType == RoleConstants.TYPE_REGULAR) {
+    List<User> users=UserLocalServiceUtil.getRoleUsers(roleId);
+    for (    User user : users) {
+      if (user.isActive()) {
+        notificationRecipients.add(new NotificationRecipient(user));
+      }
+    }
+  }
+ else {
+    KaleoInstanceToken kaleoInstanceToken=executionContext.getKaleoInstanceToken();
+    List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoInstanceToken.getGroupId(),roleId);
+    for (    UserGroupRole userGroupRole : userGroupRoles) {
+      User user=userGroupRole.getUser();
+      if (user.isActive()) {
+        notificationRecipients.add(new NotificationRecipient(user));
+      }
+    }
+  }
+}
