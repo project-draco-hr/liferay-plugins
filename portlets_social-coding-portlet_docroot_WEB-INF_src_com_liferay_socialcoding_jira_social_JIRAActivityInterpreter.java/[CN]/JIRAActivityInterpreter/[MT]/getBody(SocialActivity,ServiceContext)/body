@@ -1,0 +1,21 @@
+{
+  HttpServletRequest request=serviceContext.getRequest();
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  String link=getLink(activity,serviceContext);
+  String text=StringPool.BLANK;
+  int activityType=activity.getType();
+  if (activityType == JIRAActivityKeys.ADD_CHANGE) {
+    JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activity.getExtraData());
+    text=interpretJIRAChangeItems(extraDataJSONObject.getJSONArray("jiraChangeItems"),themeDisplay);
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
+    long jiraActionId=GetterUtil.getLong(getJSONValue(activity.getExtraData(),"jiraActionId"));
+    JIRAAction jiraAction=JIRAActionLocalServiceUtil.getJIRAAction(jiraActionId);
+    text=HtmlUtil.escape(jiraAction.getBody());
+  }
+ else   if (activityType == JIRAActivityKeys.ADD_ISSUE) {
+    JIRAIssue jiraIssue=JIRAIssueLocalServiceUtil.getJIRAIssue(activity.getClassPK());
+    text=HtmlUtil.escape(jiraIssue.getSummary());
+  }
+  return wrapLink(link,text);
+}

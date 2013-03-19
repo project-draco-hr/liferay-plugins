@@ -1,0 +1,11 @@
+{
+  HttpServletRequest request=serviceContext.getRequest();
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  StringBundler sb=new StringBundler(4);
+  sb.append(themeDisplay.getPortalURL());
+  sb.append(themeDisplay.getPathFriendlyURLPublic());
+  sb.append(StringPool.SLASH);
+  User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
+  sb.append(HtmlUtil.escapeURL(creatorUser.getScreenName()));
+  return sb.toString();
+}

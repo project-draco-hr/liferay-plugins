@@ -1,0 +1,16 @@
+{
+  HttpServletRequest request=serviceContext.getRequest();
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  int activityType=activity.getType();
+  if (activityType != MembersActivityKeys.ADD_MEMBER) {
+    return StringPool.BLANK;
+  }
+  StringBundler sb=new StringBundler(5);
+  sb.append(themeDisplay.getPortalURL());
+  sb.append(themeDisplay.getPathFriendlyURLPublic());
+  sb.append(StringPool.SLASH);
+  User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
+  sb.append(HtmlUtil.escapeURL(creatorUser.getScreenName()));
+  sb.append("/profile");
+  return sb.toString();
+}
