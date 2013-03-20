@@ -1,16 +1,13 @@
 {
-  if (this == object) {
+  if (this == obj) {
     return true;
   }
-  if ((object == null) || (getClass() != object.getClass())) {
+  if (!(obj instanceof NotificationRecipient)) {
     return false;
   }
-  NotificationRecipient notificationRecipient=(NotificationRecipient)object;
-  if (_companyId != notificationRecipient.getCompanyId()) {
-    return false;
+  NotificationRecipient notificationRecipient=(NotificationRecipient)obj;
+  if (Validator.equals(_companyId,notificationRecipient._companyId) && Validator.equals(_userId,notificationRecipient._userId)) {
+    return true;
   }
-  if (_userId != notificationRecipient.getUserId()) {
-    return false;
-  }
-  return true;
+  return false;
 }
