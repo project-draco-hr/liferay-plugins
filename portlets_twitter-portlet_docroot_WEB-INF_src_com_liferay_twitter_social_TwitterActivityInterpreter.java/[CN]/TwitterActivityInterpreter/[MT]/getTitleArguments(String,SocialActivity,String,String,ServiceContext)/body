@@ -1,14 +1,12 @@
 {
-  HttpServletRequest request=serviceContext.getRequest();
-  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   StringBundler sb=new StringBundler(5);
-  sb.append(themeDisplay.getPortalURL());
-  sb.append(themeDisplay.getPathFriendlyURLPublic());
+  sb.append(serviceContext.getPortalURL());
+  sb.append(serviceContext.getPathFriendlyURLPublic());
   sb.append(StringPool.SLASH);
   User creatorUser=UserLocalServiceUtil.getUserById(activity.getUserId());
   sb.append(HtmlUtil.escapeURL(creatorUser.getScreenName()));
   sb.append("/profile");
-  String creatorUserName=getUserName(activity.getUserId(),themeDisplay);
+  String creatorUserName=getUserName(activity.getUserId(),serviceContext);
   String creatorUserNameURL=wrapLink(sb.toString(),creatorUserName);
   return new Object[]{creatorUserNameURL};
 }

@@ -1,9 +1,7 @@
 {
-  HttpServletRequest request=serviceContext.getRequest();
-  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   StringBundler sb=new StringBundler(5);
   MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.getMicroblogsEntry(activity.getClassPK());
-  String receiverUserName=getUserName(activity.getReceiverUserId(),themeDisplay);
+  String receiverUserName=getUserName(activity.getReceiverUserId(),serviceContext);
   if (activity.getReceiverUserId() > 0) {
     if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPLY) {
       sb.append("@");
@@ -11,7 +9,7 @@
       sb.append(": ");
     }
  else     if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPOST) {
-      sb.append(themeDisplay.translate("reposted-from"));
+      sb.append(serviceContext.translate("reposted-from"));
       sb.append(" ");
       sb.append(receiverUserName);
       sb.append(": ");

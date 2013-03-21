@@ -1,12 +1,10 @@
 {
-  HttpServletRequest request=serviceContext.getRequest();
-  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String link=getLink(activity,serviceContext);
   String text=StringPool.BLANK;
   int activityType=activity.getType();
   if (activityType == JIRAActivityKeys.ADD_CHANGE) {
     JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activity.getExtraData());
-    text=interpretJIRAChangeItems(extraDataJSONObject.getJSONArray("jiraChangeItems"),themeDisplay);
+    text=interpretJIRAChangeItems(extraDataJSONObject.getJSONArray("jiraChangeItems"),serviceContext);
   }
  else   if (activityType == JIRAActivityKeys.ADD_COMMENT) {
     long jiraActionId=GetterUtil.getLong(getJSONValue(activity.getExtraData(),"jiraActionId"));
