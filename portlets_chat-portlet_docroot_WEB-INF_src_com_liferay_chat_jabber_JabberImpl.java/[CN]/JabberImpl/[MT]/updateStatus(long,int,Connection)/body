@@ -9,15 +9,15 @@
         return;
       }
     }
-    if (online == 1 && (!_isOnline.contains(userId))) {
+    if ((online == 1) && !_onlineUsers.contains(userId)) {
       Presence presence=new Presence(Presence.Type.available);
       connection.sendPacket(presence);
-      _isOnline.add(userId);
+      _onlineUsers.add(userId);
     }
- else     if (online == 0 && (_isOnline.contains(userId))) {
+ else     if ((online == 0) && _onlineUsers.contains(userId)) {
       Presence presence=new Presence(Presence.Type.unavailable);
       connection.sendPacket(presence);
-      _isOnline.remove(userId);
+      _onlineUsers.remove(userId);
     }
   }
  catch (  Exception e) {
