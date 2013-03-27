@@ -1,11 +1,5 @@
 {
-  StringBundler sb=new StringBundler(6);
-  sb.append(serviceContext.getPortalURL());
-  sb.append(serviceContext.getPathFriendlyURLPublic());
-  sb.append(StringPool.SLASH);
   User receiverUser=UserLocalServiceUtil.getUserById(activity.getReceiverUserId());
-  sb.append(HtmlUtil.escapeURL(receiverUser.getScreenName()));
-  sb.append("/profile/-/wall/");
-  sb.append(activity.getClassPK());
-  return sb.toString();
+  String wallLayoutFriendlyURL=WallUtil.getWallLayoutFriendlyURL(receiverUser);
+  return WallUtil.getWallLink(receiverUser,wallLayoutFriendlyURL,String.valueOf(activity.getClassPK()),serviceContext.getThemeDisplay());
 }
