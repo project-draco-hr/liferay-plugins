@@ -14,13 +14,20 @@
   if (awake != -1) {
     status.setAwake((awake == 1) ? true : false);
   }
-  if (activePanelId != null) {
-    List<Entry> entries=entryPersistence.findByF_T(GetterUtil.getLong(activePanelId),userId);
-    for (    Entry entry : entries) {
-      entry.setFlag(EntryConstants.FLAG_READ);
-      entryPersistence.update(entry);
+  if (activePanelIds != null) {
+    try {
+      JSONObject activePanelIdsJSONObject=JSONFactoryUtil.createJSONObject(activePanelIds);
+      long openPanelId=activePanelIdsJSONObject.getLong("open");
+      List<Entry> entries=entryPersistence.findByF_T(openPanelId,userId);
+      for (      Entry entry : entries) {
+        entry.setFlag(EntryConstants.FLAG_READ);
+        entryPersistence.update(entry);
+      }
     }
-    status.setActivePanelId(activePanelId);
+ catch (    JSONException jsone) {
+      _log.error("Unable to create a JSON object from " + activePanelIds);
+    }
+    status.setActivePanelIds(activePanelIds);
   }
   if (message != null) {
     status.setMessage(message);
