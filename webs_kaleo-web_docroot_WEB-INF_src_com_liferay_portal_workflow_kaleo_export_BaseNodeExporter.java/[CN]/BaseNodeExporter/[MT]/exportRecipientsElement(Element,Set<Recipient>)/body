@@ -1,0 +1,27 @@
+{
+  if (recipients.isEmpty()) {
+    return;
+  }
+  Element recipientsElement=notificationElement.addElement("recipients");
+  Element rolesElement=null;
+  for (  Recipient recipient : recipients) {
+    RecipientType recipientType=recipient.getRecipientType();
+    if (recipientType.equals(RecipientType.ADDRESS)) {
+      AddressRecipient addressRecipient=(AddressRecipient)recipient;
+      addTextElement(recipientsElement,"address",addressRecipient.getAddress());
+    }
+ else     if (recipientType.equals(RecipientType.ROLE)) {
+      if (rolesElement == null) {
+        rolesElement=recipientsElement.addElement("roles");
+      }
+      Element roleElement=rolesElement.addElement("role");
+      RoleRecipient roleRecipient=(RoleRecipient)recipient;
+      populateRoleElement(roleElement,roleRecipient.getRoleId(),roleRecipient.getRoleType(),roleRecipient.getRoleName(),roleRecipient.isAutoCreate());
+    }
+ else     if (recipientType.equals(RecipientType.USER)) {
+      Element userElement=recipientsElement.addElement("user");
+      UserRecipient userRecipient=(UserRecipient)recipient;
+      populateUserElement(userElement,userRecipient.getUserId(),userRecipient.getEmailAddress(),userRecipient.getScreenName());
+    }
+  }
+}

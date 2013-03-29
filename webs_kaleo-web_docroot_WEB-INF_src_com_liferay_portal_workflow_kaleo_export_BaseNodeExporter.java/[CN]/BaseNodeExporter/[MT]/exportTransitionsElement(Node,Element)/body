@@ -1,0 +1,15 @@
+{
+  List<Transition> outGoingTransitions=node.getOutgoingTransitionsList();
+  if (outGoingTransitions.isEmpty()) {
+    return;
+  }
+  Element transitionsElement=nodeElement.addElement("transitions");
+  for (  Transition outGoingTransition : outGoingTransitions) {
+    Element transition=transitionsElement.addElement("transition");
+    addTextElement(transition,"name",outGoingTransition.getName());
+    addTextElement(transition,"target",outGoingTransition.getTargetNode().getName());
+    if (outGoingTransition.isDefault()) {
+      addTextElement(transition,"default",String.valueOf(outGoingTransition.isDefault()));
+    }
+  }
+}
