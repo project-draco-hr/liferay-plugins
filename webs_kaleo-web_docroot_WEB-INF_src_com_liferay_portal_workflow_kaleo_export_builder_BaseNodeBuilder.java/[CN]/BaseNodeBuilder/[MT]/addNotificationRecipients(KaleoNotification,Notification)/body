@@ -1,0 +1,25 @@
+{
+  List<KaleoNotificationRecipient> kaleoNotificationRecipients=kaleoNotificationRecipientLocalService.getKaleoNotificationRecipients(kaleoNotification.getKaleoNotificationId());
+  for (  KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
+    String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
+    long recipientClassPK=kaleoNotificationRecipient.getRecipientClassPK();
+    Recipient recipient=null;
+    if (recipientClassName.equals(Role.class.getName())) {
+      Role role=_roleLocalService.fetchRole(recipientClassPK);
+      recipient=new RoleRecipient(role.getName(),role.getTypeLabel());
+    }
+ else     if (recipientClassName.equals(User.class.getName())) {
+      if (recipientClassPK > 0) {
+        User user=_userLocalService.getUser(recipientClassPK);
+        recipient=new UserRecipient(user.getUserId(),user.getScreenName(),user.getEmailAddress());
+      }
+ else {
+        recipient=new UserRecipient();
+      }
+    }
+ else {
+      recipient=new AddressRecipient(kaleoNotificationRecipient.getAddress());
+    }
+    notification.addRecipients(recipient);
+  }
+}
