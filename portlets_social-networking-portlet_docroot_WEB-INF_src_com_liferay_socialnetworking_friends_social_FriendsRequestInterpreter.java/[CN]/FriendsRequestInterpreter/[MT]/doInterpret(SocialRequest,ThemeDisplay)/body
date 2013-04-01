@@ -21,8 +21,10 @@
   try {
     JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(extraData);
     body=extraDataJSONObject.getString("requestMessage");
-    body=StringUtil.quote(body);
-    body=HtmlUtil.escape(body);
+    if (!(body.equals(""))) {
+      body=StringUtil.quote(body);
+      body=HtmlUtil.escape(body);
+    }
   }
  catch (  JSONException jsone) {
     _log.error("Unable to create JSON object from " + extraData);
