@@ -7,8 +7,14 @@
     content=StringPool.BLANK;
   }
  else {
-    if (content.length() > 500) {
-      content=content.substring(0,500);
+    int contentMaxLength=500;
+    DB db=DBFactoryUtil.getDB();
+    String dbType=db.getType();
+    if (dbType.equals(DB.TYPE_SQLSERVER)) {
+      contentMaxLength=442;
+    }
+    if (content.length() > contentMaxLength) {
+      content=content.substring(0,contentMaxLength);
     }
   }
   long entryId=counterLocalService.increment();
