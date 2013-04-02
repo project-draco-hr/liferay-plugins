@@ -28,6 +28,9 @@
       if (!SocialOfficeServiceUtil.isSocialOfficeGroup(userGroup.getGroupId())) {
         continue;
       }
+      if (UserLocalServiceUtil.hasRoleUser(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER,user.getUserId(),true)) {
+        continue;
+      }
       LayoutSetPrototypeUtil.removeLayoutSetPrototype(userGroup,false,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
       LayoutSetPrototypeUtil.removeLayoutSetPrototype(userGroup,true,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
       SocialOfficeUtil.disableSocialOffice(userGroup);
