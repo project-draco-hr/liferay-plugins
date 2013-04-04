@@ -1,6 +1,9 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
   CalendarResource calendarResource=CalendarResourceUtil.getGroupCalendarResource(liferayPortletRequest,themeDisplay.getScopeGroupId());
+  if (calendarResource == null) {
+    return null;
+  }
   Calendar calendar=calendarResource.getDefaultCalendar();
   if (!CalendarPermission.contains(themeDisplay.getPermissionChecker(),calendar.getCalendarId(),ActionKeys.ADD_CALENDAR)) {
     return null;
