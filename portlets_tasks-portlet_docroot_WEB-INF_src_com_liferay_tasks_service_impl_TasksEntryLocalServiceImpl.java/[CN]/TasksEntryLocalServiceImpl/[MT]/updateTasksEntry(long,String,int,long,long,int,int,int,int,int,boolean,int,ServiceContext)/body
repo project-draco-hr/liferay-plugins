@@ -25,16 +25,7 @@
   tasksEntry.setStatus(status);
   tasksEntryPersistence.update(tasksEntry);
   updateAsset(tasksEntry.getUserId(),tasksEntry,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
-  int activity=TasksActivityKeys.UPDATE_ENTRY;
-  if (status == TasksEntryConstants.STATUS_RESOLVED) {
-    activity=TasksActivityKeys.RESOLVE_ENTRY;
-  }
- else   if (status == TasksEntryConstants.STATUS_REOPENED) {
-    activity=TasksActivityKeys.REOPEN_ENTRY;
-  }
-  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
-  extraDataJSONObject.put("title",tasksEntry.getTitle());
-  SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntryId,activity,extraDataJSONObject.toString(),assigneeUserId);
+  addSocialActivity(status,tasksEntry,serviceContext);
   sendNotificationEvent(tasksEntry,oldStatus,oldAssigneeUserId,serviceContext);
   return tasksEntry;
 }

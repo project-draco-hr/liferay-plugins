@@ -1,0 +1,12 @@
+{
+  int activity=TasksActivityKeys.UPDATE_ENTRY;
+  if (status == TasksEntryConstants.STATUS_RESOLVED) {
+    activity=TasksActivityKeys.RESOLVE_ENTRY;
+  }
+ else   if (status == TasksEntryConstants.STATUS_REOPENED) {
+    activity=TasksActivityKeys.REOPEN_ENTRY;
+  }
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put("title",tasksEntry.getTitle());
+  SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(),tasksEntry.getGroupId(),TasksEntry.class.getName(),tasksEntry.getTasksEntryId(),activity,extraDataJSONObject.toString(),tasksEntry.getAssigneeUserId());
+}
