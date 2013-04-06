@@ -1,10 +1,9 @@
 {
   portletDataContext.importPermissions("com.liferay.portlet.dynamicdatalist",portletDataContext.getSourceGroupId(),portletDataContext.getScopeGroupId());
-  Element rootElement=portletDataContext.getImportDataRootElement();
-  Element recordSetElement=rootElement.element("record-set");
-  if (recordSetElement != null) {
-    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,recordSetElement);
-  }
+  Element recordSetsElement=portletDataContext.getImportDataGroupElement(DDLRecordSet.class);
+  List<Element> recordSetElements=recordSetsElement.elements();
+  Element recordSetElement=recordSetElements.get(0);
+  StagedModelDataHandlerUtil.importStagedModel(portletDataContext,recordSetElement);
   Map<Long,Long> templateIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(DDMTemplate.class);
   long importedFormDDMTemplateId=GetterUtil.getLong(portletPreferences.getValue("formDDMTemplateId",null));
   long formDDMTemplateId=MapUtil.getLong(templateIds,importedFormDDMTemplateId,importedFormDDMTemplateId);
