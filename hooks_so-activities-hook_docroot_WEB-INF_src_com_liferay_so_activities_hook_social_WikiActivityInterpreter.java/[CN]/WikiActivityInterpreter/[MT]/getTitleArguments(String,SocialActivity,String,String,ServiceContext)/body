@@ -1,0 +1,19 @@
+{
+  WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.getPageResource(activity.getClassPK());
+  WikiNode node=WikiNodeLocalServiceUtil.getNode(pageResource.getNodeId());
+  if (node == null) {
+    return null;
+  }
+  String nodeTitle=null;
+  long plid=PortalUtil.getPlidFromPortletId(activity.getGroupId(),false,PortletKeys.WIKI);
+  if (plid > 0) {
+    PortletURL nodeURL=PortletURLFactoryUtil.create(serviceContext.getLiferayPortletRequest(),PortletKeys.WIKI,plid,PortletRequest.RENDER_PHASE);
+    nodeURL.setParameter("struts_action","/wiki/view");
+    nodeURL.setParameter("nodeId",String.valueOf(node.getNodeId()));
+    nodeTitle=wrapLink(nodeURL.toString(),HtmlUtil.escape(node.getName()));
+  }
+ else {
+    nodeTitle=HtmlUtil.escape(node.getName());
+  }
+  return new Object[]{nodeTitle};
+}

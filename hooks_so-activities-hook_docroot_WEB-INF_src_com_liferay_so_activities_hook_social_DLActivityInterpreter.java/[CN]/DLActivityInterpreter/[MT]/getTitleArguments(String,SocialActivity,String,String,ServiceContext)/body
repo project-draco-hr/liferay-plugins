@@ -1,0 +1,17 @@
+{
+  FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(activity.getClassPK());
+  if (fileEntry.getFolderId() > 0) {
+    StringBundler sb=new StringBundler(6);
+    sb.append(serviceContext.getPortalURL());
+    sb.append(serviceContext.getPathMain());
+    sb.append("/document_library/find_folder?groupId=");
+    sb.append(fileEntry.getRepositoryId());
+    sb.append("&folderId=");
+    sb.append(fileEntry.getFolderId());
+    Folder folder=fileEntry.getFolder();
+    String folderName=HtmlUtil.escape(folder.getName());
+    String folderURL=wrapLink(sb.toString(),folderName);
+    return new Object[]{folderURL};
+  }
+  return null;
+}

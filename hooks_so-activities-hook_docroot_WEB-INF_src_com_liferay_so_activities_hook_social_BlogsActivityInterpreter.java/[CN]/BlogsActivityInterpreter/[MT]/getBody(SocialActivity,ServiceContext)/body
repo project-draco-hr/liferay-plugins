@@ -1,0 +1,20 @@
+{
+  StringBundler sb=new StringBundler(5);
+  sb.append("<div class=\"activity-body\"><div class=\"title\">");
+  String pageTitle=StringPool.BLANK;
+  AssetRenderer assetRenderer=getAssetRenderer(activity);
+  LiferayPortletRequest liferayPortletRequest=serviceContext.getLiferayPortletRequest();
+  if (Validator.isNotNull(assetRenderer.getIconPath(liferayPortletRequest))) {
+    pageTitle=wrapLink(getLinkURL(activity,serviceContext),assetRenderer.getIconPath(liferayPortletRequest),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+  }
+ else {
+    pageTitle=wrapLink(getLinkURL(activity,serviceContext),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+  }
+  sb.append(pageTitle);
+  sb.append("</div><div class=\"blogs-page-content\">");
+  BlogsEntry entry=BlogsEntryLocalServiceUtil.getEntry(activity.getClassPK());
+  String content=HtmlUtil.extractText(entry.getContent());
+  sb.append(StringUtil.shorten(content,200));
+  sb.append("</div></div>");
+  return sb.toString();
+}

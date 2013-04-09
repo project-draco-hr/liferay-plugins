@@ -1,0 +1,17 @@
+{
+  urlString=urlString.replaceFirst("https","http");
+  try {
+    URL url=new URL(urlString);
+    HttpURLConnection httpURLConnection=(HttpURLConnection)url.openConnection();
+    httpURLConnection.setConnectTimeout(500);
+    httpURLConnection.setReadTimeout(500);
+    httpURLConnection.setRequestMethod("HEAD");
+    int responseCode=httpURLConnection.getResponseCode();
+    if ((responseCode < HttpServletResponse.SC_BAD_REQUEST) && (responseCode >= HttpServletResponse.SC_OK)) {
+      return true;
+    }
+  }
+ catch (  IOException ioe) {
+  }
+  return false;
+}

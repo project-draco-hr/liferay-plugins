@@ -1,0 +1,17 @@
+{
+  String titlePattern=StringPool.BLANK;
+  if ((activity.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) || (activity.getReceiverUserId() > 0)) {
+    titlePattern="replied-to-x-forum-post";
+  }
+ else   if (activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+    titlePattern="wrote-a-new-forum-post";
+  }
+ else {
+    return StringPool.BLANK;
+  }
+  MBMessage message=MBMessageLocalServiceUtil.getMessage(activity.getClassPK());
+  if (message.getCategoryId() > 0) {
+    titlePattern=titlePattern.concat("-in-x");
+  }
+  return titlePattern;
+}

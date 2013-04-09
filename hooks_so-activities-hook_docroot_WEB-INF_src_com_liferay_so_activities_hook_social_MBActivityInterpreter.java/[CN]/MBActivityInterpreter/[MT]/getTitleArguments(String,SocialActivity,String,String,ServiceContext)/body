@@ -1,0 +1,24 @@
+{
+  StringBundler sb=new StringBundler(4);
+  sb.append(serviceContext.getPortalURL());
+  sb.append(serviceContext.getPathMain());
+  sb.append("/message_boards/find_category?mbCategoryId=");
+  MBMessage message=MBMessageLocalServiceUtil.getMessage(activity.getClassPK());
+  sb.append(message.getCategoryId());
+  String categoryURL=sb.toString();
+  String categoryName=message.getCategory().getName();
+  String categoryLink=wrapLink(categoryURL,categoryName);
+  if ((activity.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) || (activity.getReceiverUserId() > 0)) {
+    String receiverUserName=getUserName(activity.getReceiverUserId(),serviceContext);
+    if (message.getCategoryId() > 0) {
+      return new Object[]{receiverUserName,categoryLink};
+    }
+    return new Object[]{receiverUserName};
+  }
+ else   if (activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+    if (message.getCategoryId() > 0) {
+      return new Object[]{categoryLink};
+    }
+  }
+  return null;
+}

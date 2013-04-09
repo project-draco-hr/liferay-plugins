@@ -1,0 +1,17 @@
+{
+  String[] portletIds=PropsUtil.getArray("social.activity.interpreter.portlet.ids");
+  for (  String portletId : portletIds) {
+    Filter filter=new Filter(portletId);
+    String activityInterpreterClassName=PropsUtil.get("social.activity.interpreter",filter);
+    try {
+      SocialActivityInterpreter activityInterpreter=(SocialActivityInterpreter)InstanceFactory.newInstance(activityInterpreterClassName);
+      activityInterpreter=new SocialActivityInterpreterImpl(portletId,activityInterpreter);
+      SocialActivityInterpreterLocalServiceUtil.addActivityInterpreter(activityInterpreter);
+    }
+ catch (    Exception e) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unable to add social activity interpreter " + activityInterpreterClassName);
+      }
+    }
+  }
+}
