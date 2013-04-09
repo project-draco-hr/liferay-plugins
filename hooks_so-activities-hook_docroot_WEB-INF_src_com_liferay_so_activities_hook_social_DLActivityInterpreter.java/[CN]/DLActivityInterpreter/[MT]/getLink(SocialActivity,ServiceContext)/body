@@ -1,0 +1,21 @@
+{
+  StringBundler sb=new StringBundler(8);
+  sb.append(serviceContext.getPortalURL());
+  sb.append(serviceContext.getPathMain());
+  sb.append("/document_library/get_file?groupId=");
+  FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(activity.getClassPK());
+  sb.append(fileEntry.getRepositoryId());
+  sb.append("&folderId=");
+  sb.append(fileEntry.getFolderId());
+  sb.append("&title=");
+  sb.append(HttpUtil.encodeURL(fileEntry.getTitle()));
+  String downloadLink=wrapLink(sb.toString(),serviceContext.translate("download"));
+  sb=new StringBundler(5);
+  sb.append("<span>");
+  String documentLink=wrapLink(getLinkURL(activity,serviceContext),serviceContext.translate("view-document"));
+  sb.append(documentLink);
+  sb.append("</span><span>");
+  sb.append(downloadLink);
+  sb.append("</span>");
+  return sb.toString();
+}
