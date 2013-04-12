@@ -99,6 +99,9 @@
   for (Iterator<Attendee> iterator=propertyList.iterator(); iterator.hasNext(); ) {
     Attendee attendee=iterator.next();
     URI uri=attendee.getCalAddress();
+    if (uri == null) {
+      continue;
+    }
     User attendeeUser=UserLocalServiceUtil.fetchUserByEmailAddress(calendar.getCompanyId(),uri.getSchemeSpecificPart());
     if ((attendeeUser == null) || (calendar.getUserId() == attendeeUser.getUserId())) {
       continue;
