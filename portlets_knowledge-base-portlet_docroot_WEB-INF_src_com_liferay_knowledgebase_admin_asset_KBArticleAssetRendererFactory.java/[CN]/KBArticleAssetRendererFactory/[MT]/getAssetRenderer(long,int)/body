@@ -2,13 +2,16 @@
   KBArticle kbArticle=null;
   if (type == TYPE_LATEST_APPROVED) {
     kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(classPK,WorkflowConstants.STATUS_APPROVED);
-    return new KBArticleAssetRenderer(kbArticle);
   }
-  try {
-    kbArticle=KBArticleLocalServiceUtil.getKBArticle(classPK);
+ else {
+    try {
+      kbArticle=KBArticleLocalServiceUtil.getKBArticle(classPK);
+    }
+ catch (    NoSuchArticleException nsae) {
+      kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(classPK,WorkflowConstants.STATUS_ANY);
+    }
   }
- catch (  NoSuchArticleException nsae) {
-    kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(classPK,WorkflowConstants.STATUS_ANY);
-  }
-  return new KBArticleAssetRenderer(kbArticle);
+  KBArticleAssetRenderer kbArticleAssetRenderer=new KBArticleAssetRenderer(kbArticle);
+  kbArticleAssetRenderer.setAssetRendererType(type);
+  return kbArticleAssetRenderer;
 }
