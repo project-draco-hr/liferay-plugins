@@ -1,17 +1,18 @@
 {
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
   String originalRecurrence=calendarBooking.getRecurrence();
-  long originalStartTime=calendarBooking.getStartTime();
   deleteCalendarBookingInstance(calendarBooking,startTime,allFollowing);
-  Recurrence recurrenceObj=RecurrenceSerializer.deserialize(recurrence);
-  if (!allFollowing) {
-    recurrence=StringPool.BLANK;
+  if (allFollowing) {
+    Recurrence recurrenceObj=RecurrenceSerializer.deserialize(recurrence);
+    if (originalRecurrence.equals(recurrence) && (recurrenceObj.getCount() > 0)) {
+      int index=RecurrenceUtil.getIndexOfInstance(recurrence,calendarBooking.getStartTime(),startTime);
+      int newCount=recurrenceObj.getCount() - index;
+      recurrenceObj.setCount(newCount);
+      recurrence=RecurrenceSerializer.serialize(recurrenceObj);
+    }
   }
- else   if (originalRecurrence.equals(recurrence) && recurrenceObj.getCount() > 0) {
-    int indexOfInstance=RecurrenceUtil.getIndexOfInstance(recurrence,originalStartTime,startTime);
-    int newCount=recurrenceObj.getCount() - indexOfInstance;
-    recurrenceObj.setCount(newCount);
-    recurrence=RecurrenceSerializer.serialize(recurrenceObj);
+ else {
+    recurrence=StringPool.BLANK;
   }
   return addCalendarBooking(userId,calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startTime,endTime,allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,serviceContext);
 }
