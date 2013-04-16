@@ -1,0 +1,14 @@
+{
+  try {
+    SocialActivity activity=SocialActivityUtil.fetchByPrimaryKey(activityId);
+    if ((activity.getType() == _ACTIVITY_KEY_ADD_ENTRY) || (activity.getType() == _ACTIVITY_KEY_UPDATE_ENTRY)) {
+      SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchByU_C_C_T_First(activity.getUserId(),activity.getClassNameId(),activity.getClassPK(),activity.getType());
+      if ((activitySet != null) && !isExpired(activitySet)) {
+        return activitySet.getActivitySetId();
+      }
+    }
+  }
+ catch (  Exception e) {
+  }
+  return 0;
+}
