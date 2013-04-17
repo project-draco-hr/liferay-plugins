@@ -1,0 +1,21 @@
+{
+  Properties properties=new Properties();
+switch (templateType) {
+case EMAIL:
+    String emailAddress=ParamUtil.getString(request,"notificationSenderEmailAddress");
+  String name=ParamUtil.getString(request,"notificationSenderName");
+properties.setProperty(PortletPropsKeys.CALENDAR_NOTIFICATION_SENDER_EMAIL,emailAddress);
+properties.setProperty(PortletPropsKeys.CALENDAR_NOTIFICATION_SENDER_NAME,name);
+break;
+default :
+break;
+}
+Writer out=new StringWriter();
+try {
+properties.store(out,null);
+}
+ catch (IOException e) {
+e.printStackTrace();
+}
+return out.toString();
+}

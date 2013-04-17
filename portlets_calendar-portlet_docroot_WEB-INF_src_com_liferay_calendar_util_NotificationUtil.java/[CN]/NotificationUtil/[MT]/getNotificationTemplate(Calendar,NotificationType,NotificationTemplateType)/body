@@ -1,0 +1,12 @@
+{
+  try {
+    CalendarNotificationTemplate template=CalendarNotificationTemplateLocalServiceUtil.getCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,templateType);
+    if (Validator.isNotNull(template) && Validator.isNotNull(template.getSubject()) && Validator.isNotNull(template.getBody())) {
+      return template;
+    }
+  }
+ catch (  SystemException e) {
+    e.printStackTrace();
+  }
+  return getDefaultNotificationTemplate(calendar,notificationType,templateType);
+}

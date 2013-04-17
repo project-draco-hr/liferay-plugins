@@ -1,13 +1,9 @@
 {
+  Calendar calendar=NotificationUtil.getRootCalendar(calendarBooking);
   NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
   Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),user.getTimeZone());
   long endTime=calendarBooking.getEndTime();
   notificationTemplateContext.setAttribute("endTime",dateFormatDateTime.format(endTime));
-  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(calendarBooking.getCompanyId(),calendarBooking.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.CALENDAR,null);
-  String fromAddress=NotificationUtil.getEmailFromAddress(portletPreferences,calendarBooking.getCompanyId());
-  String fromName=NotificationUtil.getEmailFromName(portletPreferences,calendarBooking.getCompanyId());
-  notificationTemplateContext.setAttribute("fromAddress",fromAddress);
-  notificationTemplateContext.setAttribute("fromName",fromName);
   notificationTemplateContext.setAttribute("location",calendarBooking.getLocation());
   Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
   notificationTemplateContext.setAttribute("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
@@ -17,13 +13,8 @@
   notificationTemplateContext.setAttribute("title",calendarBooking.getTitle(user.getLocale()));
   notificationTemplateContext.setAttribute("toAddress",user.getEmailAddress());
   notificationTemplateContext.setAttribute("toName",user.getFullName());
-  Enumeration<String> enu=portletPreferences.getNames();
-  while (enu.hasMoreElements()) {
-    String name=enu.nextElement();
-    String value=GetterUtil.getString(portletPreferences.getValue(name,StringPool.BLANK));
-    notificationTemplateContext.setAttribute(name,value);
-  }
   notificationTemplateContext.setCompanyId(calendarBooking.getCompanyId());
   notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
+  notificationTemplateContext.setCalendarId(calendar.getCalendarId());
   return notificationTemplateContext;
 }

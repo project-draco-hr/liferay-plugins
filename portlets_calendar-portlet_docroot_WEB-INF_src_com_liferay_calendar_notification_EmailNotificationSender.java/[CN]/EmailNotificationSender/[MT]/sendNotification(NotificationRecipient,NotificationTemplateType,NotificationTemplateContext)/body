@@ -1,9 +1,11 @@
 {
   try {
-    String fromAddress=notificationTemplateContext.getString("fromAddress");
-    String fromName=notificationTemplateContext.getString("fromName");
-    String subject=getSubject(notificationTemplateType,notificationTemplateContext);
-    String body=getBody(notificationTemplateType,notificationTemplateContext);
+    Calendar calendar=CalendarLocalServiceUtil.getCalendar(notificationTemplateContext.getCalendarId());
+    CalendarNotificationTemplate template=NotificationUtil.getNotificationTemplate(calendar,NotificationType.EMAIL,notificationTemplateType);
+    String fromAddress=NotificationUtil.getEmailFromAddress(template);
+    String fromName=NotificationUtil.getEmailFromName(template);
+    String subject=processNotificationTemplateContent(template.getSubject(),notificationTemplateContext);
+    String body=processNotificationTemplateContent(template.getBody(),notificationTemplateContext);
     sendNotification(fromAddress,fromName,notificationRecipient,subject,body);
   }
  catch (  Exception e) {
