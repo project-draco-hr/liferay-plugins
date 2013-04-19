@@ -1,3 +1,13 @@
 {
   _expirationDate=expirationDate;
+  if (_pollsQuestionRemoteModel != null) {
+    try {
+      Class<?> clazz=_pollsQuestionRemoteModel.getClass();
+      Method method=clazz.getMethod("setExpirationDate",Date.class);
+      method.invoke(_pollsQuestionRemoteModel,expirationDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

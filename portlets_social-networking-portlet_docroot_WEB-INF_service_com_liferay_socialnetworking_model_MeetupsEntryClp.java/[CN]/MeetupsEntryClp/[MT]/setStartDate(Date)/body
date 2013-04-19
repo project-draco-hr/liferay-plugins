@@ -1,3 +1,13 @@
 {
   _startDate=startDate;
+  if (_meetupsEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_meetupsEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setStartDate",Date.class);
+      method.invoke(_meetupsEntryRemoteModel,startDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

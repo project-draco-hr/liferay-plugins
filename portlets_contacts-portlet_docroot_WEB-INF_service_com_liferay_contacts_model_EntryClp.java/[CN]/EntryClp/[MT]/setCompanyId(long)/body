@@ -1,3 +1,13 @@
 {
   _companyId=companyId;
+  if (_entryRemoteModel != null) {
+    try {
+      Class<?> clazz=_entryRemoteModel.getClass();
+      Method method=clazz.getMethod("setCompanyId",long.class);
+      method.invoke(_entryRemoteModel,companyId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

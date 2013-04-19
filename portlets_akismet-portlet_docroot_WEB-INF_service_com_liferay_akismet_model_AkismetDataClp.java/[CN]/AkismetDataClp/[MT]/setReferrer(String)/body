@@ -1,3 +1,13 @@
 {
   _referrer=referrer;
+  if (_akismetDataRemoteModel != null) {
+    try {
+      Class<?> clazz=_akismetDataRemoteModel.getClass();
+      Method method=clazz.getMethod("setReferrer",String.class);
+      method.invoke(_akismetDataRemoteModel,referrer);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

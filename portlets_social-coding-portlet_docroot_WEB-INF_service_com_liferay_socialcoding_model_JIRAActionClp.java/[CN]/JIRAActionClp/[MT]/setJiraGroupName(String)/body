@@ -1,3 +1,13 @@
 {
   _jiraGroupName=jiraGroupName;
+  if (_jiraActionRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraActionRemoteModel.getClass();
+      Method method=clazz.getMethod("setJiraGroupName",String.class);
+      method.invoke(_jiraActionRemoteModel,jiraGroupName);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

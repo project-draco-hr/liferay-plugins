@@ -1,3 +1,13 @@
 {
   _totalAttendees=totalAttendees;
+  if (_meetupsEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_meetupsEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setTotalAttendees",int.class);
+      method.invoke(_meetupsEntryRemoteModel,totalAttendees);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

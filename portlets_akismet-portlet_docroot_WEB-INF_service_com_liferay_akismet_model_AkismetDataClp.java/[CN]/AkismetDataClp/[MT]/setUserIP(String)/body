@@ -1,3 +1,13 @@
 {
   _userIP=userIP;
+  if (_akismetDataRemoteModel != null) {
+    try {
+      Class<?> clazz=_akismetDataRemoteModel.getClass();
+      Method method=clazz.getMethod("setUserIP",String.class);
+      method.invoke(_akismetDataRemoteModel,userIP);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

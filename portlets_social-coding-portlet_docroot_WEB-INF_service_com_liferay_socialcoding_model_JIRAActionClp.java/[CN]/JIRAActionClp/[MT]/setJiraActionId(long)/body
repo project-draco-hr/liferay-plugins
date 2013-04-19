@@ -1,3 +1,13 @@
 {
   _jiraActionId=jiraActionId;
+  if (_jiraActionRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraActionRemoteModel.getClass();
+      Method method=clazz.getMethod("setJiraActionId",long.class);
+      method.invoke(_jiraActionRemoteModel,jiraActionId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

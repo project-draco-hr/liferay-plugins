@@ -1,3 +1,13 @@
 {
   _userId=userId;
+  if (_wallEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_wallEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setUserId",long.class);
+      method.invoke(_wallEntryRemoteModel,userId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

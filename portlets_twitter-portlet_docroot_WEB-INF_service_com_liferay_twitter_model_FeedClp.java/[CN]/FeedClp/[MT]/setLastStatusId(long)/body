@@ -1,3 +1,13 @@
 {
   _lastStatusId=lastStatusId;
+  if (_feedRemoteModel != null) {
+    try {
+      Class<?> clazz=_feedRemoteModel.getClass();
+      Method method=clazz.getMethod("setLastStatusId",long.class);
+      method.invoke(_feedRemoteModel,lastStatusId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

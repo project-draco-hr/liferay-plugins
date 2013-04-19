@@ -1,3 +1,13 @@
 {
   _barId=barId;
+  if (_barRemoteModel != null) {
+    try {
+      Class<?> clazz=_barRemoteModel.getClass();
+      Method method=clazz.getMethod("setBarId",long.class);
+      method.invoke(_barRemoteModel,barId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

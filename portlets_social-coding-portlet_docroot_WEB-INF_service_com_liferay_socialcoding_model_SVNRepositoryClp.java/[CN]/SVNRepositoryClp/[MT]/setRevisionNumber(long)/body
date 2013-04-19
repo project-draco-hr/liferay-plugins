@@ -1,3 +1,13 @@
 {
   _revisionNumber=revisionNumber;
+  if (_svnRepositoryRemoteModel != null) {
+    try {
+      Class<?> clazz=_svnRepositoryRemoteModel.getClass();
+      Method method=clazz.getMethod("setRevisionNumber",long.class);
+      method.invoke(_svnRepositoryRemoteModel,revisionNumber);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

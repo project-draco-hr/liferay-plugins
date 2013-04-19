@@ -1,3 +1,13 @@
 {
   _svnUserId=svnUserId;
+  if (_svnRevisionRemoteModel != null) {
+    try {
+      Class<?> clazz=_svnRevisionRemoteModel.getClass();
+      Method method=clazz.getMethod("setSvnUserId",String.class);
+      method.invoke(_svnRevisionRemoteModel,svnUserId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _oldValue=oldValue;
+  if (_jiraChangeItemRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraChangeItemRemoteModel.getClass();
+      Method method=clazz.getMethod("setOldValue",String.class);
+      method.invoke(_jiraChangeItemRemoteModel,oldValue);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _fooId=fooId;
+  if (_fooRemoteModel != null) {
+    try {
+      Class<?> clazz=_fooRemoteModel.getClass();
+      Method method=clazz.getMethod("setFooId",long.class);
+      method.invoke(_fooRemoteModel,fooId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

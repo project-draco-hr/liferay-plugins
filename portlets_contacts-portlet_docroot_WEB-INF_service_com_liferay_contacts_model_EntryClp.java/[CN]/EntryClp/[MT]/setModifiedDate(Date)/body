@@ -1,3 +1,13 @@
 {
   _modifiedDate=modifiedDate;
+  if (_entryRemoteModel != null) {
+    try {
+      Class<?> clazz=_entryRemoteModel.getClass();
+      Method method=clazz.getMethod("setModifiedDate",Date.class);
+      method.invoke(_entryRemoteModel,modifiedDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

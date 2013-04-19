@@ -1,3 +1,13 @@
 {
   _url=url;
+  if (_svnRepositoryRemoteModel != null) {
+    try {
+      Class<?> clazz=_svnRepositoryRemoteModel.getClass();
+      Method method=clazz.getMethod("setUrl",String.class);
+      method.invoke(_svnRepositoryRemoteModel,url);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _invitedTeamId=invitedTeamId;
+  if (_memberRequestRemoteModel != null) {
+    try {
+      Class<?> clazz=_memberRequestRemoteModel.getClass();
+      Method method=clazz.getMethod("setInvitedTeamId",long.class);
+      method.invoke(_memberRequestRemoteModel,invitedTeamId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

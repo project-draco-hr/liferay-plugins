@@ -1,3 +1,13 @@
 {
   _memberRequestId=memberRequestId;
+  if (_memberRequestRemoteModel != null) {
+    try {
+      Class<?> clazz=_memberRequestRemoteModel.getClass();
+      Method method=clazz.getMethod("setMemberRequestId",long.class);
+      method.invoke(_memberRequestRemoteModel,memberRequestId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

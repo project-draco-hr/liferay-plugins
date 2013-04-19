@@ -1,3 +1,13 @@
 {
   _comments=comments;
+  if (_svnRevisionRemoteModel != null) {
+    try {
+      Class<?> clazz=_svnRevisionRemoteModel.getClass();
+      Method method=clazz.getMethod("setComments",String.class);
+      method.invoke(_svnRevisionRemoteModel,comments);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

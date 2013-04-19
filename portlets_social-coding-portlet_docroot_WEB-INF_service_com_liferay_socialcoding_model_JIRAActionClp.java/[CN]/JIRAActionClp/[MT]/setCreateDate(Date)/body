@@ -1,3 +1,13 @@
 {
   _createDate=createDate;
+  if (_jiraActionRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraActionRemoteModel.getClass();
+      Method method=clazz.getMethod("setCreateDate",Date.class);
+      method.invoke(_jiraActionRemoteModel,createDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

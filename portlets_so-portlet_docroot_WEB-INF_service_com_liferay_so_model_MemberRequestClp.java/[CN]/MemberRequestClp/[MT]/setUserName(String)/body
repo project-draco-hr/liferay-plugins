@@ -1,3 +1,13 @@
 {
   _userName=userName;
+  if (_memberRequestRemoteModel != null) {
+    try {
+      Class<?> clazz=_memberRequestRemoteModel.getClass();
+      Method method=clazz.getMethod("setUserName",String.class);
+      method.invoke(_memberRequestRemoteModel,userName);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

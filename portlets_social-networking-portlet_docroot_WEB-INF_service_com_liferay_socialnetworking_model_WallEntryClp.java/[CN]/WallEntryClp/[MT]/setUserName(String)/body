@@ -1,3 +1,13 @@
 {
   _userName=userName;
+  if (_wallEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_wallEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setUserName",String.class);
+      method.invoke(_wallEntryRemoteModel,userName);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _receiverMicroblogsEntryId=receiverMicroblogsEntryId;
+  if (_microblogsEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_microblogsEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setReceiverMicroblogsEntryId",long.class);
+      method.invoke(_microblogsEntryRemoteModel,receiverMicroblogsEntryId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _maxAttendees=maxAttendees;
+  if (_meetupsEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_meetupsEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setMaxAttendees",int.class);
+      method.invoke(_meetupsEntryRemoteModel,maxAttendees);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

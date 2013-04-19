@@ -1,3 +1,13 @@
 {
   _companyId=companyId;
+  if (_kbTemplateRemoteModel != null) {
+    try {
+      Class<?> clazz=_kbTemplateRemoteModel.getClass();
+      Method method=clazz.getMethod("setCompanyId",long.class);
+      method.invoke(_kbTemplateRemoteModel,companyId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

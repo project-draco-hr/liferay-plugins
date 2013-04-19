@@ -1,3 +1,13 @@
 {
   _dueDate=dueDate;
+  if (_tasksEntryRemoteModel != null) {
+    try {
+      Class<?> clazz=_tasksEntryRemoteModel.getClass();
+      Method method=clazz.getMethod("setDueDate",Date.class);
+      method.invoke(_tasksEntryRemoteModel,dueDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

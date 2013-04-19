@@ -1,3 +1,13 @@
 {
   _permalink=permalink;
+  if (_akismetDataRemoteModel != null) {
+    try {
+      Class<?> clazz=_akismetDataRemoteModel.getClass();
+      Method method=clazz.getMethod("setPermalink",String.class);
+      method.invoke(_akismetDataRemoteModel,permalink);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

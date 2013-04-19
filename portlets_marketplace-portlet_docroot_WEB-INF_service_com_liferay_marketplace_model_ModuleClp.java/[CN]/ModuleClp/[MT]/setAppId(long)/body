@@ -1,3 +1,13 @@
 {
   _appId=appId;
+  if (_moduleRemoteModel != null) {
+    try {
+      Class<?> clazz=_moduleRemoteModel.getClass();
+      Method method=clazz.getMethod("setAppId",long.class);
+      method.invoke(_moduleRemoteModel,appId);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

@@ -1,3 +1,13 @@
 {
   _status=status;
+  if (_jiraIssueRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraIssueRemoteModel.getClass();
+      Method method=clazz.getMethod("setStatus",String.class);
+      method.invoke(_jiraIssueRemoteModel,status);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }

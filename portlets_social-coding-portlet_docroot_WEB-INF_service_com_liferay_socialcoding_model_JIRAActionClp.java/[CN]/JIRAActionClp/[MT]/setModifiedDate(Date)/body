@@ -1,3 +1,13 @@
 {
   _modifiedDate=modifiedDate;
+  if (_jiraActionRemoteModel != null) {
+    try {
+      Class<?> clazz=_jiraActionRemoteModel.getClass();
+      Method method=clazz.getMethod("setModifiedDate",Date.class);
+      method.invoke(_jiraActionRemoteModel,modifiedDate);
+    }
+ catch (    Exception e) {
+      throw new UnsupportedOperationException(e);
+    }
+  }
 }
