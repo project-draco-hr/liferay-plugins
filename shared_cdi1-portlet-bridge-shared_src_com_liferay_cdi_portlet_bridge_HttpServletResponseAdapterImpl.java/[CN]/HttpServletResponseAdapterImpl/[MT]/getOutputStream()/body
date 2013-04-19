@@ -1,0 +1,13 @@
+{
+  if (_servletOutputStream == null) {
+    PortletResponse wrappedPortletResponse=getPortletResponse();
+    if (wrappedPortletResponse instanceof MimeResponse) {
+      MimeResponse mimeResponse=(MimeResponse)wrappedPortletResponse;
+      _servletOutputStream=new ServletOutputStreamAdapter(mimeResponse);
+    }
+ else {
+      throw new UnsupportedOperationException();
+    }
+  }
+  return _servletOutputStream;
+}
