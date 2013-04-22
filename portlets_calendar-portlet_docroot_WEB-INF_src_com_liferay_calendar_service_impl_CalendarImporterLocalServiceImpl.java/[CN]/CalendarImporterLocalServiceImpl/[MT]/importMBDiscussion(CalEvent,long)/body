@@ -1,0 +1,10 @@
+{
+  MBDiscussion mbDiscussion=mbDiscussionPersistence.fetchByC_C(PortalUtil.getClassNameId(CalEvent.class),calEvent.getEventId());
+  if (mbDiscussion == null) {
+    return;
+  }
+  String uuid=PortalUUIDUtil.generate();
+  long discussionId=counterLocalService.increment();
+  long threadId=importMBThread(mbDiscussion.getThreadId(),calendarBookingId);
+  addMBDiscussion(uuid,discussionId,mbDiscussion.getGroupId(),mbDiscussion.getCompanyId(),mbDiscussion.getUserId(),mbDiscussion.getUserName(),mbDiscussion.getCreateDate(),mbDiscussion.getModifiedDate(),PortalUtil.getClassNameId(CalendarBooking.class.getName()),calendarBookingId,threadId);
+}

@@ -1,0 +1,12 @@
+{
+  String assetVocabularyDefault=PropsUtil.get(PropsKeys.ASSET_VOCABULARY_DEFAULT);
+  AssetVocabulary assetVocabulary=assetVocabularyPersistence.findByG_N(groupId,assetVocabularyDefault);
+  AssetCategory assetCategory=assetCategoryPersistence.fetchByP_N_V(AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,name,assetVocabulary.getVocabularyId());
+  if (assetCategory != null) {
+    return assetCategory;
+  }
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setUserId(userId);
+  serviceContext.setScopeGroupId(groupId);
+  return assetCategoryLocalService.addCategory(userId,name,assetVocabulary.getVocabularyId(),serviceContext);
+}

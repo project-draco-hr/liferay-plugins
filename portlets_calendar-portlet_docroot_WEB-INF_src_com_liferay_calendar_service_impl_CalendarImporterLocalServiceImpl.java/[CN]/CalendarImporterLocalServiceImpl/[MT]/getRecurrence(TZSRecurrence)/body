@@ -1,0 +1,38 @@
+{
+  if (tzsRecurrence == null) {
+    return null;
+  }
+  Recurrence recurrence=new Recurrence();
+  Frequency frequency=_frequencyMap.get(tzsRecurrence.getFrequency());
+  int interval=tzsRecurrence.getInterval();
+  List<Weekday> weekdays=new ArrayList<Weekday>();
+  if ((frequency == Frequency.DAILY) && (interval == 0)) {
+    frequency=Frequency.WEEKLY;
+    interval=1;
+    weekdays.add(Weekday.MONDAY);
+    weekdays.add(Weekday.TUESDAY);
+    weekdays.add(Weekday.WEDNESDAY);
+    weekdays.add(Weekday.THURSDAY);
+    weekdays.add(Weekday.FRIDAY);
+    recurrence.setWeekdays(weekdays);
+  }
+ else   if (frequency == Frequency.WEEKLY) {
+    DayAndPosition[] dayAndPositions=tzsRecurrence.getByDay();
+    for (    DayAndPosition dayAndPosition : dayAndPositions) {
+      Weekday weekday=_weekdayMap.get(dayAndPosition.getDayOfWeek());
+      weekdays.add(weekday);
+    }
+  }
+  recurrence.setInterval(interval);
+  recurrence.setFrequency(frequency);
+  recurrence.setWeekdays(weekdays);
+  Calendar untilJCalendar=tzsRecurrence.getUntil();
+  int ocurrence=tzsRecurrence.getOccurrence();
+  if (untilJCalendar != null) {
+    recurrence.setUntilJCalendar(untilJCalendar);
+  }
+ else   if (ocurrence > 0) {
+    recurrence.setCount(ocurrence);
+  }
+  return RecurrenceSerializer.serialize(recurrence);
+}

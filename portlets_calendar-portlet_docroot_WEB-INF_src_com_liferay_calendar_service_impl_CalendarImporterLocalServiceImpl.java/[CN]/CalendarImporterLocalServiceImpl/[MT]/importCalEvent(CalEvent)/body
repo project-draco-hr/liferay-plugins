@@ -1,0 +1,20 @@
+{
+  if (isImported(calEvent)) {
+    return;
+  }
+  long calendarBookingId=counterLocalService.increment();
+  long companyId=calEvent.getCompanyId();
+  CalendarResource calendarResource=getCalendarResource(companyId,calEvent.getGroupId());
+  Date startDate=calEvent.getStartDate();
+  long startTime=startDate.getTime();
+  long endTime=startTime + calEvent.getDurationHour() * Time.HOUR + calEvent.getDurationMinute() * Time.MINUTE;
+  if (calEvent.isAllDay()) {
+    endTime=endTime - 1;
+  }
+  String recurrence=getRecurrence(calEvent.getRecurrenceObj());
+  addCalendarBooking(calEvent.getUuid(),calendarBookingId,companyId,calendarResource.getGroupId(),calEvent.getUserId(),calEvent.getUserName(),calEvent.getCreateDate(),calEvent.getModifiedDate(),calendarResource.getDefaultCalendarId(),calendarResource.getCalendarResourceId(),calEvent.getTitle(),calEvent.getDescription(),calEvent.getLocation(),startTime,endTime,calEvent.getAllDay(),recurrence,calEvent.getFirstReminder(),NotificationType.EMAIL,calEvent.getSecondReminder(),NotificationType.EMAIL);
+  importSubscriptions(calEvent,calendarBookingId);
+  importAssets(calEvent,calendarBookingId);
+  importMBDiscussion(calEvent,calendarBookingId);
+  importRatings(PortalUtil.getClassNameId(CalEvent.class.getName()),calEvent.getEventId(),PortalUtil.getClassNameId(CalendarBooking.class.getName()),calendarBookingId);
+}

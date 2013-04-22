@@ -1,0 +1,13 @@
+{
+  Long messageId=mbMessageIds.get(mbMessage.getMessageId());
+  if (messageId != null) {
+    return messageId;
+  }
+  String uuid=PortalUUIDUtil.generate();
+  messageId=counterLocalService.increment();
+  addMBMessage(uuid,messageId,mbMessage.getGroupId(),mbMessage.getCompanyId(),mbMessage.getUserId(),mbMessage.getUserName(),mbMessage.getCreateDate(),mbMessage.getModifiedDate(),PortalUtil.getClassNameId(CalendarBooking.class.getName()),calendarBookingId,mbMessage.getCategoryId(),threadId,mbMessage.getRootMessageId(),mbMessage.getParentMessageId(),mbMessage.getSubject(),mbMessage.getBody(),mbMessage.getFormat(),mbMessage.isAnonymous(),mbMessage.getPriority(),mbMessage.getAllowPingbacks(),mbMessage.isAnswer(),mbMessage.getStatus(),mbMessage.getStatusByUserId(),mbMessage.getStatusByUserName(),mbMessage.getStatusDate(),mbMessageIds);
+  long mbDiscussionClassNameId=PortalUtil.getClassNameId(MBDiscussion.class.getName());
+  importRatings(mbDiscussionClassNameId,mbMessage.getMessageId(),mbDiscussionClassNameId,messageId);
+  mbMessageIds.put(mbMessage.getMessageId(),messageId);
+  return messageId;
+}
