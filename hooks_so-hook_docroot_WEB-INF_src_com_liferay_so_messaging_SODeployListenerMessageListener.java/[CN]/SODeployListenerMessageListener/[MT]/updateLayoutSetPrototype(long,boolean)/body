@@ -1,19 +1,19 @@
 {
   LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(groupId,privateLayout);
   LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSet.getLayoutSetPrototypeId());
-  Group group=layoutSetPrototype.getGroup();
-  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),true);
-  String[] layoutUuids=new String[layouts.size()];
-  for (int i=0; i < layouts.size(); i++) {
-    Layout layout=layouts.get(i);
-    layoutUuids[i]=layout.getUuid();
+  Group layoutSetPrototypeGroup=layoutSetPrototype.getGroup();
+  List<Layout> layoutSetPrototypeLayouts=LayoutLocalServiceUtil.getLayouts(layoutSetPrototypeGroup.getGroupId(),true);
+  String[] layoutSetPrototypeLayoutUuids=new String[layoutSetPrototypeLayouts.size()];
+  for (int i=0; i < layoutSetPrototypeLayouts.size(); i++) {
+    Layout layout=layoutSetPrototypeLayouts.get(i);
+    layoutSetPrototypeLayoutUuids[i]=layout.getUuid();
   }
-  layouts=LayoutLocalServiceUtil.getLayouts(groupId,privateLayout);
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(groupId,privateLayout);
   for (  Layout layout : layouts) {
-    if (ArrayUtil.contains(layoutUuids,layout.getSourcePrototypeLayoutUuid())) {
+    if (ArrayUtil.contains(layoutSetPrototypeLayoutUuids,layout.getSourcePrototypeLayoutUuid())) {
       layout.setLayoutPrototypeUuid(StringPool.BLANK);
+      layout.setLayoutPrototypeLinkEnabled(false);
       layout.setSourcePrototypeLayoutUuid(StringPool.BLANK);
-      layout.setLayoutPrototypeLinkEnabled(Boolean.FALSE);
       LayoutLocalServiceUtil.updateLayout(layout);
     }
   }
