@@ -1,6 +1,10 @@
 {
-  List<CalEvent> calEvents=calEventPersistence.findAll();
-  for (  CalEvent calEvent : calEvents) {
-    importCalEvent(calEvent);
+  ActionableDynamicQuery actionableDynamicQuery=new CalEventActionableDynamicQuery(){
+    @Override protected void performAction(    Object object) throws PortalException, SystemException {
+      CalEvent calEvent=(CalEvent)object;
+      importCalEvent(calEvent);
+    }
   }
+;
+  actionableDynamicQuery.performActions();
 }
