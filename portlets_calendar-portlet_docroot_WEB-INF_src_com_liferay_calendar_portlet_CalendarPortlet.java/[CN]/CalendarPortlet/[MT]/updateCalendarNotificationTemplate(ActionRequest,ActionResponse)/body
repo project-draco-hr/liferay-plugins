@@ -1,0 +1,18 @@
+{
+  long calendarNotificationTemplateId=ParamUtil.getLong(actionRequest,"calendarNotificationTemplateId");
+  long calendarId=ParamUtil.getLong(actionRequest,"calendarId");
+  String notificationTypeString=ParamUtil.getString(actionRequest,"notificationType");
+  String notificationTemplateTypeString=ParamUtil.getString(actionRequest,"notificationTemplateType");
+  String subject=ParamUtil.getString(actionRequest,"subject");
+  String body=ParamUtil.getString(actionRequest,"body");
+  NotificationType notificationType=NotificationType.parse(notificationTypeString);
+  NotificationTemplateType notificationTemplateType=NotificationTemplateType.parse(notificationTemplateTypeString);
+  String typeSettings=getNotificationTemplateSettings(actionRequest,notificationType);
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarNotificationTemplate.class.getName(),actionRequest);
+  if (calendarNotificationTemplateId <= 0) {
+    CalendarNotificationTemplateServiceUtil.addCalendarNotificationTemplate(calendarId,notificationType,notificationTemplateType,subject,body,typeSettings,serviceContext);
+  }
+ else {
+    CalendarNotificationTemplateServiceUtil.updateCalendarNotificationTemplate(calendarNotificationTemplateId,subject,body,typeSettings,serviceContext);
+  }
+}

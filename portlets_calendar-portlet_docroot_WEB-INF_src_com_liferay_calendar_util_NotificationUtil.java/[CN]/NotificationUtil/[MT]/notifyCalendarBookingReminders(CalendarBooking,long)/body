@@ -6,7 +6,6 @@
     if (nowTime > startTime) {
       return;
     }
-    NotificationTemplateContext notificationTemplateContext=NotificationTemplateContextFactory.getInstance(calendarBooking,user);
     NotificationType notificationType=null;
     long diff=(startTime - nowTime) / _CHECK_INTERVAL;
     if (diff == (calendarBooking.getFirstReminder() / _CHECK_INTERVAL)) {
@@ -15,9 +14,10 @@
  else     if (diff == (calendarBooking.getSecondReminder() / _CHECK_INTERVAL)) {
       notificationType=calendarBooking.getSecondReminderNotificationType();
     }
+    NotificationTemplateContext notificationTemplateContext=NotificationTemplateContextFactory.getInstance(notificationType,NotificationTemplateType.REMINDER,calendarBooking,user);
     if (notificationType != null) {
       NotificationSender notificationSender=NotificationSenderFactory.getNotificationSender(notificationType.toString());
-      notificationSender.sendNotification(notificationRecipient,NotificationTemplateType.REMINDER,notificationTemplateContext);
+      notificationSender.sendNotification(notificationRecipient,notificationTemplateContext);
     }
   }
 }

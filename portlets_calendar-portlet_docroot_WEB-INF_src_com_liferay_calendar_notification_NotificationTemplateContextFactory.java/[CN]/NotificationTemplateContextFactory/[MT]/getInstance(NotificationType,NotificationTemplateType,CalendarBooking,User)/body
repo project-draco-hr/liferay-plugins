@@ -1,0 +1,32 @@
+{
+  CalendarBooking parentCalendarBooking=calendarBooking.getParentCalendarBooking();
+  Calendar calendar=parentCalendarBooking.getCalendar();
+  NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
+  notificationTemplateContext.setCompanyId(calendarBooking.getCompanyId());
+  notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
+  notificationTemplateContext.setCalendarId(calendar.getCalendarId());
+  notificationTemplateContext.setNotificationType(notificationType);
+  Map<String,Serializable> attributes=new HashMap<String,Serializable>();
+  Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),user.getTimeZone());
+  long endTime=calendarBooking.getEndTime();
+  attributes.put("endTime",dateFormatDateTime.format(endTime));
+  attributes.put("location",calendarBooking.getLocation());
+  Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
+  attributes.put("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
+  attributes.put("portletName",LanguageUtil.get(getPortletConfig(),user.getLocale(),"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
+  long startTime=calendarBooking.getStartTime();
+  attributes.put("startTime",dateFormatDateTime.format(startTime));
+  attributes.put("title",calendarBooking.getTitle(user.getLocale()));
+  attributes.put("toAddress",user.getEmailAddress());
+  attributes.put("toName",user.getFullName());
+  notificationTemplateContext.setAttributes(attributes);
+  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
+  notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
+  String templateSubject=NotificationUtil.getNotificationTemplate(calendarNotificationTemplate,notificationType,notificationTemplateType,NotificationField.SUBJECT);
+  String subject=NotificationUtil.processNotificationTemplate(templateSubject,attributes);
+  notificationTemplateContext.setSubject(subject);
+  String templateBody=NotificationUtil.getNotificationTemplate(calendarNotificationTemplate,notificationType,notificationTemplateType,NotificationField.BODY);
+  String body=NotificationUtil.processNotificationTemplate(templateBody,attributes);
+  notificationTemplateContext.setBody(body);
+  return notificationTemplateContext;
+}
