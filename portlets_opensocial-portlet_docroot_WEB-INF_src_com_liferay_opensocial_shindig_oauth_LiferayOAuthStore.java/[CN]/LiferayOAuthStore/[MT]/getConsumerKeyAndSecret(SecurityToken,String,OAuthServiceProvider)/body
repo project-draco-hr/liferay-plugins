@@ -15,6 +15,6 @@
     netOAuthConsumer.setProperty(OAuth.OAUTH_SIGNATURE_METHOD,OAuth.HMAC_SHA1);
   }
   String keyName=oAuthConsumer.getKeyName();
-  String callbackURL=_callbackURL.replace("%host%",ShindigUtil.getHost());
+  String callbackURL=StringUtil.replace(_callbackURL,new String[]{"%scheme%","%host%"},new String[]{ShindigUtil.getScheme(),ShindigUtil.getHost()});
   return new ConsumerInfo(netOAuthConsumer,keyName,callbackURL);
 }
