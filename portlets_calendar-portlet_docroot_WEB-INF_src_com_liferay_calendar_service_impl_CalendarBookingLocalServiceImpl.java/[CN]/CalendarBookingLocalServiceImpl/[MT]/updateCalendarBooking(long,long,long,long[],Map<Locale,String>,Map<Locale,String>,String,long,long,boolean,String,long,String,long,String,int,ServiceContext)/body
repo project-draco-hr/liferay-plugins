@@ -1,6 +1,7 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  Calendar calendar=calendarBooking.getCalendar();
   java.util.Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(startTime);
   java.util.Calendar endTimeJCalendar=JCalendarUtil.getJCalendar(endTime);
   if (allDay) {
@@ -33,6 +34,7 @@
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
+  socialActivityLocalService.addActivity(userId,calendar.getResourceGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.UPDATE_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking,serviceContext),0);
   calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
   return calendarBooking;
 }

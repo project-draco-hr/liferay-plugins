@@ -52,6 +52,7 @@
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
+  socialActivityLocalService.addActivity(userId,calendar.getResourceGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.ADD_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking,serviceContext),0);
   calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId,serviceContext);
   return calendarBooking;
 }
