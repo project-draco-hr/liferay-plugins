@@ -1,0 +1,11 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(MBCategory.class,PortalClassLoaderUtil.getClassLoader());
+  Property property=PropertyFactoryUtil.forName("companyId");
+  dynamicQuery.add(property.eq(companyId));
+  if (Validator.isNotNull(name)) {
+    name=StringPool.PERCENT + name + StringPool.PERCENT;
+    property=PropertyFactoryUtil.forName("name");
+    dynamicQuery.add(property.like(name));
+  }
+  return (int)MBCategoryLocalServiceUtil.dynamicQueryCount(dynamicQuery);
+}

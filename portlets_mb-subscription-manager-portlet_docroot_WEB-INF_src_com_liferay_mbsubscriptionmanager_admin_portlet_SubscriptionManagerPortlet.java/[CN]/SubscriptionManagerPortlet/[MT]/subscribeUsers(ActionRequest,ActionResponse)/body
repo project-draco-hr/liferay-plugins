@@ -1,0 +1,8 @@
+{
+  long mbCategoryId=ParamUtil.getLong(actionRequest,"mbCategoryId");
+  MBCategory category=MBCategoryLocalServiceUtil.getMBCategory(mbCategoryId);
+  long[] userIds=ParamUtil.getLongValues(actionRequest,"userIds");
+  for (  long userId : userIds) {
+    SubscriptionLocalServiceUtil.addSubscription(userId,category.getGroupId(),MBCategory.class.getName(),category.getCategoryId());
+  }
+}

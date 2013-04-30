@@ -1,0 +1,11 @@
+{
+  long mbCategoryId=ParamUtil.getLong(actionRequest,"mbCategoryId");
+  MBCategory category=MBCategoryLocalServiceUtil.getMBCategory(mbCategoryId);
+  long[] userIds=ParamUtil.getLongValues(actionRequest,"userIds");
+  for (  long userId : userIds) {
+    if (!SubscriptionLocalServiceUtil.isSubscribed(category.getCompanyId(),userId,MBCategory.class.getName(),mbCategoryId)) {
+      continue;
+    }
+    SubscriptionLocalServiceUtil.deleteSubscription(userId,MBCategory.class.getName(),mbCategoryId);
+  }
+}
