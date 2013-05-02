@@ -5,11 +5,11 @@
     long portletPlid=PortalUtil.getPlidFromPortletId(user.getGroupId(),true,"1_WAR_microblogsportlet");
     PortletURL portletURL=PortletURLFactoryUtil.create(liferayPortletRequest,"1_WAR_microblogsportlet",portletPlid,PortletRequest.RENDER_PHASE);
     portletURL.setParameter("mvcPath","/microblogs/view.jsp");
-    long displayMicroblogsEntryId=_entry.getMicroblogsEntryId();
+    long microblogsEntryId=_entry.getMicroblogsEntryId();
     if (_entry.getReceiverMicroblogsEntryId() > 0) {
-      displayMicroblogsEntryId=_entry.getReceiverMicroblogsEntryId();
+      microblogsEntryId=_entry.getReceiverMicroblogsEntryId();
     }
-    portletURL.setParameter("displayMicroblogsEntryId",String.valueOf(displayMicroblogsEntryId));
+    portletURL.setParameter("receiverMicroblogsEntryId",String.valueOf(microblogsEntryId));
     return portletURL.toString();
   }
  catch (  Exception e) {
