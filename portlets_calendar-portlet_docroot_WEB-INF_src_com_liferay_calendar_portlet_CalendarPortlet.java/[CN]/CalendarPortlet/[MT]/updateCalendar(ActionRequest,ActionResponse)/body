@@ -4,13 +4,15 @@
   Map<Locale,String> nameMap=LocalizationUtil.getLocalizationMap(actionRequest,"name");
   Map<Locale,String> descriptionMap=LocalizationUtil.getLocalizationMap(actionRequest,"description");
   int color=ParamUtil.getInteger(actionRequest,"color");
-  boolean defaultCalendar=ParamUtil.getBoolean(actionRequest,"defaultCalendar",false);
+  boolean defaultCalendar=ParamUtil.getBoolean(actionRequest,"defaultCalendar");
+  boolean enableComments=ParamUtil.getBoolean(actionRequest,"enableComments");
+  boolean enableRatings=ParamUtil.getBoolean(actionRequest,"enableRatings");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Calendar.class.getName(),actionRequest);
   if (calendarId <= 0) {
     CalendarResource calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
-    CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,serviceContext);
+    CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
   }
  else {
-    CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,serviceContext);
+    CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
   }
 }
