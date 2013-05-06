@@ -1,6 +1,5 @@
 {
-  HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
-  CDIRequestFactory cdiRequestFactory=(CDIRequestFactory)CDIUtil.getManagedBeanReference(CDIRequestFactory.class);
-  CDICrossContextRequest cdiCrossContextRequest=cdiRequestFactory.getCDICrossContextRequest(httpServletRequest);
-  filterChain.doFilter(cdiCrossContextRequest,servletResponse);
+  CDIRequestFactory cdiRequestFactory=(CDIRequestFactory)CDIBeanManagerUtil.getManagedBeanReference(CDIRequestFactory.class);
+  servletRequest=cdiRequestFactory.getCDICrossContextRequest((HttpServletRequest)servletRequest);
+  filterChain.doFilter(servletRequest,servletResponse);
 }

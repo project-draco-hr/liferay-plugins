@@ -1,6 +1,7 @@
 {
-  CDIResourceRequest cdiResourceRequest=getCDIRequestFactory().getCDIResourceRequest(resourceRequest);
-  Locale locale=resourceRequest.getLocale();
-  CDIResourceResponse cdiResourceResponse=getCDIResponseFactory().getCDIResourceResponse(resourceResponse,locale);
-  filterChain.doFilter(cdiResourceRequest,cdiResourceResponse);
+  CDIRequestFactory cdiRequestFactory=getCDIRequestFactory();
+  resourceRequest=cdiRequestFactory.getCDIResourceRequest(resourceRequest);
+  CDIResponseFactory cdiResponseFactory=getCDIResponseFactory();
+  resourceResponse=cdiResponseFactory.getCDIResourceResponse(resourceResponse,resourceRequest.getLocale());
+  filterChain.doFilter(resourceRequest,resourceResponse);
 }

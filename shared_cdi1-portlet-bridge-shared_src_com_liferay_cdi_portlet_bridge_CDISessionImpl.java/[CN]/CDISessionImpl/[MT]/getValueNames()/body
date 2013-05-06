@@ -1,13 +1,13 @@
 {
-  String[] valueNames=null;
-  Enumeration<String> attributeNames=getPortletSession().getAttributeNames();
-  if (attributeNames != null) {
-    List<String> valueNameArray=new ArrayList<String>();
-    while (attributeNames.hasMoreElements()) {
-      String attributeName=attributeNames.nextElement();
-      valueNameArray.add(attributeName);
-    }
-    valueNames=valueNameArray.toArray(new String[valueNameArray.size()]);
+  PortletSession portletSession=getPortletSession();
+  Enumeration<String> attributeNames=portletSession.getAttributeNames();
+  if (attributeNames == null) {
+    return null;
   }
-  return valueNames;
+  List<String> valueNames=new ArrayList<String>();
+  while (attributeNames.hasMoreElements()) {
+    String attributeName=attributeNames.nextElement();
+    valueNames.add(attributeName);
+  }
+  return valueNames.toArray(new String[valueNames.size()]);
 }

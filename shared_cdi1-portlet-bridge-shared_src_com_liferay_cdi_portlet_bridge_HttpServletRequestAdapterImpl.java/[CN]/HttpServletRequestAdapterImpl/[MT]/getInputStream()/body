@@ -1,13 +1,10 @@
 {
   if (_servletInputStream == null) {
-    PortletRequest wrappedPortletRequest=getPortletRequest();
-    if (wrappedPortletRequest instanceof ClientDataRequest) {
-      ClientDataRequest clientDataRequest=(ClientDataRequest)wrappedPortletRequest;
-      _servletInputStream=new ServletInputStreamAdapter(clientDataRequest);
-    }
- else {
+    if (!(_portletRequest instanceof ClientDataRequest)) {
       throw new UnsupportedOperationException();
     }
+    ClientDataRequest clientDataRequest=(ClientDataRequest)_portletRequest;
+    _servletInputStream=new ServletInputStreamAdapter(clientDataRequest);
   }
   return _servletInputStream;
 }

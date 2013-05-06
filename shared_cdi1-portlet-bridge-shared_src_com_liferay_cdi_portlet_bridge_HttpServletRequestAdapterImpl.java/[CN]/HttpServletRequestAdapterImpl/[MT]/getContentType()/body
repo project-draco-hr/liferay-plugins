@@ -1,10 +1,7 @@
 {
-  PortletRequest wrappedPortletRequest=getPortletRequest();
-  if (wrappedPortletRequest instanceof ClientDataRequest) {
-    ClientDataRequest clientDataRequest=(ClientDataRequest)wrappedPortletRequest;
-    return clientDataRequest.getContentType();
-  }
- else {
+  if (!(_portletRequest instanceof ClientDataRequest)) {
     throw new UnsupportedOperationException();
   }
+  ClientDataRequest clientDataRequest=(ClientDataRequest)_portletRequest;
+  return clientDataRequest.getContentType();
 }

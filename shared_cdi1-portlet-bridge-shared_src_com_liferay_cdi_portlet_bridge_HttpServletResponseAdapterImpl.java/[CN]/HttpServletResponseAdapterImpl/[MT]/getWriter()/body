@@ -1,10 +1,7 @@
 {
-  PortletResponse wrappedPortletResponse=getPortletResponse();
-  if (wrappedPortletResponse instanceof MimeResponse) {
-    MimeResponse mimeResponse=(MimeResponse)wrappedPortletResponse;
-    return mimeResponse.getWriter();
-  }
- else {
+  if (!(_portletResponse instanceof MimeResponse)) {
     throw new UnsupportedOperationException();
   }
+  MimeResponse mimeResponse=(MimeResponse)_portletResponse;
+  return mimeResponse.getWriter();
 }
