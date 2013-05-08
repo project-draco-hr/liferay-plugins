@@ -28,6 +28,14 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
+    if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarBookingModelImpl.getOriginalResourceBlockId()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RESOURCEBLOCKID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID,args);
+      args=new Object[]{calendarBookingModelImpl.getResourceBlockId()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RESOURCEBLOCKID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RESOURCEBLOCKID,args);
+    }
     if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{calendarBookingModelImpl.getOriginalUuid()};
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
