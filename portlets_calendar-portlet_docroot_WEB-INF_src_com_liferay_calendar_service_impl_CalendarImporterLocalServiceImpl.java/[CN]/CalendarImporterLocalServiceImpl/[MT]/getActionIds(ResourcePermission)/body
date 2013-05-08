@@ -1,0 +1,12 @@
+{
+  long actionIds=0;
+  List<ResourceAction> resourceActions=resourceActionPersistence.findByName(CalEvent.class.getName());
+  for (  ResourceAction resourceAction : resourceActions) {
+    boolean hasActionId=resourcePermissionLocalService.hasActionId(resourcePermission,resourceAction);
+    if (!hasActionId) {
+      continue;
+    }
+    actionIds=actionIds | getActionId(resourceAction);
+  }
+  return actionIds;
+}
