@@ -4,7 +4,13 @@
     String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
     long recipientClassPK=kaleoNotificationRecipient.getRecipientClassPK();
     Recipient recipient=null;
-    if (recipientClassName.equals(Role.class.getName())) {
+    if (recipientClassName.equals(RecipientType.ADDRESS.name())) {
+      recipient=new AddressRecipient(kaleoNotificationRecipient.getAddress());
+    }
+ else     if (recipientClassName.equals(RecipientType.ASSIGNEES.name())) {
+      recipient=new AssigneesRecipient();
+    }
+ else     if (recipientClassName.equals(Role.class.getName())) {
       Role role=_roleLocalService.fetchRole(recipientClassPK);
       recipient=new RoleRecipient(role.getName(),role.getTypeLabel());
     }
@@ -16,9 +22,6 @@
  else {
         recipient=new UserRecipient();
       }
-    }
- else {
-      recipient=new AddressRecipient(kaleoNotificationRecipient.getAddress());
     }
     notification.addRecipients(recipient);
   }
