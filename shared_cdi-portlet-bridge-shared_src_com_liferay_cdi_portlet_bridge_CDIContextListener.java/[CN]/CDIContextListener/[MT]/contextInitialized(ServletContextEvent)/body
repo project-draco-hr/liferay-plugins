@@ -4,5 +4,22 @@
   if (beanManager == null) {
     beanManager=(BeanManager)servletContext.getAttribute(_ATTRIBUTE_NAME_BEAN_MANAGER);
   }
+  if (beanManager == null) {
+    try {
+      Context initialContext=new InitialContext();
+      try {
+        beanManager=(BeanManager)initialContext.lookup(_BEAN_MANAGER_JNDI_NAME1);
+      }
+ catch (      NameNotFoundException e) {
+        beanManager=(BeanManager)initialContext.lookup(_BEAN_MANAGER_JNDI_NAME2);
+      }
+    }
+ catch (    NamingException e) {
+      _log.log(Level.SEVERE,e.getMessage(),e);
+    }
+  }
+  if (beanManager == null) {
+    _log.log(Level.SEVERE,"Unable to get CDI BeanManager instance");
+  }
   CDIBeanManagerUtil.setBeanManager(beanManager);
 }
