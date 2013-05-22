@@ -3,9 +3,7 @@
   PreparedStatement ps=null;
   try {
     con=DataAccess.getUpgradeOptimizedConnection();
-    ps=con.prepareStatement("update " + tableName + " set workflowContext = ? where "+ fieldName+ " = ?");
-    ps.setString(1,workflowContext);
-    ps.setLong(2,fieldValue);
+    ps=con.prepareStatement("update KaleoNotificationRecipient set recipientClassName = " + "'ADDRESS' where recipientClassName is null or " + "recipientClassName = ''");
     ps.executeUpdate();
   }
   finally {
