@@ -1,0 +1,19 @@
+{
+  ProtectionDomain protectionDomain=clazz.getProtectionDomain();
+  if (protectionDomain == null) {
+    return;
+  }
+  URL location=protectionDomain.getCodeSource().getLocation();
+  try {
+    File file=new File(processJarLocation(location));
+    if (file.exists() && file.canRead()) {
+      if (_classpath.contains(file)) {
+        _classpath.remove(file);
+      }
+      _classpath.add(0,file);
+    }
+  }
+ catch (  Exception use) {
+    _log.error(use,use);
+  }
+}
