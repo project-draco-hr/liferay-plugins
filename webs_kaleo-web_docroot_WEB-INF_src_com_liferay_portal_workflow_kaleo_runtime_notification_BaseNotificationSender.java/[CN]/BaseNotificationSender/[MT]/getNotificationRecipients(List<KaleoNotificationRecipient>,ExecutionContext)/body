@@ -5,17 +5,24 @@
     return notificationRecipients;
   }
   for (  KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
-    if (Validator.isNotNull(kaleoNotificationRecipient.getAddress())) {
-      NotificationRecipient notificationRecipient=new NotificationRecipient(kaleoNotificationRecipient.getAddress());
+    String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
+    if (recipientClassName.equals(RecipientType.ADDRESS.name())) {
+      String address=kaleoNotificationRecipient.getAddress();
+      NotificationRecipient notificationRecipient=new NotificationRecipient(address);
       notificationRecipients.add(notificationRecipient);
     }
+ else     if (recipientClassName.equals(RecipientType.ASSIGNEES.name())) {
+      addAssignedRecipients(notificationRecipients,executionContext);
+    }
+ else     if (recipientClassName.equals(Role.class.getName())) {
+      addRoleRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),executionContext);
+    }
+ else     if (recipientClassName.equals(User.class.getName())) {
+      addUserNotificationRecipient(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),executionContext);
+    }
  else {
-      String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
-      if (recipientClassName.equals(User.class.getName())) {
-        addUserNotificationRecipient(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),executionContext);
-      }
- else {
-        addRoleRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),executionContext);
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unsupported recipient: " + kaleoNotificationRecipient);
       }
     }
   }
