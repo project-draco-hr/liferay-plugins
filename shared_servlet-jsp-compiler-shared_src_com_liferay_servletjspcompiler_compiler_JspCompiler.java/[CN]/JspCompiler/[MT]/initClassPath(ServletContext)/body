@@ -1,15 +1,15 @@
 {
-  _reentrantLock.lock();
+  _lock.lock();
   try {
-    _classpath=(ArrayList<File>)servletContext.getAttribute(_JSP_COMPILER_CLASSPATH);
-    if (_classpath != null) {
+    _classPath=(ArrayList<File>)servletContext.getAttribute(_JSP_COMPILER_CLASS_PATH);
+    if (_classPath != null) {
       return;
     }
-    _classpath=new ArrayList<File>();
+    _classPath=new ArrayList<File>();
     addDependenciesToClassPath();
-    servletContext.setAttribute(_JSP_COMPILER_CLASSPATH,_classpath);
+    servletContext.setAttribute(_JSP_COMPILER_CLASS_PATH,_classPath);
   }
   finally {
-    _reentrantLock.unlock();
+    _lock.unlock();
   }
 }

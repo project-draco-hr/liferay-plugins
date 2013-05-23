@@ -3,14 +3,15 @@
   if (protectionDomain == null) {
     return;
   }
-  URL location=protectionDomain.getCodeSource().getLocation();
+  CodeSource codeSource=protectionDomain.getCodeSource();
+  URL url=codeSource.getLocation();
   try {
-    File file=new File(processJarLocation(location));
+    File file=new File(toURI(url));
     if (file.exists() && file.canRead()) {
-      if (_classpath.contains(file)) {
-        _classpath.remove(file);
+      if (_classPath.contains(file)) {
+        _classPath.remove(file);
       }
-      _classpath.add(0,file);
+      _classPath.add(0,file);
     }
   }
  catch (  Exception use) {
