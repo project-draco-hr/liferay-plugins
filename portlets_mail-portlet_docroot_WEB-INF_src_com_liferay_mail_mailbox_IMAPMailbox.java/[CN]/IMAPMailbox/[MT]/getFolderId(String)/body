@@ -1,14 +1,16 @@
 {
   Locale[] locales=LanguageUtil.getAvailableLocales();
   String[] names=new String[locales.length];
+  List<String> words=new ArrayList<String>();
   for (int i=0; i < locales.length; i++) {
     names[i]=LanguageUtil.get(locales[i],type).toLowerCase();
+    words.addAll(Arrays.asList(names[i].split("\\s+")));
   }
   List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
-  for (  Folder folder : folders) {
-    String folderName=folder.getDisplayName().toLowerCase();
-    for (    String name : names) {
-      if (folderName.contains(name)) {
+  for (  String word : words) {
+    for (    Folder folder : folders) {
+      String folderName=folder.getDisplayName().toLowerCase();
+      if (folderName.contains(word)) {
         return folder.getFolderId();
       }
     }
