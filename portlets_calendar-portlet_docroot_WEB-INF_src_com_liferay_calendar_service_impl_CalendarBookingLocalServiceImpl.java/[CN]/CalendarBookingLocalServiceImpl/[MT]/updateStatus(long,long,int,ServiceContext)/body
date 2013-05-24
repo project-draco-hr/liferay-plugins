@@ -2,11 +2,59 @@
   User user=userPersistence.findByPrimaryKey(userId);
   Date now=new Date();
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+  int oldStatus=calendarBooking.getStatus();
   calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
   calendarBooking.setStatus(status);
   calendarBooking.setStatusByUserId(user.getUserId());
   calendarBooking.setStatusByUserName(user.getFullName());
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking);
+  if (status == CalendarBookingWorkflowConstants.STATUS_IN_TRASH) {
+    List<CalendarBooking> childCalendarBookings=calendarBooking.getChildCalendarBookings();
+    for (    CalendarBooking childCalendarBooking : childCalendarBookings) {
+      if (!childCalendarBooking.equals(calendarBooking)) {
+        updateStatus(userId,childCalendarBooking.getCalendarBookingId(),CalendarBookingWorkflowConstants.STATUS_IN_TRASH,serviceContext);
+        try {
+          NotificationType notificationType=NotificationType.parse(PortletPropsValues.CALENDAR_NOTIFICATION_DEFAULT_TYPE);
+          NotificationUtil.notifyCalendarBookingMovedToTrash(childCalendarBooking,notificationType);
+        }
+ catch (        Exception e) {
+        }
+      }
+    }
+  }
+ else   if (oldStatus == CalendarBookingWorkflowConstants.STATUS_IN_TRASH) {
+    List<CalendarBooking> childCalendarBookings=calendarBooking.getChildCalendarBookings();
+    for (    CalendarBooking childCalendarBooking : childCalendarBookings) {
+      if (!childCalendarBooking.equals(calendarBooking)) {
+        updateStatus(userId,childCalendarBooking.getCalendarBookingId(),CalendarBookingWorkflowConstants.STATUS_PENDING,serviceContext);
+        try {
+          NotificationType notificationType=NotificationType.parse(PortletPropsValues.CALENDAR_NOTIFICATION_DEFAULT_TYPE);
+          NotificationUtil.notifyCalendarBookingInvites(childCalendarBooking,notificationType);
+        }
+ catch (        Exception e) {
+        }
+      }
+    }
+  }
+  try {
+    if (status == CalendarBookingWorkflowConstants.STATUS_APPROVED) {
+      assetEntryLocalService.updateVisible(DLFolder.class.getName(),calendarBooking.getCalendarBookingId(),true);
+    }
+ else     if (status == CalendarBookingWorkflowConstants.STATUS_IN_TRASH) {
+      assetEntryLocalService.updateVisible(DLFolder.class.getName(),calendarBooking.getCalendarBookingId(),false);
+    }
+  }
+ catch (  NoSuchEntryException nsee) {
+  }
+  trashEntryLocalService.deleteEntry(CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId());
+  if (status == CalendarBookingWorkflowConstants.STATUS_IN_TRASH) {
+    if (calendarBooking.isMasterBooking()) {
+      trashEntryLocalService.addTrashEntry(userId,getResourceGroupId(calendarBooking),CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId(),oldStatus,null,null);
+    }
+ else {
+      trashEntryLocalService.addTrashEntry(userId,getResourceGroupId(calendarBooking),CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId(),CalendarBookingWorkflowConstants.STATUS_PENDING,null,null);
+    }
+  }
   return calendarBooking;
 }
