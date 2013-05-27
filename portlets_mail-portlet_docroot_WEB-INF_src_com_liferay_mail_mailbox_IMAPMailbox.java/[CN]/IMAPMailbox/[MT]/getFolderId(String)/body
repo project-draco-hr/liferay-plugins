@@ -1,10 +1,9 @@
 {
   Locale[] locales=LanguageUtil.getAvailableLocales();
-  String[] names=new String[locales.length];
   List<String> words=new ArrayList<String>();
-  for (int i=0; i < locales.length; i++) {
-    names[i]=LanguageUtil.get(locales[i],type).toLowerCase();
-    words.addAll(Arrays.asList(names[i].split("\\s+")));
+  for (  Locale locale : locales) {
+    String translation=LanguageUtil.get(locale,type).toLowerCase();
+    words.addAll(ListUtil.toList(translation.split(StringPool.SPACE)));
   }
   List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
   for (  String word : words) {
