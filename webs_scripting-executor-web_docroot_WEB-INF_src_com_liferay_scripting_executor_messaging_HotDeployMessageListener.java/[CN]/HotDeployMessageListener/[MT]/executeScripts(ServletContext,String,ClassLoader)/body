@@ -1,0 +1,19 @@
+{
+  Map<String,Object> inputObjects=new HashMap<String,Object>();
+  Set<String> scriptFilePaths=servletContext.getResourcePaths(_SCRIPTS_DIR);
+  InputStream in=null;
+  for (  String scriptFilePath : scriptFilePaths) {
+    try {
+      in=servletContext.getResourceAsStream(scriptFilePath);
+      ScriptingUtil.exec(null,inputObjects,scriptLanguage,StringUtil.read(in),aggregatedClassLoader);
+    }
+ catch (    Exception e) {
+      if (_log.isErrorEnabled()) {
+        _log.error("Unable to execute script: " + scriptFilePath,e);
+      }
+    }
+ finally {
+      StreamUtil.cleanUp(in);
+    }
+  }
+}

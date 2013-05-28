@@ -1,0 +1,17 @@
+{
+  List<ClassLoader> classLoaders=new ArrayList<ClassLoader>(servletContextNames.length + 1);
+  ClassLoader contextClassLoader=null;
+  if (addContextClassLoader) {
+    contextClassLoader=_getContextClassLoader();
+    classLoaders.add(contextClassLoader);
+  }
+  for (  String servletContextName : servletContextNames) {
+    ClassLoader pluginClassLoader=_getPluginClassLoader(servletContextName);
+    classLoaders.add(pluginClassLoader);
+  }
+  if (!PortalClassLoaderUtil.getClassLoader().equals(contextClassLoader)) {
+    classLoaders.add(PortalClassLoaderUtil.getClassLoader());
+  }
+  ClassLoader[] classloaders=classLoaders.toArray(new ClassLoader[classLoaders.size()]);
+  return AggregateClassLoader.getAggregateClassLoader(classloaders);
+}

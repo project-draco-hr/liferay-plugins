@@ -1,0 +1,21 @@
+{
+  URL scriptsDirURL=servletContext.getResource(_SCRIPTS_DIR);
+  if (scriptsDirURL == null) {
+    return;
+  }
+  Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
+  String scriptLanguage=pluginPackageProperties.getProperty("script-language");
+  Set<String> supportedLanguages=ScriptingUtil.getSupportedLanguages();
+  if (!supportedLanguages.contains(scriptLanguage)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Script Executor does not support language: " + scriptLanguage + ". Supported languages are: "+ StringUtil.merge(supportedLanguages,StringPool.COMMA));
+    }
+    return;
+  }
+  String requiredDeploymentContexts=pluginPackageProperties.getProperty(_REQUIRED_DEPLOYMENT_CONTEXTS);
+  if (Validator.isNull(requiredDeploymentContexts)) {
+    return;
+  }
+  ClassLoader aggregatedClassLoader=ClassLoaderUtil.getAggregatePluginsClassLoader(StringUtil.split(requiredDeploymentContexts),false);
+  executeScripts(servletContext,scriptLanguage,aggregatedClassLoader);
+}
