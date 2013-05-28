@@ -1,0 +1,9 @@
+{
+  _hotDeployMessageListener=new HotDeployMessageListener(SERVLET_CONTEXT_NAMES){
+    @Override protected void onUndeploy(    Message message) throws Exception {
+      ChatExtensionsUtil.unregister(message.getString("servletContextName"));
+    }
+  }
+;
+  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_hotDeployMessageListener);
+}

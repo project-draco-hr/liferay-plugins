@@ -1,12 +1,10 @@
 {
   _hotDeployMessageListener=new HotDeployMessageListener(SERVLET_CONTEXT_NAMES){
     @Override protected void onDeploy(    Message message) throws Exception {
-      ExtensionHelperUtil.initialize();
-      WSRPConsumerPortletLocalServiceUtil.destroyWSRPConsumerPortlets();
-      WSRPConsumerPortletLocalServiceUtil.initWSRPConsumerPortlets();
+      registerChatExtension();
     }
     @Override protected void onUndeploy(    Message message) throws Exception {
-      WSRPConsumerPortletLocalServiceUtil.destroyWSRPConsumerPortlets();
+      ContactsExtensionsUtil.unregister(message.getString("servletContextName"));
     }
   }
 ;

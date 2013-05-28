@@ -1,0 +1,12 @@
+{
+  _hotDeployMessageListener=new HotDeployMessageListener(SERVLET_CONTEXT_NAMES){
+    @Override protected void onDeploy(    Message message) throws Exception {
+      long companyId=message.getLong("companyId");
+      if (PortletLocalServiceUtil.hasPortlet(companyId,"1_WAR_contactsportlet")) {
+        registerContactsExtension();
+      }
+    }
+  }
+;
+  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_hotDeployMessageListener);
+}

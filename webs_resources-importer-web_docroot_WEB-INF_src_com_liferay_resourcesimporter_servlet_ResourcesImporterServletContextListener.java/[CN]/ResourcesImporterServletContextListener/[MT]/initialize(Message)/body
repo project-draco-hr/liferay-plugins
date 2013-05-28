@@ -1,0 +1,90 @@
+{
+  String servletContextName=message.getString("servletContextName");
+  ServletContext servletContext=ServletContextPool.get(servletContextName);
+  URL resourcesDirURL=servletContext.getResource(_RESOURCES_DIR);
+  if (resourcesDirURL == null) {
+    return;
+  }
+  Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
+  String targetClassName=pluginPackageProperties.getProperty("resources-importer-target-class-name",LayoutSetPrototype.class.getName());
+  Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
+  URL larURL=servletContext.getResource(_RESOURCES_DIR.concat("archive.lar"));
+  List<Company> companies=CompanyLocalServiceUtil.getCompanies();
+  for (  Company company : companies) {
+    long companyId=CompanyThreadLocal.getCompanyId();
+    try {
+      CompanyThreadLocal.setCompanyId(company.getCompanyId());
+      Importer importer=null;
+      if (larURL != null) {
+        LARImporter larImporter=getLARImporter();
+        URLConnection urlConnection=larURL.openConnection();
+        larImporter.setLARInputStream(urlConnection.getInputStream());
+        importer=larImporter;
+      }
+ else       if ((resourcePaths != null) && !resourcePaths.isEmpty()) {
+        importer=getResourceImporter();
+        importer.setResourcesDir(_RESOURCES_DIR);
+      }
+ else {
+        String resourcesDir=pluginPackageProperties.getProperty("resources-importer-external-dir");
+        if (Validator.isNotNull(resourcesDir)) {
+          importer=getFileSystemImporter();
+          importer.setResourcesDir(resourcesDir);
+        }
+      }
+      if (importer == null) {
+        throw new ImporterException("No valid importer found");
+      }
+      importer.setCompanyId(company.getCompanyId());
+      importer.setServletContext(servletContext);
+      importer.setServletContextName(servletContextName);
+      importer.setTargetClassName(targetClassName);
+      String targetValue=pluginPackageProperties.getProperty("resources-importer-target-value");
+      if (Validator.isNull(targetValue)) {
+        targetValue=TextFormatter.format(servletContextName,TextFormatter.J);
+      }
+      importer.setTargetValue(targetValue);
+      importer.afterPropertiesSet();
+      boolean developerModeEnabled=GetterUtil.getBoolean(pluginPackageProperties.getProperty("resources-importer-developer-mode-enabled"));
+      if (!developerModeEnabled && importer.isExisting()) {
+        if (_log.isInfoEnabled()) {
+          _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
+        }
+        continue;
+      }
+      long startTime=0;
+      if (_log.isInfoEnabled()) {
+        startTime=System.currentTimeMillis();
+      }
+      importer.importResources();
+      if (_log.isInfoEnabled()) {
+        long endTime=System.currentTimeMillis() - startTime;
+        _log.info("Importing resources from " + servletContextName + " to group "+ importer.getGroupId()+ " takes "+ endTime+ " ms");
+      }
+      Message newMessage=new Message();
+      newMessage.put("companyId",company.getCompanyId());
+      newMessage.put("servletContextName",servletContextName);
+      newMessage.put("targetClassName",targetClassName);
+      newMessage.put("targetClassPK",importer.getTargetClassPK());
+      if (message.getResponseId() != null) {
+        Map<String,Object> responseMap=new HashMap<String,Object>();
+        responseMap.put("groupId",importer.getTargetClassPK());
+        newMessage.setPayload(responseMap);
+        newMessage.setResponseId(message.getResponseId());
+      }
+      MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
+    }
+ catch (    ImporterException ie) {
+      Message newMessage=new Message();
+      newMessage.put("companyId",company.getCompanyId());
+      newMessage.put("error",ie.getMessage());
+      newMessage.put("servletContextName",servletContextName);
+      newMessage.put("targetClassName",targetClassName);
+      newMessage.put("targetClassPK",0);
+      MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
+    }
+ finally {
+      CompanyThreadLocal.setCompanyId(companyId);
+    }
+  }
+}
