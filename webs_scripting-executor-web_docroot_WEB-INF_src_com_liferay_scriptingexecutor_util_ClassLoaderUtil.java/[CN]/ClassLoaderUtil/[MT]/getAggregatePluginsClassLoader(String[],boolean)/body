@@ -9,8 +9,9 @@
     ClassLoader pluginClassLoader=_getPluginClassLoader(servletContextName);
     classLoaders.add(pluginClassLoader);
   }
-  if (!PortalClassLoaderUtil.getClassLoader().equals(contextClassLoader)) {
-    classLoaders.add(PortalClassLoaderUtil.getClassLoader());
+  ClassLoader portalClassLoader=PortalClassLoaderUtil.getClassLoader();
+  if (!portalClassLoader.equals(contextClassLoader)) {
+    classLoaders.add(portalClassLoader);
   }
   ClassLoader[] classloaders=classLoaders.toArray(new ClassLoader[classLoaders.size()]);
   return AggregateClassLoader.getAggregateClassLoader(classloaders);
