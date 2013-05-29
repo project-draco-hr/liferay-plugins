@@ -1,0 +1,14 @@
+{
+  long userNotificationEventId=ParamUtil.getLong(actionRequest,"userNotificationEventId");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    UserNotificationEvent userNotificationEvent=UserNotificationEventLocalServiceUtil.getUserNotificationEvent(userNotificationEventId);
+    userNotificationEvent.setArchived(true);
+    UserNotificationEventLocalServiceUtil.updateUserNotificationEvent(userNotificationEvent);
+    jsonObject.put("success",true);
+  }
+ catch (  Exception e) {
+    jsonObject.put("success",false);
+  }
+  return jsonObject;
+}

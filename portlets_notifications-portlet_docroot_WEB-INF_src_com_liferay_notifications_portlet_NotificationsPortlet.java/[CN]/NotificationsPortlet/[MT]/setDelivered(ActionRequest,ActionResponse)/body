@@ -1,0 +1,16 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    List<UserNotificationEvent> userNotificationEvents=UserNotificationEventLocalServiceUtil.getUserNotificationEventsByDelivered(themeDisplay.getUserId(),false);
+    for (    UserNotificationEvent userNotificationEvent : userNotificationEvents) {
+      userNotificationEvent.setDelivered(true);
+      UserNotificationEventLocalServiceUtil.updateUserNotificationEvent(userNotificationEvent);
+    }
+    jsonObject.put("success",true);
+  }
+ catch (  Exception e) {
+    jsonObject.put("success",false);
+  }
+  return jsonObject;
+}

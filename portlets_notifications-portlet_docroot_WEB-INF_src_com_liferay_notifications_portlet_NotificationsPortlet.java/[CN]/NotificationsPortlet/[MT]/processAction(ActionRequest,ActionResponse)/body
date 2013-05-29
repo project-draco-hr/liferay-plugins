@@ -1,0 +1,23 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  try {
+    String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
+    if (actionName.equals("markAsRead")) {
+      JSONObject jsonObject=markAsRead(actionRequest,actionResponse);
+      writeJSON(actionRequest,actionResponse,jsonObject);
+    }
+ else     if (actionName.equals("setDelivered")) {
+      JSONObject jsonObject=setDelivered(actionRequest,actionResponse);
+      writeJSON(actionRequest,actionResponse,jsonObject);
+    }
+ else {
+      super.processAction(actionRequest,actionResponse);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
