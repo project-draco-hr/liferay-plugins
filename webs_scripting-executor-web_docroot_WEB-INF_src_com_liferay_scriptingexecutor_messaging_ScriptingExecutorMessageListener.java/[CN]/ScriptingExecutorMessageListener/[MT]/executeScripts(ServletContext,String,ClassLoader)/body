@@ -1,19 +1,16 @@
 {
-  Map<String,Object> inputObjects=new HashMap<String,Object>();
-  Set<String> scriptFilePaths=servletContext.getResourcePaths(_SCRIPTS_DIR);
-  InputStream in=null;
-  for (  String scriptFilePath : scriptFilePaths) {
+  InputStream inputStream=null;
+  Set<String> resourcePaths=servletContext.getResourcePaths(_SCRIPTS_DIR);
+  for (  String resourcePath : resourcePaths) {
     try {
-      in=servletContext.getResourceAsStream(scriptFilePath);
-      ScriptingUtil.exec(null,inputObjects,scriptLanguage,StringUtil.read(in),aggregatedClassLoader);
+      inputStream=servletContext.getResourceAsStream(resourcePath);
+      ScriptingUtil.exec(null,new HashMap<String,Object>(),language,StringUtil.read(inputStream),classLoader);
     }
  catch (    Exception e) {
-      if (_log.isErrorEnabled()) {
-        _log.error("Unable to execute script: " + scriptFilePath,e);
-      }
+      _log.error("Unable to execute script " + resourcePath,e);
     }
  finally {
-      StreamUtil.cleanUp(in);
+      StreamUtil.cleanUp(inputStream);
     }
   }
 }
