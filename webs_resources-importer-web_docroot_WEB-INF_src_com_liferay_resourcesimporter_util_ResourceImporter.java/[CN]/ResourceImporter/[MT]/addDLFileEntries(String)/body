@@ -1,15 +1,3 @@
 {
-  Set<String> resourcePaths=servletContext.getResourcePaths(resourcesDir.concat(fileEntriesDirName));
-  if (resourcePaths == null) {
-    return;
-  }
-  for (  String resourcePath : resourcePaths) {
-    if (resourcePath.endsWith(StringPool.SLASH)) {
-      continue;
-    }
-    String name=FileUtil.getShortFileName(resourcePath);
-    URL url=servletContext.getResource(resourcePath);
-    URLConnection urlConnection=url.openConnection();
-    doAddDLFileEntries(name,urlConnection.getInputStream(),urlConnection.getContentLength());
-  }
+  addDLFileEntries(fileEntriesDirName,false);
 }
