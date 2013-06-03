@@ -1,5 +1,5 @@
 {
-  _hotDeployMessageListener=new HotDeployMessageListener(ClpSerializer.getServletContextName(),"contacts-portlet"){
+  _messageListener=new HotDeployMessageListener(ClpSerializer.getServletContextName(),"contacts-portlet"){
     @Override protected void onDeploy(    Message message) throws Exception {
       long companyId=message.getLong("companyId");
       if (PortletLocalServiceUtil.hasPortlet(companyId,"1_WAR_contactsportlet")) {
@@ -8,5 +8,5 @@
     }
   }
 ;
-  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_hotDeployMessageListener);
+  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_messageListener);
 }
