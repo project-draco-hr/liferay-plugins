@@ -34,6 +34,18 @@
     }
  else {
       group=GroupLocalServiceUtil.fetchGroup(companyId,targetValue);
+      if (group != null && deleteExistingGroupBeforeImport) {
+        long existingGroupId=group.getGroupId();
+        if (_log.isTraceEnabled()) {
+          _log.trace("deleteExistingGroupBeforeImport=" + deleteExistingGroupBeforeImport);
+          _log.trace("Deleting group :" + existingGroupId);
+        }
+        GroupLocalServiceUtil.deleteGroup(existingGroupId);
+        if (_log.isTraceEnabled()) {
+          _log.trace("Deleted group :" + existingGroupId);
+        }
+        group=null;
+      }
       if (group != null) {
         existing=true;
       }
