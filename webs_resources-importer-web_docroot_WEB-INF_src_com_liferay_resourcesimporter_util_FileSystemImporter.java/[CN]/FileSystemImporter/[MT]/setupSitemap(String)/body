@@ -8,26 +8,16 @@
   updateLayoutSetThemeId(jsonObject);
   JSONArray layoutsJSONArray=jsonObject.getJSONArray("layouts");
   if (layoutsJSONArray != null) {
-    if (_log.isWarnEnabled()) {
-      _log.warn("WARNING : Your sitemap.json file in " + servletContextName + " should be upgraded to use: "+ "{sitePages:{publicPages:[],privatePages:[]}");
-    }
-    addLayouts(LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layoutsJSONArray);
+    addLayouts(false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,layoutsJSONArray);
   }
  else {
-    JSONObject sitePages=jsonObject.getJSONObject("sitePages");
-    JSONArray publicPages=sitePages.getJSONArray("publicPages");
-    if (publicPages != null) {
-      if (_log.isTraceEnabled()) {
-        _log.trace("Importing :" + publicPages.length() + " public pages for :"+ groupId);
-      }
-      addLayouts(LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,publicPages,false);
+    JSONArray publicPagesJSONArray=jsonObject.getJSONArray("publicPages");
+    if (publicPagesJSONArray != null) {
+      addLayouts(false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,publicPagesJSONArray);
     }
-    JSONArray privatePages=sitePages.getJSONArray("privatePages");
-    if (privatePages != null) {
-      if (_log.isTraceEnabled()) {
-        _log.trace("Importing :" + privatePages.length() + " private pages for :"+ groupId);
-      }
-      addLayouts(LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,privatePages,true);
+    JSONArray privatePagesJSONArray=jsonObject.getJSONArray("privatePages");
+    if (privatePagesJSONArray != null) {
+      addLayouts(true,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,privatePagesJSONArray);
     }
   }
 }
