@@ -4,14 +4,14 @@
   long pageId=ParamUtil.getLong(actionRequest,"pageId");
   boolean spam=ParamUtil.getBoolean(actionRequest,"spam");
   WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(pageId);
-  WikiPage latestVersionWikiPage=getWikiPage(wikiPage,false);
+  WikiPage latestVersionWikiPage=AkismetUtil.getWikiPage(wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),false);
   String latestContent=null;
   double latestVersion=-1;
   if (latestVersionWikiPage != null) {
     latestContent=latestVersionWikiPage.getContent();
     latestVersion=latestVersionWikiPage.getVersion();
   }
-  WikiPage previousVersionWikiPage=getWikiPage(wikiPage,true);
+  WikiPage previousVersionWikiPage=AkismetUtil.getWikiPage(wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),true);
   String previousContent=null;
   double previousVersion=-1;
   if (previousVersionWikiPage != null) {

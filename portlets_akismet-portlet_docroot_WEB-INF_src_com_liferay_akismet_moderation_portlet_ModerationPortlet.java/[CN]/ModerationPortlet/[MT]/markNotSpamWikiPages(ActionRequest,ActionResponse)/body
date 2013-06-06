@@ -6,12 +6,12 @@
   ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
   for (  long wikiPageId : wikiPageIds) {
     WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(wikiPageId);
-    WikiPage latestVersionWikiPage=getWikiPage(wikiPage,false);
+    WikiPage latestVersionWikiPage=AkismetUtil.getWikiPage(wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),false);
     String latestContent=null;
     if (latestVersionWikiPage != null) {
       latestContent=latestVersionWikiPage.getContent();
     }
-    WikiPage previousVersionWikiPage=getWikiPage(wikiPage,true);
+    WikiPage previousVersionWikiPage=AkismetUtil.getWikiPage(wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),true);
     String previousContent=null;
     if (previousVersionWikiPage != null) {
       previousContent=previousVersionWikiPage.getContent();
