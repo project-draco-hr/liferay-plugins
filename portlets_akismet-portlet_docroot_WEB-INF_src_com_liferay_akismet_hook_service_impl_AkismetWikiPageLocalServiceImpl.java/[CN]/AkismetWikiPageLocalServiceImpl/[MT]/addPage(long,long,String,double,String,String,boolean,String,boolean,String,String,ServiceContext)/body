@@ -16,10 +16,18 @@
   if (!AkismetUtil.isSpam(userId,akismetContent,akismetData)) {
     return super.updateStatus(userId,page.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED,serviceContext);
   }
-  page.setStatus(WorkflowConstants.STATUS_APPROVED);
-  page.setSummary(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL);
-  page=super.updateWikiPage(page);
-  ServiceContext newServiceContext=new ServiceContext();
-  newServiceContext.setFormDate(page.getModifiedDate());
-  return super.updatePage(userId,nodeId,title,page.getVersion(),null,StringPool.BLANK,true,format,parentTitle,redirectTitle,newServiceContext);
+  boolean notificationEnabled=false;
+  try {
+    notificationEnabled=NotificationThreadLocal.isEnabled();
+    NotificationThreadLocal.setEnabled(false);
+    page.setStatus(WorkflowConstants.STATUS_APPROVED);
+    page.setSummary(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL);
+    page=super.updateWikiPage(page);
+    ServiceContext newServiceContext=new ServiceContext();
+    newServiceContext.setFormDate(page.getModifiedDate());
+    return super.updatePage(userId,nodeId,title,page.getVersion(),null,StringPool.BLANK,true,format,parentTitle,redirectTitle,newServiceContext);
+  }
+  finally {
+    NotificationThreadLocal.setEnabled(notificationEnabled);
+  }
 }
