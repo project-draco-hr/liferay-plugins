@@ -3,7 +3,6 @@
   checkWikiPagePermission(themeDisplay.getScopeGroupId());
   long[] wikiPageIds=ParamUtil.getLongValues(actionRequest,"notSpamWikiPageIds");
   List<String> wikiPageLinks=new ArrayList<String>();
-  ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
   for (  long wikiPageId : wikiPageIds) {
     WikiPage wikiPage=WikiPageLocalServiceUtil.getPageByPageId(wikiPageId);
     WikiPage latestVersionWikiPage=AkismetUtil.getWikiPage(wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),false);
@@ -17,6 +16,7 @@
       previousContent=previousVersionWikiPage.getContent();
     }
     if ((latestContent != null) && (previousContent != null) && latestContent.equals(previousContent)) {
+      ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
       WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),serviceContext);
     }
  else {

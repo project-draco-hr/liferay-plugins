@@ -21,7 +21,8 @@
   String pattern=StringPool.BLANK;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
   if (spam) {
-    if ((wikiPage.getVersion() >= latestVersion) && wikiPage.isApproved()) {
+    pattern="version-x-was-marked-as-spam";
+    if (wikiPage.getVersion() >= latestVersion) {
       if (previousVersionWikiPage != null) {
         WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),previousVersion,serviceContext);
       }
@@ -29,15 +30,15 @@
         WikiPageLocalServiceUtil.updatePage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),latestVersion,null,StringPool.BLANK,true,wikiPage.getFormat(),wikiPage.getParentTitle(),wikiPage.getRedirectTitle(),serviceContext);
       }
     }
-    wikiPage.setStatus(WorkflowConstants.STATUS_DENIED);
+    wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
     wikiPage.setSummary(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL);
     wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
-    pattern="version-x-was-marked-as-spam";
     if (AkismetUtil.isWikiEnabled(themeDisplay.getCompanyId())) {
       AkismetUtil.submitSpam(wikiPage);
     }
   }
  else {
+    pattern="version-x-was-marked-as-not-spam";
     if ((latestContent != null) && (previousContent != null) && latestContent.equals(previousContent)) {
       WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),serviceContext);
     }
@@ -47,7 +48,6 @@
     wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
     wikiPage.setSummary(StringPool.BLANK);
     wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
-    pattern="version-x-was-marked-as-not-spam";
     if (AkismetUtil.isWikiEnabled(themeDisplay.getCompanyId())) {
       AkismetUtil.submitHam(wikiPage);
     }
