@@ -16,6 +16,12 @@
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
   CalendarBooking calendarBooking=null;
   if (calendarBookingId <= 0) {
+    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    PortletURL bookingURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.CALENDAR,themeDisplay.getPlid(),ActionRequest.RENDER_PHASE);
+    bookingURL.setParameter("mvcPath","/view_calendar_booking.jsp");
+    bookingURL.setParameter("calendarBookingId","");
+    serviceContext.setAttribute("portletNamespace",actionResponse.getNamespace());
+    serviceContext.setAttribute("bookingURL",bookingURL.toString());
     calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],serviceContext);
   }
  else {

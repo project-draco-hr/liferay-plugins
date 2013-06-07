@@ -1,0 +1,41 @@
+{
+  CalendarBooking parentCalendarBooking=calendarBooking.getParentCalendarBooking();
+  Calendar calendar=parentCalendarBooking.getCalendar();
+  NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
+  notificationTemplateContext.setCompanyId(calendarBooking.getCompanyId());
+  notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
+  notificationTemplateContext.setCalendarId(calendar.getCalendarId());
+  notificationTemplateContext.setNotificationType(notificationType);
+  Map<String,Serializable> attributes=new HashMap<String,Serializable>();
+  TimeZone userTimezone=user.getTimeZone();
+  Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),userTimezone);
+  String userTimezoneDisplayName=userTimezone.getDisplayName(false,TimeZone.SHORT,user.getLocale());
+  String endTime=dateFormatDateTime.format(calendarBooking.getEndTime()) + StringPool.SPACE + userTimezoneDisplayName;
+  attributes.put("endTime",endTime);
+  attributes.put("location",calendarBooking.getLocation());
+  Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
+  attributes.put("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
+  attributes.put("portletName",LanguageUtil.get(getPortletConfig(),user.getLocale(),"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
+  String startTime=dateFormatDateTime.format(calendarBooking.getStartTime()) + StringPool.SPACE + userTimezoneDisplayName;
+  attributes.put("startTime",startTime);
+  attributes.put("title",calendarBooking.getTitle(user.getLocale()));
+  attributes.put("toAddress",user.getEmailAddress());
+  attributes.put("toName",user.getFullName());
+  String namespace=(serviceContext != null) ? GetterUtil.getString(serviceContext.getAttribute("portletNamespace")) : null;
+  String bookingURL=(serviceContext != null) ? GetterUtil.getString(serviceContext.getAttribute("bookingURL")) : null;
+  if (Validator.isNotNull(bookingURL) && Validator.isNotNull(namespace)) {
+    String urlParamName=namespace + "calendarBookingId";
+    bookingURL=StringUtil.replace(bookingURL,urlParamName + "=",urlParamName + "=" + calendarBooking.getCalendarBookingId());
+    attributes.put("bookingURL",bookingURL);
+  }
+  notificationTemplateContext.setAttributes(attributes);
+  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
+  notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
+  String templateSubject=NotificationUtil.getTemplate(calendarNotificationTemplate,notificationType,notificationTemplateType,NotificationField.SUBJECT);
+  String subject=NotificationUtil.processNotificationTemplate(templateSubject,attributes);
+  notificationTemplateContext.setSubject(subject);
+  String templateBody=NotificationUtil.getTemplate(calendarNotificationTemplate,notificationType,notificationTemplateType,NotificationField.BODY);
+  String body=NotificationUtil.processNotificationTemplate(templateBody,attributes);
+  notificationTemplateContext.setBody(body);
+  return notificationTemplateContext;
+}
