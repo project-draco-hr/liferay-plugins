@@ -1,9 +1,7 @@
 {
-  try {
-    WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(company.getCompanyId(),assetClassName,0,0);
+  WorkflowDefinitionLink workflowDefinitionLink=WorkflowDefinitionLinkLocalServiceUtil.fetchDefaultWorkflowDefinitionLink(company.getCompanyId(),assetClassName,0,0);
+  if (workflowDefinitionLink != null) {
     return;
-  }
- catch (  NoSuchWorkflowDefinitionLinkException nswdle) {
   }
   List<WorkflowDefinition> workflowDefinitions=_workflowDefinitionManager.getActiveWorkflowDefinitions(company.getCompanyId(),workflowDefinitionName,0,20,new WorkflowDefinitionNameComparator(false));
   if (workflowDefinitions.isEmpty()) {
