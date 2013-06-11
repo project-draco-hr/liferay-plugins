@@ -2,13 +2,13 @@
   StringBundler sb=new StringBundler(15);
   sb.append("<div class=\"activity-body\"><div class=\"title\">");
   String pageTitle=StringPool.BLANK;
-  AssetRenderer assetRenderer=getAssetRenderer(activity);
+  AssetRenderer assetRenderer=getAssetRenderer(activity.getClassName(),activity.getClassPK());
   LiferayPortletRequest liferayPortletRequest=serviceContext.getLiferayPortletRequest();
   if (Validator.isNotNull(assetRenderer.getIconPath(liferayPortletRequest))) {
-    pageTitle=wrapLink(getLinkURL(activity,serviceContext),assetRenderer.getIconPath(liferayPortletRequest),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+    pageTitle=wrapLink(getLinkURL(activity.getClassName(),activity.getClassPK(),serviceContext),assetRenderer.getIconPath(liferayPortletRequest),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
   }
  else {
-    pageTitle=wrapLink(getLinkURL(activity,serviceContext),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+    pageTitle=wrapLink(getLinkURL(activity.getClassName(),activity.getClassPK(),serviceContext),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
   }
   sb.append(pageTitle);
   sb.append("</div><div class=\"date\"><strong>");

@@ -1,0 +1,23 @@
+{
+  StringBundler sb=new StringBundler(8);
+  sb.append("<div class=\"activity-header\">");
+  sb.append("<div class=\"activity-time\" title=\"");
+  Format dateFormatDate=getFormatDateTime(serviceContext.getLocale(),serviceContext.getTimeZone());
+  Date activityDate=new Date(createDate);
+  sb.append(dateFormatDate.format(activityDate));
+  sb.append("\">");
+  String relativeTimeDescription=Time.getRelativeTimeDescription(createDate,serviceContext.getLocale(),serviceContext.getTimeZone());
+  sb.append(relativeTimeDescription);
+  sb.append("</div><div class=\"activity-user-name\">");
+  String userName=getUserName(userId,serviceContext);
+  if (groupId != serviceContext.getScopeGroupId()) {
+    String groupName=getGroupName(groupId,serviceContext);
+    Object[] userArguments=new Object[]{userName,groupName};
+    sb.append(serviceContext.translate("x-in-x",userArguments));
+  }
+ else {
+    sb.append(userName);
+  }
+  sb.append("</div></div>");
+  return sb.toString();
+}
