@@ -1,0 +1,15 @@
+{
+  try {
+    WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.fetchWikiPageResource(classPK);
+    if (pageResource == null) {
+      return titlePattern;
+    }
+    WikiNode node=WikiNodeLocalServiceUtil.fetchWikiNode(pageResource.getNodeId());
+    if (Validator.isNotNull(node)) {
+      titlePattern=titlePattern.concat("-in-the-x-wiki");
+    }
+  }
+ catch (  Exception e) {
+  }
+  return titlePattern;
+}
