@@ -1,0 +1,29 @@
+{
+  StringBundler sb=new StringBundler();
+  sb.append("<div class=\"activity-body\">");
+  int viewableActivities=0;
+  List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  SocialActivity activity : activities) {
+    ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
+    PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+    if (!hasPermissions(permissionChecker,activity,ActionKeys.VIEW,serviceContext)) {
+      continue;
+    }
+    SocialActivityFeedEntry subFeedEntry=getSubFeedEntry(activity,serviceContext);
+    if (subFeedEntry == null) {
+      continue;
+    }
+    sb.append("<div class=\"activity-subentry\">");
+    sb.append("<span class=\"activity-subentry-title\">");
+    sb.append(subFeedEntry.getTitle());
+    sb.append("</span><span class=\"activity-subentry-body\">");
+    sb.append(subFeedEntry.getBody());
+    sb.append("</span></div>");
+    viewableActivities++;
+  }
+  if (viewableActivities == 0) {
+    return null;
+  }
+  sb.append("</div>");
+  return sb.toString();
+}

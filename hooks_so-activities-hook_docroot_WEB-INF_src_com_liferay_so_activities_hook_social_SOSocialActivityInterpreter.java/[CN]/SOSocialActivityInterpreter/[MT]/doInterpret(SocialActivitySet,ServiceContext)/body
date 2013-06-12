@@ -1,0 +1,19 @@
+{
+  if (activitySet.getActivityCount() == 1) {
+    List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),0,1);
+    if (!activities.isEmpty()) {
+      SocialActivity activity=activities.get(0);
+      return doInterpret(activity,serviceContext);
+    }
+  }
+  String link=getLink(activitySet,serviceContext);
+  String title=getTitle(activitySet,serviceContext);
+  if (Validator.isNull(title)) {
+    return null;
+  }
+  String body=getBody(activitySet,serviceContext);
+  if (Validator.isNull(body)) {
+    return null;
+  }
+  return new SocialActivityFeedEntry(link,title,body);
+}
