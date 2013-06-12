@@ -1,3 +1,12 @@
 {
-  return wrapLink(getLinkURL(activity.getClassName(),activity.getClassPK(),serviceContext),serviceContext.translate("view-wiki"));
+  String sourceVersion=null;
+  String targetVersion=null;
+  if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+    SocialActivity socialActiivty=SocialActivityLocalServiceUtil.fetchSocialActivity(activity.getActivityId());
+    SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(socialActiivty.getActivitySetId());
+    JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
+    sourceVersion=extraDataJSONObject.getString("sourceVersion");
+    targetVersion=extraDataJSONObject.getString("targetVersion");
+  }
+  return getLink(activity.getGroupId(),activity.getClassName(),activity.getClassPK(),activity.getType(),sourceVersion,targetVersion,serviceContext);
 }
