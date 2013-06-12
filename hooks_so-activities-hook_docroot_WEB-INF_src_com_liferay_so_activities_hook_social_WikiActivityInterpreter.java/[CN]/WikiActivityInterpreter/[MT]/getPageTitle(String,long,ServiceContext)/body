@@ -1,0 +1,9 @@
+{
+  String linkURL=getLinkURL(className,classPK,serviceContext);
+  AssetRenderer assetRenderer=getAssetRenderer(className,classPK);
+  LiferayPortletRequest liferayPortletRequest=serviceContext.getLiferayPortletRequest();
+  if (Validator.isNotNull(assetRenderer.getIconPath(liferayPortletRequest))) {
+    return wrapLink(linkURL,assetRenderer.getIconPath(liferayPortletRequest),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+  }
+  return wrapLink(linkURL,HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+}
