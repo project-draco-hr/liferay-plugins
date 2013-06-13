@@ -1,11 +1,11 @@
 {
-  Capability dualOrientationCapability=_capabilities.get(WURFLConstants.DUAL_ORIENTATION);
   Capability heightCapability=_capabilities.get(heightCapabilityName);
   Capability widthCapability=_capabilities.get(widthCapabilityName);
   if ((heightCapability == null) || (widthCapability == null)) {
     return Dimensions.UNKNOWN;
   }
   boolean dualOrientation=false;
+  Capability dualOrientationCapability=_capabilities.get(WURFLConstants.DUAL_ORIENTATION);
   if (dualOrientationCapability != null) {
     dualOrientation=GetterUtil.getBoolean(dualOrientationCapability.getValue());
   }
@@ -14,7 +14,5 @@
   if (dualOrientation && (height < width)) {
     return new Dimensions(width,height);
   }
- else {
-    return new Dimensions(height,width);
-  }
+  return new Dimensions(height,width);
 }
