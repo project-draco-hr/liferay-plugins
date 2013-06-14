@@ -1,0 +1,13 @@
+{
+  BookmarksEntry entry=BookmarksEntryLocalServiceUtil.getEntry(classPK);
+  String faviconUrl=HttpUtil.getDomain(entry.getUrl()) + "/favicon.ico";
+  AssetRenderer assetRenderer=getAssetRenderer(className,classPK);
+  LiferayPortletRequest liferayPortletRequest=serviceContext.getLiferayPortletRequest();
+  if (ping(faviconUrl)) {
+    return wrapLink(entry.getUrl(),faviconUrl,entry.getName());
+  }
+ else   if (Validator.isNotNull(assetRenderer.getIconPath(liferayPortletRequest))) {
+    return wrapLink(getLinkURL(className,classPK,serviceContext),assetRenderer.getIconPath(liferayPortletRequest),HtmlUtil.escape(assetRenderer.getTitle(serviceContext.getLocale())));
+  }
+  return wrapLink(entry.getUrl(),entry.getName());
+}
