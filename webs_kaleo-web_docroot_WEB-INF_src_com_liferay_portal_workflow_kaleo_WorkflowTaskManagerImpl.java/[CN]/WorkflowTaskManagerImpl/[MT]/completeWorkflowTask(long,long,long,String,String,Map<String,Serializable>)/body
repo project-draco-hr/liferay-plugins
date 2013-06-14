@@ -2,9 +2,9 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setCompanyId(companyId);
   serviceContext.setUserId(userId);
-  WorkflowTaskAdapter workflowTaskAdapter=(WorkflowTaskAdapter)_taskManager.completeWorkflowTask(workflowTaskInstanceId,transitionName,comment,workflowContext,serviceContext);
+  WorkflowTask workflowTask=_taskManager.completeWorkflowTask(workflowTaskInstanceId,transitionName,comment,workflowContext,serviceContext);
   try {
-    KaleoTaskInstanceToken kaleoTaskInstanceToken=workflowTaskAdapter.getKaleoTaskInstanceToken();
+    KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTask.getWorkflowTaskId());
     KaleoInstanceToken kaleoInstanceToken=kaleoTaskInstanceToken.getKaleoInstanceToken();
     if (workflowContext == null) {
       workflowContext=WorkflowContextUtil.convert(kaleoInstanceToken.getKaleoInstance().getWorkflowContext());
@@ -17,5 +17,5 @@
  catch (  Exception e) {
     throw new WorkflowException("Unable to complete task",e);
   }
-  return workflowTaskAdapter;
+  return workflowTask;
 }
