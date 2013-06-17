@@ -1,0 +1,22 @@
+{
+  StringBundler sb=new StringBundler(15);
+  sb.append("<div class=\"activity-body\"><div class=\"title\">");
+  sb.append(getPageTitle(className,classPK,serviceContext));
+  sb.append("</div><div class=\"date\"><strong>");
+  sb.append(serviceContext.translate("date"));
+  sb.append(": </strong>");
+  Format dateFormatDate=getFormatDateTime(serviceContext.getLocale(),serviceContext.getTimeZone());
+  CalEvent event=CalEventLocalServiceUtil.getEvent(classPK);
+  sb.append(dateFormatDate.format((event.getStartDate())));
+  sb.append("</div><div class=\"location\"><strong>");
+  sb.append(serviceContext.translate("location"));
+  sb.append(": </strong>");
+  sb.append(event.getLocation());
+  sb.append("</div><div class=\"description\"><strong>");
+  sb.append(serviceContext.translate("description"));
+  sb.append(": </strong>");
+  AssetRenderer assetRenderer=getAssetRenderer(className,classPK);
+  sb.append(StringUtil.shorten(assetRenderer.getSummary(serviceContext.getLocale()),200));
+  sb.append("</div></div>");
+  return sb.toString();
+}

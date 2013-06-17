@@ -1,0 +1,11 @@
+{
+  StringBundler sb=new StringBundler(5);
+  sb.append("<div class=\"activity-body\"><div class=\"title\">");
+  sb.append(getPageTitle(className,classPK,serviceContext));
+  sb.append("</div><div class=\"blogs-page-content\">");
+  BlogsEntry entry=BlogsEntryLocalServiceUtil.getEntry(classPK);
+  String content=HtmlUtil.extractText(entry.getContent());
+  sb.append(StringUtil.shorten(content,200));
+  sb.append("</div></div>");
+  return sb.toString();
+}
