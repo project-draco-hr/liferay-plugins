@@ -3,17 +3,17 @@
   if (!dlDocumentsDir.isDirectory() || !dlDocumentsDir.canRead()) {
     return;
   }
-  File[] files=listFiles(dlDocumentsDir);
+  File[] files=dlDocumentsDir.listFiles();
+  if (Validator.isNull(files)) {
+    return;
+  }
   for (  File file : files) {
-    InputStream inputStream=null;
-    try {
-      inputStream=new BufferedInputStream(new FileInputStream(file));
-      doAddDLFileEntries(file.getName(),inputStream,file.length());
+    if (file.isDirectory()) {
+      long folderId=addDLFolder(DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,file.getName());
+      recurseDLDirectory(folderId,file);
     }
-  finally {
-      if (inputStream != null) {
-        inputStream.close();
-      }
+ else {
+      doAddDLFileEntry(DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,file);
     }
   }
 }
