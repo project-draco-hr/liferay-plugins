@@ -11,13 +11,7 @@
     InputStream inputStream=urlObj.openStream();
     tempFile=FileUtil.createTempFile();
     FileUtil.write(tempFile,inputStream);
-    App app=AppLocalServiceUtil.fetchRemoteApp(remoteAppId);
-    if (app == null) {
-      app=AppServiceUtil.addApp(remoteAppId,version,tempFile);
-    }
- else {
-      app=AppServiceUtil.updateApp(app.getAppId(),version,tempFile);
-    }
+    App app=AppServiceUtil.updateApp(remoteAppId,version,tempFile);
     JSONObject jsonObject=getAppJSONObject(app.getRemoteAppId());
     jsonObject.put("cmd","downloadApp");
     jsonObject.put("message","success");
