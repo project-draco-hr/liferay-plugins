@@ -1,12 +1,11 @@
 {
-  String sourceVersion=null;
-  String targetVersion=null;
-  if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
-    SocialActivity socialActivity=SocialActivityLocalServiceUtil.fetchSocialActivity(activity.getActivityId());
-    SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(socialActivity.getActivitySetId());
-    JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
-    sourceVersion=extraDataJSONObject.getString("sourceVersion");
-    targetVersion=extraDataJSONObject.getString("targetVersion");
+  if (activity.getType() != _ACTIVITY_KEY_UPDATE_PAGE) {
+    return null;
   }
-  return getLink(activity.getGroupId(),activity.getClassName(),activity.getClassPK(),activity.getType(),sourceVersion,targetVersion,serviceContext);
+  SocialActivity socialActivity=SocialActivityLocalServiceUtil.fetchSocialActivity(activity.getActivityId());
+  SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(socialActivity.getActivitySetId());
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
+  String sourceVersion=extraDataJSONObject.getString("sourceVersion");
+  String targetVersion=extraDataJSONObject.getString("targetVersion");
+  return getLink(activity.getGroupId(),activity.getClassPK(),sourceVersion,targetVersion,serviceContext);
 }
