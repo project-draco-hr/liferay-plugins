@@ -1,0 +1,33 @@
+{
+  if (_installedApps != null) {
+    return _installedApps;
+  }
+  List<App> installedApps=new ArrayList<App>();
+  App coreApp=appPersistence.create(0L);
+  coreApp.setTitle("Liferay Core");
+  coreApp.setDescription("Plugins bundled with Liferay Portal.");
+  coreApp.setVersion(ReleaseInfo.getVersion());
+  coreApp.addContextName(StringPool.BLANK);
+  installedApps.add(coreApp);
+  List<PluginPackage> pluginPackages=DeployManagerUtil.getInstalledPluginPackages();
+  for (  PluginPackage pluginPackage : pluginPackages) {
+    int count=modulePersistence.countByContextName(pluginPackage.getContext());
+    if (count > 0) {
+      continue;
+    }
+    App app=appPersistence.create(0L);
+    app.setTitle(pluginPackage.getName());
+    app.setDescription(pluginPackage.getShortDescription());
+    app.setVersion(pluginPackage.getVersion());
+    app.addContextName(pluginPackage.getContext());
+    installedApps.add(app);
+  }
+  List<App> apps=appPersistence.findAll();
+  for (  App app : apps) {
+    if (app.isInstalled()) {
+      installedApps.add(app);
+    }
+  }
+  _installedApps=installedApps;
+  return _installedApps;
+}
