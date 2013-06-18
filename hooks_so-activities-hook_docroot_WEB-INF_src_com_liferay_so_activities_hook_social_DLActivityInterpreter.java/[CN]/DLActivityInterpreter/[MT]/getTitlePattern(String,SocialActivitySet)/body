@@ -1,0 +1,17 @@
+{
+  String titlePattern=StringPool.BLANK;
+  if (activitySet.getType() == _ACTIVITY_KEY_ADD_FILE_ENTRY) {
+    titlePattern="uploaded-x-new-documents";
+  }
+ else   if (activitySet.getType() == _ACTIVITY_KEY_UPDATE_FILE_ENTRY) {
+    titlePattern="made-x-updates-to-a-document";
+    FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(activitySet.getClassPK());
+    if (fileEntry.getFolderId() > 0) {
+      titlePattern=titlePattern.concat("-in-the-x-folder");
+    }
+  }
+ else {
+    return StringPool.BLANK;
+  }
+  return titlePattern;
+}
