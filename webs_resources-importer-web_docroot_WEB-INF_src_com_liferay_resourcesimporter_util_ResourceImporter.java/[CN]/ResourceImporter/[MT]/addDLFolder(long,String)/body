@@ -1,6 +1,5 @@
 {
-  String folderPath=FileUtil.getPath(resourcePath);
-  long folderId=super.addDLFolder(parentFolderId,FileUtil.getShortFileName(folderPath));
+  long folderId=super.addDLFolder(parentFolderId,FileUtil.getShortFileName(FileUtil.getPath(resourcePath)));
   _folderIds.put(resourcePath,folderId);
   Set<String> resourcePaths=servletContext.getResourcePaths(resourcePath);
   if ((resourcePaths == null) || resourcePaths.isEmpty()) {
@@ -11,7 +10,7 @@
       addDLFolder(folderId,curResourcePath);
     }
  else {
-      doAddDLFileEntry(curResourcePath);
+      addDLFileEntry(curResourcePath);
     }
   }
   return folderId;
