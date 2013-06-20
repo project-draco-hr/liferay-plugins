@@ -1,0 +1,17 @@
+{
+  Date now=new Date();
+  if (_previousCheckDate == null) {
+    _previousCheckDate=new Date(now.getTime() - _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL);
+  }
+  List<AnnouncementsEntry> entries=AnnouncementsEntryFinderUtil.findByDisplayDate(now,_previousCheckDate);
+  if (_log.isDebugEnabled()) {
+    _log.debug("Processing " + entries.size() + " entries");
+  }
+  for (  AnnouncementsEntry entry : entries) {
+    Date displayDate=entry.getDisplayDate();
+    if (displayDate.after(entry.getCreateDate())) {
+      sendNotificationEvent(entry);
+    }
+  }
+  _previousCheckDate=now;
+}
