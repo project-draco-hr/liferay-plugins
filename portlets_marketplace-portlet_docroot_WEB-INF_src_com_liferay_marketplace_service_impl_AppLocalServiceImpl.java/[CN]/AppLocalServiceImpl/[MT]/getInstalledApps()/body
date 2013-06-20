@@ -7,7 +7,7 @@
   coreApp.setTitle("Liferay Core");
   coreApp.setDescription("Plugins bundled with Liferay Portal.");
   coreApp.setVersion(ReleaseInfo.getVersion());
-  coreApp.addContextName(StringPool.BLANK);
+  coreApp.addContextName(PortalUtil.getPathContext());
   installedApps.add(coreApp);
   List<PluginPackage> pluginPackages=DeployManagerUtil.getInstalledPluginPackages();
   for (  PluginPackage pluginPackage : pluginPackages) {
@@ -17,7 +17,7 @@
     }
     App app=appPersistence.create(0);
     app.setTitle(pluginPackage.getName());
-    app.setDescription(pluginPackage.getShortDescription());
+    app.setDescription(pluginPackage.getLongDescription());
     app.setVersion(pluginPackage.getVersion());
     app.addContextName(pluginPackage.getContext());
     installedApps.add(app);
@@ -28,6 +28,7 @@
       installedApps.add(app);
     }
   }
+  installedApps=ListUtil.sort(installedApps,new AppTitleComparator());
   _installedApps=installedApps;
   return _installedApps;
 }
