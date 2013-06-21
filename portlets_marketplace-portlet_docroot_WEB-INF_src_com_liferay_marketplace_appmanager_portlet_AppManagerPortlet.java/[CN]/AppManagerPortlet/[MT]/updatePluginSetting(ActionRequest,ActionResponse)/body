@@ -9,6 +9,10 @@
     PortletServiceUtil.updatePortlet(themeDisplay.getCompanyId(),pluginId,StringPool.BLANK,active);
   }
  else {
+    if (roles.length == 0) {
+      PluginSetting pluginSetting=PluginSettingLocalServiceUtil.getPluginSetting(themeDisplay.getCompanyId(),pluginId,pluginType);
+      roles=StringUtil.split(pluginSetting.getRoles());
+    }
     PluginSettingServiceUtil.updatePluginSetting(themeDisplay.getCompanyId(),pluginId,pluginType,StringUtil.merge(roles),active);
   }
 }
