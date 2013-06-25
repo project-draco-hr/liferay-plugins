@@ -1,16 +1,31 @@
 {
+  String url=ParamUtil.getString(actionRequest,"url");
+  File tempFile=null;
   try {
-    String url=ParamUtil.getString(actionRequest,"url");
     URL urlObj=new URL(url);
-    String host=urlObj.getHost();
-    if (host.endsWith(".sf.net") || host.endsWith(".sourceforge.net")) {
-      installRemoteAppSourceForge(urlObj.getPath(),actionRequest);
+    InputStream inputStream=urlObj.openStream();
+    tempFile=FileUtil.createTempFile();
+    FileUtil.write(tempFile,inputStream);
+    String deployDir=PrefsPropsUtil.getString(PropsKeys.AUTO_DEPLOY_DEPLOY_DIR);
+    String fileName=url.substring(url.lastIndexOf(CharPool.SLASH) + 1);
+    String destination=deployDir + StringPool.SLASH + fileName;
+    File destinationFile=new File(destination);
+    boolean moved=FileUtil.move(tempFile,destinationFile);
+    if (!moved) {
+      FileUtil.copyFile(tempFile,destinationFile);
+      FileUtil.delete(tempFile);
     }
- else {
-      installRemoteApp(url,urlObj,actionRequest,true);
-    }
+    SessionMessages.add(actionRequest,"pluginDownloaded");
   }
  catch (  MalformedURLException murle) {
     SessionErrors.add(actionRequest,"invalidUrl",murle);
+  }
+catch (  IOException ioe) {
+    SessionErrors.add(actionRequest,"errorConnectingToUrl",ioe);
+  }
+ finally {
+    if (tempFile != null) {
+      tempFile.delete();
+    }
   }
 }
