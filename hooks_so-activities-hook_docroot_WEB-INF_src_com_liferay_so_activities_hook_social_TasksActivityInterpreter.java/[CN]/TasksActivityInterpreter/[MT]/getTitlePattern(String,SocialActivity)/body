@@ -1,0 +1,22 @@
+{
+  String titlePattern=null;
+  if (activity.getType() == _ACTIVITY_KEY_ADD_ENTRY) {
+    titlePattern="created-a-new-task";
+  }
+ else   if (activity.getType() == _ACTIVITY_KEY_REOPEN_ENTRY) {
+    titlePattern="reopened-a-task";
+  }
+ else   if (activity.getType() == _ACTIVITY_KEY_RESOLVE_ENTRY) {
+    titlePattern="resolved-a-task";
+  }
+ else   if (activity.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
+    titlePattern="updated-a-task";
+  }
+ else {
+    return StringPool.BLANK;
+  }
+  if ((activity.getReceiverUserId() > 0) && (activity.getUserId() != activity.getReceiverUserId())) {
+    titlePattern=titlePattern.concat("-for");
+  }
+  return titlePattern;
+}
