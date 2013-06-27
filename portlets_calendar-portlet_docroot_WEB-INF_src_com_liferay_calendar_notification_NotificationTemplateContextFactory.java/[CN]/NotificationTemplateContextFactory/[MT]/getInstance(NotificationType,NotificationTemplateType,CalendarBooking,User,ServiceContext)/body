@@ -21,13 +21,8 @@
   attributes.put("title",calendarBooking.getTitle(user.getLocale()));
   attributes.put("toAddress",user.getEmailAddress());
   attributes.put("toName",user.getFullName());
-  String namespace=(serviceContext != null) ? GetterUtil.getString(serviceContext.getAttribute("portletNamespace")) : null;
-  String bookingURL=(serviceContext != null) ? GetterUtil.getString(serviceContext.getAttribute("bookingURL")) : null;
-  if (Validator.isNotNull(bookingURL) && Validator.isNotNull(namespace)) {
-    String urlParamName=namespace + "calendarBookingId";
-    bookingURL=StringUtil.replace(bookingURL,urlParamName + "=",urlParamName + "=" + calendarBooking.getCalendarBookingId());
-    attributes.put("bookingURL",bookingURL);
-  }
+  String calendarBookingURL=_getCalendarBookingURL(calendarBooking.getCalendarBookingId(),serviceContext);
+  attributes.put("url",calendarBookingURL);
   notificationTemplateContext.setAttributes(attributes);
   CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
   notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
