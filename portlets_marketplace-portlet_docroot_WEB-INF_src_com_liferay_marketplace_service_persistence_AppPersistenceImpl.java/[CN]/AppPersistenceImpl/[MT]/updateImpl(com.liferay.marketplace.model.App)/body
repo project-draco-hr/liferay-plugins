@@ -52,6 +52,14 @@
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPANYID,args);
       FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,args);
     }
+    if ((appModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CATEGORY.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{appModelImpl.getOriginalCategory()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CATEGORY,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CATEGORY,args);
+      args=new Object[]{appModelImpl.getCategory()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_CATEGORY,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_CATEGORY,args);
+    }
   }
   EntityCacheUtil.putResult(AppModelImpl.ENTITY_CACHE_ENABLED,AppImpl.class,app.getPrimaryKey(),app);
   clearUniqueFindersCache(app);
