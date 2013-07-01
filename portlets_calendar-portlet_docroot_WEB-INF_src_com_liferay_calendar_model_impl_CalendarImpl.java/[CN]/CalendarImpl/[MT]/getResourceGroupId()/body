@@ -4,6 +4,10 @@
     if (calendarResource.isGroup()) {
       return calendarResource.getClassPK();
     }
+ else     if (calendarResource.isUser()) {
+      Group group=GroupLocalServiceUtil.getUserGroup(getCompanyId(),calendarResource.getClassPK());
+      return group.getGroupId();
+    }
   }
  catch (  Exception e) {
     _log.error(e,e);
