@@ -1,10 +1,10 @@
 {
   mockBundleWiring();
-  List<LogRecord> logRecords=JDKLoggerTestUtil.configureJDKLogger(MockFilter.class.getName(),Level.INFO);
+  List<LogRecord> logRecords=JDKLoggerTestUtil.configureJDKLogger(MockLoggingFilter.class.getName(),Level.INFO);
   String cssFilterName="CSS Filter";
-  registerFilter(cssFilterName,new MockFilter(cssFilterName),null,"/css/*");
+  registerFilter(cssFilterName,new MockLoggingFilter(cssFilterName),null,"/css/*");
   String jsFilterName="JS Filter";
-  registerFilter(jsFilterName,new MockFilter(jsFilterName),null,"/js/*");
+  registerFilter(jsFilterName,new MockLoggingFilter(jsFilterName),null,"/js/*");
   FilterChain filterChain=_bundleServletContext.getFilterChain("/js/main.js");
   Assert.assertNotNull(filterChain);
   filterChain.doFilter(new MockHttpServletRequest(),new MockHttpServletResponse());
