@@ -56,9 +56,21 @@
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_GROUP)) {
       params.put("usersGroups",ContactsUtil.getGroupId(filterBy));
     }
-    int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
-    jsonObject.put("count",usersCount);
-    List<User> users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
+    List<User> users=new UniqueList<User>();
+    if (filterBy.equals(ContactsConstants.FILTER_BY_ADMINS)) {
+      Role role=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_OWNER);
+      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(role.getRoleId())});
+      users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
+      role=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
+      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(role.getRoleId())});
+      users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
+      ListUtil.sort(users,new UserLastNameComparator(true));
+    }
+ else {
+      int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
+      jsonObject.put("count",usersCount);
+      users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
+    }
     for (    User user : users) {
       JSONObject userJSONObject=getUserJSONObject(portletResponse,themeDisplay,user);
       jsonArray.put(userJSONObject);
