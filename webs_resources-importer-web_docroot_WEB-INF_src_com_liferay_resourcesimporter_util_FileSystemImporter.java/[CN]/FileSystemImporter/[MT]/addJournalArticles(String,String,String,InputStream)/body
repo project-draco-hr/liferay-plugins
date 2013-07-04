@@ -1,7 +1,6 @@
 {
   String journalArticleId=getJournalId(fileName);
   String title=FileUtil.stripExtension(fileName);
-  Map<Locale,String> titleMap=getMap(title);
   JSONObject assetJSONObject=_assetJSONObjectMap.get(fileName);
   Map<Locale,String> descriptionMap=null;
   if (assetJSONObject != null) {
@@ -10,6 +9,8 @@
   }
   String content=StringUtil.read(inputStream);
   content=processJournalArticleContent(content);
+  Locale articleDefaultLocale=LocaleUtil.fromLanguageId(LocalizationUtil.getDefaultLocale(content));
+  Map<Locale,String> titleMap=getMap(articleDefaultLocale,title);
   boolean smallImage=false;
   String smallImageURL=StringPool.BLANK;
   if (assetJSONObject != null) {
