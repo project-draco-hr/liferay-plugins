@@ -58,11 +58,11 @@
     }
     List<User> users=new UniqueList<User>();
     if (filterBy.equals(ContactsConstants.FILTER_BY_ADMINS)) {
-      Role role=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_OWNER);
-      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(role.getRoleId())});
+      Role siteAdministratorRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
+      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteAdministratorRole.getRoleId())});
       users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
-      role=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
-      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(role.getRoleId())});
+      Role siteOwnerRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_OWNER);
+      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteOwnerRole.getRoleId())});
       users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
       ListUtil.sort(users,new UserLastNameComparator(true));
     }
