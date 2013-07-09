@@ -6,13 +6,17 @@
   JSONObject nameMapJSONObject=layoutJSONObject.getJSONObject("nameMap");
   if (nameMapJSONObject != null) {
     nameMap=(Map<Locale,String>)LocalizationUtil.deserialize(nameMapJSONObject);
+    if (!nameMap.containsKey(LocaleUtil.getDefault())) {
+      Iterator itr=nameMap.values().iterator();
+      nameMap.put(LocaleUtil.getDefault(),(String)itr.next());
+    }
   }
  else {
     String name=layoutJSONObject.getString("name");
     nameMap.put(LocaleUtil.getDefault(),name);
   }
   Map<Locale,String> titleMap=new HashMap<Locale,String>();
-  JSONObject titleMapJSONObject=layoutJSONObject.getJSONObject("nameMap");
+  JSONObject titleMapJSONObject=layoutJSONObject.getJSONObject("titleMap");
   if (titleMapJSONObject != null) {
     titleMap=(Map<Locale,String>)LocalizationUtil.deserialize(titleMapJSONObject);
   }
