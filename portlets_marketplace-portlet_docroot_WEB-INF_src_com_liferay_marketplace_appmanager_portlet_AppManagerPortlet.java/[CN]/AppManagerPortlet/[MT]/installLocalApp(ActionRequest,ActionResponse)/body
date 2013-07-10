@@ -5,9 +5,12 @@
   byte[] bytes=FileUtil.getBytes(file);
   if ((bytes == null) || (bytes.length == 0)) {
     SessionErrors.add(actionRequest,UploadException.class.getName());
-    return;
   }
-  String deployDir=PrefsPropsUtil.getString(PropsKeys.AUTO_DEPLOY_DEPLOY_DIR);
-  FileUtil.copyFile(file.toString(),deployDir + StringPool.SLASH + fileName);
-  SessionMessages.add(actionRequest,"pluginUploaded");
+ else {
+    String deployDir=PrefsPropsUtil.getString(PropsKeys.AUTO_DEPLOY_DEPLOY_DIR);
+    FileUtil.copyFile(file.toString(),deployDir + StringPool.SLASH + fileName);
+    SessionMessages.add(actionRequest,"pluginUploaded");
+  }
+  String redirect=ParamUtil.getString(uploadPortletRequest,"redirect");
+  actionResponse.sendRedirect(redirect);
 }
