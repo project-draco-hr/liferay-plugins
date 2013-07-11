@@ -30,9 +30,11 @@
   calendarResource.setActive(active);
   calendarResourcePersistence.update(calendarResource);
   resourceLocalService.addModelResources(calendarResource,serviceContext);
-  serviceContext.setAddGroupPermissions(true);
-  serviceContext.setAddGuestPermissions(true);
-  calendarLocalService.addCalendar(userId,calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,false,false,serviceContext);
+  if (!ExportImportThreadLocal.isImportInProcess()) {
+    serviceContext.setAddGroupPermissions(true);
+    serviceContext.setAddGuestPermissions(true);
+    calendarLocalService.addCalendar(userId,calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,false,false,serviceContext);
+  }
   updateAsset(calendarResource.getUserId(),calendarResource,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   return calendarResource;
 }
