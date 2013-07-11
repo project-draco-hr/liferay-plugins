@@ -2,5 +2,29 @@
   if (activitySet.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
     return getBody(activitySet.getClassName(),activitySet.getClassPK(),serviceContext);
   }
-  return super.getBody(activitySet,serviceContext);
+  StringBundler sb=new StringBundler();
+  sb.append("<div class=\"grouped-activity-body-container\">");
+  sb.append("<div class=\"grouped-activity-body\">");
+  int viewableActivities=0;
+  List<com.liferay.so.activities.model.SocialActivity> activities=com.liferay.so.activities.service.SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  com.liferay.so.activities.model.SocialActivity activity : activities) {
+    ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
+    PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+    if (!hasPermissions(permissionChecker,activity.getPortalSocialActivity(),ActionKeys.VIEW,serviceContext)) {
+      continue;
+    }
+    SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity.getPortalSocialActivity(),serviceContext);
+    if (subfeedEntry == null) {
+      continue;
+    }
+    sb.append("<div class=\"activity-subentry tasks\">");
+    sb.append(getBody(activity.getClassName(),activity.getClassPK(),serviceContext));
+    sb.append("</div>");
+    viewableActivities++;
+  }
+  if (viewableActivities == 0) {
+    return null;
+  }
+  sb.append("</div></div>");
+  return sb.toString();
 }

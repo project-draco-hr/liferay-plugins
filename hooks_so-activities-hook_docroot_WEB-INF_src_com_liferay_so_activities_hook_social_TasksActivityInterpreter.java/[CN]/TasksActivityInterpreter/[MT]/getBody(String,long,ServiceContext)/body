@@ -1,10 +1,30 @@
 {
-  StringBundler sb=new StringBundler(5);
-  sb.append("<div class=\"activity-body\"><div class=\"title\">");
+  StringBundler sb=new StringBundler(14);
+  sb.append("<div class=\"activity-body-container ");
+  TasksEntry tasksEntry=TasksEntryLocalServiceUtil.getTasksEntry(classPK);
+  sb.append(tasksEntry.getPriorityLabel());
+  sb.append("\"><div class=\"activity-body\"><div class=\"title\">");
   sb.append(getPageTitle(className,classPK,serviceContext));
   sb.append("</div><div class=\"tasks-entry-content\">");
-  AssetRenderer assetRenderer=getAssetRenderer(className,classPK);
-  sb.append(StringUtil.shorten(assetRenderer.getSummary(serviceContext.getLocale()),200));
-  sb.append("</div></div>");
+  sb.append("<span class=\"tasks-entry-status\"><strong>");
+  sb.append(serviceContext.translate("assigned-to"));
+  sb.append(": </strong>");
+  User assigneeUserDisplay=UserLocalServiceUtil.fetchUser(tasksEntry.getAssigneeUserId());
+  String assigneeDisplayURL=assigneeUserDisplay.getDisplayURL(serviceContext.getThemeDisplay());
+  String assigneeUserLink=wrapLink(assigneeDisplayURL,HtmlUtil.escape(tasksEntry.getAssigneeFullName()));
+  sb.append(assigneeUserLink);
+  sb.append("</span><span class=\"tasks-entry-due-date\"><strong>");
+  sb.append(serviceContext.translate("due-date"));
+  sb.append(": </strong>");
+  String dueDate;
+  if (tasksEntry.getDueDate() != null) {
+    Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(serviceContext.getLocale(),serviceContext.getTimeZone());
+    dueDate=dateFormatDateTime.format(tasksEntry.getDueDate());
+  }
+ else {
+    dueDate=serviceContext.translate("none");
+  }
+  sb.append(dueDate);
+  sb.append("</span></div></div></div>");
   return sb.toString();
 }
