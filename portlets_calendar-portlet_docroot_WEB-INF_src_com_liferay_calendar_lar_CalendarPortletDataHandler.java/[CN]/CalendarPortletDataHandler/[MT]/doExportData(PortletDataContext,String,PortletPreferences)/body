@@ -1,15 +1,19 @@
 {
-  portletDataContext.addPermissions("com.liferay.portlet.calendar",portletDataContext.getScopeGroupId());
+  portletDataContext.addPermissions(CalendarPortletPermission.RESOURCE_NAME,portletDataContext.getScopeGroupId());
   Element rootElement=addExportDataRootElement(portletDataContext);
-  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
-  Element calendarsElement=rootElement.addElement("calendars");
-  Element calendarBookingsElement=rootElement.addElement("calendar-bookings");
-  Element calendarResourcesElement=rootElement.addElement("calendar-resources");
-  List<CalendarResource> calendarResources=CalendarResourceLocalServiceUtil.getCalendarResources(portletDataContext.getScopeGroupId());
-  for (  CalendarResource calendarResource : calendarResources) {
-    if (portletDataContext.isWithinDateRange(calendarResource.getModifiedDate())) {
-      exportCalendarResource(portletDataContext,calendarsElement,calendarBookingsElement,calendarResourcesElement,calendarResource);
-    }
+  if (portletDataContext.getBooleanParameter(NAMESPACE,"calendars")) {
+    ActionableDynamicQuery resourceActionableDynamicQuery=new CalendarResourceExportActionableDynamicQuery(portletDataContext);
+    resourceActionableDynamicQuery.performActions();
+    ActionableDynamicQuery calendarActionableDynamicQuery=new CalendarExportActionableDynamicQuery(portletDataContext);
+    calendarActionableDynamicQuery.performActions();
+  }
+  if (portletDataContext.getBooleanParameter(NAMESPACE,"bookings")) {
+    ActionableDynamicQuery bookingActionableDynamicQuery=new CalendarBookingExportActionableDynamicQuery(portletDataContext);
+    bookingActionableDynamicQuery.performActions();
+  }
+  if (portletDataContext.getBooleanParameter(NAMESPACE,"notification-templates")) {
+    ActionableDynamicQuery notificationTemplateActionableDynamicQuery=new CalendarNotificationTemplateExportActionableDynamicQuery(portletDataContext);
+    notificationTemplateActionableDynamicQuery.performActions();
   }
   return getExportDataRootElementString(rootElement);
 }

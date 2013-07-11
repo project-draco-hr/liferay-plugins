@@ -1,21 +1,29 @@
 {
-  portletDataContext.importPermissions("com.liferay.portlet.calendar",portletDataContext.getSourceGroupId(),portletDataContext.getScopeGroupId());
-  Element rootElement=portletDataContext.getImportDataRootElement();
-  Element calendarResourcesElement=rootElement.element("calendar-resources");
-  List<Element> calendarResourceElements=calendarResourcesElement.elements("calendar-resource");
-  for (  Element calendarResourceElement : calendarResourceElements) {
-    importCalendarResource(portletDataContext,calendarResourceElement);
-  }
-  Element calendarsElement=rootElement.element("calendars");
-  List<Element> calendarElements=calendarsElement.elements("calendar");
-  for (  Element calendarElement : calendarElements) {
-    importCalendar(portletDataContext,calendarElement);
+  portletDataContext.importPermissions(CalendarPortletPermission.RESOURCE_NAME,portletDataContext.getSourceGroupId(),portletDataContext.getScopeGroupId());
+  if (portletDataContext.getBooleanParameter(NAMESPACE,"calendars")) {
+    Element resourcesElement=portletDataContext.getImportDataGroupElement(CalendarResource.class);
+    List<Element> resourceElements=resourcesElement.elements();
+    for (    Element resourceElement : resourceElements) {
+      StagedModelDataHandlerUtil.importStagedModel(portletDataContext,resourceElement);
+    }
+    Element calendarsElement=portletDataContext.getImportDataGroupElement(Calendar.class);
+    List<Element> calendarElements=calendarsElement.elements();
+    for (    Element calendarElement : calendarElements) {
+      StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarElement);
+    }
   }
   if (portletDataContext.getBooleanParameter(NAMESPACE,"bookings")) {
-    Element calendarBookingsElement=rootElement.element("calendar-bookings");
-    List<Element> calendarBookingElements=calendarBookingsElement.elements("calendar-booking");
-    for (    Element calendarBookingElement : calendarBookingElements) {
-      importCalendarBooking(portletDataContext,calendarBookingElement);
+    Element bookingsElement=portletDataContext.getImportDataGroupElement(CalendarBooking.class);
+    List<Element> bookingElements=bookingsElement.elements();
+    for (    Element bookingElement : bookingElements) {
+      StagedModelDataHandlerUtil.importStagedModel(portletDataContext,bookingElement);
+    }
+  }
+  if (portletDataContext.getBooleanParameter(NAMESPACE,"notification-templates")) {
+    Element notificationTemplatesElement=portletDataContext.getImportDataGroupElement(CalendarNotificationTemplate.class);
+    List<Element> notificationTemplateElements=notificationTemplatesElement.elements();
+    for (    Element notificationTemplateElement : notificationTemplateElements) {
+      StagedModelDataHandlerUtil.importStagedModel(portletDataContext,notificationTemplateElement);
     }
   }
   return portletPreferences;
