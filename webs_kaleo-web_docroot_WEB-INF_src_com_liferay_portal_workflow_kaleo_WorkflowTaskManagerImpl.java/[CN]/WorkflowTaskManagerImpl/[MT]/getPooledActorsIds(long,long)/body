@@ -5,25 +5,22 @@
     List<KaleoTaskAssignment> kaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTask.getKaleoTaskId(),Role.class.getName());
     PrimitiveLongSet pooledActors=new PrimitiveLongSet();
     for (    KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
-      long roleId=kaleoTaskAssignment.getAssigneeClassPK();
-      Role role=RoleLocalServiceUtil.getRole(roleId);
+      Role role=RoleLocalServiceUtil.getRole(kaleoTaskAssignment.getAssigneeClassPK());
       if ((role.getType() == RoleConstants.TYPE_SITE) || (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
-        long groupId=kaleoTaskInstanceToken.getGroupId();
-        List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(groupId,roleId);
+        List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupRole userGroupRole : userGroupRoles) {
           pooledActors.add(userGroupRole.getUserId());
         }
-        List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(groupId,roleId);
+        List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
-          long userGroupId=userGroupGroupRole.getUserGroupId();
-          List<User> userGroupUsers=UserLocalServiceUtil.getUserGroupUsers(userGroupId);
+          List<User> userGroupUsers=UserLocalServiceUtil.getUserGroupUsers(userGroupGroupRole.getUserGroupId());
           for (          User user : userGroupUsers) {
             pooledActors.add(user.getUserId());
           }
         }
       }
  else {
-        long[] userIds=UserLocalServiceUtil.getRoleUserIds(roleId);
+        long[] userIds=UserLocalServiceUtil.getRoleUserIds(kaleoTaskAssignment.getAssigneeClassPK());
         pooledActors.addAll(userIds);
       }
     }
