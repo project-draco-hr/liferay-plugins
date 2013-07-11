@@ -1,0 +1,24 @@
+{
+  long userId=portletDataContext.getUserId(calendar.getUserUuid());
+  String calendarResourcePath=ExportImportPathUtil.getModelPath(calendar.getGroupId(),CalendarResource.class.getName(),calendar.getCalendarResourceId());
+  CalendarResource calendarResource=(CalendarResource)portletDataContext.getZipEntryAsObject(calendarResourcePath);
+  StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarResource);
+  Map<Long,Long> calendarResourceIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarResource.class);
+  long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendar,CalendarPortletDataHandler.NAMESPACE);
+  Calendar importedCalendar=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    Calendar existingCalendar=CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingCalendar == null) {
+      serviceContext.setUuid(calendar.getUuid());
+      importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
+    }
+ else {
+      importedCalendar=CalendarLocalServiceUtil.updateCalendar(existingCalendar.getCalendarId(),calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
+    }
+  }
+ else {
+    importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
+  }
+  portletDataContext.importClassedModel(calendar,importedCalendar,CalendarPortletDataHandler.NAMESPACE);
+}

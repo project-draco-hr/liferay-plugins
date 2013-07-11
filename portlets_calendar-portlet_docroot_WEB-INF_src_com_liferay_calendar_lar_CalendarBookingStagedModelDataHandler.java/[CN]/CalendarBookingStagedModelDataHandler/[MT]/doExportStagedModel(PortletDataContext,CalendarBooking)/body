@@ -1,0 +1,15 @@
+{
+  StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,calendarBooking.getCalendar());
+  Element calendarBookingElement=portletDataContext.getExportDataElement(calendarBooking);
+  if (!calendarBooking.isMasterBooking()) {
+    CalendarBooking parentCalendarBooking=calendarBooking.getParentCalendarBooking();
+    boolean parentCalendarBookingInGlobalScope=false;
+    if (parentCalendarBooking.getGroupId() == portletDataContext.getCompanyGroupId()) {
+      parentCalendarBookingInGlobalScope=true;
+    }
+    calendarBookingElement.addAttribute("parent-calendar-booking-uuid",parentCalendarBooking.getUuid());
+    calendarBookingElement.addAttribute("parent-calendar-booking-in-global-scope",String.valueOf(parentCalendarBookingInGlobalScope));
+    portletDataContext.addReferenceElement(calendarBooking,calendarBookingElement,parentCalendarBooking,PortletDataContext.REFERENCE_TYPE_PARENT,true);
+  }
+  portletDataContext.addClassedModel(calendarBookingElement,ExportImportPathUtil.getModelPath(calendarBooking),calendarBooking,CalendarPortletDataHandler.NAMESPACE);
+}
