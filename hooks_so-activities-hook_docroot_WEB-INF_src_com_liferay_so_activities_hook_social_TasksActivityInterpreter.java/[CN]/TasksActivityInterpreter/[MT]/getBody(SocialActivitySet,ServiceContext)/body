@@ -6,14 +6,14 @@
   sb.append("<div class=\"grouped-activity-body-container\">");
   sb.append("<div class=\"grouped-activity-body\">");
   int viewableActivities=0;
-  List<com.liferay.so.activities.model.SocialActivity> activities=com.liferay.so.activities.service.SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-  for (  com.liferay.so.activities.model.SocialActivity activity : activities) {
+  List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  SocialActivity activity : activities) {
     ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
     PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-    if (!hasPermissions(permissionChecker,activity.getPortalSocialActivity(),ActionKeys.VIEW,serviceContext)) {
+    if (!hasPermissions(permissionChecker,activity,ActionKeys.VIEW,serviceContext)) {
       continue;
     }
-    SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity.getPortalSocialActivity(),serviceContext);
+    SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity,serviceContext);
     if (subfeedEntry == null) {
       continue;
     }
