@@ -34,7 +34,7 @@
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
-  socialActivityLocalService.addActivity(userId,calendar.getResourceGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.UPDATE_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking,serviceContext),0);
+  socialActivityLocalService.addActivity(userId,calendarBooking.getGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.UPDATE_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking,serviceContext),0);
   calendarBookingApprovalWorkflow.invokeTransition(userId,calendarBookingId,CalendarBookingWorkflowConstants.toLabel(status),serviceContext);
   return calendarBooking;
 }
