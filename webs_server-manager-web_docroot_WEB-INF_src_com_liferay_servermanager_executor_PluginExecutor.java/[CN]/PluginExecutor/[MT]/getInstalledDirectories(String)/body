@@ -12,7 +12,7 @@
   if (ServerDetector.isTomcat()) {
     File tempDir=new File(SystemProperties.get(SystemProperties.TMP_DIR));
     File[] tempContextDirs=tempDir.listFiles(new FilenameFilter(){
-      public boolean accept(      File dir,      String name){
+      @Override public boolean accept(      File dir,      String name){
         if (name.endsWith("-" + context)) {
           return true;
         }
@@ -22,7 +22,7 @@
 );
     if ((tempContextDirs != null) && (tempContextDirs.length > 0)) {
       Arrays.sort(tempContextDirs,new Comparator<File>(){
-        public int compare(        File file1,        File file2){
+        @Override public int compare(        File file1,        File file2){
           String fileName1=file1.getName();
           String fileName2=file2.getName();
           return fileName1.compareTo(fileName2);
