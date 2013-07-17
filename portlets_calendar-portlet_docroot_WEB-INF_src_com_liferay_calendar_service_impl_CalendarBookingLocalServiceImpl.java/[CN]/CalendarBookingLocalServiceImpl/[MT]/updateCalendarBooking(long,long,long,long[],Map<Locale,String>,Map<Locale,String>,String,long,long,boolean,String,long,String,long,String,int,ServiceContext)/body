@@ -1,5 +1,6 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
+  Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
   CalendarBooking calendarBooking=calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
   java.util.Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(startTime);
   java.util.Calendar endTimeJCalendar=JCalendarUtil.getJCalendar(endTime);
@@ -13,6 +14,7 @@
     firstReminder=originalSecondReminder;
   }
   validate(titleMap,startTimeJCalendar,endTimeJCalendar);
+  calendarBooking.setGroupId(calendar.getGroupId());
   calendarBooking.setCompanyId(user.getCompanyId());
   calendarBooking.setUserId(user.getUserId());
   calendarBooking.setUserName(user.getFullName());
