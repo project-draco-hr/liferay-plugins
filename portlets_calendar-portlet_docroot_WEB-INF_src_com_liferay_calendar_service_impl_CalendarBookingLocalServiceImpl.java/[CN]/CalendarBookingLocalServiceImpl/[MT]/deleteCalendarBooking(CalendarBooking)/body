@@ -2,7 +2,7 @@
   calendarBookingPersistence.remove(calendarBooking);
   List<CalendarBooking> childCalendarBookings=getChildCalendarBookings(calendarBooking.getCalendarBookingId());
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
-    deleteCalendarBooking(childCalendarBooking);
+    calendarBookingLocalService.deleteCalendarBooking(childCalendarBooking);
   }
   resourceLocalService.deleteResource(calendarBooking,ResourceConstants.SCOPE_INDIVIDUAL);
   subscriptionLocalService.deleteSubscriptions(calendarBooking.getCompanyId(),CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId());
