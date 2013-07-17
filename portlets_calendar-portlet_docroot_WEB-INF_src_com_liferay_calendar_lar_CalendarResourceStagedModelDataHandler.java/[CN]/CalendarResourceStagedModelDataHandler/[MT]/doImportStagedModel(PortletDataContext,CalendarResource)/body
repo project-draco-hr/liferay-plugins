@@ -1,22 +1,24 @@
 {
   long userId=portletDataContext.getUserId(calendarResource.getUserUuid());
-  String className=null;
-  long classPK=0;
-  String classUuid=PortalUUIDUtil.generate();
+  List<Element> calendarElements=portletDataContext.getReferenceDataElements(calendarResource,Calendar.class);
+  for (  Element calendarElement : calendarElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarElement);
+  }
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResource,CalendarPortletDataHandler.NAMESPACE);
+  long classPK=getClassPk(portletDataContext,calendarResource,userId);
   CalendarResource importedCalendarResource=null;
   if (portletDataContext.isDataStrategyMirror()) {
     CalendarResource existingCalendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResourceByUuidAndGroupId(calendarResource.getUuid(),portletDataContext.getScopeGroupId());
     if (existingCalendarResource == null) {
       serviceContext.setUuid(calendarResource.getUuid());
-      importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),className,classPK,classUuid,calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
+      importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassNameId(),classPK,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
     }
  else {
       importedCalendarResource=CalendarResourceLocalServiceUtil.updateCalendarResource(existingCalendarResource.getCalendarResourceId(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
     }
   }
  else {
-    importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),className,classPK,classUuid,calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
+    importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassNameId(),classPK,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
   }
   portletDataContext.importClassedModel(calendarResource,importedCalendarResource,CalendarPortletDataHandler.NAMESPACE);
 }
