@@ -10,6 +10,9 @@
   if (portletDataContext.isDataStrategyMirror()) {
     CalendarResource existingCalendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResourceByUuidAndGroupId(calendarResource.getUuid(),portletDataContext.getScopeGroupId());
     if (existingCalendarResource == null) {
+      existingCalendarResource=CalendarResourceLocalServiceUtil.fetchCalendarResource(calendarResource.getClassNameId(),classPK);
+    }
+    if (existingCalendarResource == null) {
       serviceContext.setUuid(calendarResource.getUuid());
       importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassNameId(),classPK,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
     }
