@@ -10,7 +10,14 @@
       SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(activitySetId);
       WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.fetchWikiPageResource(activity.getClassPK());
       WikiPage wikiPage=WikiPageLocalServiceUtil.getPage(pageResource.getResourcePrimKey());
-      JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
+      JSONObject extraDataJSONObject=null;
+      if (Validator.isNull(activitySet.getExtraData())) {
+        extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+        extraDataJSONObject.put("sourceVersion",wikiPage.getVersion());
+      }
+ else {
+        extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
+      }
       extraDataJSONObject.put("targetVersion",MathUtil.format(wikiPage.getVersion() + 0.1,1,1));
       activitySet.setExtraData(extraDataJSONObject.toString());
       SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
