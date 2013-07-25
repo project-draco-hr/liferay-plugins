@@ -2,15 +2,7 @@
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddGroupPermissions(true);
   serviceContext.setAddGuestPermissions(true);
-  Repository repository=null;
-  Folder folder=null;
-  try {
-    repository=PortletFileRepositoryUtil.getPortletRepository(groupId,PortletKeys.KNOWLEDGE_BASE_ARTICLE);
-    folder=PortletFileRepositoryUtil.getPortletFolder(userId,repository.getRepositoryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,String.valueOf(resourcePrimKey),serviceContext);
-  }
- catch (  NoSuchRepositoryException nsre) {
-    repository=PortletFileRepositoryUtil.addPortletRepository(groupId,PortletKeys.KNOWLEDGE_BASE_ARTICLE,serviceContext);
-    folder=PortletFileRepositoryUtil.addPortletFolder(userId,repository.getRepositoryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,String.valueOf(resourcePrimKey),serviceContext);
-  }
+  Repository repository=PortletFileRepositoryUtil.getPortletRepository(groupId,PortletKeys.KNOWLEDGE_BASE_ARTICLE);
+  Folder folder=PortletFileRepositoryUtil.getPortletFolder(userId,repository.getRepositoryId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,String.valueOf(resourcePrimKey),serviceContext);
   return folder.getFolderId();
 }
