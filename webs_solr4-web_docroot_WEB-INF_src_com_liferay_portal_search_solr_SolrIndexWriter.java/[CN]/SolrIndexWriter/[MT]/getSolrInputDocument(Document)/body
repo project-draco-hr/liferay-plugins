@@ -4,6 +4,9 @@
   for (  Field field : fields) {
     String name=field.getName();
     float boost=field.getBoost();
+    if (ArrayUtil.contains(Field.UNSCORED_FIELD_NAMES,name)) {
+      boost=_UNSCORED_FIELDS_BOOST;
+    }
     if (!field.isLocalized()) {
       for (      String value : field.getValues()) {
         if (Validator.isNull(value)) {
