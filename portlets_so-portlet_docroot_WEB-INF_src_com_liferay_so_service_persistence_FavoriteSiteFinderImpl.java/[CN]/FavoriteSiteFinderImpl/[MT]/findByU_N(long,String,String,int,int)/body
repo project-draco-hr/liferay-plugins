@@ -1,5 +1,5 @@
 {
-  name=StringUtil.lowerCase(name);
+  name=CustomSQLUtil.keywords(name)[0];
   Session session=null;
   try {
     session=openSession();
@@ -9,7 +9,7 @@
     q.addScalar("groupId",Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
-    qPos.add(StringPool.PERCENT + name + StringPool.PERCENT);
+    qPos.add(name);
     qPos.add(groupRealName);
     qPos.add(name);
     return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
