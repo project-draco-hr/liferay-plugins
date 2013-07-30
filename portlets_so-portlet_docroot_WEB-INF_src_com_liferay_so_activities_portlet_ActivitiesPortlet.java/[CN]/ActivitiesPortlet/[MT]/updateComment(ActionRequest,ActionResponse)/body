@@ -1,0 +1,38 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  long groupId=PortalUtil.getScopeGroupId(actionRequest);
+  String className=ParamUtil.getString(actionRequest,"className");
+  long classPK=ParamUtil.getLong(actionRequest,"classPK");
+  long messageId=ParamUtil.getLong(actionRequest,"messageId");
+  long threadId=ParamUtil.getLong(actionRequest,"threadId");
+  long parentMessageId=ParamUtil.getLong(actionRequest,"parentMessageId");
+  String subject=ParamUtil.getString(actionRequest,"subject");
+  String body=ParamUtil.getString(actionRequest,"body");
+  MBMessage mbMessage=null;
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(MBMessage.class.getName(),actionRequest);
+  if (cmd.equals(Constants.DELETE)) {
+    MBMessageServiceUtil.deleteDiscussionMessage(groupId,className,classPK,className,classPK,themeDisplay.getUserId(),messageId);
+  }
+ else   if (cmd.equals(Constants.EDIT) && (messageId > 0)) {
+    mbMessage=MBMessageServiceUtil.updateDiscussionMessage(className,classPK,className,classPK,themeDisplay.getUserId(),messageId,subject,body,serviceContext);
+  }
+ else {
+    mbMessage=MBMessageServiceUtil.addDiscussionMessage(groupId,className,classPK,className,classPK,themeDisplay.getUserId(),threadId,parentMessageId,subject,body,serviceContext);
+  }
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  if (mbMessage != null) {
+    jsonObject.put("body",HtmlUtil.escape(mbMessage.getBody()));
+    jsonObject.put("messageId",mbMessage.getMessageId());
+    Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(themeDisplay.getLocale(),themeDisplay.getTimeZone());
+    jsonObject.put("modifiedDate",dateFormatDateTime.format(mbMessage.getModifiedDate()));
+    User user=UserLocalServiceUtil.getUser(mbMessage.getUserId());
+    String userDisplayURL=user.getDisplayURL(themeDisplay);
+    if (Validator.isNotNull(userDisplayURL)) {
+      jsonObject.put("userDisplayURL",userDisplayURL);
+    }
+    jsonObject.put("userName",HtmlUtil.escape(mbMessage.getUserName()));
+  }
+  jsonObject.put("success",Boolean.TRUE);
+  writeJSON(actionRequest,actionResponse,jsonObject);
+}

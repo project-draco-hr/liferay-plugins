@@ -1,0 +1,16 @@
+{
+  String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
+  if (actionName.equals("updateComment")) {
+    try {
+      updateComment(actionRequest,actionResponse);
+    }
+ catch (    Exception e) {
+      JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+      jsonObject.put("success",Boolean.FALSE);
+      writeJSON(actionRequest,actionResponse,jsonObject);
+    }
+  }
+ else {
+    super.processAction(actionRequest,actionResponse);
+  }
+}
