@@ -1,16 +1,14 @@
 {
   String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
-  if (actionName.equals("updateComment")) {
-    try {
+  try {
+    if (actionName.equals("updateComment")) {
       updateComment(actionRequest,actionResponse);
     }
- catch (    Exception e) {
-      JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-      jsonObject.put("success",Boolean.FALSE);
-      writeJSON(actionRequest,actionResponse,jsonObject);
+ else {
+      super.processAction(actionRequest,actionResponse);
     }
   }
- else {
-    super.processAction(actionRequest,actionResponse);
+ catch (  Exception e) {
+    throw new PortletException(e);
   }
 }
