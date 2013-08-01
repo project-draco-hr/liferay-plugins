@@ -1,3 +1,7 @@
 {
-  return true;
+  TasksEntry tasksEntry=TasksEntryLocalServiceUtil.fetchTasksEntry(activity.getClassPK());
+  if (Validator.isNull(tasksEntry)) {
+    return false;
+  }
+  return TasksEntryPermission.contains(permissionChecker,tasksEntry,ActionKeys.VIEW);
 }
