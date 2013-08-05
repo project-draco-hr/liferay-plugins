@@ -2,18 +2,18 @@
   portletDataContext.addPermissions(RESOURCE_NAME,portletDataContext.getScopeGroupId());
   Element rootElement=addExportDataRootElement(portletDataContext);
   if (portletDataContext.getBooleanParameter(NAMESPACE,"calendars")) {
-    ActionableDynamicQuery resourceActionableDynamicQuery=getCalendarResourceActionableDynamicQuery(portletDataContext,StagedModelType.REFERRER_CLASS_NAME_ID_ALL);
-    resourceActionableDynamicQuery.performActions();
     ActionableDynamicQuery calendarActionableDynamicQuery=new CalendarExportActionableDynamicQuery(portletDataContext);
     calendarActionableDynamicQuery.performActions();
+    ActionableDynamicQuery calendarResourceActionableDynamicQuery=getCalendarResourceActionableDynamicQuery(portletDataContext,StagedModelType.REFERRER_CLASS_NAME_ID_ALL);
+    calendarResourceActionableDynamicQuery.performActions();
   }
   if (portletDataContext.getBooleanParameter(NAMESPACE,"bookings")) {
-    ActionableDynamicQuery bookingActionableDynamicQuery=new CalendarBookingExportActionableDynamicQuery(portletDataContext);
-    bookingActionableDynamicQuery.performActions();
+    ActionableDynamicQuery calendarBookingActionableDynamicQuery=new CalendarBookingExportActionableDynamicQuery(portletDataContext);
+    calendarBookingActionableDynamicQuery.performActions();
   }
   if (portletDataContext.getBooleanParameter(NAMESPACE,"notification-templates")) {
-    ActionableDynamicQuery notificationTemplateActionableDynamicQuery=new CalendarNotificationTemplateExportActionableDynamicQuery(portletDataContext);
-    notificationTemplateActionableDynamicQuery.performActions();
+    ActionableDynamicQuery calendarNotificationTemplateActionableDynamicQuery=new CalendarNotificationTemplateExportActionableDynamicQuery(portletDataContext);
+    calendarNotificationTemplateActionableDynamicQuery.performActions();
   }
   return getExportDataRootElementString(rootElement);
 }
