@@ -1,0 +1,14 @@
+{
+  ExpandoTable expandoTable=null;
+  try {
+    expandoTable=ExpandoTableLocalServiceUtil.getTable(companyId,User.class.getName(),"MP");
+  }
+ catch (  NoSuchTableException nste) {
+    return;
+  }
+  ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(companyId,User.class.getName(),expandoTable.getName(),"client-id");
+  if (expandoColumn == null) {
+    return;
+  }
+  ExpandoColumnLocalServiceUtil.updateColumn(expandoColumn.getColumnId(),"clientId",ExpandoColumnConstants.STRING);
+}
