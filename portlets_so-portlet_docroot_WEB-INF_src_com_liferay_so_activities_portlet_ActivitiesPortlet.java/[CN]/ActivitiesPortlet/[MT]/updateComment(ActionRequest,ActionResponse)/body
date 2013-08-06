@@ -26,7 +26,7 @@
       jsonObject.put("body",HtmlUtil.escape(mbMessage.getBody()));
       jsonObject.put("messageId",mbMessage.getMessageId());
       Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(themeDisplay.getLocale(),themeDisplay.getTimeZone());
-      jsonObject.put("modifiedDate",dateFormatDateTime.format(mbMessage.getModifiedDate()));
+      jsonObject.put("modifiedDate",Time.getRelativeTimeDescription(mbMessage.getModifiedDate().getTime(),themeDisplay.getLocale(),themeDisplay.getTimeZone()));
       User user=UserLocalServiceUtil.fetchUser(mbMessage.getUserId());
       if (user != null) {
         String userDisplayURL=user.getDisplayURL(themeDisplay);
