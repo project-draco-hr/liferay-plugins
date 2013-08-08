@@ -1,0 +1,32 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
+  long classPK=ParamUtil.getLong(actionRequest,"classPK");
+  long microblogsEntryId=ParamUtil.getLong(actionRequest,"entryId");
+  String body=ParamUtil.getString(actionRequest,"body");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    MicroblogsEntry microblogsEntry=null;
+    if (cmd.equals(Constants.DELETE)) {
+      MicroblogsEntryServiceUtil.deleteMicroblogsEntry(classPK);
+    }
+ else     if (classPK > 0) {
+      ServiceContext serviceContext=ServiceContextFactory.getInstance(MicroblogsEntry.class.getName(),actionRequest);
+      MicroblogsEntry currentMicroblogsEntry=MicroblogsEntryLocalServiceUtil.getMicroblogsEntry(classPK);
+      if (cmd.equals(Constants.EDIT) && (microblogsEntryId > 0)) {
+        microblogsEntry=MicroblogsEntryServiceUtil.updateMicroblogsEntry(microblogsEntryId,body,currentMicroblogsEntry.getSocialRelationType(),serviceContext);
+      }
+ else {
+        microblogsEntry=MicroblogsEntryServiceUtil.addMicroblogsEntry(themeDisplay.getUserId(),body,MicroblogsEntryConstants.TYPE_REPLY,currentMicroblogsEntry.getUserId(),classPK,currentMicroblogsEntry.getSocialRelationType(),serviceContext);
+      }
+    }
+    if (microblogsEntry != null) {
+      jsonObject=getJSONObject(microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getContent(),microblogsEntry.getModifiedDate(),microblogsEntry.getUserId(),microblogsEntry.getUserName(),themeDisplay);
+    }
+    jsonObject.put("success",Boolean.TRUE);
+  }
+ catch (  Exception e) {
+    jsonObject.put("success",Boolean.FALSE);
+  }
+  writeJSON(actionRequest,actionResponse,jsonObject);
+}

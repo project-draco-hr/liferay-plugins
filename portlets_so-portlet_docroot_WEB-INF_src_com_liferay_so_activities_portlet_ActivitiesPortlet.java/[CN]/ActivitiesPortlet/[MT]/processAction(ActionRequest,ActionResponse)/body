@@ -2,10 +2,13 @@
   String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
   try {
     if (actionName.equals("updateComment")) {
-      updateComment(actionRequest,actionResponse);
-    }
+      String className=ParamUtil.getString(actionRequest,"className");
+      if (className.equals(MicroblogsEntry.class.getName())) {
+        updateMicroblogsComment(actionRequest,actionResponse);
+      }
  else {
-      super.processAction(actionRequest,actionResponse);
+        updateMBComment(actionRequest,actionResponse);
+      }
     }
   }
  catch (  Exception e) {
