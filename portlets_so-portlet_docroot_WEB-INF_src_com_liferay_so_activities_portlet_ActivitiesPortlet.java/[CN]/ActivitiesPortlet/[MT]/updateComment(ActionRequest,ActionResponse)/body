@@ -22,15 +22,7 @@
       mbMessage=MBMessageServiceUtil.addDiscussionMessage(groupId,className,classPK,className,classPK,themeDisplay.getUserId(),mbThreadId,parentMBMessageId,StringPool.BLANK,body,serviceContext);
     }
     if (mbMessage != null) {
-      jsonObject.put("body",HtmlUtil.escape(mbMessage.getBody()));
-      jsonObject.put("mbMessageId",mbMessage.getMessageId());
-      jsonObject.put("modifiedDate",Time.getRelativeTimeDescription(mbMessage.getModifiedDate(),themeDisplay.getLocale(),themeDisplay.getTimeZone()));
-      User user=UserLocalServiceUtil.fetchUser(mbMessage.getUserId());
-      if (user != null) {
-        jsonObject.put("userDisplayURL",user.getDisplayURL(themeDisplay));
-        jsonObject.put("userPortraitURL",HtmlUtil.escape(user.getPortraitURL(themeDisplay)));
-      }
-      jsonObject.put("userName",HtmlUtil.escape(mbMessage.getUserName()));
+      jsonObject=getJSONObject(mbMessage.getMessageId(),mbMessage.getBody(),mbMessage.getModifiedDate(),mbMessage.getUserId(),mbMessage.getUserName(),themeDisplay);
     }
     jsonObject.put("success",Boolean.TRUE);
   }
