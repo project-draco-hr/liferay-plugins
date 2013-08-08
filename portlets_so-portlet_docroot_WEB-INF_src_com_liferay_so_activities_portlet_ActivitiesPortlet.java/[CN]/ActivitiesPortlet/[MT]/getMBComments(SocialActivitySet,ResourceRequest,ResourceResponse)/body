@@ -1,0 +1,22 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  String className=activitySet.getClassName();
+  long classPK=activitySet.getClassPK();
+  if (activitySet.getActivityCount() > 1) {
+    className=SocialActivitySet.class.getName();
+    classPK=activitySet.getActivitySetId();
+  }
+  MBMessageDisplay mbMessageDisplay=MBMessageLocalServiceUtil.getDiscussionMessageDisplay(themeDisplay.getUserId(),activitySet.getGroupId(),className,classPK,WorkflowConstants.STATUS_APPROVED);
+  MBTreeWalker mbTeeWalker=mbMessageDisplay.getTreeWalker();
+  List<MBMessage> mbMessages=mbTeeWalker.getMessages();
+  mbMessages=ListUtil.sort(mbMessages,new MessageCreateDateComparator(true));
+  for (int i=1; i < mbMessages.size(); i++) {
+    MBMessage mbMessage=mbMessages.get(i);
+    JSONObject messageJSONObject=getJSONObject(mbMessage.getMessageId(),mbMessage.getBody(),mbMessage.getModifiedDate(),mbMessage.getUserId(),mbMessage.getUserName(),themeDisplay);
+    jsonArray.put(messageJSONObject);
+  }
+  jsonObject.put("comments",jsonArray);
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}

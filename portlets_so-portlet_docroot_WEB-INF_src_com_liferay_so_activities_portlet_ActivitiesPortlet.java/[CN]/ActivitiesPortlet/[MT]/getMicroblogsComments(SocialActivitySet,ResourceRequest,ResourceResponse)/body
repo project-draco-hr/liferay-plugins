@@ -1,0 +1,13 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  List<MicroblogsEntry> microblogsEntries=MicroblogsEntryLocalServiceUtil.getReceiverMicroblogsEntryMicroblogsEntries(MicroblogsEntryConstants.TYPE_REPLY,activitySet.getClassPK(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  for (  MicroblogsEntry microblogsEntry : microblogsEntries) {
+    JSONObject microblogsEntryJSONObject=getJSONObject(microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getContent(),microblogsEntry.getModifiedDate(),microblogsEntry.getUserId(),microblogsEntry.getUserName(),themeDisplay);
+    jsonArray.put(microblogsEntryJSONObject);
+  }
+  jsonObject.put("comments",jsonArray);
+  jsonObject.put("commentsCount",microblogsEntries.size());
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}

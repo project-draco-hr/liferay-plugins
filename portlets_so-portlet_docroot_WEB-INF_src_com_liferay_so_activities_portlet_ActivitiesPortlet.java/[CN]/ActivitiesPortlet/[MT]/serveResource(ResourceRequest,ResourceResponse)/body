@@ -1,0 +1,25 @@
+{
+  try {
+    String resourceID=resourceRequest.getResourceID();
+    if (resourceID.equals("getComments")) {
+      long activitySetId=ParamUtil.getLong(resourceRequest,"activitySetId");
+      SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(activitySetId);
+      if (activitySet == null) {
+        return;
+      }
+      String className=activitySet.getClassName();
+      if (className.equals(MicroblogsEntry.class.getName())) {
+        getMicroblogsComments(activitySet,resourceRequest,resourceResponse);
+      }
+ else {
+        getMBComments(activitySet,resourceRequest,resourceResponse);
+      }
+    }
+ else {
+      super.serveResource(resourceRequest,resourceResponse);
+    }
+  }
+ catch (  Exception e) {
+    throw new PortletException(e);
+  }
+}
