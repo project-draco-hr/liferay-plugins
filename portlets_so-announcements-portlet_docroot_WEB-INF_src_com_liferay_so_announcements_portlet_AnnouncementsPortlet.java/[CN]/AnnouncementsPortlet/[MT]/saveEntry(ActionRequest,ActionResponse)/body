@@ -9,7 +9,11 @@
  else {
       SessionMessages.add(actionRequest,"announcementUpdated");
     }
-    jsonObject.put("redirect",ParamUtil.getString(actionRequest,"redirect"));
+    LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)actionResponse;
+    PortletURL portletURL=liferayPortletResponse.createRenderURL();
+    portletURL.setParameter("mvcPath","/manage_entries.jsp");
+    portletURL.setParameter("distributionScope",ParamUtil.getString(actionRequest,"distributionScope"));
+    jsonObject.put("redirect",portletURL.toString());
     jsonObject.put("success",true);
   }
  catch (  Exception e) {
