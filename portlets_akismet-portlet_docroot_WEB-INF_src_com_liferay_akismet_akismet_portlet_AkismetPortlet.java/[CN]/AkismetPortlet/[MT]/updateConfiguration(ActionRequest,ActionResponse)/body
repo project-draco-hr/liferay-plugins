@@ -5,11 +5,13 @@
   boolean discussionsEnabled=ParamUtil.getBoolean(actionRequest,"discussionsEnabled");
   boolean messageBoardsEnabled=ParamUtil.getBoolean(actionRequest,"messageBoardsEnabled");
   int reportableTime=ParamUtil.getInteger(actionRequest,"reportableTime");
+  boolean wikiEnabled=ParamUtil.getBoolean(actionRequest,"wikiEnabled");
   PortletPreferences preferences=PrefsPortletPropsUtil.getPortletPreferences(themeDisplay.getCompanyId());
   preferences.setValue(PortletPropsKeys.AKISMET_API_KEY,apiKey);
   preferences.setValue(PortletPropsKeys.AKISMET_CHECK_THRESHOLD,String.valueOf(checkThreshold));
   preferences.setValue(PortletPropsKeys.AKISMET_DISCUSSIONS_CHECK_ENABLED,String.valueOf(discussionsEnabled));
   preferences.setValue(PortletPropsKeys.AKISMET_MESSAGE_BOARDS_CHECK_ENABLED,String.valueOf(messageBoardsEnabled));
+  preferences.setValue(PortletPropsKeys.AKISMET_WIKI_CHECK_ENABLED,String.valueOf(wikiEnabled));
   preferences.setValue(PortletPropsKeys.AKISMET_REPORTABLE_TIME,String.valueOf(reportableTime));
   preferences.store();
   if (!AkismetUtil.verifyApiKey(themeDisplay.getCompanyId(),apiKey)) {
