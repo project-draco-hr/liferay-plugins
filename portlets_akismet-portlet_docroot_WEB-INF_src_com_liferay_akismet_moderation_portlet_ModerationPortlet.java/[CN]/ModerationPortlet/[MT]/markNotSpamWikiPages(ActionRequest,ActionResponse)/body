@@ -38,7 +38,9 @@
     wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
     wikiPage.setSummary(StringPool.BLANK);
     wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
-    AkismetUtil.submitHam(wikiPage);
+    if (AkismetUtil.isWikiEnabled(wikiPage.getCompanyId())) {
+      AkismetUtil.submitHam(wikiPage);
+    }
   }
   if (!wikiPageLinks.isEmpty()) {
     SessionMessages.add(actionRequest,"requestProcessed");
