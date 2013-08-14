@@ -1,0 +1,39 @@
+{
+  solrQuery.addFilterQuery(getFilterQueries(searchContext,SPELL_CHECKER_TYPE));
+  try {
+    solrQuery.setRows(QUERY_RESULTS);
+    QueryResponse queryResponse=_solrServer.query(solrQuery,SolrRequest.METHOD.POST);
+    SolrDocumentList solrDocumentList=queryResponse.getResults();
+    int numResults=solrDocumentList.size();
+    for (int i=0; i < numResults; i++) {
+      SolrDocument solrDocument=solrDocumentList.get(i);
+      String suggestion=((List<String>)solrDocument.get(Field.SPELL_CHECK_WORD)).get(0);
+      String strWeight=((List<String>)solrDocument.get(Field.SPELL_CHECK_WORD)).get(0);
+      float weight=Float.parseFloat(strWeight);
+      if (suggestion.equals(token)) {
+        weight=INFINITE_WEIGHT;
+        words.put(token,weight);
+        continue;
+      }
+      String lowerCaseToken=token.toLowerCase();
+      String lowerCaseSuggestion=suggestion.toLowerCase();
+      float distance=_stringDistance.getDistance(lowerCaseToken,lowerCaseSuggestion);
+      if (distance >= _threshold) {
+        float normalizedWeight=weight + distance;
+        if (words.containsKey(suggestion)) {
+          float existingWeight=words.get(suggestion);
+          if (normalizedWeight < existingWeight) {
+            continue;
+          }
+        }
+        words.put(suggestion,normalizedWeight);
+      }
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Unable to execute Solr query",e);
+    }
+    throw new SearchException(e.getMessage());
+  }
+}

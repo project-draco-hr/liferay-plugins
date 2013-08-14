@@ -1,0 +1,25 @@
+{
+  NGramHolder nGramHolder=NGramHolderBuilderUtil.buildNGramHolder(token);
+  Map<String,List<String>> nGrams=nGramHolder.getNGrams();
+  Map<String,String> nGramEnds=nGramHolder.getNGramEnds();
+  Map<String,String> nGramStarts=nGramHolder.getNGramStarts();
+  StringBundler stringBundler=new StringBundler(10);
+  addNGramsListQuery(stringBundler,nGrams);
+  if (!nGrams.isEmpty()) {
+    addOrQuerySeparator(stringBundler);
+  }
+  addNGramsQuery(stringBundler,nGramEnds);
+  if (!nGramEnds.isEmpty()) {
+    addOrQuerySeparator(stringBundler);
+  }
+  addNGramsQuery(stringBundler,nGramStarts);
+  if (!nGramStarts.isEmpty()) {
+    addOrQuerySeparator(stringBundler);
+  }
+  stringBundler.append(Field.SPELL_CHECK_WORD);
+  stringBundler.append(StringPool.COLON);
+  stringBundler.append(token);
+  SolrQuery solrQuery=new SolrQuery();
+  solrQuery.setQuery(stringBundler.toString());
+  return solrQuery;
+}

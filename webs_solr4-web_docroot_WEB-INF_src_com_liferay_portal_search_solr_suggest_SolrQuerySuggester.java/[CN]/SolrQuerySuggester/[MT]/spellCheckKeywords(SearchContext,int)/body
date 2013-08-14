@@ -1,0 +1,9 @@
+{
+  Map<String,List<String>> suggestions=new HashMap<String,List<String>>();
+  List<String> originals=TokenizerUtil.tokenize(Field.SPELL_CHECK_WORD,searchContext.getKeywords(),searchContext.getLanguageId());
+  for (  String original : originals) {
+    List<String> similarTokens=suggestTokenSimilars(searchContext,maxSuggestions,original);
+    suggestions.put(original,similarTokens);
+  }
+  return suggestions;
+}
