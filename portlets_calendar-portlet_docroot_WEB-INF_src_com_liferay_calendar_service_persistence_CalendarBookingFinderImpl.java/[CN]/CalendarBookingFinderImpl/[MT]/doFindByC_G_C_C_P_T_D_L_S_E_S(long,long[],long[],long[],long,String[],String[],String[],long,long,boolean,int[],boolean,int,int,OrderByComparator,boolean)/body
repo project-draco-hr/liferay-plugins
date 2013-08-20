@@ -30,13 +30,13 @@
     q.addEntity("CalendarBooking",CalendarBookingImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(companyId);
-    if ((groupIds != null) && (groupIds.length > 0)) {
+    if (ArrayUtil.isNotEmpty(groupIds)) {
       qPos.add(groupIds);
     }
-    if ((calendarIds != null) && (calendarIds.length > 0)) {
+    if (ArrayUtil.isNotEmpty(calendarIds)) {
       qPos.add(calendarIds);
     }
-    if ((calendarResourceIds != null) && (calendarResourceIds.length > 0)) {
+    if (ArrayUtil.isNotEmpty(calendarResourceIds)) {
       qPos.add(calendarResourceIds);
     }
     if (parentCalendarBookingId >= 0) {
@@ -55,7 +55,7 @@
     qPos.add(startTime);
     qPos.add(startTime);
     qPos.add(endTime);
-    if ((statuses != null) && (statuses.length > 0)) {
+    if (ArrayUtil.isNotEmpty(statuses)) {
       qPos.add(statuses);
     }
     return (List<CalendarBooking>)QueryUtil.list(q,getDialect(),start,end);

@@ -17,11 +17,11 @@
   meetupsEntry.setTotalAttendees(totalAttendees);
   meetupsEntry.setMaxAttendees(maxAttendees);
   meetupsEntry.setPrice(price);
-  if ((thumbnail != null) && (thumbnail.length > 0)) {
+  if (ArrayUtil.isNotEmpty(thumbnail)) {
     meetupsEntry.setThumbnailId(counterLocalService.increment());
   }
   meetupsEntryPersistence.update(meetupsEntry);
-  if ((thumbnail != null) && (thumbnail.length > 0)) {
+  if (ArrayUtil.isNotEmpty(thumbnail)) {
     ImageLocalServiceUtil.updateImage(meetupsEntry.getThumbnailId(),thumbnail);
   }
   return meetupsEntry;
