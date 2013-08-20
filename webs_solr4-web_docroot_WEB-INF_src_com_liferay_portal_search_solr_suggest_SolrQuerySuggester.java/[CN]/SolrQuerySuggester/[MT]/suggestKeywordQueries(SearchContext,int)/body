@@ -1,15 +1,15 @@
 {
-  SolrQuery solrQuery=new SolrQuery();
-  StringBundler sb=new StringBundler(6);
+  StringBundler sb=new StringBundler(8);
   sb.append("start");
   sb.append(searchContext.getKeywords().length());
   sb.append(StringPool.COLON);
   sb.append(StringPool.QUOTE);
   sb.append(searchContext.getKeywords());
   sb.append(StringPool.QUOTE);
+  SolrQuery solrQuery=new SolrQuery();
+  solrQuery.setFilterQueries(getFilterQueries(searchContext,SuggestionConstants.QUERY_SUGGESTION_TYPE));
   solrQuery.setQuery(sb.toString());
   solrQuery.setRows(max);
-  solrQuery.setFilterQueries(getFilterQueries(searchContext,QUERY_SUGGESTION_TYPE));
   try {
     QueryResponse queryResponse=_solrServer.query(solrQuery);
     SolrDocumentList solrDocumentList=queryResponse.getResults();

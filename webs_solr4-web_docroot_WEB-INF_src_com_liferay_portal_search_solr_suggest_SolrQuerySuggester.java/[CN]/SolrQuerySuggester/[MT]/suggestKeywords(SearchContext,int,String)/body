@@ -1,0 +1,16 @@
+{
+  Set<WeightedWord> suggestionSet=suggestKeywords(searchContext,token);
+  maxSuggestions=Math.min(maxSuggestions,suggestionSet.size());
+  Iterator<WeightedWord> suggestionsIterator=suggestionSet.iterator();
+  List<String> suggestionList=new ArrayList<String>(maxSuggestions);
+  int counter=0;
+  while (suggestionsIterator.hasNext()) {
+    WeightedWord weightedWord=suggestionsIterator.next();
+    suggestionList.add(weightedWord.getWord());
+    counter++;
+    if (counter >= maxSuggestions) {
+      break;
+    }
+  }
+  return suggestionList;
+}

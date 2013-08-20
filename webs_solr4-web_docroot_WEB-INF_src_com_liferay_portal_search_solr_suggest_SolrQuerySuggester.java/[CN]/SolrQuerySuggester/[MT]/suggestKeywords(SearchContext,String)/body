@@ -1,0 +1,45 @@
+{
+  try {
+    SolrQuery solrQuery=_nGramQueryBuilder.getNGramQuery(token);
+    solrQuery.addFilterQuery(getFilterQueries(searchContext,SuggestionConstants.SPELL_CHECKER_TYPE));
+    solrQuery.setRows(_MAX_QUERY_RESULTS);
+    QueryResponse queryResponse=_solrServer.query(solrQuery,SolrRequest.METHOD.POST);
+    SolrDocumentList solrDocumentList=queryResponse.getResults();
+    int numResults=solrDocumentList.size();
+    Set<WeightedWord> sortedWords=new TreeSet<WeightedWord>();
+    Map<String,WeightedWord> weightedWordMap=new HashMap<String,WeightedWord>();
+    for (int i=0; i < numResults; i++) {
+      SolrDocument solrDocument=solrDocumentList.get(i);
+      String suggestion=((List<String>)solrDocument.get(Field.SPELL_CHECK_WORD)).get(0);
+      String strWeight=((List<String>)solrDocument.get(Field.PRIORITY)).get(0);
+      float weight=Float.parseFloat(strWeight);
+      if (suggestion.equals(token)) {
+        weight=_INFINITE_WEIGHT;
+      }
+ else {
+        String lowerCaseToken=token.toLowerCase();
+        String lowerCaseSuggestion=suggestion.toLowerCase();
+        float distance=StringDistanceCalculatorUtil.getDistance(lowerCaseToken,lowerCaseSuggestion);
+        if (distance >= _distanceThreshold) {
+          weight=weight + distance;
+        }
+      }
+      WeightedWord weightedWord=weightedWordMap.get(suggestion);
+      if (weightedWord == null) {
+        weightedWord=new WeightedWord(suggestion,weight);
+        weightedWordMap.put(suggestion,weightedWord);
+        sortedWords.add(weightedWord);
+      }
+ else       if (weight > weightedWord.getWeight()) {
+        weightedWord.setWeight(weight);
+      }
+    }
+    return sortedWords;
+  }
+ catch (  Exception e) {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Unable to execute Solr query",e);
+    }
+    throw new SearchException(e.getMessage(),e);
+  }
+}
