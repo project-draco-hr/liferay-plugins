@@ -1,10 +1,10 @@
 {
   Map<String,List<String>> suggestions=new HashMap<String,List<String>>();
   String localizedFieldName=DocumentImpl.getLocalizedName(searchContext.getLanguageId(),Field.SPELL_CHECK_WORD);
-  List<String> keywordTokens=TokenizerUtil.tokenize(localizedFieldName,searchContext.getKeywords(),searchContext.getLanguageId());
-  for (  String keywordToken : keywordTokens) {
-    List<String> keywordSuggestions=suggestKeywords(searchContext,maxSuggestions,keywordToken);
-    suggestions.put(keywordToken,keywordSuggestions);
+  List<String> keywords=TokenizerUtil.tokenize(localizedFieldName,searchContext.getKeywords(),searchContext.getLanguageId());
+  for (  String keyword : keywords) {
+    List<String> keywordSuggestions=suggestKeywords(searchContext,maxSuggestions,keyword);
+    suggestions.put(keyword,keywordSuggestions);
   }
   return suggestions;
 }
