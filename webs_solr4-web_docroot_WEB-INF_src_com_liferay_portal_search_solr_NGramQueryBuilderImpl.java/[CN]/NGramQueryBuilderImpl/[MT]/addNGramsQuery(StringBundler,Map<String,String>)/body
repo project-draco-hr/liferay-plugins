@@ -1,12 +1,13 @@
 {
-  Iterator<Map.Entry<String,String>> nGramEntriesIterator=nGrams.entrySet().iterator();
-  while (nGramEntriesIterator.hasNext()) {
-    Map.Entry<String,String> nGramEntry=nGramEntriesIterator.next();
-    String fieldName=nGramEntry.getKey();
-    String fieldValue=nGramEntry.getValue();
-    addQuery(stringBundler,fieldName,fieldValue);
-    if (nGramEntriesIterator.hasNext()) {
-      addOrQuerySeparator(stringBundler);
+  Set<Map.Entry<String,String>> set=nGrams.entrySet();
+  Iterator<Map.Entry<String,String>> iterator=set.iterator();
+  while (iterator.hasNext()) {
+    Map.Entry<String,String> entry=iterator.next();
+    String fieldName=entry.getKey();
+    String fieldValue=entry.getValue();
+    addQuery(sb,fieldName,fieldValue);
+    if (iterator.hasNext()) {
+      addOrQuerySeparator(sb);
     }
   }
 }
