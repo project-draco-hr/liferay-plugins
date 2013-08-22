@@ -1,6 +1,6 @@
 {
   try {
-    SolrQuery solrQuery=_nGramQueryBuilder.getNGramQuery(token);
+    SolrQuery solrQuery=_nGramQueryBuilder.getNGramQuery(input);
     solrQuery.addFilterQuery(getFilterQueries(searchContext,SuggestionConstants.SPELL_CHECKER_TYPE));
     solrQuery.setRows(_MAX_QUERY_RESULTS);
     QueryResponse queryResponse=_solrServer.query(solrQuery,SolrRequest.METHOD.POST);
@@ -13,13 +13,13 @@
       String suggestion=((List<String>)solrDocument.get(Field.SPELL_CHECK_WORD)).get(0);
       String strWeight=((List<String>)solrDocument.get(Field.PRIORITY)).get(0);
       float weight=Float.parseFloat(strWeight);
-      if (suggestion.equals(token)) {
+      if (suggestion.equals(input)) {
         weight=_INFINITE_WEIGHT;
       }
  else {
-        String lowerCaseToken=token.toLowerCase();
+        String lowerCaseInput=input.toLowerCase();
         String lowerCaseSuggestion=suggestion.toLowerCase();
-        float distance=StringDistanceCalculatorUtil.getDistance(lowerCaseToken,lowerCaseSuggestion);
+        float distance=StringDistanceCalculatorUtil.getDistance(lowerCaseInput,lowerCaseSuggestion);
         if (distance >= _distanceThreshold) {
           weight=weight + distance;
         }
