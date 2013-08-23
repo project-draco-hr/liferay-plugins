@@ -6,10 +6,12 @@
       activityType=_ACTIVITY_KEY_REPLY_MESSAGE;
     }
     SocialActivitySet activitySet=null;
+    boolean comment=false;
     if (activityType == _ACTIVITY_KEY_REPLY_MESSAGE) {
       activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(activity.getClassNameId(),activity.getClassPK(),activity.getType());
+      comment=true;
     }
-    if ((activitySet != null) && !isExpired(activitySet)) {
+    if ((activitySet != null) && !isExpired(activitySet,comment)) {
       return activitySet.getActivitySetId();
     }
   }

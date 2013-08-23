@@ -1,14 +1,16 @@
 {
   try {
     SocialActivitySet activitySet=null;
+    boolean comment=false;
     SocialActivity activity=SocialActivityLocalServiceUtil.getActivity(activityId);
     if ((activity.getType() == _ACTIVITY_KEY_ADD_COMMENT) || (activity.getType() == SocialActivityConstants.TYPE_ADD_COMMENT)) {
       activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(activity.getClassNameId(),activity.getClassPK(),activity.getType());
+      comment=true;
     }
  else     if (activity.getType() == _ACTIVITY_KEY_UPDATE_ENTRY) {
       activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(activity.getUserId(),activity.getClassNameId(),activity.getClassPK(),activity.getType());
     }
-    if ((activitySet != null) && !isExpired(activitySet)) {
+    if ((activitySet != null) && !isExpired(activitySet,comment)) {
       return activitySet.getActivitySetId();
     }
   }
