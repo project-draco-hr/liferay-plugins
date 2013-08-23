@@ -1,0 +1,32 @@
+{
+  if (type == _ACTIVITY_KEY_ADD_ENTRY) {
+    return StringPool.BLANK;
+  }
+  String userDisplayURL=StringPool.BLANK;
+  String userFullName=StringPool.BLANK;
+  String userPortraitURL=StringPool.BLANK;
+  MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(classPK);
+  if (microblogsEntry == null) {
+    return StringPool.BLANK;
+  }
+  User user=UserLocalServiceUtil.fetchUser(microblogsEntry.getUserId());
+  if (user != null) {
+    userDisplayURL=user.getDisplayURL(serviceContext.getThemeDisplay());
+    userFullName=user.getFullName();
+    userPortraitURL=user.getPortraitURL(serviceContext.getThemeDisplay());
+  }
+  StringBundler sb=new StringBundler(12);
+  sb.append("<div class=\"activity-body-container\">");
+  sb.append("<div class=\"activity-body\">");
+  sb.append("<div class=\"user-portrait\"><span class=\"avatar\">");
+  sb.append("<a href=\"");
+  sb.append(userDisplayURL);
+  sb.append("\"><img alt=\"");
+  sb.append(userFullName);
+  sb.append("\" src=");
+  sb.append(userPortraitURL);
+  sb.append("\"/></a></span></div>");
+  sb.append(MicroblogsUtil.getTaggedContent(microblogsEntry,serviceContext));
+  sb.append("</div></div>");
+  return sb.toString();
+}
