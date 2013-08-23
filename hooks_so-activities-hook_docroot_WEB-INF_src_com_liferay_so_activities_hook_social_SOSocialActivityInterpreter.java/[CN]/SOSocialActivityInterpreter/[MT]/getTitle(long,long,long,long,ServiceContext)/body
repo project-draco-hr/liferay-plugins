@@ -10,10 +10,25 @@
   sb.append(relativeTimeDescription);
   sb.append("</div><div class=\"activity-user-name\">");
   String userName=getUserName(userId,serviceContext);
+  int otherUsersCount=0;
+  if (activitySetId > 0) {
+    List<Long> userIds=getActivitySetUserIds(activitySetId);
+    otherUsersCount=userIds.size() - 1;
+  }
   if ((groupId != serviceContext.getScopeGroupId()) && (groupId > 0)) {
     String groupName=getGroupName(groupId,serviceContext);
-    Object[] userArguments=new Object[]{userName,groupName};
-    sb.append(serviceContext.translate("x-in-x",userArguments));
+    if (otherUsersCount > 0) {
+      Object[] userArguments=new Object[]{userName,otherUsersCount,groupName};
+      sb.append(serviceContext.translate("x-and-x-others-in-x",userArguments));
+    }
+ else {
+      Object[] userArguments=new Object[]{userName,groupName};
+      sb.append(serviceContext.translate("x-in-x",userArguments));
+    }
+  }
+ else   if (otherUsersCount > 0) {
+    Object userArguments=new Object[]{userName,otherUsersCount};
+    sb.append(serviceContext.translate("x-and-x-others",userArguments));
   }
  else {
     sb.append(userName);
