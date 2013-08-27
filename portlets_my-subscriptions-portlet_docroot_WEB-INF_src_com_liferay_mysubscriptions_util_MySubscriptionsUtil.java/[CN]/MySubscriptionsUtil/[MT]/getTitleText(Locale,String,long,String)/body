@@ -9,7 +9,7 @@
     BookmarksFolder bookmarksFolder=BookmarksFolderLocalServiceUtil.getBookmarksFolder(classPK);
     return bookmarksFolder.getName();
   }
- else   if (className.equals(KNOWLEDGE_BASE_MODEL_CLASSNAME)) {
+ else   if (className.equals(_KNOWLEDGE_BASE_MODEL_CLASSNAME)) {
     title="Knowledge Base Article at ";
   }
  else   if (className.equals(Layout.class.getName())) {
@@ -23,11 +23,9 @@
     WikiNode wikiNode=WikiNodeLocalServiceUtil.getWikiNode(classPK);
     return wikiNode.getName();
   }
-  try {
-    Group group=GroupLocalServiceUtil.getGroup(classPK);
+  Group group=GroupLocalServiceUtil.fetchGroup(classPK);
+  if (group != null) {
     title+=group.getDescriptiveName(locale);
-  }
- catch (  Exception e) {
   }
   if (Validator.isNull(title)) {
     title=String.valueOf(classPK);
