@@ -1,7 +1,7 @@
 {
   Join join=null;
-  int joinIncomingTransitions=fork.getOutgoingTransitionsCount();
   List<Node> targetNodes=new ArrayList<Node>();
+  Map<Join,Fork> joinForkMap=new HashMap<Join,Fork>();
   targetNodes.add(fork);
   for (  Transition transition : fork.getOutgoingTransitionsList()) {
     targetNodes.add(transition.getTargetNode());
@@ -11,10 +11,8 @@
     NodeType nodeType=targetNode.getNodeType();
     if (nodeType.equals(NodeType.FORK)) {
       Join localJoin=traverse((Fork)targetNode);
-      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,localJoin.getOutgoingTransitionsList());
-      if (unvisitedTargetNodes.size() > 1) {
-        joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
-      }
+      joinForkMap.put(localJoin,(Fork)targetNode);
+      List<Node> unvisitedTargetNodes=getUnvisitedNodes(targetNodes,localJoin.getOutgoingTransitionsList(),true);
       targetNodes.addAll(unvisitedTargetNodes);
     }
  else     if (nodeType.equals(NodeType.JOIN) || nodeType.equals(NodeType.JOIN_XOR)) {
@@ -26,18 +24,16 @@
       }
     }
  else {
-      List<Node> unvisitedTargetNodes=getUnvisitedTargetNodes(targetNodes,targetNode.getOutgoingTransitionsList());
-      if (unvisitedTargetNodes.size() > 1) {
-        joinIncomingTransitions+=unvisitedTargetNodes.size() - 1;
-      }
+      List<Node> unvisitedTargetNodes=getUnvisitedNodes(targetNodes,targetNode.getOutgoingTransitionsList(),true);
       targetNodes.addAll(unvisitedTargetNodes);
     }
   }
   if (join == null) {
     throw new WorkflowException("No matching join found for fork " + fork.getName());
   }
- else   if (join.getIncomingTransitionsCount() != joinIncomingTransitions) {
-    throw new WorkflowException("Incorrect number of incoming transitions for join " + join.getName());
+  List<Node> sourceNodes=reverseTraverse(fork,join,joinForkMap);
+  if ((sourceNodes.size() != targetNodes.size()) || !sourceNodes.containsAll(targetNodes)) {
+    throw new WorkflowException("There are errors between fork " + fork.getName() + " and join "+ join.getName());
   }
   return join;
 }
