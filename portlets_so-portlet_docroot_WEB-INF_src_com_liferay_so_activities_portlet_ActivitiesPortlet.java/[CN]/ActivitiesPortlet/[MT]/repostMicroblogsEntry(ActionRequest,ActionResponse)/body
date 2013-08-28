@@ -1,0 +1,7 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long microblogsEntryId=ParamUtil.getLong(actionRequest,"microblogsEntryId");
+  MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.getMicroblogsEntry(microblogsEntryId);
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(MicroblogsEntry.class.getName(),actionRequest);
+  MicroblogsEntryServiceUtil.addMicroblogsEntry(themeDisplay.getUserId(),microblogsEntry.getContent(),MicroblogsEntryConstants.TYPE_REPOST,microblogsEntry.getUserId(),microblogsEntry.getMicroblogsEntryId(),microblogsEntry.getSocialRelationType(),serviceContext);
+}
