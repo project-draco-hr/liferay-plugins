@@ -1,6 +1,6 @@
 {
   int responseCode=HttpServletResponse.SC_OK;
-  String deploymentContext=ParamUtil.getString(actionRequest,"deploymentContext");
+  String deploymentContext=ParamUtil.getString(uploadPortletRequest,"deploymentContext");
   try {
     String fileName=null;
     if (Validator.isNotNull(deploymentContext)) {
@@ -18,7 +18,7 @@
     options.setLocation(url);
     options.setPortletRequest(actionRequest);
     options.setPost(false);
-    String progressId=ParamUtil.getString(actionRequest,Constants.PROGRESS_ID);
+    String progressId=ParamUtil.getString(uploadPortletRequest,Constants.PROGRESS_ID);
     options.setProgressId(progressId);
     byte[] bytes=HttpUtil.URLtoByteArray(options);
     Http.Response response=options.getResponse();
