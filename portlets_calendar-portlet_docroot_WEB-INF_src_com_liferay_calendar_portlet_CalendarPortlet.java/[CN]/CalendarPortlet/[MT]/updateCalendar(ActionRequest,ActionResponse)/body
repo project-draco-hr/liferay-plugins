@@ -10,7 +10,10 @@
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Calendar.class.getName(),actionRequest);
   if (calendarId <= 0) {
     CalendarResource calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
-    CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
+    Calendar calendar=CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
+    String redirect=actionRequest.getParameter("redirect");
+    redirect=HttpUtil.addParameter(redirect,actionResponse.getNamespace() + "calendarId",calendar.getCalendarId());
+    actionRequest.setAttribute(WebKeys.REDIRECT,redirect);
   }
  else {
     CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
