@@ -1,6 +1,9 @@
 {
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   jsonObject.put("body",HtmlUtil.escape(body));
+  if ((userId <= 0) || (userId != themeDisplay.getUserId())) {
+    jsonObject.put("commentControlsClass","aui-helper-hidden");
+  }
   jsonObject.put("mbMessageIdOrMicroblogsEntryId",mbMessageIdOrMicroblogsEntryId);
   jsonObject.put("modifiedDate",Time.getRelativeTimeDescription(modifiedDate,themeDisplay.getLocale(),themeDisplay.getTimeZone()));
   User user=UserLocalServiceUtil.fetchUser(userId);
