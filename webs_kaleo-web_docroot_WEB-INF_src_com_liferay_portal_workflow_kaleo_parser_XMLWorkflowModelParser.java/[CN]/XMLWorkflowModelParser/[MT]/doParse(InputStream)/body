@@ -20,6 +20,11 @@
     Join join=parseJoin(joinElement);
     definition.addNode(join);
   }
+  List<Element> joinXorElements=rootElement.elements("join-xor");
+  for (  Element joinXorElement : joinXorElements) {
+    JoinXor joinXor=parseJoinXor(joinXorElement);
+    definition.addNode(joinXor);
+  }
   List<Element> stateElements=rootElement.elements("state");
   for (  Element stateElement : stateElements) {
     State state=parseState(stateElement);
@@ -30,6 +35,6 @@
     Task task=parseTask(taskElement);
     definition.addNode(task);
   }
-  parseTransitions(definition,conditionElements,forkElements,joinElements,stateElements,taskElements);
+  parseTransitions(definition,conditionElements,forkElements,joinElements,joinXorElements,stateElements,taskElements);
   return definition;
 }
