@@ -8,11 +8,17 @@
   boolean enableComments=ParamUtil.getBoolean(actionRequest,"enableComments");
   boolean enableRatings=ParamUtil.getBoolean(actionRequest,"enableRatings");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Calendar.class.getName(),actionRequest);
+  Calendar calendar=null;
   if (calendarId <= 0) {
     CalendarResource calendarResource=CalendarResourceServiceUtil.getCalendarResource(calendarResourceId);
-    CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
+    calendar=CalendarServiceUtil.addCalendar(calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
   }
  else {
-    CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
+    calendar=CalendarServiceUtil.updateCalendar(calendarId,nameMap,descriptionMap,color,defaultCalendar,enableComments,enableRatings,serviceContext);
+  }
+  boolean saveAndContinue=ParamUtil.getBoolean(actionRequest,"saveAndContinue");
+  if (saveAndContinue) {
+    String redirect=getEditCalendarURL(actionRequest,actionResponse,calendar);
+    actionRequest.setAttribute(WebKeys.REDIRECT,redirect);
   }
 }
