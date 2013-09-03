@@ -31,9 +31,6 @@
   if (join == null) {
     throw new WorkflowException("No matching join found for fork " + fork.getName());
   }
-  List<Node> sourceNodes=reverseTraverse(fork,join,joinForkMap);
-  if ((sourceNodes.size() != targetNodes.size()) || !sourceNodes.containsAll(targetNodes)) {
-    throw new WorkflowException("There are errors between fork " + fork.getName() + " and join "+ join.getName());
-  }
+  reverseTraverse(fork,join,targetNodes,joinForkMap);
   return join;
 }

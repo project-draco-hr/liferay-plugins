@@ -17,5 +17,7 @@
     List<Node> unvisitedSourceNodes=getUnvisitedNodes(sourceNodes,sourceNode.getIncomingTransitions(),false);
     sourceNodes.addAll(unvisitedSourceNodes);
   }
-  return sourceNodes;
+  if ((sourceNodes.size() != targetNodes.size()) || !sourceNodes.containsAll(targetNodes)) {
+    throw new WorkflowException("There are errors between fork " + fork.getName() + " and join "+ join.getName());
+  }
 }
