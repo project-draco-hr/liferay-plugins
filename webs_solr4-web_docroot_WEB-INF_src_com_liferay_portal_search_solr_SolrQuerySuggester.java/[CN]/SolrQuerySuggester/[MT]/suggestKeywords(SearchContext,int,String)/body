@@ -1,19 +1,19 @@
 {
   TreeSet<WeightedWord> suggestionsSet=suggestKeywords(searchContext,input);
   max=Math.min(max,suggestionsSet.size());
-  Iterator<WeightedWord> descendingIterator=suggestionsSet.descendingIterator();
   List<String> suggestionsList=new ArrayList<String>(max);
-  int counter=0;
-  while (descendingIterator.hasNext()) {
-    WeightedWord weightedWord=descendingIterator.next();
+  int count=0;
+  Iterator<WeightedWord> iterator=suggestionsSet.descendingIterator();
+  while (iterator.hasNext()) {
+    WeightedWord weightedWord=iterator.next();
     if (weightedWord.getWeight() != 0) {
       suggestionsList.add(weightedWord.getWord());
     }
  else {
       suggestionsList.add(input);
     }
-    counter++;
-    if (counter >= max) {
+    count++;
+    if (count >= max) {
       break;
     }
   }
