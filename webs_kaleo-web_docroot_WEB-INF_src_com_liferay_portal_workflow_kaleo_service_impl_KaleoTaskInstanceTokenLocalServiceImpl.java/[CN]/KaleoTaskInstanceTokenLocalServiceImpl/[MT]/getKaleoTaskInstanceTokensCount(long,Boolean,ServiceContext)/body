@@ -4,11 +4,9 @@
     DynamicQuery dynamicQuery=buildDynamicQuery(kaleoInstanceId,completed,serviceContext);
     return (int)dynamicQueryCount(dynamicQuery);
   }
- else {
-    KaleoTaskInstanceTokenQuery kaleoTaskInstanceTokenQuery=new KaleoTaskInstanceTokenQuery(serviceContext);
-    kaleoTaskInstanceTokenQuery.setAssigneeClassName(User.class.getName());
-    kaleoTaskInstanceTokenQuery.setAssigneeClassPK(serviceContext.getUserId());
-    kaleoTaskInstanceTokenQuery.setCompleted(completed);
-    return kaleoTaskInstanceTokenFinder.countKaleoTaskInstanceTokens(kaleoTaskInstanceTokenQuery);
-  }
+  KaleoTaskInstanceTokenQuery kaleoTaskInstanceTokenQuery=new KaleoTaskInstanceTokenQuery(serviceContext);
+  kaleoTaskInstanceTokenQuery.setAssigneeClassName(User.class.getName());
+  kaleoTaskInstanceTokenQuery.setAssigneeClassPK(serviceContext.getUserId());
+  kaleoTaskInstanceTokenQuery.setCompleted(completed);
+  return kaleoTaskInstanceTokenFinder.countKaleoTaskInstanceTokens(kaleoTaskInstanceTokenQuery);
 }
