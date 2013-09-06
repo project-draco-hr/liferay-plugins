@@ -4,9 +4,16 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   String className=activitySet.getClassName();
   long classPK=activitySet.getClassPK();
-  if ((activitySet.getActivityCount() > 1) && className.equals(DLFileEntry.class.getName())) {
-    className=SocialActivitySet.class.getName();
-    classPK=activitySet.getActivitySetId();
+  if (className.equals(DLFileEntry.class.getName())) {
+    if ((activitySet.getActivityCount() > 1) && (activitySet.getType() == SocialActivityKeyConstants.DL_ADD_FILE_ENTRY)) {
+      className=SocialActivitySet.class.getName();
+      classPK=activitySet.getActivitySetId();
+    }
+ else {
+      className=DLFileVersion.class.getName();
+      DLFileVersion dlFileVersion=DLFileVersionLocalServiceUtil.getLatestFileVersion(classPK,false);
+      classPK=dlFileVersion.getFileVersionId();
+    }
   }
   MBMessageDisplay mbMessageDisplay=MBMessageLocalServiceUtil.getDiscussionMessageDisplay(themeDisplay.getUserId(),activitySet.getGroupId(),className,classPK,WorkflowConstants.STATUS_APPROVED);
   MBTreeWalker mbTeeWalker=mbMessageDisplay.getTreeWalker();
