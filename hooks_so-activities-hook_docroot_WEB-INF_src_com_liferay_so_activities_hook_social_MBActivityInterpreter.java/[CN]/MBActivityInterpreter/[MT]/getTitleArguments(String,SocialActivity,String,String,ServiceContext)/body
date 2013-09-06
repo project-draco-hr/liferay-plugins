@@ -8,14 +8,14 @@
   String categoryURL=sb.toString();
   String categoryName=message.getCategory().getName();
   String categoryLink=wrapLink(categoryURL,categoryName);
-  if ((activity.getType() == _ACTIVITY_KEY_REPLY_MESSAGE) || (activity.getReceiverUserId() > 0)) {
+  if ((activity.getType() == SocialActivityKeyConstants.MB_REPLY_MESSAGE) || (activity.getReceiverUserId() > 0)) {
     String receiverUserName=getUserName(activity.getReceiverUserId(),serviceContext);
     if (message.getCategoryId() > 0) {
       return new Object[]{receiverUserName,categoryLink};
     }
     return new Object[]{receiverUserName};
   }
- else   if (activity.getType() == _ACTIVITY_KEY_ADD_MESSAGE) {
+ else   if (activity.getType() == SocialActivityKeyConstants.MB_ADD_MESSAGE) {
     if (message.getCategoryId() > 0) {
       return new Object[]{categoryLink};
     }

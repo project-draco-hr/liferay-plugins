@@ -6,7 +6,7 @@
   long activitySetId=getActivitySetId(activityId);
   if (activitySetId > 0) {
     SocialActivitySetLocalServiceUtil.incrementActivityCount(activitySetId,activityId);
-    if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+    if (activity.getType() == SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
       SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(activitySetId);
       WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.fetchWikiPageResource(activity.getClassPK());
       WikiPage wikiPage=WikiPageLocalServiceUtil.getPage(pageResource.getResourcePrimKey());
@@ -25,7 +25,7 @@
   }
  else {
     SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.addActivitySet(activityId);
-    if (activity.getType() == _ACTIVITY_KEY_UPDATE_PAGE) {
+    if (activity.getType() == SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
       WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.fetchWikiPageResource(activity.getClassPK());
       WikiPage wikiPage=WikiPageLocalServiceUtil.getPage(pageResource.getResourcePrimKey());
       JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
