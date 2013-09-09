@@ -20,8 +20,10 @@
         }
       }
  else {
-        long[] userIds=UserLocalServiceUtil.getRoleUserIds(kaleoTaskAssignment.getAssigneeClassPK());
-        pooledActors.addAll(userIds);
+        List<User> inheritedRoleUsers=UserLocalServiceUtil.getInheritedRoleUsers(kaleoTaskAssignment.getAssigneeClassPK(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+        for (        User user : inheritedRoleUsers) {
+          pooledActors.add(user.getUserId());
+        }
       }
     }
     return pooledActors.getArray();
