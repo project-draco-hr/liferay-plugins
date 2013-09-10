@@ -1,6 +1,14 @@
 {
-  String title=getPageTitle(activity.getClassName(),activity.getClassPK(),serviceContext);
-  AssetRenderer assetRenderer=getAssetRenderer(activity.getClassName(),activity.getClassPK());
-  String body=StringUtil.shorten(HtmlUtil.escape(assetRenderer.getSearchSummary(serviceContext.getLocale())),200);
+  String className=activity.getClassName();
+  String title=getPageTitle(className,activity.getClassPK(),serviceContext);
+  AssetRenderer assetRenderer=getAssetRenderer(className,activity.getClassPK());
+  String body=assetRenderer.getSummary(serviceContext.getLocale());
+  if (className.equals(MBMessage.class.getName())) {
+    MBMessage mbMessage=MBMessageLocalServiceUtil.getMBMessage(activity.getClassPK());
+    if (mbMessage.isFormatBBCode()) {
+      body=HtmlUtil.extractText(BBCodeTranslatorUtil.getHTML(mbMessage.getBody()));
+    }
+  }
+  body=StringUtil.shorten(HtmlUtil.escape(body),200);
   return new SocialActivityFeedEntry(title,body);
 }
