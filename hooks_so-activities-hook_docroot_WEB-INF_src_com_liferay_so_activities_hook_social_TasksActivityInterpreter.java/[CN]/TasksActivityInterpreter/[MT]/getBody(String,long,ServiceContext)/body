@@ -9,10 +9,18 @@
   sb.append("<span class=\"tasks-entry-status\"><strong>");
   sb.append(serviceContext.translate("assigned-to"));
   sb.append(": </strong>");
-  User assigneeUser=UserLocalServiceUtil.fetchUser(tasksEntry.getAssigneeUserId());
-  String assigneeDisplayURL=assigneeUser.getDisplayURL(serviceContext.getThemeDisplay());
-  String assigneeUserLink=wrapLink(assigneeDisplayURL,HtmlUtil.escape(tasksEntry.getAssigneeFullName()));
-  sb.append(assigneeUserLink);
+  if (tasksEntry.getAssigneeUserId() > 0) {
+    String assigneeDisplayURL=null;
+    User assigneeUser=UserLocalServiceUtil.fetchUser(tasksEntry.getAssigneeUserId());
+    if (assigneeUser != null) {
+      assigneeDisplayURL=assigneeUser.getDisplayURL(serviceContext.getThemeDisplay());
+    }
+    String assigneeUserLink=wrapLink(assigneeDisplayURL,HtmlUtil.escape(tasksEntry.getAssigneeFullName()));
+    sb.append(assigneeUserLink);
+  }
+ else {
+    sb.append(serviceContext.translate("unassigned"));
+  }
   sb.append("</span><span class=\"tasks-entry-due-date\"><strong>");
   sb.append(serviceContext.translate("due-date"));
   sb.append(": </strong>");
