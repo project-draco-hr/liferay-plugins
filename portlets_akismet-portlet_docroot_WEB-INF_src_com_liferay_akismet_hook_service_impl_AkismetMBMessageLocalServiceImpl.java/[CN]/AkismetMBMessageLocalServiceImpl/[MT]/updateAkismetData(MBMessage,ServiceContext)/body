@@ -5,7 +5,7 @@
   String permalink=getPermalink(message,serviceContext);
   Map<String,String> headers=serviceContext.getHeaders();
   String referrer=headers.get("referer");
-  String userAgent=headers.get(HttpHeaders.USER_AGENT.toLowerCase());
+  String userAgent=headers.get(StringUtil.toLowerCase(HttpHeaders.USER_AGENT));
   String userIP=serviceContext.getRemoteAddr();
   return AkismetDataLocalServiceUtil.updateAkismetData(MBMessage.class.getName(),message.getMessageId(),AkismetConstants.TYPE_COMMENT,permalink,referrer,userAgent,userIP,StringPool.BLANK);
 }

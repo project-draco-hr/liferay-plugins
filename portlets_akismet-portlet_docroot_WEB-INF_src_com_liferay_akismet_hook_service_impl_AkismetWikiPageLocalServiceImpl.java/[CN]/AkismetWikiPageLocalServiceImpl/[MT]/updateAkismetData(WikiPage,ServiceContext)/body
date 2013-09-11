@@ -5,7 +5,7 @@
   String permalink=getPermalink(page,serviceContext);
   Map<String,String> headers=serviceContext.getHeaders();
   String referrer=headers.get("referer");
-  String userAgent=headers.get(HttpHeaders.USER_AGENT.toLowerCase());
+  String userAgent=headers.get(StringUtil.toLowerCase(HttpHeaders.USER_AGENT));
   String userIP=serviceContext.getRemoteAddr();
   return AkismetDataLocalServiceUtil.updateAkismetData(WikiPage.class.getName(),page.getPageId(),AkismetConstants.TYPE_WIKI,permalink,referrer,userAgent,userIP,StringPool.BLANK);
 }

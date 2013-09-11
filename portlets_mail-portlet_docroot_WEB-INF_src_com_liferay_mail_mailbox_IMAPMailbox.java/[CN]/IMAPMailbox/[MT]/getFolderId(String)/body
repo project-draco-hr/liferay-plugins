@@ -2,13 +2,13 @@
   Locale[] locales=LanguageUtil.getAvailableLocales();
   List<String> words=new ArrayList<String>();
   for (  Locale locale : locales) {
-    String translation=LanguageUtil.get(locale,type).toLowerCase();
+    String translation=StringUtil.toLowerCase(LanguageUtil.get(locale,type));
     words.addAll(ListUtil.toList(translation.split(StringPool.SPACE)));
   }
   List<Folder> folders=FolderLocalServiceUtil.getFolders(account.getAccountId());
   for (  String word : words) {
     for (    Folder folder : folders) {
-      String folderName=folder.getDisplayName().toLowerCase();
+      String folderName=StringUtil.toLowerCase(folder.getDisplayName());
       if (folderName.contains(word)) {
         return folder.getFolderId();
       }
