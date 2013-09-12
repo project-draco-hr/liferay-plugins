@@ -1,14 +1,7 @@
 {
-  boolean strict=PortletPreferencesThreadLocal.isStrict();
-  try {
-    PortletPreferencesThreadLocal.setStrict(false);
-    InstanceUtil.initRuntime(companyId);
-    if (InstanceUtil.isInitialized(companyId)) {
-      return;
-    }
-    InstanceUtil.initInstance(companyId);
+  InstanceUtil.initRuntime(companyId);
+  if (InstanceUtil.isInitialized(companyId)) {
+    return;
   }
-  finally {
-    PortletPreferencesThreadLocal.setStrict(strict);
-  }
+  InstanceUtil.initInstance(companyId);
 }
