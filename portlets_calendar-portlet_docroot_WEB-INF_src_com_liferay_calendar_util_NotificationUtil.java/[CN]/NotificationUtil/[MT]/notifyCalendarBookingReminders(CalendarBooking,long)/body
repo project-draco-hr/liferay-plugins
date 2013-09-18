@@ -7,11 +7,11 @@
       return;
     }
     NotificationType notificationType=null;
-    long diff=(startTime - nowTime) / _CHECK_INTERVAL;
-    if (diff == (calendarBooking.getFirstReminder() / _CHECK_INTERVAL)) {
+    long timeToEvent=startTime - nowTime;
+    if (_isInCheckInterval(timeToEvent,calendarBooking.getFirstReminder())) {
       notificationType=calendarBooking.getFirstReminderNotificationType();
     }
- else     if (diff == (calendarBooking.getSecondReminder() / _CHECK_INTERVAL)) {
+ else     if (_isInCheckInterval(timeToEvent,calendarBooking.getSecondReminder())) {
       notificationType=calendarBooking.getSecondReminderNotificationType();
     }
     if (notificationType == null) {
