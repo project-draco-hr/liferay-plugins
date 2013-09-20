@@ -4,6 +4,9 @@
   }
   SocialActivity socialActivity=SocialActivityLocalServiceUtil.fetchSocialActivity(activity.getActivityId());
   SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(socialActivity.getActivitySetId());
+  if (Validator.isNull(activitySet.getExtraData())) {
+    return null;
+  }
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
   String sourceVersion=extraDataJSONObject.getString("sourceVersion");
   String targetVersion=extraDataJSONObject.getString("targetVersion");

@@ -2,6 +2,9 @@
   if (activitySet.getType() != SocialActivityKeyConstants.WIKI_UPDATE_PAGE) {
     return null;
   }
+  if (Validator.isNull(activitySet.getExtraData())) {
+    return null;
+  }
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
   String sourceVersion=extraDataJSONObject.getString("sourceVersion");
   String targetVersion=extraDataJSONObject.getString("targetVersion");
