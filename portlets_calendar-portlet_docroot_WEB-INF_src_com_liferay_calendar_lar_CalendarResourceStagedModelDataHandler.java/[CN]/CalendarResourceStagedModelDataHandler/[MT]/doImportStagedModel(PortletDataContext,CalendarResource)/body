@@ -4,7 +4,7 @@
   for (  Element calendarElement : calendarElements) {
     StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarElement);
   }
-  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResource,CalendarPortletDataHandler.NAMESPACE);
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResource);
   long classPK=getClassPK(portletDataContext,calendarResource,userId);
   CalendarResource importedCalendarResource=null;
   if (portletDataContext.isDataStrategyMirror()) {
@@ -24,5 +24,5 @@
     importedCalendarResource=CalendarResourceLocalServiceUtil.addCalendarResource(userId,portletDataContext.getScopeGroupId(),calendarResource.getClassNameId(),classPK,calendarResource.getClassUuid(),calendarResource.getCode(),calendarResource.getNameMap(),calendarResource.getDescriptionMap(),calendarResource.isActive(),serviceContext);
   }
   updateCalendars(portletDataContext,calendarResource,importedCalendarResource);
-  portletDataContext.importClassedModel(calendarResource,importedCalendarResource,CalendarPortletDataHandler.NAMESPACE);
+  portletDataContext.importClassedModel(calendarResource,importedCalendarResource);
 }

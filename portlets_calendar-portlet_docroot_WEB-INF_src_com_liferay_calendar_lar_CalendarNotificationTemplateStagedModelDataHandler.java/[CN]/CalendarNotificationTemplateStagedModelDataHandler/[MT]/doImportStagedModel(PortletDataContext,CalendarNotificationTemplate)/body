@@ -7,7 +7,7 @@
   long calendarId=MapUtil.getLong(calendarIds,calendarNotificationTemplate.getCalendarId(),calendarNotificationTemplate.getCalendarId());
   NotificationType notificationType=NotificationType.parse(calendarNotificationTemplate.getNotificationType());
   NotificationTemplateType notificationTemplateType=NotificationTemplateType.parse(calendarNotificationTemplate.getNotificationTemplateType());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarNotificationTemplate,CalendarPortletDataHandler.NAMESPACE);
+  ServiceContext serviceContext=portletDataContext.createServiceContext(calendarNotificationTemplate);
   CalendarNotificationTemplate importedCalendarNotificationTemplate=null;
   if (portletDataContext.isDataStrategyMirror()) {
     CalendarNotificationTemplate existingCalendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplateByUuidAndGroupId(calendarNotificationTemplate.getUuid(),portletDataContext.getScopeGroupId());
@@ -22,5 +22,5 @@
  else {
     importedCalendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.addCalendarNotificationTemplate(userId,calendarId,notificationType,calendarNotificationTemplate.getNotificationTypeSettings(),notificationTemplateType,calendarNotificationTemplate.getSubject(),calendarNotificationTemplate.getBody(),serviceContext);
   }
-  portletDataContext.importClassedModel(calendarNotificationTemplate,importedCalendarNotificationTemplate,CalendarPortletDataHandler.NAMESPACE);
+  portletDataContext.importClassedModel(calendarNotificationTemplate,importedCalendarNotificationTemplate);
 }
