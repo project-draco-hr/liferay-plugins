@@ -12,8 +12,7 @@
  catch (  Exception e) {
     if (e instanceof NoSuchArticleException || e instanceof PrincipalException) {
       SessionErrors.add(renderRequest,e.getClass());
-      LiferayPortletConfig liferayPortletConfig=(LiferayPortletConfig)getPortletConfig();
-      SessionMessages.add(renderRequest,liferayPortletConfig.getPortletId() + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
+      SessionMessages.add(renderRequest,PortalUtil.getPortletId(renderRequest) + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
     }
  else {
       throw new PortletException(e);
