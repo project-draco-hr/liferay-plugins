@@ -4,6 +4,9 @@
     String userIdString=userId.getUserId(securityToken);
     long userIdLong=GetterUtil.getLong(userIdString);
     User user=UserLocalServiceUtil.getUserById(userIdLong);
+    if (!ShindigUtil.isValidUser(user)) {
+      continue;
+    }
     List<Folder> folders=new ArrayList<Folder>();
     GroupId.Type groupIdType=groupId.getType();
     if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {

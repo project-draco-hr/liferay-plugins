@@ -3,6 +3,9 @@
   for (  UserId userId : userIds) {
     long userIdLong=GetterUtil.getLong(userId.getUserId(securityToken));
     User user=UserLocalServiceUtil.getUserById(userIdLong);
+    if (!ShindigUtil.isValidUser(user)) {
+      continue;
+    }
     List<FileEntry> fileEntries=new ArrayList<FileEntry>();
     GroupId.Type groupIdType=groupId.getType();
     if (groupIdType.equals(GroupId.Type.all) || groupIdType.equals(GroupId.Type.friends) || groupIdType.equals(GroupId.Type.groupId)) {

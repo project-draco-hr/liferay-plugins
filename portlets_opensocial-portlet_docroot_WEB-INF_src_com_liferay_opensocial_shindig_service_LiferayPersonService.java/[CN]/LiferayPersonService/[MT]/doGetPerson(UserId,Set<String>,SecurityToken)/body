@@ -8,6 +8,9 @@
  else {
     long userIdLong=GetterUtil.getLong(userIdString);
     User user=UserLocalServiceUtil.getUserById(userIdLong);
+    if (!ShindigUtil.isValidUser(user)) {
+      return null;
+    }
     person=getUserPerson(user,fields,securityToken);
   }
   return person;
