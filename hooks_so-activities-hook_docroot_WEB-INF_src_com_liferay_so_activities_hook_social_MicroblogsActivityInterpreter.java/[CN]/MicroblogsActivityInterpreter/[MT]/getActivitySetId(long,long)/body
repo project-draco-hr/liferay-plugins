@@ -3,11 +3,7 @@
     SocialActivitySet activitySet=null;
     SocialActivity activity=SocialActivityLocalServiceUtil.getActivity(activityId);
     if (activity.getType() == SocialActivityKeyConstants.MICROBLOGS_REPLY_ENTRY) {
-      MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(activity.getClassPK());
-      if (microblogsEntry == null) {
-        return 0;
-      }
-      activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(activity.getClassNameId(),microblogsEntry.getReceiverMicroblogsEntryId(),activity.getType());
+      activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(activity.getClassNameId(),receiverMicroblogsEntryId,activity.getType());
     }
     if ((activitySet != null) && !isExpired(activitySet,true)) {
       return activitySet.getActivitySetId();

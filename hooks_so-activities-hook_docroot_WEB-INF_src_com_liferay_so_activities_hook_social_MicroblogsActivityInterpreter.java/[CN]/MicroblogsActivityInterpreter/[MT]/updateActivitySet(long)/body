@@ -3,18 +3,16 @@
   if ((activity == null) || (activity.getActivitySetId() > 0)) {
     return;
   }
-  long activitySetId=getActivitySetId(activityId);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activity.getExtraData());
+  long receiverMicroblogsEntryId=extraDataJSONObject.getLong("receiverMicroblogsEntryId");
+  long activitySetId=getActivitySetId(activityId,receiverMicroblogsEntryId);
   if (activitySetId > 0) {
     SocialActivitySetLocalServiceUtil.incrementActivityCount(activitySetId,activityId);
   }
  else {
     SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.addActivitySet(activityId);
     if (activity.getType() == SocialActivityKeyConstants.MICROBLOGS_REPLY_ENTRY) {
-      MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(activity.getClassPK());
-      if (microblogsEntry == null) {
-        return;
-      }
-      activitySet.setClassPK(microblogsEntry.getReceiverMicroblogsEntryId());
+      activitySet.setClassPK(receiverMicroblogsEntryId);
       SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
     }
   }
