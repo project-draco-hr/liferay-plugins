@@ -1,0 +1,30 @@
+{
+  if (_bundledApps != null) {
+    return _bundledApps;
+  }
+  Map<String,String> bundledApps=new HashMap<String,String>();
+  List<PluginPackage> pluginPackages=DeployManagerUtil.getInstalledPluginPackages();
+  for (  PluginPackage pluginPackage : pluginPackages) {
+    ServletContext servletContext=ServletContextPool.get(pluginPackage.getContext());
+    InputStream inputStream=null;
+    try {
+      inputStream=servletContext.getResourceAsStream("/WEB-INF/liferay-releng.md5");
+      System.out.println(String.valueOf(inputStream));
+      if (inputStream == null) {
+        continue;
+      }
+      String relengHash=StringUtil.read(inputStream);
+      if (Validator.isNotNull(relengHash)) {
+        bundledApps.put(pluginPackage.getContext(),relengHash);
+      }
+    }
+ catch (    Exception e) {
+      _log.warn("Unable to read plugin package hash for " + pluginPackage.getContext());
+    }
+ finally {
+      StreamUtil.cleanUp(inputStream);
+    }
+  }
+  _bundledApps=bundledApps;
+  return _bundledApps;
+}
