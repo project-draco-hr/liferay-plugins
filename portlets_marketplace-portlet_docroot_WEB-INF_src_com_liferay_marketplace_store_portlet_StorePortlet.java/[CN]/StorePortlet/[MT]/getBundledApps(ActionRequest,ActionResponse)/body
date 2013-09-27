@@ -1,7 +1,5 @@
 {
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  jsonObject.put("cmd","getBundledApps");
-  jsonObject.put("message","success");
   Map<String,String> bundledApps=AppLocalServiceUtil.getBundledApps();
   JSONObject bundledAppJsonObject=JSONFactoryUtil.createJSONObject();
   Set<String> keys=bundledApps.keySet();
@@ -9,5 +7,7 @@
     bundledAppJsonObject.put(key,bundledApps.get(key));
   }
   jsonObject.put("bundledApps",bundledAppJsonObject);
+  jsonObject.put("cmd","getBundledApps");
+  jsonObject.put("message","success");
   writeJSON(actionRequest,actionResponse,jsonObject);
 }
