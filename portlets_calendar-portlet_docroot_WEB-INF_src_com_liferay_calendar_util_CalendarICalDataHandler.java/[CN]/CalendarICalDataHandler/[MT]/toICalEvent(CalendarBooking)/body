@@ -3,19 +3,13 @@
   PropertyList propertyList=vEvent.getProperties();
   Uid uid=new Uid(calendarBooking.getUuid());
   propertyList.add(uid);
-  boolean multipleDayEvent=false;
-  if (calendarBooking.getDuration() > Time.DAY) {
-    multipleDayEvent=true;
-  }
   if (calendarBooking.isAllDay()) {
     DtStart dtStart=new DtStart(new Date(calendarBooking.getStartTime()));
     propertyList.add(dtStart);
-    if (calendarBooking.getDuration() > Time.DAY) {
-      java.util.Calendar endJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getEndTime());
-      endJCalendar.add(java.util.Calendar.DAY_OF_MONTH,1);
-      DtEnd dtEnd=new DtEnd(new Date(endJCalendar.getTime()));
-      propertyList.add(dtEnd);
-    }
+    java.util.Calendar endJCalendar=JCalendarUtil.getJCalendar(calendarBooking.getEndTime());
+    endJCalendar.add(java.util.Calendar.DAY_OF_MONTH,1);
+    DtEnd dtEnd=new DtEnd(new Date(endJCalendar.getTime()));
+    propertyList.add(dtEnd);
   }
  else {
     DtStart dtStart=new DtStart(toICalDateTime(calendarBooking.getStartTime()));
