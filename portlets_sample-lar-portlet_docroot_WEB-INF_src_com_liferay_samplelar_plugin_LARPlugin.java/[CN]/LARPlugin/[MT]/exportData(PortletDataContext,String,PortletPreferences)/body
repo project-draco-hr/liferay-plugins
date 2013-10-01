@@ -1,6 +1,6 @@
 {
-  Map parameterMap=context.getParameterMap();
-  boolean exportData=MapUtil.getBoolean(parameterMap,"export-sample-lar-portlet-data",_enableExport.getDefaultState());
+  Map parameterMap=portletDataContext.getParameterMap();
+  boolean exportData=portletDataContext.getBooleanParameter(_NAMESPACE,"export-sample-lar-portlet-data");
   if (_log.isDebugEnabled()) {
     if (exportData) {
       _log.debug("Exporting data is enabled");
@@ -20,16 +20,16 @@
     preferences.setValue("last-export-date",String.valueOf(exportDate));
     preferences.store();
     String data="<data-file />";
-    ZipWriter zipWriter=context.getZipWriter();
+    ZipWriter zipWriter=portletDataContext.getZipWriter();
     if (zipWriter != null) {
-      boolean createReadMe=MapUtil.getBoolean(parameterMap,"create-readme",_createReadme.getDefaultState());
+      boolean createReadMe=portletDataContext.getBooleanParameter(_NAMESPACE,"create-readme");
       if (createReadMe) {
         if (_log.isInfoEnabled()) {
           _log.info("Writing to zip");
         }
         zipWriter.addEntry(portletId + "/README.txt","Test writing to zip.");
       }
-      String dataType=MapUtil.getString(parameterMap,"data-type",_dataType.getDefaultChoice());
+      String dataType=MapUtil.getString(parameterMap,"data-type","xml");
       if (Validator.equals(dataType,"csv")) {
         StringBuilder csv=new StringBuilder();
         csv.append("data 1," + new Date() + "\n");

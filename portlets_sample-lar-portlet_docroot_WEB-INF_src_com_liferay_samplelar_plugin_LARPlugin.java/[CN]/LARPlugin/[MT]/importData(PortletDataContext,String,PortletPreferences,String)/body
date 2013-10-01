@@ -1,6 +1,5 @@
 {
-  Map parameterMap=context.getParameterMap();
-  boolean importData=MapUtil.getBoolean(parameterMap,"import-sample-lar-portlet-data",_enableImport.getDefaultState());
+  boolean importData=portletDataContext.getBooleanParameter(_NAMESPACE,"import-sample-lar-portlet-data");
   if (_log.isDebugEnabled()) {
     if (importData) {
       _log.debug("Importing data is enabled");
@@ -18,7 +17,7 @@
     if (_log.isInfoEnabled()) {
       _log.info("Importing data " + data);
     }
-    ZipReader zipReader=context.getZipReader();
+    ZipReader zipReader=portletDataContext.getZipReader();
     if (zipReader != null) {
       _log.info("From README file:\n\n" + zipReader.getEntryAsString(portletId + "/README.txt"));
     }
