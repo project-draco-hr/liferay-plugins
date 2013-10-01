@@ -2,10 +2,9 @@
   portletDataContext.addPortletPermissions(RESOURCE_NAME);
   long recordSetId=GetterUtil.getLong(portletPreferences.getValue("recordSetId",null));
   if (recordSetId == 0) {
-    return StringPool.BLANK;
+    return portletPreferences;
   }
   DDLRecordSet recordSet=DDLRecordSetLocalServiceUtil.getRecordSet(recordSetId);
-  StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,recordSet);
-  Element rootElement=addExportDataRootElement(portletDataContext);
-  return getExportDataRootElementString(rootElement);
+  StagedModelDataHandlerUtil.exportReferenceStagedModel(portletDataContext,portletId,recordSet);
+  return portletPreferences;
 }
