@@ -5,9 +5,17 @@
     return calendarResource;
   }
   User user=UserLocalServiceUtil.getUser(userId);
-  Group userGroup=GroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(),userId);
+  Group userGroup=null;
+  String userName=user.getFullName();
+  if (user.isDefaultUser()) {
+    userGroup=GroupLocalServiceUtil.getGroup(serviceContext.getCompanyId(),GroupConstants.GUEST);
+    userName=GroupConstants.GUEST;
+  }
+ else {
+    userGroup=GroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(),userId);
+  }
   Map<Locale,String> nameMap=new HashMap<Locale,String>();
-  nameMap.put(LocaleUtil.getDefault(),user.getFullName());
+  nameMap.put(LocaleUtil.getDefault(),userName);
   Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
   return CalendarResourceLocalServiceUtil.addCalendarResource(userId,userGroup.getGroupId(),PortalUtil.getClassNameId(User.class),userId,null,null,nameMap,descriptionMap,true,serviceContext);
 }
