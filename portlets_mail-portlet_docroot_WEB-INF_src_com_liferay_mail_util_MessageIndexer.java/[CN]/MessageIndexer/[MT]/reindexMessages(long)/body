@@ -1,15 +1,13 @@
 {
-  Collection<Document> documents=new ArrayList<Document>();
   ActionableDynamicQuery actionableDynamicQuery=new MessageActionableDynamicQuery(){
     @Override protected void performAction(    Object object) throws PortalException {
       Message message=(Message)object;
       Document document=getDocument(message);
-      getDocuments().add(document);
+      addDocument(document);
     }
   }
 ;
   actionableDynamicQuery.setCompanyId(companyId);
-  actionableDynamicQuery.setDocuments(documents);
   actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
   actionableDynamicQuery.performActions();
 }

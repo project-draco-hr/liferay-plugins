@@ -1,5 +1,4 @@
 {
-  Collection<Document> documents=new ArrayList<Document>();
   ActionableDynamicQuery actionableDynamicQuery=new KBArticleActionableDynamicQuery(){
     @Override protected void addCriteria(    DynamicQuery dynamicQuery){
       Property property=PropertyFactoryUtil.forName("status");
@@ -8,12 +7,11 @@
     @Override protected void performAction(    Object object) throws PortalException {
       KBArticle kbArticle=(KBArticle)object;
       Document document=getDocument(kbArticle);
-      getDocuments().add(document);
+      addDocument(document);
     }
   }
 ;
   actionableDynamicQuery.setCompanyId(companyId);
-  actionableDynamicQuery.setDocuments(documents);
   actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
   actionableDynamicQuery.performActions();
 }
