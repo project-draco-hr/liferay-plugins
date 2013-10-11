@@ -15,6 +15,9 @@
     if (previousVersionWikiPage != null) {
       previousContent=previousVersionWikiPage.getContent();
     }
+    wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
+    wikiPage.setSummary(StringPool.BLANK);
+    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
     if ((latestContent != null) && ((previousContent == null) || latestContent.equals(previousContent))) {
       ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
       WikiPageLocalServiceUtil.revertPage(themeDisplay.getUserId(),wikiPage.getNodeId(),wikiPage.getTitle(),wikiPage.getVersion(),serviceContext);
@@ -35,9 +38,6 @@
       sb.append("</a>");
       wikiPageLinks.add(sb.toString());
     }
-    wikiPage.setStatus(WorkflowConstants.STATUS_APPROVED);
-    wikiPage.setSummary(StringPool.BLANK);
-    wikiPage=WikiPageLocalServiceUtil.updateWikiPage(wikiPage);
     if (AkismetUtil.isWikiEnabled(wikiPage.getCompanyId())) {
       AkismetUtil.submitHam(wikiPage);
     }
