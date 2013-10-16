@@ -4,9 +4,9 @@ synchronized (this.clients) {
       for (      WebRTCClient otherClient : client.getConnectedWebRTCClients()) {
         WebRTCConnection conn=client.getWebRTCConnection(otherClient);
         if (conn.getState() == WebRTCConnection.State.INITIATED) {
-          if (conn.getInitatedTsMs() > WebRTCManager.CONNECTION_TIMEOUT_MS) {
+          if (conn.getDurationTime() > WebRTCManager.CONNECTION_TIMEOUT_MS) {
             assert(otherClient.isAlreadyConnected(client));
-            client.removeBilateralWebRTCConnection(otherClient);
+            client.removeWebRTCConnections(otherClient);
             WebRTCManager.notifyClientLostConnection(client,otherClient,"timeout");
             WebRTCManager.notifyClientLostConnection(otherClient,client,"timeout");
           }

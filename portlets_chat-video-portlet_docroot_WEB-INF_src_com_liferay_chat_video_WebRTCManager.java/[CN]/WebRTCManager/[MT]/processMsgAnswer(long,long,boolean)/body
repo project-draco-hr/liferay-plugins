@@ -14,7 +14,7 @@ synchronized (this.clients) {
       fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
       return;
     }
-    if (fromClient.getWebRTCConnection(toClient).getCaller() == fromClient) {
+    if (fromClient.getWebRTCConnection(toClient).getWebRTCClient() == fromClient) {
       fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"cannot_answer\"}"));
       return;
     }
@@ -23,7 +23,7 @@ synchronized (this.clients) {
       conn.setState(WebRTCConnection.State.CONNECTED);
     }
  else {
-      fromClient.removeBilateralWebRTCConnection(toClient);
+      fromClient.removeWebRTCConnections(toClient);
     }
     String acceptJsonBool=acceptAnswer ? "true" : "false";
     toClient.getMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"answer\", \"accept\": " + acceptJsonBool + "}"));
