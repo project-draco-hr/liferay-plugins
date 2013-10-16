@@ -1,0 +1,14 @@
+{
+  WebRTCClient client=this.getClientUnsafe(userId);
+  if (client == null) {
+    return;
+  }
+  Set<WebRTCClient> connectedClients=client.getConnectedClients();
+  for (  WebRTCClient cc : connectedClients) {
+    if (client.getConnection(cc).getState() != WebRTCConnection.State.DISCONNECTED) {
+      WebRTCManager.notifyClientLostConnection(cc,client,"reset");
+    }
+  }
+  client.reset();
+  client.updatePresence();
+}

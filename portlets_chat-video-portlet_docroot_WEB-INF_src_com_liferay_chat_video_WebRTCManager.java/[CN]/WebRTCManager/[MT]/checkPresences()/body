@@ -1,0 +1,14 @@
+{
+  long currentTimeMs=System.currentTimeMillis();
+synchronized (this.clients) {
+    Set<Long> presUserIds=this.clients.keySet();
+    for (    long userId : presUserIds) {
+      long tsMs=this.getClientUnsafe(userId).getTs();
+      long diff=currentTimeMs - tsMs;
+      if (diff > WebRTCManager.PRESENCE_TIMEOUT_MS) {
+        this.resetUserUnsafe(userId);
+        this.removeClient(userId);
+      }
+    }
+  }
+}

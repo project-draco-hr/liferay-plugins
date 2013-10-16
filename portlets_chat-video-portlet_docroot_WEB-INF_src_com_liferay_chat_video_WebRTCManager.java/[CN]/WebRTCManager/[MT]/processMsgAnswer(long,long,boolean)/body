@@ -1,0 +1,31 @@
+{
+synchronized (this.clients) {
+    this.addNonExistingClient(fromUserId);
+    WebRTCClient fromClient=this.getClientUnsafe(fromUserId);
+    if (!this.clientIsAvailable(fromUserId)) {
+      return;
+    }
+    if (!this.clientIsAvailable(toUserId)) {
+      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
+      return;
+    }
+    WebRTCClient toClient=this.getClientUnsafe(toUserId);
+    if (!WebRTCManager.validateConnectionState(fromClient,toClient,WebRTCConnection.State.INITIATED)) {
+      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
+      return;
+    }
+    if (fromClient.getConnection(toClient).getCaller() == fromClient) {
+      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"cannot_answer\"}"));
+      return;
+    }
+    if (acceptAnswer) {
+      WebRTCConnection conn=fromClient.getConnection(toClient);
+      conn.setState(WebRTCConnection.State.CONNECTED);
+    }
+ else {
+      fromClient.removeBilateralConnection(toClient);
+    }
+    String acceptJsonBool=acceptAnswer ? "true" : "false";
+    toClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"answer\", \"accept\": " + acceptJsonBool + "}"));
+  }
+}

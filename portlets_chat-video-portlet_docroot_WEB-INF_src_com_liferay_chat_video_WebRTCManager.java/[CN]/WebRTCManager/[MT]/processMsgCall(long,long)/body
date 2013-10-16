@@ -1,0 +1,23 @@
+{
+synchronized (this.clients) {
+    this.addNonExistingClient(fromUserId);
+    WebRTCClient fromClient=this.getClientUnsafe(fromUserId);
+    if (!this.clientIsAvailable(fromUserId)) {
+      return;
+    }
+    if (!this.clientIsAvailable(toUserId)) {
+      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
+      return;
+    }
+    WebRTCClient toClient=this.getClientUnsafe(toUserId);
+    if (fromClient.connectionExists(toClient) || toClient.connectionExists(fromClient)) {
+      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"existing_conn\"}"));
+      return;
+    }
+    WebRTCConnection conn=new WebRTCConnection(fromClient);
+    conn.setState(WebRTCConnection.State.INITIATED);
+    toClient.addConnection(fromClient,conn);
+    fromClient.addConnection(toClient,conn);
+    toClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"call\"}"));
+  }
+}

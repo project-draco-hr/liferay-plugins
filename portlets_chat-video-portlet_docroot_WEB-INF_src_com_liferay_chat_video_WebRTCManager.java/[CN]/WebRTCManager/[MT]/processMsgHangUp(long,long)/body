@@ -1,0 +1,17 @@
+{
+synchronized (this.clients) {
+    WebRTCClient fromClient=this.getClientUnsafe(fromUserId);
+    if (fromClient == null) {
+      return;
+    }
+    WebRTCClient toClient=this.getClientUnsafe(toUserId);
+    if (toClient == null) {
+      return;
+    }
+    if (fromClient.connectionExists(toClient)) {
+      fromClient.removeBilateralConnection(toClient);
+      WebRTCManager.notifyClientLostConnection(fromClient,toClient,"hangUp");
+      WebRTCManager.notifyClientLostConnection(toClient,fromClient,"hangUp");
+    }
+  }
+}
