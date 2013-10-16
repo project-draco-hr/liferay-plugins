@@ -6,26 +6,26 @@ synchronized (this.clients) {
       return;
     }
     if (!this.clientIsAvailable(toUserId)) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
       return;
     }
     WebRTCClient toClient=this.getClientUnsafe(toUserId);
     if (!WebRTCManager.validateConnectionState(fromClient,toClient,WebRTCConnection.State.INITIATED)) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
       return;
     }
-    if (fromClient.getConnection(toClient).getCaller() == fromClient) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"cannot_answer\"}"));
+    if (fromClient.getWebRTCConnection(toClient).getCaller() == fromClient) {
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"cannot_answer\"}"));
       return;
     }
     if (acceptAnswer) {
-      WebRTCConnection conn=fromClient.getConnection(toClient);
+      WebRTCConnection conn=fromClient.getWebRTCConnection(toClient);
       conn.setState(WebRTCConnection.State.CONNECTED);
     }
  else {
-      fromClient.removeBilateralConnection(toClient);
+      fromClient.removeBilateralWebRTCConnection(toClient);
     }
     String acceptJsonBool=acceptAnswer ? "true" : "false";
-    toClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"answer\", \"accept\": " + acceptJsonBool + "}"));
+    toClient.getMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"answer\", \"accept\": " + acceptJsonBool + "}"));
   }
 }

@@ -6,9 +6,9 @@ synchronized (this.clients) {
     WebRTCClient fromClient=this.getClientUnsafe(fromUserId);
     WebRTCClient toClient=this.getClientUnsafe(toUserId);
     if (!WebRTCManager.validateConnectionState(fromClient,toClient,WebRTCConnection.State.CONNECTED)) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
       return;
     }
-    toClient.getOugoingMailbox().push(mail);
+    toClient.getMailbox().push(mail);
   }
 }

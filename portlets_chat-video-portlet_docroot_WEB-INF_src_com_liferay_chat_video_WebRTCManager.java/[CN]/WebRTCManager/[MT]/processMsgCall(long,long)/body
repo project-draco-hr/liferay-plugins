@@ -6,18 +6,18 @@ synchronized (this.clients) {
       return;
     }
     if (!this.clientIsAvailable(toUserId)) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
       return;
     }
     WebRTCClient toClient=this.getClientUnsafe(toUserId);
-    if (fromClient.connectionExists(toClient) || toClient.connectionExists(fromClient)) {
-      fromClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"existing_conn\"}"));
+    if (fromClient.isAlreadyConnected(toClient) || toClient.isAlreadyConnected(fromClient)) {
+      fromClient.getMailbox().push(new WebRTCClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"existing_conn\"}"));
       return;
     }
     WebRTCConnection conn=new WebRTCConnection(fromClient);
     conn.setState(WebRTCConnection.State.INITIATED);
-    toClient.addConnection(fromClient,conn);
-    fromClient.addConnection(toClient,conn);
-    toClient.getOugoingMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"call\"}"));
+    toClient.addWebRTCConnection(fromClient,conn);
+    fromClient.addWebRTCConnection(toClient,conn);
+    toClient.getMailbox().push(new WebRTCClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"call\"}"));
   }
 }

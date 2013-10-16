@@ -8,8 +8,8 @@ synchronized (this.clients) {
     if (toClient == null) {
       return;
     }
-    if (fromClient.connectionExists(toClient)) {
-      fromClient.removeBilateralConnection(toClient);
+    if (fromClient.isAlreadyConnected(toClient)) {
+      fromClient.removeBilateralWebRTCConnection(toClient);
       WebRTCManager.notifyClientLostConnection(fromClient,toClient,"hangUp");
       WebRTCManager.notifyClientLostConnection(toClient,fromClient,"hangUp");
     }
