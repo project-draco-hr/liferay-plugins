@@ -1,0 +1,23 @@
+{
+synchronized (this.clients) {
+    this.addNonExistingClient(fromUserId);
+    WebRtcClient fromClient=this.getClientUnsafe(fromUserId);
+    if (!this.clientIsAvailable(fromUserId)) {
+      return;
+    }
+    if (!this.clientIsAvailable(toUserId)) {
+      fromClient.getOugoingMailbox().push(new WebRtcClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"unavailable_user\"}"));
+      return;
+    }
+    WebRtcClient toClient=this.getClientUnsafe(toUserId);
+    if (fromClient.connectionExists(toClient) || toClient.connectionExists(fromClient)) {
+      fromClient.getOugoingMailbox().push(new WebRtcClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"existing_conn\"}"));
+      return;
+    }
+    WebRtcConnection conn=new WebRtcConnection(fromClient);
+    conn.setState(WebRtcConnection.State.INITIATED);
+    toClient.addConnection(fromClient,conn);
+    fromClient.addConnection(toClient,conn);
+    toClient.getOugoingMailbox().push(new WebRtcClient.Mailbox.ConnectionMail(fromUserId,"{\"type\": \"call\"}"));
+  }
+}

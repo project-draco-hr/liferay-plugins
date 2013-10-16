@@ -1,0 +1,14 @@
+{
+synchronized (this.clients) {
+    if (this.getClientUnsafe(fromUserId) == null || this.getClientUnsafe(toUserId) == null) {
+      return;
+    }
+    WebRtcClient fromClient=this.getClientUnsafe(fromUserId);
+    WebRtcClient toClient=this.getClientUnsafe(toUserId);
+    if (!WebRtcManager.validateConnectionState(fromClient,toClient,WebRtcConnection.State.CONNECTED)) {
+      fromClient.getOugoingMailbox().push(new WebRtcClient.Mailbox.ErrorMail(toUserId,"{\"id\": \"invalid_state\"}"));
+      return;
+    }
+    toClient.getOugoingMailbox().push(mail);
+  }
+}

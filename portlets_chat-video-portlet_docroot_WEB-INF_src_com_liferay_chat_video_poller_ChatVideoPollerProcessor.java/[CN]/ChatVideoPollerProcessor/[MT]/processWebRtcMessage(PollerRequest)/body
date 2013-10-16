@@ -1,0 +1,35 @@
+{
+  long srcUserId=req.getUserId();
+  String webRtcMsgType=this.getWebRtcMessageType(req);
+  long dstUserId=this.getWebRtcDstUserId(req);
+  if (webRtcMsgType.equals("setAvailability")) {
+    boolean isAvailable=getBoolean(req,"webrtcIsAvailable");
+    this.webRtcManager.processMsgSetAvailability(srcUserId,isAvailable);
+  }
+ else   if (webRtcMsgType.equals("call")) {
+    this.webRtcManager.processMsgCall(srcUserId,dstUserId);
+  }
+ else   if (webRtcMsgType.equals("answer")) {
+    boolean acceptAnswer=getBoolean(req,"webrtcAccept");
+    this.webRtcManager.processMsgAnswer(srcUserId,dstUserId,acceptAnswer);
+  }
+ else   if (webRtcMsgType.equals("sdp")) {
+    String jsonSdp=getString(req,"webrtcSdp");
+    this.webRtcManager.processMsgShareSdp(srcUserId,dstUserId,jsonSdp);
+  }
+ else   if (webRtcMsgType.equals("ice")) {
+    String jsonIceCandidate=getString(req,"webrtcIce");
+    this.webRtcManager.processMsgShareIceCandidate(srcUserId,dstUserId,jsonIceCandidate);
+  }
+ else   if (webRtcMsgType.equals("hangUp")) {
+    this.webRtcManager.processMsgHangUp(srcUserId,dstUserId);
+  }
+ else   if (webRtcMsgType.equals("reset")) {
+    this.webRtcManager.processMsgReset(srcUserId);
+  }
+ else   if (webRtcMsgType.equals("updatePresence")) {
+    this.webRtcManager.updatePresence(srcUserId);
+  }
+ else {
+  }
+}

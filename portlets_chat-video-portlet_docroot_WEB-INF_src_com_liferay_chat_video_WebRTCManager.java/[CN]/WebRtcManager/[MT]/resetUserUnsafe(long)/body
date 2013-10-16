@@ -1,0 +1,14 @@
+{
+  WebRtcClient client=this.getClientUnsafe(userId);
+  if (client == null) {
+    return;
+  }
+  Set<WebRtcClient> connectedClients=client.getConnectedClients();
+  for (  WebRtcClient cc : connectedClients) {
+    if (client.getConnection(cc).getState() != WebRtcConnection.State.DISCONNECTED) {
+      WebRtcManager.notifyClientLostConnection(cc,client,"reset");
+    }
+  }
+  client.reset();
+  client.updatePresence();
+}

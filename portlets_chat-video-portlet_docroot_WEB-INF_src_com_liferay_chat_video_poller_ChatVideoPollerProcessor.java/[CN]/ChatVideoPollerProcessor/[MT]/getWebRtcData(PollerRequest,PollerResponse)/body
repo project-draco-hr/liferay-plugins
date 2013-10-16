@@ -1,0 +1,26 @@
+{
+  WebRtcClient client=this.webRtcManager.getClient(req.getUserId());
+  JSONObject webrtcObj=JSONFactoryUtil.createJSONObject();
+  JSONArray mailsArray=JSONFactoryUtil.createJSONArray();
+  JSONArray clientsArray=JSONFactoryUtil.createJSONArray();
+  if (client != null) {
+    List<WebRtcClient.Mailbox.Mail> clientMails=client.getOugoingMailbox().popAll();
+    for (    Mailbox.Mail mail : clientMails) {
+      String type=mail.getMsgType();
+      String jsonMessage=mail.getJsonMessage();
+      JSONObject mailObj=JSONFactoryUtil.createJSONObject();
+      mailObj.put("type",type);
+      mailObj.put("msg",jsonMessage);
+      mailObj.put("fromUserId",mail.getFromUserId());
+      mailsArray.put(mailObj);
+    }
+  }
+  for (  Long uid : this.webRtcManager.getAvailableClientsIds()) {
+    if (uid != req.getUserId()) {
+      clientsArray.put(uid);
+    }
+  }
+  webrtcObj.put("mails",mailsArray);
+  webrtcObj.put("clients",clientsArray);
+  resp.setParameter("webrtc",webrtcObj);
+}
