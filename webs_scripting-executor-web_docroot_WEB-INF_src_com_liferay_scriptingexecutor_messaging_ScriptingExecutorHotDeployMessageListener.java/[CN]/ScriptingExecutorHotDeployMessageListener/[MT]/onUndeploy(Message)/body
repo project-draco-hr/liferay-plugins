@@ -3,7 +3,9 @@
   if (servletContext != null) {
     Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
     String language=getLanguage(pluginPackageProperties);
-    ScriptingUtil.clearCache(language);
+    if (Validator.isNotNull(language)) {
+      ScriptingUtil.clearCache(language);
+    }
   }
  else {
     Set<String> supportedLanguages=ScriptingUtil.getSupportedLanguages();
