@@ -5,15 +5,15 @@
   servletContextNames.add(servletContext.getServletContextName());
   servletContextNames.add(ClassLoaderPool.getContextName(PortalClassLoaderUtil.getClassLoader()));
   for (  String resourcePath : resourcePaths) {
-    if (resourcePath.endsWith("/")) {
+    if (resourcePath.endsWith(StringPool.SLASH)) {
       if (_log.isInfoEnabled()) {
-        _log.info("Skipping directory: " + resourcePath);
+        _log.info("Skipping directory " + resourcePath);
       }
       continue;
     }
     try {
       inputStream=servletContext.getResourceAsStream(resourcePath);
-      ScriptingUtil.exec(null,new HashMap<String,Object>(),language,StringUtil.read(inputStream),(String[])servletContextNames.toArray(new String[servletContextNames.size()]));
+      ScriptingUtil.exec(null,new HashMap<String,Object>(),language,StringUtil.read(inputStream),servletContextNames.toArray(new String[servletContextNames.size()]));
     }
  catch (    Exception e) {
       _log.error("Unable to execute script " + resourcePath,e);
