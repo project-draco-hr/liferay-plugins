@@ -1,13 +1,10 @@
 {
-  JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
-  notificationEventJSONObject.put("body",microblogsEntry.getContent());
-  notificationEventJSONObject.put("entryId",microblogsEntry.getMicroblogsEntryId());
-  notificationEventJSONObject.put("entryKeyName","receiverMicroblogsEntryId");
-  notificationEventJSONObject.put("mvcPath","/microblogs/view.jsp");
-  notificationEventJSONObject.put("portletId","1_WAR_microblogsportlet");
-  notificationEventJSONObject.put("title","x-commented-on-your-post");
-  notificationEventJSONObject.put("userId",microblogsEntry.getUserId());
-  NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
-  notificationEvent.setDeliveryRequired(0);
-  ChannelHubManagerUtil.sendNotificationEvent(microblogsEntry.getCompanyId(),microblogsEntry.getReceiverUserId(),notificationEvent);
+  if (UserNotificationManagerUtil.isDeliver(microblogsEntry.getReceiverUserId(),PortletKeys.MICROBLOGS,PortalUtil.getClassNameId(MicroblogsEntry.class),MicroblogsEntryConstants.TYPE_REPLY,UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
+    JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
+    notificationEventJSONObject.put("microblogsEntryId",microblogsEntry.getMicroblogsEntryId());
+    notificationEventJSONObject.put("userId",microblogsEntry.getUserId());
+    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),PortletKeys.MICROBLOGS,notificationEventJSONObject);
+    notificationEvent.setDeliveryRequired(0);
+    UserNotificationEventLocalServiceUtil.addUserNotificationEvent(microblogsEntry.getReceiverUserId(),notificationEvent);
+  }
 }
