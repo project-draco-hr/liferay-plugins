@@ -1,8 +1,8 @@
 {
-  List<User> users=null;
+  int count=0;
   LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
   if (announcementEntry.getClassNameId() == 0) {
-    users=UserLocalServiceUtil.getUsers(start,end);
+    count=UserLocalServiceUtil.getUsersCount();
   }
  else {
     String className=announcementEntry.getClassName();
@@ -36,11 +36,23 @@
         params.put("usersUserGroups",classPK);
       }
     }
-    users=UserLocalServiceUtil.search(announcementEntry.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params,start,end,(OrderByComparator)null);
+    count=UserLocalServiceUtil.searchCount(announcementEntry.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params);
   }
-  for (  User user : users) {
-    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
-    notificationEvent.setDeliveryRequired(0);
-    ChannelHubManagerUtil.sendNotificationEvent(user.getCompanyId(),user.getUserId(),notificationEvent);
+  int pages=count / Indexer.DEFAULT_INTERVAL;
+  for (int i=0; i <= pages; i++) {
+    List<User> users=null;
+    int start=(i * Indexer.DEFAULT_INTERVAL);
+    int end=start + Indexer.DEFAULT_INTERVAL;
+    if (announcementEntry.getClassNameId() == 0) {
+      users=UserLocalServiceUtil.getUsers(start,end);
+    }
+ else {
+      users=UserLocalServiceUtil.search(announcementEntry.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params,start,end,(OrderByComparator)null);
+    }
+    for (    User user : users) {
+      NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
+      notificationEvent.setDeliveryRequired(0);
+      ChannelHubManagerUtil.sendNotificationEvent(user.getCompanyId(),user.getUserId(),notificationEvent);
+    }
   }
 }
