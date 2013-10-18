@@ -1,0 +1,19 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long microblogsEntryId=jsonObject.getLong("microblogsEntryId");
+  MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(microblogsEntryId);
+  if (microblogsEntry == null) {
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+    return null;
+  }
+  StringBundler sb=new StringBundler(5);
+  sb.append("<div class=\"title\">");
+  if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPLY) {
+    String userFullName=PortalUtil.getUserName(microblogsEntry.getUserId(),StringPool.BLANK);
+    sb.append(serviceContext.translate("x-commented-on-your-post",userFullName));
+  }
+  sb.append("</div><div class=\"body\">");
+  sb.append(HtmlUtil.escape(microblogsEntry.getContent()));
+  sb.append("</div>");
+  return sb.toString();
+}
