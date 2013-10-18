@@ -1,8 +1,6 @@
 {
   long userId=portletDataContext.getUserId(calendar.getUserUuid());
-  String calendarResourcePath=ExportImportPathUtil.getModelPath(portletDataContext,CalendarResource.class.getName(),calendar.getCalendarResourceId());
-  CalendarResource calendarResource=(CalendarResource)portletDataContext.getZipEntryAsObject(calendarResourcePath);
-  StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarResource);
+  StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,CalendarResource.class);
   Map<Long,Long> calendarResourceIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarResource.class);
   long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendar);

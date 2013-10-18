@@ -1,9 +1,6 @@
 {
   long userId=portletDataContext.getUserId(calendarResource.getUserUuid());
-  List<Element> calendarElements=portletDataContext.getReferenceDataElements(calendarResource,Calendar.class);
-  for (  Element calendarElement : calendarElements) {
-    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,calendarElement);
-  }
+  StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,calendarResource,Calendar.class);
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendarResource);
   long classPK=getClassPK(portletDataContext,calendarResource,userId);
   CalendarResource importedCalendarResource=null;
