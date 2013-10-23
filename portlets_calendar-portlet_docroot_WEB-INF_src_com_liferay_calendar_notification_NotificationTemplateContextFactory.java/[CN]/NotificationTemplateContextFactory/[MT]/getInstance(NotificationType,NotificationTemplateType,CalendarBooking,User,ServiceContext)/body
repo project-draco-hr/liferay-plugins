@@ -1,6 +1,7 @@
 {
   CalendarBooking parentCalendarBooking=calendarBooking.getParentCalendarBooking();
   Calendar calendar=parentCalendarBooking.getCalendar();
+  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
   NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
   notificationTemplateContext.setCompanyId(calendarBooking.getCompanyId());
   notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
@@ -12,6 +13,8 @@
   String userTimezoneDisplayName=userTimezone.getDisplayName(false,TimeZone.SHORT,user.getLocale());
   String endTime=dateFormatDateTime.format(calendarBooking.getEndTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("endTime",endTime);
+  attributes.put("fromAddress",NotificationUtil.getTemplatePropertyValue(calendarNotificationTemplate,"from-address"));
+  attributes.put("fromName",NotificationUtil.getTemplatePropertyValue(calendarNotificationTemplate,"from-name"));
   attributes.put("location",calendarBooking.getLocation());
   Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
   attributes.put("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
@@ -24,7 +27,6 @@
   String calendarBookingURL=_getCalendarBookingURL(calendarBooking.getCalendarBookingId(),serviceContext);
   attributes.put("url",calendarBookingURL);
   notificationTemplateContext.setAttributes(attributes);
-  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
   notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
   String templateSubject=NotificationUtil.getTemplate(calendarNotificationTemplate,notificationType,notificationTemplateType,NotificationField.SUBJECT);
   String subject=NotificationUtil.processNotificationTemplate(templateSubject,attributes);
