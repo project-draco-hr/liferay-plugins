@@ -1,6 +1,7 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Calendar calendar=calendarPersistence.findByPrimaryKey(calendarId);
+  long calendarBookingId=counterLocalService.increment();
   for (  Locale locale : descriptionMap.keySet()) {
     String sanitizedDescription=SanitizerUtil.sanitize(calendar.getCompanyId(),calendar.getGroupId(),userId,CalendarBooking.class.getName(),calendarBookingId,ContentTypes.TEXT_HTML,Sanitizer.MODE_ALL,descriptionMap.get(locale),null);
     descriptionMap.put(locale,sanitizedDescription);
@@ -18,7 +19,6 @@
   }
   Date now=new Date();
   validate(titleMap,startTimeJCalendar,endTimeJCalendar);
-  long calendarBookingId=counterLocalService.increment();
   CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
   calendarBooking.setUuid(serviceContext.getUuid());
   calendarBooking.setGroupId(calendar.getGroupId());
