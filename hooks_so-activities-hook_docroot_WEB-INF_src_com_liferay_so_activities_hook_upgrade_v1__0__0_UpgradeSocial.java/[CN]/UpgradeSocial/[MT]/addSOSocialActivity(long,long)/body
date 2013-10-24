@@ -1,0 +1,19 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  try {
+    con=DataAccess.getUpgradeOptimizedConnection();
+    ps=con.prepareStatement("insert into SO_SocialActivity (activityId, activitySetId) " + "values (?, ?)");
+    ps.setLong(1,activityId);
+    ps.setLong(2,activitySetId);
+    ps.executeUpdate();
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Unable to add SO_SocialActivity " + activityId,e);
+    }
+  }
+ finally {
+    DataAccess.cleanUp(con,ps);
+  }
+}
