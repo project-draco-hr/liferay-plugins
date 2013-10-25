@@ -1,0 +1,9 @@
+{
+  List<FileEntry> fileEntries=dlAppService.getFileEntries(repositoryId,folderId);
+  List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>(fileEntries.size());
+  for (  FileEntry fileEntry : fileEntries) {
+    SyncDLObject syncDLObject=SyncUtil.toSyncDLObject(fileEntry,DLSyncConstants.EVENT_GET);
+    syncDLObjects.add(syncDLObject);
+  }
+  return syncDLObjects;
+}

@@ -1,0 +1,35 @@
+{
+  if (!isDefaultRepository(parentFolderId)) {
+    return null;
+  }
+  SyncDLObject syncDLObject=syncDLObjectPersistence.fetchByTypePK(typePK);
+  if (syncDLObject == null) {
+    long syncId=counterLocalService.increment();
+    syncDLObject=syncDLObjectPersistence.create(syncId);
+    syncDLObject.setCompanyId(companyId);
+    syncDLObject.setCreateTime(modifiedTime);
+    syncDLObject.setRepositoryId(repositoryId);
+    syncDLObject.setType(type);
+    syncDLObject.setTypePK(typePK);
+    syncDLObject.setTypeUuid(typeUuid);
+  }
+ else   if (syncDLObject.getModifiedTime() > modifiedTime) {
+    return null;
+  }
+  syncDLObject.setModifiedTime(modifiedTime);
+  syncDLObject.setParentFolderId(parentFolderId);
+  syncDLObject.setName(name);
+  syncDLObject.setExtension(extension);
+  syncDLObject.setMimeType(mimeType);
+  syncDLObject.setDescription(description);
+  syncDLObject.setChangeLog(changeLog);
+  syncDLObject.setExtraSettings(extraSettings);
+  syncDLObject.setVersion(version);
+  syncDLObject.setSize(size);
+  syncDLObject.setChecksum(checksum);
+  syncDLObject.setEvent(event);
+  syncDLObject.setLockExpirationDate(lockExpirationDate);
+  syncDLObject.setLockUserId(lockUserId);
+  syncDLObject.setLockUserName(lockUserName);
+  return syncDLObjectPersistence.update(syncDLObject);
+}

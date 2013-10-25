@@ -1,0 +1,15 @@
+{
+  SyncDLObject syncDLObject=fetchByTypePK(typePK);
+  if (syncDLObject == null) {
+    StringBundler msg=new StringBundler(4);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("typePK=");
+    msg.append(typePK);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchDLObjectException(msg.toString());
+  }
+  return syncDLObject;
+}

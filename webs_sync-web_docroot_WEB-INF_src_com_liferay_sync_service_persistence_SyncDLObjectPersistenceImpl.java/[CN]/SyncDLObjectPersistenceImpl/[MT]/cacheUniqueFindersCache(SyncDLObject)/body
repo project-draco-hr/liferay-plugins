@@ -1,0 +1,15 @@
+{
+  if (syncDLObject.isNew()) {
+    Object[] args=new Object[]{syncDLObject.getTypePK()};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_TYPEPK,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK,args,syncDLObject);
+  }
+ else {
+    SyncDLObjectModelImpl syncDLObjectModelImpl=(SyncDLObjectModelImpl)syncDLObject;
+    if ((syncDLObjectModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_TYPEPK.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{syncDLObject.getTypePK()};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_TYPEPK,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TYPEPK,args,syncDLObject);
+    }
+  }
+}

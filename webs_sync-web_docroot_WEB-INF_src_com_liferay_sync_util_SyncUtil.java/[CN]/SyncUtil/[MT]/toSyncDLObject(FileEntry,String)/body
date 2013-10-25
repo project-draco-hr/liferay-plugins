@@ -1,0 +1,34 @@
+{
+  SyncDLObject syncDLObject=new SyncDLObjectImpl();
+  syncDLObject.setCompanyId(fileEntry.getCompanyId());
+  syncDLObject.setCreateDate(fileEntry.getCreateDate());
+  syncDLObject.setModifiedDate(fileEntry.getModifiedDate());
+  syncDLObject.setRepositoryId(fileEntry.getRepositoryId());
+  syncDLObject.setParentFolderId(fileEntry.getFolderId());
+  syncDLObject.setName(fileEntry.getTitle());
+  syncDLObject.setExtension(fileEntry.getExtension());
+  syncDLObject.setMimeType(fileEntry.getMimeType());
+  syncDLObject.setDescription(fileEntry.getDescription());
+  DLFileVersion dlFileVersion=DLFileVersionLocalServiceUtil.getLatestFileVersion(fileEntry.getFileEntryId(),false);
+  syncDLObject.setChangeLog(dlFileVersion.getChangeLog());
+  syncDLObject.setExtraSettings(dlFileVersion.getExtraSettings());
+  syncDLObject.setVersion(fileEntry.getVersion());
+  syncDLObject.setSize(fileEntry.getSize());
+  syncDLObject.setChecksum(getChecksum(dlFileVersion));
+  syncDLObject.setEvent(event);
+  Lock lock=fileEntry.getLock();
+  if (lock != null) {
+    syncDLObject.setLockExpirationDate(lock.getExpirationDate());
+    syncDLObject.setLockUserId(lock.getUserId());
+    syncDLObject.setLockUserName(lock.getUserName());
+  }
+ else {
+    syncDLObject.setLockExpirationDate(null);
+    syncDLObject.setLockUserId(0);
+    syncDLObject.setLockUserName(StringPool.BLANK);
+  }
+  syncDLObject.setType(DLSyncConstants.TYPE_FILE);
+  syncDLObject.setTypePK(fileEntry.getFileEntryId());
+  syncDLObject.setTypeUuid(fileEntry.getUuid());
+  return syncDLObject;
+}

@@ -1,0 +1,12 @@
+{
+  File patchedFile=null;
+  try {
+    File sourceFile=DLFileEntryLocalServiceUtil.getFile(getUserId(),fileEntryId,sourceVersion,false);
+    patchedFile=FileUtil.createTempFile();
+    SyncUtil.patchFile(sourceFile,deltaFile,patchedFile);
+    return updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,patchedFile,checksum,serviceContext);
+  }
+  finally {
+    FileUtil.delete(patchedFile);
+  }
+}

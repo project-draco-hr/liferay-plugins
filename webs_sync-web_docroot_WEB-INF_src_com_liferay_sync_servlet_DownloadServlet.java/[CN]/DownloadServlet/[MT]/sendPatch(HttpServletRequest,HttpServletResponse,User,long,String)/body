@@ -1,0 +1,13 @@
+{
+  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  String sourceVersion=ParamUtil.getString(request,"sourceVersion");
+  if (Validator.isNull(sourceVersion)) {
+    throw new IllegalArgumentException("Missing source version");
+  }
+  String destinationVersion=ParamUtil.getString(request,"destinationVersion");
+  if (Validator.isNull(destinationVersion)) {
+    throw new IllegalArgumentException("Missing destination version");
+  }
+  InputStream inputStream=SyncUtil.getFileDeltaAsStream(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
+  ServletResponseUtil.write(response,inputStream);
+}

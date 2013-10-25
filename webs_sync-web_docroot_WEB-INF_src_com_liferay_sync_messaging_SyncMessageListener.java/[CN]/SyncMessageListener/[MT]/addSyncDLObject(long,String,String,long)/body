@@ -1,0 +1,35 @@
+{
+  if (event.equals(DLSyncConstants.EVENT_DELETE)) {
+    SyncDLObjectLocalServiceUtil.addSyncDLObject(0,modifiedTime,0,0,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,StringPool.BLANK,0,StringPool.BLANK,event,null,0,StringPool.BLANK,type,typePK,StringPool.BLANK);
+  }
+ else   if (type.equals(DLSyncConstants.TYPE_FILE)) {
+    FileEntry fileEntry=null;
+    try {
+      fileEntry=DLAppLocalServiceUtil.getFileEntry(typePK);
+    }
+ catch (    NoSuchFileEntryException nsfee) {
+      return;
+    }
+    Date lockExpirationDate=null;
+    long lockUserId=0;
+    String lockUserName=StringPool.BLANK;
+    Lock lock=fileEntry.getLock();
+    if (lock != null) {
+      lockExpirationDate=lock.getExpirationDate();
+      lockUserId=lock.getUserId();
+      lockUserName=lock.getUserName();
+    }
+    DLFileVersion dlFileVersion=DLFileVersionLocalServiceUtil.getLatestFileVersion(fileEntry.getFileEntryId(),false);
+    SyncDLObjectLocalServiceUtil.addSyncDLObject(dlFileVersion.getCompanyId(),modifiedTime,dlFileVersion.getRepositoryId(),fileEntry.getFolderId(),dlFileVersion.getTitle(),dlFileVersion.getExtension(),dlFileVersion.getMimeType(),dlFileVersion.getDescription(),dlFileVersion.getChangeLog(),dlFileVersion.getExtraSettings(),dlFileVersion.getVersion(),dlFileVersion.getSize(),SyncUtil.getChecksum(dlFileVersion),event,lockExpirationDate,lockUserId,lockUserName,type,fileEntry.getFileEntryId(),fileEntry.getUuid());
+  }
+ else {
+    Folder folder=null;
+    try {
+      folder=DLAppLocalServiceUtil.getFolder(typePK);
+    }
+ catch (    NoSuchFolderException nsfe) {
+      return;
+    }
+    SyncDLObjectLocalServiceUtil.addSyncDLObject(folder.getCompanyId(),modifiedTime,folder.getRepositoryId(),folder.getParentFolderId(),folder.getName(),StringPool.BLANK,StringPool.BLANK,folder.getDescription(),StringPool.BLANK,StringPool.BLANK,"-1",0,StringPool.BLANK,event,null,0,StringPool.BLANK,type,folder.getFolderId(),folder.getUuid());
+  }
+}

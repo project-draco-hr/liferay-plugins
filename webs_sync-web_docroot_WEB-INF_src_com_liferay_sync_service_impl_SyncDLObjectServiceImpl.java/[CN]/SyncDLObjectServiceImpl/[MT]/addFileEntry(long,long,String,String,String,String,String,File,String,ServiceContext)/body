@@ -1,0 +1,17 @@
+{
+  try {
+    validateChecksum(file,checksum);
+    FileEntry fileEntry=dlAppService.addFileEntry(repositoryId,folderId,sourceFileName,mimeType,title,description,changeLog,file,serviceContext);
+    return SyncUtil.toSyncDLObject(fileEntry,DLSyncConstants.EVENT_ADD);
+  }
+ catch (  DuplicateFileException dfe) {
+    if (GetterUtil.getBoolean(serviceContext.getAttribute("overwrite"))) {
+      FileEntry fileEntry=dlAppService.getFileEntry(repositoryId,folderId,title);
+      fileEntry=dlAppService.updateFileEntry(fileEntry.getFileEntryId(),sourceFileName,mimeType,title,description,changeLog,true,file,serviceContext);
+      return SyncUtil.toSyncDLObject(fileEntry,DLSyncConstants.EVENT_UPDATE);
+    }
+ else {
+      throw dfe;
+    }
+  }
+}

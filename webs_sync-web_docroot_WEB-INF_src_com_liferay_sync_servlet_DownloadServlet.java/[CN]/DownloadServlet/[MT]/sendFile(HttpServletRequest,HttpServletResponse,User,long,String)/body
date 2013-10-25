@@ -1,0 +1,10 @@
+{
+  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  String version=ParamUtil.getString(request,"version");
+  if (Validator.isNull(version)) {
+    version=fileEntry.getVersion();
+  }
+  FileVersion fileVersion=fileEntry.getFileVersion(version);
+  InputStream inputStream=fileVersion.getContentStream(false);
+  ServletResponseUtil.write(response,inputStream,fileVersion.getSize());
+}

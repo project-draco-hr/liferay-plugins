@@ -1,0 +1,28 @@
+{
+  try {
+    HttpSession session=request.getSession();
+    if (PortalSessionThreadLocal.getHttpSession() == null) {
+      PortalSessionThreadLocal.setHttpSession(session);
+    }
+    User user=PortalUtil.getUser(request);
+    PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user);
+    PermissionThreadLocal.setPermissionChecker(permissionChecker);
+    String path=HttpUtil.fixPath(request.getPathInfo());
+    String[] pathArray=StringUtil.split(path,CharPool.SLASH);
+    long groupId=GetterUtil.getLong(pathArray[0]);
+    String uuid=pathArray[1];
+    boolean patch=ParamUtil.getBoolean(request,"patch");
+    if (patch) {
+      sendPatch(request,response,user,groupId,uuid);
+    }
+ else {
+      sendFile(request,response,user,groupId,uuid);
+    }
+  }
+ catch (  NoSuchFileEntryException nsfee) {
+    PortalUtil.sendError(HttpServletResponse.SC_NOT_FOUND,nsfee,request,response);
+  }
+catch (  Exception e) {
+    PortalUtil.sendError(e,request,response);
+  }
+}

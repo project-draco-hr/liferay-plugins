@@ -1,0 +1,10 @@
+{
+  repositoryService.checkRepository(repositoryId);
+  List<SyncDLObject> syncDLObjects=syncDLObjectFinder.filterFindByC_M_R(companyId,lastAccessTime,repositoryId);
+  for (  SyncDLObject syncDLObject : syncDLObjects) {
+    if (syncDLObject.getModifiedTime() > lastAccessTime) {
+      lastAccessTime=syncDLObject.getModifiedTime();
+    }
+  }
+  return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+}
