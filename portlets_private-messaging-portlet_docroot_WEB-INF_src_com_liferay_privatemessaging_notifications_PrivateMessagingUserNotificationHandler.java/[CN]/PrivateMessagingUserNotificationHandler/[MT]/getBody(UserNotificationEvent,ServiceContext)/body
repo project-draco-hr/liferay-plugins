@@ -1,0 +1,16 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long mbMessageId=jsonObject.getLong("mbMessageId");
+  MBMessage mbMessage=MBMessageLocalServiceUtil.getMBMessage(mbMessageId);
+  if (mbMessage == null) {
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+    return null;
+  }
+  StringBundler sb=new StringBundler(5);
+  sb.append("<div class=\"title\">");
+  sb.append(serviceContext.translate("x-sent-you-a-message",PortalUtil.getUserName(mbMessage.getUserId(),StringPool.BLANK)));
+  sb.append("</div><div class=\"body\">");
+  sb.append(HtmlUtil.escape(StringUtil.shorten(mbMessage.getBody())));
+  sb.append("</div>");
+  return sb.toString();
+}

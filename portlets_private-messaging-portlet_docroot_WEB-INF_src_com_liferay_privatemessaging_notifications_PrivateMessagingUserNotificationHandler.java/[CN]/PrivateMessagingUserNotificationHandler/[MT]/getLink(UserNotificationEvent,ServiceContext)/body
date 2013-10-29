@@ -1,0 +1,26 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long mbMessageId=jsonObject.getLong("mbMessageId");
+  MBMessage mbMessage=MBMessageLocalServiceUtil.getMBMessage(mbMessageId);
+  if (mbMessage == null) {
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+    return null;
+  }
+  ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
+  User user=themeDisplay.getUser();
+  Group group=user.getGroup();
+  long portletPlid=PortalUtil.getPlidFromPortletId(group.getGroupId(),true,PortletKeys.PRIVATE_MESSAGING);
+  PortletURL portletURL=null;
+  if (portletPlid != 0) {
+    portletURL=PortletURLFactoryUtil.create(serviceContext.getLiferayPortletRequest(),PortletKeys.PRIVATE_MESSAGING,portletPlid,PortletRequest.RENDER_PHASE);
+    portletURL.setParameter("mbThreadId",String.valueOf(mbMessage.getThreadId()));
+  }
+ else {
+    LiferayPortletResponse liferayPortletResponse=serviceContext.getLiferayPortletResponse();
+    portletURL=liferayPortletResponse.createRenderURL(PortletKeys.PRIVATE_MESSAGING);
+    portletURL.setWindowState(WindowState.MAXIMIZED);
+    portletURL.setParameter("mvcPath","/view.jsp");
+    portletURL.setParameter("mbThreadId",String.valueOf(mbMessage.getThreadId()));
+  }
+  return portletURL.toString();
+}
