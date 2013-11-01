@@ -1,0 +1,24 @@
+{
+  final ExpandoColumn expandoColumn=ExpandoColumnLocalServiceUtil.getColumn(companyId,DLFileEntry.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,DL.MANUAL_CHECK_IN_REQUIRED);
+  ActionableDynamicQuery actionableDynamicQuery=new ExpandoValueActionableDynamicQuery(){
+    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+      Property columnIdProperty=PropertyFactoryUtil.forName("columnId");
+      dynamicQuery.add(columnIdProperty.eq(expandoColumn.getColumnId()));
+      Property dataProperty=PropertyFactoryUtil.forName("data");
+      dynamicQuery.add(dataProperty.eq(StringPool.TRUE));
+    }
+    @Override protected void performAction(    Object object) throws PortalException, SystemException {
+      ExpandoValue expandoValue=(ExpandoValue)object;
+      DLFileVersion dlFileVersion=DLFileVersionLocalServiceUtil.fetchDLFileVersion(expandoValue.getClassPK());
+      if ((dlFileVersion == null) || dlFileVersion.isDraft()) {
+        return;
+      }
+      DLFileEntry dlFileEntry=dlFileVersion.getFileEntry();
+      dlFileEntry.setManualCheckInRequired(true);
+      DLFileEntryLocalServiceUtil.updateDLFileEntry(dlFileEntry);
+    }
+  }
+;
+  actionableDynamicQuery.performActions();
+  ExpandoColumnLocalServiceUtil.deleteColumn(expandoColumn);
+}
