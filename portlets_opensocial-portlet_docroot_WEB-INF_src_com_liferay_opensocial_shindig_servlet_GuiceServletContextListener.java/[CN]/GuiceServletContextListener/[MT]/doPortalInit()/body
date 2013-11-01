@@ -1,16 +1,18 @@
 {
-  ClassLoader portletClassLoader=PortletClassLoaderUtil.getClassLoader();
-  Thread currentThread=Thread.currentThread();
-  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
-  try {
-    if (contextClassLoader != portletClassLoader) {
-      currentThread.setContextClassLoader(portletClassLoader);
+  _messageListener=new MessageListener(){
+    @Override public void receive(    Message message) throws MessageListenerException {
+      String servletContextName=GetterUtil.getString(message.getString("servletContextName"));
+      String command=GetterUtil.getString(message.getString("command"));
+      if (command.equals("deploy") && ClpSerializer.getServletContextName().equals(servletContextName)) {
+        try {
+          initialize();
+        }
+ catch (        Exception e) {
+          _log.error("Unable to initialize open-social",e);
+        }
+      }
     }
-    _guiceServletContextListener.contextInitialized(_initializedServletContextEvent);
   }
-  finally {
-    if (contextClassLoader != portletClassLoader) {
-      currentThread.setContextClassLoader(contextClassLoader);
-    }
-  }
+;
+  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_messageListener);
 }
