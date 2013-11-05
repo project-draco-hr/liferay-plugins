@@ -6,7 +6,12 @@
   long[] subscriptionIds=StringUtil.split(ParamUtil.getString(actionRequest,"subscriptionIds"),0L);
   for (  long subscriptionId : subscriptionIds) {
     if (subscriptionId > 0) {
-      SubscriptionLocalServiceUtil.deleteSubscription(subscriptionId);
+      Subscription subscription=SubscriptionLocalServiceUtil.getSubscription(subscriptionId);
+      PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+      if (permissionChecker.getUserId() != subscription.getUserId()) {
+        throw new PrincipalException();
+      }
+      SubscriptionLocalServiceUtil.deleteSubscription(subscription);
     }
   }
 }
