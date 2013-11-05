@@ -7,8 +7,7 @@
   for (  long subscriptionId : subscriptionIds) {
     if (subscriptionId > 0) {
       Subscription subscription=SubscriptionLocalServiceUtil.getSubscription(subscriptionId);
-      PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-      if (permissionChecker.getUserId() != subscription.getUserId()) {
+      if (themeDisplay.getUserId() != subscription.getUserId()) {
         throw new PrincipalException();
       }
       SubscriptionLocalServiceUtil.deleteSubscription(subscription);
