@@ -1,18 +1,18 @@
 {
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
   try {
-    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    long messageId=ParamUtil.getLong(actionRequest,"messageId");
-    String fileName=ParamUtil.getString(actionRequest,"attachment");
+    ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    long messageId=ParamUtil.getLong(resourceRequest,"messageId");
+    String fileName=ParamUtil.getString(resourceRequest,"attachment");
     MBMessage message=MBMessageLocalServiceUtil.getMessage(messageId);
     if (!PrivateMessagingUtil.isUserPartOfThread(themeDisplay.getUserId(),message.getThreadId())) {
       throw new PrincipalException();
     }
-    HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
-    HttpServletResponse response=PortalUtil.getHttpServletResponse(actionResponse);
     FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(message.getGroupId(),message.getAttachmentsFolderId(),fileName);
     ServletResponseUtil.sendFile(request,response,fileName,fileEntry.getContentStream(),fileEntry.getSize(),fileEntry.getMimeType());
   }
  catch (  Exception e) {
-    PortalUtil.sendError(e,actionRequest,actionResponse);
+    PortalUtil.sendError(e,request,response);
   }
 }
