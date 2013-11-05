@@ -1,18 +1,2 @@
 {
-  _messageListener=new MessageListener(){
-    @Override public void receive(    Message message) throws MessageListenerException {
-      String servletContextName=GetterUtil.getString(message.getString("servletContextName"));
-      String command=GetterUtil.getString(message.getString("command"));
-      if (command.equals("deploy") && ClpSerializer.getServletContextName().equals(servletContextName)) {
-        try {
-          initialize();
-        }
- catch (        Exception e) {
-          _log.error("Unable to initialize open-social",e);
-        }
-      }
-    }
-  }
-;
-  MessageBusUtil.registerMessageListener(DestinationNames.HOT_DEPLOY,_messageListener);
 }
