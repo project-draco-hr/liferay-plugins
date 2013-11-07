@@ -10,9 +10,18 @@
     queryDBObject.put("classNameId",expandoTable.getClassNameId());
     queryDBObject.put("classPK",classPK);
     BasicDBObject expandoValueDBObject=(BasicDBObject)dbCollection.findOne(queryDBObject);
+    if (expandoValueDBObject == null) {
+      return null;
+    }
     return toExpandoValue(expandoValueDBObject,expandoColumn);
   }
- catch (  PortalException pe) {
+ catch (  NoSuchTableException e) {
+    return null;
+  }
+catch (  NoSuchColumnException e) {
+    return null;
+  }
+catch (  PortalException pe) {
     throw new SystemException(pe);
   }
 }
