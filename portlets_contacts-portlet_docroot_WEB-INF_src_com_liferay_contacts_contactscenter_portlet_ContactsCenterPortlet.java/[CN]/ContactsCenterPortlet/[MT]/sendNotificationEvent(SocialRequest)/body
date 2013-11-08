@@ -1,0 +1,10 @@
+{
+  if (UserNotificationManagerUtil.isDeliver(socialRequest.getReceiverUserId(),PortletKeys.CONTACTS_CENTER,0,SocialRelationConstants.SOCIAL_RELATION_REQUEST,UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
+    JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
+    notificationEventJSONObject.put("classPK",socialRequest.getRequestId());
+    notificationEventJSONObject.put("userId",socialRequest.getUserId());
+    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),PortletKeys.CONTACTS_CENTER,notificationEventJSONObject);
+    notificationEvent.setDeliveryRequired(0);
+    UserNotificationEventLocalServiceUtil.addUserNotificationEvent(socialRequest.getReceiverUserId(),notificationEvent);
+  }
+}

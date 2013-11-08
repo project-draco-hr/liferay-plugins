@@ -1,0 +1,37 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long socialRequestId=jsonObject.getLong("classPK");
+  SocialRequest socialRequest=SocialRequestLocalServiceUtil.fetchSocialRequest(socialRequestId);
+  if (socialRequest == null) {
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+    return null;
+  }
+  StringBundler sb=new StringBundler(10);
+  sb.append("<div class=\"title\">");
+  if (socialRequest.getType() == SocialRelationConstants.TYPE_BI_CONNECTION) {
+    String creatorUserName=getUserNameLink(socialRequest.getUserId(),serviceContext);
+    sb.append(serviceContext.translate("request-social-networking-summary-add-connection",creatorUserName));
+  }
+  sb.append("</div>");
+  sb.append("<div class=\"body\">");
+  LiferayPortletResponse liferayPortletResponse=serviceContext.getLiferayPortletResponse();
+  PortletURL confirmURL=liferayPortletResponse.createActionURL(PortletKeys.CONTACTS_CENTER);
+  confirmURL.setWindowState(WindowState.NORMAL);
+  confirmURL.setParameter(ActionRequest.ACTION_NAME,"updateSocialRequest");
+  confirmURL.setParameter("socialRequestId",String.valueOf(socialRequestId));
+  confirmURL.setParameter("status",String.valueOf(SocialRequestConstants.STATUS_CONFIRM));
+  confirmURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+  sb.append("<a class=\"btn btn-success\"href=\"" + confirmURL + "\">");
+  sb.append(serviceContext.translate("confirm"));
+  sb.append("</a>");
+  PortletURL ignoreURL=liferayPortletResponse.createActionURL(PortletKeys.CONTACTS_CENTER);
+  ignoreURL.setWindowState(WindowState.NORMAL);
+  ignoreURL.setParameter(ActionRequest.ACTION_NAME,"updateSocialRequest");
+  ignoreURL.setParameter("socialRequestId",String.valueOf(socialRequestId));
+  ignoreURL.setParameter("status",String.valueOf(SocialRequestConstants.STATUS_IGNORE));
+  ignoreURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+  sb.append("<a class=\"btn btn-warning\"href=\"" + ignoreURL + "\">");
+  sb.append(serviceContext.translate("ignore"));
+  sb.append("</a></div>");
+  return sb.toString();
+}
