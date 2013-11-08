@@ -1,0 +1,27 @@
+{
+  BlobEntry blobEntry=(BlobEntry)EntityCacheUtil.getResult(BlobEntryModelImpl.ENTITY_CACHE_ENABLED,BlobEntryImpl.class,primaryKey);
+  if (blobEntry == _nullBlobEntry) {
+    return null;
+  }
+  if (blobEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      blobEntry=(BlobEntry)session.get(BlobEntryImpl.class,primaryKey);
+      if (blobEntry != null) {
+        cacheResult(blobEntry);
+      }
+ else {
+        EntityCacheUtil.putResult(BlobEntryModelImpl.ENTITY_CACHE_ENABLED,BlobEntryImpl.class,primaryKey,_nullBlobEntry);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(BlobEntryModelImpl.ENTITY_CACHE_ENABLED,BlobEntryImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return blobEntry;
+}
