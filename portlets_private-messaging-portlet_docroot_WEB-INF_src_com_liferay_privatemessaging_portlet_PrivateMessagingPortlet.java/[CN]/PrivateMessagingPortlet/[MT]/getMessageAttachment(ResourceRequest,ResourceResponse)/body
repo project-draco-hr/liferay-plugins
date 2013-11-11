@@ -1,18 +1,11 @@
 {
-  HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
-  HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
-  try {
-    ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-    long messageId=ParamUtil.getLong(resourceRequest,"messageId");
-    String fileName=ParamUtil.getString(resourceRequest,"attachment");
-    MBMessage message=MBMessageLocalServiceUtil.getMessage(messageId);
-    if (!PrivateMessagingUtil.isUserPartOfThread(themeDisplay.getUserId(),message.getThreadId())) {
-      throw new PrincipalException();
-    }
-    FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(message.getGroupId(),message.getAttachmentsFolderId(),fileName);
-    ServletResponseUtil.sendFile(request,response,fileName,fileEntry.getContentStream(),fileEntry.getSize(),fileEntry.getMimeType());
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long messageId=ParamUtil.getLong(resourceRequest,"messageId");
+  String fileName=ParamUtil.getString(resourceRequest,"attachment");
+  MBMessage message=MBMessageLocalServiceUtil.getMessage(messageId);
+  if (!PrivateMessagingUtil.isUserPartOfThread(themeDisplay.getUserId(),message.getThreadId())) {
+    throw new PrincipalException();
   }
- catch (  Exception e) {
-    PortalUtil.sendError(e,request,response);
-  }
+  FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(message.getGroupId(),message.getAttachmentsFolderId(),fileName);
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,fileName,fileEntry.getContentStream(),(int)fileEntry.getSize(),fileEntry.getMimeType());
 }
