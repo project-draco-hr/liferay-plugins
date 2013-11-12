@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long memberRequestId=ParamUtil.getLong(actionRequest,"memberRequestId");
+  int status=ParamUtil.getInteger(actionRequest,"status");
+  long userNotificationEventId=ParamUtil.getLong(actionRequest,"userNotificationEventId");
+  try {
+    MemberRequestLocalServiceUtil.updateMemberRequest(themeDisplay.getUserId(),memberRequestId,status);
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEventId);
+  }
+ catch (  Exception e) {
+    if ((e instanceof MemberRequestAlreadyUsedException) || (e instanceof MemberRequestInvalidUserException)) {
+      SessionErrors.add(actionRequest,e.getClass(),e);
+    }
+ else {
+      throw e;
+    }
+  }
+}

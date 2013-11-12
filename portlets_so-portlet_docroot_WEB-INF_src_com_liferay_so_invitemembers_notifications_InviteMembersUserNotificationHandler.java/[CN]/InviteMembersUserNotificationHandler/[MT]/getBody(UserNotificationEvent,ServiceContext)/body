@@ -1,0 +1,38 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long memberRequestId=jsonObject.getLong("classPK");
+  MemberRequest memberRequest=MemberRequestLocalServiceUtil.fetchMemberRequest(memberRequestId);
+  if (memberRequest == null) {
+    UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+    return null;
+  }
+  StringBundler sb=new StringBundler(12);
+  sb.append("<div class=\"title\">");
+  if (memberRequest.getStatus() == MembershipRequestConstants.STATUS_PENDING) {
+    sb.append(serviceContext.translate("x-invited-you-to-join-x",new Object[]{getUserNameLink(memberRequest.getUserId(),serviceContext),getSiteDescriptiveName(memberRequest.getGroupId(),serviceContext)}));
+  }
+  sb.append("</div><div class=\"body\">");
+  sb.append("<a class=\"btn btn-success\" href=\"");
+  LiferayPortletResponse liferayPortletResponse=serviceContext.getLiferayPortletResponse();
+  PortletURL confirmURL=liferayPortletResponse.createActionURL(PortletKeys.SO_INVITE_MEMBERS);
+  confirmURL.setParameter(ActionRequest.ACTION_NAME,"updateMemberRequest");
+  confirmURL.setParameter("memberRequestId",String.valueOf(memberRequestId));
+  confirmURL.setParameter("status",String.valueOf(MembershipRequestConstants.STATUS_APPROVED));
+  confirmURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+  confirmURL.setWindowState(WindowState.NORMAL);
+  sb.append(confirmURL);
+  sb.append("\">");
+  sb.append(serviceContext.translate("confirm"));
+  sb.append("</a><a class=\"btn btn-warning\" href=\"");
+  PortletURL ignoreURL=liferayPortletResponse.createActionURL(PortletKeys.SO_INVITE_MEMBERS);
+  ignoreURL.setParameter(ActionRequest.ACTION_NAME,"updateMemberRequest");
+  ignoreURL.setParameter("memberRequestId",String.valueOf(memberRequestId));
+  ignoreURL.setParameter("status",String.valueOf(MembershipRequestConstants.STATUS_DENIED));
+  ignoreURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+  ignoreURL.setWindowState(WindowState.NORMAL);
+  sb.append(ignoreURL);
+  sb.append("\">");
+  sb.append(serviceContext.translate("ignore"));
+  sb.append("</a></div>");
+  return sb.toString();
+}
