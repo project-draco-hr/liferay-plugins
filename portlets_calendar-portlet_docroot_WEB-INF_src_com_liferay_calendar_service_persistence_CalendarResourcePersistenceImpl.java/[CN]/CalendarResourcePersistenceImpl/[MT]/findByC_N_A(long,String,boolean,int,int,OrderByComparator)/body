@@ -7,7 +7,7 @@
   List<CalendarResource> list=(List<CalendarResource>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if ((list != null) && !list.isEmpty()) {
     for (    CalendarResource calendarResource : list) {
-      if ((companyId != calendarResource.getCompanyId()) || !Validator.equals(name,calendarResource.getName()) || (active != calendarResource.getActive())) {
+      if ((companyId != calendarResource.getCompanyId()) || !StringUtil.wildcardMatches(calendarResource.getName(),name,CharPool.UNDERLINE,CharPool.PERCENT,CharPool.BACK_SLASH,true) || (active != calendarResource.getActive())) {
         list=null;
         break;
       }
