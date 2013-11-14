@@ -50,9 +50,11 @@
       users=UserLocalServiceUtil.search(announcementEntry.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params,start,end,(OrderByComparator)null);
     }
     for (    User user : users) {
-      NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),"6_WAR_soportlet",notificationEventJSONObject);
-      notificationEvent.setDeliveryRequired(0);
-      ChannelHubManagerUtil.sendNotificationEvent(user.getCompanyId(),user.getUserId(),notificationEvent);
+      if (UserNotificationManagerUtil.isDeliver(user.getUserId(),PortletKeys.SO_ANNOUNCEMENTS,0,0,UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
+        NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),PortletKeys.SO_ANNOUNCEMENTS,notificationEventJSONObject);
+        notificationEvent.setDeliveryRequired(0);
+        UserNotificationEventLocalServiceUtil.addUserNotificationEvent(user.getUserId(),notificationEvent);
+      }
     }
   }
 }

@@ -1,10 +1,6 @@
 {
   JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
-  notificationEventJSONObject.put("body",announcementEntry.getTitle());
-  notificationEventJSONObject.put("entryId",announcementEntry.getEntryId());
-  notificationEventJSONObject.put("groupId",announcementEntry.getClassPK());
-  notificationEventJSONObject.put("portletId",PortletKeys.ANNOUNCEMENTS);
-  notificationEventJSONObject.put("title","x-sent-a-new-announcement");
+  notificationEventJSONObject.put("classPK",announcementEntry.getEntryId());
   notificationEventJSONObject.put("userId",announcementEntry.getUserId());
   MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new NotificationProcessCallable(announcementEntry,notificationEventJSONObject));
 }
