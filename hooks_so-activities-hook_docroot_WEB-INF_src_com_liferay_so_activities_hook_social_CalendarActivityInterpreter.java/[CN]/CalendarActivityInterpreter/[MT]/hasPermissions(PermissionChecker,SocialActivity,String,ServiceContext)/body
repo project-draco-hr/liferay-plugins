@@ -1,0 +1,10 @@
+{
+  CalendarBooking calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(activity.getClassPK());
+  if (calendarBooking == null) {
+    return false;
+  }
+  if (actionId.equals(ActionKeys.VIEW) && !CalendarPermission.contains(permissionChecker,calendarBooking.getCalendarId(),"VIEW_BOOKING_DETAILS")) {
+    return false;
+  }
+  return CalendarPermission.contains(permissionChecker,calendarBooking.getCalendarId(),actionId);
+}
