@@ -7,7 +7,7 @@
   List<JIRAIssue> list=(List<JIRAIssue>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if ((list != null) && !list.isEmpty()) {
     for (    JIRAIssue jiraIssue : list) {
-      if (!Validator.equals(modifiedDate,jiraIssue.getModifiedDate()) || (projectId != jiraIssue.getProjectId())) {
+      if ((modifiedDate.getTime() >= jiraIssue.getModifiedDate().getTime()) || (projectId != jiraIssue.getProjectId())) {
         list=null;
         break;
       }

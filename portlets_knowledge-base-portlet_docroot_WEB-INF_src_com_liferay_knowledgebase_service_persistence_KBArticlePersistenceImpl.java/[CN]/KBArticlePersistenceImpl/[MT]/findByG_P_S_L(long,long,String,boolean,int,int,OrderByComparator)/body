@@ -7,7 +7,7 @@
   List<KBArticle> list=(List<KBArticle>)FinderCacheUtil.getResult(finderPath,finderArgs,this);
   if ((list != null) && !list.isEmpty()) {
     for (    KBArticle kbArticle : list) {
-      if ((groupId != kbArticle.getGroupId()) || (parentResourcePrimKey != kbArticle.getParentResourcePrimKey()) || !Validator.equals(sections,kbArticle.getSections())|| (latest != kbArticle.getLatest())) {
+      if ((groupId != kbArticle.getGroupId()) || (parentResourcePrimKey != kbArticle.getParentResourcePrimKey()) || !StringUtil.wildcardMatches(kbArticle.getSections(),sections,CharPool.UNDERLINE,CharPool.PERCENT,CharPool.BACK_SLASH,true)|| (latest != kbArticle.getLatest())) {
         list=null;
         break;
       }
