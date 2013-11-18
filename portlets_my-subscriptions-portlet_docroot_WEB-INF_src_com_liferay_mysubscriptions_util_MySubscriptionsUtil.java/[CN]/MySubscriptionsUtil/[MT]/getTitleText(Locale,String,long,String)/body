@@ -2,6 +2,7 @@
   if (Validator.isNotNull(title)) {
     return title;
   }
+  Group group=GroupLocalServiceUtil.fetchGroup(classPK);
   if (className.equals(BlogsEntry.class.getName())) {
     title="Blog at ";
   }
@@ -23,8 +24,7 @@
     WikiNode wikiNode=WikiNodeLocalServiceUtil.getWikiNode(classPK);
     return wikiNode.getName();
   }
-  Group group=GroupLocalServiceUtil.fetchGroup(classPK);
-  if (className.equals(Folder.class.getName())) {
+ else   if (className.equals(Folder.class.getName())) {
     if (group != null) {
       return LanguageUtil.get(locale,"home");
     }
