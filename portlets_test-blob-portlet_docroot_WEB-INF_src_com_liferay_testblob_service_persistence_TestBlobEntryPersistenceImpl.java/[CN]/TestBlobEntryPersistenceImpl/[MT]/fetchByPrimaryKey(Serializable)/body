@@ -1,0 +1,27 @@
+{
+  TestBlobEntry testBlobEntry=(TestBlobEntry)EntityCacheUtil.getResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
+  if (testBlobEntry == _nullTestBlobEntry) {
+    return null;
+  }
+  if (testBlobEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      testBlobEntry=(TestBlobEntry)session.get(TestBlobEntryImpl.class,primaryKey);
+      if (testBlobEntry != null) {
+        cacheResult(testBlobEntry);
+      }
+ else {
+        EntityCacheUtil.putResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey,_nullTestBlobEntry);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return testBlobEntry;
+}

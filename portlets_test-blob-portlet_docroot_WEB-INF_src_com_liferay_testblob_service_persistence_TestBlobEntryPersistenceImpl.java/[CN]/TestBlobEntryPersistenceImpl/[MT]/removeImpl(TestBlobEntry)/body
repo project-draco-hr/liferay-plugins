@@ -1,0 +1,23 @@
+{
+  testBlobEntry=toUnwrappedModel(testBlobEntry);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(testBlobEntry)) {
+      testBlobEntry=(TestBlobEntry)session.get(TestBlobEntryImpl.class,testBlobEntry.getPrimaryKeyObj());
+    }
+    if (testBlobEntry != null) {
+      session.delete(testBlobEntry);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (testBlobEntry != null) {
+    clearCache(testBlobEntry);
+  }
+  return testBlobEntry;
+}

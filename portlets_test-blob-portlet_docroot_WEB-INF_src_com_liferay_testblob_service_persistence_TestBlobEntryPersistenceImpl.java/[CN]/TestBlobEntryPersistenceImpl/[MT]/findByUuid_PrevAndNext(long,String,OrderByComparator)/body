@@ -1,0 +1,18 @@
+{
+  TestBlobEntry testBlobEntry=findByPrimaryKey(testBlobEntryId);
+  Session session=null;
+  try {
+    session=openSession();
+    TestBlobEntry[] array=new TestBlobEntryImpl[3];
+    array[0]=getByUuid_PrevAndNext(session,testBlobEntry,uuid,orderByComparator,true);
+    array[1]=testBlobEntry;
+    array[2]=getByUuid_PrevAndNext(session,testBlobEntry,uuid,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

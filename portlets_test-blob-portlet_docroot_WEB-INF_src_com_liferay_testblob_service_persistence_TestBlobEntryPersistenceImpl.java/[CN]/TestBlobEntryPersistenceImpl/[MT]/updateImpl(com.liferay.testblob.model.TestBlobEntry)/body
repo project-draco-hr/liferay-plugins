@@ -1,0 +1,46 @@
+{
+  testBlobEntry=toUnwrappedModel(testBlobEntry);
+  boolean isNew=testBlobEntry.isNew();
+  TestBlobEntryModelImpl testBlobEntryModelImpl=(TestBlobEntryModelImpl)testBlobEntry;
+  if (Validator.isNull(testBlobEntry.getUuid())) {
+    String uuid=PortalUUIDUtil.generate();
+    testBlobEntry.setUuid(uuid);
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (testBlobEntry.isNew()) {
+      session.save(testBlobEntry);
+      testBlobEntry.setNew(false);
+    }
+ else {
+      session.evict(testBlobEntry);
+      session.saveOrUpdate(testBlobEntry);
+    }
+    session.flush();
+    session.clear();
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew || !TestBlobEntryModelImpl.COLUMN_BITMASK_ENABLED) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+ else {
+    if ((testBlobEntryModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{testBlobEntryModelImpl.getOriginalUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+      args=new Object[]{testBlobEntryModelImpl.getUuid()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_UUID,args);
+    }
+  }
+  EntityCacheUtil.putResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,testBlobEntry.getPrimaryKey(),testBlobEntry);
+  testBlobEntry.resetOriginalValues();
+  return testBlobEntry;
+}
