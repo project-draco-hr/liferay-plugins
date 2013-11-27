@@ -1,12 +1,16 @@
 {
-  List<AssetTag> assetTags=AssetTagLocalServiceUtil.getGroupTags(groupId);
-  for (  AssetTag assetTag : assetTags) {
-    AssetTagLocalServiceUtil.deleteAssetTag(assetTag);
+  Group globalGroup=GroupLocalServiceUtil.getCompanyGroup(companyId);
+  long globalGroupId=globalGroup.getGroupId();
+  if (groupId != globalGroupId) {
+    List<AssetTag> assetTags=AssetTagLocalServiceUtil.getGroupTags(groupId);
+    for (    AssetTag assetTag : assetTags) {
+      AssetTagLocalServiceUtil.deleteAssetTag(assetTag);
+    }
+    RepositoryLocalServiceUtil.deleteRepositories(groupId);
+    JournalArticleLocalServiceUtil.deleteArticles(groupId);
+    DDMTemplateLocalServiceUtil.deleteTemplates(groupId);
+    DDMStructureLocalServiceUtil.deleteStructures(groupId);
   }
-  RepositoryLocalServiceUtil.deleteRepositories(groupId);
-  JournalArticleLocalServiceUtil.deleteArticles(groupId);
-  DDMTemplateLocalServiceUtil.deleteTemplates(groupId);
-  DDMStructureLocalServiceUtil.deleteStructures(groupId);
   JSONObject jsonObject=getJSONObject(fileName);
   if (jsonObject != null) {
     JSONArray assetsJSONArray=jsonObject.getJSONArray("assets");
@@ -16,4 +20,7 @@
   addJournalArticles(StringPool.BLANK,StringPool.BLANK,_JOURNAL_ARTICLES_DIR_NAME);
   addDDMStructures(StringPool.BLANK,_JOURNAL_DDM_STRUCTURES_DIR_NAME);
   addDDMTemplates(StringPool.BLANK,_JOURNAL_DDM_TEMPLATES_DIR_NAME);
+  addApplicationDisplayTemplates(_APP_DISPLAY_TEMPLATE_DIR_NAME);
+  addDDLStructures(_DDL_STRUCTURE_DIR_NAME);
+  addPageTemplate(_PAGE_TEMPLATE_DIR_NAME);
 }

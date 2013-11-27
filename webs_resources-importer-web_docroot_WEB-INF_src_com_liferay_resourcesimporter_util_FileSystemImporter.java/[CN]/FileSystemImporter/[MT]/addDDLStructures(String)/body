@@ -1,0 +1,11 @@
+{
+  File ddlStructuresDir=new File(_resourcesDir,dirName);
+  if (!ddlStructuresDir.isDirectory() || !ddlStructuresDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(ddlStructuresDir);
+  for (  File file : files) {
+    String fileName=FileUtil.stripExtension(file.getName());
+    addDDMStructures(fileName,getInputStream(file));
+  }
+}

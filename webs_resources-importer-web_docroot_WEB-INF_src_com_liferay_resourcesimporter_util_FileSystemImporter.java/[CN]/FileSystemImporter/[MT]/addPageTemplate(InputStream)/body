@@ -1,0 +1,15 @@
+{
+  String content=StringUtil.read(inputStream);
+  if (Validator.isNull(content)) {
+    return;
+  }
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(content);
+  JSONObject pageTemplateJsonObject=jsonObject.getJSONObject("page_template");
+  String name=pageTemplateJsonObject.getString("name","New Page Template");
+  Map<Locale,String> nameMap=getMap(name);
+  LayoutPrototype layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,name,true,serviceContext);
+  JSONArray columnsJSONArray=pageTemplateJsonObject.getJSONArray("columns");
+  Layout layout=layoutPrototype.getLayout();
+  addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
+  LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+}

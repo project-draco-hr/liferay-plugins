@@ -1,0 +1,16 @@
+{
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),ddmStructureKey);
+  long ddmStructureId=ddmStructure.getStructureId();
+  File ddlStructureFormTemplateDir=new File(_resourcesDir,formTemplateDir + "/" + ddmStructure.getName(Locale.getDefault()));
+  if (!ddlStructureFormTemplateDir.isDirectory() || !ddlStructureFormTemplateDir.canRead()) {
+    return;
+  }
+  File[] files=listFiles(ddlStructureFormTemplateDir);
+  for (  File file : files) {
+    String script=StringUtil.read(getInputStream(file));
+    if (Validator.isNull(script)) {
+      return;
+    }
+    addDDMTemplate(groupId,ddmStructureId,file.getName(),"xsd",script,DDMTemplateConstants.TEMPLATE_TYPE_FORM,DDMTemplateConstants.TEMPLATE_MODE_CREATE);
+  }
+}
