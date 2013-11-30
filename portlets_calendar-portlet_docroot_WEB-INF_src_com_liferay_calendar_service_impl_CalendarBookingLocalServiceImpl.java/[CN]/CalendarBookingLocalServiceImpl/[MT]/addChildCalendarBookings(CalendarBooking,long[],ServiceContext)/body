@@ -3,11 +3,12 @@
     return;
   }
   List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBooking.getCalendarBookingId());
+  Set<Long> existingCalendarBookingIds=new HashSet<Long>(childCalendarIds.length);
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
-    if (childCalendarBooking.isMasterBooking() || ArrayUtil.contains(childCalendarIds,childCalendarBooking.getCalendarId())) {
-      continue;
+    if (!childCalendarBooking.isMasterBooking()) {
+      deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
+      existingCalendarBookingIds.add(childCalendarBooking.getCalendarId());
     }
-    deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
   }
   for (  long calendarId : childCalendarIds) {
     int count=calendarBookingPersistence.countByC_P(calendarId,calendarBooking.getCalendarBookingId());
@@ -17,7 +18,11 @@
     CalendarBooking childCalendarBooking=addCalendarBooking(calendarBooking.getUserId(),calendarId,new long[0],calendarBooking.getCalendarBookingId(),calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartTime(),calendarBooking.getEndTime(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
     try {
       NotificationType notificationType=NotificationType.parse(PortletPropsValues.CALENDAR_NOTIFICATION_DEFAULT_TYPE);
-      NotificationUtil.notifyCalendarBookingRecipients(childCalendarBooking,notificationType,NotificationTemplateType.INVITE,serviceContext);
+      NotificationTemplateType notificationTemplateType=NotificationTemplateType.INVITE;
+      if (existingCalendarBookingIds.contains(childCalendarBooking.getCalendarId())) {
+        notificationTemplateType=NotificationTemplateType.UPDATE;
+      }
+      NotificationUtil.notifyCalendarBookingRecipients(childCalendarBooking,notificationType,notificationTemplateType,serviceContext);
     }
  catch (    Exception e) {
       if (_log.isWarnEnabled()) {
