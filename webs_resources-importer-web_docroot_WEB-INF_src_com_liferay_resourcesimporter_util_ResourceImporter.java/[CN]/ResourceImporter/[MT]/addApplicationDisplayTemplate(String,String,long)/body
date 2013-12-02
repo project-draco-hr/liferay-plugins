@@ -9,13 +9,13 @@
     return;
   }
   for (  String resourcePath : resourcePaths) {
-    File file=new File(resourcePath);
     URL url=servletContext.getResource(resourcePath);
     URLConnection urlConnection=url.openConnection();
     String script=StringUtil.read(urlConnection.getInputStream());
     if (Validator.isNull(script)) {
       continue;
     }
+    File file=new File(resourcePath);
     addApplicationDisplayTemplate(script,file,classNameId);
   }
 }

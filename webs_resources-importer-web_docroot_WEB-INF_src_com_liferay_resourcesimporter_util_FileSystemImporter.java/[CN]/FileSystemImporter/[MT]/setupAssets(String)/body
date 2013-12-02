@@ -1,7 +1,5 @@
 {
-  Group globalGroup=GroupLocalServiceUtil.getCompanyGroup(companyId);
-  long globalGroupId=globalGroup.getGroupId();
-  if (groupId != globalGroupId) {
+  if (!isGlobalGroup()) {
     List<AssetTag> assetTags=AssetTagLocalServiceUtil.getGroupTags(groupId);
     for (    AssetTag assetTag : assetTags) {
       AssetTagLocalServiceUtil.deleteAssetTag(assetTag);
@@ -16,11 +14,11 @@
     JSONArray assetsJSONArray=jsonObject.getJSONArray("assets");
     setupAssets(assetsJSONArray);
   }
-  addDLFileEntries(_DL_DOCUMENTS_DIR_NAME);
-  addJournalArticles(StringPool.BLANK,StringPool.BLANK,_JOURNAL_ARTICLES_DIR_NAME);
+  addApplicationDisplayTemplates(_APPLICATION_DISPLAY_TEMPLATE_DIR_NAME);
+  addDDLStructures(_DDL_STRUCTURE_DIR_NAME);
   addDDMStructures(StringPool.BLANK,_JOURNAL_DDM_STRUCTURES_DIR_NAME);
   addDDMTemplates(StringPool.BLANK,_JOURNAL_DDM_TEMPLATES_DIR_NAME);
-  addApplicationDisplayTemplates(_APP_DISPLAY_TEMPLATE_DIR_NAME);
-  addDDLStructures(_DDL_STRUCTURE_DIR_NAME);
+  addDLFileEntries(_DL_DOCUMENTS_DIR_NAME);
+  addJournalArticles(StringPool.BLANK,StringPool.BLANK,_JOURNAL_ARTICLES_DIR_NAME);
   addPageTemplate(_PAGE_TEMPLATE_DIR_NAME);
 }

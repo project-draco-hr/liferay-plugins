@@ -1,5 +1,4 @@
 {
-  String journalArticleId=getJournalId(fileName);
   String title=FileUtil.stripExtension(fileName);
   JSONObject assetJSONObject=_assetJSONObjectMap.get(fileName);
   Map<Locale,String> descriptionMap=null;
@@ -9,8 +8,7 @@
   }
   String content=StringUtil.read(inputStream);
   content=processJournalArticleContent(content);
-  Locale articleDefaultLocale=LocaleUtil.fromLanguageId(LocalizationUtil.getDefaultLocale(content));
-  Map<Locale,String> titleMap=getMap(articleDefaultLocale,title);
+  Locale articleDefaultLocale=LocaleUtil.fromLanguageId(LocalizationUtil.getDefaultLanguageId(content));
   boolean smallImage=false;
   String smallImageURL=StringPool.BLANK;
   if (assetJSONObject != null) {
@@ -24,6 +22,6 @@
     }
   }
   setServiceContext(fileName);
-  JournalArticle journalArticle=JournalArticleLocalServiceUtil.addArticle(userId,groupId,0,0,0,journalArticleId,false,JournalArticleConstants.VERSION_DEFAULT,titleMap,descriptionMap,content,"general",ddmStructureKey,ddmTemplateKey,StringPool.BLANK,1,1,2010,0,0,0,0,0,0,0,true,0,0,0,0,0,true,true,smallImage,smallImageURL,null,new HashMap<String,byte[]>(),StringPool.BLANK,serviceContext);
+  JournalArticle journalArticle=JournalArticleLocalServiceUtil.addArticle(userId,groupId,0,0,0,getJournalId(fileName),false,JournalArticleConstants.VERSION_DEFAULT,getMap(articleDefaultLocale,title),descriptionMap,content,"general",ddmStructureKey,ddmTemplateKey,StringPool.BLANK,1,1,2010,0,0,0,0,0,0,0,true,0,0,0,0,0,true,true,smallImage,smallImageURL,null,new HashMap<String,byte[]>(),StringPool.BLANK,serviceContext);
   JournalArticleLocalServiceUtil.updateStatus(userId,groupId,journalArticle.getArticleId(),journalArticle.getVersion(),WorkflowConstants.STATUS_APPROVED,StringPool.BLANK,new HashMap<String,Serializable>(),serviceContext);
 }

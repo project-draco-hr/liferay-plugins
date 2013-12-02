@@ -1,16 +1,15 @@
 {
   DDMStructure ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),ddmStructureKey);
-  long ddmStructureId=ddmStructure.getStructureId();
-  File ddlStructureFormTemplateDir=new File(_resourcesDir,formTemplateDir + "/" + ddmStructure.getName(Locale.getDefault()));
-  if (!ddlStructureFormTemplateDir.isDirectory() || !ddlStructureFormTemplateDir.canRead()) {
+  File directory=new File(_resourcesDir,dirName + "/" + ddmStructure.getName(Locale.getDefault()));
+  if (!directory.isDirectory() || !directory.canRead()) {
     return;
   }
-  File[] files=listFiles(ddlStructureFormTemplateDir);
+  File[] files=listFiles(directory);
   for (  File file : files) {
     String script=StringUtil.read(getInputStream(file));
     if (Validator.isNull(script)) {
       return;
     }
-    addDDMTemplate(groupId,ddmStructureId,file.getName(),"xsd",script,DDMTemplateConstants.TEMPLATE_TYPE_FORM,DDMTemplateConstants.TEMPLATE_MODE_CREATE);
+    addDDMTemplate(groupId,ddmStructure.getStructureId(),file.getName(),"xsd",script,DDMTemplateConstants.TEMPLATE_TYPE_FORM,DDMTemplateConstants.TEMPLATE_MODE_CREATE);
   }
 }

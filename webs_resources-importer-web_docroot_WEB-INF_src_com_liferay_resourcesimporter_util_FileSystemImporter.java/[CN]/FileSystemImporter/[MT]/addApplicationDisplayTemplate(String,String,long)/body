@@ -1,10 +1,9 @@
 {
-  String appDisplayTemplateTypeDir=StringUtil.add(parentDirName,dirName,"/");
-  File applicationDisplayTemplatesDir=new File(_resourcesDir,appDisplayTemplateTypeDir);
-  if (!applicationDisplayTemplatesDir.isDirectory() || !applicationDisplayTemplatesDir.canRead()) {
+  File directory=new File(_resourcesDir,parentDirName + "/" + dirName);
+  if (!directory.isDirectory() || !directory.canRead()) {
     return;
   }
-  File[] files=listFiles(applicationDisplayTemplatesDir);
+  File[] files=listFiles(directory);
   for (  File file : files) {
     String script=StringUtil.read(getInputStream(file));
     if (Validator.isNull(script)) {
