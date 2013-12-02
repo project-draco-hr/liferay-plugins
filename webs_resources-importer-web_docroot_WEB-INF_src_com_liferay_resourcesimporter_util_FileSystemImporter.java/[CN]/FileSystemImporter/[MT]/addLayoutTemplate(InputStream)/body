@@ -4,11 +4,11 @@
     return;
   }
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject(content);
-  JSONObject pageTemplateJSONObject=jsonObject.getJSONObject("pageTemplate");
-  String name=pageTemplateJSONObject.getString("name");
+  JSONObject layoutTemplateJSONObject=jsonObject.getJSONObject("layoutTemplate");
+  String name=layoutTemplateJSONObject.getString("name");
   Map<Locale,String> nameMap=getMap(name);
   LayoutPrototype layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,name,true,serviceContext);
-  JSONArray columnsJSONArray=pageTemplateJSONObject.getJSONArray("columns");
+  JSONArray columnsJSONArray=layoutTemplateJSONObject.getJSONArray("columns");
   Layout layout=layoutPrototype.getLayout();
   addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
   LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
