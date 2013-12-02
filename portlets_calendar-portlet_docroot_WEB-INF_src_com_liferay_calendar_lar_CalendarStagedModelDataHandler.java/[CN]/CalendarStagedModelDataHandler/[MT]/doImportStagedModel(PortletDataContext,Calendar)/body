@@ -4,19 +4,27 @@
   Map<Long,Long> calendarResourceIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarResource.class);
   long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendar);
+  Group sourceGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getSourceGroupId());
+  Group newGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getScopeGroupId());
+  String sourceCalendarName=calendar.getName(LocaleUtil.getDefault());
+  Map<Locale,String> calendarNameMap=calendar.getNameMap();
   Calendar importedCalendar=null;
+  if (sourceCalendarName.equals(sourceGroup.getName())) {
+    calendarNameMap=new HashMap<Locale,String>();
+    calendarNameMap.put(LocaleUtil.getDefault(),newGroup.getName());
+  }
   if (portletDataContext.isDataStrategyMirror()) {
     Calendar existingCalendar=CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(),portletDataContext.getScopeGroupId());
     if (existingCalendar == null) {
       serviceContext.setUuid(calendar.getUuid());
-      importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
+      importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendarNameMap,calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
     }
  else {
       importedCalendar=CalendarLocalServiceUtil.updateCalendar(existingCalendar.getCalendarId(),calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
     }
   }
  else {
-    importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendar.getNameMap(),calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
+    importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendarNameMap,calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
   }
   portletDataContext.importClassedModel(calendar,importedCalendar);
 }
