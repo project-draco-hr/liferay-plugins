@@ -1,10 +1,10 @@
 {
   DDMStructure ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),ddmStructureKey);
-  File directory=new File(_resourcesDir,dirName + "/" + ddmStructure.getName(Locale.getDefault()));
-  if (!directory.isDirectory() || !directory.canRead()) {
+  File dir=new File(_resourcesDir,dirName + "/" + ddmStructure.getName(Locale.getDefault()));
+  if (!dir.isDirectory() || !dir.canRead()) {
     return;
   }
-  File[] files=listFiles(directory);
+  File[] files=listFiles(dir);
   for (  File file : files) {
     String language=getDDMTemplateLanguage(file.getName());
     String script=StringUtil.read(getInputStream(file));
