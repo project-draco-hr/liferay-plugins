@@ -14,7 +14,11 @@
     targetClassPK=layoutSetPrototype.getLayoutSetPrototypeId();
   }
  else   if (targetClassName.equals(Group.class.getName())) {
-    if (targetValue.equals(GroupConstants.GUEST)) {
+    if (targetValue.equals(GroupConstants.GLOBAL)) {
+      group=GroupLocalServiceUtil.getCompanyGroup(companyId);
+      companyGroup=true;
+    }
+ else     if (targetValue.equals(GroupConstants.GUEST)) {
       group=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
       List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),false,LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,false,0,1);
       if (!layouts.isEmpty()) {
@@ -30,10 +34,6 @@
           }
         }
       }
-    }
- else     if (targetValue.equals(GroupConstants.GLOBAL)) {
-      group=GroupLocalServiceUtil.getCompanyGroup(companyId);
-      companyGroup=true;
     }
  else {
       group=GroupLocalServiceUtil.fetchGroup(companyId,targetValue);
