@@ -5,10 +5,11 @@
   List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBooking.getCalendarBookingId());
   Set<Long> existingCalendarBookingIds=new HashSet<Long>(childCalendarIds.length);
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
-    if (!childCalendarBooking.isMasterBooking() && !childCalendarBooking.isDenied()) {
-      deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
-      existingCalendarBookingIds.add(childCalendarBooking.getCalendarId());
+    if (childCalendarBooking.isMasterBooking() && childCalendarBooking.isDenied()) {
+      continue;
     }
+    deleteCalendarBooking(childCalendarBooking.getCalendarBookingId());
+    existingCalendarBookingIds.add(childCalendarBooking.getCalendarId());
   }
   for (  long calendarId : childCalendarIds) {
     int count=calendarBookingPersistence.countByC_P(calendarId,calendarBooking.getCalendarBookingId());
