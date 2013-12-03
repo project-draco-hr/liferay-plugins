@@ -1,7 +1,6 @@
 {
   User user=UserLocalServiceUtil.getDefaultUser(companyId);
   userId=user.getUserId();
-  Group group=null;
   if (targetClassName.equals(LayoutSetPrototype.class.getName())) {
     LayoutSetPrototype layoutSetPrototype=getLayoutSetPrototype(companyId,targetValue);
     if (layoutSetPrototype != null) {
@@ -16,7 +15,6 @@
  else   if (targetClassName.equals(Group.class.getName())) {
     if (targetValue.equals(GroupConstants.GLOBAL)) {
       group=GroupLocalServiceUtil.getCompanyGroup(companyId);
-      companyGroup=true;
     }
  else     if (targetValue.equals(GroupConstants.GUEST)) {
       group=GroupLocalServiceUtil.getGroup(companyId,GroupConstants.GUEST);
@@ -45,8 +43,5 @@
       }
     }
     targetClassPK=group.getGroupId();
-  }
-  if (group != null) {
-    groupId=group.getGroupId();
   }
 }
