@@ -1,0 +1,11 @@
+{
+  String calendarName=calendar.getName(LocaleUtil.getDefault());
+  Group sourceGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getSourceGroupId());
+  if (!calendarName.equals(sourceGroup.getName())) {
+    return calendar.getNameMap();
+  }
+  Map<Locale,String> calendarNameMap=new HashMap<Locale,String>();
+  Group scopeGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getScopeGroupId());
+  calendarNameMap.put(LocaleUtil.getDefault(),scopeGroup.getName());
+  return calendarNameMap;
+}

@@ -3,16 +3,9 @@
   StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,CalendarResource.class);
   Map<Long,Long> calendarResourceIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(CalendarResource.class);
   long calendarResourceId=MapUtil.getLong(calendarResourceIds,calendar.getCalendarResourceId(),calendar.getCalendarResourceId());
+  Map<Locale,String> calendarNameMap=getCalendarNameMap(portletDataContext,calendar);
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendar);
-  Group sourceGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getSourceGroupId());
-  Group newGroup=GroupLocalServiceUtil.getGroup(portletDataContext.getScopeGroupId());
-  String sourceCalendarName=calendar.getName(LocaleUtil.getDefault());
-  Map<Locale,String> calendarNameMap=calendar.getNameMap();
   Calendar importedCalendar=null;
-  if (sourceCalendarName.equals(sourceGroup.getName())) {
-    calendarNameMap=new HashMap<Locale,String>();
-    calendarNameMap.put(LocaleUtil.getDefault(),newGroup.getName());
-  }
   if (portletDataContext.isDataStrategyMirror()) {
     Calendar existingCalendar=CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(),portletDataContext.getScopeGroupId());
     if (existingCalendar == null) {
