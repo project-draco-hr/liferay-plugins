@@ -1,13 +1,15 @@
 {
   String servletContextName=message.getString("servletContextName");
   ServletContext servletContext=ServletContextPool.get(servletContextName);
-  URL url=servletContext.getResource(_RESOURCES_DIR);
-  if (url == null) {
+  URL resourcesUrl=servletContext.getResource(_RESOURCES_DIR);
+  URL templatesUrl=servletContext.getResource(_TEMPLATES_DIR);
+  if ((resourcesUrl == null) && (templatesUrl == null)) {
     return;
   }
   Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
   String targetClassName=pluginPackageProperties.getProperty("resources-importer-target-class-name",LayoutSetPrototype.class.getName());
   Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
+  Set<String> templatePaths=servletContext.getResourcePaths(_TEMPLATES_DIR);
   URL privateLARURL=null;
   URL publicLARURL=servletContext.getResource(_RESOURCES_DIR.concat("archive.lar"));
   if (publicLARURL == null) {
@@ -37,6 +39,10 @@
  else       if ((resourcePaths != null) && !resourcePaths.isEmpty()) {
         importer=getResourceImporter();
         importer.setResourcesDir(_RESOURCES_DIR);
+      }
+ else       if ((templatePaths != null) && !templatePaths.isEmpty()) {
+        importer=getTemplateImporter();
+        importer.setResourcesDir(_TEMPLATES_DIR);
       }
  else {
         String resourcesDir=pluginPackageProperties.getProperty("resources-importer-external-dir");
