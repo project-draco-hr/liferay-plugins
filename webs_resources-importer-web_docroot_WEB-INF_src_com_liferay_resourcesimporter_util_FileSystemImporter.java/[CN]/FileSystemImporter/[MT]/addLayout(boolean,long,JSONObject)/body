@@ -33,7 +33,7 @@
     friendlyURL=StringPool.SLASH + friendlyURL;
   }
   friendlyURLMap.put(LocaleUtil.getDefault(),friendlyURL);
-  Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,LayoutConstants.TYPE_PORTLET,typeSettings,hidden,friendlyURLMap,serviceContext);
+  Layout layout=LayoutLocalServiceUtil.addLayout(userId,getGroupId(),privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,LayoutConstants.TYPE_PORTLET,typeSettings,hidden,friendlyURLMap,serviceContext);
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
   if (Validator.isNotNull(layoutTemplateId)) {
@@ -41,7 +41,7 @@
   }
   JSONArray columnsJSONArray=layoutJSONObject.getJSONArray("columns");
   addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
-  LayoutLocalServiceUtil.updateLayout(groupId,layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+  LayoutLocalServiceUtil.updateLayout(getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
   JSONArray layoutsJSONArray=layoutJSONObject.getJSONArray("layouts");
   addLayouts(privateLayout,layout.getLayoutId(),layoutsJSONArray);
 }
