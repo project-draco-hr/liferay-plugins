@@ -1,9 +1,7 @@
 {
   String servletContextName=message.getString("servletContextName");
   ServletContext servletContext=ServletContextPool.get(servletContextName);
-  URL resourcesUrl=servletContext.getResource(_RESOURCES_DIR);
-  URL templatesUrl=servletContext.getResource(_TEMPLATES_DIR);
-  if ((resourcesUrl == null) && (templatesUrl == null)) {
+  if ((servletContext.getResource(_RESOURCES_DIR) == null) && (servletContext.getResource(_TEMPLATES_DIR) == null)) {
     return;
   }
   Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
@@ -41,7 +39,9 @@
         importer.setResourcesDir(_RESOURCES_DIR);
       }
  else       if ((templatePaths != null) && !templatePaths.isEmpty()) {
-        importer=getTemplateImporter();
+        importer=getResourceImporter();
+        Group group=GroupLocalServiceUtil.getCompanyGroup(companyId);
+        importer.setGroupId(group.getGroupId());
         importer.setResourcesDir(_TEMPLATES_DIR);
       }
  else {
