@@ -4,7 +4,8 @@
   StringBundler sb=new StringBundler(5);
   sb.append(portalURL);
   sb.append(PortalUtil.getPathContext());
-  if (Validator.isNotNull(languageId)) {
+  String availableLocales[]=PropsUtil.getArray(PropsKeys.LOCALES_ENABLED);
+  if (ArrayUtil.contains(availableLocales,languageId)) {
     sb.append(StringPool.SLASH);
     sb.append(languageId);
   }
