@@ -1,5 +1,11 @@
 {
+  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+  long groupId=layout.getGroupId();
+  long displayPortlet=PortalUtil.getPlidFromPortletId(groupId,PortletKeys.KNOWLEDGE_BASE_DISPLAY);
   String portletId=PortletKeys.KNOWLEDGE_BASE_ARTICLE_DEFAULT_INSTANCE;
+  if (displayPortlet > 0) {
+    portletId=PortletKeys.KNOWLEDGE_BASE_DISPLAY;
+  }
   PortletURL portletURL=getKBArticleURL(plid,portletId,request);
   if (status != WorkflowConstants.STATUS_APPROVED) {
     portletURL.setParameter("status",String.valueOf(status));
@@ -9,6 +15,8 @@
     portletURL.setParameter("p_p_auth",token);
   }
   portletURL.setPortletMode(PortletMode.VIEW);
-  portletURL.setWindowState(LiferayWindowState.MAXIMIZED);
+  if (displayPortlet == 0) {
+    portletURL.setWindowState(LiferayWindowState.MAXIMIZED);
+  }
   return portletURL;
 }
