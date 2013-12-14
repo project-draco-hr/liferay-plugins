@@ -1,5 +1,8 @@
 {
   if (activitySet.getType() == SocialActivityKeyConstants.BOOKMARKS_UPDATE_ENTRY) {
+    if (!hasPermissions(activitySet,serviceContext)) {
+      return null;
+    }
     return getBody(activitySet.getClassName(),activitySet.getClassPK(),serviceContext);
   }
   return super.getBody(activitySet,serviceContext);

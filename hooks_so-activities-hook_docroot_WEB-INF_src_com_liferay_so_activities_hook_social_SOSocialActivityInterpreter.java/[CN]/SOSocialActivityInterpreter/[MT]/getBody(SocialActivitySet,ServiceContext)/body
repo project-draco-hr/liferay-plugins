@@ -5,9 +5,7 @@
   int viewableActivities=0;
   List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
   for (  SocialActivity activity : activities) {
-    ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
-    PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-    if (!hasPermissions(permissionChecker,activity,ActionKeys.VIEW,serviceContext)) {
+    if (!hasPermissions(activity,serviceContext)) {
       continue;
     }
     SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity,serviceContext);

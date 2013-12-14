@@ -1,5 +1,8 @@
 {
   if ((activitySet.getType() == SocialActivityKeyConstants.BLOGS_ADD_COMMENT) || (activitySet.getType() == SocialActivityKeyConstants.BLOGS_UPDATE_ENTRY) || (activitySet.getType() == SocialActivityConstants.TYPE_ADD_COMMENT)) {
+    if (!hasPermissions(activitySet,serviceContext)) {
+      return null;
+    }
     return getBody(activitySet.getClassName(),activitySet.getClassPK(),serviceContext);
   }
   return super.getBody(activitySet,serviceContext);
