@@ -63,8 +63,8 @@
         targetValue=TextFormatter.format(servletContextName,TextFormatter.J);
       }
       importer.setTargetValue(targetValue);
-      int version=GetterUtil.getInteger(pluginPackageProperties.getProperty("module-incremental-version","1"));
-      importer.setVersion(version);
+      PluginPackage pluginPackage=DeployManagerUtil.getInstalledPluginPackage(servletContextName);
+      importer.setVersion(pluginPackage.getVersion());
       boolean developerModeEnabled=GetterUtil.getBoolean(pluginPackageProperties.getProperty("resources-importer-developer-mode-enabled"));
       importer.setDeveloperModeEnabled(developerModeEnabled);
       importer.afterPropertiesSet();
