@@ -13,6 +13,11 @@
     userId=jsonObject.getLong("userId");
   }
  else {
+    UserThread userThread=UserThreadLocalServiceUtil.fetchUserThread(serviceContext.getUserId(),mbMessage.getThreadId());
+    if ((userThread == null) || userThread.isDeleted()) {
+      UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
+      return null;
+    }
     body=mbMessage.getBody();
     userId=mbMessage.getUserId();
   }
