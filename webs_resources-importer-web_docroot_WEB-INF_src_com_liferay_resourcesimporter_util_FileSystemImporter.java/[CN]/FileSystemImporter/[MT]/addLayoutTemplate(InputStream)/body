@@ -7,7 +7,17 @@
   JSONObject layoutTemplateJSONObject=jsonObject.getJSONObject("layoutTemplate");
   String name=layoutTemplateJSONObject.getString("name");
   Map<Locale,String> nameMap=getMap(name);
-  LayoutPrototype layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,name,true,serviceContext);
+  LayoutPrototype layoutPrototype=getLayoutPrototype(companyId,name);
+  if (layoutPrototype != null) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Layout prototype already exists for " + name);
+    }
+    if (!developerModeEnabled) {
+      return;
+    }
+    LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(layoutPrototype);
+  }
+  layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,name,true,serviceContext);
   JSONArray columnsJSONArray=layoutTemplateJSONObject.getJSONArray("columns");
   Layout layout=layoutPrototype.getLayout();
   addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);

@@ -1,5 +1,15 @@
 {
-  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,PortalUtil.getClassNameId(DDLRecordSet.class),null,getMap(fileName),null,StringUtil.read(inputStream),PropsUtil.get(PropsKeys.DYNAMIC_DATA_LISTS_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),getTemplateKey(fileName));
+  if (ddmStructure != null) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Structure already exists for " + fileName + " with version "+ version);
+    }
+    if (!developerModeEnabled) {
+      return;
+    }
+    DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
+  }
+  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,PortalUtil.getClassNameId(DDLRecordSet.class),getTemplateKey(fileName),getMap(fileName),null,StringUtil.read(inputStream),PropsUtil.get(PropsKeys.DYNAMIC_DATA_LISTS_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
   addDDLDisplayTemplates(ddmStructure.getStructureKey(),_DDL_STRUCTURE_DISPLAY_TEMPLATE_DIR_NAME);
   addDDLFormTemplates(ddmStructure.getStructureKey(),_DDL_STRUCTURE_FORM_TEMPLATE_DIR_NAME);
 }

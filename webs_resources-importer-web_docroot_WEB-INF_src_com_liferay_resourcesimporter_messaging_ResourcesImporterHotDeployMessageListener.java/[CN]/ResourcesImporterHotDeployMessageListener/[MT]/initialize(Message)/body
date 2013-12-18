@@ -40,7 +40,7 @@
       }
  else       if ((templatePaths != null) && !templatePaths.isEmpty()) {
         importer=getResourceImporter();
-        Group group=GroupLocalServiceUtil.getCompanyGroup(companyId);
+        Group group=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
         importer.setGroupId(group.getGroupId());
         importer.setResourcesDir(_TEMPLATES_DIR);
       }
@@ -63,8 +63,11 @@
         targetValue=TextFormatter.format(servletContextName,TextFormatter.J);
       }
       importer.setTargetValue(targetValue);
-      importer.afterPropertiesSet();
+      int version=GetterUtil.getInteger(pluginPackageProperties.getProperty("module-incremental-version","1"));
+      importer.setVersion(version);
       boolean developerModeEnabled=GetterUtil.getBoolean(pluginPackageProperties.getProperty("resources-importer-developer-mode-enabled"));
+      importer.setDeveloperModeEnabled(developerModeEnabled);
+      importer.afterPropertiesSet();
       if (!developerModeEnabled && importer.isExisting() && !importer.isCompanyGroup()) {
         if (_log.isInfoEnabled()) {
           _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
