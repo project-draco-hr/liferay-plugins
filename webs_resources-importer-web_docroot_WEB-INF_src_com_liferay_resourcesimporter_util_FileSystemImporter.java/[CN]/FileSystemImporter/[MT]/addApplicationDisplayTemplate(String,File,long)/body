@@ -1,14 +1,14 @@
 {
   String name=FileUtil.stripExtension(file.getName());
-  DDMTemplate template=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,classNameId,getTemplateKey(name));
-  if (template != null) {
-    if (_log.isInfoEnabled()) {
-      _log.info("Template already exists for " + name + " with version "+ version);
-    }
+  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,classNameId,getKey(name));
+  if (ddmTemplate != null) {
     if (!developerModeEnabled) {
+      if (_log.isInfoEnabled()) {
+        _log.info("Template already exists for " + name + " with "+ "version "+ version);
+      }
       return;
     }
-    DDMTemplateLocalServiceUtil.deleteTemplate(template);
+    DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
   }
-  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getTemplateKey(name),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(name),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
 }
