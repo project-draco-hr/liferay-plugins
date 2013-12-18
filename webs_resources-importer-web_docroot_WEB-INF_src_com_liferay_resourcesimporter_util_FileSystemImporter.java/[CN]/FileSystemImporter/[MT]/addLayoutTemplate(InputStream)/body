@@ -6,18 +6,17 @@
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject(content);
   JSONObject layoutTemplateJSONObject=jsonObject.getJSONObject("layoutTemplate");
   String name=layoutTemplateJSONObject.getString("name");
-  Map<Locale,String> nameMap=getMap(name);
   LayoutPrototype layoutPrototype=getLayoutPrototype(companyId,name);
   if (layoutPrototype != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
-        _log.info("Layout prototype already exists for " + name);
+        _log.info("Layout prototype with name " + name + " already exists for company "+ companyId);
       }
       return;
     }
     LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(layoutPrototype);
   }
-  layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,name,true,serviceContext);
+  layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,getMap(name),name,true,serviceContext);
   JSONArray columnsJSONArray=layoutTemplateJSONObject.getJSONArray("columns");
   Layout layout=layoutPrototype.getLayout();
   addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);

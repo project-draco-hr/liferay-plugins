@@ -1,14 +1,15 @@
 {
-  fileName=FileUtil.stripExtension(FileUtil.getShortFileName(fileName));
-  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,PortalUtil.getClassNameId(DDMStructure.class),getKey(fileName));
+  fileName=FileUtil.getShortFileName(fileName);
+  String name=FileUtil.stripExtension(fileName);
+  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,PortalUtil.getClassNameId(DDMStructure.class),getKey(name));
   if (ddmTemplate != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
-        _log.info("Template already exists for " + fileName + " with version "+ version);
+        _log.info("DDMTemplate with name " + name + " and version "+ version+ " already exists");
       }
       return;
     }
     DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
   }
-  DDMTemplateLocalServiceUtil.addTemplate(userId,templateGroupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructureId,getKey(fileName),getMap(fileName),null,type,mode,language,script,false,false,StringPool.BLANK,null,serviceContext);
+  DDMTemplateLocalServiceUtil.addTemplate(userId,templateGroupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructureId,getKey(name),getMap(fileName),null,type,mode,language,script,false,false,StringPool.BLANK,null,serviceContext);
 }

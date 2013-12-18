@@ -7,12 +7,12 @@
   if (ddmTemplate != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
-        _log.info("Template already exists for " + fileName + " with version "+ version);
+        _log.info("DDMTemplate with name " + name + " and version "+ version+ " already exists");
       }
       return;
     }
     DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
   }
-  ddmTemplate=DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,null,getDDMTemplateLanguage(fileName),replaceFileEntryURL(xsl),false,false,null,null,serviceContext);
+  ddmTemplate=DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),getKey(name),getMap(fileName),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,null,getDDMTemplateLanguage(fileName),replaceFileEntryURL(xsl),false,false,null,null,serviceContext);
   addJournalArticles(ddmStructureKey,ddmTemplate.getTemplateKey(),_JOURNAL_ARTICLES_DIR_NAME + name);
 }

@@ -1,22 +1,21 @@
 {
   String name=FileUtil.stripExtension(fileName);
-  Map<Locale,String> nameMap=getMap(name);
-  String xsd=StringUtil.read(inputStream);
-  if (isJournalStructureXSD(xsd)) {
-    xsd=JournalConverterUtil.getDDMXSD(xsd);
-  }
-  setServiceContext(fileName);
-  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName));
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),getKey(name));
   if (ddmStructure != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
-        _log.info("Structure already exists for " + fileName + " with version "+ version);
+        _log.info("DDMStructure with name " + name + " and version "+ version+ " already exists");
       }
       return;
     }
     DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
   }
-  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),nameMap,null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  String xsd=StringUtil.read(inputStream);
+  if (isJournalStructureXSD(xsd)) {
+    xsd=JournalConverterUtil.getDDMXSD(xsd);
+  }
+  setServiceContext(fileName);
+  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),getKey(name),getMap(fileName),null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
   addDDMTemplates(ddmStructure.getStructureKey(),_JOURNAL_DDM_TEMPLATES_DIR_NAME + name);
   if (Validator.isNull(parentDDMStructureKey)) {
     addDDMStructures(ddmStructure.getStructureKey(),_JOURNAL_DDM_STRUCTURES_DIR_NAME + name);
