@@ -1,10 +1,5 @@
 {
-  Layout layout=LayoutLocalServiceUtil.getLayout(plid);
-  long selPlid=PortalUtil.getPlidFromPortletId(layout.getGroupId(),PortletKeys.KNOWLEDGE_BASE_DISPLAY);
-  String portletId=PortletKeys.KNOWLEDGE_BASE_ARTICLE_DEFAULT_INSTANCE;
-  if (selPlid != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
-    portletId=PortletKeys.KNOWLEDGE_BASE_DISPLAY;
-  }
+  String portletId=getPortletId(plid);
   PortletURL portletURL=getKBArticleURL(plid,portletId,request);
   if (status != WorkflowConstants.STATUS_APPROVED) {
     portletURL.setParameter("status",String.valueOf(status));
@@ -14,7 +9,7 @@
     portletURL.setParameter("p_p_auth",token);
   }
   portletURL.setPortletMode(PortletMode.VIEW);
-  if (selPlid == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
+  if (Validator.equals(portletId,PortletKeys.KNOWLEDGE_BASE_ARTICLE_DEFAULT_INSTANCE)) {
     portletURL.setWindowState(LiferayWindowState.MAXIMIZED);
   }
   return portletURL;
