@@ -1,0 +1,21 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("cmd","GET_ORDER");
+  jsonObject.put("hostName",LicenseManagerUtil.getHostName());
+  jsonObject.put("ipAddresses",StringUtil.merge(LicenseManagerUtil.getIpAddresses()));
+  jsonObject.put("macAddresses",StringUtil.merge(LicenseManagerUtil.getMacAddresses()));
+  jsonObject.put("productEntryName",productEntryName);
+  jsonObject.put("serverId",Arrays.toString(getServerIdBytes()));
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
+  String response=null;
+  try {
+    currentThread.setContextClassLoader(PortalClassLoaderUtil.getClassLoader());
+    response=(String)PortalClassInvoker.invoke(false,_sendRequestMethodKey,jsonObject.toString());
+  }
+  finally {
+    currentThread.setContextClassLoader(contextClassLoader);
+  }
+  JSONObject responseJSONObject=JSONFactoryUtil.createJSONObject(response);
+  return responseJSONObject.getString("orderUuid");
+}
