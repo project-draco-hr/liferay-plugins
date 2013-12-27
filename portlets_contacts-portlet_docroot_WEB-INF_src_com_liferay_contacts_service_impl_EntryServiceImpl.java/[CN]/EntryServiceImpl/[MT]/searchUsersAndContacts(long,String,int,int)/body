@@ -1,0 +1,16 @@
+{
+  JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
+  long userId=getUserId();
+  List<BaseModel<?>> contacts=entryLocalService.searchUsersAndContacts(companyId,userId,keywords,start,end);
+  for (  BaseModel<?> contact : contacts) {
+    JSONObject jsonObj=null;
+    if (contact instanceof User) {
+      jsonObj=ContactsUtil.getUserJSONObject(userId,(User)contact);
+    }
+ else {
+      jsonObj=ContactsUtil.getEntryJSONObject((Entry)contact);
+    }
+    jsonArray.put(jsonObj);
+  }
+  return jsonArray;
+}
