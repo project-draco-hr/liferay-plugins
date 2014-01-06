@@ -4,7 +4,7 @@
     return calendarBooking;
   }
   TrashEntry trashEntry=trashEntryLocalService.getEntry(CalendarBooking.class.getName(),calendarBookingId);
-  updateStatus(userId,calendarBookingId,trashEntry.getStatus(),new ServiceContext());
+  calendarBookingLocalService.updateStatus(userId,calendarBookingId,trashEntry.getStatus(),new ServiceContext());
   socialActivityCounterLocalService.enableActivityCounters(CalendarBooking.class.getName(),calendarBookingId);
   socialActivityLocalService.addActivity(userId,calendarBooking.getGroupId(),CalendarBooking.class.getName(),calendarBookingId,SocialActivityConstants.TYPE_RESTORE_FROM_TRASH,getExtraDataJSON(calendarBooking),0);
   return calendarBooking;
