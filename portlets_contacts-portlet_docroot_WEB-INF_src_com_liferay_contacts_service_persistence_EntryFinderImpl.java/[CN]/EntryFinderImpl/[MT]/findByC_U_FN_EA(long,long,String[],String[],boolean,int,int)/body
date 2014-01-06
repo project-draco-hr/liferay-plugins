@@ -13,7 +13,7 @@
     sql=CustomSQLUtil.replaceKeywords(sql,"lower(Contacts_Entry.fullName)",StringPool.LIKE,false,fullNames);
     sql=CustomSQLUtil.replaceKeywords(sql,"lower(Contacts_Entry.emailAddress)",StringPool.LIKE,true,emailAddresses);
     sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
-    SQLQuery q=session.createSQLQuery(sql);
+    SQLQuery q=session.createSynchronizedSQLQuery(sql);
     q.addScalar("id",Type.LONG);
     q.addScalar("name",Type.STRING);
     q.addScalar("portalUser",Type.INTEGER);

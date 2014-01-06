@@ -8,7 +8,7 @@
     sql=CustomSQLUtil.replaceKeywords(sql,"lower(fullName)",StringPool.LIKE,false,fullNames);
     sql=CustomSQLUtil.replaceKeywords(sql,"lower(emailAddress)",StringPool.LIKE,true,emailAddresses);
     sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
-    SQLQuery q=session.createSQLQuery(sql);
+    SQLQuery q=session.createSynchronizedSQLQuery(sql);
     q.addEntity("Contacts_Entry",EntryImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
