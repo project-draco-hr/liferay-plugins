@@ -1,21 +1,21 @@
 {
-  JSONObject jsonObj=JSONFactoryUtil.createJSONObject();
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   boolean block=SocialRelationLocalServiceUtil.hasRelation(userId,user.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY);
-  jsonObj.put("block",block);
-  jsonObj.put("emailAddress",user.getEmailAddress());
-  jsonObj.put("firstName",user.getFirstName());
-  jsonObj.put("fullName",user.getFullName());
-  jsonObj.put("jobTitle",user.getJobTitle());
-  jsonObj.put("lastName",user.getLastName());
-  jsonObj.put("portalUser",true);
-  jsonObj.put("userId",String.valueOf(user.getUserId()));
+  jsonObject.put("block",block);
+  jsonObject.put("emailAddress",user.getEmailAddress());
+  jsonObject.put("firstName",user.getFirstName());
+  jsonObject.put("fullName",user.getFullName());
+  jsonObject.put("jobTitle",user.getJobTitle());
+  jsonObject.put("lastName",user.getLastName());
+  jsonObject.put("portalUser",true);
+  jsonObject.put("userId",String.valueOf(user.getUserId()));
   if (!SocialRelationLocalServiceUtil.hasRelation(user.getUserId(),userId,SocialRelationConstants.TYPE_UNI_ENEMY) && !SocialRelationLocalServiceUtil.hasRelation(userId,user.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY)) {
     boolean connectionRequested=SocialRequestLocalServiceUtil.hasRequest(userId,User.class.getName(),userId,SocialRelationConstants.TYPE_BI_CONNECTION,user.getUserId(),SocialRequestConstants.STATUS_PENDING);
-    jsonObj.put("connectionRequested",connectionRequested);
+    jsonObject.put("connectionRequested",connectionRequested);
     boolean connected=!connectionRequested && SocialRelationLocalServiceUtil.hasRelation(userId,user.getUserId(),SocialRelationConstants.TYPE_BI_CONNECTION);
-    jsonObj.put("connected",connected);
+    jsonObject.put("connected",connected);
     boolean following=SocialRelationLocalServiceUtil.hasRelation(userId,user.getUserId(),SocialRelationConstants.TYPE_UNI_FOLLOWER);
-    jsonObj.put("following",following);
+    jsonObject.put("following",following);
   }
-  return jsonObj;
+  return jsonObject;
 }
