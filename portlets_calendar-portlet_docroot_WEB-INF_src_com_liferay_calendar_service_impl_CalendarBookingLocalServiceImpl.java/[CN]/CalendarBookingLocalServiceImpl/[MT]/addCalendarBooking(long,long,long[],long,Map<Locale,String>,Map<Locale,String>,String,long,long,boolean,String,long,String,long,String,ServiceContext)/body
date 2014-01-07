@@ -47,17 +47,13 @@
   calendarBooking.setSecondReminder(secondReminder);
   calendarBooking.setSecondReminderType(secondReminderType);
   calendarBooking.setExpandoBridgeAttributes(serviceContext);
-  int status=CalendarBookingWorkflowConstants.STATUS_PENDING;
-  if (parentCalendarBookingId == 0) {
-    status=CalendarBookingWorkflowConstants.STATUS_APPROVED;
-  }
-  calendarBooking.setStatus(status);
+  calendarBooking.setStatus(CalendarBookingWorkflowConstants.STATUS_PENDING);
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
   resourceLocalService.addModelResources(calendarBooking,serviceContext);
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
   socialActivityLocalService.addActivity(userId,calendarBooking.getGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.ADD_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking),0);
-  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBookingId,serviceContext);
+  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBooking,serviceContext);
   return calendarBooking;
 }
