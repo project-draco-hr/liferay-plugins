@@ -17,19 +17,19 @@
       if (layoutTypePortlet.hasPortletId(PortletKeys.ANNOUNCEMENTS)) {
         LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
         for (        String columnName : layoutTemplate.getColumns()) {
-          String columnProperty=typeSettingsProperties.getProperty(columnName);
-          columnProperty=StringUtil.replace(columnProperty,PortletKeys.ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
-          typeSettingsProperties.setProperty(columnName,columnProperty);
+          String columnValue=typeSettingsProperties.getProperty(columnName);
+          columnValue=StringUtil.replace(columnValue,PortletKeys.ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
+          typeSettingsProperties.setProperty(columnName,columnValue);
         }
         layout.setTypeSettingsProperties(typeSettingsProperties);
       }
  else {
-        String columnProperty=typeSettingsProperties.getProperty("column-1");
-        if (Validator.isNull(columnProperty)) {
+        String columnValue=typeSettingsProperties.getProperty("column-1");
+        if (Validator.isNull(columnValue)) {
           return;
         }
         int columnPos=0;
-        if (StringUtil.contains(columnProperty,PortletKeys.MICROBLOGS)) {
+        if (StringUtil.contains(columnValue,PortletKeys.MICROBLOGS)) {
           columnPos=1;
         }
         layoutTypePortlet.addPortletId(0,PortletKeys.SO_ANNOUNCEMENTS,"column-1",columnPos,false);
