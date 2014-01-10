@@ -1,0 +1,14 @@
+{
+  for (  long companyId : PortalUtil.getCompanyIds()) {
+    String[] layoutSetPrototypeKeys=new String[]{SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_SITE,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE};
+    for (    String layoutSetPrototypeKey : layoutSetPrototypeKeys) {
+      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(companyId,layoutSetPrototypeKey);
+      if (layoutSetPrototype == null) {
+        continue;
+      }
+      long layoutSetPrototypeId=layoutSetPrototype.getLayoutSetPrototypeId();
+      Group group=GroupLocalServiceUtil.getLayoutSetPrototypeGroup(companyId,layoutSetPrototypeId);
+      ExpandoValueLocalServiceUtil.addValue(companyId,Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"socialOfficeEnabled",group.getGroupId(),true);
+    }
+  }
+}
