@@ -1,0 +1,40 @@
+{
+  while (true) {
+    WatchKey watchKey;
+    try {
+      watchKey=_watchService.take();
+    }
+ catch (    InterruptedException ie) {
+      return;
+    }
+    Path dir=_watchKeys.get(watchKey);
+    if (dir == null) {
+      continue;
+    }
+    List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
+    for (int i=0; i < watchEvents.size(); i++) {
+      WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
+      Path name=watchEvent.context();
+      Path child=dir.resolve(name);
+      fireWatchEventListeners(watchEvent,child);
+      WatchEvent.Kind kind=watchEvent.kind();
+      if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
+        try {
+          boolean isDirectory=Files.isDirectory(child,LinkOption.NOFOLLOW_LINKS);
+          if (isDirectory) {
+            _registerRecursive(child);
+          }
+        }
+ catch (        IOException ioe) {
+        }
+      }
+    }
+    boolean valid=watchKey.reset();
+    if (!valid) {
+      _watchKeys.remove(watchKey);
+      if (_watchKeys.isEmpty()) {
+        break;
+      }
+    }
+  }
+}
