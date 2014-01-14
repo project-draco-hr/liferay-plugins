@@ -12,8 +12,8 @@
       continue;
     }
     List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
-    for (    WatchEvent<?> tempWatchEvent : watchEvents) {
-      WatchEvent<Path> watchEvent=(WatchEvent<Path>)tempWatchEvent;
+    for (int i=0; i < watchEvents.size(); i++) {
+      WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
       Path childPath=parentPath.resolve(watchEvent.context());
       fireWatchEventListeners(watchEvent,childPath);
       WatchEvent.Kind kind=watchEvent.kind();
