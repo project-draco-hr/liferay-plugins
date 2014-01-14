@@ -1,0 +1,15 @@
+{
+  if (recursive) {
+    Files.walkFileTree(path,new SimpleFileVisitor<Path>(){
+      @Override public FileVisitResult preVisitDirectory(      Path path,      BasicFileAttributes basicFileAttributes) throws IOException {
+        register(path,false);
+        return FileVisitResult.CONTINUE;
+      }
+    }
+);
+  }
+ else {
+    WatchKey watchKey=path.register(_watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
+    _paths.put(watchKey,path);
+  }
+}
