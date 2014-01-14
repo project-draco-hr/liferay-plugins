@@ -24,8 +24,15 @@
         layout.setTypeSettingsProperties(typeSettingsProperties);
       }
  else {
-        if (layout.getLayoutId() != 1) {
+        if (layout.getPriority() != 0) {
           return;
+        }
+        LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(layout.getCompanyId(),SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
+        if (layoutSetPrototype != null) {
+          long groupId=layoutSetPrototype.getGroupId();
+          if (groupId == layout.getGroupId()) {
+            return;
+          }
         }
         String columnValue=typeSettingsProperties.getProperty("column-1");
         if (Validator.isNull(columnValue)) {
