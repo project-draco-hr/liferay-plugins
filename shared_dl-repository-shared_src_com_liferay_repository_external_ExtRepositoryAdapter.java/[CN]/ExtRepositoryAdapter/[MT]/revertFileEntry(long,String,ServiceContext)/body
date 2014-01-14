@@ -1,0 +1,23 @@
+{
+  String repositoryMappedFileEntryId=_getRepositoryEntryMappedId(fileEntryId);
+  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getEntry(ExtRepositoryModelType.FILE,repositoryMappedFileEntryId);
+  ExtRepositoryFileVersion extRepositoryFileVersion=null;
+  List<ExtRepositoryFileVersion> extRepositoryFileVersions=_extRepository.getFileVersions(extRepositoryFileEntry);
+  for (  ExtRepositoryFileVersion curExtRepositoryFileVersion : extRepositoryFileVersions) {
+    String tag=curExtRepositoryFileVersion.getVersion();
+    if (tag.equals(version)) {
+      extRepositoryFileVersion=curExtRepositoryFileVersion;
+      break;
+    }
+  }
+  if (extRepositoryFileVersion != null) {
+    InputStream is=_extRepository.getContentStream(extRepositoryFileVersion);
+    _extRepository.checkOutFileEntry(repositoryMappedFileEntryId);
+    _extRepository.updateFileEntry(repositoryMappedFileEntryId,is);
+    String changeLog="Reverted to " + version;
+    _extRepository.checkInFileEntry(repositoryMappedFileEntryId,true,changeLog);
+  }
+ else {
+    throw new NoSuchFileVersionException(extRepositoryFileEntry.getTitle() + "@" + version);
+  }
+}

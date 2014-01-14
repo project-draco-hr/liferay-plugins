@@ -1,0 +1,10 @@
+{
+  String repositoryMappedFileEntryId=_getRepositoryEntryMappedId(fileEntryId);
+  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.updateFileEntry(repositoryMappedFileEntryId,is);
+  _extRepository.checkInFileEntry(repositoryMappedFileEntryId,majorVersion,changeLog);
+  ExtRepositoryFolder folder=_extRepository.getParentFolder(extRepositoryFileEntry);
+  if (!title.equals(extRepositoryFileEntry.getTitle())) {
+    _extRepository.moveEntry(ExtRepositoryModelType.FILE,repositoryMappedFileEntryId,folder.getId(),title);
+  }
+  return _toExtRepositoryEntryAdapter(ExtRepositoryModelAdapterType.FILE,extRepositoryFileEntry);
+}

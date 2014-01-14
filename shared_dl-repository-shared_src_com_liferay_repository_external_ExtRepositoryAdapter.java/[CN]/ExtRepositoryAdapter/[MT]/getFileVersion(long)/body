@@ -1,0 +1,13 @@
+{
+  String repositoryMappedFileVersionId=_getRepositoryEntryMappedId(fileVersionId);
+  String[] parts=repositoryMappedFileVersionId.split("@");
+  String fileEntryMappedId=parts[0];
+  String versionTag=parts[1];
+  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getEntry(ExtRepositoryModelType.FILE,fileEntryMappedId);
+  ExtRepositoryFileVersion extRepositoryFileVersion=_extRepository.getFileVersion(extRepositoryFileEntry,versionTag);
+  if (extRepositoryFileVersion == null) {
+    return null;
+  }
+  ExtRepositoryFileEntryAdapter extRepositoryFileEntryAdapter=_toExtRepositoryEntryAdapter(ExtRepositoryModelAdapterType.FILE,extRepositoryFileEntry);
+  return _toExtRepositoryFileVersionAdapter(extRepositoryFileEntryAdapter,extRepositoryFileVersion);
+}

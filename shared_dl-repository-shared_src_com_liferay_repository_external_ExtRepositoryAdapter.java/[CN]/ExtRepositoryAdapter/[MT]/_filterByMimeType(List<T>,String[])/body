@@ -1,0 +1,18 @@
+{
+  if (mimeTypes == null) {
+    return entries;
+  }
+ else {
+    Set<String> allowedMimeTypes=new HashSet<String>(Arrays.asList(mimeTypes));
+    List<T> filtered=new ArrayList<T>();
+    for (    T entry : entries) {
+      if (entry instanceof ExtRepositoryFileEntryAdapter) {
+        ExtRepositoryFileEntryAdapter fileEntry=(ExtRepositoryFileEntryAdapter)entry;
+        if (allowedMimeTypes.contains(fileEntry.getMimeType())) {
+          filtered.add(entry);
+        }
+      }
+    }
+    return filtered;
+  }
+}

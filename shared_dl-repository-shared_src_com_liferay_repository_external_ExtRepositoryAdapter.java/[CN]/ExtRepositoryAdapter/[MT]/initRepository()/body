@@ -1,0 +1,26 @@
+{
+  try {
+    CredentialsProvider credentialsProvider=new CredentialsProvider(){
+      @Override public String getUser(){
+        return _getLogin();
+      }
+      @Override public String getPassword(){
+        return _getPassword();
+      }
+    }
+;
+    _extRepository.initRepository(getTypeSettingsProperties(),credentialsProvider);
+  }
+ catch (  PortalException pe) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Cannot initialize repository: " + _extRepository,pe);
+    }
+    throw pe;
+  }
+catch (  SystemException se) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Cannot initialize repository: " + _extRepository,se);
+    }
+    throw se;
+  }
+}
