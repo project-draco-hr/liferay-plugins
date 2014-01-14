@@ -1,0 +1,26 @@
+{
+  String screenName=_extRepositoryAdapter.getLiferayUserId(creatorName);
+  User user=null;
+  try {
+    String authType=_extRepositoryAdapter.getAuthType();
+    if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
+      user=UserLocalServiceUtil.getUser(GetterUtil.getLong(screenName));
+    }
+ else     if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
+      user=UserLocalServiceUtil.getUserByEmailAddress(getCompanyId(),screenName);
+    }
+ else     if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
+      user=UserLocalServiceUtil.getUserByScreenName(getCompanyId(),screenName);
+    }
+  }
+ catch (  Exception e) {
+  }
+  if (user == null) {
+    try {
+      user=UserLocalServiceUtil.getDefaultUser(getCompanyId());
+    }
+ catch (    Exception e) {
+    }
+  }
+  return user;
+}
