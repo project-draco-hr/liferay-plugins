@@ -27,12 +27,8 @@
         if (layout.getPriority() != 0) {
           return;
         }
-        LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(layout.getCompanyId(),SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
-        if (layoutSetPrototype != null) {
-          long groupId=layoutSetPrototype.getGroupId();
-          if (groupId == layout.getGroupId()) {
-            return;
-          }
+        if (layout.getGroupId() == _userPublicLayoutSetPrototypeGroupId) {
+          return;
         }
         String columnValue=typeSettingsProperties.getProperty("column-1");
         if (Validator.isNull(columnValue)) {
@@ -47,7 +43,16 @@
       }
       LayoutLocalServiceUtil.updateLayout(layout);
     }
+    protected long getLayoutSetPrototypeGroupId(    long companyId,    String layoutSetPrototypeKey) throws Exception {
+      LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeUtil.fetchLayoutSetPrototype(companyId,layoutSetPrototypeKey);
+      if (layoutSetPrototype != null) {
+        return layoutSetPrototype.getGroupId();
+      }
+      return 0;
+    }
+    private long _userPublicLayoutSetPrototypeGroupId=getLayoutSetPrototypeGroupId(companyId,SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
   }
 ;
+  actionableDynamicQuery.setCompanyId(companyId);
   actionableDynamicQuery.performActions();
 }
