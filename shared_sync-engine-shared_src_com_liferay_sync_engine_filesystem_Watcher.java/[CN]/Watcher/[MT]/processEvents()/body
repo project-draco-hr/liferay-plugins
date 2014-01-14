@@ -7,20 +7,20 @@
  catch (    InterruptedException ie) {
       return;
     }
-    Path path=_paths.get(watchKey);
-    if (path == null) {
+    Path parentPath=_paths.get(watchKey);
+    if (parentPath == null) {
       continue;
     }
     List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
     for (    WatchEvent<?> tempWatchEvent : watchEvents) {
       WatchEvent<Path> watchEvent=(WatchEvent<Path>)tempWatchEvent;
-      Path watchEventContextPath=path.resolve(watchEvent.context());
-      fireWatchEventListeners(watchEvent,watchEventContextPath);
+      Path childPath=parentPath.resolve(watchEvent.context());
+      fireWatchEventListeners(watchEvent,childPath);
       WatchEvent.Kind kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
         try {
-          if (Files.isDirectory(watchEventContextPath,LinkOption.NOFOLLOW_LINKS)) {
-            register(watchEventContextPath,true);
+          if (Files.isDirectory(childPath,LinkOption.NOFOLLOW_LINKS)) {
+            register(childPath,true);
           }
         }
  catch (        IOException ioe) {
