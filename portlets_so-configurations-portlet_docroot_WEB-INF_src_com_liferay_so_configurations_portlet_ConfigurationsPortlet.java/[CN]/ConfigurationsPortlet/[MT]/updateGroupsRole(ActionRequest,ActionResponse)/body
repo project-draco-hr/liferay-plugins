@@ -1,0 +1,8 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  long[] addGroupIds=StringUtil.split(ParamUtil.getString(actionRequest,"addIds"),0L);
+  long[] removeGroupIds=StringUtil.split(ParamUtil.getString(actionRequest,"removeIds"),0L);
+  Role role=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+  GroupLocalServiceUtil.addRoleGroups(role.getRoleId(),addGroupIds);
+  GroupLocalServiceUtil.unsetRoleGroups(role.getRoleId(),removeGroupIds);
+}

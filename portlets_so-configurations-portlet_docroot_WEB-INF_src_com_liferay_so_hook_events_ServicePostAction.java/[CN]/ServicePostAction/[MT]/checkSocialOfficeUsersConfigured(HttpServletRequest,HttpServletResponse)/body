@@ -1,0 +1,40 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  if (!themeDisplay.isSignedIn()) {
+    return;
+  }
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  if (!permissionChecker.isCompanyAdmin() || isSocialOfficeUsersConfigured(themeDisplay.getCompanyId())) {
+    return;
+  }
+  User user=themeDisplay.getUser();
+  if (user.isPasswordReset()) {
+    return;
+  }
+  if (!user.isAgreedToTermsOfUse()) {
+    boolean termsOfUseRequired=false;
+    try {
+      termsOfUseRequired=PrefsPropsUtil.getBoolean(user.getCompanyId(),PropsKeys.TERMS_OF_USE_REQUIRED);
+    }
+ catch (    Exception e) {
+    }
+    if (termsOfUseRequired) {
+      return;
+    }
+  }
+  if (Validator.isNull(user.getReminderQueryQuestion()) || Validator.isNull(user.getReminderQueryAnswer())) {
+    if (PrefsPropsUtil.getBoolean(user.getCompanyId(),PropsKeys.USERS_REMINDER_QUERIES_ENABLED)) {
+      return;
+    }
+  }
+  if (Validator.isNotNull(request.getParameter("_1_WAR_soconfigurationsportlet_mvcPath"))) {
+    setSocialOfficeUsersConfigured(themeDisplay.getCompanyId(),true);
+    return;
+  }
+  Group group=GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(),GroupConstants.CONTROL_PANEL);
+  PortletURL portletURL=PortletURLFactoryUtil.create(request,"1_WAR_soconfigurationsportlet",group.getDefaultPrivatePlid(),PortletRequest.RENDER_PHASE);
+  portletURL.setParameter("mvcPath","/view.jsp");
+  portletURL.setPortletMode(PortletMode.VIEW);
+  portletURL.setWindowState(WindowState.MAXIMIZED);
+  response.sendRedirect(portletURL.toString());
+}
