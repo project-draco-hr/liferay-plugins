@@ -1,37 +1,3 @@
 {
-  while (true) {
-    WatchKey watchKey=null;
-    try {
-      watchKey=_watchService.take();
-    }
- catch (    InterruptedException ie) {
-      return;
-    }
-    Path parentPath=_paths.get(watchKey);
-    if (parentPath == null) {
-      continue;
-    }
-    List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
-    for (int i=0; i < watchEvents.size(); i++) {
-      WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
-      Path childPath=parentPath.resolve(watchEvent.context());
-      fireWatchEventListeners(watchEvent,childPath);
-      WatchEvent.Kind kind=watchEvent.kind();
-      if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
-        try {
-          if (Files.isDirectory(childPath,LinkOption.NOFOLLOW_LINKS)) {
-            register(childPath,true);
-          }
-        }
- catch (        IOException ioe) {
-        }
-      }
-    }
-    if (!watchKey.reset()) {
-      _paths.remove(watchKey);
-      if (_paths.isEmpty()) {
-        break;
-      }
-    }
-  }
+  _executorService.submit(this);
 }
