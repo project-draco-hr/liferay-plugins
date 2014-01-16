@@ -7,20 +7,20 @@
  catch (    InterruptedException ie) {
       return;
     }
-    Path parentPath=_paths.get(watchKey);
-    if (parentPath == null) {
+    Path parentFilePath=_filePaths.get(watchKey);
+    if (parentFilePath == null) {
       continue;
     }
     List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
     for (int i=0; i < watchEvents.size(); i++) {
       WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
-      Path childPath=parentPath.resolve(watchEvent.context());
-      fireWatchEventListeners(watchEvent,childPath);
+      Path childFilePath=parentFilePath.resolve(watchEvent.context());
+      fireWatchEventListeners(watchEvent,childFilePath);
       WatchEvent.Kind<?> kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
         try {
-          if (Files.isDirectory(childPath,LinkOption.NOFOLLOW_LINKS)) {
-            register(childPath,true);
+          if (Files.isDirectory(childFilePath,LinkOption.NOFOLLOW_LINKS)) {
+            register(childFilePath,true);
           }
         }
  catch (        IOException ioe) {
@@ -28,8 +28,8 @@
       }
     }
     if (!watchKey.reset()) {
-      _paths.remove(watchKey);
-      if (_paths.isEmpty()) {
+      _filePaths.remove(watchKey);
+      if (_filePaths.isEmpty()) {
         break;
       }
     }

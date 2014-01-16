@@ -1,15 +1,15 @@
 {
   if (recursive) {
-    Files.walkFileTree(path,new SimpleFileVisitor<Path>(){
-      @Override public FileVisitResult preVisitDirectory(      Path path,      BasicFileAttributes basicFileAttributes) throws IOException {
-        register(path,false);
+    Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
+      @Override public FileVisitResult preVisitDirectory(      Path filePath,      BasicFileAttributes basicFileAttributes) throws IOException {
+        register(filePath,false);
         return FileVisitResult.CONTINUE;
       }
     }
 );
   }
  else {
-    WatchKey watchKey=path.register(_watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
-    _paths.put(watchKey,path);
+    WatchKey watchKey=filePath.register(_watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
+    _filePaths.put(watchKey,filePath);
   }
 }
