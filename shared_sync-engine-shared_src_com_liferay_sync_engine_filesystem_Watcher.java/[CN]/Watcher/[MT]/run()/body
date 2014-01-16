@@ -16,7 +16,7 @@
       WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
       Path childPath=parentPath.resolve(watchEvent.context());
       fireWatchEventListeners(watchEvent,childPath);
-      WatchEvent.Kind kind=watchEvent.kind();
+      WatchEvent.Kind<?> kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
         try {
           if (Files.isDirectory(childPath,LinkOption.NOFOLLOW_LINKS)) {
