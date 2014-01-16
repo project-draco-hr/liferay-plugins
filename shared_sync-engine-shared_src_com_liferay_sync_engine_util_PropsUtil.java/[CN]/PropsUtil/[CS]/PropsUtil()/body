@@ -1,11 +1,8 @@
 {
-  _properties=new Properties();
-  Thread thread=Thread.currentThread();
-  ClassLoader classLoader=thread.getContextClassLoader();
   try {
-    _properties.load(classLoader.getResourceAsStream("sync.properties"));
+    _configuration=new PropertiesConfiguration("sync.properties");
   }
- catch (  Exception e) {
-    _logger.error("Unable to initialize",e);
+ catch (  ConfigurationException ce) {
+    _logger.error("Unable to initialize",ce);
   }
 }
