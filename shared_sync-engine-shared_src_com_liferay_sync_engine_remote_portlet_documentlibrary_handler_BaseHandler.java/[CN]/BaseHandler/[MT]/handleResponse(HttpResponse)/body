@@ -1,0 +1,9 @@
+{
+  StatusLine statusLine=httpResponse.getStatusLine();
+  if (statusLine.getStatusCode() != 200) {
+    _logger.error("Received Error Code {} ",statusLine.getStatusCode());
+    throw new HttpResponseException(statusLine.getStatusCode(),statusLine.getReasonPhrase());
+  }
+  HttpEntity entity=httpResponse.getEntity();
+  return EntityUtils.toString(entity);
+}

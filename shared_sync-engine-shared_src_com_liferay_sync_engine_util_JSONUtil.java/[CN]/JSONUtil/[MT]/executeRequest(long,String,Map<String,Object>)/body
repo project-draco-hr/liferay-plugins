@@ -1,0 +1,20 @@
+{
+  SyncAccount syncAccount=SyncAccountService.getSyncAccount(syncAccountId);
+  HttpClientBuilder httpClientBuilder=HttpClientBuilder.create();
+  URL url=new URL(syncAccount.getUrl());
+  CredentialsProvider credentialsProvider=new BasicCredentialsProvider();
+  credentialsProvider.setCredentials(new AuthScope(url.getHost(),url.getPort()),new UsernamePasswordCredentials(syncAccount.getLogin(),Encryptor.decrypt(syncAccount.getPassword())));
+  httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+  HttpClient httpClient=httpClientBuilder.build();
+  HttpHost httpHost=new HttpHost(url.getHost(),url.getPort(),url.getProtocol());
+  BasicAuthCache basicAuthCache=new BasicAuthCache();
+  BasicScheme basicScheme=new BasicScheme();
+  basicAuthCache.put(httpHost,basicScheme);
+  BasicHttpContext basicHttpContext=new BasicHttpContext();
+  basicHttpContext.setAttribute(HttpClientContext.AUTH_CACHE,basicAuthCache);
+  HttpPost httpPost=new HttpPost(syncAccount.getUrl() + method);
+  MultipartEntityBuilder multipartEntityBuilder=getMultipartEntityBuilder(parameters);
+  httpPost.setEntity(multipartEntityBuilder.build());
+  BaseHandler baseHandler=new BaseHandler();
+  return httpClient.execute(httpHost,httpPost,baseHandler,basicHttpContext);
+}
