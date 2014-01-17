@@ -14,7 +14,7 @@
     sql=InlineSQLHelperUtil.replacePermissionCheck(sql,DLFolder.class.getName(),"SyncDLObject.typePK",null,"SyncDLObject.repositoryId",new long[]{repositoryId},null);
     sb.append(sql);
     sql=sb.toString();
-    SQLQuery q=session.createSQLQuery(sql);
+    SQLQuery q=session.createSynchronizedSQLQuery(sql);
     q.addEntity("SyncDLObject",SyncDLObjectImpl.class);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(companyId);
