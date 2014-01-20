@@ -14,8 +14,8 @@
     List<WatchEvent<?>> watchEvents=watchKey.pollEvents();
     for (int i=0; i < watchEvents.size(); i++) {
       WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
-      Path childFilePath=parentFilePath.resolve(watchEvent.context());
-      fireWatchEventListeners(watchEvent,childFilePath);
+      Path childFilePath=parentFilePath.resolve(watchEvent.context()).normalize();
+      fireWatchEventListener(watchEvent,childFilePath);
       WatchEvent.Kind<?> kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
         try {
