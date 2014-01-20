@@ -1,6 +1,8 @@
 {
-  String name=FileUtil.stripExtension(file.getName());
-  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,classNameId,getKey(name));
+  String fileName=FileUtil.stripExtension(file.getName());
+  String name=getName(fileName);
+  String templateKey=getKey(fileName);
+  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,classNameId,templateKey);
   if (ddmTemplate != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
@@ -10,5 +12,5 @@
     }
     DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
   }
-  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(name),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,templateKey,getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
 }
