@@ -3,13 +3,9 @@
   serviceContext.setCompanyId(companyId);
   long userId=UserLocalServiceUtil.getDefaultUserId(companyId);
   serviceContext.setUserId(userId);
-  CalendarResource calendarResource=null;
   Group group=groupLocalService.getGroup(groupId);
   if (group.isUser()) {
-    calendarResource=CalendarResourceUtil.getUserCalendarResource(group.getCreatorUserId(),serviceContext);
+    return CalendarResourceUtil.getUserCalendarResource(group.getCreatorUserId(),serviceContext);
   }
- else {
-    calendarResource=CalendarResourceUtil.getGroupCalendarResource(groupId,serviceContext);
-  }
-  return calendarResource;
+  return CalendarResourceUtil.getGroupCalendarResource(groupId,serviceContext);
 }
