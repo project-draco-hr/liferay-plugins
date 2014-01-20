@@ -1,0 +1,17 @@
+{
+  FileOutputStream fileOutputStream=null;
+  try {
+    File file=new File(_syncFile.getFilePath());
+    File dir=file.getParentFile();
+    if (!dir.exists()) {
+      dir.mkdirs();
+    }
+    fileOutputStream=new FileOutputStream(file);
+    fileOutputStream.write(response.getBytes());
+  }
+  finally {
+    if (fileOutputStream != null) {
+      fileOutputStream.close();
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncAccountId);
+  URL url=new URL(syncAccount.getUrl());
+  HttpClient httpClient=_getHttpClient(syncAccount,url);
+  HttpHost httpHost=new HttpHost(url.getHost(),url.getPort(),url.getProtocol());
+  HttpPost httpPost=new HttpPost(syncAccount.getUrl() + urlPath);
+  httpPost.setEntity(_getHttpEntity(parameters));
+  return httpClient.execute(httpHost,httpPost,new BaseHandler(),_getBasicHttpContext(httpHost));
+}
