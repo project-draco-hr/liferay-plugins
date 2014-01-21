@@ -3,8 +3,13 @@
   if (Validator.isNull(createAccountURL)) {
     createAccountURL=serviceContext.getPortalURL();
   }
-  String redirectURL=getRedirectURL(serviceContext);
-  redirectURL=addParameterWithPortletNamespace(redirectURL,"key",memberRequest.getKey());
-  createAccountURL=addParameterWithPortletNamespace(createAccountURL,"redirect",redirectURL);
+  try {
+    WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(memberRequest.getCompanyId(),User.class.getName(),0,0);
+  }
+ catch (  NoSuchWorkflowDefinitionLinkException nswdle) {
+    String redirectURL=getRedirectURL(serviceContext);
+    redirectURL=addParameterWithPortletNamespace(redirectURL,"key",memberRequest.getKey());
+    createAccountURL=addParameterWithPortletNamespace(createAccountURL,"redirect",redirectURL);
+  }
   return createAccountURL;
 }
