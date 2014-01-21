@@ -1,8 +1,7 @@
 {
   PowerMockito.mockStatic(HttpUtil.class);
-  Thread thread=new Thread();
-  ClassLoader classLoader=thread.getContextClassLoader();
-  InputStream inputStream=classLoader.getResourceAsStream("com/liferay/sync/dependencies/test_1.json");
+  Class<?> clazz=getClass();
+  InputStream inputStream=clazz.getResourceAsStream("dependencies/test_1.json");
   String response=IOUtils.toString(inputStream);
   inputStream.close();
   Mockito.when(HttpUtil.executePost(Mockito.anyLong(),Mockito.anyString(),Mockito.anyMap())).thenReturn(response);
