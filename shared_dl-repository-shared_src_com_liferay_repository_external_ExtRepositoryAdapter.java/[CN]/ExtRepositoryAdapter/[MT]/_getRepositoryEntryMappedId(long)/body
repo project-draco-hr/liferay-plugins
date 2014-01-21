@@ -1,7 +1,9 @@
 {
   RepositoryEntry repositoryEntry=RepositoryEntryUtil.fetchByPrimaryKey(entryId);
-  if (repositoryEntry == null) {
-    throw new NoSuchRepositoryEntryException("No repository entry exists with {entryId=" + entryId + "}");
+  if (repositoryEntry != null) {
+    return repositoryEntry.getMappedId();
   }
+  DLFolder rootMountFolder=DLFolderLocalServiceUtil.getDLFolder(entryId);
+  repositoryEntry=_getRootRepositoryEntry(rootMountFolder);
   return repositoryEntry.getMappedId();
 }

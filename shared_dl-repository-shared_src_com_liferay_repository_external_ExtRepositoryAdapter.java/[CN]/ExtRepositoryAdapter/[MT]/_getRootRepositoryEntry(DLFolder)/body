@@ -1,0 +1,12 @@
+{
+  RepositoryEntry repositoryEntry=RepositoryEntryUtil.fetchByR_M(getRepositoryId(),_extRepository.getRootFolderId());
+  if (repositoryEntry == null) {
+    try {
+      repositoryEntry=RepositoryEntryLocalServiceUtil.addRepositoryEntry(rootMountFolder.getUserId(),getGroupId(),getRepositoryId(),_extRepository.getRootFolderId(),new ServiceContext());
+    }
+ catch (    PortalException pe) {
+      throw new SystemException("Cannot create root folder entry",pe);
+    }
+  }
+  return repositoryEntry;
+}
