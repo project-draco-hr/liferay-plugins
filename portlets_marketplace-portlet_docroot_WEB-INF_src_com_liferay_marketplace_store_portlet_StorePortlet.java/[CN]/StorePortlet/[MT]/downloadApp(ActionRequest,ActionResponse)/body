@@ -5,6 +5,13 @@
   String url=ParamUtil.getString(actionRequest,"url");
   String version=ParamUtil.getString(actionRequest,"version");
   url=getRemoteAppPackageURL(themeDisplay.getCompanyId(),themeDisplay.getUserId(),token,url);
+  if (!url.startsWith(MarketplaceConstants.MARKETPLACE_URL)) {
+    JSONObject jsonObject=getAppJSONObject(remoteAppId);
+    jsonObject.put("cmd","downloadApp");
+    jsonObject.put("message","fail");
+    writeJSON(actionRequest,actionResponse,jsonObject);
+    return;
+  }
   URL urlObj=new URL(url);
   File tempFile=null;
   try {
