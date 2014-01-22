@@ -1,0 +1,14 @@
+{
+  if (field.equals(Field.CREATE_DATE) || field.equals(Field.MODIFIED_DATE)) {
+    try {
+      DateFormat searchSimpleDateFormat=DateFormatFactoryUtil.getSimpleDateFormat(_INDEX_DATE_FORMAT_PATTERN);
+      return searchSimpleDateFormat.parse(value);
+    }
+ catch (    ParseException pe) {
+      throw new SearchException("Unable to parse date " + value + " for field "+ field);
+    }
+  }
+ else {
+    throw new SearchException("Field '" + field + "'is not of type date");
+  }
+}

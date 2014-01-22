@@ -1,0 +1,30 @@
+{
+  if (field.equals(Field.CREATE_DATE) || field.equals(Field.MODIFIED_DATE)) {
+    throw new SearchException("Field " + field + " is of type Date: use "+ "formatDateParameterValue()");
+  }
+ else   if (field.equals(Field.FOLDER_ID)) {
+    try {
+      long folderId=GetterUtil.getLong(value);
+      return _extRepositoryAdapter.getExtRepositoryObjectKey(folderId);
+    }
+ catch (    SystemException se) {
+      throw new SearchException("Unable to get folder {folderId=" + value + "}",se);
+    }
+catch (    PortalException pe) {
+      throw new SearchException("Unable to get folder {folderId=" + value + "}",pe);
+    }
+  }
+ else   if (field.equals(Field.USER_ID)) {
+    try {
+      long userId=GetterUtil.getLong(value);
+      User user=UserLocalServiceUtil.getUserById(userId);
+      return user.getScreenName();
+    }
+ catch (    Exception e) {
+      throw new SearchException("Unable to get user {userId=" + value + "}",e);
+    }
+  }
+ else {
+    return value;
+  }
+}
