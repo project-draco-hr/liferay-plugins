@@ -1,9 +1,9 @@
 {
-  String repositoryMappedFileVersionId=_getRepositoryEntryMappedId(fileVersionId);
-  ExtRepositoryFileVersionDescriptor extRepositoryFileVersionDescriptor=_extRepository.getExtRepositoryFileVersionDescriptor(repositoryMappedFileVersionId);
-  String fileId=extRepositoryFileVersionDescriptor.getFileId();
+  String extRepositoryFileVersionKey=_getExtRepositoryObjectKey(fileVersionId);
+  ExtRepositoryFileVersionDescriptor extRepositoryFileVersionDescriptor=_extRepository.getExtRepositoryFileVersionDescriptor(extRepositoryFileVersionKey);
+  String fileEntryKey=extRepositoryFileVersionDescriptor.getFileEntryKey();
   String version=extRepositoryFileVersionDescriptor.getVersion();
-  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getExtRepositoryObject(ExtRepositoryObjectType.FILE,fileId);
+  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getExtRepositoryObject(ExtRepositoryObjectType.FILE,fileEntryKey);
   ExtRepositoryFileVersion extRepositoryFileVersion=_extRepository.getExtRepositoryFileVersion(extRepositoryFileEntry,version);
   if (extRepositoryFileVersion == null) {
     return null;

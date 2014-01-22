@@ -1,9 +1,9 @@
 {
-  String repositoryMappedFolderId=_getRepositoryEntryMappedId(folderId);
-  List<String> extRepositoryObjectIds=_extRepository.getSubfolderIds(repositoryMappedFolderId,recurse);
+  String extRepositoryFolderKey=_getExtRepositoryObjectKey(folderId);
+  List<String> extRepositorySubfolderKeys=_extRepository.getSubfolderKeys(extRepositoryFolderKey,recurse);
   List<Long> subfolderIds=new ArrayList<Long>();
-  for (  String extRepositoryObjectId : extRepositoryObjectIds) {
-    Object[] ids=getRepositoryEntryIds(extRepositoryObjectId);
+  for (  String extRepositorySubfolderKey : extRepositorySubfolderKeys) {
+    Object[] ids=getRepositoryEntryIds(extRepositorySubfolderKey);
     long repositoryEntryId=(Long)ids[0];
     subfolderIds.add(repositoryEntryId);
   }

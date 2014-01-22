@@ -1,6 +1,6 @@
 {
-  String repositoryMappedFileEntryId=_getRepositoryEntryMappedId(fileEntryId);
-  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getExtRepositoryObject(ExtRepositoryObjectType.FILE,repositoryMappedFileEntryId);
+  String extRepositoryFileEntryKey=_getExtRepositoryObjectKey(fileEntryId);
+  ExtRepositoryFileEntry extRepositoryFileEntry=_extRepository.getExtRepositoryObject(ExtRepositoryObjectType.FILE,extRepositoryFileEntryKey);
   ExtRepositoryFileVersion extRepositoryFileVersion=null;
   List<ExtRepositoryFileVersion> extRepositoryFileVersions=_extRepository.getExtRepositoryFileVersions(extRepositoryFileEntry);
   for (  ExtRepositoryFileVersion curExtRepositoryFileVersion : extRepositoryFileVersions) {
@@ -12,12 +12,12 @@
   }
   if (extRepositoryFileVersion != null) {
     InputStream is=_extRepository.getContentStream(extRepositoryFileVersion);
-    _extRepository.checkOutExtRepositoryFileEntry(repositoryMappedFileEntryId);
-    _extRepository.updateExtRepositoryFileEntry(repositoryMappedFileEntryId,extRepositoryFileVersion.getMimeType(),is);
+    _extRepository.checkOutExtRepositoryFileEntry(extRepositoryFileEntryKey);
+    _extRepository.updateExtRepositoryFileEntry(extRepositoryFileEntryKey,extRepositoryFileVersion.getMimeType(),is);
     String changeLog="Reverted to " + version;
-    _extRepository.checkInExtRepositoryFileEntry(repositoryMappedFileEntryId,true,changeLog);
+    _extRepository.checkInExtRepositoryFileEntry(extRepositoryFileEntryKey,true,changeLog);
   }
  else {
-    throw new NoSuchFileVersionException("No file version with {id=" + extRepositoryFileEntry.getId() + ", version: "+ version+ "}");
+    throw new NoSuchFileVersionException("No file version with {id=" + extRepositoryFileEntry.getKey() + ", version: "+ version+ "}");
   }
 }
