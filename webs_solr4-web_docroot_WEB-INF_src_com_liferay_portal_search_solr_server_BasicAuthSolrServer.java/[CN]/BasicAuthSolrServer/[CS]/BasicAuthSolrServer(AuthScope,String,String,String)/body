@@ -9,6 +9,7 @@
     }
     CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
     credentialsProvider.setCredentials(authScope,new UsernamePasswordCredentials(_username,_password));
+    defaultHttpClient.addRequestInterceptor(new PreemptiveAuthInterceptor(),0);
   }
   _server=new HttpSolrServer(url,defaultHttpClient);
 }
