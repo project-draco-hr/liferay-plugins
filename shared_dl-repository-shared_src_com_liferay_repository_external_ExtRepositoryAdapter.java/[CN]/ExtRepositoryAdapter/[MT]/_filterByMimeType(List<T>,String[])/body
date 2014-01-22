@@ -2,17 +2,15 @@
   if (mimeTypes == null) {
     return extRepositoryObjects;
   }
- else {
-    Set<String> allowedMimeTypes=new HashSet<String>(Arrays.asList(mimeTypes));
-    List<T> filtered=new ArrayList<T>();
-    for (    T extRepositoryObject : extRepositoryObjects) {
-      if (extRepositoryObject instanceof ExtRepositoryFileEntryAdapter) {
-        ExtRepositoryFileEntryAdapter fileEntry=(ExtRepositoryFileEntryAdapter)extRepositoryObject;
-        if (allowedMimeTypes.contains(fileEntry.getMimeType())) {
-          filtered.add(extRepositoryObject);
-        }
+  Set<String> allowedMimeTypes=new HashSet<String>(Arrays.asList(mimeTypes));
+  List<T> filteredExtRepositoryObjects=new ArrayList<T>();
+  for (  T extRepositoryObject : extRepositoryObjects) {
+    if (extRepositoryObject instanceof ExtRepositoryFileEntryAdapter) {
+      ExtRepositoryFileEntryAdapter extRepositoryFileEntryAdapter=(ExtRepositoryFileEntryAdapter)extRepositoryObject;
+      if (allowedMimeTypes.contains(extRepositoryFileEntryAdapter.getMimeType())) {
+        filteredExtRepositoryObjects.add(extRepositoryObject);
       }
     }
-    return filtered;
   }
+  return filteredExtRepositoryObjects;
 }
