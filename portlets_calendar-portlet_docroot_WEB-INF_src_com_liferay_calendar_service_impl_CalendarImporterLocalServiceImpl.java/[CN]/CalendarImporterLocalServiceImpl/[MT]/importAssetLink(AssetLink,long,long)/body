@@ -1,0 +1,33 @@
+{
+  long entryId1;
+  long entryId2;
+  AssetEntry linkedAssetEntry;
+  if (assetLink.getEntryId1() == oldEntryId) {
+    entryId1=newEntryId;
+    entryId2=assetLink.getEntryId2();
+    linkedAssetEntry=assetEntryPersistence.findByPrimaryKey(entryId2);
+  }
+ else {
+    entryId1=assetLink.getEntryId1();
+    entryId2=newEntryId;
+    linkedAssetEntry=assetEntryPersistence.findByPrimaryKey(entryId1);
+  }
+  if (linkedAssetEntry.getClassNameId() == classNameLocalService.getClassNameId(CalEvent.class)) {
+    CalEvent calEvent=calEventPersistence.findByPrimaryKey(linkedAssetEntry.getClassPK());
+    importCalEvent(calEvent);
+    linkedAssetEntry=assetEntryPersistence.findByG_CU(calEvent.getGroupId(),calEvent.getUuid());
+    if (assetLink.getEntryId1() == oldEntryId) {
+      entryId2=linkedAssetEntry.getEntryId();
+    }
+ else {
+      entryId1=linkedAssetEntry.getEntryId();
+    }
+    int countingAssetLink=assetLinkPersistence.countByE_E_T(entryId1,entryId2,assetLink.getType());
+    if (countingAssetLink > 0) {
+      return;
+    }
+  }
+  long linkId=counterLocalService.increment();
+  addAssetLink(linkId,assetLink.getCompanyId(),assetLink.getUserId(),assetLink.getUserName(),assetLink.getCreateDate(),entryId1,entryId2,assetLink.getType(),assetLink.getWeight());
+  assetLinkLocalService.deleteAssetLink(assetLink);
+}
