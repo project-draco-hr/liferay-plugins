@@ -12,10 +12,18 @@
   }
   if (extRepositoryFileVersion != null) {
     InputStream inputStream=_extRepository.getContentStream(extRepositoryFileVersion);
-    _extRepository.checkOutExtRepositoryFileEntry(extRepositoryFileEntryKey);
+    try {
+      _extRepository.checkOutExtRepositoryFileEntry(extRepositoryFileEntryKey);
+    }
+ catch (    UnsupportedOperationException uoe) {
+    }
     _extRepository.updateExtRepositoryFileEntry(extRepositoryFileEntryKey,extRepositoryFileVersion.getMimeType(),inputStream);
     String changeLog="Reverted to " + version;
-    _extRepository.checkInExtRepositoryFileEntry(extRepositoryFileEntryKey,true,changeLog);
+    try {
+      _extRepository.checkInExtRepositoryFileEntry(extRepositoryFileEntryKey,true,changeLog);
+    }
+ catch (    UnsupportedOperationException uoe) {
+    }
   }
  else {
     throw new NoSuchFileVersionException("No file version with {extRepositoryModelKey=" + extRepositoryFileEntry.getExtRepositoryModelKey() + ", version: "+ version+ "}");

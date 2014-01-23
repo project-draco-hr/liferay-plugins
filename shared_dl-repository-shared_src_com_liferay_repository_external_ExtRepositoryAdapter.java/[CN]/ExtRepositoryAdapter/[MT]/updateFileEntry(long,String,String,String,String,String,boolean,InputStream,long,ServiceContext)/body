@@ -5,9 +5,17 @@
     extRepositoryFileEntry=_extRepository.getExtRepositoryObject(ExtRepositoryObjectType.FILE,extRepositoryFileEntryKey);
   }
  else {
-    extRepositoryFileEntry=_extRepository.checkOutExtRepositoryFileEntry(extRepositoryFileEntryKey);
+    try {
+      _extRepository.checkOutExtRepositoryFileEntry(extRepositoryFileEntryKey);
+    }
+ catch (    UnsupportedOperationException uoe) {
+    }
     extRepositoryFileEntry=_extRepository.updateExtRepositoryFileEntry(extRepositoryFileEntryKey,mimeType,is);
-    _extRepository.checkInExtRepositoryFileEntry(extRepositoryFileEntryKey,majorVersion,changeLog);
+    try {
+      _extRepository.checkInExtRepositoryFileEntry(extRepositoryFileEntryKey,majorVersion,changeLog);
+    }
+ catch (    UnsupportedOperationException uoe) {
+    }
   }
   if (!title.equals(extRepositoryFileEntry.getTitle())) {
     ExtRepositoryFolder folder=_extRepository.getExtRepositoryParentFolder(extRepositoryFileEntry);
