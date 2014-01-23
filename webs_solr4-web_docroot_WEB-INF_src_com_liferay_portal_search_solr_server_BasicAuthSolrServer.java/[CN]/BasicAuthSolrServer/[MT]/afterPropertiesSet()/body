@@ -1,0 +1,15 @@
+{
+  _poolingClientConnectionManager=new PoolingClientConnectionManager();
+  DefaultHttpClient defaultHttpClient=new DefaultHttpClient(_poolingClientConnectionManager);
+  if ((_username != null) && (_password != null)) {
+    if (_authScope == null) {
+      _authScope=AuthScope.ANY;
+    }
+    CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
+    credentialsProvider.setCredentials(_authScope,new UsernamePasswordCredentials(_username,_password));
+    for (    HttpRequestInterceptor httpRequestInterceptor : _httpRequestInterceptors) {
+      defaultHttpClient.addRequestInterceptor(httpRequestInterceptor);
+    }
+  }
+  _server=new HttpSolrServer(_url,defaultHttpClient);
+}
