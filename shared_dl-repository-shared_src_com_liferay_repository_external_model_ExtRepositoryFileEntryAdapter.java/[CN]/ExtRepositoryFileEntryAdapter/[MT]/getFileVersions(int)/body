@@ -1,6 +1,11 @@
 {
   if ((status == WorkflowConstants.STATUS_ANY) || (status == WorkflowConstants.STATUS_APPROVED)) {
-    return (List)_getExtRepositoryFileVersionAdapters();
+    try {
+      return (List)_getExtRepositoryFileVersionAdapters();
+    }
+ catch (    PortalException pe) {
+      throw new SystemException(pe);
+    }
   }
  else {
     return Collections.emptyList();
