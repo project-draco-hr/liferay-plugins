@@ -1,14 +1,9 @@
 {
-  PowerMockito.mockStatic(HttpUtil.class);
-  Class<?> clazz=getClass();
-  InputStream inputStream=clazz.getResourceAsStream("dependencies/test_1.json");
-  String response=IOUtils.toString(inputStream);
-  inputStream.close();
-  Mockito.when(HttpUtil.executePost(Mockito.anyLong(),Mockito.anyString(),Mockito.anyMap())).thenReturn(response);
+  setMockPostResponse("dependencies/get_all_sync_dl_objects.json");
   GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(_syncAccount.getSyncAccountId(),null);
   getAllSyncDLObjectsEvent.run();
-  _syncFile=SyncFileService.fetchSyncFile(_filePath + "/Document_1.txt",_syncAccount.getSyncAccountId());
-  Assert.assertNotNull(_syncFile);
+  _syncFiles=SyncFileService.fetchSyncFiles(_syncAccount.getSyncAccountId());
+  Assert.assertEquals(_syncFiles.size(),2);
   File file=new File(_filePath + "/Document_1.txt");
   Assert.assertTrue(file.exists());
 }
