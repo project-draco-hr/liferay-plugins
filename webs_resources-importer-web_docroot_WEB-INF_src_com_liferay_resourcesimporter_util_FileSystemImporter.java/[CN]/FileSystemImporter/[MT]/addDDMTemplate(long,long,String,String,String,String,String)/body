@@ -2,8 +2,7 @@
   fileName=FileUtil.getShortFileName(fileName);
   fileName=FileUtil.stripExtension(fileName);
   String name=getName(fileName);
-  String templateKey=getKey(fileName);
-  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,PortalUtil.getClassNameId(DDMStructure.class),templateKey);
+  DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,PortalUtil.getClassNameId(DDMStructure.class),getKey(fileName));
   if (ddmTemplate != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
@@ -13,5 +12,5 @@
     }
     DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
   }
-  DDMTemplateLocalServiceUtil.addTemplate(userId,templateGroupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructureId,templateKey,getMap(name),null,type,mode,language,script,false,false,StringPool.BLANK,null,serviceContext);
+  DDMTemplateLocalServiceUtil.addTemplate(userId,templateGroupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructureId,getKey(fileName),getMap(name),null,type,mode,language,script,false,false,StringPool.BLANK,null,serviceContext);
 }

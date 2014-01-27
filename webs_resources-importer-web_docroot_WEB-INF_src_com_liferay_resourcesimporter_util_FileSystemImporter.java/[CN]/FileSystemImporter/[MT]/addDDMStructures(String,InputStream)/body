@@ -1,8 +1,7 @@
 {
   fileName=FileUtil.stripExtension(fileName);
   String name=getName(fileName);
-  String structureKey=getKey(fileName);
-  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),structureKey);
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(DDLRecordSet.class),getKey(fileName));
   if (ddmStructure != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
@@ -12,7 +11,7 @@
     }
     DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
   }
-  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,PortalUtil.getClassNameId(DDLRecordSet.class),structureKey,getMap(name),null,StringUtil.read(inputStream),PropsUtil.get(PropsKeys.DYNAMIC_DATA_LISTS_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
-  addDDLDisplayTemplates(fileName,ddmStructure.getStructureKey(),_DDL_STRUCTURE_DISPLAY_TEMPLATE_DIR_NAME);
-  addDDLFormTemplates(fileName,ddmStructure.getStructureKey(),_DDL_STRUCTURE_FORM_TEMPLATE_DIR_NAME);
+  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID,PortalUtil.getClassNameId(DDLRecordSet.class),getKey(fileName),getMap(name),null,StringUtil.read(inputStream),PropsUtil.get(PropsKeys.DYNAMIC_DATA_LISTS_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  addDDLDisplayTemplates(ddmStructure.getStructureKey(),_DDL_STRUCTURE_DISPLAY_TEMPLATE_DIR_NAME,fileName);
+  addDDLFormTemplates(ddmStructure.getStructureKey(),_DDL_STRUCTURE_FORM_TEMPLATE_DIR_NAME,fileName);
 }

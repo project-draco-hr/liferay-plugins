@@ -1,8 +1,7 @@
 {
   fileName=FileUtil.stripExtension(fileName);
   String name=getName(fileName);
-  String structureKey=getKey(fileName);
-  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),structureKey);
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName));
   if (ddmStructure != null) {
     if (!developerModeEnabled) {
       if (_log.isInfoEnabled()) {
@@ -17,7 +16,7 @@
     xsd=JournalConverterUtil.getDDMXSD(xsd);
   }
   setServiceContext(fileName);
-  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),structureKey,getMap(name),null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),getMap(name),null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
   addDDMTemplates(ddmStructure.getStructureKey(),_JOURNAL_DDM_TEMPLATES_DIR_NAME + fileName);
   if (Validator.isNull(parentDDMStructureKey)) {
     addDDMStructures(ddmStructure.getStructureKey(),_JOURNAL_DDM_STRUCTURES_DIR_NAME + fileName);
