@@ -1,5 +1,9 @@
 {
   long companyId=PortalUtil.getCompanyId(request);
+  boolean googleAuthEnabled=PrefsPropsUtil.getBoolean(companyId,"google-auth-enabled",true);
+  if (!googleAuthEnabled) {
+    return null;
+  }
   User user=getUser(request,companyId);
   if (user == null) {
     return null;
