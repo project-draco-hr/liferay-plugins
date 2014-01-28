@@ -15,7 +15,8 @@
   if (linkedAssetEntry.getClassNameId() == classNameLocalService.getClassNameId(CalEvent.class)) {
     CalEvent calEvent=calEventPersistence.findByPrimaryKey(linkedAssetEntry.getClassPK());
     importCalEvent(calEvent);
-    linkedAssetEntry=assetEntryPersistence.findByG_CU(calEvent.getGroupId(),calEvent.getUuid());
+    CalendarResource calendarResource=getCalendarResource(calEvent.getCompanyId(),calEvent.getGroupId());
+    linkedAssetEntry=assetEntryPersistence.findByG_CU(calendarResource.getGroupId(),calEvent.getUuid());
     if (assetLink.getEntryId1() == oldEntryId) {
       entryId2=linkedAssetEntry.getEntryId();
     }
