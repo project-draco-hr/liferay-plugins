@@ -8,12 +8,12 @@
   if ((user == null) && Validator.isNotNull(emailAddress)) {
     user=UserLocalServiceUtil.fetchUserByEmailAddress(companyId,emailAddress);
     if ((user != null) && (user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE)) {
-      session.setAttribute("GOOGLE_USER_EMAIL_ADDRESS",emailAddress);
+      session.setAttribute(GOOGLE_USER_EMAIL_ADDRESS,emailAddress);
     }
   }
   if (user != null) {
     if (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE) {
-      session.setAttribute("GOOGLE_INCOMPLETE_USER_ID",userinfo.getId());
+      session.setAttribute(GOOGLE_INCOMPLETE_USER_ID,userinfo.getId());
       user.setEmailAddress(userinfo.getEmail());
       user.setFirstName(userinfo.getGivenName());
       user.setLastName(userinfo.getFamilyName());
