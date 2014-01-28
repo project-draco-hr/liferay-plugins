@@ -16,7 +16,7 @@
       WatchEvent<Path> watchEvent=(WatchEvent<Path>)watchEvents.get(i);
       Path childFilePath=parentFilePath.resolve(watchEvent.context());
       childFilePath=childFilePath.normalize();
-      fireWatchEventListener(watchEvent,childFilePath);
+      fireWatchEventListener(childFilePath,watchEvent);
       WatchEvent.Kind<?> kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKinds.ENTRY_CREATE)) {
         try {
@@ -29,7 +29,11 @@
       }
     }
     if (!watchKey.reset()) {
-      _filePaths.remove(watchKey);
+      Path filePath=_filePaths.remove(watchKey);
+      if (_logger.isTraceEnabled()) {
+        _logger.trace("Unregistered file path {}",filePath);
+      }
+      fireWatchEventListener(filePath,SyncWatchEvent.ENTRY_DELETE);
       if (_filePaths.isEmpty()) {
         break;
       }
