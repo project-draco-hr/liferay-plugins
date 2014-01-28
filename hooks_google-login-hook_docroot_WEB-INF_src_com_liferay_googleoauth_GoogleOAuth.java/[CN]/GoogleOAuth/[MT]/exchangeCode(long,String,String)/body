@@ -1,0 +1,13 @@
+{
+  try {
+    GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow=getGoogleAuthorizationCodeFlow(companyId);
+    GoogleAuthorizationCodeTokenRequest googleAuthorizationCodeTokenRequest=googleAuthorizationCodeFlow.newTokenRequest(authorizationCode);
+    googleAuthorizationCodeTokenRequest.setRedirectUri(redirectUri);
+    GoogleTokenResponse googleTokenResponse=googleAuthorizationCodeTokenRequest.execute();
+    return googleAuthorizationCodeFlow.createAndStoreCredential(googleTokenResponse,null);
+  }
+ catch (  IOException ioe) {
+    _log.error(ioe,ioe);
+    throw new SystemException();
+  }
+}
