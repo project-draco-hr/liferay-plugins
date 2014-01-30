@@ -1,11 +1,12 @@
 {
+  SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
   StringBuilder sb=new StringBuilder(7);
   sb.append(replaceUrlPath(getSyncAccountId()));
   sb.append("/");
-  sb.append(_syncFile.getRepositoryId());
+  sb.append(syncFile.getRepositoryId());
   sb.append("/");
-  sb.append(_syncFile.getTypeUuid());
+  sb.append(syncFile.getTypeUuid());
   sb.append("/");
-  sb.append(_patch);
+  sb.append(getParameterValue("patch"));
   return HttpUtil.executeGet(getSyncAccountId(),sb.toString());
 }

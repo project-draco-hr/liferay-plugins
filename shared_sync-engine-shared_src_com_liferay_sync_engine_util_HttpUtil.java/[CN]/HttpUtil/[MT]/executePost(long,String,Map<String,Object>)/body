@@ -4,6 +4,11 @@
   HttpClient httpClient=_getHttpClient(syncAccount,url);
   HttpHost httpHost=new HttpHost(url.getHost(),url.getPort(),url.getProtocol());
   HttpPost httpPost=new HttpPost(syncAccount.getUrl() + urlPath);
-  httpPost.setEntity(_getHttpEntity(parameters));
+  Path filePath=(Path)parameters.remove("filePath");
+  MultipartEntityBuilder multipartEntityBuilder=_getMultipartEntityBuilder(parameters);
+  if (filePath != null) {
+    multipartEntityBuilder.addPart("file",_getByteArrayBody(Files.readAllBytes(filePath),(String)parameters.get("mimeType"),(String)parameters.get("title")));
+  }
+  httpPost.setEntity(multipartEntityBuilder.build());
   return httpClient.execute(httpHost,httpPost,new BaseHandler(),_getBasicHttpContext(httpHost));
 }

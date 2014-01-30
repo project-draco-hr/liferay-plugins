@@ -5,7 +5,8 @@
   StringBuilder sb=new StringBuilder(5);
   sb.append("jdbc:h2:");
   sb.append(PropsValues.SYNC_CONFIGURATION_DIRECTORY);
-  sb.append(File.separator);
+  FileSystem fileSystem=FileSystems.getDefault();
+  sb.append(fileSystem.getSeparator());
   sb.append(PropsValues.SYNC_DATABASE_NAME);
   sb.append(";AUTO_SERVER=TRUE");
   _connectionSource=new JdbcPooledConnectionSource(sb.toString());
