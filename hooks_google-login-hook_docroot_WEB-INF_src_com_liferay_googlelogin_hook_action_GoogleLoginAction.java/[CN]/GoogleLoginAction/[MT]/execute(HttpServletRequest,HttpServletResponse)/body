@@ -13,7 +13,7 @@
     String code=ParamUtil.getString(request,"code");
     if (Validator.isNotNull(code)) {
       Credential credential=exchangeCode(themeDisplay.getCompanyId(),code,getRedirectURI(request));
-      User user=setGoogleCredentials(session,themeDisplay.getCompanyId(),credential);
+      User user=setCredential(session,themeDisplay.getCompanyId(),credential);
       if ((user != null) && (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE)) {
         sendUpdateAccountRedirect(request,response,user);
         return null;
