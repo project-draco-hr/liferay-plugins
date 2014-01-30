@@ -1,0 +1,46 @@
+{
+  Path path=Paths.get(syncWatchEvent.getFilePath());
+  Path parentPath=path.getParent();
+  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentPath.toString(),syncWatchEvent.getSyncAccountId());
+  List<SyncFile> syncFiles=SyncFileService.findSyncFiles(FileUtil.getChecksum(path),syncWatchEvent.getSyncAccountId());
+  for (  SyncFile syncFile : syncFiles) {
+    SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(syncFile.getFilePath(),SyncWatchEvent.ENTRY_DELETE,syncWatchEvent.getTimestamp());
+    if (relatedSyncWatchEvent != null) {
+      Path oldPath=Paths.get(syncWatchEvent.getFilePath());
+      if (parentPath.equals(oldPath.getParent())) {
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("changeLog",syncFile.getVersion() + .1);
+        map.put("checksum",FileUtil.getChecksum(path));
+        map.put("description",syncFile.getDescription());
+        map.put("file",path.toFile());
+        map.put("fileEntryId",syncFile.getTypePK());
+        map.put("mimeType",syncFile.getMimeType());
+        map.put("sourceFileName",path.getFileName());
+        map.put("title",path.getFileName());
+        UpdateFileEntryEvent updateFileEntryEvent=new UpdateFileEntryEvent(syncWatchEvent.getSyncAccountId(),map);
+        updateFileEntryEvent.run();
+      }
+ else {
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("fileEntryId",syncFile.getTypePK());
+        map.put("newFolderId",parentSyncFile.getTypePK());
+        MoveFileEntryEvent moveFileEntryEvent=new MoveFileEntryEvent(syncWatchEvent.getSyncAccountId(),map);
+        moveFileEntryEvent.run();
+      }
+      _processedSyncWatchEvents.add(relatedSyncWatchEvent);
+      return;
+    }
+  }
+  Map<String,Object> map=new HashMap<String,Object>();
+  map.put("changeLog","1.0");
+  map.put("checksum",FileUtil.getChecksum(path));
+  map.put("description",null);
+  map.put("file",path.toFile());
+  map.put("folderId",parentSyncFile.getTypePK());
+  map.put("mimeType",Files.probeContentType(path));
+  map.put("repositoryId",parentSyncFile.getRepositoryId());
+  map.put("sourceFileName",path.getFileName());
+  map.put("title",path.getFileName());
+  AddFileEntryEvent addFileEntryEvent=new AddFileEntryEvent(syncWatchEvent.getSyncAccountId(),map);
+  addFileEntryEvent.run();
+}

@@ -1,0 +1,15 @@
+{
+  setMockPostResponse("dependencies/watcher_test_add_file.json");
+  SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
+  syncWatchEventProcessor.process();
+  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+  Path filePath=Paths.get(syncAccount.getFilePath());
+  Watcher watcher=new Watcher(filePath,true,watchEventListener);
+  Thread thread=new Thread(watcher);
+  thread.start();
+  File file=new File(_syncSite.getFilePath() + "/test.txt");
+  file.createNewFile();
+  thread.sleep(15000);
+  _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
+  Assert.assertEquals(3,_syncFiles.size());
+}

@@ -1,0 +1,22 @@
+{
+  InputStream fileInputStream=null;
+  try {
+    fileInputStream=new FileInputStream(path.toFile());
+    byte[] bytes=DigestUtils.sha1(fileInputStream);
+    return Base64.encodeBase64URLSafeString(bytes);
+  }
+ catch (  Exception e) {
+    _logger.error(e.getMessage(),e);
+  }
+ finally {
+    if (fileInputStream != null) {
+      try {
+        fileInputStream.close();
+      }
+ catch (      IOException ioe) {
+        _logger.error(ioe.getMessage(),ioe);
+      }
+    }
+  }
+  return null;
+}

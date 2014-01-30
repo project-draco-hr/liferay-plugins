@@ -6,7 +6,10 @@
   syncFile.setParentFolderId(parentFolderId);
   syncFile.setSyncAccountId(syncAccountId);
   syncFile.setType(type);
-  syncFile.setTypePK(typePK);
   _syncFilePersistence.create(syncFile);
+  if (type.equals(SyncFile.TYPE_FOLDER)) {
+    File file=new File(filePath);
+    file.mkdirs();
+  }
   return syncFile;
 }
