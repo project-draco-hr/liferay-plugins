@@ -1,16 +1,9 @@
 {
   Oauth2.Builder builder=new Oauth2.Builder(new NetHttpTransport(),new JacksonFactory(),credentials);
   Oauth2 oauth2=builder.build();
-  Userinfo userinfo=null;
-  try {
-    userinfo=getUserinfo(oauth2.userinfo());
-  }
- catch (  IOException ioe) {
-    _log.error(ioe,ioe);
-    throw new SystemException();
-  }
+  Userinfo userinfo=getUserinfo(oauth2.userinfo());
   if ((userinfo == null) || (userinfo.getId() == null)) {
-    throw new SystemException();
+    throw new PrincipalException();
   }
   return userinfo;
 }
