@@ -1,11 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String cmd=ParamUtil.getString(request,Constants.CMD);
-  String redirectUri=PortalUtil.getPortalURL(request) + _REDIRECT_URI;
   if (cmd.equals("login")) {
     GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow=getGoogleAuthorizationCodeFlow(themeDisplay.getCompanyId());
     GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl=googleAuthorizationCodeFlow.newAuthorizationUrl();
-    googleAuthorizationCodeRequestUrl.setRedirectUri(redirectUri);
+    googleAuthorizationCodeRequestUrl.setRedirectUri(getRedirectURI(request));
     String url=googleAuthorizationCodeRequestUrl.build();
     response.sendRedirect(url);
   }
@@ -13,7 +12,7 @@
     HttpSession session=request.getSession();
     String code=ParamUtil.getString(request,"code");
     if (Validator.isNotNull(code)) {
-      Credential credential=exchangeCode(themeDisplay.getCompanyId(),code,redirectUri);
+      Credential credential=exchangeCode(themeDisplay.getCompanyId(),code,getRedirectURI(request));
       User user=setGoogleCredentials(session,themeDisplay.getCompanyId(),credential);
       if ((user != null) && (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE)) {
         redirectUpdateAccount(request,response,user);
