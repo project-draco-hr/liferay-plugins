@@ -1,13 +1,13 @@
 {
-  Path path=Paths.get(syncWatchEvent.getFilePath());
+  Path path=Paths.get(syncWatchEvent.getFilePathName());
   Path parentPath=path.getParent();
   SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentPath.toString(),syncWatchEvent.getSyncAccountId());
   List<SyncFile> syncFiles=SyncFileService.findSyncFiles(FileUtil.getChecksum(path),syncWatchEvent.getSyncAccountId());
   for (  SyncFile syncFile : syncFiles) {
-    SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(syncFile.getFilePath(),SyncWatchEvent.ENTRY_DELETE,syncWatchEvent.getTimestamp());
+    SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(syncFile.getFilePathName(),SyncWatchEvent.ENTRY_DELETE,syncWatchEvent.getTimestamp());
     if (relatedSyncWatchEvent != null) {
-      Path srcPath=Paths.get(syncWatchEvent.getFilePath());
-      if (parentPath.equals(srcPath.getParent())) {
+      Path srcFilePath=Paths.get(syncWatchEvent.getFilePathName());
+      if (parentPath.equals(srcFilePath.getParent())) {
         Map<String,Object> parameters=new HashMap<String,Object>();
         parameters.put("changeLog",syncFile.getVersion() + .1);
         parameters.put("checksum",FileUtil.getChecksum(path));
