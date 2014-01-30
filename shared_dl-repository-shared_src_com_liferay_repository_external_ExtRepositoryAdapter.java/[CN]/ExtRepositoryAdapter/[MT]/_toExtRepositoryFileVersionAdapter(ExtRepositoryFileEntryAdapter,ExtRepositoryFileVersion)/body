@@ -1,6 +1,13 @@
 {
-  Object[] repositoryEntryIds=getRepositoryEntryIds(extRepositoryFileVersion.getExtRepositoryModelKey());
-  long extRepositoryObjectId=(Long)repositoryEntryIds[0];
-  String uuid=(String)repositoryEntryIds[1];
-  return new ExtRepositoryFileVersionAdapter(this,extRepositoryObjectId,uuid,extRepositoryFileEntryAdapter,extRepositoryFileVersion);
+  ExtRepositoryAdapterCache cache=ExtRepositoryAdapterCache.getInstance();
+  String modelKey=extRepositoryFileVersion.getExtRepositoryModelKey();
+  ExtRepositoryFileVersionAdapter extRepositoryVersionAdapter=cache.get(modelKey);
+  if (extRepositoryVersionAdapter == null) {
+    Object[] repositoryEntryIds=getRepositoryEntryIds(modelKey);
+    long extRepositoryObjectId=(Long)repositoryEntryIds[0];
+    String uuid=(String)repositoryEntryIds[1];
+    extRepositoryVersionAdapter=new ExtRepositoryFileVersionAdapter(this,extRepositoryObjectId,uuid,extRepositoryFileEntryAdapter,extRepositoryFileVersion);
+    cache.put(extRepositoryVersionAdapter);
+  }
+  return extRepositoryVersionAdapter;
 }

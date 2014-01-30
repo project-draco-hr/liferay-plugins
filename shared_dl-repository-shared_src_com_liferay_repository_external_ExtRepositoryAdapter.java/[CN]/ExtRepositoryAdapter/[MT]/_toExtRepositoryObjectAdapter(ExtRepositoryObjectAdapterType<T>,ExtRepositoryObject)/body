@@ -1,9 +1,11 @@
 {
-  Object[] repositoryEntryIds=getRepositoryEntryIds(extRepositoryObject.getExtRepositoryModelKey());
-  long extRepositoryObjectId=(Long)repositoryEntryIds[0];
-  String uuid=(String)repositoryEntryIds[1];
-  ExtRepositoryObjectAdapter<?> extRepositoryObjectAdapter=null;
+  ExtRepositoryAdapterCache cache=ExtRepositoryAdapterCache.getInstance();
+  String modelKey=extRepositoryObject.getExtRepositoryModelKey();
+  ExtRepositoryObjectAdapter<?> extRepositoryObjectAdapter=cache.get(modelKey);
   if (extRepositoryObjectAdapter == null) {
+    Object[] repositoryEntryIds=getRepositoryEntryIds(modelKey);
+    long extRepositoryObjectId=(Long)repositoryEntryIds[0];
+    String uuid=(String)repositoryEntryIds[1];
     if (extRepositoryObject instanceof ExtRepositoryFolder) {
       ExtRepositoryFolder extRepositoryFolder=(ExtRepositoryFolder)extRepositoryObject;
       extRepositoryObjectAdapter=new ExtRepositoryFolderAdapter(this,extRepositoryObjectId,uuid,extRepositoryFolder);
@@ -13,6 +15,7 @@
       extRepositoryObjectAdapter=new ExtRepositoryFileEntryAdapter(this,extRepositoryObjectId,uuid,extRepositoryFileEntry);
       _forceGetVersions((ExtRepositoryFileEntryAdapter)extRepositoryObjectAdapter);
     }
+    cache.put(extRepositoryObjectAdapter);
   }
   if (extRepositoryObjectAdapterType == ExtRepositoryObjectAdapterType.FILE) {
     if (!(extRepositoryObjectAdapter instanceof ExtRepositoryFileEntryAdapter)) {
