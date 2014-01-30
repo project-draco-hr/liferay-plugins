@@ -1,6 +1,6 @@
 {
   SyncFile syncFile=new SyncFile();
-  syncFile.setFilePath(filePath);
+  syncFile.setFilePath(filePathName);
   syncFile.setName(name);
   syncFile.setRepositoryId(repositoryId);
   syncFile.setParentFolderId(parentFolderId);
@@ -8,8 +8,8 @@
   syncFile.setType(type);
   _syncFilePersistence.create(syncFile);
   if (type.equals(SyncFile.TYPE_FOLDER)) {
-    File file=new File(filePath);
-    file.mkdirs();
+    Path filePath=Paths.get(filePathName);
+    Files.createDirectories(filePath);
   }
   return syncFile;
 }

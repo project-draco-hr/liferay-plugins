@@ -7,8 +7,8 @@
   Watcher watcher=new Watcher(filePath,true,watchEventListener);
   Thread thread=new Thread(watcher);
   thread.start();
-  File file=new File(_syncSite.getFilePath() + "/test.txt");
-  file.createNewFile();
+  Path addFilePath=Paths.get(_syncSite.getFilePath() + "/test.txt");
+  Files.createFile(addFilePath);
   thread.sleep(15000);
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(3,_syncFiles.size());
