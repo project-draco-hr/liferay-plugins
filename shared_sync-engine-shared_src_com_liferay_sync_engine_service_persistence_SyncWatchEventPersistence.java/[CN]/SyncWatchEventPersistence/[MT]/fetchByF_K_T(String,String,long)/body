@@ -5,7 +5,9 @@
   where.and();
   where.eq("kindName",kindName);
   where.and();
-  where.le("timestamp",timestamp);
+  where.ge("timestamp",timestamp - 1000);
+  where.or();
+  where.le("timestamp",timestamp + 1000);
   List<SyncWatchEvent> syncWatchEvents=query(queryBuilder.prepare());
   if ((syncWatchEvents == null) || syncWatchEvents.isEmpty()) {
     return null;

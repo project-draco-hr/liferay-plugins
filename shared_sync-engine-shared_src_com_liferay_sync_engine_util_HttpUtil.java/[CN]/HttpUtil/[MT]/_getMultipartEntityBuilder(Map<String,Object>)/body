@@ -1,6 +1,9 @@
 {
   MultipartEntityBuilder multipartEntityBuilder=MultipartEntityBuilder.create();
   for (  Map.Entry<String,Object> entry : parameters.entrySet()) {
+    if (_IGNORED_PARAMETER_KEYS.contains(entry.getKey())) {
+      continue;
+    }
     multipartEntityBuilder.addPart(entry.getKey(),_getStringBody(entry.getValue()));
   }
   return multipartEntityBuilder;
