@@ -1,11 +1,16 @@
 {
   try {
     BasicFileAttributes basicFileAttributes=Files.readAttributes(filePath,BasicFileAttributes.class);
-    Object fileKey=basicFileAttributes.fileKey();
-    return fileKey.toString();
+    if (OSDetector.isWindows()) {
+      return String.valueOf(basicFileAttributes.creationTime());
+    }
+ else {
+      Object fileKey=basicFileAttributes.fileKey();
+      return fileKey.toString();
+    }
   }
  catch (  Exception e) {
     _logger.error(e.getMessage(),e);
+    return null;
   }
-  return null;
 }
