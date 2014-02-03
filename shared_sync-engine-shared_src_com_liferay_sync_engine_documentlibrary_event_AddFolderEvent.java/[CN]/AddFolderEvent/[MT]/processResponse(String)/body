@@ -1,3 +1,15 @@
 {
-  System.out.println(response);
+  ObjectMapper objectMapper=new ObjectMapper();
+  SyncFile syncFile=objectMapper.readValue(response,new TypeReference<SyncFile>(){
+  }
+);
+  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(syncFile.getRepositoryId(),getSyncAccountId(),syncFile.getParentFolderId());
+  String filePathName=null;
+  if (parentSyncFile != null) {
+    filePathName=FilePathNameUtil.getFilePathName(parentSyncFile.getFilePathName(),syncFile.getName());
+  }
+  syncFile.setFileKey(FileUtil.getFileKey(filePathName));
+  syncFile.setFilePathName(filePathName);
+  syncFile.setSyncAccountId(getSyncAccountId());
+  SyncFileService.update(syncFile);
 }

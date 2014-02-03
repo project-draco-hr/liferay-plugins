@@ -1,0 +1,9 @@
+{
+  Path filePath=Paths.get(syncWatchEvent.getFilePathName());
+  SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncWatchEvent.getSyncAccountId());
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("folderId",syncFile.getTypePK());
+  parameters.put("syncFile",syncFile);
+  MoveFolderToTrashEvent moveFolderToTrashEvent=new MoveFolderToTrashEvent(syncWatchEvent.getSyncAccountId(),parameters);
+  moveFolderToTrashEvent.run();
+}
