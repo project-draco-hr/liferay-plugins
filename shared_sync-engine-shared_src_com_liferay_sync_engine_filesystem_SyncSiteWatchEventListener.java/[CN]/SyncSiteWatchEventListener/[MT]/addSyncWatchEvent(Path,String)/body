@@ -1,13 +1,6 @@
 {
-  String fileType=null;
-  if (Files.isDirectory(filePath,LinkOption.NOFOLLOW_LINKS)) {
-    fileType=SyncFile.TYPE_FOLDER;
-  }
- else {
-    fileType=SyncFile.TYPE_FILE;
-  }
   try {
-    SyncWatchEventService.addSyncWatchEvent(FilePathNameUtil.getFilePathName(filePath),fileType,kindName,getSyncAccountId());
+    SyncWatchEventService.addSyncWatchEvent(FilePathNameUtil.getFilePathName(filePath),getFileType(filePath,kindName),kindName,getSyncAccountId());
   }
  catch (  Exception e) {
     _logger.error(e.getMessage(),e);

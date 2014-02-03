@@ -1,0 +1,12 @@
+{
+  if (kindName.equals(SyncWatchEvent.ENTRY_DELETE)) {
+    SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),getSyncAccountId());
+    if (syncFile != null) {
+      return syncFile.getType();
+    }
+  }
+  if (Files.isDirectory(filePath,LinkOption.NOFOLLOW_LINKS)) {
+    return SyncFile.TYPE_FOLDER;
+  }
+  return SyncFile.TYPE_FILE;
+}
