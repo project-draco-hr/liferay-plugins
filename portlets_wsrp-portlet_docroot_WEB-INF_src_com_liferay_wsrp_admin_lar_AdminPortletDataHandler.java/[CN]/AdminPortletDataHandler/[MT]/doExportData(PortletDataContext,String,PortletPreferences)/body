@@ -1,17 +1,16 @@
 {
   Element rootElement=addExportDataRootElement(portletDataContext);
+  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
   if (portletDataContext.getBooleanParameter(NAMESPACE,"wsrp-producers")) {
-    Element wsrpProducersElement=rootElement.addElement("wsrp-producers");
-    List<WSRPProducer> wsrpProducers=WSRPProducerLocalServiceUtil.getWSRPProducers(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-    for (    WSRPProducer wsrpProducer : wsrpProducers) {
-      exportWSRPProducer(portletDataContext,wsrpProducersElement,wsrpProducer);
-    }
+    ActionableDynamicQuery wsrpProducerExportActionableDynamicQuery=new WSRPProducerExportActionableDynamicQuery(portletDataContext);
+    wsrpProducerExportActionableDynamicQuery.performActions();
   }
   if (portletDataContext.getBooleanParameter(NAMESPACE,"wsrp-consumers")) {
-    Element wsrpConsumersElement=rootElement.addElement("wsrp-consumers");
-    List<WSRPConsumer> wsrpConsumers=WSRPConsumerLocalServiceUtil.getWSRPConsumers(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-    for (    WSRPConsumer wsrpConsumer : wsrpConsumers) {
-      exportWSRPConsumer(portletDataContext,wsrpConsumersElement,wsrpConsumer);
+    ActionableDynamicQuery wsrpConsumerExportActionableDynamicQuery=new WSRPConsumerExportActionableDynamicQuery(portletDataContext);
+    wsrpConsumerExportActionableDynamicQuery.performActions();
+    if (portletDataContext.getBooleanParameter(NAMESPACE,"wsrp-consumer-portlets")) {
+      ActionableDynamicQuery wsrpConsumerPortletExportActionableDynamicQuery=new WSRPConsumerPortletExportActionableDynamicQuery(portletDataContext);
+      wsrpConsumerPortletExportActionableDynamicQuery.performActions();
     }
   }
   return getExportDataRootElementString(rootElement);
