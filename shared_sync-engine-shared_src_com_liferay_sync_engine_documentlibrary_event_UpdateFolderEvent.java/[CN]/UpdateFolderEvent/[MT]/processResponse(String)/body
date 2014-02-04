@@ -3,14 +3,7 @@
   SyncFile remoteSyncFile=objectMapper.readValue(response,new TypeReference<SyncFile>(){
   }
 );
-  SyncFile parentLocalSyncFile=SyncFileService.fetchSyncFile(remoteSyncFile.getParentFolderId(),remoteSyncFile.getRepositoryId(),getSyncAccountId());
-  String filePathName=null;
-  if (parentLocalSyncFile != null) {
-    filePathName=FilePathNameUtil.getFilePathName(parentLocalSyncFile.getFilePathName(),remoteSyncFile.getName());
-  }
   SyncFile localSyncFile=(SyncFile)getParameterValue("syncFile");
   localSyncFile.setModifiedTime(remoteSyncFile.getModifiedTime());
-  localSyncFile.setFilePathName(filePathName);
-  localSyncFile.setName(remoteSyncFile.getName());
   SyncFileService.update(localSyncFile);
 }

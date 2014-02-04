@@ -1,15 +1,16 @@
 {
   SyncFile syncFile=new SyncFile();
+  syncFile.setChangeLog(changeLog);
+  syncFile.setChecksum(checksum);
+  syncFile.setDescription(description);
+  syncFile.setFileKey(fileKey);
   syncFile.setFilePathName(filePathName);
+  syncFile.setMimeType(mimeType);
   syncFile.setName(name);
-  syncFile.setRepositoryId(repositoryId);
   syncFile.setParentFolderId(parentFolderId);
+  syncFile.setRepositoryId(repositoryId);
   syncFile.setSyncAccountId(syncAccountId);
   syncFile.setType(type);
   _syncFilePersistence.create(syncFile);
-  if (type.equals(SyncFile.TYPE_FOLDER)) {
-    Path filePath=Paths.get(filePathName);
-    Files.createDirectories(filePath);
-  }
   return syncFile;
 }

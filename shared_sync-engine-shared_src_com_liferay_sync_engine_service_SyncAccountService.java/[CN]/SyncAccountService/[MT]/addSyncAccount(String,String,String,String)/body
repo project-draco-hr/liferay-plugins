@@ -5,6 +5,9 @@
   syncAccount.setPassword(Encryptor.encrypt(password));
   syncAccount.setUrl(url);
   _syncAccountPersistence.create(syncAccount);
-  SyncFileService.addSyncFile(filePathName,filePathName,0,0,syncAccount.getSyncAccountId(),SyncFile.TYPE_FOLDER);
+  if (Files.notExists(Paths.get(filePathName))) {
+    Files.createDirectory(Paths.get(filePathName));
+  }
+  SyncFileService.addSyncFile(null,null,filePathName,FileUtil.getFileKey(filePathName),filePathName,null,filePathName,0,0,syncAccount.getSyncAccountId(),SyncFile.TYPE_FOLDER);
   return syncAccount;
 }

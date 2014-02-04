@@ -1,9 +1,5 @@
 {
   Path filePath=Paths.get(syncWatchEvent.getFilePathName());
   SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncWatchEvent.getSyncAccountId());
-  Map<String,Object> parameters=new HashMap<String,Object>();
-  parameters.put("fileEntryId",syncFile.getTypePK());
-  parameters.put("syncFile",syncFile);
-  MoveFileEntryToTrashEvent moveFileEntryToTrashEvent=new MoveFileEntryToTrashEvent(syncWatchEvent.getSyncAccountId(),parameters);
-  moveFileEntryToTrashEvent.run();
+  SyncFileService.deleteFileSyncFile(syncWatchEvent.getSyncAccountId(),syncFile);
 }

@@ -9,13 +9,7 @@
   SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentFilePath),syncWatchEvent.getSyncAccountId());
   SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(filePath),syncWatchEvent.getSyncAccountId());
   if (syncFile == null) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("repositoryId",parentSyncFile.getRepositoryId());
-    parameters.put("parentFolderId",parentSyncFile.getTypePK());
-    parameters.put("name",filePath.getFileName());
-    parameters.put("description",filePath);
-    AddFolderEvent addFolderEvent=new AddFolderEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    addFolderEvent.run();
+    SyncFileService.addFolderSyncFile(filePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
   SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(syncFile.getFilePathName(),SyncWatchEvent.ENTRY_DELETE,syncWatchEvent.getTimestamp());
@@ -24,20 +18,10 @@
   }
   Path srcFilePath=Paths.get(relatedSyncWatchEvent.getFilePathName());
   if (parentFilePath.equals(srcFilePath.getParent())) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("description",syncFile.getDescription());
-    parameters.put("folderId",syncFile.getTypePK());
-    parameters.put("name",filePath.getFileName());
-    UpdateFolderEvent updateFolderEvent=new UpdateFolderEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    updateFolderEvent.run();
+    SyncFileService.updateFolderSyncFile(filePath,syncWatchEvent.getSyncAccountId(),syncFile);
   }
  else {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("folderId",syncFile.getTypePK());
-    parameters.put("parentFolderId",parentSyncFile.getTypePK());
-    parameters.put("serviceContext.scopeGroupId",syncFile.getRepositoryId());
-    MoveFolderEvent moveFolderEvent=new MoveFolderEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    moveFolderEvent.run();
+    SyncFileService.moveFolderSyncFile(filePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
   }
-  _processedSyncWatchEvents.add(relatedSyncWatchEvent);
+  _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
 }

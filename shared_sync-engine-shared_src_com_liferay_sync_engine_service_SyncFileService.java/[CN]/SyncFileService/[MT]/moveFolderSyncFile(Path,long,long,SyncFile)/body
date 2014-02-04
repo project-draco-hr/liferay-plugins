@@ -1,0 +1,12 @@
+{
+  syncFile.setFilePathName(FilePathNameUtil.getFilePathName(filePath));
+  syncFile.setParentFolderId(parentFolderId);
+  update(syncFile);
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("folderId",syncFile.getTypePK());
+  parameters.put("parentFolderId",parentFolderId);
+  parameters.put("serviceContext.scopeGroupId",syncFile.getRepositoryId());
+  MoveFolderEvent moveFolderEvent=new MoveFolderEvent(syncAccountId,parameters);
+  moveFolderEvent.run();
+  return syncFile;
+}

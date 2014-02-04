@@ -4,18 +4,7 @@
   SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentFilePath),syncWatchEvent.getSyncAccountId());
   SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(filePath),syncWatchEvent.getSyncAccountId());
   if (syncFile == null) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("changeLog","1.0");
-    parameters.put("checksum",FileUtil.getChecksum(filePath));
-    parameters.put("description",null);
-    parameters.put("filePath",filePath);
-    parameters.put("folderId",parentSyncFile.getTypePK());
-    parameters.put("mimeType",Files.probeContentType(filePath));
-    parameters.put("repositoryId",parentSyncFile.getRepositoryId());
-    parameters.put("sourceFileName",filePath.getFileName());
-    parameters.put("title",String.valueOf(filePath.getFileName()));
-    AddFileEntryEvent addFileEntryEvent=new AddFileEntryEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    addFileEntryEvent.run();
+    SyncFileService.addFileSyncFile(filePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
   SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(syncFile.getFilePathName(),SyncWatchEvent.ENTRY_DELETE,syncWatchEvent.getTimestamp());
@@ -24,27 +13,10 @@
   }
   Path srcFilePath=Paths.get(relatedSyncWatchEvent.getFilePathName());
   if (parentFilePath.equals(srcFilePath.getParent())) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("changeLog",syncFile.getVersion() + .1);
-    parameters.put("checksum",FileUtil.getChecksum(filePath));
-    parameters.put("description",syncFile.getDescription());
-    parameters.put("fileEntryId",syncFile.getTypePK());
-    parameters.put("filePath",filePath);
-    parameters.put("majorVersion",false);
-    parameters.put("mimeType",syncFile.getMimeType());
-    parameters.put("sourceFileName",filePath.getFileName());
-    parameters.put("syncFile",syncFile);
-    parameters.put("title",String.valueOf(filePath.getFileName()));
-    UpdateFileEntryEvent updateFileEntryEvent=new UpdateFileEntryEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    updateFileEntryEvent.run();
+    SyncFileService.updateFileSyncFile(filePath,syncWatchEvent.getSyncAccountId(),syncFile);
   }
  else {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("fileEntryId",syncFile.getTypePK());
-    parameters.put("newFolderId",parentSyncFile.getTypePK());
-    parameters.put("serviceContext.scopeGroupId",syncFile.getRepositoryId());
-    MoveFileEntryEvent moveFileEntryEvent=new MoveFileEntryEvent(syncWatchEvent.getSyncAccountId(),parameters);
-    moveFileEntryEvent.run();
+    SyncFileService.moveFileSyncFile(filePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
   }
-  _processedSyncWatchEvents.add(relatedSyncWatchEvent);
+  _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
 }

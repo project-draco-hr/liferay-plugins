@@ -4,7 +4,8 @@
   }
   List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findAll("kindName",true);
   for (  SyncWatchEvent syncWatchEvent : syncWatchEvents) {
-    if (_processedSyncWatchEvents.contains(syncWatchEvent)) {
+    if (_processedSyncWatchEventIds.contains(syncWatchEvent.getSyncWatchEventId())) {
+      SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
       continue;
     }
     if (_logger.isDebugEnabled()) {
@@ -12,44 +13,28 @@
     }
     String fileType=syncWatchEvent.getFileType();
     String kindName=syncWatchEvent.getKindName();
-    if (kindName.equals(SyncWatchEvent.ENTRY_CREATE)) {
-      if (fileType.equals(SyncFile.TYPE_FILE)) {
-        try {
+    try {
+      if (kindName.equals(SyncWatchEvent.ENTRY_CREATE)) {
+        if (fileType.equals(SyncFile.TYPE_FILE)) {
           addFile(syncWatchEvent);
         }
- catch (        Exception e) {
-          _logger.error(e.getMessage(),e);
-        }
-      }
  else {
-        try {
           addFolder(syncWatchEvent);
         }
- catch (        Exception e) {
-          _logger.error(e.getMessage(),e);
+      }
+ else       if (kindName.equals(SyncWatchEvent.ENTRY_DELETE)) {
+        if (fileType.equals(SyncFile.TYPE_FILE)) {
+          deleteFile(syncWatchEvent);
+        }
+ else {
+          deleteFolder(syncWatchEvent);
         }
       }
     }
- else     if (kindName.equals(SyncWatchEvent.ENTRY_DELETE)) {
-      System.out.println(fileType);
-      if (fileType.equals(SyncFile.TYPE_FILE)) {
-        try {
-          deleteFile(syncWatchEvent);
-        }
- catch (        Exception e) {
-          _logger.error(e.getMessage(),e);
-        }
-      }
- else {
-        try {
-          deleteFolder(syncWatchEvent);
-        }
- catch (        Exception e) {
-          _logger.error(e.getMessage(),e);
-        }
-      }
+ catch (    Exception e) {
+      _logger.error(e.getMessage(),e);
     }
     SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
   }
-  _processedSyncWatchEvents.clear();
+  _processedSyncWatchEventIds.clear();
 }

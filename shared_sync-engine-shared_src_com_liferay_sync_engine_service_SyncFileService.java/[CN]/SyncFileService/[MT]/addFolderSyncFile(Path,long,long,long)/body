@@ -1,0 +1,13 @@
+{
+  String name=String.valueOf(filePath.getFileName());
+  SyncFile syncFile=addSyncFile(null,null,name,FileUtil.getFileKey(filePath),FilePathNameUtil.getFilePathName(filePath),Files.probeContentType(filePath),name,parentFolderId,repositoryId,syncAccountId,SyncFile.TYPE_FOLDER);
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("description",name);
+  parameters.put("name",filePath.getFileName());
+  parameters.put("parentFolderId",parentFolderId);
+  parameters.put("repositoryId",repositoryId);
+  parameters.put("syncFile",syncFile);
+  AddFolderEvent addFolderEvent=new AddFolderEvent(syncAccountId,parameters);
+  addFolderEvent.run();
+  return syncFile;
+}
