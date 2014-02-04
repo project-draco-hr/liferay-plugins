@@ -1,13 +1,9 @@
 {
-  Element rootElement=portletDataContext.getImportDataRootElement();
-  Element gadgetsElement=rootElement.element("gadgets");
-  for (  Element gadgetElement : gadgetsElement.elements("gadget")) {
-    String gadgetPath=gadgetElement.attributeValue("path");
-    if (!portletDataContext.isPathNotProcessed(gadgetPath)) {
-      continue;
-    }
-    Gadget gadget=(Gadget)portletDataContext.getZipEntryAsObject(gadgetPath);
-    importGadget(portletDataContext,gadgetElement,gadget);
+  portletDataContext.importPortalPermissions();
+  Element gadgetsElement=portletDataContext.getImportDataGroupElement(Gadget.class);
+  List<Element> gadgetElements=gadgetsElement.elements();
+  for (  Element gadgetElement : gadgetElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,gadgetElement);
   }
   return null;
 }

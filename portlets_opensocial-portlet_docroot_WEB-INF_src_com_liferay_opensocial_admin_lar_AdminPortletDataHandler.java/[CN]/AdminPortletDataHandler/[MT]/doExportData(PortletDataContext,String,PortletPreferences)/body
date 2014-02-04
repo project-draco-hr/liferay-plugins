@@ -1,9 +1,8 @@
 {
   Element rootElement=addExportDataRootElement(portletDataContext);
-  Element gadgetsElement=rootElement.addElement("gadgets");
-  List<Gadget> gadgets=GadgetLocalServiceUtil.getGadgets(portletDataContext.getCompanyId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-  for (  Gadget gadget : gadgets) {
-    exportGadget(portletDataContext,gadgetsElement,gadget);
-  }
+  portletDataContext.addPortletPermissions(GadgetPermission.RESOURCE_NAME);
+  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
+  ActionableDynamicQuery actionableDynamicQuery=new GadgetExportActionableDynamicQuery(portletDataContext);
+  actionableDynamicQuery.performActions();
   return getExportDataRootElementString(rootElement);
 }
