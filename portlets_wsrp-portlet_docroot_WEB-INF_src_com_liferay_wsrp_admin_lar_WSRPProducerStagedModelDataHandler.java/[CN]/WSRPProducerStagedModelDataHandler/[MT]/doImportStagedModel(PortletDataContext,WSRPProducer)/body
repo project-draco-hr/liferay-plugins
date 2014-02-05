@@ -1,22 +1,22 @@
 {
-  ServiceContext serviceContext=portletDataContext.createServiceContext(producer);
-  WSRPProducer importedProducer=null;
+  ServiceContext serviceContext=portletDataContext.createServiceContext(wsrpProducer);
+  WSRPProducer importedWSRPProducer=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    WSRPProducer existingProducer=WSRPProducerLocalServiceUtil.fetchWSRPProducerByUuidAndCompanyId(producer.getUuid(),portletDataContext.getCompanyId());
-    if (existingProducer == null) {
-      serviceContext.setUuid(producer.getUuid());
-      importedProducer=WSRPProducerLocalServiceUtil.addWSRPProducer(portletDataContext.getUserId(null),producer.getName(),producer.getVersion(),producer.getPortletIds(),serviceContext);
+    WSRPProducer existingWSRPProducer=WSRPProducerLocalServiceUtil.fetchWSRPProducerByUuidAndCompanyId(wsrpProducer.getUuid(),portletDataContext.getCompanyId());
+    if (existingWSRPProducer == null) {
+      serviceContext.setUuid(wsrpProducer.getUuid());
+      importedWSRPProducer=WSRPProducerLocalServiceUtil.addWSRPProducer(portletDataContext.getUserId(null),wsrpProducer.getName(),wsrpProducer.getVersion(),wsrpProducer.getPortletIds(),serviceContext);
     }
  else {
-      existingProducer.setName(producer.getName());
-      existingProducer.setVersion(producer.getVersion());
-      existingProducer.setPortletIds(producer.getPortletIds());
-      WSRPProducerLocalServiceUtil.updateWSRPProducer(existingProducer);
-      importedProducer=WSRPProducerLocalServiceUtil.updateWSRPProducer(existingProducer);
+      existingWSRPProducer.setName(wsrpProducer.getName());
+      existingWSRPProducer.setVersion(wsrpProducer.getVersion());
+      existingWSRPProducer.setPortletIds(wsrpProducer.getPortletIds());
+      WSRPProducerLocalServiceUtil.updateWSRPProducer(existingWSRPProducer);
+      importedWSRPProducer=WSRPProducerLocalServiceUtil.updateWSRPProducer(existingWSRPProducer);
     }
   }
  else {
-    importedProducer=WSRPProducerLocalServiceUtil.addWSRPProducer(portletDataContext.getUserId(null),producer.getName(),producer.getVersion(),producer.getPortletIds(),serviceContext);
+    importedWSRPProducer=WSRPProducerLocalServiceUtil.addWSRPProducer(portletDataContext.getUserId(null),wsrpProducer.getName(),wsrpProducer.getVersion(),wsrpProducer.getPortletIds(),serviceContext);
   }
-  portletDataContext.importClassedModel(producer,importedProducer);
+  portletDataContext.importClassedModel(wsrpProducer,importedWSRPProducer);
 }
