@@ -1,11 +1,11 @@
 {
   setMockPostResponse("dependencies/watcher_test_delete_file.json");
-  Path addFilePath=Paths.get(_syncSite.getFilePathName() + "/test.txt");
-  Files.createFile(addFilePath);
+  Path filePath=Paths.get(_syncSite.getFilePathName() + "/test.txt");
+  Files.createFile(filePath);
   Thread.sleep(5000);
-  Files.delete(addFilePath);
+  Files.delete(filePath);
   Thread.sleep(5000);
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(2,_syncFiles.size());
-  Assert.assertNull(SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(addFilePath),syncAccount.getSyncAccountId()));
+  Assert.assertNull(SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccount.getSyncAccountId()));
 }
