@@ -1,4 +1,11 @@
 {
   super.setUp();
   _syncSite=SyncSiteService.addSyncSite(filePathName + "/test-site",10184,syncAccount.getSyncAccountId());
+  SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
+  syncWatchEventProcessor.process();
+  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+  Path filePath=Paths.get(syncAccount.getFilePathName());
+  _watcher=new Watcher(filePath,true,watchEventListener);
+  Thread thread=new Thread(_watcher);
+  thread.start();
 }
