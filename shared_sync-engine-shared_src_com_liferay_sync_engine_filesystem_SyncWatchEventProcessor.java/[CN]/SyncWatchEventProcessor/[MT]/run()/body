@@ -2,19 +2,19 @@
   if (_logger.isTraceEnabled()) {
     _logger.trace("Processing sync watch events");
   }
-  List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findAll("kindName",true);
+  List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findAll("eventType",true);
   for (  SyncWatchEvent syncWatchEvent : syncWatchEvents) {
     if (_processedSyncWatchEventIds.contains(syncWatchEvent.getSyncWatchEventId())) {
       SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
       continue;
     }
     if (_logger.isDebugEnabled()) {
-      _logger.debug("Event file path {} file type {} kind name {} timestamp {}",syncWatchEvent.getFilePathName(),syncWatchEvent.getFileType(),syncWatchEvent.getKindName(),syncWatchEvent.getTimestamp());
+      _logger.debug("Event type {} file path {} file type {} timestamp {}",syncWatchEvent.getEventType(),syncWatchEvent.getFilePathName(),syncWatchEvent.getFileType(),syncWatchEvent.getTimestamp());
     }
     String fileType=syncWatchEvent.getFileType();
-    String kindName=syncWatchEvent.getKindName();
+    String eventType=syncWatchEvent.getEventType();
     try {
-      if (kindName.equals(SyncWatchEvent.ENTRY_CREATE)) {
+      if (eventType.equals(SyncWatchEvent.EVENT_TYPE_CREATE)) {
         if (fileType.equals(SyncFile.TYPE_FILE)) {
           addFile(syncWatchEvent);
         }
@@ -22,7 +22,7 @@
           addFolder(syncWatchEvent);
         }
       }
- else       if (kindName.equals(SyncWatchEvent.ENTRY_DELETE)) {
+ else       if (eventType.equals(SyncWatchEvent.EVENT_TYPE_DELETE)) {
         if (fileType.equals(SyncFile.TYPE_FILE)) {
           deleteFile(syncWatchEvent);
         }
