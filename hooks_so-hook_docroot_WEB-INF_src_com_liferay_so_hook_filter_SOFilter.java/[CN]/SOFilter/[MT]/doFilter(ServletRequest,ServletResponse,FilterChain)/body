@@ -6,14 +6,12 @@
       filterChain.doFilter(servletRequest,servletResponse);
       return;
     }
-    Boolean secure=PortalUtil.isSecure(request);
-    String portalURL=PortalUtil.getPortalURL(request,secure);
-    String redirect=user.getDisplayURL(portalURL,PortalUtil.getPathMain(),Boolean.TRUE);
+    String portalURL=PortalUtil.getPortalURL(request,PortalUtil.isSecure(request));
+    String redirect=user.getDisplayURL(portalURL,PortalUtil.getPathMain(),true);
     HttpServletResponse response=(HttpServletResponse)servletResponse;
-    response.sendRedirect(redirect.toString());
+    response.sendRedirect(redirect);
   }
  catch (  Exception e) {
     filterChain.doFilter(servletRequest,servletResponse);
-    if (_log.isDebugEnabled())     _log.debug(e,e);
   }
 }
