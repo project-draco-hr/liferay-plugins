@@ -1,27 +1,13 @@
 {
   SyncContext syncContext=new SyncContext();
-  PluginPackage pluginPackage=DeployManagerUtil.getInstalledPluginPackage("sync-web");
-  syncContext.setPluginVersion(pluginPackage.getVersion());
+  PluginPackage syncWebPluginPackage=DeployManagerUtil.getInstalledPluginPackage("sync-web");
+  syncContext.setPluginVersion(syncWebPluginPackage.getVersion());
   syncContext.setPortalBuildNumber(ReleaseInfo.getBuildNumber());
-  try {
-    String digest=getLicenseDigest("Portal",uuid,LicenseManager.STATE_GOOD);
-    syncContext.setPortalEELicenseDigest(digest);
-  }
- catch (  Exception e) {
-    syncContext.setPortalEELicenseDigest(StringPool.BLANK);
-  }
-  try {
-    SocialOfficeServiceUtil.getService();
+  PluginPackage soPortletPluginPackage=DeployManagerUtil.getInstalledPluginPackage("so-portlet");
+  if (soPortletPluginPackage != null) {
     syncContext.setSocialOfficeInstalled(true);
-    try {
-      String digest=getLicenseDigest("Social Office EE",uuid,LicenseManager.STATE_GOOD);
-      syncContext.setSocialOfficeEELicenseDigest(digest);
-    }
- catch (    Exception e) {
-      syncContext.setSocialOfficeEELicenseDigest(StringPool.BLANK);
-    }
   }
- catch (  BeanLocatorException ble) {
+ else {
     syncContext.setSocialOfficeInstalled(false);
   }
   syncContext.setUserId(getUserId());
