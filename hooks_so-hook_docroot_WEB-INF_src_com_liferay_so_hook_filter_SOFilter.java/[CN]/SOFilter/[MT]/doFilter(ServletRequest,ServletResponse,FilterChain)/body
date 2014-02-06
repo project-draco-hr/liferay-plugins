@@ -1,13 +1,6 @@
 {
   try {
     HttpServletRequest request=(HttpServletRequest)servletRequest;
-    long companyId=PortalUtil.getCompanyId(request);
-    String path=PrefsPropsUtil.getString(companyId,PropsKeys.DEFAULT_LANDING_PAGE_PATH);
-    String homeURL=PortalUtil.getRelativeHomeURL(request);
-    if (!homeURL.equals("/user") && (!path.equals("/user"))) {
-      filterChain.doFilter(servletRequest,servletResponse);
-      return;
-    }
     User user=PortalUtil.initUser(request);
     if (!user.hasPrivateLayouts()) {
       filterChain.doFilter(servletRequest,servletResponse);
