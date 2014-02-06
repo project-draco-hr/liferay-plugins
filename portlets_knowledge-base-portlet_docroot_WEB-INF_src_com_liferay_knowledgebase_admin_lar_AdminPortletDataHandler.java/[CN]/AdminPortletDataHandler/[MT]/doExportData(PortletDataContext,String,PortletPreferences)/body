@@ -2,8 +2,11 @@
   portletDataContext.addPortletPermissions(RESOURCE_NAME);
   Element rootElement=addExportDataRootElement(portletDataContext);
   rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
-  exportKBArticles(portletDataContext,rootElement);
-  exportKBTemplates(portletDataContext,rootElement);
-  exportKBComments(portletDataContext,rootElement);
+  ActionableDynamicQuery KBArticleActionableDynamicQuery=getKBArticlesActionableDynamicQuery(portletDataContext);
+  KBArticleActionableDynamicQuery.performActions();
+  ActionableDynamicQuery KBTemplateActionableDynamicQuery=new KBTemplateExportActionableDynamicQuery(portletDataContext);
+  KBTemplateActionableDynamicQuery.performActions();
+  ActionableDynamicQuery KBCommentActionableDynamicQuery=getKBCommentsActionableDynamicQuery(portletDataContext);
+  KBCommentActionableDynamicQuery.performActions();
   return getExportDataRootElementString(rootElement);
 }

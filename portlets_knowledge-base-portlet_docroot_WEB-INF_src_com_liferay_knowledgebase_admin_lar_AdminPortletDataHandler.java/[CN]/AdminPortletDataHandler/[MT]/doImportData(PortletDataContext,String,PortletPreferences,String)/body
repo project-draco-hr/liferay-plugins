@@ -1,8 +1,19 @@
 {
   portletDataContext.importPortletPermissions(RESOURCE_NAME);
-  Element rootElement=portletDataContext.getImportDataRootElement();
-  importKBArticles(portletDataContext,rootElement);
-  importKBTemplates(portletDataContext,rootElement);
-  importKBComments(portletDataContext,rootElement);
+  Element KBArticlesElement=portletDataContext.getImportDataGroupElement(KBArticle.class);
+  List<Element> KBArticleElements=KBArticlesElement.elements();
+  for (  Element KBArticleElement : KBArticleElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,KBArticleElement);
+  }
+  Element KBTemplatesElement=portletDataContext.getImportDataGroupElement(KBTemplate.class);
+  List<Element> KBTemplateElements=KBTemplatesElement.elements();
+  for (  Element KBTemplateElement : KBTemplateElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,KBTemplateElement);
+  }
+  Element KBCommentsElement=portletDataContext.getImportDataGroupElement(KBComment.class);
+  List<Element> KBCommentElements=KBCommentsElement.elements();
+  for (  Element KBCommentElement : KBCommentElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,KBCommentElement);
+  }
   return null;
 }
