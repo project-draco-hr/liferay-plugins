@@ -1,8 +1,8 @@
 {
   try {
     HttpServletRequest request=(HttpServletRequest)servletRequest;
-    User user=PortalUtil.initUser(request);
-    if (!user.hasPrivateLayouts()) {
+    User user=PortalUtil.getUser(request);
+    if ((user == null) || !user.hasPrivateLayouts()) {
       filterChain.doFilter(servletRequest,servletResponse);
       return;
     }
