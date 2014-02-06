@@ -1,7 +1,7 @@
 {
   List<KBArticle> siblingKBArticles=getSiblingKBArticles(kbArticle.getGroupId(),kbArticle.getResourcePrimKey(),WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticlePriorityComparator());
   for (  KBArticle siblingKBArticle : siblingKBArticles) {
-    deleteKBArticle(siblingKBArticle);
+    kbArticleLocalService.deleteKBArticle(siblingKBArticle);
   }
   resourceLocalService.deleteResource(kbArticle.getCompanyId(),KBArticle.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL,kbArticle.getResourcePrimKey());
   kbArticlePersistence.removeByResourcePrimKey(kbArticle.getResourcePrimKey());

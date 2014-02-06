@@ -23,7 +23,13 @@
   }
   AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
   updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
-  assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
+  SystemEventHierarchyEntryThreadLocal.push(KBArticle.class);
+  try {
+    assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
+  }
+  finally {
+    SystemEventHierarchyEntryThreadLocal.pop(KBArticle.class);
+  }
   assetEntryLocalService.updateVisible(KBArticle.class.getName(),kbArticle.getResourcePrimKey(),true);
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
   extraDataJSONObject.put("title",kbArticle.getTitle());
