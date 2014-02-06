@@ -1,0 +1,21 @@
+{
+  long userId=portletDataContext.getUserId(comment.getUserUuid());
+  Map<Long,Long> relatedEntityIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(comment.getClassName());
+  long newClassPK=MapUtil.getLong(relatedEntityIds,comment.getClassPK(),comment.getClassPK());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(comment);
+  KBComment importedComment=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBComment existingKBComment=KBCommentUtil.fetchByUUID_G(comment.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBComment == null) {
+      serviceContext.setUuid(comment.getUuid());
+      importedComment=KBCommentLocalServiceUtil.addKBComment(userId,comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+    }
+ else {
+      importedComment=KBCommentLocalServiceUtil.updateKBComment(existingKBComment.getKbCommentId(),comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+    }
+  }
+ else {
+    importedComment=KBCommentLocalServiceUtil.addKBComment(userId,comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+  }
+  portletDataContext.importClassedModel(comment,importedComment);
+}

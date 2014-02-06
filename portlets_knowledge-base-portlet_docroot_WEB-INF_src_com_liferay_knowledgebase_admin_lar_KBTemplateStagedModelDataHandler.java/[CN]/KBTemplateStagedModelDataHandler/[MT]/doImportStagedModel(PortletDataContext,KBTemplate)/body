@@ -1,0 +1,19 @@
+{
+  long userId=portletDataContext.getUserId(template.getUserUuid());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(template);
+  KBTemplate importedKBTemplate=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    KBTemplate existingKBTemplate=KBTemplateUtil.fetchByUUID_G(template.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingKBTemplate == null) {
+      serviceContext.setUuid(template.getUuid());
+      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,template.getTitle(),template.getContent(),serviceContext);
+    }
+ else {
+      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),template.getTitle(),template.getContent(),serviceContext);
+    }
+  }
+ else {
+    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,template.getTitle(),template.getContent(),serviceContext);
+  }
+  portletDataContext.importClassedModel(template,importedKBTemplate);
+}

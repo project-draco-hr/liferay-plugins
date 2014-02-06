@@ -1,0 +1,21 @@
+{
+  List<Element> fileElements=portletDataContext.getReferenceDataElements(article,DLFileEntry.class);
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCompanyId(portletDataContext.getCompanyId());
+  serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
+  InputStream inputStream=null;
+  for (  Element fileElement : fileElements) {
+    try {
+      inputStream=portletDataContext.getZipEntryAsInputStream(fileElement.attributeValue("path"));
+      String fileName=fileElement.attributeValue("file-name");
+      String mimeType=MimeTypesUtil.getContentType(inputStream,fileName);
+      PortletFileRepositoryUtil.addPortletFileEntry(portletDataContext.getScopeGroupId(),portletDataContext.getUserId(importedArticle.getUserUuid()),KBArticle.class.getName(),importedArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ADMIN,importedArticle.getAttachmentsFolderId(),inputStream,fileName,mimeType,true);
+    }
+ catch (    DuplicateFileException dfe) {
+      continue;
+    }
+ finally {
+      StreamUtil.cleanUp(inputStream);
+    }
+  }
+}
