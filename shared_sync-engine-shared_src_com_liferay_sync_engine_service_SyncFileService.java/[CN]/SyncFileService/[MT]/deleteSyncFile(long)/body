@@ -1,9 +1,9 @@
 {
   try {
+    _syncFilePersistence.deleteById(syncFileId);
     SyncFile syncFile=_syncFilePersistence.queryForId(syncFileId);
     String type=syncFile.getType();
     if (type.equals(SyncFile.TYPE_FILE)) {
-      _syncFilePersistence.deleteById(syncFileId);
       return;
     }
     List<SyncFile> childSyncFiles=_syncFilePersistence.queryForEq("parentFolderId",syncFileId);
@@ -16,7 +16,6 @@
         deleteSyncFile(childSyncFile.getSyncFileId());
       }
     }
-    _syncFilePersistence.deleteById(syncFileId);
   }
  catch (  SQLException sqle) {
     if (_logger.isDebugEnabled()) {
