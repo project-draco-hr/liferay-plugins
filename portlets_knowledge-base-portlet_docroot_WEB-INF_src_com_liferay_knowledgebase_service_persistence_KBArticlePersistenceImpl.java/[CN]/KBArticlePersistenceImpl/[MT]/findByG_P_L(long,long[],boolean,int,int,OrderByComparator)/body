@@ -1,5 +1,11 @@
 {
-  if ((parentResourcePrimKeies != null) && (parentResourcePrimKeies.length == 1)) {
+  if (parentResourcePrimKeies == null) {
+    parentResourcePrimKeies=new long[0];
+  }
+ else {
+    parentResourcePrimKeies=ArrayUtil.unique(parentResourcePrimKeies);
+  }
+  if (parentResourcePrimKeies.length == 1) {
     return findByG_P_L(groupId,parentResourcePrimKeies[0],latest,start,end,orderByComparator);
   }
   boolean pagination=true;
@@ -23,31 +29,17 @@
   if (list == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_SELECT_KBARTICLE_WHERE);
-    boolean conjunctionable=false;
-    if (conjunctionable) {
-      query.append(WHERE_AND);
-    }
-    query.append(_FINDER_COLUMN_G_P_L_GROUPID_5);
-    conjunctionable=true;
-    if ((parentResourcePrimKeies == null) || (parentResourcePrimKeies.length > 0)) {
-      if (conjunctionable) {
-        query.append(WHERE_AND);
-      }
+    query.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+    if (parentResourcePrimKeies.length > 0) {
       query.append(StringPool.OPEN_PARENTHESIS);
-      for (int i=0; i < parentResourcePrimKeies.length; i++) {
-        query.append(_FINDER_COLUMN_G_P_L_PARENTRESOURCEPRIMKEY_5);
-        if ((i + 1) < parentResourcePrimKeies.length) {
-          query.append(WHERE_OR);
-        }
-      }
+      query.append(_FINDER_COLUMN_G_P_L_PARENTRESOURCEPRIMKEY_7);
+      query.append(StringUtil.merge(parentResourcePrimKeies));
       query.append(StringPool.CLOSE_PARENTHESIS);
-      conjunctionable=true;
-    }
-    if (conjunctionable) {
+      query.append(StringPool.CLOSE_PARENTHESIS);
       query.append(WHERE_AND);
     }
-    query.append(_FINDER_COLUMN_G_P_L_LATEST_5);
-    conjunctionable=true;
+    query.append(_FINDER_COLUMN_G_P_L_LATEST_2);
+    query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),query.index() - 1);
     if (orderByComparator != null) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
     }
@@ -61,9 +53,6 @@
       Query q=session.createQuery(sql);
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(groupId);
-      if (parentResourcePrimKeies != null) {
-        qPos.add(parentResourcePrimKeies);
-      }
       qPos.add(latest);
       if (!pagination) {
         list=(List<KBArticle>)QueryUtil.list(q,getDialect(),start,end,false);

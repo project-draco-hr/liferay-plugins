@@ -1,5 +1,11 @@
 {
-  if ((sectionses != null) && (sectionses.length == 1)) {
+  if (sectionses == null) {
+    sectionses=new String[0];
+  }
+ else {
+    sectionses=ArrayUtil.distinct(sectionses,NULL_SAFE_STRING_COMPARATOR);
+  }
+  if (sectionses.length == 1) {
     return findByG_P_S_M(groupId,parentResourcePrimKey,sectionses[0],main,start,end,orderByComparator);
   }
   boolean pagination=true;
@@ -23,21 +29,9 @@
   if (list == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_SELECT_KBARTICLE_WHERE);
-    boolean conjunctionable=false;
-    if (conjunctionable) {
-      query.append(WHERE_AND);
-    }
-    query.append(_FINDER_COLUMN_G_P_S_M_GROUPID_5);
-    conjunctionable=true;
-    if (conjunctionable) {
-      query.append(WHERE_AND);
-    }
-    query.append(_FINDER_COLUMN_G_P_S_M_PARENTRESOURCEPRIMKEY_5);
-    conjunctionable=true;
-    if ((sectionses == null) || (sectionses.length > 0)) {
-      if (conjunctionable) {
-        query.append(WHERE_AND);
-      }
+    query.append(_FINDER_COLUMN_G_P_S_M_GROUPID_2);
+    query.append(_FINDER_COLUMN_G_P_S_M_PARENTRESOURCEPRIMKEY_2);
+    if (sectionses.length > 0) {
       query.append(StringPool.OPEN_PARENTHESIS);
       for (int i=0; i < sectionses.length; i++) {
         String sections=sectionses[i];
@@ -55,13 +49,10 @@
         }
       }
       query.append(StringPool.CLOSE_PARENTHESIS);
-      conjunctionable=true;
-    }
-    if (conjunctionable) {
       query.append(WHERE_AND);
     }
-    query.append(_FINDER_COLUMN_G_P_S_M_MAIN_5);
-    conjunctionable=true;
+    query.append(_FINDER_COLUMN_G_P_S_M_MAIN_2);
+    query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),query.index() - 1);
     if (orderByComparator != null) {
       appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
     }
@@ -76,8 +67,10 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(groupId);
       qPos.add(parentResourcePrimKey);
-      if (sectionses != null) {
-        qPos.add(sectionses);
+      for (      String sections : sectionses) {
+        if ((sections != null) && !sections.isEmpty()) {
+          qPos.add(sections);
+        }
       }
       qPos.add(main);
       if (!pagination) {
