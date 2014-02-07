@@ -1,0 +1,12 @@
+{
+  SyncFile folderSyncFileA=SyncFileTestUtil.addFolderSyncFile("/home/liferay/liferay-sync-test/a",syncAccount.getSyncAccountId());
+  SyncFile folderSyncFileB=SyncFileTestUtil.addFolderSyncFile("/home/liferay/liferay-sync-test/b",syncAccount.getSyncAccountId());
+  SyncFile folderSyncFileAA=SyncFileTestUtil.addFolderSyncFile("/home/liferay/liferay-sync-test/a/a",folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
+  SyncFile fileSyncFileAA=SyncFileTestUtil.addFileSyncFile("/home/liferay/liferay-sync-test/a/a.txt",folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
+  SyncFileService.updateSyncFile(Paths.get("/home/liferay/liferay-sync-test/b/a"),folderSyncFileB.getTypePK(),folderSyncFileA);
+  SyncFilePersistence syncFilePersistence=SyncFileService.getSyncFilePersistence();
+  folderSyncFileAA=syncFilePersistence.queryForId(folderSyncFileAA.getTypePK());
+  Assert.assertEquals("/home/liferay/liferay-sync-test/b/a/a",folderSyncFileAA.getFilePathName());
+  fileSyncFileAA=syncFilePersistence.queryForId(fileSyncFileAA.getTypePK());
+  Assert.assertEquals("/home/liferay/liferay-sync-test/b/a/a.txt",fileSyncFileAA.getFilePathName());
+}
