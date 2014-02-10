@@ -1,0 +1,16 @@
+{
+  try {
+    List<SyncProp> syncPropList=_syncPropPersistence.queryForEq("key",key);
+    SyncProp syncProp=syncPropList.get(0);
+    if (syncProp == null) {
+      return 0;
+    }
+    return Integer.parseInt(syncProp.getValue());
+  }
+ catch (  SQLException sqle) {
+    if (_logger.isDebugEnabled()) {
+      _logger.debug(sqle.getMessage(),sqle);
+    }
+    return 0;
+  }
+}
