@@ -1,5 +1,7 @@
 {
-  CalendarResource calendarResource=CalendarResourceUtil.getGroupCalendarResource(groupId,new ServiceContext());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCompanyId(permissionChecker.getCompanyId());
+  CalendarResource calendarResource=CalendarResourceUtil.getScopedGroupCalendarResource(groupId,serviceContext);
   if (calendarResource == null) {
     return false;
   }
