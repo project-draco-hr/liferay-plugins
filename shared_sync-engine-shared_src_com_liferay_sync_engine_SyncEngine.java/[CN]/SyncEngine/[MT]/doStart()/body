@@ -3,6 +3,8 @@
   LoggerUtil.initLogger();
   _logger.info("Starting " + PropsValues.SYNC_PRODUCT_NAME);
   UpgradeUtil.upgrade();
+  SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
+  syncWatchEventProcessor.process();
   for (  SyncAccount syncAccount : SyncAccountService.findAll()) {
     List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
     for (    SyncSite syncSite : syncSites) {
@@ -11,8 +13,6 @@
       map.put("repositoryId",syncSite.getGroupId());
       _scheduledExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
     }
-    SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
-    syncWatchEventProcessor.process();
     Path filePath=Paths.get(syncAccount.getFilePathName());
     WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
     Watcher watcher=new Watcher(filePath,true,watchEventListener);
