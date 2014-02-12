@@ -4,19 +4,19 @@
   _logger.info("Starting " + PropsValues.SYNC_PRODUCT_NAME);
   UpgradeUtil.upgrade();
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
-  syncWatchEventProcessor.process();
+  _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
   for (  SyncAccount syncAccount : SyncAccountService.findAll()) {
     List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
     for (    SyncSite syncSite : syncSites) {
       Map<String,Object> map=new HashMap<String,Object>();
       map.put("folderId",0);
       map.put("repositoryId",syncSite.getGroupId());
-      _scheduledExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
+      _eventExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
     }
     Path filePath=Paths.get(syncAccount.getFilePathName());
     WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
     Watcher watcher=new Watcher(filePath,true,watchEventListener);
-    _executorService.execute(watcher);
+    _watcherExecutorService.execute(watcher);
   }
   SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_STATE_STARTED);
 }
