@@ -4,7 +4,7 @@
   }
 );
   for (  SyncFile syncFile : syncDLObjectUpdate.getSyncDLObjects()) {
-    SyncFile parentSyncFile=SyncFileService.fetchSyncFile(syncFile.getParentFolderId(),syncFile.getRepositoryId(),getSyncAccountId());
+    SyncFile parentSyncFile=SyncFileService.fetchSyncFile(syncFile.getRepositoryId(),getSyncAccountId(),syncFile.getParentFolderId());
     String filePathName=null;
     if (parentSyncFile != null) {
       filePathName=FilePathNameUtil.getFilePathName(parentSyncFile.getFilePathName(),syncFile.getName());
@@ -13,6 +13,14 @@
     syncFile.setFilePathName(filePathName);
     syncFile.setSyncAccountId(getSyncAccountId());
     SyncFileService.update(syncFile);
+    String type=syncFile.getType();
+    if (type.equals(SyncFile.TYPE_FOLDER)) {
+      Path filePath=Paths.get(filePathName);
+      if (Files.notExists(filePath)) {
+        Files.createDirectory(filePath);
+      }
+      continue;
+    }
     Map<String,Object> parameters=new HashMap<String,Object>();
     parameters.put("patch",false);
     parameters.put("syncFile",syncFile);

@@ -3,5 +3,21 @@
   LoggerUtil.initLogger();
   _logger.info("Starting " + PropsValues.SYNC_PRODUCT_NAME);
   UpgradeUtil.upgrade();
+  for (  SyncAccount syncAccount : SyncAccountService.findAll()) {
+    List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
+    for (    SyncSite syncSite : syncSites) {
+      Map<String,Object> map=new HashMap<String,Object>();
+      map.put("folderId",0);
+      map.put("repositoryId",syncSite.getGroupId());
+      _scheduledExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
+    }
+    SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
+    syncWatchEventProcessor.process();
+    WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+    Path filePath=Paths.get(syncAccount.getFilePathName());
+    Watcher watcher=new Watcher(filePath,true,watchEventListener);
+    ExecutorService executorService=Executors.newSingleThreadScheduledExecutor();
+    executorService.execute(watcher);
+  }
   SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_STATE_STARTED);
 }
