@@ -11,7 +11,7 @@
       Map<String,Object> map=new HashMap<String,Object>();
       map.put("folderId",0);
       map.put("repositoryId",syncSite.getGroupId());
-      _eventExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
+      _eventScheduledExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
     }
     Path filePath=Paths.get(syncAccount.getFilePathName());
     WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
