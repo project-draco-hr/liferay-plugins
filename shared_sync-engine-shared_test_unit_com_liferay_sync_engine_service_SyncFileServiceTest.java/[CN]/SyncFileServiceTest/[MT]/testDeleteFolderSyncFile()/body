@@ -1,6 +1,6 @@
 {
-  _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
-  Assert.assertEquals(1,_syncFiles.size());
+  List<SyncFile> syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
+  Assert.assertEquals(1,syncFiles.size());
   SyncFile folderSyncFileA=SyncFileTestUtil.addFolderSyncFile(null,syncAccount.getSyncAccountId());
   SyncFile folderSyncFileAA=SyncFileTestUtil.addFolderSyncFile(null,folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
   SyncFileTestUtil.addFolderSyncFile(null,folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
@@ -8,9 +8,9 @@
   SyncFileTestUtil.addFileSyncFile(null,folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
   SyncFileTestUtil.addFileSyncFile(null,folderSyncFileA.getTypePK(),syncAccount.getSyncAccountId());
   SyncFileTestUtil.addFileSyncFile(null,folderSyncFileAA.getTypePK(),syncAccount.getSyncAccountId());
-  _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
-  Assert.assertEquals(8,_syncFiles.size());
+  syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
+  Assert.assertEquals(8,syncFiles.size());
   SyncFileService.deleteSyncFile(folderSyncFileA.getSyncFileId());
-  _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
-  Assert.assertEquals(1,_syncFiles.size());
+  syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
+  Assert.assertEquals(1,syncFiles.size());
 }
