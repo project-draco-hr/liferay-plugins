@@ -5,6 +5,8 @@
     Path filePath=Paths.get(syncFile.getFilePathName());
     outputStream=Files.newOutputStream(filePath);
     outputStream.write(response.getBytes());
+    syncFile.setFileKey(FileUtil.getFileKey(filePath));
+    SyncFileService.update(syncFile);
   }
   finally {
     if (outputStream != null) {
