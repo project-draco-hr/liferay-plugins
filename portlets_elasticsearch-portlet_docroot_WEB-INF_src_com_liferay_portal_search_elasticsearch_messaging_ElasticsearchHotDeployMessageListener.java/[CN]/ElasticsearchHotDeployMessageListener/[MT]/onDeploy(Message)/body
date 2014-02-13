@@ -1,0 +1,24 @@
+{
+  ElasticsearchConnectionManager elasticsearchConnectionManager=ElasticsearchConnectionManager.getInstance();
+  ElasticsearchConnection elasticsearchConnection=elasticsearchConnectionManager.getElasticsearchConnection();
+  elasticsearchConnection.initialize();
+  AdminClient adminClient=elasticsearchConnection.getClient().admin();
+  List<Company> companies=CompanyLocalServiceUtil.getCompanies();
+  IndicesAdminClient indicesAdminClient=adminClient.indices();
+  for (  Company company : companies) {
+    IndicesExistsRequestBuilder indicesExistsRequestBuilder=indicesAdminClient.prepareExists(String.valueOf(company.getCompanyId()));
+    ListenableActionFuture<IndicesExistsResponse> indicesExistsRequestFuture=indicesExistsRequestBuilder.execute();
+    IndicesExistsResponse indicesExistsResponse=indicesExistsRequestFuture.get();
+    if (indicesExistsResponse.isExists()) {
+      continue;
+    }
+    CreateIndexRequestBuilder createIndexRequestBuilder=indicesAdminClient.prepareCreate(String.valueOf(company.getCompanyId()));
+    ListenableActionFuture<CreateIndexResponse> createIndexFuture=createIndexRequestBuilder.execute();
+    CreateIndexResponse createIndexResponse=createIndexFuture.get();
+    if (_log.isInfoEnabled()) {
+      StringOutputStream stringOutputStream=new StringOutputStream();
+      createIndexResponse.writeTo(new OutputStreamStreamOutput(stringOutputStream));
+      _log.info(stringOutputStream);
+    }
+  }
+}
