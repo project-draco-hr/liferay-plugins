@@ -2,11 +2,11 @@
   setMockPostResponse("dependencies/watcher_test_modify_file.json");
   Path filePath=Paths.get(_syncSite.getFilePathName() + "/test.txt");
   Files.createFile(filePath);
-  Thread.sleep(1000);
+  sleep();
   BufferedWriter bufferedWriter=Files.newBufferedWriter(filePath,StandardCharsets.UTF_8);
   bufferedWriter.write("Hello World");
   bufferedWriter.close();
-  Thread.sleep(1000);
+  sleep();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(3,_syncFiles.size());
   SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccount.getSyncAccountId());

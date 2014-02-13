@@ -4,9 +4,9 @@
   Files.createFile(sourceFilePath);
   Path destinationFilePath=Paths.get(_syncSite.getFilePathName() + "/test");
   Files.createDirectory(destinationFilePath);
-  Thread.sleep(1000);
+  sleep();
   Files.move(sourceFilePath,destinationFilePath.resolve(sourceFilePath.getFileName()));
-  Thread.sleep(1000);
+  sleep();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(4,_syncFiles.size());
   Assert.assertNotNull(SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(destinationFilePath),syncAccount.getSyncAccountId()));
