@@ -1,10 +1,9 @@
 {
-  String[] syncNotificationFieldsArray=_syncNotificationFieldsCache.get(className);
-  if (syncNotificationFieldsArray != null) {
-    return syncNotificationFieldsArray;
+  String[] syncNotificationFields=_syncNotificationFieldsCache.get(className);
+  if (syncNotificationFields != null) {
+    return syncNotificationFields;
   }
-  String syncNotificationFields=PropsUtil.get(PropsKeys.SYNC_NOTIFICATION_FIELDS_PREFIX + "." + className);
-  syncNotificationFieldsArray=syncNotificationFields.split(",");
-  _syncNotificationFieldsCache.put(className,syncNotificationFieldsArray);
-  return syncNotificationFieldsArray;
+  syncNotificationFields=PropsUtil.getArray(PropsKeys.SYNC_NOTIFICATION_FIELDS_PREFIX + "." + className);
+  _syncNotificationFieldsCache.put(className,syncNotificationFields);
+  return syncNotificationFields;
 }

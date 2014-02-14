@@ -2,7 +2,8 @@
   SyncFile syncFile=SyncFileTestUtil.addFileSyncFile("/home/liferay/test",0,syncAccount.getSyncAccountId());
   SyncFileService.registerListener(new SyncFileModelListener());
   syncFile.setFilePathName("/home/liferay/test2");
+  syncFile.setSize(256);
   SyncFileService.update(syncFile);
-  Assert.assertEquals("/home/liferay/test",_filePathName);
-  Assert.assertTrue(_onUpdateCalled);
+  Assert.assertEquals("/home/liferay/test",_updatedFields.get("filePathName"));
+  Assert.assertEquals(2,_updatedFields.size());
 }
