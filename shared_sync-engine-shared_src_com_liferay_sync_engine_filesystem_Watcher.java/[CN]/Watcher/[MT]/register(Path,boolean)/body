@@ -9,7 +9,8 @@
 );
   }
  else {
-    WatchKey watchKey=filePath.register(_watchService,StandardWatchEventKinds.ENTRY_CREATE,StandardWatchEventKinds.ENTRY_DELETE,StandardWatchEventKinds.ENTRY_MODIFY);
+    name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
+    WatchKey watchKey=jpathwatchFilePath.register(_watchService,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
     _filePaths.put(watchKey,filePath);
     fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
     if (_logger.isTraceEnabled()) {
