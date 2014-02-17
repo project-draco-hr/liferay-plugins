@@ -1,43 +1,43 @@
 {
-  long userId=portletDataContext.getUserId(article.getUserUuid());
-  if (article.getParentResourcePrimKey() != KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
-    StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,article,KBArticle.class);
+  long userId=portletDataContext.getUserId(kbArticle.getUserUuid());
+  if (kbArticle.getParentResourcePrimKey() != KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
+    StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,kbArticle,KBArticle.class);
   }
-  Map<Long,Long> articleResourcePrimaryKeys=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBArticle.class);
-  long parentResourcePrimKey=MapUtil.getLong(articleResourcePrimaryKeys,article.getParentResourcePrimKey());
-  long resourcePrimaryKey=MapUtil.getLong(articleResourcePrimaryKeys,article.getResourcePrimKey(),0);
-  String[] sections=AdminUtil.unescapeSections(article.getSections());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(article);
-  KBArticle importedArticle=null;
+  Map<Long,Long> kbArticleResourcePrimKeys=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBArticle.class);
+  long parentResourcePrimKey=MapUtil.getLong(kbArticleResourcePrimKeys,kbArticle.getParentResourcePrimKey());
+  long resourcePrimaryKey=MapUtil.getLong(kbArticleResourcePrimKeys,kbArticle.getResourcePrimKey(),0);
+  String[] sections=AdminUtil.unescapeSections(kbArticle.getSections());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticle);
+  KBArticle importedKBArticle=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBArticle existingKBArticle=KBArticleUtil.fetchByR_V(resourcePrimaryKey,article.getVersion());
+    KBArticle existingKBArticle=KBArticleUtil.fetchByR_V(resourcePrimaryKey,kbArticle.getVersion());
     if (existingKBArticle == null) {
-      existingKBArticle=KBArticleUtil.fetchByUUID_G(article.getUuid(),portletDataContext.getScopeGroupId());
+      existingKBArticle=KBArticleUtil.fetchByUUID_G(kbArticle.getUuid(),portletDataContext.getScopeGroupId());
     }
     if (existingKBArticle == null) {
-      serviceContext.setUuid(article.getUuid());
+      serviceContext.setUuid(kbArticle.getUuid());
       existingKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimaryKey,WorkflowConstants.STATUS_ANY);
       if (existingKBArticle == null) {
-        importedArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),sections,StringPool.BLANK,serviceContext);
-        KBArticleLocalServiceUtil.updatePriority(importedArticle.getResourcePrimKey(),article.getPriority());
+        importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+        KBArticleLocalServiceUtil.updatePriority(importedKBArticle.getResourcePrimKey(),kbArticle.getPriority());
       }
  else {
-        KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),article.getTitle(),article.getContent(),article.getDescription(),sections,StringPool.BLANK,serviceContext);
-        KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,article.getPriority());
-        importedArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
+        KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+        KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,kbArticle.getPriority());
+        importedKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
       }
     }
  else {
-      importedArticle=existingKBArticle;
+      importedKBArticle=existingKBArticle;
     }
   }
  else {
-    importedArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,article.getTitle(),article.getContent(),article.getDescription(),sections,StringPool.BLANK,serviceContext);
-    KBArticleLocalServiceUtil.updatePriority(importedArticle.getResourcePrimKey(),article.getPriority());
+    importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+    KBArticleLocalServiceUtil.updatePriority(importedKBArticle.getResourcePrimKey(),kbArticle.getPriority());
   }
-  importKBArticleAttachments(portletDataContext,article,importedArticle);
-  portletDataContext.importClassedModel(article,importedArticle);
-  if (!article.isMain()) {
-    articleResourcePrimaryKeys.put(article.getResourcePrimKey(),importedArticle.getResourcePrimKey());
+  importKBArticleAttachments(portletDataContext,kbArticle,importedKBArticle);
+  portletDataContext.importClassedModel(kbArticle,importedKBArticle);
+  if (!kbArticle.isMain()) {
+    kbArticleResourcePrimKeys.put(kbArticle.getResourcePrimKey(),importedKBArticle.getResourcePrimKey());
   }
 }

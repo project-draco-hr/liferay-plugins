@@ -1,21 +1,21 @@
 {
-  long userId=portletDataContext.getUserId(comment.getUserUuid());
-  Map<Long,Long> relatedEntityIds=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(comment.getClassName());
-  long newClassPK=MapUtil.getLong(relatedEntityIds,comment.getClassPK(),comment.getClassPK());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(comment);
-  KBComment importedComment=null;
+  long userId=portletDataContext.getUserId(kbComment.getUserUuid());
+  Map<Long,Long> relatedClassPKs=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(kbComment.getClassName());
+  long newClassPK=MapUtil.getLong(relatedClassPKs,kbComment.getClassPK(),kbComment.getClassPK());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbComment);
+  KBComment importedKBComment=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBComment existingKBComment=KBCommentUtil.fetchByUUID_G(comment.getUuid(),portletDataContext.getScopeGroupId());
+    KBComment existingKBComment=KBCommentUtil.fetchByUUID_G(kbComment.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBComment == null) {
-      serviceContext.setUuid(comment.getUuid());
-      importedComment=KBCommentLocalServiceUtil.addKBComment(userId,comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+      serviceContext.setUuid(kbComment.getUuid());
+      importedKBComment=KBCommentLocalServiceUtil.addKBComment(userId,kbComment.getClassNameId(),newClassPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
     }
  else {
-      importedComment=KBCommentLocalServiceUtil.updateKBComment(existingKBComment.getKbCommentId(),comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+      importedKBComment=KBCommentLocalServiceUtil.updateKBComment(existingKBComment.getKbCommentId(),kbComment.getClassNameId(),newClassPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
     }
   }
  else {
-    importedComment=KBCommentLocalServiceUtil.addKBComment(userId,comment.getClassNameId(),newClassPK,comment.getContent(),comment.getHelpful(),serviceContext);
+    importedKBComment=KBCommentLocalServiceUtil.addKBComment(userId,kbComment.getClassNameId(),newClassPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
   }
-  portletDataContext.importClassedModel(comment,importedComment);
+  portletDataContext.importClassedModel(kbComment,importedKBComment);
 }

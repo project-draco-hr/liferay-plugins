@@ -1,19 +1,19 @@
 {
-  long userId=portletDataContext.getUserId(template.getUserUuid());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(template);
+  long userId=portletDataContext.getUserId(kbTemplate.getUserUuid());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbTemplate);
   KBTemplate importedKBTemplate=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBTemplate existingKBTemplate=KBTemplateUtil.fetchByUUID_G(template.getUuid(),portletDataContext.getScopeGroupId());
+    KBTemplate existingKBTemplate=KBTemplateUtil.fetchByUUID_G(kbTemplate.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBTemplate == null) {
-      serviceContext.setUuid(template.getUuid());
-      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,template.getTitle(),template.getContent(),serviceContext);
+      serviceContext.setUuid(kbTemplate.getUuid());
+      importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),serviceContext);
     }
  else {
-      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),template.getTitle(),template.getContent(),serviceContext);
+      importedKBTemplate=KBTemplateLocalServiceUtil.updateKBTemplate(existingKBTemplate.getKbTemplateId(),kbTemplate.getTitle(),kbTemplate.getContent(),serviceContext);
     }
   }
  else {
-    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,template.getTitle(),template.getContent(),serviceContext);
+    importedKBTemplate=KBTemplateLocalServiceUtil.addKBTemplate(userId,kbTemplate.getTitle(),kbTemplate.getContent(),serviceContext);
   }
-  portletDataContext.importClassedModel(template,importedKBTemplate);
+  portletDataContext.importClassedModel(kbTemplate,importedKBTemplate);
 }
