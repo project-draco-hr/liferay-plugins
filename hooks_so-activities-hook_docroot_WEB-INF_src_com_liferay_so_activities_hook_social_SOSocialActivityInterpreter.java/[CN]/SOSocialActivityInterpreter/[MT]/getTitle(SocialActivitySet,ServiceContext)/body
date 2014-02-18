@@ -3,6 +3,9 @@
   sb.append(getTitle(activitySet.getActivitySetId(),activitySet.getGroupId(),activitySet.getUserId(),activitySet.getModifiedDate(),serviceContext));
   sb.append("<div class=\"activity-action\">");
   String titlePattern=getTitlePattern(null,activitySet);
+  if (Validator.isNull(titlePattern)) {
+    return null;
+  }
   Object[] titleArguments=getTitleArguments(null,activitySet,null,null,serviceContext);
   sb.append(serviceContext.translate(titlePattern,titleArguments));
   sb.append("</div>");
