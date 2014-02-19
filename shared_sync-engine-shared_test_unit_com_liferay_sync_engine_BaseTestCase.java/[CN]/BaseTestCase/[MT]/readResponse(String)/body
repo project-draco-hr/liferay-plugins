@@ -1,7 +1,16 @@
 {
-  Class<?> clazz=getClass();
-  InputStream inputStream=clazz.getResourceAsStream(fileName);
-  String response=IOUtils.toString(inputStream);
-  inputStream.close();
+  InputStream inputStream=null;
+  String response=null;
+  try {
+    Class<?> clazz=getClass();
+    inputStream=clazz.getResourceAsStream(fileName);
+    response=IOUtils.toString(inputStream);
+  }
+ catch (  IOException ioe) {
+    _logger.error(ioe.getMessage(),ioe);
+  }
+ finally {
+    StreamUtil.cleanUp(inputStream);
+  }
   return response;
 }
