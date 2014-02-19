@@ -1,5 +1,5 @@
 {
-  Map<String,Object> originalFieldValues=new HashMap<String,Object>();
+  Map<String,Object> originalValues=new HashMap<String,Object>();
   TT sourceModel=queryForId(extractId(targetModel));
   for (  String syncNotificationField : getSyncNotificationFields(dataClass.getSimpleName())) {
     FieldType fieldType=tableInfo.getFieldTypeByColumnName(syncNotificationField);
@@ -7,13 +7,13 @@
     Object targetFieldValue=fieldType.extractJavaFieldValue(targetModel);
     DataPersister dataPersister=fieldType.getDataPersister();
     if (!dataPersister.dataIsEqual(sourceFieldValue,targetFieldValue)) {
-      originalFieldValues.put(fieldType.getColumnName(),sourceFieldValue);
+      originalValues.put(fieldType.getColumnName(),sourceFieldValue);
     }
   }
-  if (originalFieldValues.isEmpty()) {
+  if (originalValues.isEmpty()) {
     return;
   }
-  for (  ModelListener<TT> listener : _listeners) {
-    listener.onUpdate(targetModel,originalFieldValues);
+  for (  ModelListener<TT> modelListener : _modelListeners) {
+    modelListener.onUpdate(targetModel,originalValues);
   }
 }
