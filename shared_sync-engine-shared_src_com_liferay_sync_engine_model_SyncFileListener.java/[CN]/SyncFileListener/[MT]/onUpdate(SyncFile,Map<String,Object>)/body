@@ -1,0 +1,35 @@
+{
+  if (!originalFieldValues.containsKey("checksum")) {
+    return;
+  }
+  Path filePath=Paths.get(syncFile.getFilePathName());
+  if (Files.notExists(filePath)) {
+    return;
+  }
+  FileInputStream fileInputStream=null;
+  OutputStream outputStream=null;
+  FileChannel fileChannel=null;
+  WritableByteChannel writableByteChannel=null;
+  try {
+    fileInputStream=new FileInputStream(syncFile.getFilePathName());
+    fileChannel=fileInputStream.getChannel();
+    filePath=Paths.get(PropsValues.SYNC_CONFIGURATION_DIRECTORY + "/files/" + syncFile.getSyncFileId());
+    if (Files.notExists(filePath)) {
+      Files.createFile(filePath);
+    }
+    outputStream=Files.newOutputStream(filePath);
+    writableByteChannel=Channels.newChannel(outputStream);
+    ByteChannelWriter byteChannelWriter=new ByteChannelWriter(writableByteChannel);
+    DeltaUtil.checksums(fileChannel,byteChannelWriter);
+    byteChannelWriter.finish();
+  }
+ catch (  IOException ioe) {
+    _logger.error(ioe.getMessage(),ioe);
+  }
+ finally {
+    StreamUtil.cleanUp(fileInputStream);
+    StreamUtil.cleanUp(outputStream);
+    StreamUtil.cleanUp(fileChannel);
+    StreamUtil.cleanUp(writableByteChannel);
+  }
+}
