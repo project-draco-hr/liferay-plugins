@@ -1,0 +1,17 @@
+{
+  long syncId=counterLocalService.increment();
+  SyncDLFileVersionDiff syncDLFileVersionDiff=syncDLFileVersionDiffPersistence.create(syncId);
+  syncDLFileVersionDiff.setFileEntryId(fileEntryId);
+  syncDLFileVersionDiff.setSourceFileVersionId(sourceFileVersionId);
+  syncDLFileVersionDiff.setDestinationFileVersionId(destinationFileVersionId);
+  FileEntry fileEntry=dlAppService.getFileEntry(fileEntryId);
+  String dataFileName=getDataFileName(fileEntryId,sourceFileVersionId,destinationFileVersionId);
+  FileEntry dataFileEntry=PortletFileRepositoryUtil.addPortletFileEntry(fileEntry.getGroupId(),fileEntry.getUserId(),SyncDLFileVersionDiff.class.getName(),syncDLFileVersionDiff.getFileVersionDiffId(),PortletKeys.DOCUMENT_LIBRARY,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,file,dataFileName,fileEntry.getMimeType(),false);
+  syncDLFileVersionDiff.setDataFileEntryId(dataFileEntry.getFileEntryId());
+  syncDLFileVersionDiff.setSize(file.length());
+  Date expirationDate=new Date();
+  expirationDate.setTime(expirationDate.getTime() + PortletPropsValues.FILE_DIFF_CACHE_EXPIRATION_TIME * 3600000);
+  syncDLFileVersionDiff.setExpirationDate(expirationDate);
+  syncDLFileVersionDiffPersistence.update(syncDLFileVersionDiff);
+  return syncDLFileVersionDiff;
+}

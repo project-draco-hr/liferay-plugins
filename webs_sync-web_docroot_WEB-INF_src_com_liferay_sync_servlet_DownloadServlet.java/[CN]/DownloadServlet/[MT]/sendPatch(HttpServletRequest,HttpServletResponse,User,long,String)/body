@@ -8,6 +8,21 @@
   if (Validator.isNull(destinationVersion)) {
     throw new IllegalArgumentException("Missing destination version");
   }
-  InputStream inputStream=SyncUtil.getFileDeltaAsStream(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
-  ServletResponseUtil.write(response,inputStream);
+  DLFileVersion sourceFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),sourceVersion);
+  DLFileVersion destinationFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),destinationVersion);
+  if (!PortletPropsValues.FILE_DIFF_CACHE_ENABLED) {
+    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
+    ServletResponseUtil.write(response,new FileInputStream(deltaFile),deltaFile.length());
+    return;
+  }
+  SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),destinationFileVersion.getFileVersionId());
+  if (syncDLFileVersionDiff != null) {
+    SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getFileVersionDiffId());
+  }
+ else {
+    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
+    syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),destinationFileVersion.getFileVersionId(),deltaFile);
+  }
+  FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
+  ServletResponseUtil.write(response,dataFileEntry.getContentStream(),dataFileEntry.getSize());
 }
