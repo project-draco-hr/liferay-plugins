@@ -1,0 +1,9 @@
+{
+  SyncSite syncSite=(SyncSite)getParameterValue("syncSite");
+  syncSite=SyncSiteService.fetchSyncSite(syncSite.getGroupId(),syncSite.getSyncAccountId());
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("companyId",syncSite.getCompanyId());
+  parameters.put("lastAccessTime",syncSite.getLastRemoteSyncTime());
+  parameters.put("repositoryId",syncSite.getGroupId());
+  return HttpUtil.executePost(getSyncAccountId(),_URL_PATH,parameters);
+}
