@@ -7,7 +7,7 @@
   Path filePath=(Path)parameters.remove("filePath");
   MultipartEntityBuilder multipartEntityBuilder=_getMultipartEntityBuilder(parameters);
   if (filePath != null) {
-    multipartEntityBuilder.addPart("file",_getByteArrayBody(Files.readAllBytes(filePath),(String)parameters.get("mimeType"),(String)parameters.get("title")));
+    multipartEntityBuilder.addPart("file",_getFileBody(filePath,(String)parameters.get("mimeType"),(String)parameters.get("title")));
   }
   httpPost.setEntity(multipartEntityBuilder.build());
   return httpClient.execute(httpHost,httpPost,new BaseHandler(),_getBasicHttpContext(httpHost));
