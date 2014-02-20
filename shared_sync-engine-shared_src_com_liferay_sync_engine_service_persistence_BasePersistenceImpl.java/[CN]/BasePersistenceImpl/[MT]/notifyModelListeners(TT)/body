@@ -2,6 +2,9 @@
   Map<String,Object> originalValues=new HashMap<String,Object>();
   TT sourceModel=queryForId(extractId(targetModel));
   for (  String syncNotificationFieldName : getSyncNotificationFieldNames(dataClass.getSimpleName())) {
+    if (syncNotificationFieldName.equals("")) {
+      continue;
+    }
     FieldType fieldType=tableInfo.getFieldTypeByColumnName(syncNotificationFieldName);
     Object sourceFieldValue=fieldType.extractJavaFieldValue(sourceModel);
     Object targetFieldValue=fieldType.extractJavaFieldValue(targetModel);

@@ -7,18 +7,24 @@
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
   for (  SyncAccount syncAccount : SyncAccountService.findAll()) {
-    final List<Runnable> getAllSyncDLObjectsEvents=new ArrayList<Runnable>();
+    final List<Runnable> getSyncDLObjectUpdateEvents=new ArrayList<Runnable>();
     List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
     for (    SyncSite syncSite : syncSites) {
       Map<String,Object> parameters=new HashMap<String,Object>();
       parameters.put("folderId",0);
       parameters.put("repositoryId",syncSite.getGroupId());
-      getAllSyncDLObjectsEvents.add(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),parameters));
+      GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),parameters);
+      getAllSyncDLObjectsEvent.run();
+      parameters=new HashMap<String,Object>();
+      parameters.put("companyId",syncSite.getCompanyId());
+      parameters.put("repositoryId",syncSite.getGroupId());
+      parameters.put("syncSite",syncSite);
+      getSyncDLObjectUpdateEvents.add(new GetSyncDLObjectUpdateEvent(syncAccount.getSyncAccountId(),parameters));
     }
     _eventScheduledExecutorService.scheduleAtFixedRate(new Runnable(){
       @Override public void run(){
-        for (        Runnable getAllSyncDLObjectsEvent : getAllSyncDLObjectsEvents) {
-          getAllSyncDLObjectsEvent.run();
+        for (        Runnable getSyncDLObjectUpdateEvent : getSyncDLObjectUpdateEvents) {
+          getSyncDLObjectUpdateEvent.run();
         }
       }
     }

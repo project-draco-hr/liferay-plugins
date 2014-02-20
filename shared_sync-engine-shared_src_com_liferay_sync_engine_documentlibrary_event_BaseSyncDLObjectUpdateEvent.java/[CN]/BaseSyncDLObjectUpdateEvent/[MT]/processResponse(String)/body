@@ -26,4 +26,7 @@
     DownloadFileEvent downloadFileEvent=new DownloadFileEvent(getSyncAccountId(),parameters);
     downloadFileEvent.run();
   }
+  SyncSite syncSite=SyncSiteService.fetchSyncSite((Long)getParameterValue("repositoryId"),getSyncAccountId());
+  syncSite.setLastRemoteSyncTime(syncDLObjectUpdate.getLastAccessTime());
+  SyncSiteService.update(syncSite);
 }
