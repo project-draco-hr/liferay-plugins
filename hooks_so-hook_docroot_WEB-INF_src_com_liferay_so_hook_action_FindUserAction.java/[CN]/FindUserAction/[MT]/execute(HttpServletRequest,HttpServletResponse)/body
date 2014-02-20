@@ -1,0 +1,17 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long userId=ParamUtil.getLong(request,"p_u_i_d");
+  User user=UserLocalServiceUtil.fetchUser(userId);
+  if ((user != null) && user.hasPublicLayouts()) {
+    response.sendRedirect(user.getDisplayURL(themeDisplay,false));
+    return null;
+  }
+  String noSuchEntryRedirect=ParamUtil.getString(request,"noSuchEntryRedirect");
+  if (Validator.isNotNull(noSuchEntryRedirect)) {
+    response.sendRedirect(PortalUtil.escapeRedirect(noSuchEntryRedirect));
+  }
+ else {
+    PortalUtil.sendError(new NoSuchUserException(),request,response);
+  }
+  return null;
+}
