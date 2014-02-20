@@ -1,5 +1,5 @@
 {
-  if (!originalFieldValues.containsKey("checksum")) {
+  if (!originalValues.containsKey("checksum")) {
     return;
   }
   Path filePath=Paths.get(syncFile.getFilePathName());
@@ -7,17 +7,17 @@
     return;
   }
   FileInputStream fileInputStream=null;
-  OutputStream outputStream=null;
   FileChannel fileChannel=null;
+  OutputStream outputStream=null;
   WritableByteChannel writableByteChannel=null;
   try {
     fileInputStream=new FileInputStream(syncFile.getFilePathName());
     fileChannel=fileInputStream.getChannel();
-    filePath=Paths.get(PropsValues.SYNC_CONFIGURATION_DIRECTORY + "/files/" + syncFile.getSyncFileId());
-    if (Files.notExists(filePath)) {
-      Files.createFile(filePath);
+    Path checksumFilePath=Paths.get(PropsValues.SYNC_CONFIGURATION_DIRECTORY + "/files/" + syncFile.getSyncFileId());
+    if (Files.notExists(checksumFilePath)) {
+      Files.createFile(checksumFilePath);
     }
-    outputStream=Files.newOutputStream(filePath);
+    outputStream=Files.newOutputStream(checksumFilePath);
     writableByteChannel=Channels.newChannel(outputStream);
     ByteChannelWriter byteChannelWriter=new ByteChannelWriter(writableByteChannel);
     DeltaUtil.checksums(fileChannel,byteChannelWriter);
