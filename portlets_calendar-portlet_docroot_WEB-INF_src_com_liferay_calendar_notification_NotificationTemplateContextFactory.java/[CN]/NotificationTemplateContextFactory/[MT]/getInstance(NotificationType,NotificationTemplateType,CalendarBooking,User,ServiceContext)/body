@@ -12,9 +12,6 @@
   String userTimezoneDisplayName=userTimezone.getDisplayName(false,TimeZone.SHORT,user.getLocale());
   String endTime=dateFormatDateTime.format(calendarBooking.getEndTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("endTime",endTime);
-  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
-  attributes.put("fromAddress",NotificationUtil.getTemplatePropertyValue(calendarNotificationTemplate,"from-address"));
-  attributes.put("fromName",NotificationUtil.getTemplatePropertyValue(calendarNotificationTemplate,"from-name"));
   attributes.put("location",calendarBooking.getLocation());
   Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
   attributes.put("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
@@ -22,8 +19,6 @@
   String startTime=dateFormatDateTime.format(calendarBooking.getStartTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("startTime",startTime);
   attributes.put("title",calendarBooking.getTitle(user.getLocale()));
-  attributes.put("toAddress",user.getEmailAddress());
-  attributes.put("toName",user.getFullName());
   String calendarBookingURL=_getCalendarBookingURL(calendarBooking.getCalendarBookingId(),serviceContext);
   attributes.put("url",calendarBookingURL);
   notificationTemplateContext.setAttributes(attributes);
