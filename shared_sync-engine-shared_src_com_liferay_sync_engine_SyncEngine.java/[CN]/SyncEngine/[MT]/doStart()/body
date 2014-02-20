@@ -7,13 +7,22 @@
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
   for (  SyncAccount syncAccount : SyncAccountService.findAll()) {
+    final List<Runnable> getAllSyncDLObjectsEvents=new ArrayList<Runnable>();
     List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
     for (    SyncSite syncSite : syncSites) {
-      Map<String,Object> map=new HashMap<String,Object>();
-      map.put("folderId",0);
-      map.put("repositoryId",syncSite.getGroupId());
-      _eventScheduledExecutorService.scheduleAtFixedRate(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),map),0,syncAccount.getInterval(),TimeUnit.SECONDS);
+      Map<String,Object> parameters=new HashMap<String,Object>();
+      parameters.put("folderId",0);
+      parameters.put("repositoryId",syncSite.getGroupId());
+      getAllSyncDLObjectsEvents.add(new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),parameters));
     }
+    _eventScheduledExecutorService.scheduleAtFixedRate(new Runnable(){
+      @Override public void run(){
+        for (        Runnable getAllSyncDLObjectsEvent : getAllSyncDLObjectsEvents) {
+          getAllSyncDLObjectsEvent.run();
+        }
+      }
+    }
+,0,syncAccount.getInterval(),TimeUnit.SECONDS);
     Path filePath=Paths.get(syncAccount.getFilePathName());
     WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
     Watcher watcher=new Watcher(filePath,true,watchEventListener);
