@@ -1,10 +1,13 @@
 {
   setGetResponse("dependencies/get_all_sync_dl_objects.json");
   setPostResponse("dependencies/get_all_sync_dl_objects.json");
-  GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),null);
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("folderId",0);
+  parameters.put("repositoryId",_syncSite.getGroupId());
+  GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),parameters);
   getAllSyncDLObjectsEvent.run();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
-  Assert.assertEquals(3,_syncFiles.size());
+  Assert.assertEquals(4,_syncFiles.size());
   Path filePath=Paths.get(filePathName + "/Document_1.txt");
   Assert.assertTrue(Files.exists(filePath));
 }
