@@ -1,0 +1,13 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  List<Group> permittedGroups=new ArrayList<Group>();
+  List<Group> groups=GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId(),true);
+  if (!groups.isEmpty()) {
+    for (    Group curGroup : groups) {
+      if (((curGroup.isOrganization() && curGroup.isSite()) || curGroup.isRegularSite()) && GroupPermissionUtil.contains(permissionChecker,curGroup.getGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+        permittedGroups.add(curGroup);
+      }
+    }
+  }
+  return permittedGroups;
+}

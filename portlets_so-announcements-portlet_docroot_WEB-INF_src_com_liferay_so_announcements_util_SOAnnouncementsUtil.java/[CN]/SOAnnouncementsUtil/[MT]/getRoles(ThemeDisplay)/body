@@ -1,0 +1,17 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  List<Role> permittedRoles=new ArrayList<Role>();
+  List<Role> roles=RoleLocalServiceUtil.getRoles(themeDisplay.getCompanyId());
+  for (  Role role : roles) {
+    if (role.isTeam()) {
+      Team team=TeamLocalServiceUtil.getTeam(role.getClassPK());
+      if (GroupPermissionUtil.contains(permissionChecker,team.getGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+        permittedRoles.add(role);
+      }
+    }
+ else     if (RolePermissionUtil.contains(permissionChecker,role.getRoleId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+      permittedRoles.add(role);
+    }
+  }
+  return permittedRoles;
+}

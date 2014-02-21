@@ -1,0 +1,10 @@
+{
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  List<UserGroup> userGroups=UserGroupLocalServiceUtil.getUserGroups(themeDisplay.getCompanyId());
+  for (  UserGroup userGroup : userGroups) {
+    if (UserGroupPermissionUtil.contains(permissionChecker,userGroup.getUserGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+      return true;
+    }
+  }
+  return false;
+}
