@@ -1,9 +1,12 @@
 {
-  SyncFile syncFile=SyncFileTestUtil.addFileSyncFile("/home/liferay/test",0,syncAccount.getSyncAccountId());
   SyncFileService.registerModelListener(new SyncFileModelListener());
+  SyncFile syncFile=SyncFileTestUtil.addFileSyncFile("/home/liferay/test",0,syncAccount.getSyncAccountId());
+  Assert.assertTrue(_onCreateCalled);
   syncFile.setFilePathName("/home/liferay/test2");
   syncFile.setSize(256);
   SyncFileService.update(syncFile);
   Assert.assertEquals("/home/liferay/test",_originalFieldValues.get("filePathName"));
   Assert.assertEquals(2,_originalFieldValues.size());
+  SyncFileService.deleteSyncFile(syncFile.getSyncFileId());
+  Assert.assertTrue(_onRemoveCalled);
 }
