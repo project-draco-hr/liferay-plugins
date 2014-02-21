@@ -1,0 +1,15 @@
+{
+  String[] listenerClassNames=StringUtil.split(GetterUtil.getString(com.liferay.util.service.ServiceProps.get("value.object.listener.com.liferay.sync.model.SyncDLFileVersionDiff")));
+  if (listenerClassNames.length > 0) {
+    try {
+      List<ModelListener<SyncDLFileVersionDiff>> listenersList=new ArrayList<ModelListener<SyncDLFileVersionDiff>>();
+      for (      String listenerClassName : listenerClassNames) {
+        listenersList.add((ModelListener<SyncDLFileVersionDiff>)InstanceFactory.newInstance(getClassLoader(),listenerClassName));
+      }
+      listeners=listenersList.toArray(new ModelListener[listenersList.size()]);
+    }
+ catch (    Exception e) {
+      _log.error(e);
+    }
+  }
+}

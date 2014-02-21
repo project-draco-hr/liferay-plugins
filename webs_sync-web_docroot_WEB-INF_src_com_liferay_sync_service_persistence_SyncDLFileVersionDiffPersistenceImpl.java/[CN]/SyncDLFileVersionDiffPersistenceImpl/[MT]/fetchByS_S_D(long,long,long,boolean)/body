@@ -1,0 +1,55 @@
+{
+  Object[] finderArgs=new Object[]{syncDLFileVersionDiffId,sourceFileVersionId,destinationFileVersionId};
+  Object result=null;
+  if (retrieveFromCache) {
+    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_S_S_D,finderArgs,this);
+  }
+  if (result instanceof SyncDLFileVersionDiff) {
+    SyncDLFileVersionDiff syncDLFileVersionDiff=(SyncDLFileVersionDiff)result;
+    if ((syncDLFileVersionDiffId != syncDLFileVersionDiff.getSyncDLFileVersionDiffId()) || (sourceFileVersionId != syncDLFileVersionDiff.getSourceFileVersionId()) || (destinationFileVersionId != syncDLFileVersionDiff.getDestinationFileVersionId())) {
+      result=null;
+    }
+  }
+  if (result == null) {
+    StringBundler query=new StringBundler(5);
+    query.append(_SQL_SELECT_SYNCDLFILEVERSIONDIFF_WHERE);
+    query.append(_FINDER_COLUMN_S_S_D_SYNCDLFILEVERSIONDIFFID_2);
+    query.append(_FINDER_COLUMN_S_S_D_SOURCEFILEVERSIONID_2);
+    query.append(_FINDER_COLUMN_S_S_D_DESTINATIONFILEVERSIONID_2);
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(syncDLFileVersionDiffId);
+      qPos.add(sourceFileVersionId);
+      qPos.add(destinationFileVersionId);
+      List<SyncDLFileVersionDiff> list=q.list();
+      if (list.isEmpty()) {
+        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_S_S_D,finderArgs,list);
+      }
+ else {
+        SyncDLFileVersionDiff syncDLFileVersionDiff=list.get(0);
+        result=syncDLFileVersionDiff;
+        cacheResult(syncDLFileVersionDiff);
+        if ((syncDLFileVersionDiff.getSyncDLFileVersionDiffId() != syncDLFileVersionDiffId) || (syncDLFileVersionDiff.getSourceFileVersionId() != sourceFileVersionId) || (syncDLFileVersionDiff.getDestinationFileVersionId() != destinationFileVersionId)) {
+          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_S_S_D,finderArgs,syncDLFileVersionDiff);
+        }
+      }
+    }
+ catch (    Exception e) {
+      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_S_S_D,finderArgs);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  if (result instanceof List<?>) {
+    return null;
+  }
+ else {
+    return (SyncDLFileVersionDiff)result;
+  }
+}

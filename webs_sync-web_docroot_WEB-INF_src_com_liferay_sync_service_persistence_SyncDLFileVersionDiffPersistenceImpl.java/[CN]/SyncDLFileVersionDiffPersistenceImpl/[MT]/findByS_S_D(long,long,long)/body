@@ -1,0 +1,19 @@
+{
+  SyncDLFileVersionDiff syncDLFileVersionDiff=fetchByS_S_D(syncDLFileVersionDiffId,sourceFileVersionId,destinationFileVersionId);
+  if (syncDLFileVersionDiff == null) {
+    StringBundler msg=new StringBundler(8);
+    msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+    msg.append("syncDLFileVersionDiffId=");
+    msg.append(syncDLFileVersionDiffId);
+    msg.append(", sourceFileVersionId=");
+    msg.append(sourceFileVersionId);
+    msg.append(", destinationFileVersionId=");
+    msg.append(destinationFileVersionId);
+    msg.append(StringPool.CLOSE_CURLY_BRACE);
+    if (_log.isWarnEnabled()) {
+      _log.warn(msg.toString());
+    }
+    throw new NoSuchDLFileVersionDiffException(msg.toString());
+  }
+  return syncDLFileVersionDiff;
+}
