@@ -2,13 +2,13 @@
   CalendarBooking parentCalendarBooking=calendarBooking.getParentCalendarBooking();
   Calendar calendar=parentCalendarBooking.getCalendar();
   NotificationTemplateContext notificationTemplateContext=new NotificationTemplateContext();
-  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
-  notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
   notificationTemplateContext.setCompanyId(calendarBooking.getCompanyId());
   notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
   notificationTemplateContext.setCalendarId(calendar.getCalendarId());
-  notificationTemplateContext.setNotificationTemplateType(notificationTemplateType);
   notificationTemplateContext.setNotificationType(notificationType);
+  notificationTemplateContext.setNotificationTemplateType(notificationTemplateType);
+  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
+  notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
   Map<String,Serializable> attributes=new HashMap<String,Serializable>();
   TimeZone userTimezone=user.getTimeZone();
   Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),userTimezone);
