@@ -6,9 +6,6 @@
   notificationTemplateContext.setGroupId(calendarBooking.getGroupId());
   notificationTemplateContext.setCalendarId(calendar.getCalendarId());
   notificationTemplateContext.setNotificationType(notificationType);
-  notificationTemplateContext.setNotificationTemplateType(notificationTemplateType);
-  CalendarNotificationTemplate calendarNotificationTemplate=CalendarNotificationTemplateLocalServiceUtil.fetchCalendarNotificationTemplate(calendar.getCalendarId(),notificationType,notificationTemplateType);
-  notificationTemplateContext.setCalendarNotificationTemplate(calendarNotificationTemplate);
   Map<String,Serializable> attributes=new HashMap<String,Serializable>();
   TimeZone userTimezone=user.getTimeZone();
   Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),userTimezone);
@@ -16,14 +13,13 @@
   String endTime=dateFormatDateTime.format(calendarBooking.getEndTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("endTime",endTime);
   attributes.put("location",calendarBooking.getLocation());
-  Group userGroup=user.getGroup();
-  String portalURL=_getPortalURL(userGroup.getCompanyId(),userGroup.getGroupId());
-  attributes.put("portalUrl",portalURL);
+  Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
+  attributes.put("portalUrl",company.getPortalURL(calendarBooking.getGroupId()));
   attributes.put("portletName",LanguageUtil.get(getPortletConfig(),user.getLocale(),"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
   String startTime=dateFormatDateTime.format(calendarBooking.getStartTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("startTime",startTime);
   attributes.put("title",calendarBooking.getTitle(user.getLocale()));
-  String calendarBookingURL=_getCalendarBookingURL(user,calendarBooking.getCalendarBookingId());
+  String calendarBookingURL=_getCalendarBookingURL(calendarBooking.getCalendarBookingId(),serviceContext);
   attributes.put("url",calendarBookingURL);
   notificationTemplateContext.setAttributes(attributes);
   return notificationTemplateContext;
