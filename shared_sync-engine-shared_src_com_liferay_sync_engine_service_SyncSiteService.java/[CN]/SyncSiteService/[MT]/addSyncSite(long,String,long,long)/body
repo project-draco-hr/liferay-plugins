@@ -5,9 +5,7 @@
   syncSite.setGroupId(groupId);
   syncSite.setSyncAccountId(syncAccountId);
   _syncSitePersistence.create(syncSite);
-  if (Files.notExists(Paths.get(filePathName))) {
-    Files.createDirectory(Paths.get(filePathName));
-  }
+  Files.createDirectories(Paths.get(filePathName));
   SyncFileService.addSyncFile(null,null,filePathName,FileUtil.getFileKey(filePathName),filePathName,null,filePathName,0,groupId,syncSite.getSyncAccountId(),SyncFile.TYPE_FOLDER);
   return syncSite;
 }
