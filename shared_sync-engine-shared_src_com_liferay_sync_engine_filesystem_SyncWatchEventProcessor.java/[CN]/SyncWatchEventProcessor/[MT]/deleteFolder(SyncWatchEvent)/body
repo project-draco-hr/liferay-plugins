@@ -1,5 +1,8 @@
 {
   Path filePath=Paths.get(syncWatchEvent.getFilePathName());
   SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncWatchEvent.getSyncAccountId());
+  if (syncFile == null) {
+    return;
+  }
   SyncFileService.deleteFolderSyncFile(syncWatchEvent.getSyncAccountId(),syncFile);
 }

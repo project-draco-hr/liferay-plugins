@@ -1,5 +1,6 @@
 {
-  if (_syncIgnoreFileNames.contains(String.valueOf(filePath.getFileName()))) {
+  String fileName=String.valueOf(filePath.getFileName());
+  if (_syncIgnoreFileNames.contains(fileName) || (PropsValues.SYNC_IGNORE_HIDDEN_FILES && Files.isHidden(filePath)) || Files.isSymbolicLink(filePath)|| fileName.endsWith(".lnk")) {
     return true;
   }
   return false;
