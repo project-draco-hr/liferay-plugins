@@ -9,20 +9,21 @@
     if (parentSyncFile != null) {
       filePathName=FilePathNameUtil.getFilePathName(parentSyncFile.getFilePathName(),syncFile.getName());
     }
-    syncFile.setFilePathName(filePathName);
-    syncFile.setSyncAccountId(getSyncAccountId());
-    SyncFileService.update(syncFile);
-    String type=syncFile.getType();
-    if (type.equals(SyncFile.TYPE_FOLDER)) {
-      Path filePath=Paths.get(filePathName);
-      Files.createDirectories(filePath);
-      continue;
+    String event=syncFile.getEvent();
+    if (event.equals(SyncFile.EVENT_ADD) || event.equals(SyncFile.EVENT_GET) || event.equals(SyncFile.EVENT_RESTORE_FROM_TRASH)) {
+      addFile(syncFile,filePathName);
     }
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("patch",false);
-    parameters.put("syncFile",syncFile);
-    DownloadFileEvent downloadFileEvent=new DownloadFileEvent(getSyncAccountId(),parameters);
-    downloadFileEvent.run();
+ else     if (event.equals(SyncFile.EVENT_DELETE)) {
+    }
+ else     if (event.equals(SyncFile.EVENT_MOVE)) {
+      moveFile(syncFile,filePathName);
+    }
+ else     if (event.equals(SyncFile.EVENT_MOVE_TO_TRASH)) {
+      deleteFile(syncFile);
+    }
+ else     if (event.equals(SyncFile.EVENT_UPDATE)) {
+      updateFile(syncFile);
+    }
   }
   SyncSite syncSite=SyncSiteService.fetchSyncSite((Long)getParameterValue("repositoryId"),getSyncAccountId());
   syncSite.setLastRemoteSyncTime(syncDLObjectUpdate.getLastAccessTime());

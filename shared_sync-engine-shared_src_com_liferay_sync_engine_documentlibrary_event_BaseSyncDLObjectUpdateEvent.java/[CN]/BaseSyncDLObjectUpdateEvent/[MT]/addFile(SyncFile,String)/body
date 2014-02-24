@@ -1,0 +1,14 @@
+{
+  syncFile.setFilePathName(filePathName);
+  syncFile.setSyncAccountId(getSyncAccountId());
+  SyncFileService.update(syncFile);
+  String type=syncFile.getType();
+  if (type.equals(SyncFile.TYPE_FOLDER)) {
+    Path filePath=Paths.get(filePathName);
+    if (Files.notExists(filePath)) {
+      Files.createDirectory(filePath);
+    }
+    return;
+  }
+  downloadFile(syncFile);
+}

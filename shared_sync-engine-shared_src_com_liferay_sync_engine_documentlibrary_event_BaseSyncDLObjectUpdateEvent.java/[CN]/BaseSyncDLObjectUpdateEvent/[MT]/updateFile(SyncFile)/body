@@ -1,0 +1,24 @@
+{
+  SyncFile sourceSyncFile=SyncFileService.fetchSyncFile(targetSyncFile.getRepositoryId(),getSyncAccountId(),targetSyncFile.getTypePK());
+  Path sourceFilePath=Paths.get(sourceSyncFile.getFilePathName());
+  String sourceFileName=String.valueOf(sourceFilePath.getFileName());
+  if (!sourceFileName.equals(targetSyncFile.getName())) {
+    Path targetFilePath=sourceFilePath.resolveSibling(targetSyncFile.getName());
+    Files.move(sourceFilePath,targetFilePath);
+    sourceSyncFile.setFilePathName(FilePathNameUtil.getFilePathName(targetFilePath));
+    sourceSyncFile.setName(targetSyncFile.getName());
+  }
+  sourceSyncFile.setChangeLog(targetSyncFile.getChangeLog());
+  sourceSyncFile.setChecksum(targetSyncFile.getChecksum());
+  sourceSyncFile.setDescription(targetSyncFile.getDescription());
+  sourceSyncFile.setExtension(targetSyncFile.getExtension());
+  sourceSyncFile.setExtraSettings(targetSyncFile.getExtraSettings());
+  sourceSyncFile.setLockExpirationDate(targetSyncFile.getLockExpirationDate());
+  sourceSyncFile.setLockUserId(targetSyncFile.getLockUserId());
+  sourceSyncFile.setLockUserName(targetSyncFile.getLockUserName());
+  sourceSyncFile.setModifiedTime(targetSyncFile.getModifiedTime());
+  sourceSyncFile.setSize(targetSyncFile.getSize());
+  sourceSyncFile.setVersion(targetSyncFile.getVersion());
+  SyncFileService.update(sourceSyncFile);
+  downloadFile(sourceSyncFile);
+}
