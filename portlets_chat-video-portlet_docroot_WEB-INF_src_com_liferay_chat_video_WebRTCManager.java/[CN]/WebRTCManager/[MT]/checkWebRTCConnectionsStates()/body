@@ -10,8 +10,13 @@
         continue;
       }
       webRTCClient.removeBilateralWebRTCConnection(otherWebRTCClient);
-      pushConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,"timeout","lost","status");
-      pushConnectionStateWebRTCMail(otherWebRTCClient,webRTCClient,"timeout","lost","status");
+      JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
+      messageJSONObject.put("reason","timeout");
+      messageJSONObject.put("status","lost");
+      messageJSONObject.put("type","status");
+      String messageJSON=messageJSONObject.toString();
+      pushConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,messageJSON);
+      pushConnectionStateWebRTCMail(otherWebRTCClient,webRTCClient,messageJSON);
     }
   }
 }
