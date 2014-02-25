@@ -1,14 +1,14 @@
 {
   setPostResponse("dependencies/get_sync_dl_object_update_event_move.json");
-  Path fileFilePath=Paths.get(_syncSite.getFilePathName() + "/Document_1.txt");
-  Files.createFile(fileFilePath);
-  SyncFileTestUtil.addFileSyncFile(FilePathNameUtil.getFilePathName(fileFilePath),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27382);
+  Path sourceFilePath=Paths.get(_syncSite.getFilePathName() + "/Document_1.txt");
+  Files.createFile(sourceFilePath);
+  SyncFileTestUtil.addFileSyncFile(FilePathNameUtil.getFilePathName(sourceFilePath),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27382);
   Path folderFilePath=Paths.get(_syncSite.getFilePathName() + "/test-folder");
   Files.createDirectory(folderFilePath);
   SyncFileTestUtil.addFolderSyncFile(FilePathNameUtil.getFilePathName(folderFilePath),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27488);
   run();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(4,_syncFiles.size());
-  Path filePath=Paths.get(folderFilePath + "/test.txt");
-  Assert.assertTrue(Files.exists(filePath));
+  Path targetFilePath=Paths.get(folderFilePath + "/test.txt");
+  Assert.assertTrue(Files.exists(targetFilePath));
 }
