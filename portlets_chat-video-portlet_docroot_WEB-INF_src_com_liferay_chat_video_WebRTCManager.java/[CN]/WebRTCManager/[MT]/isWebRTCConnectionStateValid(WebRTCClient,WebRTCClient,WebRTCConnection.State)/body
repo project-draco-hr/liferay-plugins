@@ -1,0 +1,16 @@
+{
+  boolean webRTCConnectionAToBExists=webRTCClientA.hasWebRTCConnection(webRTCClientB);
+  boolean webRTCConnectionBToAExists=webRTCClientB.hasWebRTCConnection(webRTCClientA);
+  if (!webRTCConnectionAToBExists || !webRTCConnectionBToAExists) {
+    return false;
+  }
+  WebRTCConnection webRTCConnectionAToB=webRTCClientA.getWebRTCConnection(webRTCClientB);
+  WebRTCConnection webRTCConnectionBToA=webRTCClientB.getWebRTCConnection(webRTCClientA);
+  if (webRTCConnectionAToB != webRTCConnectionBToA) {
+    return false;
+  }
+  if (webRTCConnectionAToB.getState() != expectedState) {
+    return false;
+  }
+  return true;
+}
