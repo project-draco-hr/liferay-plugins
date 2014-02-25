@@ -5,8 +5,9 @@
   }
   Set<WebRTCClient> webRTCClients=webRTCClient.getWebRTCClients();
   for (  WebRTCClient otherWebRTCClient : webRTCClients) {
-    WebRTCConnection.State webRTCConnectionState=webRTCClient.getWebRTCConnection(webRTCClient).getState();
-    if (webRTCConnectionState != WebRTCConnection.State.DISCONNECTED) {
+    WebRTCConnection webRTCConnection=webRTCClient.getWebRTCConnection(webRTCClient);
+    WebRTCConnection.State state=webRTCConnection.getState();
+    if (state != WebRTCConnection.State.DISCONNECTED) {
       JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
       messageJSONObject.put("reason","reset");
       messageJSONObject.put("status","lost");
