@@ -1,10 +1,10 @@
 {
-  Path destinationFilePath=Paths.get(syncWatchEvent.getFilePathName());
-  Path parentDestinationFilePath=destinationFilePath.getParent();
-  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentDestinationFilePath),syncWatchEvent.getSyncAccountId());
-  SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(destinationFilePath),syncWatchEvent.getSyncAccountId());
+  Path targetFilePath=Paths.get(syncWatchEvent.getFilePathName());
+  Path parentTargetFilePath=targetFilePath.getParent();
+  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentTargetFilePath),syncWatchEvent.getSyncAccountId());
+  SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(targetFilePath),syncWatchEvent.getSyncAccountId());
   if (syncFile == null) {
-    SyncFileService.addFileSyncFile(destinationFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
+    SyncFileService.addFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
   SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(SyncWatchEvent.EVENT_TYPE_DELETE,syncFile.getFilePathName(),syncWatchEvent.getTimestamp());
@@ -12,11 +12,11 @@
     return;
   }
   Path sourceFilePath=Paths.get(relatedSyncWatchEvent.getFilePathName());
-  if (parentDestinationFilePath.equals(sourceFilePath.getParent())) {
-    SyncFileService.updateFileSyncFile(destinationFilePath,syncWatchEvent.getSyncAccountId(),syncFile);
+  if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
+    SyncFileService.updateFileSyncFile(targetFilePath,syncWatchEvent.getSyncAccountId(),syncFile);
   }
  else {
-    SyncFileService.moveFileSyncFile(destinationFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
+    SyncFileService.moveFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
   }
   _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
 }

@@ -1,15 +1,15 @@
 {
-  Path destinationFilePath=Paths.get(syncWatchEvent.getFilePathName());
-  String destinationFilePathName=FilePathNameUtil.getFilePathName(destinationFilePath);
+  Path targetFilePath=Paths.get(syncWatchEvent.getFilePathName());
+  String targetFilePathName=FilePathNameUtil.getFilePathName(targetFilePath);
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
-  if (destinationFilePathName.equals(syncAccount.getFilePathName()) || (SyncSiteService.fetchSyncSite(destinationFilePathName,syncWatchEvent.getSyncAccountId()) != null)) {
+  if (targetFilePathName.equals(syncAccount.getFilePathName()) || (SyncSiteService.fetchSyncSite(targetFilePathName,syncWatchEvent.getSyncAccountId()) != null)) {
     return;
   }
-  Path parentDestinationFilePath=destinationFilePath.getParent();
-  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentDestinationFilePath),syncWatchEvent.getSyncAccountId());
-  SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(destinationFilePath),syncWatchEvent.getSyncAccountId());
+  Path parentTargetFilePath=targetFilePath.getParent();
+  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentTargetFilePath),syncWatchEvent.getSyncAccountId());
+  SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(targetFilePath),syncWatchEvent.getSyncAccountId());
   if (syncFile == null) {
-    SyncFileService.addFolderSyncFile(destinationFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
+    SyncFileService.addFolderSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
   SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(SyncWatchEvent.EVENT_TYPE_DELETE,syncFile.getFilePathName(),syncWatchEvent.getTimestamp());
@@ -17,11 +17,11 @@
     return;
   }
   Path sourceFilePath=Paths.get(relatedSyncWatchEvent.getFilePathName());
-  if (parentDestinationFilePath.equals(sourceFilePath.getParent())) {
-    SyncFileService.updateFolderSyncFile(destinationFilePath,syncWatchEvent.getSyncAccountId(),syncFile);
+  if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
+    SyncFileService.updateFolderSyncFile(targetFilePath,syncWatchEvent.getSyncAccountId(),syncFile);
   }
  else {
-    SyncFileService.moveFolderSyncFile(destinationFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
+    SyncFileService.moveFolderSyncFile(targetFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
   }
   _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
 }

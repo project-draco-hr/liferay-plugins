@@ -2,12 +2,12 @@
   setPostResponse("dependencies/watcher_test_move_file.json");
   Path sourceFilePath=Paths.get(_syncSite.getFilePathName() + "/test.txt");
   Files.createFile(sourceFilePath);
-  Path destinationFilePath=Paths.get(_syncSite.getFilePathName() + "/test");
-  Files.createDirectory(destinationFilePath);
+  Path targetFilePath=Paths.get(_syncSite.getFilePathName() + "/test");
+  Files.createDirectory(targetFilePath);
   sleep();
-  Files.move(sourceFilePath,destinationFilePath.resolve(sourceFilePath.getFileName()));
+  Files.move(sourceFilePath,targetFilePath.resolve(sourceFilePath.getFileName()));
   sleep();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(4,_syncFiles.size());
-  Assert.assertNotNull(SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(destinationFilePath),syncAccount.getSyncAccountId()));
+  Assert.assertNotNull(SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(targetFilePath),syncAccount.getSyncAccountId()));
 }
