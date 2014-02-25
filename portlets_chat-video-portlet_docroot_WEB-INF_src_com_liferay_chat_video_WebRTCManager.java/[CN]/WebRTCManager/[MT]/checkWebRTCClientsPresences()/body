@@ -1,0 +1,11 @@
+{
+  long currentTime=System.currentTimeMillis();
+  for (  long userId : _webRTCClients.keySet()) {
+    long webRTCClientPresenceTime=getWebRTCClient(userId).getPresenceTime();
+    long presenceDuration=currentTime - webRTCClientPresenceTime;
+    if (presenceDuration > _PRESENCE_TIMEOUT_TIME) {
+      resetWebRTCClient(userId);
+      removeWebRTCClient(userId);
+    }
+  }
+}

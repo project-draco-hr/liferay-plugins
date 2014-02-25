@@ -1,0 +1,19 @@
+{
+  WebRTCClient webRTCClient=getWebRTCClient(userId);
+  if (webRTCClient == null) {
+    return;
+  }
+  Set<WebRTCClient> webRTCClients=webRTCClient.getWebRTCClients();
+  for (  WebRTCClient otherWebRTCClient : webRTCClients) {
+    WebRTCConnection.State webRTCConnectionState=webRTCClient.getWebRTCConnection(webRTCClient).getState();
+    if (webRTCConnectionState != WebRTCConnection.State.DISCONNECTED) {
+      JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
+      messageJSONObject.put("reason","reset");
+      messageJSONObject.put("status","lost");
+      messageJSONObject.put("type","status");
+      pushConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,messageJSONObject);
+    }
+  }
+  webRTCClient.reset();
+  webRTCClient.updatePresenceTime();
+}
