@@ -1,5 +1,5 @@
 {
-  Map<Long,Long> keyValueMap=new HashMap<Long,Long>();
+  Map<Long,Long> syncDLObjectIds=new HashMap<Long,Long>();
   Connection con=null;
   PreparedStatement ps=null;
   ResultSet rs=null;
@@ -15,7 +15,7 @@
       if (_log.isDebugEnabled()) {
         _log.debug("{" + keyColumnName + "="+ key+ ", "+ valueColumnName+ "="+ value+ "}");
       }
-      keyValueMap.put(key,value);
+      syncDLObjectIds.put(key,value);
     }
   }
  catch (  Exception e) {
@@ -24,5 +24,5 @@
  finally {
     DataAccess.cleanUp(con,ps,rs);
   }
-  return keyValueMap;
+  return syncDLObjectIds;
 }
