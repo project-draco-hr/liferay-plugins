@@ -15,6 +15,10 @@
  else {
     recurrenceObj.addExceptionDate(startTimeJCalendar);
   }
-  calendarBooking.setRecurrence(RecurrenceSerializer.serialize(recurrenceObj));
-  calendarBookingPersistence.update(calendarBooking);
+  String recurrence=RecurrenceSerializer.serialize(recurrenceObj);
+  List<CalendarBooking> childCalendarBookings=getChildCalendarBookings(calendarBooking.getCalendarBookingId());
+  for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
+    childCalendarBooking.setRecurrence(recurrence);
+    calendarBookingPersistence.update(childCalendarBooking);
+  }
 }
