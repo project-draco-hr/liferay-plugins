@@ -1,0 +1,15 @@
+{
+  try {
+    Client client=getClient();
+    DeleteByQueryRequestBuilder deleteByQueryRequestBuilder=client.prepareDeleteByQuery(String.valueOf(searchContext.getCompanyId()));
+    BoolQueryBuilder boolQueryBuilder=QueryBuilders.boolQuery();
+    boolQueryBuilder.must(QueryBuilders.termQuery(Field.PORTLET_ID,portletId));
+    deleteByQueryRequestBuilder.setQuery(boolQueryBuilder);
+    Future<DeleteByQueryResponse> deleteByQueryFuture=deleteByQueryRequestBuilder.execute();
+    DeleteByQueryResponse deleteByQueryResponse=deleteByQueryFuture.get();
+    logActionResponse(deleteByQueryResponse);
+  }
+ catch (  Exception e) {
+    throw new SearchException("Failed to delete portlet data from index for portlet " + portletId,e);
+  }
+}
