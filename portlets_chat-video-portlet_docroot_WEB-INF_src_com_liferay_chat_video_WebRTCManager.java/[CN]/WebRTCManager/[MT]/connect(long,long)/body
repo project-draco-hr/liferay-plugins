@@ -1,6 +1,5 @@
 {
   addWebRTCClient(sourceUserId);
-  WebRTCClient sourceWebRTCClient=getWebRTCClient(sourceUserId);
   if (!hasAvailableWebRTCClient(sourceUserId)) {
     return;
   }
@@ -8,6 +7,7 @@
     pushErrorWebRTCMail(destinationUserId,sourceUserId,"unavailable_user");
     return;
   }
+  WebRTCClient sourceWebRTCClient=getWebRTCClient(sourceUserId);
   WebRTCClient destinationWebRTCClient=getWebRTCClient(destinationUserId);
   if (sourceWebRTCClient.hasWebRTCConnection(destinationWebRTCClient) || destinationWebRTCClient.hasWebRTCConnection(sourceWebRTCClient)) {
     pushErrorWebRTCMail(destinationUserId,sourceUserId,"existing_connection");
