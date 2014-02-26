@@ -1,13 +1,12 @@
 {
-  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-  List<Group> permittedGroups=new ArrayList<Group>();
   List<Group> groups=GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId(),true);
+  List<Group> filteredGroups=new ArrayList<Group>();
   if (!groups.isEmpty()) {
     for (    Group curGroup : groups) {
-      if (((curGroup.isOrganization() && curGroup.isSite()) || curGroup.isRegularSite()) && GroupPermissionUtil.contains(permissionChecker,curGroup.getGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
-        permittedGroups.add(curGroup);
+      if (((curGroup.isOrganization() && curGroup.isSite()) || curGroup.isRegularSite()) && GroupPermissionUtil.contains(themeDisplay.getPermissionChecker(),curGroup.getGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+        filteredGroups.add(curGroup);
       }
     }
   }
-  return permittedGroups;
+  return filteredGroups;
 }

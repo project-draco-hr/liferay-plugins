@@ -1,11 +1,10 @@
 {
-  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-  List<UserGroup> permittedUserGroups=new ArrayList<UserGroup>();
   List<UserGroup> userGroups=UserGroupLocalServiceUtil.getUserGroups(themeDisplay.getCompanyId());
+  List<UserGroup> filteredUserGroups=new ArrayList<UserGroup>();
   for (  UserGroup userGroup : userGroups) {
-    if (UserGroupPermissionUtil.contains(permissionChecker,userGroup.getUserGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
-      permittedUserGroups.add(userGroup);
+    if (UserGroupPermissionUtil.contains(themeDisplay.getPermissionChecker(),userGroup.getUserGroupId(),ActionKeys.MANAGE_ANNOUNCEMENTS)) {
+      filteredUserGroups.add(userGroup);
     }
   }
-  return permittedUserGroups;
+  return filteredUserGroups;
 }
