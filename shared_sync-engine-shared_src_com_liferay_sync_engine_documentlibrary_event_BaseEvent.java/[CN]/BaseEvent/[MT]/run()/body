@@ -4,6 +4,17 @@
     processResponse(response);
   }
  catch (  Exception e) {
-    _logger.error(e.getMessage(),e);
+    if (e instanceof HttpHostConnectException) {
+      SyncAccountService.updateUIEvent(_syncAccountId,SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
+    }
+ else     if (e instanceof HttpResponseException) {
+      int statusCode=((HttpResponseException)e).getStatusCode();
+      if (statusCode == 401) {
+        SyncAccountService.updateUIEvent(_syncAccountId,SyncAccount.UI_EVENT_AUTHENTICATION_EXCEPTION);
+      }
+ else {
+        SyncAccountService.updateUIEvent(_syncAccountId,SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
+      }
+    }
   }
 }
