@@ -1,0 +1,9 @@
+{
+  WebRTCClient sourceWebRTCClient=getWebRTCClient(sourceUserId);
+  WebRTCClient destinationWebRTCClient=getWebRTCClient(destinationUserId);
+  JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
+  messageJSONObject.put("id",errorId);
+  WebRTCMail errorWebRTCMail=new ErrorWebRTCMail(sourceUserId,messageJSONObject);
+  WebRTCMailbox destinationOutgoingWebRTCMailbox=destinationWebRTCClient.getOutgoingWebRTCMailbox();
+  destinationOutgoingWebRTCMailbox.pushWebRTCMail(errorWebRTCMail);
+}

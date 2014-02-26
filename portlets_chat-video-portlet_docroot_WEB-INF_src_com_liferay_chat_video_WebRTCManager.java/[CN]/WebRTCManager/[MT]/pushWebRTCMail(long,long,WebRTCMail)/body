@@ -5,11 +5,7 @@
     return;
   }
   if (!isValidWebRTCConnectionState(sourceWebRTCClient,destinationWebRTCClient,WebRTCConnection.State.CONNECTED)) {
-    JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
-    messageJSONObject.put("id","invalid_state");
-    WebRTCMail errorWebRTCMail=new ErrorWebRTCMail(destinationUserId,messageJSONObject);
-    WebRTCMailbox sourceOutgoingWebRTCMailbox=sourceWebRTCClient.getOutgoingWebRTCMailbox();
-    sourceOutgoingWebRTCMailbox.pushWebRTCMail(errorWebRTCMail);
+    pushErrorWebRTCMail(destinationUserId,sourceUserId,"invalid_state");
     return;
   }
   WebRTCMailbox destinationOutgoingWebRTCMailbox=destinationWebRTCClient.getOutgoingWebRTCMailbox();
