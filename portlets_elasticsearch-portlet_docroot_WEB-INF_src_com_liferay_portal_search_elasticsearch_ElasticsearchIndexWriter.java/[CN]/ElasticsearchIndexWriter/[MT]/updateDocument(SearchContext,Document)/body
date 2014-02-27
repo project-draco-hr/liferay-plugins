@@ -1,12 +1,12 @@
 {
   try {
     Client client=getClient();
-    UpdateRequestBuilder updateRequestBuilder=createUpdateRequestBuilder(searchContext,client,document);
-    Future<UpdateResponse> updateFuture=updateRequestBuilder.execute();
-    UpdateResponse updateResponse=updateFuture.get();
+    UpdateRequestBuilder updateRequestBuilder=buildUpdateRequestBuilder(searchContext,client,document);
+    Future<UpdateResponse> future=updateRequestBuilder.execute();
+    UpdateResponse updateResponse=future.get();
     logActionResponse(updateResponse);
   }
  catch (  Exception e) {
-    throw new SearchException("Failed to update document: " + document,e);
+    throw new SearchException("Unable to update document " + document,e);
   }
 }

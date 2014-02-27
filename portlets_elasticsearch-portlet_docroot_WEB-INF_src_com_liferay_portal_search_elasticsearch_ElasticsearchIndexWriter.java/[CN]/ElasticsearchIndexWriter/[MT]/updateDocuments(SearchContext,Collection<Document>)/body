@@ -3,14 +3,14 @@
     Client client=getClient();
     BulkRequestBuilder bulkRequestBuilder=client.prepareBulk();
     for (    Document document : documents) {
-      UpdateRequestBuilder updateRequestBuilder=createUpdateRequestBuilder(searchContext,client,document);
+      UpdateRequestBuilder updateRequestBuilder=buildUpdateRequestBuilder(searchContext,client,document);
       bulkRequestBuilder.add(updateRequestBuilder);
     }
-    Future<BulkResponse> bulkRequestFuture=bulkRequestBuilder.execute();
-    BulkResponse bulkResponse=bulkRequestFuture.get();
+    Future<BulkResponse> future=bulkRequestBuilder.execute();
+    BulkResponse bulkResponse=future.get();
     logActionResponse(bulkResponse);
   }
  catch (  Exception e) {
-    throw new SearchException("Failed to update documents: " + documents,e);
+    throw new SearchException("Unable to update documents " + documents,e);
   }
 }
