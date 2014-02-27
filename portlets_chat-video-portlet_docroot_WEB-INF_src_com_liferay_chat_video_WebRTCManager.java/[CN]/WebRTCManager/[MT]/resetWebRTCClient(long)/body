@@ -8,11 +8,7 @@
     WebRTCConnection webRTCConnection=webRTCClient.getWebRTCConnection(webRTCClient);
     WebRTCConnection.State state=webRTCConnection.getState();
     if (state != WebRTCConnection.State.DISCONNECTED) {
-      JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
-      messageJSONObject.put("reason","reset");
-      messageJSONObject.put("status","lost");
-      messageJSONObject.put("type","status");
-      pushConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,messageJSONObject);
+      pushLostConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,"reset");
     }
   }
   webRTCClient.reset();

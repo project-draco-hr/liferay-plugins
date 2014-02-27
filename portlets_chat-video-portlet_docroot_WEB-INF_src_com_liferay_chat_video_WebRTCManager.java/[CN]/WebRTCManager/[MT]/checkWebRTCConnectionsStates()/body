@@ -10,12 +10,8 @@
         continue;
       }
       webRTCClient.removeBilateralWebRTCConnection(otherWebRTCClient);
-      JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
-      messageJSONObject.put("reason","timeout");
-      messageJSONObject.put("status","lost");
-      messageJSONObject.put("type","status");
-      pushConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,messageJSONObject);
-      pushConnectionStateWebRTCMail(otherWebRTCClient,webRTCClient,messageJSONObject);
+      pushLostConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,"timeout");
+      pushLostConnectionStateWebRTCMail(otherWebRTCClient,webRTCClient,"timeout");
     }
   }
 }
