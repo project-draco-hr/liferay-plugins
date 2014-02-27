@@ -1,0 +1,33 @@
+{
+  ElasticsearchConnectionManager elasticsearchConnectionManager=ElasticsearchConnectionManager.getInstance();
+  Client client=elasticsearchConnectionManager.getClient();
+  QueryConfig queryConfig=query.getQueryConfig();
+  StopWatch stopWatch=null;
+  if (_log.isInfoEnabled()) {
+    stopWatch=new StopWatch();
+    stopWatch.start();
+  }
+  SearchRequestBuilder searchRequestBuilder=client.prepareSearch(String.valueOf(searchContext.getCompanyId()));
+  addFacets(searchRequestBuilder,searchContext);
+  addHighlights(searchRequestBuilder,queryConfig);
+  addPagination(searchRequestBuilder,searchContext.getStart(),searchContext.getEnd());
+  addSelectedFields(searchRequestBuilder,queryConfig);
+  addSort(searchRequestBuilder,searchContext.getSorts());
+  QueryBuilder queryBuilder=QueryBuilders.queryString(query.toString());
+  searchRequestBuilder.setQuery(queryBuilder);
+  long startTime=System.currentTimeMillis();
+  SearchRequest searchRequest=searchRequestBuilder.request();
+  ActionFuture<SearchResponse> future=client.search(searchRequest);
+  SearchResponse searchResponse=future.actionGet();
+  updateFacetCollectors(searchContext,searchResponse);
+  Hits hits=processSearchHits(searchResponse.getHits(),queryConfig);
+  hits.setQuery(query);
+  TimeValue timeValue=searchResponse.getTook();
+  hits.setSearchTime((float)timeValue.getSecondsFrac());
+  hits.setStart(startTime);
+  if (_log.isInfoEnabled()) {
+    stopWatch.stop();
+    _log.info("Search: " + queryBuilder.toString() + " consumed: "+ stopWatch.getTime()+ "ms. Search engine took: "+ hits.getSearchTime()+ "s");
+  }
+  return hits;
+}

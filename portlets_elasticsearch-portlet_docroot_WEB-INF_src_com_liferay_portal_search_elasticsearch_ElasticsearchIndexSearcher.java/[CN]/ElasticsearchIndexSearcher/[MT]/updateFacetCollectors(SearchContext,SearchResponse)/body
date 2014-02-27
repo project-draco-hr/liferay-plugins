@@ -1,0 +1,11 @@
+{
+  for (  Facet searchRequestFacet : searchContext.getFacets().values()) {
+    if (searchRequestFacet.isStatic()) {
+      continue;
+    }
+    Facets searchResponseFacets=searchResponse.getFacets();
+    org.elasticsearch.search.facet.Facet searchResponseFacet=searchResponseFacets.facet(searchRequestFacet.getFieldName());
+    FacetCollector facetCollector=new ElasticsearchFacetFieldCollector(searchResponseFacet);
+    searchRequestFacet.setFacetCollector(facetCollector);
+  }
+}

@@ -1,0 +1,24 @@
+{
+  Hits hits=new HitsImpl();
+  List<Document> documents=new ArrayList<Document>();
+  Set<String> queryTerms=new HashSet<String>();
+  List<Float> scores=new ArrayList<Float>();
+  List<String> snippets=new ArrayList<String>();
+  if (searchHits.totalHits() > 0) {
+    SearchHit[] returnedHits=searchHits.getHits();
+    for (    SearchHit hit : returnedHits) {
+      Document document=processSearchHit(hit);
+      documents.add(document);
+      String snippet=getSnippet(hit,queryConfig);
+      queryTerms.add(snippet);
+      snippets.add(snippet);
+      scores.add(hit.getScore());
+    }
+  }
+  hits.setDocs(documents.toArray(new Document[documents.size()]));
+  hits.setLength((int)searchHits.getTotalHits());
+  hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
+  hits.setScores(scores.toArray(new Float[scores.size()]));
+  hits.setSnippets(snippets.toArray(new String[snippets.size()]));
+  return hits;
+}

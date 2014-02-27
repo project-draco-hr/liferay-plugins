@@ -1,0 +1,23 @@
+{
+  if ((sorts == null) || (sorts.length == 0)) {
+    return;
+  }
+  for (  Sort sort : sorts) {
+    if (sort == null) {
+      continue;
+    }
+    String sortFieldName=sort.getFieldName();
+    if (DocumentImpl.isSortableTextField(sortFieldName)) {
+      sortFieldName=DocumentImpl.getSortableFieldName(sortFieldName);
+    }
+    SortOrder order=SortOrder.ASC;
+    if (Validator.isNull(sortFieldName) || !sortFieldName.endsWith("sortable")) {
+      order=SortOrder.DESC;
+      sortFieldName="_score";
+    }
+    if (sort.isReverse()) {
+      order=SortOrder.DESC;
+    }
+    searchRequestBuilder.addSort(sortFieldName,order);
+  }
+}

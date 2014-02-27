@@ -1,0 +1,10 @@
+{
+  Document document=new DocumentImpl();
+  Map<String,SearchHitField> hitFields=hit.getFields();
+  for (  Map.Entry<String,SearchHitField> entry : hitFields.entrySet()) {
+    Collection<Object> fieldValues=entry.getValue().getValues();
+    Field field=new Field(entry.getKey(),ArrayUtil.toStringArray(fieldValues.toArray(new Object[fieldValues.size()])));
+    document.add(field);
+  }
+  return document;
+}
