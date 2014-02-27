@@ -1,0 +1,38 @@
+{
+  if (!message.isDiscussion()) {
+    return;
+  }
+  String[] mentionedUsersScreenNamesArray=_getMentionedUsersScreenNames(message);
+  if (ArrayUtil.isEmpty(mentionedUsersScreenNamesArray)) {
+    return;
+  }
+  long companyId=message.getCompanyId();
+  String contentURL=(String)serviceContext.getAttribute("contentURL");
+  String mailUserAddress=PortalUtil.getUserEmailAddress(message.getUserId());
+  String mailUserName=PortalUtil.getUserName(message.getUserId(),StringPool.BLANK);
+  String fromName=PrefsPropsUtil.getString(message.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME);
+  String fromAddress=PrefsPropsUtil.getString(message.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+  String mailSubject=ContentUtil.get(PropsUtil.get("discussion.mentioned.email.subject"));
+  String mailBody=ContentUtil.get(PropsUtil.get("discussion.mentioned.email.body"));
+  SubscriptionSender subscriptionSender=new SubscriptionSender();
+  subscriptionSender.setBody(mailBody);
+  subscriptionSender.setCompanyId(companyId);
+  subscriptionSender.setContextAttribute("[$COMMENTS_BODY$]",message.getBody(true),false);
+  subscriptionSender.setContextAttributes("[$COMMENTS_USER_ADDRESS$]",mailUserAddress,"[$COMMENTS_USER_NAME$]",mailUserName,"[$CONTENT_URL$]",contentURL);
+  subscriptionSender.setFrom(fromAddress,fromName);
+  subscriptionSender.setHtmlFormat(true);
+  subscriptionSender.setMailId("mb_discussion",message.getCategoryId(),message.getMessageId());
+  subscriptionSender.setScopeGroupId(message.getGroupId());
+  subscriptionSender.setServiceContext(serviceContext);
+  subscriptionSender.setSubject(mailSubject);
+  subscriptionSender.setUserId(message.getUserId());
+  for (int i=0; i < mentionedUsersScreenNamesArray.length; i++) {
+    String mentionedUserScreenName=mentionedUsersScreenNamesArray[i];
+    try {
+      User mentionedUser=UserLocalServiceUtil.getUserByScreenName(companyId,mentionedUserScreenName);
+      subscriptionSender.addRuntimeSubscribers(mentionedUser.getEmailAddress(),mentionedUser.getFullName());
+    }
+ catch (    Exception e) {
+    }
+  }
+}
