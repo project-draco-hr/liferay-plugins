@@ -8,8 +8,9 @@
       SyncAccountService.updateUIEvent(_syncAccountId,SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
     }
  else     if (e instanceof HttpResponseException) {
-      int statusCode=((HttpResponseException)e).getStatusCode();
-      if (statusCode == 401) {
+      HttpResponseException hre=(HttpResponseException)e;
+      int statusCode=hre.getStatusCode();
+      if (statusCode == HttpServletResponse.SC_UNAUTHORIZED) {
         SyncAccountService.updateUIEvent(_syncAccountId,SyncAccount.UI_EVENT_AUTHENTICATION_EXCEPTION);
       }
  else {
