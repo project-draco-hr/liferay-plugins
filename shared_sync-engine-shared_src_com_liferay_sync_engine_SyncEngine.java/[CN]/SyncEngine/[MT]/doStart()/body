@@ -13,11 +13,6 @@
     List<SyncSite> syncSites=SyncSiteService.findSyncSites(syncAccount.getSyncAccountId());
     for (    SyncSite syncSite : syncSites) {
       Map<String,Object> parameters=new HashMap<String,Object>();
-      parameters.put("folderId",0);
-      parameters.put("repositoryId",syncSite.getGroupId());
-      GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(syncAccount.getSyncAccountId(),parameters);
-      getAllSyncDLObjectsEvent.run();
-      parameters.clear();
       parameters.put("companyId",syncSite.getCompanyId());
       parameters.put("repositoryId",syncSite.getGroupId());
       parameters.put("syncSite",syncSite);
