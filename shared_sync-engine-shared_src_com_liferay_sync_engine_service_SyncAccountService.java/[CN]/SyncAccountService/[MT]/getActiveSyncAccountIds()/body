@@ -1,0 +1,15 @@
+{
+  try {
+    if ((_activeSyncAccountIds != null) && !_activeSyncAccountIds.isEmpty()) {
+      return _activeSyncAccountIds;
+    }
+    _activeSyncAccountIds=_syncAccountPersistence.findByActive(true);
+    return _activeSyncAccountIds;
+  }
+ catch (  SQLException sqle) {
+    if (_logger.isDebugEnabled()) {
+      _logger.debug(sqle.getMessage(),sqle);
+    }
+    return Collections.emptyList();
+  }
+}

@@ -3,7 +3,9 @@
   LoggerUtil.initLogger();
   _logger.info("Starting " + PropsValues.SYNC_PRODUCT_NAME);
   UpgradeUtil.upgrade();
+  SyncAccountService.registerModelListener(new SyncAccountModelListener());
   SyncFileService.registerModelListener(new SyncFileModelListener());
+  SyncSiteService.registerModelListener(new SyncSiteModelListener());
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
   for (  SyncAccount syncAccount : SyncAccountService.findAll()) {

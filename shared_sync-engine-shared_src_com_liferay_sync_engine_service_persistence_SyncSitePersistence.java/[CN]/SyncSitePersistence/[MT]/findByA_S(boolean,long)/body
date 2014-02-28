@@ -1,0 +1,14 @@
+{
+  QueryBuilder<SyncSite,Long> queryBuilder=queryBuilder();
+  Where<SyncSite,Long> where=queryBuilder.where();
+  where.eq("active",active);
+  where.and();
+  where.eq("syncAccountId",syncAccountId);
+  GenericRawResults<Long> rawResults=queryRaw(queryBuilder.prepareStatementString(),new RawRowMapper<Long>(){
+    @Override public Long mapRow(    String[] columnNames,    String[] resultColumns){
+      return Long.valueOf(resultColumns[0]);
+    }
+  }
+);
+  return rawResults.getResults();
+}

@@ -1,0 +1,13 @@
+{
+  if (!originalValues.containsKey("active")) {
+    return;
+  }
+  List<Long> activeSyncSiteIds=SyncSiteService.getActiveSyncSiteIds(syncSite.getSyncAccountId());
+  if ((Boolean)originalValues.get("active")) {
+    activeSyncSiteIds.remove(syncSite.getSyncSiteId());
+  }
+ else {
+    activeSyncSiteIds.add(syncSite.getSyncSiteId());
+  }
+  SyncSiteService.setActiveSyncSiteIds(syncSite.getSyncAccountId(),activeSyncSiteIds);
+}

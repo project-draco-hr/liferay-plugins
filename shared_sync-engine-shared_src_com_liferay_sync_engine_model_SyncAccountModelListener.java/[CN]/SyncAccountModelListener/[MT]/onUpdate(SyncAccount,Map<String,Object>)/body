@@ -1,0 +1,13 @@
+{
+  if (!originalValues.containsKey("active")) {
+    return;
+  }
+  List<Long> activeSyncAccountIds=SyncAccountService.getActiveSyncAccountIds();
+  if ((Boolean)originalValues.get("active")) {
+    activeSyncAccountIds.remove(syncAccount.getSyncAccountId());
+  }
+ else {
+    activeSyncAccountIds.add(syncAccount.getSyncAccountId());
+  }
+  SyncAccountService.setActiveSyncAccountIds(activeSyncAccountIds);
+}
