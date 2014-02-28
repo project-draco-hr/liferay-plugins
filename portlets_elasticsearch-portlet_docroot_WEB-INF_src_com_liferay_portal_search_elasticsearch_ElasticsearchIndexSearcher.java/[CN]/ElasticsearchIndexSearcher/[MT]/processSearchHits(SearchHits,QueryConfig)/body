@@ -5,14 +5,14 @@
   List<Float> scores=new ArrayList<Float>();
   List<String> snippets=new ArrayList<String>();
   if (searchHits.totalHits() > 0) {
-    SearchHit[] returnedHits=searchHits.getHits();
-    for (    SearchHit hit : returnedHits) {
-      Document document=processSearchHit(hit);
+    SearchHit[] searchHitsArray=searchHits.getHits();
+    for (    SearchHit searchHit : searchHitsArray) {
+      Document document=processSearchHit(searchHit);
       documents.add(document);
-      String snippet=getSnippet(hit,queryConfig);
+      String snippet=getSnippet(searchHit,queryConfig);
       queryTerms.add(snippet);
+      scores.add(searchHit.getScore());
       snippets.add(snippet);
-      scores.add(hit.getScore());
     }
   }
   hits.setDocs(documents.toArray(new Document[documents.size()]));

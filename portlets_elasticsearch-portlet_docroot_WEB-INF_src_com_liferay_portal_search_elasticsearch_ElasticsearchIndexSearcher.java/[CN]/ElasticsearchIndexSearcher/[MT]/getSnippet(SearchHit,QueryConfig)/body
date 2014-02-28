@@ -1,11 +1,10 @@
 {
-  String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
-  String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
   String snippet=null;
   Map<String,HighlightField> highlightFields=hit.getHighlightFields();
   if ((highlightFields == null) || highlightFields.isEmpty()) {
     return StringPool.BLANK;
   }
+  String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
   if (localizedContentName != null) {
     HighlightField highlightField=highlightFields.get(localizedContentName);
     if (highlightField != null) {
@@ -15,6 +14,7 @@
       }
     }
   }
+  String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
   if ((snippet == null) && (localizedTitleName != null)) {
     HighlightField highlightField=highlightFields.get(localizedContentName);
     if (highlightField != null) {

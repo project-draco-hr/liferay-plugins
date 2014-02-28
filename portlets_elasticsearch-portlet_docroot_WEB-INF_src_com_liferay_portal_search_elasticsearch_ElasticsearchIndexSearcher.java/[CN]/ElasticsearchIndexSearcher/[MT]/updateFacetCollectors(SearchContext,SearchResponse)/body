@@ -1,11 +1,12 @@
 {
-  for (  Facet searchRequestFacet : searchContext.getFacets().values()) {
-    if (searchRequestFacet.isStatic()) {
+  Map<String,Facet> facetsMap=searchContext.getFacets();
+  for (  Facet facet : facetsMap.values()) {
+    if (facet.isStatic()) {
       continue;
     }
-    Facets searchResponseFacets=searchResponse.getFacets();
-    org.elasticsearch.search.facet.Facet searchResponseFacet=searchResponseFacets.facet(searchRequestFacet.getFieldName());
-    FacetCollector facetCollector=new ElasticsearchFacetFieldCollector(searchResponseFacet);
-    searchRequestFacet.setFacetCollector(facetCollector);
+    Facets facets=searchResponse.getFacets();
+    org.elasticsearch.search.facet.Facet elasticsearchFacet=facets.facet(facet.getFieldName());
+    FacetCollector facetCollector=new ElasticsearchFacetFieldCollector(elasticsearchFacet);
+    facet.setFacetCollector(facetCollector);
   }
 }

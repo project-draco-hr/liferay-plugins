@@ -1,33 +1,28 @@
 {
+  StopWatch stopWatch=new StopWatch();
+  stopWatch.start();
   ElasticsearchConnectionManager elasticsearchConnectionManager=ElasticsearchConnectionManager.getInstance();
   Client client=elasticsearchConnectionManager.getClient();
-  QueryConfig queryConfig=query.getQueryConfig();
-  StopWatch stopWatch=null;
-  if (_log.isInfoEnabled()) {
-    stopWatch=new StopWatch();
-    stopWatch.start();
-  }
   SearchRequestBuilder searchRequestBuilder=client.prepareSearch(String.valueOf(searchContext.getCompanyId()));
   addFacets(searchRequestBuilder,searchContext);
-  addHighlights(searchRequestBuilder,queryConfig);
+  addHighlights(searchRequestBuilder,query.getQueryConfig());
   addPagination(searchRequestBuilder,searchContext.getStart(),searchContext.getEnd());
-  addSelectedFields(searchRequestBuilder,queryConfig);
+  addSelectedFields(searchRequestBuilder,query.getQueryConfig());
   addSort(searchRequestBuilder,searchContext.getSorts());
   QueryBuilder queryBuilder=QueryBuilders.queryString(query.toString());
   searchRequestBuilder.setQuery(queryBuilder);
-  long startTime=System.currentTimeMillis();
   SearchRequest searchRequest=searchRequestBuilder.request();
   ActionFuture<SearchResponse> future=client.search(searchRequest);
   SearchResponse searchResponse=future.actionGet();
   updateFacetCollectors(searchContext,searchResponse);
-  Hits hits=processSearchHits(searchResponse.getHits(),queryConfig);
+  Hits hits=processSearchHits(searchResponse.getHits(),query.getQueryConfig());
   hits.setQuery(query);
   TimeValue timeValue=searchResponse.getTook();
   hits.setSearchTime((float)timeValue.getSecondsFrac());
-  hits.setStart(startTime);
+  hits.setStart(stopWatch.getStartTime());
   if (_log.isInfoEnabled()) {
     stopWatch.stop();
-    _log.info("Search: " + queryBuilder.toString() + " consumed: "+ stopWatch.getTime()+ "ms. Search engine took: "+ hits.getSearchTime()+ "s");
+    _log.info("Searching " + queryBuilder.toString() + " took "+ stopWatch.getTime()+ " ms with the search engine using "+ hits.getSearchTime()+ " s");
   }
   return hits;
 }
