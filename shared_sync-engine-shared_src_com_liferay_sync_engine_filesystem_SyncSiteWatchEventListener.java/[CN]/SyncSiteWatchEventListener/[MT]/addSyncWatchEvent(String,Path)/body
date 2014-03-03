@@ -3,7 +3,19 @@
     if (eventType.equals(SyncWatchEvent.EVENT_TYPE_CREATE) && FileUtil.isIgnoredFilePath(filePath)) {
       return;
     }
-    SyncWatchEventService.addSyncWatchEvent(eventType,FilePathNameUtil.getFilePathName(filePath),getFileType(eventType,filePath),getSyncAccountId());
+    String parentFilePathName=FilePathNameUtil.getFilePathName(filePath.getParent());
+    SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentFilePathName,getSyncAccountId());
+    SyncSite syncSite=SyncSiteService.fetchSyncSite(parentSyncFile.getRepositoryId(),getSyncAccountId());
+    List<Long> syncSiteIds=SyncSiteService.getActiveSyncSiteIds(getSyncAccountId());
+    if ((parentSyncFile == null) || !syncSiteIds.contains(syncSite.getSyncSiteId())) {
+      return;
+    }
+    String filePathName=FilePathNameUtil.getFilePathName(filePath);
+    SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+    if (filePathName.equals(syncAccount.getFilePathName()) || parentFilePathName.equals(syncAccount.getFilePathName())) {
+      return;
+    }
+    SyncWatchEventService.addSyncWatchEvent(eventType,filePathName,getFileType(eventType,filePath),getSyncAccountId());
   }
  catch (  Exception e) {
     _logger.error(e.getMessage(),e);

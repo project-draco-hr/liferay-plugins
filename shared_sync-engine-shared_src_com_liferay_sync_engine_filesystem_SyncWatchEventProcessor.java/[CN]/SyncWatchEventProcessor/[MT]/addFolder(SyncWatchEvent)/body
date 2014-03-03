@@ -1,10 +1,5 @@
 {
   Path targetFilePath=Paths.get(syncWatchEvent.getFilePathName());
-  String targetFilePathName=FilePathNameUtil.getFilePathName(targetFilePath);
-  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
-  if (targetFilePathName.equals(syncAccount.getFilePathName()) || (SyncSiteService.fetchSyncSite(targetFilePathName,syncWatchEvent.getSyncAccountId()) != null)) {
-    return;
-  }
   Path parentTargetFilePath=targetFilePath.getParent();
   SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentTargetFilePath),syncWatchEvent.getSyncAccountId());
   SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(targetFilePath),syncWatchEvent.getSyncAccountId());
