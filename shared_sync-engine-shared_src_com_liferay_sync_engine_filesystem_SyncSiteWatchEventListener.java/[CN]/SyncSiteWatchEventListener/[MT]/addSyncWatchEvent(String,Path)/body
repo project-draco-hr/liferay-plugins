@@ -6,7 +6,7 @@
     String parentFilePathName=FilePathNameUtil.getFilePathName(filePath.getParent());
     SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentFilePathName,getSyncAccountId());
     SyncSite syncSite=SyncSiteService.fetchSyncSite(parentSyncFile.getRepositoryId(),getSyncAccountId());
-    List<Long> syncSiteIds=SyncSiteService.getActiveSyncSiteIds(getSyncAccountId());
+    Set<Long> syncSiteIds=SyncSiteService.getActiveSyncSiteIds(getSyncAccountId());
     if ((parentSyncFile == null) || !syncSiteIds.contains(syncSite.getSyncSiteId())) {
       return;
     }
