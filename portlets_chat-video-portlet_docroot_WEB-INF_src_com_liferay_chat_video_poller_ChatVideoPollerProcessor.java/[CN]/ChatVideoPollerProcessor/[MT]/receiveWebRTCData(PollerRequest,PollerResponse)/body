@@ -1,0 +1,27 @@
+{
+  WebRTCClient webRTCClient=_webRTCManager.getWebRTCClient(pollerRequest.getUserId());
+  JSONArray webRTCMailsJSONArray=JSONFactoryUtil.createJSONArray();
+  if (webRTCClient != null) {
+    List<WebRTCMail> webRTCMails=webRTCClient.getOutgoingWebRTCMailbox().popWebRTCMails();
+    for (    WebRTCMail webRTCMail : webRTCMails) {
+      String messageType=webRTCMail.getMessageType();
+      String messageJSON=webRTCMail.getMessageJSON();
+      long sourceUserId=webRTCMail.getSourceUserId();
+      JSONObject mailJSONObject=JSONFactoryUtil.createJSONObject();
+      mailJSONObject.put("type",messageType);
+      mailJSONObject.put("msg",messageJSON);
+      mailJSONObject.put("source_user_id",sourceUserId);
+      webRTCMailsJSONArray.put(mailJSONObject);
+    }
+  }
+  JSONArray webRTCClientsJSONArray=JSONFactoryUtil.createJSONArray();
+  for (  Long userId : _webRTCManager.getAvailableWebRTCClientIds()) {
+    if (userId != pollerRequest.getUserId()) {
+      webRTCClientsJSONArray.put(userId);
+    }
+  }
+  JSONObject webRTCJSONObject=JSONFactoryUtil.createJSONObject();
+  webRTCJSONObject.put("mails",webRTCMailsJSONArray);
+  webRTCJSONObject.put("clients",webRTCClientsJSONArray);
+  pollerResponse.setParameter("webrtc",webRTCJSONObject);
+}
