@@ -2,8 +2,10 @@
   if (!queryConfig.isHighlightEnabled()) {
     return;
   }
+  searchRequestBuilder.addHighlightedField(Field.CONTENT,queryConfig.getHighlightFragmentSize(),queryConfig.getHighlightSnippetSize());
   String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
   searchRequestBuilder.addHighlightedField(localizedContentName,queryConfig.getHighlightFragmentSize(),queryConfig.getHighlightSnippetSize());
+  searchRequestBuilder.addHighlightedField(Field.TITLE,queryConfig.getHighlightFragmentSize(),queryConfig.getHighlightSnippetSize());
   String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
   searchRequestBuilder.addHighlightedField(localizedTitleName,queryConfig.getHighlightFragmentSize(),queryConfig.getHighlightSnippetSize());
 }

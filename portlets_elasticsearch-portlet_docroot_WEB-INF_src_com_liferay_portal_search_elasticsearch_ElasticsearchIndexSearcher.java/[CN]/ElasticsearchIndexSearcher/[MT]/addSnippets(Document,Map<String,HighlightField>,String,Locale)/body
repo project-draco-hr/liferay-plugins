@@ -1,0 +1,17 @@
+{
+  String snippet=StringPool.BLANK;
+  String localizedContentName=DocumentImpl.getLocalizedName(locale,fieldName);
+  HighlightField highlightField=highlightFields.get(localizedContentName);
+  String snippetField=localizedContentName;
+  if (highlightField == null) {
+    highlightField=highlightFields.get(fieldName);
+    snippetField=fieldName;
+  }
+  if (highlightField != null) {
+    Text[] texts=highlightField.fragments();
+    if (ArrayUtil.isNotEmpty(texts)) {
+      snippet=texts[0].string();
+    }
+  }
+  document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetField),snippet);
+}
