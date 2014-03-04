@@ -10,7 +10,8 @@
   WebRTCClient webRTCClient=_webRTCManager.getWebRTCClient(pollerRequest.getUserId());
   if (webRTCClient != null) {
     JSONArray webRTCMailsJSONArray=JSONFactoryUtil.createJSONArray();
-    List<WebRTCMail> webRTCMails=webRTCClient.getOutgoingWebRTCMailbox().popWebRTCMails();
+    WebRTCMailbox webRTCMailbox=webRTCClient.getOutgoingWebRTCMailbox();
+    List<WebRTCMail> webRTCMails=webRTCMailbox.popWebRTCMails();
     for (    WebRTCMail webRTCMail : webRTCMails) {
       String messageType=webRTCMail.getMessageType();
       String messageJSON=webRTCMail.getMessageJSON();
