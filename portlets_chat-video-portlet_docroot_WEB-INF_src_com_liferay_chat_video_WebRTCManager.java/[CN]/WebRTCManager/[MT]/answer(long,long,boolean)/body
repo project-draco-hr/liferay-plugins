@@ -4,19 +4,19 @@
     return;
   }
   if (!hasAvailableWebRTCClient(destinationUserId)) {
-    pushErrorWebRTCMail(destinationUserId,sourceUserId,"unavailable_user");
+    pushErrorWebRTCMail(destinationUserId,sourceUserId,"unavailableUser");
     return;
   }
   WebRTCClient sourceWebRTCClient=getWebRTCClient(sourceUserId);
   WebRTCClient destinationWebRTCClient=getWebRTCClient(destinationUserId);
   if (!isValidWebRTCConnectionState(sourceWebRTCClient,destinationWebRTCClient,WebRTCConnection.State.INITIATED)) {
-    pushErrorWebRTCMail(destinationUserId,sourceUserId,"invalid_state");
+    pushErrorWebRTCMail(destinationUserId,sourceUserId,"invalidState");
     return;
   }
   WebRTCConnection webRTCConnection=sourceWebRTCClient.getWebRTCConnection(destinationWebRTCClient);
   WebRTCClient webRTCConnectionSourceWebRTCClient=webRTCConnection.getSourceWebRTCClient();
   if (webRTCConnectionSourceWebRTCClient == sourceWebRTCClient) {
-    pushErrorWebRTCMail(destinationUserId,sourceUserId,"cannot_answer");
+    pushErrorWebRTCMail(destinationUserId,sourceUserId,"cannotAnswer");
     return;
   }
   if (answer) {
@@ -26,7 +26,7 @@
     sourceWebRTCClient.removeBilateralWebRTCConnection(destinationWebRTCClient);
   }
   JSONObject messageJSONObject=JSONFactoryUtil.createJSONObject();
-  messageJSONObject.put("type","answer");
   messageJSONObject.put("answer",answer);
+  messageJSONObject.put("type","answer");
   pushConnectionStateWebRTCMail(sourceWebRTCClient,destinationWebRTCClient,messageJSONObject);
 }
