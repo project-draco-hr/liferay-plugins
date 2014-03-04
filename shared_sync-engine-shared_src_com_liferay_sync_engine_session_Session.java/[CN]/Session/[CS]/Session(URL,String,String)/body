@@ -1,0 +1,10 @@
+{
+  _url=url;
+  _httpHost=new HttpHost(_url.getHost(),_url.getPort(),_url.getProtocol());
+  HttpClientBuilder httpClientBuilder=HttpClientBuilder.create();
+  CredentialsProvider credentialsProvider=new BasicCredentialsProvider();
+  credentialsProvider.setCredentials(new AuthScope(url.getHost(),url.getPort()),new UsernamePasswordCredentials(login,password));
+  httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+  httpClientBuilder.setMaxConnPerRoute(2);
+  _httpClient=httpClientBuilder.build();
+}
