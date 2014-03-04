@@ -1,19 +1,18 @@
 {
   try {
-    SyncFile syncFile=_syncFilePersistence.queryForId(syncFileId);
-    _syncFilePersistence.deleteById(syncFileId);
+    _syncFilePersistence.delete(syncFile);
     String type=syncFile.getType();
     if (type.equals(SyncFile.TYPE_FILE)) {
       return;
     }
-    List<SyncFile> childSyncFiles=_syncFilePersistence.queryForEq("parentFolderId",syncFileId);
+    List<SyncFile> childSyncFiles=_syncFilePersistence.queryForEq("parentFolderId",syncFile.getSyncFileId());
     for (    SyncFile childSyncFile : childSyncFiles) {
       type=childSyncFile.getType();
       if (type.equals(SyncFile.TYPE_FILE)) {
         _syncFilePersistence.deleteById(childSyncFile.getSyncFileId());
       }
  else {
-        deleteSyncFile(childSyncFile.getSyncFileId());
+        deleteSyncFile(childSyncFile);
       }
     }
   }

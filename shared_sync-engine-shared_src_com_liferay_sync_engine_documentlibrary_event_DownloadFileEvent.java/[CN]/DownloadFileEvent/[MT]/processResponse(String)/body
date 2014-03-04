@@ -6,6 +6,8 @@
     outputStream=Files.newOutputStream(filePath);
     outputStream.write(response.getBytes());
     syncFile.setFileKey(FileUtil.getFileKey(filePath));
+    syncFile.setState(SyncFile.STATE_SYNCED);
+    syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED);
     SyncFileService.update(syncFile);
   }
   finally {

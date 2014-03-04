@@ -1,5 +1,8 @@
 {
   Object[] syncAccountTasks=_syncAccountTasks.get(syncAccountId);
+  if (syncAccountTasks == null) {
+    return;
+  }
   ScheduledFuture<?> scheduledFuture=(ScheduledFuture<?>)syncAccountTasks[0];
   scheduledFuture.cancel(false);
   Watcher watcher=(Watcher)syncAccountTasks[1];

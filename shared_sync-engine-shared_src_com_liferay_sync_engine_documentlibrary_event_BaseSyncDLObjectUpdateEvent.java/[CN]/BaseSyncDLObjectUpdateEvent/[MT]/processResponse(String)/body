@@ -14,6 +14,10 @@
       addFile(syncFile,filePathName);
     }
  else     if (event.equals(SyncFile.EVENT_DELETE)) {
+      syncFile=SyncFileService.fetchSyncFile(syncFile.getRepositoryId(),getSyncAccountId(),syncFile.getTypePK());
+      syncFile.setState(SyncFile.STATE_DELETED);
+      syncFile.setUiEvent(SyncFile.UI_EVENT_DELETED_REMOTE);
+      SyncFileService.update(syncFile);
     }
  else     if (event.equals(SyncFile.EVENT_MOVE)) {
       moveFile(syncFile,filePathName);

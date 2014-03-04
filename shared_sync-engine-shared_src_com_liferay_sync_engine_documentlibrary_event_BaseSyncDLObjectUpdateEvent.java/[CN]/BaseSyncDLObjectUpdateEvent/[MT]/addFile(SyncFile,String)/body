@@ -1,13 +1,23 @@
 {
+  String type=syncFile.getType();
+  Path filePath=Paths.get(filePathName);
+  if (Files.exists(filePath)) {
+    if (type.equals(SyncFile.TYPE_FILE)) {
+      String checksum=FileUtil.getChecksum(filePath);
+      if (checksum.equals(syncFile.getChecksum())) {
+        return;
+      }
+    }
+ else {
+      return;
+    }
+  }
   syncFile.setFilePathName(filePathName);
   syncFile.setSyncAccountId(getSyncAccountId());
+  syncFile.setUiEvent(SyncFile.UI_EVENT_ADDED_REMOTE);
   SyncFileService.update(syncFile);
-  String type=syncFile.getType();
   if (type.equals(SyncFile.TYPE_FOLDER)) {
-    Path filePath=Paths.get(filePathName);
-    if (Files.notExists(filePath)) {
-      Files.createDirectory(filePath);
-    }
+    Files.createDirectories(filePath);
     return;
   }
   downloadFile(syncFile);
