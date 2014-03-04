@@ -8,8 +8,8 @@
   }
   webRTCResponseJSONObject.put("clients",webRTCClientsJSONArray);
   WebRTCClient webRTCClient=_webRTCManager.getWebRTCClient(pollerRequest.getUserId());
+  JSONArray webRTCMailsJSONArray=JSONFactoryUtil.createJSONArray();
   if (webRTCClient != null) {
-    JSONArray webRTCMailsJSONArray=JSONFactoryUtil.createJSONArray();
     WebRTCMailbox webRTCMailbox=webRTCClient.getOutgoingWebRTCMailbox();
     List<WebRTCMail> webRTCMails=webRTCMailbox.popWebRTCMails();
     for (    WebRTCMail webRTCMail : webRTCMails) {
@@ -19,7 +19,7 @@
       mailJSONObject.put("type",webRTCMail.getMessageType());
       webRTCMailsJSONArray.put(mailJSONObject);
     }
-    webRTCResponseJSONObject.put("mails",webRTCMailsJSONArray);
   }
+  webRTCResponseJSONObject.put("mails",webRTCMailsJSONArray);
   pollerResponse.setParameter("webRTCResponse",webRTCResponseJSONObject);
 }
