@@ -1,11 +1,4 @@
 {
-  Set<Long> activeSyncAccountIds=SyncAccountService.getActiveSyncAccountIds();
-  activeSyncAccountIds.remove(syncAccount.getSyncAccountId());
-  SyncAccountService.setActiveSyncAccountIds(activeSyncAccountIds);
-  try {
-    SyncEngine.cancelSyncAccountTasks(syncAccount.getSyncAccountId());
-  }
- catch (  Exception e) {
-    _logger.error(e.getMessage(),e);
-  }
+  deactivateSyncAccount(syncAccount);
+  SessionManager.removeSession(syncAccount.getSyncAccountId());
 }
