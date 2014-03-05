@@ -6,12 +6,12 @@
   try {
     SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncAccountId);
     URL url=new URL(syncAccount.getUrl());
-    session=new Session(url,syncAccount.getLogin(),syncAccount.getPassword());
+    session=new Session(url,syncAccount.getLogin(),Encryptor.decrypt(syncAccount.getPassword()));
     _sessions.put(syncAccountId,session);
     return session;
   }
- catch (  MalformedURLException murle) {
-    _logger.error(murle.getMessage(),murle);
+ catch (  Exception e) {
+    _logger.error(e.getMessage(),e);
     return null;
   }
 }
