@@ -1,8 +1,7 @@
 {
   String content=HtmlUtil.escape(microblogsEntry.getContent());
   ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
-  Pattern pattern=Pattern.compile("\\#\\S*");
-  Matcher matcher=pattern.matcher(microblogsEntry.getContent());
+  Matcher matcher=_tagPattern1.matcher(microblogsEntry.getContent());
   while (matcher.find()) {
     String result=matcher.group();
     StringBuilder sb=new StringBuilder(5);
@@ -38,8 +37,7 @@
     String tagLink=sb.toString();
     content=StringUtil.replace(content,result,tagLink);
   }
-  pattern=Pattern.compile("\\[\\@\\S*\\]");
-  matcher=pattern.matcher(content);
+  matcher=_tagPattern2.matcher(content);
   while (matcher.find()) {
     String result=matcher.group();
     try {
