@@ -1,30 +1,15 @@
 {
   if (activitySet.getType() == SocialActivityKeyConstants.TASKS_UPDATE_ENTRY) {
-    if (!hasPermissions(activitySet,serviceContext)) {
-      return null;
-    }
     return getBody(activitySet.getClassName(),activitySet.getClassPK(),serviceContext);
   }
   StringBundler sb=new StringBundler();
   sb.append("<div class=\"grouped-activity-body-container\">");
   sb.append("<div class=\"grouped-activity-body\">");
-  boolean hasViewableActivities=false;
-  List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  List<SocialActivity> activities=getViewableActivities(activitySet,serviceContext);
   for (  SocialActivity activity : activities) {
-    if (!hasPermissions(activity,serviceContext)) {
-      continue;
-    }
-    SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity,serviceContext);
-    if (subfeedEntry == null) {
-      continue;
-    }
     sb.append("<div class=\"activity-subentry tasks\">");
     sb.append(getBody(activity.getClassName(),activity.getClassPK(),serviceContext));
     sb.append("</div>");
-    hasViewableActivities=true;
-  }
-  if (!hasViewableActivities) {
-    return null;
   }
   sb.append("</div></div>");
   return sb.toString();

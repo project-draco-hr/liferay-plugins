@@ -1,10 +1,11 @@
 {
-  if (activitySet.getActivityCount() == 1) {
-    List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),0,1);
-    if (!activities.isEmpty()) {
-      SocialActivity activity=activities.get(0);
-      return doInterpret(activity,serviceContext);
-    }
+  List<SocialActivity> viewableActivities=getViewableActivities(activitySet,serviceContext);
+  if (viewableActivities.size() == 0) {
+    return null;
+  }
+  if (viewableActivities.size() == 1) {
+    SocialActivity activity=viewableActivities.get(0);
+    return doInterpret(activity,serviceContext);
   }
   String link=getLink(activitySet,serviceContext);
   String title=getTitle(activitySet,serviceContext);
@@ -12,8 +13,5 @@
     return null;
   }
   String body=getBody(activitySet,serviceContext);
-  if (Validator.isNull(body)) {
-    return null;
-  }
   return new SocialActivityFeedEntry(link,title,body);
 }

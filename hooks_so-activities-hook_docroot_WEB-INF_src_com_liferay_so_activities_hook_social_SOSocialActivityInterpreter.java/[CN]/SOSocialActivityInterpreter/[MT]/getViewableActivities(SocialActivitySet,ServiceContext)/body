@@ -1,0 +1,18 @@
+{
+  List<SocialActivity> viewableActivities=new ArrayList<SocialActivity>();
+  List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  SocialActivity activity : activities) {
+    if (!hasPermissions(activity,serviceContext)) {
+      continue;
+    }
+    Group group=GroupLocalServiceUtil.fetchGroup(activity.getGroupId());
+    if ((group != null) && group.isUser()) {
+      continue;
+    }
+    if (TrashUtil.isInTrash(activity.getClassName(),activity.getClassPK())) {
+      continue;
+    }
+    viewableActivities.add(activity);
+  }
+  return viewableActivities;
+}

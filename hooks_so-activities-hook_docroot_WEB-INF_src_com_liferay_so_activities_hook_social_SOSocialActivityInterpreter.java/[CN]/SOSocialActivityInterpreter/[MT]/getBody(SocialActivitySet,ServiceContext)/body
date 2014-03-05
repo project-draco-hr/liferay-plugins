@@ -2,12 +2,8 @@
   StringBundler sb=new StringBundler();
   sb.append("<div class=\"grouped-activity-body-container\">");
   sb.append("<div class=\"grouped-activity-body\">");
-  int viewableActivities=0;
-  List<SocialActivity> activities=SocialActivityLocalServiceUtil.getActivitySetActivities(activitySet.getActivitySetId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  List<SocialActivity> activities=getViewableActivities(activitySet,serviceContext);
   for (  SocialActivity activity : activities) {
-    if (!hasPermissions(activity,serviceContext)) {
-      continue;
-    }
     SocialActivityFeedEntry subfeedEntry=getSubfeedEntry(activity,serviceContext);
     if (subfeedEntry == null) {
       continue;
@@ -18,10 +14,6 @@
     sb.append("</span><span class=\"activity-subentry-body\">");
     sb.append(subfeedEntry.getBody());
     sb.append("</span></div>");
-    viewableActivities++;
-  }
-  if (viewableActivities == 0) {
-    return null;
   }
   sb.append("</div></div>");
   return sb.toString();
