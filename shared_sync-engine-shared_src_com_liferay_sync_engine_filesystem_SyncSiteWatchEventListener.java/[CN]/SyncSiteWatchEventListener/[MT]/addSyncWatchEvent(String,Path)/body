@@ -11,6 +11,8 @@
     }
     SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentFilePathName,getSyncAccountId());
     if (parentSyncFile == null) {
+      Thread.sleep(1000);
+      addSyncWatchEvent(eventType,filePath);
       return;
     }
     SyncSite syncSite=SyncSiteService.fetchSyncSite(parentSyncFile.getRepositoryId(),getSyncAccountId());
