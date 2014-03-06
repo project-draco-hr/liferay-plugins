@@ -9,9 +9,19 @@
   }
   if (highlightField != null) {
     Text[] texts=highlightField.fragments();
-    if (ArrayUtil.isNotEmpty(texts)) {
-      snippet=texts[0].string();
+    StringBundler sb=new StringBundler(texts.length * 2);
+    for (    Text text : texts) {
+      sb.append(text);
+      sb.append(StringPool.TRIPLE_PERIOD);
     }
+    snippet=sb.toString();
   }
+  Pattern pattern=Pattern.compile(_HIGHLIGHTED_TEXT_PATTERN);
+  Matcher matcher=pattern.matcher(snippet);
+  while (matcher.find()) {
+    queryTerms.add(matcher.group(1));
+  }
+  snippet=StringUtil.replace(snippet,_OPEN_HIGHLIGHT_TAG,StringPool.BLANK);
+  snippet=StringUtil.replace(snippet,_CLOSE_HIGHLIGHT_TAG,StringPool.BLANK);
   document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetField),snippet);
 }
