@@ -1,0 +1,11 @@
+{
+  SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_STATE_STOPPING);
+  for (  long syncAccountId : _syncAccountTasks.keySet()) {
+    cancelSyncAccountTasks(syncAccountId);
+  }
+  _syncWatchEventProcessorExecutorService.shutdown();
+  SyncAccountService.unregisterModelListener(new SyncAccountModelListener());
+  SyncFileService.unregisterModelListener(new SyncFileModelListener());
+  SyncSiteService.unregisterModelListener(new SyncSiteModelListener());
+  SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_STATE_STOPPED);
+}
