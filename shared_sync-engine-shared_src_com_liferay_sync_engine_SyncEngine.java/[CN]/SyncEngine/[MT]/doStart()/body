@@ -8,8 +8,12 @@
   SyncSiteService.registerModelListener(new SyncSiteModelListener());
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
-  for (  long syncAccountId : SyncAccountService.getActiveSyncAccountIds()) {
-    scheduleSyncAccountTasks(syncAccountId);
+  List<SyncAccount> syncAccounts=SyncAccountService.findAll();
+  if (syncAccounts.isEmpty()) {
+    SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_NOT_CONFIGURED);
+  }
+  for (  long activeSyncAccountId : SyncAccountService.getActiveSyncAccountIds()) {
+    scheduleSyncAccountTasks(activeSyncAccountId);
   }
   SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_STATE_STARTED);
 }
