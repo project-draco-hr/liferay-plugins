@@ -2,11 +2,6 @@
   String snippet=StringPool.BLANK;
   String localizedContentName=DocumentImpl.getLocalizedName(locale,fieldName);
   HighlightField highlightField=highlightFields.get(localizedContentName);
-  String snippetField=localizedContentName;
-  if (highlightField == null) {
-    highlightField=highlightFields.get(fieldName);
-    snippetField=fieldName;
-  }
   if (highlightField != null) {
     Text[] texts=highlightField.fragments();
     StringBundler sb=new StringBundler(texts.length * 2);
@@ -16,12 +11,16 @@
     }
     snippet=sb.toString();
   }
-  Pattern pattern=Pattern.compile(_HIGHLIGHTED_TEXT_PATTERN);
-  Matcher matcher=pattern.matcher(snippet);
+  Matcher matcher=_pattern.matcher(snippet);
   while (matcher.find()) {
     queryTerms.add(matcher.group(1));
   }
-  snippet=StringUtil.replace(snippet,_OPEN_HIGHLIGHT_TAG,StringPool.BLANK);
-  snippet=StringUtil.replace(snippet,_CLOSE_HIGHLIGHT_TAG,StringPool.BLANK);
-  document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetField),snippet);
+  snippet=StringUtil.replace(snippet,"<em>",StringPool.BLANK);
+  snippet=StringUtil.replace(snippet,"</em>",StringPool.BLANK);
+  String snippetFieldName=localizedContentName;
+  if (highlightField == null) {
+    highlightField=highlightFields.get(fieldName);
+    snippetFieldName=fieldName;
+  }
+  document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetFieldName),snippet);
 }

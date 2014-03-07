@@ -10,14 +10,14 @@
     if (DocumentImpl.isSortableTextField(sortFieldName)) {
       sortFieldName=DocumentImpl.getSortableFieldName(sortFieldName);
     }
-    SortOrder order=SortOrder.ASC;
-    if (Validator.isNull(sortFieldName) || !sortFieldName.endsWith(_SORTABLE_SUFFIX)) {
-      order=SortOrder.DESC;
-      sortFieldName=_SCORE_SUFFIX;
+    SortOrder sortOrder=SortOrder.ASC;
+    if (Validator.isNull(sortFieldName) || !sortFieldName.endsWith("sortable")) {
+      sortOrder=SortOrder.DESC;
+      sortFieldName="_score";
     }
     if (sort.isReverse()) {
-      order=SortOrder.DESC;
+      sortOrder=SortOrder.DESC;
     }
-    searchRequestBuilder.addSort(sortFieldName,order);
+    searchRequestBuilder.addSort(sortFieldName,sortOrder);
   }
 }
