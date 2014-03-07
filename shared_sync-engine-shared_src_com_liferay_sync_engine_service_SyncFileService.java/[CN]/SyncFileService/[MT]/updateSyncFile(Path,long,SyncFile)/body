@@ -1,7 +1,6 @@
 {
   try {
-    String type=syncFile.getType();
-    if (type.equals(SyncFile.TYPE_FILE)) {
+    if (!syncFile.isFolder()) {
       return update(syncFile);
     }
     String oldFilePathName=syncFile.getFilePathName();
@@ -14,13 +13,12 @@
     for (    SyncFile childSyncFile : childSyncFiles) {
       String childFilePathName=childSyncFile.getFilePathName();
       childFilePathName=childFilePathName.replace(oldFilePathName,newFilePathName);
-      type=childSyncFile.getType();
-      if (type.equals(SyncFile.TYPE_FILE)) {
-        childSyncFile.setFilePathName(childFilePathName);
-        update(childSyncFile);
+      if (childSyncFile.isFolder()) {
+        updateSyncFile(Paths.get(childFilePathName),childSyncFile.getParentFolderId(),childSyncFile);
       }
  else {
-        updateSyncFile(Paths.get(childFilePathName),childSyncFile.getParentFolderId(),childSyncFile);
+        childSyncFile.setFilePathName(childFilePathName);
+        update(childSyncFile);
       }
     }
     return syncFile;

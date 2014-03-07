@@ -21,14 +21,11 @@
   sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_UPDATED_REMOTE);
   sourceSyncFile.setVersion(targetSyncFile.getVersion());
   SyncFileService.update(sourceSyncFile);
-  if (Files.exists(sourceFilePath)) {
-    String type=targetSyncFile.getType();
-    if (type.equals(SyncFile.TYPE_FILE)) {
-      String checksum=FileUtil.getChecksum(sourceFilePath);
-      if (checksum.equals(targetSyncFile.getChecksum())) {
-        return;
-      }
-      downloadFile(sourceSyncFile);
+  if (Files.exists(sourceFilePath) && !targetSyncFile.isFolder()) {
+    String checksum=FileUtil.getChecksum(sourceFilePath);
+    if (checksum.equals(targetSyncFile.getChecksum())) {
+      return;
     }
+    downloadFile(sourceSyncFile);
   }
 }
