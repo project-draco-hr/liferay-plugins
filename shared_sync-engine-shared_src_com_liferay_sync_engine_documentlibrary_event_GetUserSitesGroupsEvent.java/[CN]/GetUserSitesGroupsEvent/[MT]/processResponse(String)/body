@@ -1,10 +1,31 @@
 {
+  Set<Long> remoteSyncSiteIds=new HashSet<Long>();
   ObjectMapper objectMapper=new ObjectMapper();
-  List<SyncSite> syncSites=objectMapper.readValue(response,new TypeReference<List<SyncSite>>(){
+  List<SyncSite> remoteSyncSites=objectMapper.readValue(response,new TypeReference<List<SyncSite>>(){
   }
 );
-  for (  SyncSite syncSite : syncSites) {
-    syncSite.setSyncAccountId(getSyncAccountId());
-    SyncSiteService.update(syncSite);
+  for (  SyncSite remoteSyncSite : remoteSyncSites) {
+    SyncSite localSyncSite=SyncSiteService.fetchSyncSite(remoteSyncSite.getGroupId(),getSyncAccountId());
+    if (localSyncSite == null) {
+      remoteSyncSite.setSyncAccountId(getSyncAccountId());
+      SyncSiteService.update(remoteSyncSite);
+      remoteSyncSiteIds.add(remoteSyncSite.getSyncSiteId());
+    }
+ else {
+      localSyncSite.setDescription(remoteSyncSite.getDescription());
+      localSyncSite.setFriendlyURL(remoteSyncSite.getFriendlyURL());
+      localSyncSite.setName(remoteSyncSite.getName());
+      localSyncSite.setType(remoteSyncSite.getType());
+      localSyncSite.setTypeSettings(remoteSyncSite.getTypeSettings());
+      localSyncSite.setSite(remoteSyncSite.getSite());
+      SyncSiteService.update(localSyncSite);
+      remoteSyncSiteIds.add(localSyncSite.getSyncSiteId());
+    }
+  }
+  for (  SyncSite localSyncSite : SyncSiteService.findSyncSites(getSyncAccountId())) {
+    if (remoteSyncSiteIds.contains(localSyncSite.getSyncSiteId())) {
+      continue;
+    }
+    SyncSiteService.deleteSyncSite(localSyncSite.getSyncSiteId());
   }
 }
