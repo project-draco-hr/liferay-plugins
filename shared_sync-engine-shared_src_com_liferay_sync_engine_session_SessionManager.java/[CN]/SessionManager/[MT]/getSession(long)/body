@@ -6,7 +6,7 @@
   try {
     SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncAccountId);
     URL url=new URL(syncAccount.getUrl());
-    session=new Session(url,syncAccount.getLogin(),Encryptor.decrypt(syncAccount.getPassword()));
+    session=new Session(url,syncAccount.getLogin(),Encryptor.decrypt(syncAccount.getPassword()),syncAccount.isTrustSelfSigned());
     _sessions.put(syncAccountId,session);
     return session;
   }
