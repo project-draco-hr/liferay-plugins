@@ -2,9 +2,26 @@
   if (!DLStoreUtil.hasDirectory(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX)) {
     return;
   }
-  String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX);
-  Arrays.sort(fileNames);
-  for (int i=0; i < fileNames.length - 50; i++) {
-    DLStoreUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM,fileNames[i]);
+  String[] directoryNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX);
+  Date now=new Date();
+  for (  String directoryName : directoryNames) {
+    String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,directoryName);
+    File file=null;
+    for (    String fileName : fileNames) {
+      try {
+        file=DLStoreUtil.getFile(companyId,CompanyConstants.SYSTEM,fileName);
+      }
+ catch (      Exception e) {
+        if (_log.isWarnEnabled()) {
+          _log.error("Unable to get temp file " + e.getMessage());
+        }
+      }
+      if (file != null) {
+        break;
+      }
+    }
+    if ((file != null) && (now.getTime() - file.lastModified()) > Time.DAY) {
+      DLStoreUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM,directoryName);
+    }
   }
 }
