@@ -7,6 +7,8 @@
   for (  SyncSite remoteSyncSite : remoteSyncSites) {
     SyncSite localSyncSite=SyncSiteService.fetchSyncSite(remoteSyncSite.getGroupId(),getSyncAccountId());
     if (localSyncSite == null) {
+      SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+      remoteSyncSite.setFilePathName(syncAccount.getFilePathName() + "/" + remoteSyncSite.getName());
       remoteSyncSite.setSyncAccountId(getSyncAccountId());
       SyncSiteService.update(remoteSyncSite);
       remoteSyncSiteIds.add(remoteSyncSite.getSyncSiteId());

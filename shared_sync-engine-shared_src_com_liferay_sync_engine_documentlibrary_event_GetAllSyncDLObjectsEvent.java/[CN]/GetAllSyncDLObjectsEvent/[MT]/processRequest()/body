@@ -1,0 +1,10 @@
+{
+  SyncSite syncSite=(SyncSite)getParameterValue("syncSite");
+  String filePathName=syncSite.getFilePathName();
+  SyncFile syncFile=SyncFileService.fetchSyncFile(filePathName,getSyncAccountId());
+  if (syncFile == null) {
+    Files.createDirectories(Paths.get(filePathName));
+    SyncFileService.addSyncFile(null,null,filePathName,FileUtil.getFileKey(filePathName),filePathName,null,filePathName,0,syncSite.getGroupId(),syncSite.getSyncAccountId(),SyncFile.TYPE_FOLDER);
+  }
+  return super.processRequest();
+}
