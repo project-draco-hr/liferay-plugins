@@ -3,9 +3,9 @@
     return;
   }
   Date now=new Date();
-  String[] directoryNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX);
-  for (  String directoryName : directoryNames) {
-    String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,directoryName);
+  String[] dirNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,_TEMP_DIR_NAME_PREFIX);
+  for (  String dirName : dirNames) {
+    String[] fileNames=DLStoreUtil.getFileNames(companyId,CompanyConstants.SYSTEM,dirName);
     File file=null;
     for (    String fileName : fileNames) {
       try {
@@ -21,7 +21,7 @@
       }
     }
     if ((file != null) && (now.getTime() - file.lastModified()) > Time.DAY) {
-      DLStoreUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM,directoryName);
+      DLStoreUtil.deleteDirectory(companyId,CompanyConstants.SYSTEM,dirName);
     }
   }
 }
