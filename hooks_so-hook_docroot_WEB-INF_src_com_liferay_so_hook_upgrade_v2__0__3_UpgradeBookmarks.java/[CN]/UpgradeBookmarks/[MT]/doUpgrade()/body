@@ -1,18 +1,23 @@
 {
-  List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
-  for (  Group group : groups) {
-    LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),group.hasPrivateLayouts());
-    String themeId=layoutSet.getThemeId();
-    if (!themeId.equals("so_WAR_sotheme")) {
-      continue;
+  ActionableDynamicQuery actionableDynamicQuery=new BookmarksFolderActionableDynamicQuery(){
+    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+      Property columnIdProperty=PropertyFactoryUtil.forName("name");
+      dynamicQuery.add(columnIdProperty.eq("Bookmarks"));
     }
-    List<BookmarksFolder> folders=BookmarksFolderLocalServiceUtil.getFolders(group.getGroupId());
-    for (    BookmarksFolder folder : folders) {
-      String name=folder.getName();
-      if (!name.equals("Bookmarks")) {
-        continue;
+    @Override protected void performAction(    Object object) throws PortalException, SystemException {
+      BookmarksFolder bookmarksFolder=(BookmarksFolder)object;
+      Group group=GroupLocalServiceUtil.fetchGroup(bookmarksFolder.getGroupId());
+      if (group == null) {
+        return;
       }
-      BookmarksFolderLocalServiceUtil.updateFolder(folder.getUserId(),folder.getFolderId(),folder.getParentFolderId(),name,folder.getDescription(),true,new ServiceContext());
+      LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(group.getGroupId(),group.hasPrivateLayouts());
+      String themeId=layoutSet.getThemeId();
+      if (!themeId.equals("so_WAR_sotheme")) {
+        return;
+      }
+      BookmarksFolderLocalServiceUtil.updateFolder(bookmarksFolder.getUserId(),bookmarksFolder.getFolderId(),bookmarksFolder.getParentFolderId(),bookmarksFolder.getName(),bookmarksFolder.getDescription(),true,new ServiceContext());
     }
   }
+;
+  actionableDynamicQuery.performActions();
 }
