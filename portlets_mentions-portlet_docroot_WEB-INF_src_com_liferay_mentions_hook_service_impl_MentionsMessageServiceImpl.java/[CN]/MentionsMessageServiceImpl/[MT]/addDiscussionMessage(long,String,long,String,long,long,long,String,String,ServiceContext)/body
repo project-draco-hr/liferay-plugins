@@ -1,5 +1,9 @@
 {
   MBMessage message=super.addDiscussionMessage(userId,userName,groupId,className,classPK,threadId,parentMessageId,subject,body,serviceContext);
+  long siteGroupId=PortalUtil.getSiteGroupId(message.getGroupId());
+  if (!_isMentionsEnabled(siteGroupId)) {
+    return message;
+  }
   notifyUsers(message,serviceContext);
   return message;
 }
