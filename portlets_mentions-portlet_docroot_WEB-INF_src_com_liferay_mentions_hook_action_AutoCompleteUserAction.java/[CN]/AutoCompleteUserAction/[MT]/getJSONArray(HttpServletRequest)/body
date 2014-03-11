@@ -2,7 +2,7 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String query=ParamUtil.getString(request,"query") + StringPool.STAR;
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
-  Hits hits=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),query,query,query,query,StringPool.BLANK,WorkflowConstants.STATUS_APPROVED,null,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(Sort)null);
+  Hits hits=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),query,query,query,query,StringPool.BLANK,WorkflowConstants.STATUS_APPROVED,null,false,0,100,(Sort)null);
   List<User> users=UsersAdminUtil.getUsers(hits);
   for (  User user : users) {
     if (user.isDefaultUser() || (themeDisplay.getUserId() == user.getUserId())) {
