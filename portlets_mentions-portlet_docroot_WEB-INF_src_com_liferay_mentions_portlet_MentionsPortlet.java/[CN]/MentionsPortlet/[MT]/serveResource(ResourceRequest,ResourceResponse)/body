@@ -1,0 +1,17 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  try {
+    if (!_isMentionsEnabled(themeDisplay.getSiteGroupId())) {
+      return;
+    }
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
+    JSONArray jsonArray=getJSONArray(request);
+    response.setContentType(ContentTypes.APPLICATION_JSON);
+    ServletResponseUtil.write(response,jsonArray.toString());
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
+  return;
+}
