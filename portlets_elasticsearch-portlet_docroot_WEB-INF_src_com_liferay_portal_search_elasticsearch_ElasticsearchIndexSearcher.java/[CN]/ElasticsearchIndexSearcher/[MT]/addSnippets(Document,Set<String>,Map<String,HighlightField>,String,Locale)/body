@@ -2,6 +2,11 @@
   String snippet=StringPool.BLANK;
   String localizedContentName=DocumentImpl.getLocalizedName(locale,fieldName);
   HighlightField highlightField=highlightFields.get(localizedContentName);
+  String snippetFieldName=localizedContentName;
+  if (highlightField == null) {
+    highlightField=highlightFields.get(fieldName);
+    snippetFieldName=fieldName;
+  }
   if (highlightField != null) {
     Text[] texts=highlightField.fragments();
     StringBundler sb=new StringBundler(texts.length * 2);
@@ -17,10 +22,5 @@
   }
   snippet=StringUtil.replace(snippet,"<em>",StringPool.BLANK);
   snippet=StringUtil.replace(snippet,"</em>",StringPool.BLANK);
-  String snippetFieldName=localizedContentName;
-  if (highlightField == null) {
-    highlightField=highlightFields.get(fieldName);
-    snippetFieldName=fieldName;
-  }
   document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetFieldName),snippet);
 }
