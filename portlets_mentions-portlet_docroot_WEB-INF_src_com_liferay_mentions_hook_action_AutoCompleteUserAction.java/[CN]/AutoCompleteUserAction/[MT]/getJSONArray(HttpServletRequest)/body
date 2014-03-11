@@ -8,13 +8,12 @@
     if (user.isDefaultUser() || (themeDisplay.getUserId() == user.getUserId())) {
       continue;
     }
-    JSONObject userJSONObject=JSONFactoryUtil.createJSONObject();
-    String portraitURL=user.getPortraitURL(themeDisplay);
-    userJSONObject.put("portrait",portraitURL);
-    userJSONObject.put("fullName",user.getFullName());
-    userJSONObject.put("screenName",StringPool.AT + user.getScreenName());
-    userJSONObject.put("text",user.getScreenName());
-    jsonArray.put(userJSONObject);
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+    jsonObject.put("fullName",user.getFullName());
+    jsonObject.put("portrait",user.getPortraitURL(themeDisplay));
+    jsonObject.put("screenName",StringPool.AT + user.getScreenName());
+    jsonObject.put("text",user.getScreenName());
+    jsonArray.put(jsonObject);
   }
   return jsonArray;
 }
