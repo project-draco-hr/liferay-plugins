@@ -1,0 +1,15 @@
+{
+  List<Organization> organizations=OrganizationLocalServiceUtil.getGroupOrganizations(groupId);
+  for (  Organization organization : organizations) {
+    if (OrganizationLocalServiceUtil.hasUserOrganization(userId,organization.getOrganizationId())) {
+      return true;
+    }
+  }
+  List<UserGroup> userGroups=UserGroupLocalServiceUtil.getGroupUserGroups(groupId);
+  for (  UserGroup userGroup : userGroups) {
+    if (UserGroupLocalServiceUtil.hasUserUserGroup(userId,userGroup.getUserGroupId())) {
+      return true;
+    }
+  }
+  return false;
+}
