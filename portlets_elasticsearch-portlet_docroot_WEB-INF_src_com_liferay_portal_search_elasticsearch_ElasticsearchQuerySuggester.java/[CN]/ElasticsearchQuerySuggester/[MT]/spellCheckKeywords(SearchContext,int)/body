@@ -1,0 +1,28 @@
+{
+  StopWatch stopWatch=null;
+  if (_log.isInfoEnabled()) {
+    stopWatch=new StopWatch();
+    stopWatch.start();
+  }
+  SuggestBuilder.SuggestionBuilder<TermSuggestionBuilder> suggestionBuilder=SuggestBuilder.termSuggestion(_SPELL_CHECK_REQUEST_ID);
+  Suggest.Suggestion suggestion=getSuggestion(searchContext,suggestionBuilder,DocumentTypes.SPELL_CHECK_DOCUMENT_TYPE,Field.SPELL_CHECK_WORD,_SPELL_CHECK_REQUEST_ID,max);
+  Map<String,List<String>> suggestionsMap=new HashMap<String,List<String>>();
+  for (  Object entry : suggestion.getEntries()) {
+    Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> suggestionEntry=(Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>)entry;
+    String text=suggestionEntry.getText().string();
+    List<String> suggestionsList=suggestionsMap.get(text);
+    if (suggestionsList == null) {
+      suggestionsList=new ArrayList<String>();
+      suggestionsMap.put(text,suggestionsList);
+    }
+    for (    Suggest.Suggestion.Entry.Option option : suggestionEntry.getOptions()) {
+      String optionText=option.getText().string();
+      suggestionsList.add(optionText);
+    }
+  }
+  if (_log.isInfoEnabled()) {
+    stopWatch.stop();
+    _log.info("Spellcheck consumed: " + stopWatch.getTime() + "ms");
+  }
+  return suggestionsMap;
+}

@@ -1,0 +1,20 @@
+{
+  StopWatch stopWatch=null;
+  if (_log.isInfoEnabled()) {
+    stopWatch=new StopWatch();
+    stopWatch.start();
+  }
+  SuggestBuilder.SuggestionBuilder<PhraseSuggestionBuilder> suggestionBuilder=SuggestBuilder.phraseSuggestion(_KEYWORD_QUERY_REQUEST_ID);
+  Suggest.Suggestion suggestion=getSuggestion(searchContext,suggestionBuilder,DocumentTypes.KEYWORD_QUERY_DOCUMENT_TYPE,Field.KEYWORD_SEARCH,_KEYWORD_QUERY_REQUEST_ID,max);
+  Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option> suggestionEntry=(Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>)suggestion.getEntries().get(0);
+  List<String> keywordQueries=new ArrayList<String>();
+  for (  Suggest.Suggestion.Entry.Option option : suggestionEntry.getOptions()) {
+    String optionText=option.getText().string();
+    keywordQueries.add(optionText);
+  }
+  if (_log.isInfoEnabled()) {
+    stopWatch.stop();
+    _log.info("Query suggestions consumed: " + stopWatch.getTime() + "ms");
+  }
+  return keywordQueries.toArray(new String[keywordQueries.size()]);
+}
