@@ -19,7 +19,9 @@
   Group group=user.getGroup();
   String portalURL=_getPortalURL(group.getCompanyId(),group.getGroupId());
   attributes.put("portalURL",portalURL);
-  attributes.put("portletName",LanguageUtil.get(getPortletConfig(),user.getLocale(),"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
+  PortletConfig portletConfig=getPortletConfig();
+  ResourceBundle resourceBundle=portletConfig.getResourceBundle(user.getLocale());
+  attributes.put("portletName",LanguageUtil.get(resourceBundle,"javax.portlet.title.".concat(PortletKeys.CALENDAR)));
   String startTime=dateFormatDateTime.format(calendarBooking.getStartTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("startTime",startTime);
   attributes.put("title",calendarBooking.getTitle(user.getLocale()));
