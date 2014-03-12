@@ -4,7 +4,6 @@
   ElasticsearchConnectionManager elasticsearchConnectionManager=ElasticsearchConnectionManager.getInstance();
   Client client=elasticsearchConnectionManager.getClient();
   SearchRequestBuilder searchRequestBuilder=client.prepareSearch(String.valueOf(searchContext.getCompanyId()));
-  searchRequestBuilder.setTypes(DocumentTypes.LIFERAY);
   addFacets(searchRequestBuilder,searchContext);
   addHighlights(searchRequestBuilder,query.getQueryConfig());
   addPagination(searchRequestBuilder,searchContext.getStart(),searchContext.getEnd());
@@ -12,6 +11,7 @@
   addSort(searchRequestBuilder,searchContext.getSorts());
   QueryBuilder queryBuilder=QueryBuilders.queryString(query.toString());
   searchRequestBuilder.setQuery(queryBuilder);
+  searchRequestBuilder.setTypes(DocumentTypes.LIFERAY);
   SearchRequest searchRequest=searchRequestBuilder.request();
   ActionFuture<SearchResponse> future=client.search(searchRequest);
   SearchResponse searchResponse=future.actionGet();
