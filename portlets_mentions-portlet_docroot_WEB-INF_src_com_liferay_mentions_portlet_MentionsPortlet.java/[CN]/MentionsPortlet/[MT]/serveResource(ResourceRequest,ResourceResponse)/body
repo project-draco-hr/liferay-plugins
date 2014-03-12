@@ -1,12 +1,12 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
+    ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
     if (!MentionsUtil.isMentionsEnabled(themeDisplay.getSiteGroupId())) {
       return;
     }
     HttpServletRequest request=PortalUtil.getHttpServletRequest(resourceRequest);
-    HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
     JSONArray jsonArray=getJSONArray(request);
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(resourceResponse);
     response.setContentType(ContentTypes.APPLICATION_JSON);
     ServletResponseUtil.write(response,jsonArray.toString());
   }
