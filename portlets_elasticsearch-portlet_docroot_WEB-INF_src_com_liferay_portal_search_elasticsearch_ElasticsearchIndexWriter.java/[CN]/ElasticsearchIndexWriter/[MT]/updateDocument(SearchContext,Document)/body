@@ -1,12 +1,3 @@
 {
-  try {
-    Client client=getClient();
-    UpdateRequestBuilder updateRequestBuilder=buildUpdateRequestBuilder(searchContext,client,document);
-    Future<UpdateResponse> future=updateRequestBuilder.execute();
-    UpdateResponse updateResponse=future.get();
-    LogUtil.logActionResponse(_log,updateResponse);
-  }
- catch (  Exception e) {
-    throw new SearchException("Unable to update document " + document,e);
-  }
+  _elasticsearchUpdateDocumentCommand.updateDocument(DocumentTypes.LIFERAY_DOCUMENT_TYPE,searchContext,document);
 }

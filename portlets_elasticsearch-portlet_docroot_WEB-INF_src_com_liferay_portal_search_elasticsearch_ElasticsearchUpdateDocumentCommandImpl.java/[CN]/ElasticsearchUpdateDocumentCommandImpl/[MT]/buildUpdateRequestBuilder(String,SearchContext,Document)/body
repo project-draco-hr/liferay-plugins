@@ -1,5 +1,6 @@
 {
-  UpdateRequestBuilder updateRequestBuilder=client.prepareUpdate(String.valueOf(searchContext.getCompanyId()),DocumentTypes.LIFERAY_DOCUMENT_TYPE,document.getUID());
+  Client client=getClient();
+  UpdateRequestBuilder updateRequestBuilder=client.prepareUpdate(String.valueOf(searchContext.getCompanyId()),documentType,document.getUID());
   String elasticSearchDocument=_elasticsearchDocumentFactory.getElasticsearchDocument(document);
   updateRequestBuilder.setDoc(elasticSearchDocument);
   updateRequestBuilder.setDocAsUpsert(true);
