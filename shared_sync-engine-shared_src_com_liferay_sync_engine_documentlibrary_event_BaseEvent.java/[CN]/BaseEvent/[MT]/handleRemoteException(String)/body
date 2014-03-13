@@ -3,14 +3,14 @@
     return false;
   }
   ObjectMapper objectMapper=new ObjectMapper();
-  JsonNode jsonNode=objectMapper.readTree(response);
-  JsonNode exceptionJsonNode=jsonNode.get("exception");
+  JsonNode responseJsonNode=objectMapper.readTree(response);
+  JsonNode exceptionJsonNode=responseJsonNode.get("exception");
   if (exceptionJsonNode == null) {
     return false;
   }
   String exception=exceptionJsonNode.asText();
   if (exception.equals("java.lang.SecurityException")) {
-    JsonNode messageJsonNode=jsonNode.get("message");
+    JsonNode messageJsonNode=responseJsonNode.get("message");
     String message=messageJsonNode.asText();
     if (message.equals("Authenticated access required")) {
       throw new HttpResponseException(HttpServletResponse.SC_UNAUTHORIZED,message);
