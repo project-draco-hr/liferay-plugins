@@ -1,0 +1,29 @@
+{
+  RetryTemplate retryTemplate=new RetryTemplate();
+  ExponentialBackOffPolicy exponentialBackOffPolicy=new ExponentialBackOffPolicy();
+  exponentialBackOffPolicy.setInitialInterval(1000);
+  exponentialBackOffPolicy.setMaxInterval(300000);
+  retryTemplate.setBackOffPolicy(exponentialBackOffPolicy);
+  SimpleRetryPolicy simpleRetryPolicy=new SimpleRetryPolicy();
+  simpleRetryPolicy.setMaxAttempts(25);
+  retryTemplate.setRetryPolicy(simpleRetryPolicy);
+  RetryCallback<Object> retryCallback=new RetryCallback<Object>(){
+    @Override public Object doWithRetry(    RetryContext retryContext) throws Exception {
+      SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(_syncAccountId);
+      if (_logger.isDebugEnabled()) {
+        _logger.debug("Attempting to reconnect to {}. Retry #{}",syncAccount.getUrl(),retryContext.getRetryCount() + 1);
+      }
+      syncAccount=SyncAccountService.synchronizeSyncAccount(_syncAccountId);
+      if (syncAccount.getState() == SyncAccount.STATE_DISCONNECTED) {
+        throw new Exception();
+      }
+      return null;
+    }
+  }
+;
+  try {
+    retryTemplate.execute(retryCallback);
+  }
+ catch (  Exception e) {
+  }
+}

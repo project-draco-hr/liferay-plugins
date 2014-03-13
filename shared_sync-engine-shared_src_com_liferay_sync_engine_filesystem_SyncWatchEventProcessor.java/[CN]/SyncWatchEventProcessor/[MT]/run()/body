@@ -4,6 +4,10 @@
   }
   List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findAll("eventType",true);
   for (  SyncWatchEvent syncWatchEvent : syncWatchEvents) {
+    SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
+    if (syncAccount.getState() == SyncAccount.STATE_DISCONNECTED) {
+      continue;
+    }
     if (_processedSyncWatchEventIds.contains(syncWatchEvent.getSyncWatchEventId())) {
       SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
       continue;
@@ -39,7 +43,10 @@
  catch (    Exception e) {
       _logger.error(e.getMessage(),e);
     }
-    SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
+    syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
+    if (syncAccount.getState() != SyncAccount.STATE_DISCONNECTED) {
+      SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
+    }
   }
   _processedSyncWatchEventIds.clear();
 }

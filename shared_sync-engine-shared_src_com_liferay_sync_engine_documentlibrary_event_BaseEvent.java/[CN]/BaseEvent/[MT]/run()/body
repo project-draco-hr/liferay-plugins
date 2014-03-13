@@ -1,7 +1,7 @@
 {
   try {
     String response=processRequest();
-    if (response == null) {
+    if ((response == null) || handleRemoteException(response)) {
       return;
     }
     processResponse(response);
@@ -24,5 +24,6 @@
       }
     }
     SyncAccountService.update(syncAccount);
+    retryServerConnection();
   }
 }

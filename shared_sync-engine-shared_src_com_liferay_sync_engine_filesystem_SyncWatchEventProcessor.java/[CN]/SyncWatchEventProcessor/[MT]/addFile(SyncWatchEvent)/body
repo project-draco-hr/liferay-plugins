@@ -18,5 +18,8 @@
  else {
     SyncFileService.moveFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
   }
-  _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
+  if (syncAccount.getState() != SyncAccount.STATE_DISCONNECTED) {
+    _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
+  }
 }
