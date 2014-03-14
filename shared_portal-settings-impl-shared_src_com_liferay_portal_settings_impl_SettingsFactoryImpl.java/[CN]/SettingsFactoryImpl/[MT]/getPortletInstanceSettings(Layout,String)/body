@@ -1,4 +1,5 @@
 {
+  Settings defaultGroupSettings=getGroupSettings(layout.getCompanyId(),portletId,PortletKeys.PREFS_OWNER_TYPE_LAYOUT_DEFAULTS_GROUP);
   long ownerId=PortletKeys.PREFS_OWNER_ID_DEFAULT;
   int ownerType=PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
   if (PortletConstants.hasUserId(portletId)) {
@@ -6,12 +7,5 @@
     ownerType=PortletKeys.PREFS_OWNER_TYPE_USER;
   }
   PortletPreferences portletInstancePortletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(layout.getCompanyId(),ownerId,ownerType,layout.getPlid(),portletId);
-  PortletInstanceSettings portletInstanceSettings=new PortletInstanceSettings(portletInstancePortletPreferences);
-  PortletPreferences companyPortletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(layout.getCompanyId(),layout.getCompanyId(),PortletKeys.PREFS_OWNER_TYPE_LAYOUT_DEFAULTS_COMPANY,0,portletId);
-  portletInstanceSettings.setCompanyPortletPreferences(companyPortletPreferences);
-  PortletPreferences groupPortletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(layout.getCompanyId(),layout.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_LAYOUT_DEFAULTS_GROUP,0,portletId);
-  portletInstanceSettings.setGroupPortletPreferences(groupPortletPreferences);
-  portletInstanceSettings.setPortalPreferences(getPortalPreferences(layout.getCompanyId()));
-  portletInstanceSettings.setPortalProperties(getPortalProperties(portletId));
-  return portletInstanceSettings;
+  return new PortletPreferencesSettings(portletInstancePortletPreferences,defaultGroupSettings);
 }
