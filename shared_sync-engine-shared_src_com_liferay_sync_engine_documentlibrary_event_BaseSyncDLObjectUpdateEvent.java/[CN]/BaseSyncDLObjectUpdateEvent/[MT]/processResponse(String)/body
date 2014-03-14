@@ -14,16 +14,13 @@
       addFile(syncFile,filePathName);
     }
  else     if (event.equals(SyncFile.EVENT_DELETE)) {
-      syncFile=SyncFileService.fetchSyncFile(syncFile.getRepositoryId(),getSyncAccountId(),syncFile.getTypePK());
-      syncFile.setState(SyncFile.STATE_DELETED);
-      syncFile.setUiEvent(SyncFile.UI_EVENT_DELETED_REMOTE);
-      SyncFileService.update(syncFile);
+      deleteFile(syncFile,false);
     }
  else     if (event.equals(SyncFile.EVENT_MOVE)) {
       moveFile(syncFile,filePathName);
     }
  else     if (event.equals(SyncFile.EVENT_TRASH)) {
-      deleteFile(syncFile);
+      deleteFile(syncFile,true);
     }
  else     if (event.equals(SyncFile.EVENT_UPDATE)) {
       updateFile(syncFile);

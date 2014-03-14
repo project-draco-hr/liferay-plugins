@@ -3,7 +3,12 @@
   if (sourceSyncFile == null) {
     return;
   }
-  sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_TRASHED_REMOTE);
+  if (trashed) {
+    sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_TRASHED_REMOTE);
+  }
+ else {
+    sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_DELETED_REMOTE);
+  }
   Files.deleteIfExists(Paths.get(sourceSyncFile.getFilePathName()));
   SyncFileService.deleteSyncFile(sourceSyncFile);
 }
