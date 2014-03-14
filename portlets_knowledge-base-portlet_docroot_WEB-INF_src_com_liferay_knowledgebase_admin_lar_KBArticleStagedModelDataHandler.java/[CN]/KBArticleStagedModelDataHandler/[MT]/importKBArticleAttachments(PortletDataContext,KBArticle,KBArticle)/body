@@ -6,9 +6,10 @@
   InputStream inputStream=null;
   for (  Element dlFileEntryElement : dlFileEntryElements) {
     try {
-      inputStream=portletDataContext.getZipEntryAsInputStream(dlFileEntryElement.attributeValue("path"));
+      byte[] bytes=portletDataContext.getZipEntryAsByteArray(dlFileEntryElement.attributeValue("path"));
+      inputStream=new UnsyncByteArrayInputStream(bytes);
       String fileName=dlFileEntryElement.attributeValue("file-name");
-      String mimeType=MimeTypesUtil.getContentType(fileName);
+      String mimeType=KnowledgeBaseUtil.getMimeType(bytes,fileName);
       PortletFileRepositoryUtil.addPortletFileEntry(portletDataContext.getScopeGroupId(),portletDataContext.getUserId(importedKBArticle.getUserUuid()),KBArticle.class.getName(),importedKBArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ADMIN,importedKBArticle.getAttachmentsFolderId(),inputStream,fileName,mimeType,true);
     }
  catch (    DuplicateFileException dfe) {

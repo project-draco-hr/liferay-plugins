@@ -15,10 +15,10 @@
   for (  String fileName : fileNames) {
     InputStream inputStream=null;
     try {
-      File file=DLStoreUtil.getFile(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      byte[] bytes=DLStoreUtil.getFileAsBytes(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
+      inputStream=new UnsyncByteArrayInputStream(bytes);
+      String mimeType=KnowledgeBaseUtil.getMimeType(bytes,fileName);
       String shortFileName=FileUtil.getShortFileName(fileName);
-      String mimeType=MimeTypesUtil.getContentType(file,shortFileName);
-      inputStream=DLStoreUtil.getFileAsStream(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,fileName);
       PortletFileRepositoryUtil.addPortletFileEntry(serviceContext.getScopeGroupId(),userId,KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName,mimeType,true);
     }
   finally {
