@@ -1,16 +1,8 @@
 {
-  TimeZone timeZone=TimeZoneUtil.getDefault();
-  try {
-    timeZone=CalendarBookingLocalServiceUtil.getTimeZone(calendarBooking);
-  }
- catch (  Exception e) {
-    if (_log.isWarnEnabled()) {
-      _log.warn(e);
-    }
-  }
   Calendar jCalendar=JCalendarUtil.getJCalendar(calendarBooking.getStartTime());
   Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(startDateValue.year(),startDateValue.month() - 1,startDateValue.day(),jCalendar.get(Calendar.HOUR_OF_DAY),jCalendar.get(Calendar.MINUTE),jCalendar.get(Calendar.SECOND),jCalendar.get(Calendar.MILLISECOND),TimeZone.getTimeZone(StringPool.UTC));
-  int shift=JCalendarUtil.getDstShift(jCalendar,startTimeJCalendar,timeZone);
+  TimeZone timeZone=_getTimeZone(calendarBooking);
+  int shift=JCalendarUtil.getDSTShift(jCalendar,startTimeJCalendar,timeZone);
   startTimeJCalendar.add(Calendar.MILLISECOND,shift);
   return startTimeJCalendar;
 }
