@@ -88,38 +88,40 @@
         groupJSONObject.put("leaveURL",siteAssignmentsPortletURL.toString());
       }
     }
-  }
-  if (GroupPermissionUtil.contains(permissionChecker,group.getGroupId(),ActionKeys.DELETE)) {
-    if (group.getGroupId() == themeDisplay.getSiteGroupId()) {
-      groupJSONObject.put("deleteURL",StringPool.FALSE);
+    if (GroupPermissionUtil.contains(permissionChecker,group.getGroupId(),ActionKeys.DELETE)) {
+      if (group.getGroupId() == themeDisplay.getSiteGroupId()) {
+        groupJSONObject.put("deleteURL",StringPool.FALSE);
+      }
+ else {
+        PortletURL deletePortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
+        deletePortletURL.setWindowState(WindowState.NORMAL);
+        deletePortletURL.setParameter("struts_action","/sites_admin/edit_site");
+        deletePortletURL.setParameter(Constants.CMD,Constants.DELETE);
+        deletePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+        deletePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+        groupJSONObject.put("deleteURL",deletePortletURL.toString());
+      }
+    }
+    PortletURL favoritePortletURL=resourceResponse.createActionURL();
+    favoritePortletURL.setWindowState(WindowState.NORMAL);
+    favoritePortletURL.setParameter(ActionRequest.ACTION_NAME,"updateFavorites");
+    favoritePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
+    favoritePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
+    if (!member && !group.hasPublicLayouts()) {
+      groupJSONObject.put("favoriteURL",StringPool.BLANK);
     }
  else {
-      PortletURL deletePortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITES_ADMIN);
-      deletePortletURL.setWindowState(WindowState.NORMAL);
-      deletePortletURL.setParameter("struts_action","/sites_admin/edit_site");
-      deletePortletURL.setParameter(Constants.CMD,Constants.DELETE);
-      deletePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
-      deletePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
-      groupJSONObject.put("deleteURL",deletePortletURL.toString());
-    }
-  }
-  PortletURL favoritePortletURL=resourceResponse.createActionURL();
-  favoritePortletURL.setWindowState(WindowState.NORMAL);
-  favoritePortletURL.setParameter(ActionRequest.ACTION_NAME,"updateFavorites");
-  favoritePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
-  favoritePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
-  if (!member && !group.hasPublicLayouts()) {
-    groupJSONObject.put("favoriteURL",StringPool.BLANK);
-  }
+      if (!FavoriteSiteLocalServiceUtil.isFavoriteSite(themeDisplay.getUserId(),group.getGroupId())) {
+        favoritePortletURL.setParameter(Constants.CMD,Constants.ADD);
+        groupJSONObject.put("favoriteURL",favoritePortletURL.toString());
+      }
  else {
-    if (!FavoriteSiteLocalServiceUtil.isFavoriteSite(themeDisplay.getUserId(),group.getGroupId())) {
-      favoritePortletURL.setParameter(Constants.CMD,Constants.ADD);
-      groupJSONObject.put("favoriteURL",favoritePortletURL.toString());
+        favoritePortletURL.setParameter(Constants.CMD,Constants.DELETE);
+        groupJSONObject.put("unfavoriteURL",favoritePortletURL.toString());
+      }
     }
- else {
-      favoritePortletURL.setParameter(Constants.CMD,Constants.DELETE);
-      groupJSONObject.put("unfavoriteURL",favoritePortletURL.toString());
-    }
+    jsonArray.put(groupJSONObject);
   }
-  jsonArray.put(groupJSONObject);
+  jsonObject.put("sites",jsonArray);
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
 }
