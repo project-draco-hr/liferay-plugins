@@ -2,8 +2,7 @@
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
   String query=ParamUtil.getString(request,"query") + StringPool.STAR;
-  Hits hits=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),query,query,query,query,StringPool.BLANK,WorkflowConstants.STATUS_APPROVED,null,false,0,100,(Sort)null);
-  List<User> users=UsersAdminUtil.getUsers(hits);
+  List<User> users=MentionsUserFinderUtil.getUsers(query,themeDisplay);
   for (  User user : users) {
     if (user.isDefaultUser() || (themeDisplay.getUserId() == user.getUserId())) {
       continue;
