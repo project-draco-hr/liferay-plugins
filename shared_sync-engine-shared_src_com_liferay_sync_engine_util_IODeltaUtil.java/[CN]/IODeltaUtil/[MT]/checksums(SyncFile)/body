@@ -1,7 +1,10 @@
 {
+  if (isIgnoredFilePatchingExtension(syncFile)) {
+    return null;
+  }
   Path syncFilePath=Paths.get(syncFile.getFilePathName());
   if (Files.isDirectory(syncFilePath) || Files.notExists(syncFilePath)) {
-    return;
+    return null;
   }
   FileInputStream fileInputStream=null;
   FileChannel fileChannel=null;
@@ -10,7 +13,7 @@
   try {
     fileInputStream=new FileInputStream(syncFile.getFilePathName());
     fileChannel=fileInputStream.getChannel();
-    Path checksumsFilePath=Paths.get(PropsValues.SYNC_CONFIGURATION_DIRECTORY + "/files/" + syncFile.getSyncFileId());
+    Path checksumsFilePath=getChecksumsFilePath(syncFile);
     if (Files.notExists(checksumsFilePath)) {
       Files.createFile(checksumsFilePath);
     }
@@ -19,9 +22,11 @@
     ByteChannelWriter byteChannelWriter=new ByteChannelWriter(writableByteChannel);
     DeltaUtil.checksums(fileChannel,byteChannelWriter);
     byteChannelWriter.finish();
+    return checksumsFilePath;
   }
  catch (  IOException ioe) {
     _logger.error(ioe.getMessage(),ioe);
+    return null;
   }
  finally {
     StreamUtil.cleanUp(fileInputStream);

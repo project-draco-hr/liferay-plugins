@@ -1,0 +1,15 @@
+{
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("patch",false);
+  parameters.put("syncFile",syncFile);
+  if (patch) {
+    String targetSyncFileVersion=syncFile.getVersion();
+    if (!sourceSyncFileVersion.equals(targetSyncFileVersion)) {
+      parameters.put("destinationVersion",targetSyncFileVersion);
+      parameters.put("patch",true);
+      parameters.put("sourceVersion",sourceSyncFileVersion);
+    }
+  }
+  DownloadFileEvent downloadFileEvent=new DownloadFileEvent(getSyncAccountId(),parameters);
+  downloadFileEvent.run();
+}

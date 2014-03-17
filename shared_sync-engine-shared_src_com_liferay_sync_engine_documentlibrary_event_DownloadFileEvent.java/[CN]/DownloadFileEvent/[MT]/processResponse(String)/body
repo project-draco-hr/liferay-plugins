@@ -3,8 +3,14 @@
   try {
     SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
     Path filePath=Paths.get(syncFile.getFilePathName());
-    outputStream=Files.newOutputStream(filePath);
-    outputStream.write(response.getBytes());
+    if ((Boolean)getParameterValue("patch")) {
+      InputStream inputStream=new ByteArrayInputStream(response.getBytes());
+      IODeltaUtil.patch(filePath,inputStream);
+    }
+ else {
+      outputStream=Files.newOutputStream(filePath);
+      outputStream.write(response.getBytes());
+    }
     syncFile.setFileKey(FileUtil.getFileKey(filePath));
     syncFile.setState(SyncFile.STATE_SYNCED);
     syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED);

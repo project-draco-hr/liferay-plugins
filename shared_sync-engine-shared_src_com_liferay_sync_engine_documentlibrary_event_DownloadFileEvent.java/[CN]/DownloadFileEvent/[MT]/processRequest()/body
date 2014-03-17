@@ -3,13 +3,17 @@
   syncFile.setState(SyncFile.STATE_IN_PROGRESS);
   syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADING);
   SyncFileService.update(syncFile);
-  StringBuilder sb=new StringBuilder(7);
+  StringBuilder sb=new StringBuilder(9);
   sb.append(replaceURLPath(getSyncAccountId()));
   sb.append("/");
   sb.append(syncFile.getRepositoryId());
   sb.append("/");
   sb.append(syncFile.getTypeUuid());
-  sb.append("/");
-  sb.append(getParameterValue("patch"));
+  if ((Boolean)getParameterValue("patch")) {
+    sb.append("?destinationVersion=");
+    sb.append(getParameterValue("destinationVersion"));
+    sb.append("&patch=true&sourceVersion=");
+    sb.append(getParameterValue("sourceVersion"));
+  }
   return executeGet(sb.toString(),new BaseHandler());
 }
