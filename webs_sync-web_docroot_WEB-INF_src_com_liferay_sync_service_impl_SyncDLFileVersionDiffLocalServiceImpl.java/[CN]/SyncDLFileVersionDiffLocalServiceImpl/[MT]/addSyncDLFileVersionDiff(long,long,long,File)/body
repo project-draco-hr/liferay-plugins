@@ -3,9 +3,9 @@
   SyncDLFileVersionDiff syncDLFileVersionDiff=syncDLFileVersionDiffPersistence.create(syncDLFileVersionDiffId);
   syncDLFileVersionDiff.setFileEntryId(fileEntryId);
   syncDLFileVersionDiff.setSourceFileVersionId(sourceFileVersionId);
-  syncDLFileVersionDiff.setDestinationFileVersionId(destinationFileVersionId);
+  syncDLFileVersionDiff.setTargetFileVersionId(targetFileVersionId);
   FileEntry fileEntry=dlAppService.getFileEntry(fileEntryId);
-  String dataFileName=getDataFileName(fileEntryId,sourceFileVersionId,destinationFileVersionId);
+  String dataFileName=getDataFileName(fileEntryId,sourceFileVersionId,targetFileVersionId);
   FileEntry dataFileEntry=PortletFileRepositoryUtil.addPortletFileEntry(fileEntry.getGroupId(),fileEntry.getUserId(),SyncDLFileVersionDiff.class.getName(),syncDLFileVersionDiff.getSyncDLFileVersionDiffId(),PortletKeys.DOCUMENT_LIBRARY,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,file,dataFileName,fileEntry.getMimeType(),false);
   syncDLFileVersionDiff.setDataFileEntryId(dataFileEntry.getFileEntryId());
   syncDLFileVersionDiff.setSize(file.length());

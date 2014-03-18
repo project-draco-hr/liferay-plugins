@@ -4,24 +4,24 @@
   if (Validator.isNull(sourceVersion)) {
     throw new IllegalArgumentException("Missing source version");
   }
-  String destinationVersion=ParamUtil.getString(request,"destinationVersion");
-  if (Validator.isNull(destinationVersion)) {
-    throw new IllegalArgumentException("Missing destination version");
+  String targetVersion=ParamUtil.getString(request,"targetVersion");
+  if (Validator.isNull(targetVersion)) {
+    throw new IllegalArgumentException("Missing target version");
   }
   DLFileVersion sourceFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),sourceVersion);
-  DLFileVersion destinationFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),destinationVersion);
+  DLFileVersion targetFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),targetVersion);
   if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
+    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
     ServletResponseUtil.write(response,new FileInputStream(deltaFile),deltaFile.length());
     return;
   }
-  SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),destinationFileVersion.getFileVersionId());
+  SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId());
   if (syncDLFileVersionDiff != null) {
     SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getSyncDLFileVersionDiffId());
   }
  else {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,destinationVersion);
-    syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),destinationFileVersion.getFileVersionId(),deltaFile);
+    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
+    syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId(),deltaFile);
   }
   FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
   ServletResponseUtil.write(response,dataFileEntry.getContentStream(),dataFileEntry.getSize());

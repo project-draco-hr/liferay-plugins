@@ -23,15 +23,15 @@
     StreamUtil.cleanUp(checksumsOutputStream);
     StreamUtil.cleanUp(checksumsWritableByteChannel);
   }
-  FileInputStream destinationFileInputStream=null;
-  ReadableByteChannel destinationReadableByteChannel=null;
+  FileInputStream targetFileInputStream=null;
+  ReadableByteChannel targetReadableByteChannel=null;
   InputStream checksumsInputStream=null;
   ReadableByteChannel checksumsReadableByteChannel=null;
   OutputStream deltaOutputStream=null;
   WritableByteChannel deltaOutputStreamWritableByteChannel=null;
   try {
-    destinationFileInputStream=new FileInputStream(destinationFile);
-    destinationReadableByteChannel=destinationFileInputStream.getChannel();
+    targetFileInputStream=new FileInputStream(targetFile);
+    targetReadableByteChannel=targetFileInputStream.getChannel();
     checksumsInputStream=new FileInputStream(checksumsFile);
     checksumsReadableByteChannel=Channels.newChannel(checksumsInputStream);
     ByteChannelReader checksumsByteChannelReader=new ByteChannelReader(checksumsReadableByteChannel);
@@ -39,15 +39,15 @@
     deltaOutputStream=new FileOutputStream(deltaFile);
     deltaOutputStreamWritableByteChannel=Channels.newChannel(deltaOutputStream);
     ByteChannelWriter deltaByteChannelWriter=new ByteChannelWriter(deltaOutputStreamWritableByteChannel);
-    DeltaUtil.delta(destinationReadableByteChannel,checksumsByteChannelReader,deltaByteChannelWriter);
+    DeltaUtil.delta(targetReadableByteChannel,checksumsByteChannelReader,deltaByteChannelWriter);
     deltaByteChannelWriter.finish();
   }
  catch (  Exception e) {
     throw new PortalException(e);
   }
  finally {
-    StreamUtil.cleanUp(destinationFileInputStream);
-    StreamUtil.cleanUp(destinationReadableByteChannel);
+    StreamUtil.cleanUp(targetFileInputStream);
+    StreamUtil.cleanUp(targetReadableByteChannel);
     StreamUtil.cleanUp(checksumsInputStream);
     StreamUtil.cleanUp(checksumsReadableByteChannel);
     StreamUtil.cleanUp(deltaOutputStream);
