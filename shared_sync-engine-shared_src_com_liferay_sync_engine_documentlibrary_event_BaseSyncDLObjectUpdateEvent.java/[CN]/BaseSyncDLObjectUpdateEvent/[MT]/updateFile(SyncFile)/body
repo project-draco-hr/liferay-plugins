@@ -1,5 +1,6 @@
 {
   SyncFile sourceSyncFile=SyncFileService.fetchSyncFile(targetSyncFile.getRepositoryId(),getSyncAccountId(),targetSyncFile.getTypePK());
+  String sourceVersion=sourceSyncFile.getVersion();
   Path sourceFilePath=Paths.get(sourceSyncFile.getFilePathName());
   String sourceFileName=String.valueOf(sourceFilePath.getFileName());
   if (!sourceFileName.equals(targetSyncFile.getName())) {
@@ -26,6 +27,6 @@
     if (checksum.equals(targetSyncFile.getChecksum())) {
       return;
     }
-    downloadFile(sourceSyncFile,sourceSyncFile.getVersion(),!IODeltaUtil.isIgnoredFilePatchingExtension(targetSyncFile));
+    downloadFile(sourceSyncFile,sourceVersion,!IODeltaUtil.isIgnoredFilePatchingExtension(targetSyncFile));
   }
 }

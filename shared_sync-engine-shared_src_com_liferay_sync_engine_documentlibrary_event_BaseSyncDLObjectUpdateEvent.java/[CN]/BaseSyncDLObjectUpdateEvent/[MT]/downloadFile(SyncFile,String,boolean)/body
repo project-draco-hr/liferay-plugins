@@ -1,13 +1,11 @@
 {
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("syncFile",syncFile);
-  if (patch) {
-    String targetSyncFileVersion=syncFile.getVersion();
-    if (!sourceSyncFileVersion.equals(targetSyncFileVersion)) {
-      parameters.put("destinationVersion",targetSyncFileVersion);
-      parameters.put("patch",true);
-      parameters.put("sourceVersion",sourceSyncFileVersion);
-    }
+  String targetVersion=syncFile.getVersion();
+  if (patch && !sourceVersion.equals(targetVersion)) {
+    parameters.put("patch",true);
+    parameters.put("sourceVersion",sourceVersion);
+    parameters.put("targetVersion",targetVersion);
   }
  else {
     parameters.put("patch",false);
