@@ -1,3 +1,9 @@
 {
-  return PortalUtil.getUserValue(getLockUserId(),"uuid",_lockUserUuid);
+  try {
+    User user=UserLocalServiceUtil.getUserById(getLockUserId());
+    return user.getUuid();
+  }
+ catch (  PortalException pe) {
+    return StringPool.BLANK;
+  }
 }
