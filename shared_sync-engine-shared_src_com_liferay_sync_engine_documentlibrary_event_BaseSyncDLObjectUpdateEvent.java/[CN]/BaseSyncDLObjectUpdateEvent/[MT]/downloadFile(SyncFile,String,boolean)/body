@@ -1,6 +1,5 @@
 {
   Map<String,Object> parameters=new HashMap<String,Object>();
-  parameters.put("patch",false);
   parameters.put("syncFile",syncFile);
   if (patch) {
     String targetSyncFileVersion=syncFile.getVersion();
@@ -9,6 +8,9 @@
       parameters.put("patch",true);
       parameters.put("sourceVersion",sourceSyncFileVersion);
     }
+  }
+ else {
+    parameters.put("patch",false);
   }
   DownloadFileEvent downloadFileEvent=new DownloadFileEvent(getSyncAccountId(),parameters);
   downloadFileEvent.run();
