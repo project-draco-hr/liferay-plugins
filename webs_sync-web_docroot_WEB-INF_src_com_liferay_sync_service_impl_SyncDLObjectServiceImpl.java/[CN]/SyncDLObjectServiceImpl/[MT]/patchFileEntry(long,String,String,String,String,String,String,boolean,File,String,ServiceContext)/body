@@ -7,8 +7,8 @@
     SyncDLObject syncDLObject=updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,patchedFile,checksum,serviceContext);
     if (PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
       DLFileVersion sourceDLFileVersion=dlFileVersionLocalService.getFileVersion(fileEntryId,sourceVersion);
-      DLFileVersion destinationDLFileVersion=dlFileVersionLocalService.getFileVersion(fileEntryId,syncDLObject.getVersion());
-      syncDLFileVersionDiffLocalService.addSyncDLFileVersionDiff(fileEntryId,sourceDLFileVersion.getFileVersionId(),destinationDLFileVersion.getFileVersionId(),deltaFile);
+      DLFileVersion targetDLFileVersion=dlFileVersionLocalService.getFileVersion(fileEntryId,syncDLObject.getVersion());
+      syncDLFileVersionDiffLocalService.addSyncDLFileVersionDiff(fileEntryId,sourceDLFileVersion.getFileVersionId(),targetDLFileVersion.getFileVersionId(),deltaFile);
     }
     return syncDLObject;
   }
