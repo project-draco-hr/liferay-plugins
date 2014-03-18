@@ -1,10 +1,16 @@
 {
   File patchedFile=null;
   try {
-    File sourceFile=DLFileEntryLocalServiceUtil.getFile(getUserId(),fileEntryId,sourceVersion,false);
+    File sourceFile=dlFileEntryLocalService.getFile(getUserId(),fileEntryId,sourceVersion,false);
     patchedFile=FileUtil.createTempFile();
     SyncUtil.patchFile(sourceFile,deltaFile,patchedFile);
-    return updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,patchedFile,checksum,serviceContext);
+    SyncDLObject syncDLObject=updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,patchedFile,checksum,serviceContext);
+    if (PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
+      DLFileVersion sourceDLFileVersion=dlFileVersionLocalService.getFileVersion(fileEntryId,sourceVersion);
+      DLFileVersion destinationDLFileVersion=dlFileVersionLocalService.getFileVersion(fileEntryId,syncDLObject.getVersion());
+      syncDLFileVersionDiffLocalService.addSyncDLFileVersionDiff(fileEntryId,sourceDLFileVersion.getFileVersionId(),destinationDLFileVersion.getFileVersionId(),deltaFile);
+    }
+    return syncDLObject;
   }
   finally {
     FileUtil.delete(patchedFile);
