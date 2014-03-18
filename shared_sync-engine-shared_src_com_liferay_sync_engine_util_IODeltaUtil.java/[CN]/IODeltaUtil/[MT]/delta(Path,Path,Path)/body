@@ -15,8 +15,6 @@
     checksumsReadableByteChannel=Channels.newChannel(checksumsInputStream);
     ByteChannelReader checksumsByteChannelReader=new ByteChannelReader(checksumsReadableByteChannel);
     deltaFilePath=Paths.get(checksumsFilePath.toString() + ".tmp");
-    Files.createFile(deltaFilePath);
-    deltaOutputStream=Files.newOutputStream(deltaFilePath);
     deltaWritableByteChannel=Channels.newChannel(deltaOutputStream);
     ByteChannelWriter deltaByteChannelWriter=new ByteChannelWriter(deltaWritableByteChannel);
     DeltaUtil.delta(targetReadableByteChannel,checksumsByteChannelReader,deltaByteChannelWriter);
