@@ -1,6 +1,7 @@
 {
   PowerMockito.mockStatic(HttpClientBuilder.class);
   HttpClientBuilder httpClientbuilder=Mockito.mock(HttpClientBuilder.class);
-  Mockito.when(httpClientbuilder.build()).thenReturn(mockCloseableHttpClient(fileName));
+  CloseableHttpClient closeableHttpClient=mockCloseableHttpClient(fileName);
+  Mockito.when(httpClientbuilder.build()).thenReturn(closeableHttpClient);
   Mockito.when(HttpClientBuilder.create()).thenReturn(httpClientbuilder);
 }
