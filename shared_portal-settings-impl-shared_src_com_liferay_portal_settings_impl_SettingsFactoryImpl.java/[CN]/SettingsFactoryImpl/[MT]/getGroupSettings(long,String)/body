@@ -1,6 +1,5 @@
 {
   Group group=GroupLocalServiceUtil.getGroup(groupId);
-  PortletPreferences groupPortletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(group.getCompanyId(),groupId,PortletKeys.PREFS_OWNER_TYPE_GROUP,0,key);
-  Settings defaultCompanySettings=getCompanySettings(group.getCompanyId(),key);
-  return new PortletPreferencesSettings(groupPortletPreferences,defaultCompanySettings);
+  long companyId=group.getCompanyId();
+  return new PortletPreferencesSettings(getGroupPortletPreferences(companyId,groupId,key),getCompanySettings(companyId,key));
 }
