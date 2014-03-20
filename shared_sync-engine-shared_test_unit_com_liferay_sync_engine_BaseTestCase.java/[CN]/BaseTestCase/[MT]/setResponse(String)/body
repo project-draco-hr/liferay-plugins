@@ -1,0 +1,18 @@
+{
+  PowerMockito.mockStatic(EntityUtils.class);
+  PowerMockito.mockStatic(HttpClientBuilder.class);
+  HttpClientBuilder httpClientbuilder=Mockito.mock(HttpClientBuilder.class);
+  CloseableHttpClient closeableHttpClient=Mockito.mock(CloseableHttpClient.class);
+  CloseableHttpResponse closeableHttpResponse=Mockito.mock(CloseableHttpResponse.class);
+  StatusLine statusLine=Mockito.mock(StatusLine.class);
+  HttpEntity httpEntity=Mockito.mock(HttpEntity.class);
+  Mockito.when(HttpClientBuilder.create()).thenReturn(httpClientbuilder);
+  Mockito.when(httpClientbuilder.build()).thenReturn(closeableHttpClient);
+  Mockito.when(EntityUtils.toString(Mockito.any(HttpEntity.class))).thenReturn(readResponse(fileName));
+  Mockito.when(httpEntity.getContent()).thenReturn(getInputStream(fileName));
+  Mockito.when(closeableHttpResponse.getStatusLine()).thenReturn(statusLine);
+  Mockito.when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
+  Mockito.when(closeableHttpResponse.getEntity()).thenReturn(httpEntity);
+  Mockito.when(closeableHttpClient.execute(Mockito.any(HttpHost.class),Mockito.any(HttpRequest.class),Mockito.any(ResponseHandler.class),Mockito.any(HttpContext.class))).thenCallRealMethod();
+  Mockito.when(closeableHttpClient.execute(Mockito.any(HttpHost.class),Mockito.any(HttpRequest.class),Mockito.any(HttpContext.class))).thenReturn(closeableHttpResponse);
+}
