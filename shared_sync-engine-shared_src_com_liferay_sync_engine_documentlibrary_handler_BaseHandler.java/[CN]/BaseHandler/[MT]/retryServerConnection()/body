@@ -1,0 +1,27 @@
+{
+  RetryTemplate retryTemplate=new RetryTemplate();
+  retryTemplate.setBackOffPolicy(new ExponentialBackOffPolicy());
+  SimpleRetryPolicy simpleRetryPolicy=new SimpleRetryPolicy();
+  simpleRetryPolicy.setMaxAttempts(Integer.MAX_VALUE);
+  retryTemplate.setRetryPolicy(simpleRetryPolicy);
+  RetryCallback<Object> retryCallback=new RetryCallback<Object>(){
+    @Override public Object doWithRetry(    RetryContext retryContext) throws Exception {
+      SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+      if (_logger.isDebugEnabled()) {
+        _logger.debug("Attempting to reconnect to {}. Retry #{}.",syncAccount.getUrl(),retryContext.getRetryCount() + 1);
+      }
+      SyncAccountService.synchronizeSyncAccount(getSyncAccountId());
+      syncAccount=SyncAccountService.synchronizeSyncAccount(getSyncAccountId());
+      if (syncAccount.getState() == SyncAccount.STATE_DISCONNECTED) {
+        throw new Exception();
+      }
+      return null;
+    }
+  }
+;
+  try {
+    retryTemplate.execute(retryCallback);
+  }
+ catch (  Exception e) {
+  }
+}

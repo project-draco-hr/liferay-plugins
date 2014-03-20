@@ -1,0 +1,22 @@
+{
+  InputStream inputStream=null;
+  try {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    Path filePath=Paths.get(syncFile.getFilePathName());
+    HttpEntity httpEntity=httpResponse.getEntity();
+    inputStream=httpEntity.getContent();
+    if ((Boolean)getParameterValue("patch")) {
+      IODeltaUtil.patch(filePath,inputStream);
+    }
+ else {
+      Files.copy(inputStream,filePath,StandardCopyOption.REPLACE_EXISTING);
+    }
+    syncFile.setFileKey(FileUtil.getFileKey(filePath));
+    syncFile.setState(SyncFile.STATE_SYNCED);
+    syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADED);
+    SyncFileService.update(syncFile);
+  }
+  finally {
+    StreamUtil.cleanUp(inputStream);
+  }
+}

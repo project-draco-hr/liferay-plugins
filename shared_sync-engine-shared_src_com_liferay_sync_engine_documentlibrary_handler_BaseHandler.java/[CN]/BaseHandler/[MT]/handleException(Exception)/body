@@ -1,0 +1,20 @@
+{
+  _logger.error(e.getMessage(),e);
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+  syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
+  if (e instanceof HttpHostConnectException) {
+    syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
+  }
+ else   if (e instanceof HttpResponseException) {
+    HttpResponseException hre=(HttpResponseException)e;
+    int statusCode=hre.getStatusCode();
+    if (statusCode == HttpServletResponse.SC_UNAUTHORIZED) {
+      syncAccount.setUiEvent(SyncAccount.UI_EVENT_AUTHENTICATION_EXCEPTION);
+    }
+ else {
+      syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
+    }
+  }
+  SyncAccountService.update(syncAccount);
+  retryServerConnection();
+}
