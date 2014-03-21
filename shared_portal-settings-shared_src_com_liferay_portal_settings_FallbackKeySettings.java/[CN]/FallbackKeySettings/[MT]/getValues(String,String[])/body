@@ -2,12 +2,16 @@
   if (key == null) {
     throw new IllegalArgumentException("Key is null");
   }
-  while (key != null) {
-    String[] values=_settings.getValues(key,null);
+  String[] values=_settings.getValues(key,null);
+  if (values != null) {
+    return values;
+  }
+  List<String> path=_fallbackKeys.getPath(key);
+  for (int i=0; i < path.size(); i++) {
+    values=_settings.getValues(path.get(i),null);
     if (values != null) {
       return values;
     }
-    key=getFallbackKey(key);
   }
   return defaultValue;
 }
