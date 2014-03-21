@@ -1,12 +1,6 @@
 {
-  UploadException uploadException=(UploadException)actionRequest.getAttribute(WebKeys.UPLOAD_EXCEPTION);
-  if (uploadException != null) {
-    if (uploadException.isExceededSizeLimit()) {
-      throw new FileSizeException(uploadException.getCause());
-    }
-    throw new PortalException(uploadException.getCause());
-  }
   UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  checkExceededSizeLimit(uploadPortletRequest);
   String portletId=PortalUtil.getPortletId(actionRequest);
   long resourcePrimKey=ParamUtil.getLong(uploadPortletRequest,"resourcePrimKey");
   String dirName=ParamUtil.getString(uploadPortletRequest,"dirName");
