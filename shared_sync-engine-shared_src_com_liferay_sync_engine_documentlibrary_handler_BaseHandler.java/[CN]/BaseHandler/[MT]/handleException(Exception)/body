@@ -1,8 +1,14 @@
 {
   _logger.error(e.getMessage(),e);
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
-  syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
-  if (e instanceof HttpHostConnectException) {
+  if (e instanceof FileNotFoundException) {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    if (syncFile.getVersion() == null) {
+      SyncFileService.deleteSyncFile(syncFile);
+    }
+    return;
+  }
+ else   if (e instanceof HttpHostConnectException) {
     syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
   }
  else   if (e instanceof HttpResponseException) {
@@ -15,6 +21,7 @@
       syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
     }
   }
+  syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
   SyncAccountService.update(syncAccount);
   retryServerConnection();
 }

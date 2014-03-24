@@ -7,7 +7,7 @@
   String sourceVersion=syncFile.getVersion();
   String targetChecksum=FileUtil.getChecksum(filePath);
   if (!sourceChecksum.equals(targetChecksum) && !IODeltaUtil.isIgnoredFilePatchingExtension(syncFile)) {
-    deltaFilePath=Files.createTempFile(String.valueOf(filePath.getFileName()),"tmp");
+    deltaFilePath=Files.createTempFile(String.valueOf(filePath.getFileName()),".tmp");
     deltaFilePath=IODeltaUtil.delta(filePath,IODeltaUtil.getChecksumsFilePath(syncFile),deltaFilePath);
   }
   syncFile.setChangeLog(changeLog);

@@ -1,5 +1,8 @@
 {
   Path targetFilePath=Paths.get(syncWatchEvent.getFilePathName());
+  if (Files.notExists(targetFilePath)) {
+    return;
+  }
   Path parentTargetFilePath=targetFilePath.getParent();
   SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentTargetFilePath),syncWatchEvent.getSyncAccountId());
   SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(targetFilePath),syncWatchEvent.getSyncAccountId());
