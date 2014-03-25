@@ -2,7 +2,7 @@
   if (!isDefaultRepository(parentFolderId)) {
     return null;
   }
-  SyncDLObject syncDLObject=syncDLObjectPersistence.fetchByTypePK(typePK);
+  SyncDLObject syncDLObject=syncDLObjectPersistence.fetchByT_T(type,typePK);
   if (syncDLObject == null) {
     long syncDLObjectId=counterLocalService.increment();
     syncDLObject=syncDLObjectPersistence.create(syncDLObjectId);
@@ -15,6 +15,12 @@
   }
  else   if (syncDLObject.getModifiedTime() > modifiedTime) {
     return null;
+  }
+ else   if (type.equals(SyncConstants.TYPE_FILE)) {
+    SyncDLObject pwcSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_PWC,typePK);
+    if (pwcSyncDLObject != null) {
+      syncDLObjectPersistence.remove(pwcSyncDLObject);
+    }
   }
   syncDLObject.setModifiedTime(modifiedTime);
   syncDLObject.setParentFolderId(parentFolderId);
