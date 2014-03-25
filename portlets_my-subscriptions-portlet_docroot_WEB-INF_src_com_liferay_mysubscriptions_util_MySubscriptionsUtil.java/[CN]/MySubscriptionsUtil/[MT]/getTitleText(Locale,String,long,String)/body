@@ -33,6 +33,15 @@
  else   if (className.equals(MBCategory.class.getName())) {
     title="Message Board at ";
   }
+ else   if (className.equals(PortletPreferences.class.getName())) {
+    PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.fetchPortletPreferences(classPK);
+    if (portletPreferences == null) {
+      return String.valueOf(classPK);
+    }
+    Layout layout=LayoutLocalServiceUtil.getLayout(portletPreferences.getPlid());
+    group=layout.getGroup();
+    title="Asset Publisher at ";
+  }
  else   if (className.equals(WikiNode.class.getName())) {
     WikiNode wikiNode=WikiNodeLocalServiceUtil.getWikiNode(classPK);
     return wikiNode.getName();
