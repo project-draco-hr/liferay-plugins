@@ -4,13 +4,13 @@
     if (!syncFile.isFolder()) {
       return;
     }
-    List<SyncFile> childSyncFiles=_syncFilePersistence.queryForEq("parentFolderId",syncFile.getSyncFileId());
+    List<SyncFile> childSyncFiles=_syncFilePersistence.queryForEq("parentFolderId",syncFile.getTypePK());
     for (    SyncFile childSyncFile : childSyncFiles) {
       if (childSyncFile.isFolder()) {
         deleteSyncFile(childSyncFile);
       }
  else {
-        _syncFilePersistence.deleteById(childSyncFile.getSyncFileId());
+        _syncFilePersistence.delete(childSyncFile);
       }
     }
   }

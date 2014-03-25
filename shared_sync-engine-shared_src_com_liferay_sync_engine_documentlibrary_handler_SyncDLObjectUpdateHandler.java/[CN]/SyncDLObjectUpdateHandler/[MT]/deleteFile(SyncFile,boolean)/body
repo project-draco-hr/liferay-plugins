@@ -9,6 +9,16 @@
  else {
     sourceSyncFile.setUiEvent(SyncFile.UI_EVENT_DELETED_REMOTE);
   }
-  Files.deleteIfExists(Paths.get(sourceSyncFile.getFilePathName()));
+  Files.walkFileTree(Paths.get(sourceSyncFile.getFilePathName()),new SimpleFileVisitor<Path>(){
+    @Override public FileVisitResult postVisitDirectory(    Path filePath,    IOException ioe) throws IOException {
+      Files.delete(filePath);
+      return FileVisitResult.CONTINUE;
+    }
+    @Override public FileVisitResult visitFile(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
+      Files.delete(filePath);
+      return FileVisitResult.CONTINUE;
+    }
+  }
+);
   SyncFileService.deleteSyncFile(sourceSyncFile);
 }
