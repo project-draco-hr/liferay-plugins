@@ -1,5 +1,8 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  if (ParamUtil.getBoolean(portletRequest,"allDay")) {
+    return TimeZoneUtil.getTimeZone(StringPool.UTC);
+  }
   PortletPreferences preferences=portletRequest.getPreferences();
   User user=themeDisplay.getUser();
   String timeZoneId=preferences.getValue("timeZoneId",user.getTimeZoneId());
