@@ -36,12 +36,12 @@
  else   if (className.equals(PortletPreferences.class.getName())) {
     PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPortletPreferences(classPK);
     Layout layout=LayoutLocalServiceUtil.getLayout(portletPreferences.getPlid());
-    javax.portlet.PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletPreferences.getPortletId(),null);
-    String portletName=preferences.getValue("portletSetupTitle_" + LocaleUtil.toLanguageId(locale),StringPool.BLANK);
-    if (Validator.isNull(portletName)) {
-      portletName="Asset Publisher";
+    javax.portlet.PortletPreferences jxPortletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portletPreferences.getPortletId(),null);
+    String portletTitle=jxPortletPreferences.getValue("portletSetupTitle_" + LocaleUtil.toLanguageId(locale),StringPool.BLANK);
+    if (Validator.isNull(portletTitle)) {
+      portletTitle="Asset Publisher";
     }
-    return portletName;
+    return portletTitle;
   }
  else   if (className.equals(WikiNode.class.getName())) {
     WikiNode wikiNode=WikiNodeLocalServiceUtil.getWikiNode(classPK);
