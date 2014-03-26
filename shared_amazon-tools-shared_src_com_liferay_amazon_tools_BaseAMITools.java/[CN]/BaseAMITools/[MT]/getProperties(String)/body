@@ -1,0 +1,14 @@
+{
+  Properties buildProperties=new Properties();
+  InputStream inputStream=new FileInputStream(buildFilePath);
+  buildProperties.load(inputStream);
+  Properties properties=new Properties();
+  for (  Object key : buildProperties.keySet()) {
+    String keyString=(String)key;
+    if (keyString.startsWith("#")) {
+      continue;
+    }
+    properties.put(keyString,buildProperties.get(key));
+  }
+  return properties;
+}
