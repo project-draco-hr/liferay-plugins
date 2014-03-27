@@ -5,14 +5,14 @@
     XMLOutputFactory xmlOutputFactory=XMLOutputFactory.newInstance();
     xmlStreamWriter=xmlOutputFactory.createXMLStreamWriter(unsyncStringWriter);
     xmlStreamWriter.writeStartDocument();
-    xmlStreamWriter.writeStartElement(_ROOT);
-    xmlStreamWriter.writeAttribute(_AVAILABLE_LOCALES,StringUtil.merge(_availableLocales));
-    xmlStreamWriter.writeAttribute(_DEFAULT_LOCALE,_defaultLocale.toString());
+    xmlStreamWriter.writeStartElement("root");
+    xmlStreamWriter.writeAttribute("available-locales",StringUtil.merge(_availableLocales));
+    xmlStreamWriter.writeAttribute("default-locale",_defaultLocale.toString());
     for (    Locale locale : _availableLocales) {
       String value=get(locale);
       if (value != null) {
         xmlStreamWriter.writeStartElement(_key);
-        xmlStreamWriter.writeAttribute(_LANGUAGE_ID,locale.toString());
+        xmlStreamWriter.writeAttribute("language-id",locale.toString());
         xmlStreamWriter.writeCharacters(value);
         xmlStreamWriter.writeEndElement();
       }
