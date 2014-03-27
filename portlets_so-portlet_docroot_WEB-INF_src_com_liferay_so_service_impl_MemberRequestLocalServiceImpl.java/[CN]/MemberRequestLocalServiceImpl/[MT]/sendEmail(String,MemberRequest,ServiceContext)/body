@@ -22,7 +22,7 @@
     body=StringUtil.read(getClassLoader(),"com/liferay/so/invitemembers/dependencies/" + "new_user_body.tmpl");
   }
   subject=StringUtil.replace(subject,new String[]{"[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_USER$]"},new String[]{group.getDescriptiveName(serviceContext.getLocale()),user.getFullName()});
-  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,getCreateAccountURL(memberRequest,serviceContext),group.getDescriptiveName(serviceContext.getLocale()),getLoginURL(serviceContext),user.getFullName()});
+  body=StringUtil.replace(body,new String[]{"[$ADMIN_ADDRESS$]","[$ADMIN_NAME$]","[$MEMBER_REQUEST_CREATE_ACCOUNT_URL$]","[$MEMBER_REQUEST_GROUP$]","[$MEMBER_REQUEST_LOGIN_URL$]","[$MEMBER_REQUEST_USER$]"},new String[]{fromAddress,fromName,getCreateAccountURL(memberRequest,serviceContext),group.getDescriptiveName(serviceContext.getLocale()),getLoginURL(memberRequest,serviceContext),user.getFullName()});
   InternetAddress from=new InternetAddress(fromAddress,fromName);
   InternetAddress to=new InternetAddress(toAddress,toName);
   MailMessage mailMessage=new MailMessage(from,to,subject,body,true);
