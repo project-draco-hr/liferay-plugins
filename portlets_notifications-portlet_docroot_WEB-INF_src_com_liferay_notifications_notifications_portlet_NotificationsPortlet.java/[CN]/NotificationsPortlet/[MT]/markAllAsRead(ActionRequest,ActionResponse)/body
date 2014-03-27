@@ -1,0 +1,14 @@
+{
+  String[] userNotificationEventIds=StringUtil.split(ParamUtil.getString(actionRequest,"userNotificationEventIds"));
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    for (    String userNotificationEventId : userNotificationEventIds) {
+      doSetArchived(GetterUtil.getLong(userNotificationEventId));
+    }
+    jsonObject.put("success",Boolean.TRUE);
+  }
+ catch (  Exception e) {
+    jsonObject.put("success",Boolean.FALSE);
+  }
+  writeJSON(actionRequest,actionResponse,jsonObject);
+}

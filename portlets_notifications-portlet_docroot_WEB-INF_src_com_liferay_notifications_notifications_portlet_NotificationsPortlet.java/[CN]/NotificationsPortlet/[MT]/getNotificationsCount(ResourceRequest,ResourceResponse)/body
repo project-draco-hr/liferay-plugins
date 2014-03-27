@@ -1,0 +1,15 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  try {
+    int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),false);
+    int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),false);
+    jsonObject.put("newUserNotificationsCount",newUserNotificationsCount);
+    jsonObject.put("unreadUserNotificationsCount",unreadUserNotificationsCount);
+    jsonObject.put("success",Boolean.TRUE);
+  }
+ catch (  Exception e) {
+    jsonObject.put("success",Boolean.FALSE);
+  }
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}
