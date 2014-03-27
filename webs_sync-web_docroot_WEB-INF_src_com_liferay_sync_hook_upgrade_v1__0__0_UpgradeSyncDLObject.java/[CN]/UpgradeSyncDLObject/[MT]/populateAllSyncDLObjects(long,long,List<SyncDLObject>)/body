@@ -1,0 +1,36 @@
+{
+  List<Object> foldersAndFileEntriesAndFileShortcuts=DLFolderLocalServiceUtil.getFoldersAndFileEntriesAndFileShortcuts(groupId,folderId,null,false,new QueryDefinition(WorkflowConstants.STATUS_APPROVED));
+  for (  Object foldersAndFileEntriesAndFileShortcut : foldersAndFileEntriesAndFileShortcuts) {
+    if (foldersAndFileEntriesAndFileShortcut instanceof DLFileEntry) {
+      DLFileEntry dlFileEntry=(DLFileEntry)foldersAndFileEntriesAndFileShortcut;
+      String event=StringPool.BLANK;
+      if (dlFileEntry.isInTrash()) {
+        event=SyncConstants.EVENT_TRASH;
+      }
+ else {
+        event=SyncConstants.EVENT_ADD;
+      }
+      SyncDLObject fileEntrySyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,event);
+      syncDLObjects.add(fileEntrySyncDLObject);
+      if (fileEntrySyncDLObject.getType().equals(SyncConstants.TYPE_PRIVATE_WORKNG_COPY)) {
+        SyncDLObject approvedSyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,event,true);
+        syncDLObjects.add(approvedSyncDLObject);
+      }
+    }
+ else     if (foldersAndFileEntriesAndFileShortcut instanceof DLFolder) {
+      DLFolder dlFolder=(DLFolder)foldersAndFileEntriesAndFileShortcut;
+      if (!SyncUtil.isSupportedFolder(dlFolder)) {
+        continue;
+      }
+      String event=StringPool.BLANK;
+      if (dlFolder.isInTrash()) {
+        event=SyncConstants.EVENT_TRASH;
+      }
+ else {
+        event=SyncConstants.EVENT_ADD;
+      }
+      syncDLObjects.add(SyncUtil.toSyncDLObject(dlFolder,event));
+      populateAllSyncDLObjects(groupId,dlFolder.getFolderId(),syncDLObjects);
+    }
+  }
+}
