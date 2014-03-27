@@ -1,0 +1,13 @@
+{
+  TerminateInstancesRequest terminateInstancesRequest=new TerminateInstancesRequest();
+  List<String> instanceIds=terminateInstancesRequest.getInstanceIds();
+  instanceIds.add(instanceId);
+  TerminateInstancesResult terminateInstancesResult=amazonEC2Client.terminateInstances(terminateInstancesRequest);
+  List<InstanceStateChange> instanceStateChanges=terminateInstancesResult.getTerminatingInstances();
+  if (!instanceStateChanges.isEmpty()) {
+    System.out.println("Instance InstanceId: " + instanceId + " has been terminated.");
+  }
+ else {
+    System.out.println("Instance InstanceId: " + instanceId + " has not been terminated.");
+  }
+}

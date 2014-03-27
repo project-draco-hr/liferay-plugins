@@ -1,0 +1,18 @@
+{
+  CmdLineParser parser=new CmdLineParser();
+  CmdLineParser.Option buildDirOption=parser.addStringOption("base.dir");
+  CmdLineParser.Option buildFilePathOption=parser.addStringOption("build.file.path");
+  CmdLineParser.Option imageNameOption=parser.addStringOption("image.name");
+  parser.parse(args);
+  AMIBuilder amiBuilder=new AMIBuilder((String)parser.getOptionValue(buildDirOption),(String)parser.getOptionValue(buildFilePathOption),(String)parser.getOptionValue(imageNameOption));
+  try {
+    amiBuilder._start();
+    amiBuilder._runProvisioners();
+    amiBuilder._createImage();
+    amiBuilder._destroy();
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    amiBuilder._destroy();
+  }
+}

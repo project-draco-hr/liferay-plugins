@@ -1,0 +1,46 @@
+{
+  sleep(45);
+  final SSHClient sshClient=new SSHClient();
+  sshClient.addHostKeyVerifier(new PromiscuousVerifier());
+  sshClient.setTimeout(Integer.parseInt(properties.getProperty("ssh.timeout")) * 1000);
+  sshClient.useCompression();
+  System.out.println("Connecting via SSH to " + _publicIpAddress);
+  sshClient.connect(_publicIpAddress);
+  PKCS8KeyFile keyFile=new PKCS8KeyFile();
+  keyFile.init(new File(_getKeyFilePath()));
+  sshClient.authPublickey(properties.getProperty("ssh.username"),keyFile);
+  try {
+    Set<String> keys=_provisioners.keySet();
+    for (    String key : keys) {
+      String provisioner=_provisioners.get(key);
+      if (key.contains("shell.inline")) {
+        _runShellInlineProvisioner(provisioner,sshClient);
+      }
+ else       if (key.contains("shell.script")) {
+        String shellScriptFilePath=null;
+        if (provisioner.startsWith(File.separator)) {
+          shellScriptFilePath=provisioner;
+        }
+ else {
+          shellScriptFilePath=_baseDir + File.separator + provisioner;
+        }
+        _runShellScriptProvisioner(shellScriptFilePath,sshClient);
+      }
+ else {
+        JSONObject jsonObject=new JSONObject(provisioner);
+        String filePath=null;
+        String src=jsonObject.getString("src");
+        if (src.startsWith(File.separator)) {
+          filePath=src;
+        }
+ else {
+          filePath=_baseDir + File.separator + jsonObject.getString("src");
+        }
+        _runFileUploadProvisioner(jsonObject.getString("dest"),filePath,sshClient);
+      }
+    }
+  }
+  finally {
+    sshClient.disconnect();
+  }
+}
