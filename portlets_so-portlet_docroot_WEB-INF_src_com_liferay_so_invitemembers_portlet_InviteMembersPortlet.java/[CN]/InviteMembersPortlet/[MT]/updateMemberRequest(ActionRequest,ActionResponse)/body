@@ -3,16 +3,14 @@
   long memberRequestId=ParamUtil.getLong(actionRequest,"memberRequestId");
   int status=ParamUtil.getInteger(actionRequest,"status");
   long userNotificationEventId=ParamUtil.getLong(actionRequest,"userNotificationEventId");
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   try {
     MemberRequestLocalServiceUtil.updateMemberRequest(themeDisplay.getUserId(),memberRequestId,status);
     UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEventId);
+    jsonObject.put("success",Boolean.TRUE);
   }
  catch (  Exception e) {
-    if ((e instanceof MemberRequestAlreadyUsedException) || (e instanceof MemberRequestInvalidUserException)) {
-      SessionErrors.add(actionRequest,e.getClass(),e);
-    }
- else {
-      throw e;
-    }
+    jsonObject.put("success",Boolean.FALSE);
   }
+  writeJSON(actionRequest,actionResponse,jsonObject);
 }
