@@ -1,0 +1,13 @@
+{
+  List<Group> groups=GroupLocalServiceUtil.getGroups(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Group group : groups) {
+    if (group.isStaged()) {
+      continue;
+    }
+    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>();
+    getAllSyncDLObjects(group.getGroupId(),DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,syncDLObjects);
+    for (    SyncDLObject syncDLObject : syncDLObjects) {
+      SyncDLObjectLocalServiceUtil.addSyncDLObject(syncDLObject.getCompanyId(),syncDLObject.getModifiedTime(),syncDLObject.getRepositoryId(),syncDLObject.getParentFolderId(),syncDLObject.getName(),syncDLObject.getExtension(),syncDLObject.getMimeType(),syncDLObject.getDescription(),syncDLObject.getChangeLog(),syncDLObject.getExtraSettings(),syncDLObject.getVersion(),syncDLObject.getSize(),syncDLObject.getChecksum(),syncDLObject.getEvent(),syncDLObject.getLockExpirationDate(),syncDLObject.getLockUserId(),syncDLObject.getLockUserName(),syncDLObject.getType(),syncDLObject.getTypePK(),syncDLObject.getTypeUuid());
+    }
+  }
+}

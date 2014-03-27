@@ -1,42 +1,9 @@
 {
-  DLFileVersion dlFileVersion=null;
-  Date lockExpirationDate=null;
-  long lockUserId=0;
-  String lockUserName=StringPool.BLANK;
-  String type=null;
-  Lock lock=fileEntry.getLock();
-  if (lock != null) {
-    dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),DLFileEntryConstants.PRIVATE_WORKING_COPY_VERSION);
-    lockExpirationDate=lock.getExpirationDate();
-    lockUserId=lock.getUserId();
-    lockUserName=lock.getUserName();
-    type=SyncConstants.TYPE_PRIVATE_WORKNG_COPY;
+  if (fileEntry.getModel() instanceof DLFileEntry) {
+    DLFileEntry dlFileEntry=(DLFileEntry)fileEntry.getModel();
+    return toSyncDLObject(dlFileEntry,event);
   }
  else {
-    dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),fileEntry.getVersion());
-    type=SyncConstants.TYPE_FILE;
+    throw new PortalException("FileEntry must be an instance of DLFileEntry");
   }
-  SyncDLObject syncDLObject=new SyncDLObjectImpl();
-  syncDLObject.setCompanyId(dlFileVersion.getCompanyId());
-  syncDLObject.setCreateDate(dlFileVersion.getCreateDate());
-  syncDLObject.setModifiedDate(dlFileVersion.getModifiedDate());
-  syncDLObject.setRepositoryId(dlFileVersion.getRepositoryId());
-  syncDLObject.setParentFolderId(dlFileVersion.getFolderId());
-  syncDLObject.setName(dlFileVersion.getTitle());
-  syncDLObject.setExtension(dlFileVersion.getExtension());
-  syncDLObject.setMimeType(dlFileVersion.getMimeType());
-  syncDLObject.setDescription(dlFileVersion.getDescription());
-  syncDLObject.setChangeLog(dlFileVersion.getChangeLog());
-  syncDLObject.setExtraSettings(dlFileVersion.getExtraSettings());
-  syncDLObject.setVersion(dlFileVersion.getVersion());
-  syncDLObject.setSize(dlFileVersion.getSize());
-  syncDLObject.setChecksum(getChecksum(dlFileVersion));
-  syncDLObject.setEvent(event);
-  syncDLObject.setLockExpirationDate(lockExpirationDate);
-  syncDLObject.setLockUserId(lockUserId);
-  syncDLObject.setLockUserName(lockUserName);
-  syncDLObject.setType(type);
-  syncDLObject.setTypePK(fileEntry.getFileEntryId());
-  syncDLObject.setTypeUuid(fileEntry.getUuid());
-  return syncDLObject;
 }
