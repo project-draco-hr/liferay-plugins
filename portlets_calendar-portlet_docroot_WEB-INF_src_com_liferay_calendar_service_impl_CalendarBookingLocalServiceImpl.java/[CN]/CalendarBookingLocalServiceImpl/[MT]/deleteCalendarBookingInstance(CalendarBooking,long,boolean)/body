@@ -1,4 +1,5 @@
 {
+  Date now=new Date();
   java.util.Calendar startTimeJCalendar=JCalendarUtil.getJCalendar(startTime);
   Recurrence recurrenceObj=calendarBooking.getRecurrenceObj();
   if (allFollowing) {
@@ -18,6 +19,7 @@
   String recurrence=RecurrenceSerializer.serialize(recurrenceObj);
   List<CalendarBooking> childCalendarBookings=getChildCalendarBookings(calendarBooking.getCalendarBookingId());
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
+    childCalendarBooking.setModifiedDate(now);
     childCalendarBooking.setRecurrence(recurrence);
     calendarBookingPersistence.update(childCalendarBooking);
   }
