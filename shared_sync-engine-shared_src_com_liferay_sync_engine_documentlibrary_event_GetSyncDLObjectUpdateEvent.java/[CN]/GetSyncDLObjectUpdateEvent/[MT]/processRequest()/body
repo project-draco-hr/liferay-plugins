@@ -2,13 +2,12 @@
   SyncSite syncSite=(SyncSite)getParameterValue("syncSite");
   syncSite=SyncSiteService.fetchSyncSite(syncSite.getGroupId(),syncSite.getSyncAccountId());
   if (syncSite.getLastRemoteSyncTime() == 0) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("folderId",0);
-    parameters.put("repositoryId",syncSite.getGroupId());
-    parameters.put("syncSite",syncSite);
-    GetAllSyncDLObjectsEvent getAllSyncDLObjectsEvent=new GetAllSyncDLObjectsEvent(getSyncAccountId(),parameters);
-    getAllSyncDLObjectsEvent.run();
-    return;
+    String filePathName=syncSite.getFilePathName();
+    SyncFile syncFile=SyncFileService.fetchSyncFile(filePathName,getSyncAccountId());
+    if (syncFile == null) {
+      Files.createDirectories(Paths.get(filePathName));
+      SyncFileService.addSyncFile(null,null,filePathName,FileUtil.getFileKey(filePathName),filePathName,null,filePathName,0,syncSite.getGroupId(),syncSite.getSyncAccountId(),SyncFile.TYPE_FOLDER);
+    }
   }
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("companyId",syncSite.getCompanyId());
