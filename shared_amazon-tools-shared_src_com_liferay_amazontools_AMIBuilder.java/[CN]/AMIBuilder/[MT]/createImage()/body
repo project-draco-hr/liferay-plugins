@@ -3,18 +3,18 @@
   createImageRequest.setInstanceId(_instanceId);
   createImageRequest.setName(_imageName);
   CreateImageResult createImageResult=amazonEC2Client.createImage(createImageRequest);
-  System.out.println("Image creation for instance InstanceId: " + _instanceId + " has been started.");
-  boolean isImageCreated=false;
+  System.out.println("Creating image for instance " + _instanceId);
+  boolean created=false;
   for (int i=0; i < 6; i++) {
     sleep(30);
-    isImageCreated=isImageCreated(createImageResult.getImageId());
-    if (isImageCreated) {
-      System.out.println("Image ImageId: " + createImageResult.getImageId() + " has been created.");
+    created=isImageCreated(createImageResult.getImageId());
+    if (created) {
+      System.out.println("Created image " + createImageResult.getImageId());
       break;
     }
   }
-  if (!isImageCreated) {
-    System.out.println("Image ImageId: " + createImageResult.getImageId() + " has not been created.");
+  if (!created) {
+    System.out.println("Unable to create image " + createImageResult.getImageId());
     deregisterImage(createImageResult.getImageId());
   }
 }

@@ -2,12 +2,8 @@
   final Session session=sshClient.startSession();
   try {
     final Session.Command sessionCommand=session.exec(command);
-    ByteArrayOutputStream resultstream=IOUtils.readFully(sessionCommand.getInputStream());
-    String result=resultstream.toString();
-    if ((result != null) && (result.length() > 0)) {
-      System.out.println("Command result: ");
-      System.out.println(result);
-    }
+    ByteArrayOutputStream byteArrayOutputStream=IOUtils.readFully(sessionCommand.getInputStream());
+    System.out.println("Result: " + byteArrayOutputStream.toString());
     sessionCommand.join(5,TimeUnit.SECONDS);
   }
   finally {
