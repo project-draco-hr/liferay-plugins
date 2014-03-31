@@ -7,14 +7,14 @@
   System.out.println("Connecting via SSH to " + _publicIpAddress);
   sshClient.connect(_publicIpAddress);
   PKCS8KeyFile keyFile=new PKCS8KeyFile();
-  keyFile.init(new File(_getKeyFilePath()));
+  keyFile.init(new File(getKeyFilePath()));
   sshClient.authPublickey(properties.getProperty("ssh.username"),keyFile);
   try {
     Set<String> keys=_provisioners.keySet();
     for (    String key : keys) {
       String provisioner=_provisioners.get(key);
       if (key.contains("shell.inline")) {
-        _runShellInlineProvisioner(provisioner,sshClient);
+        runShellInlineProvisioner(provisioner,sshClient);
       }
  else       if (key.contains("shell.script")) {
         String shellScriptFilePath=null;
@@ -24,7 +24,7 @@
  else {
           shellScriptFilePath=_baseDirName + File.separator + provisioner;
         }
-        _runShellScriptProvisioner(shellScriptFilePath,sshClient);
+        runShellScriptProvisioner(shellScriptFilePath,sshClient);
       }
  else {
         JSONObject jsonObject=new JSONObject(provisioner);
@@ -36,7 +36,7 @@
  else {
           filePath=_baseDirName + File.separator + jsonObject.getString("src");
         }
-        _runFileUploadProvisioner(jsonObject.getString("dest"),filePath,sshClient);
+        runFileUploadProvisioner(jsonObject.getString("dest"),filePath,sshClient);
       }
     }
   }

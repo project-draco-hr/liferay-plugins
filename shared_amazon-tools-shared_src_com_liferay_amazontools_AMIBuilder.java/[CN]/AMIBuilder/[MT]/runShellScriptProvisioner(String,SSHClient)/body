@@ -1,12 +1,12 @@
 {
   String tmpDir="/tmp";
-  _runFileUploadProvisioner(tmpDir,shellScriptFilePath,sshClient);
+  runFileUploadProvisioner(tmpDir,shellScriptFilePath,sshClient);
   System.out.println("Executing shell script: " + shellScriptFilePath);
   File shellScriptFile=new File(shellScriptFilePath);
   String uploadFilePath=tmpDir + "/" + shellScriptFile.getName();
   String command="chmod +x {FILE_PATH}; {FILE_PATH}".replace("{FILE_PATH}",uploadFilePath);
-  _executeSessionCommand(command,sshClient);
+  executeSessionCommand(command,sshClient);
   command="rm " + uploadFilePath;
   System.out.println("Deleting shell script: " + shellScriptFilePath);
-  _executeSessionCommand(command,sshClient);
+  executeSessionCommand(command,sshClient);
 }

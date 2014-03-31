@@ -1,7 +1,7 @@
 {
   RunInstancesRequest runInstancesRequest=new RunInstancesRequest();
   String availabilityZone=properties.getProperty("availability.zone");
-  if (!_isZoneAvailable(availabilityZone)) {
+  if (!isZoneAvailable(availabilityZone)) {
     throw new RuntimeException("Zone " + availabilityZone + " is not available.");
   }
   String imageId=getImageId(properties.getProperty("image.name"));
@@ -47,7 +47,7 @@
   boolean isInstanceRunning=false;
   for (int i=0; i < 6; i++) {
     sleep(30);
-    Instance instance=_getRunningInstance(_instanceId);
+    Instance instance=getRunningInstance(_instanceId);
     if (instance != null) {
       _publicIpAddress=instance.getPublicIpAddress();
       isInstanceRunning=true;
