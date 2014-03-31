@@ -6,37 +6,37 @@
   sshClient.useCompression();
   System.out.println("Connecting via SSH to " + _publicIpAddress);
   sshClient.connect(_publicIpAddress);
-  PKCS8KeyFile keyFile=new PKCS8KeyFile();
-  keyFile.init(new File(getKeyFileName()));
-  sshClient.authPublickey(properties.getProperty("ssh.username"),keyFile);
+  FileKeyProvider fileKeyProvider=new PKCS8KeyFile();
+  fileKeyProvider.init(new File(getKeyFileName()));
+  sshClient.authPublickey(properties.getProperty("ssh.username"),fileKeyProvider);
   try {
     Set<String> keys=_provisioners.keySet();
     for (    String key : keys) {
       String provisioner=_provisioners.get(key);
       if (key.contains("shell.inline")) {
-        runShellInlineProvisioner(sshClient,provisioner);
+        executeSessionCommand(sshClient,provisioner);
       }
  else       if (key.contains("shell.script")) {
-        String shellScriptFilePath=null;
+        String shellScriptFileName=null;
         if (provisioner.startsWith(File.separator)) {
-          shellScriptFilePath=provisioner;
+          shellScriptFileName=provisioner;
         }
  else {
-          shellScriptFilePath=_baseDirName + File.separator + provisioner;
+          shellScriptFileName=_baseDirName + File.separator + provisioner;
         }
-        runShellScriptProvisioner(sshClient,shellScriptFilePath);
+        executeRemoteScript(sshClient,shellScriptFileName);
       }
  else {
         JSONObject jsonObject=new JSONObject(provisioner);
-        String filePath=null;
+        String fileName=null;
         String src=jsonObject.getString("src");
         if (src.startsWith(File.separator)) {
-          filePath=src;
+          fileName=src;
         }
  else {
-          filePath=_baseDirName + File.separator + jsonObject.getString("src");
+          fileName=_baseDirName + File.separator + jsonObject.getString("src");
         }
-        uploadFile(sshClient,filePath,jsonObject.getString("dest"));
+        uploadFile(sshClient,fileName,jsonObject.getString("dest"));
       }
     }
   }
