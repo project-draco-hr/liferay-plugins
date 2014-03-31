@@ -2,7 +2,7 @@
   RunInstancesRequest runInstancesRequest=new RunInstancesRequest();
   String availabilityZone=properties.getProperty("availability.zone");
   if (!isZoneAvailable(availabilityZone)) {
-    throw new RuntimeException("Zone " + availabilityZone + " is not available.");
+    throw new RuntimeException("Unavailable zone " + availabilityZone);
   }
   String imageId=getImageId(properties.getProperty("image.name"));
   runInstancesRequest.setImageId(imageId);
@@ -19,53 +19,49 @@
   RunInstancesResult runInstancesResult=amazonEC2Client.runInstances(runInstancesRequest);
   Reservation reservation=runInstancesResult.getReservation();
   List<Instance> instances=reservation.getInstances();
-  if (!instances.isEmpty()) {
-    Instance instance=instances.get(0);
-    _instanceId=instance.getInstanceId();
-    _publicIpAddress=instance.getPublicIpAddress();
-    StringBuilder sb=new StringBuilder(12);
-    sb.append("Instance ");
-    sb.append(" ImageId: ");
-    sb.append(instance.getImageId());
-    sb.append(" InstanceId: ");
-    sb.append(_instanceId);
-    sb.append(" InstanceType: ");
-    sb.append(instance.getInstanceType());
-    sb.append(" KeyName: ");
-    sb.append(instance.getKeyName());
-    sb.append(" State: ");
-    InstanceState instanceState=instance.getState();
-    sb.append(instanceState.getName());
-    sb.append(" is starting.");
-    System.out.println(sb.toString());
+  if (instances.isEmpty()) {
+    throw new RuntimeException("Unable to create instances");
   }
- else {
-    throw new RuntimeException("Instance creation has failed.");
-  }
-  String reservationId=reservation.getReservationId();
-  System.out.println("Reservation Id of the executed transaction: " + reservationId);
-  boolean isInstanceRunning=false;
+  Instance instance=instances.get(0);
+  _instanceId=instance.getInstanceId();
+  _publicIpAddress=instance.getPublicIpAddress();
+  StringBuilder sb=new StringBuilder(13);
+  sb.append("{imageId=");
+  sb.append(instance.getImageId());
+  sb.append(", instanceId=");
+  sb.append(_instanceId);
+  sb.append(", instanceType=");
+  sb.append(instance.getInstanceType());
+  sb.append(", keyName=");
+  sb.append(instance.getKeyName());
+  sb.append(", reservationId=");
+  sb.append(reservation.getReservationId());
+  sb.append(", state=");
+  InstanceState instanceState=instance.getState();
+  sb.append(instanceState.getName());
+  sb.append("}");
+  System.out.println("Starting instance " + sb.toString());
+  boolean running=false;
   for (int i=0; i < 6; i++) {
     sleep(30);
-    Instance instance=getRunningInstance(_instanceId);
+    instance=getRunningInstance(_instanceId);
     if (instance != null) {
       _publicIpAddress=instance.getPublicIpAddress();
-      isInstanceRunning=true;
-      StringBuilder sb=new StringBuilder(8);
-      sb.append("Instance InstanceId: ");
+      running=true;
+      sb=new StringBuilder(7);
+      sb.append("{instanceId=");
       sb.append(_instanceId);
-      sb.append(" Public IP ");
-      sb.append("address: ");
+      sb.append(", publicIpAddress=");
       sb.append(_publicIpAddress);
-      sb.append(" State: ");
-      InstanceState instanceState=instance.getState();
+      sb.append(", stat=");
+      instanceState=instance.getState();
       sb.append(instanceState.getName());
-      sb.append(" has been started.");
-      System.out.println(sb.toString());
+      sb.append("}");
+      System.out.println("Started instance " + sb.toString());
       break;
     }
   }
-  if (!isInstanceRunning) {
-    throw new RuntimeException("Instance InstanceId: " + _instanceId + " has failed to start.");
+  if (!running) {
+    throw new RuntimeException("Unable to start instance " + _instanceId);
   }
 }
