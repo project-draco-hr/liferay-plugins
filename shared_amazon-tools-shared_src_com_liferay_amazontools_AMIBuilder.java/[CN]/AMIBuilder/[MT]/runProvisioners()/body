@@ -1,6 +1,6 @@
 {
   sleep(45);
-  final SSHClient sshClient=new SSHClient();
+  SSHClient sshClient=new SSHClient();
   sshClient.addHostKeyVerifier(new PromiscuousVerifier());
   sshClient.setTimeout(Integer.parseInt(properties.getProperty("ssh.timeout")) * 1000);
   sshClient.useCompression();
@@ -14,7 +14,7 @@
     for (    String key : keys) {
       String provisioner=_provisioners.get(key);
       if (key.contains("shell.inline")) {
-        runShellInlineProvisioner(provisioner,sshClient);
+        runShellInlineProvisioner(sshClient,provisioner);
       }
  else       if (key.contains("shell.script")) {
         String shellScriptFilePath=null;
@@ -24,7 +24,7 @@
  else {
           shellScriptFilePath=_baseDirName + File.separator + provisioner;
         }
-        runShellScriptProvisioner(shellScriptFilePath,sshClient);
+        runShellScriptProvisioner(sshClient,shellScriptFilePath);
       }
  else {
         JSONObject jsonObject=new JSONObject(provisioner);
