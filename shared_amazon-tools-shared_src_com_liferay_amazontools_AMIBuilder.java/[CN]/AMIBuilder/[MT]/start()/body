@@ -4,7 +4,10 @@
   if (!isZoneAvailable(availabilityZone)) {
     throw new RuntimeException("Unavailable zone " + availabilityZone);
   }
-  String imageId=getImageId(properties.getProperty("image.name"));
+  String imageId=properties.getProperty("image.id");
+  if (imageId == null) {
+    imageId=getImageId(properties.getProperty("image.name"));
+  }
   runInstancesRequest.setImageId(imageId);
   runInstancesRequest.setInstanceType(properties.getProperty("instance.type"));
   runInstancesRequest.setKeyName(properties.getProperty("key.name"));
