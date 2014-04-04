@@ -1,0 +1,12 @@
+{
+  String json=doGet(url,parametersArray);
+  if ((json == null) || json.equals("{}") || json.equals("[]")) {
+    return Collections.emptyList();
+  }
+  if (json.contains("exception")) {
+    throw new Exception(getExceptionMessage(json));
+  }
+  JSONDeserializer<List<T>> jsonDeserializer=JSONFactoryUtil.createJSONDeserializer();
+  jsonDeserializer.use("values",clazz);
+  return jsonDeserializer.deserialize(json);
+}

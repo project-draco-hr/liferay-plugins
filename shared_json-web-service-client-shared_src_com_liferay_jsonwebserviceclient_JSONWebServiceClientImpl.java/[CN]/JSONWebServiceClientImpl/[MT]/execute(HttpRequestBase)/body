@@ -1,0 +1,38 @@
+{
+  HttpHost httpHost=new HttpHost(_hostName,_port,_protocol);
+  try {
+    HttpContext httpContext=null;
+    if ((_login != null) && (_password != null)) {
+      CredentialsProvider credentialsProvider=_defaultHttpClient.getCredentialsProvider();
+      AuthScope authScope=new AuthScope(httpHost.getHostName(),httpHost.getPort());
+      UsernamePasswordCredentials usernamePasswordCredentials=new UsernamePasswordCredentials(_login,_password);
+      credentialsProvider.setCredentials(authScope,usernamePasswordCredentials);
+      httpContext=new BasicHttpContext();
+      AuthCache authCache=new BasicAuthCache();
+      BasicScheme basicScheme=new BasicScheme();
+      authCache.put(httpHost,basicScheme);
+      httpContext.setAttribute(ClientContext.AUTH_CACHE,authCache);
+    }
+    HttpResponse httpResponse=null;
+    if (httpContext == null) {
+      httpResponse=_defaultHttpClient.execute(httpHost,httpRequestBase);
+    }
+ else {
+      httpResponse=_defaultHttpClient.execute(httpHost,httpRequestBase,httpContext);
+    }
+    StatusLine statusLine=httpResponse.getStatusLine();
+    if (statusLine.getStatusCode() == HttpServletResponse.SC_NOT_FOUND) {
+      if (_logger.isWarnEnabled()) {
+        _logger.warn("Status code " + statusLine.getStatusCode());
+      }
+      return null;
+    }
+ else     if (statusLine.getStatusCode() == HttpServletResponse.SC_UNAUTHORIZED) {
+      throw new CredentialException("Not authorized to access JSON web service");
+    }
+    return EntityUtils.toString(httpResponse.getEntity(),Charsets.UTF_8);
+  }
+  finally {
+    httpRequestBase.releaseConnection();
+  }
+}

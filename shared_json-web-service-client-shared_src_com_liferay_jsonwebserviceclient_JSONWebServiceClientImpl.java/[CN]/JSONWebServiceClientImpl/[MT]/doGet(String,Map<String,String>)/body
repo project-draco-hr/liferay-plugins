@@ -1,0 +1,12 @@
+{
+  List<NameValuePair> nameValuePairs=toNameValuePairs(parameters);
+  if (!nameValuePairs.isEmpty()) {
+    String queryString=URLEncodedUtils.format(nameValuePairs,Charsets.UTF_8);
+    url+="?" + queryString;
+  }
+  if (_logger.isDebugEnabled()) {
+    _logger.debug("Sending GET request to " + _login + "@"+ _hostName+ url);
+  }
+  HttpGet httpGet=new HttpGet(url);
+  return execute(httpGet);
+}
