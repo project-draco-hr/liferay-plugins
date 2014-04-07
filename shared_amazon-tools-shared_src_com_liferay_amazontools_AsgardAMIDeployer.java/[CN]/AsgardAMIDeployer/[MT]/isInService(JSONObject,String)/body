@@ -1,0 +1,15 @@
+{
+  JSONArray instanceStatesJSONArray=loadBalancerJSONObject.getJSONArray("instanceStates");
+  for (int i=0; i < instanceStatesJSONArray.length(); i++) {
+    JSONObject instanceStateJSONObject=instanceStatesJSONArray.getJSONObject(i);
+    String instanceStateAutoScalingGroupName=instanceStateJSONObject.getString("autoScalingGroupName");
+    if (!autoScalingGroupName.equals(instanceStateAutoScalingGroupName)) {
+      continue;
+    }
+    String state=instanceStateJSONObject.getString("state");
+    if (!state.equals("InService")) {
+      return false;
+    }
+  }
+  return true;
+}

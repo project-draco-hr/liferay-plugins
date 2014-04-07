@@ -1,0 +1,11 @@
+{
+  JSONArray instancesJSONArray=autoScalingGroupJSONObject.getJSONArray("instances");
+  for (int i=0; i < instancesJSONArray.length(); i++) {
+    JSONObject instance=instancesJSONArray.getJSONObject(i);
+    String lifecycleState=instance.getString("lifecycleState");
+    if (!lifecycleState.equals("InService")) {
+      return false;
+    }
+  }
+  return true;
+}
