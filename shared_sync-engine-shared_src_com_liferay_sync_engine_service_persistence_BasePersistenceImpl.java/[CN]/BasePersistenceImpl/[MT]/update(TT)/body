@@ -1,4 +1,6 @@
 {
-  notifyModelListenersOnUpdate(model);
-  return super.update(model);
+  TT sourceModel=queryForId(extractId(targetModel));
+  int count=super.update(targetModel);
+  notifyModelListenersOnUpdate(sourceModel,targetModel);
+  return count;
 }
