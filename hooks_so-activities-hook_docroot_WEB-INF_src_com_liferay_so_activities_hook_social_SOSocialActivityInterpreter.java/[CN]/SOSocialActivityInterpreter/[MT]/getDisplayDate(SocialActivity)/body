@@ -1,0 +1,10 @@
+{
+  long activitySetId=activity.getActivitySetId();
+  if (activitySetId > 0) {
+    SocialActivitySet socialActivitySet=SocialActivitySetLocalServiceUtil.fetchSocialActivitySet(activitySetId);
+    if ((socialActivitySet != null) && (socialActivitySet.getActivityCount() == 1) && (socialActivitySet.getModifiedDate() > socialActivitySet.getCreateDate())) {
+      return socialActivitySet.getModifiedDate();
+    }
+  }
+  return activity.getCreateDate();
+}
