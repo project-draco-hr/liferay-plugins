@@ -1,3 +1,11 @@
 {
-  return super.doImportData(portletDataContext,portletId,portletPreferences,data);
+  if (!portletDataContext.getBooleanParameter(NAMESPACE,"bookings")) {
+    return null;
+  }
+  Element sampleLARBookingsElement=portletDataContext.getImportDataGroupElement(SampleLARBooking.class);
+  List<Element> sampleLARBookingElements=sampleLARBookingsElement.elements();
+  for (  Element sampleLARBookingElement : sampleLARBookingElements) {
+    StagedModelDataHandlerUtil.importStagedModel(portletDataContext,sampleLARBookingElement);
+  }
+  return null;
 }

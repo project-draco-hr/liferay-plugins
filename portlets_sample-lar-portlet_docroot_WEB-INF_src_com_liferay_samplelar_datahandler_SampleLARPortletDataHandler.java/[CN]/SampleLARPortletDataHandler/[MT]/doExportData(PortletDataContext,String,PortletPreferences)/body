@@ -1,3 +1,10 @@
 {
-  return super.doExportData(portletDataContext,portletId,portletPreferences);
+  Element rootElement=addExportDataRootElement(portletDataContext);
+  if (!portletDataContext.getBooleanParameter(NAMESPACE,"bookings")) {
+    return getExportDataRootElementString(rootElement);
+  }
+  rootElement.addAttribute("group-id",String.valueOf(portletDataContext.getScopeGroupId()));
+  ActionableDynamicQuery sampleLARBookingActionableDynamicQuery=new SampleLARBookingExportActionableDynamicQuery(portletDataContext);
+  sampleLARBookingActionableDynamicQuery.performActions();
+  return getExportDataRootElementString(rootElement);
 }

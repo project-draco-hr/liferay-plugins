@@ -1,3 +1,7 @@
 {
-  return super.doDeleteData(portletDataContext,portletId,portletPreferences);
+  if (portletDataContext.addPrimaryKey(SampleLARPortletDataHandler.class,"deleteData")) {
+    return portletPreferences;
+  }
+  SampleLARBookingLocalServiceUtil.deleteSampleLARBookings(portletDataContext.getScopeGroupId());
+  return portletPreferences;
 }
