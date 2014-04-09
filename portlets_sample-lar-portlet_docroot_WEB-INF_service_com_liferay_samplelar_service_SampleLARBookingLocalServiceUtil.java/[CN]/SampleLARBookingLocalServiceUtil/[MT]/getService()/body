@@ -1,0 +1,13 @@
+{
+  if (_service == null) {
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),SampleLARBookingLocalService.class.getName());
+    if (invokableLocalService instanceof SampleLARBookingLocalService) {
+      _service=(SampleLARBookingLocalService)invokableLocalService;
+    }
+ else {
+      _service=new SampleLARBookingLocalServiceClp(invokableLocalService);
+    }
+    ReferenceRegistry.registerReference(SampleLARBookingLocalServiceUtil.class,"_service");
+  }
+  return _service;
+}

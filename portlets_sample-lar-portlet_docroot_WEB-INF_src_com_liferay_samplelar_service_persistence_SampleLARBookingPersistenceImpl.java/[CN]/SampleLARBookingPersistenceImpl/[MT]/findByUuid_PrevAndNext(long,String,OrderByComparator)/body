@@ -1,0 +1,18 @@
+{
+  SampleLARBooking sampleLARBooking=findByPrimaryKey(sampleLARBookingId);
+  Session session=null;
+  try {
+    session=openSession();
+    SampleLARBooking[] array=new SampleLARBookingImpl[3];
+    array[0]=getByUuid_PrevAndNext(session,sampleLARBooking,uuid,orderByComparator,true);
+    array[1]=sampleLARBooking;
+    array[2]=getByUuid_PrevAndNext(session,sampleLARBooking,uuid,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

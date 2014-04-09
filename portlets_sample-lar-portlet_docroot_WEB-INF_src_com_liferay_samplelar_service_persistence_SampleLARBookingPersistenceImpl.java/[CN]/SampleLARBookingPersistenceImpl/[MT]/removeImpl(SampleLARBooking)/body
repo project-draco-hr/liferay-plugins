@@ -1,0 +1,23 @@
+{
+  sampleLARBooking=toUnwrappedModel(sampleLARBooking);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(sampleLARBooking)) {
+      sampleLARBooking=(SampleLARBooking)session.get(SampleLARBookingImpl.class,sampleLARBooking.getPrimaryKeyObj());
+    }
+    if (sampleLARBooking != null) {
+      session.delete(sampleLARBooking);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (sampleLARBooking != null) {
+    clearCache(sampleLARBooking);
+  }
+  return sampleLARBooking;
+}
