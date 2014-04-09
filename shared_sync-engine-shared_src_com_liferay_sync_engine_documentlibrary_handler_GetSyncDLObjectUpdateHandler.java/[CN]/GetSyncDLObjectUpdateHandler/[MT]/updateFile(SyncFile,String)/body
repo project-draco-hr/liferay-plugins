@@ -1,5 +1,9 @@
 {
   SyncFile sourceSyncFile=SyncFileService.fetchSyncFile(targetSyncFile.getRepositoryId(),getSyncAccountId(),targetSyncFile.getTypePK());
+  if (sourceSyncFile == null) {
+    addFile(targetSyncFile,filePathName);
+    return;
+  }
   String sourceVersion=sourceSyncFile.getVersion();
   Path sourceFilePath=Paths.get(sourceSyncFile.getFilePathName());
   String sourceFileName=String.valueOf(sourceFilePath.getFileName());
