@@ -1,0 +1,12 @@
+{
+  if (_keyStore == null) {
+    return;
+  }
+  if (_sslConnectionSocketFactory == null) {
+    SSLContextBuilder sslContextBuilder=SSLContexts.custom();
+    sslContextBuilder.loadTrustMaterial(_keyStore,new TrustSelfSignedStrategy());
+    SSLContext sslContext=sslContextBuilder.build();
+    _sslConnectionSocketFactory=new SSLConnectionSocketFactory(sslContext,new String[]{"TLSv1"},null,SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+  }
+  httpClientBuilder.setSSLSocketFactory(_sslConnectionSocketFactory);
+}
