@@ -1,0 +1,16 @@
+{
+  User user=userPersistence.findByPrimaryKey(userId);
+  Date now=new Date();
+  validate(bookingNumber);
+  long sampleLARBookingId=counterLocalService.increment();
+  SampleLARBooking sampleLARBooking=sampleLARBookingPersistence.create(sampleLARBookingId);
+  sampleLARBooking.setGroupId(groupId);
+  sampleLARBooking.setCompanyId(user.getCompanyId());
+  sampleLARBooking.setUserId(userId);
+  sampleLARBooking.setUserName(user.getFullName());
+  sampleLARBooking.setCreateDate(serviceContext.getCreateDate(now));
+  sampleLARBooking.setModifiedDate(serviceContext.getModifiedDate(now));
+  sampleLARBooking.setBookingNumber(bookingNumber);
+  sampleLARBookingPersistence.update(sampleLARBooking);
+  return sampleLARBooking;
+}
