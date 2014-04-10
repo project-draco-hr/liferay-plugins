@@ -1,0 +1,12 @@
+{
+  String command=null;
+  String tomcatDir=System.getProperty("app.server.tomcat.dir");
+  if (OSDetector.isWindows()) {
+    command=tomcatDir.concat("/bin/catalina.bat ").concat(action);
+  }
+ else {
+    command=tomcatDir.concat("/bin/catalina.sh ").concat(action);
+  }
+  Runtime runtime=Runtime.getRuntime();
+  return runtime.exec(command);
+}

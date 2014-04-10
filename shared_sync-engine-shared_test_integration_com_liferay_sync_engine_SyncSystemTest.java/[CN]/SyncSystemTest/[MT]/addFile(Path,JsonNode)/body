@@ -1,0 +1,17 @@
+{
+  String doAsSyncAccount=getString(stepJsonNode,"doAsSyncAccount");
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(_syncAccounts.get(doAsSyncAccount));
+  StringBuilder sb=new StringBuilder();
+  sb.append("tests/dependencies/");
+  Path testFileNameFilePath=testFilePath.getFileName();
+  String testFileName=testFileNameFilePath.toString();
+  sb.append(FilenameUtils.removeExtension(testFileName));
+  sb.append("/");
+  String dependency=getString(stepJsonNode,"dependency");
+  sb.append(dependency);
+  Path sourceFilePath=getResourceFilePath(sb.toString());
+  String syncSiteName=getString(stepJsonNode,"site");
+  SyncSite syncSite=SyncSiteService.fetchSyncSite(_syncSites.get(syncSiteName),syncAccount.getSyncAccountId());
+  Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
+  Files.copy(sourceFilePath,targetFilePath);
+}

@@ -1,0 +1,16 @@
+{
+  if (Files.isDirectory(testFilePath)) {
+    return;
+  }
+  _testFileName=String.valueOf(testFilePath.getFileName());
+  SyncEngine.start();
+  _filePathName=FilePathNameUtil.fixFilePathName(System.getProperty("user.home") + "/liferay-sync-test");
+  _syncAccount=SyncAccountService.addSyncAccount(_filePathName + "/test",10,"test@liferay.com","test","test",false,"http://localhost:8080/api/jsonws");
+  long guestGroupId=SyncSystemTestUtil.getGuestGroupId(_syncAccount.getSyncAccountId());
+  _syncSites.put("Guest",guestGroupId);
+  BufferedReader bufferedReader=Files.newBufferedReader(testFilePath,Charset.defaultCharset());
+  ObjectMapper mapper=new ObjectMapper();
+  JsonNode rootJsonNode=mapper.readTree(bufferedReader);
+  executeSteps(testFilePath,rootJsonNode);
+  cleanUp();
+}

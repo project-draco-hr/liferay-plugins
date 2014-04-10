@@ -1,0 +1,8 @@
+{
+  String doAsSyncAccount=getString(stepJsonNode,"doAsSyncAccount");
+  long syncAccountId=_syncAccounts.get(doAsSyncAccount);
+  String syncSiteName=getString(stepJsonNode,"name");
+  SyncSite syncSite=SyncSiteService.fetchSyncSite(_syncSites.get(syncSiteName),syncAccountId);
+  syncSite.setActive(true);
+  SyncSiteService.update(syncSite);
+}

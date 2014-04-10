@@ -1,0 +1,17 @@
+{
+  if (_guestGroupId > 0) {
+    return _guestGroupId;
+  }
+  Map<String,Object> parameters=new HashMap<String,Object>();
+  parameters.put("companyId",getCompanyId(syncAccountId));
+  parameters.put("name","Guest");
+  Session session=SessionManager.getSession(syncAccountId);
+  HttpResponse httpResponse=session.executePost(_GET_GROUP_URL_PATH,parameters);
+  HttpEntity httpEntity=httpResponse.getEntity();
+  String response=EntityUtils.toString(httpEntity);
+  ObjectMapper mapper=new ObjectMapper();
+  JsonNode rootJsonNode=mapper.readTree(response);
+  JsonNode groupIdJsonNode=rootJsonNode.get("groupId");
+  _guestGroupId=groupIdJsonNode.asLong();
+  return _guestGroupId;
+}

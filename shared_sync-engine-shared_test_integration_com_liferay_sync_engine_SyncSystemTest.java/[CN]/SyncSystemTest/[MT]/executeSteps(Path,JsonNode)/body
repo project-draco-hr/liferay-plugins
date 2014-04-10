@@ -1,0 +1,23 @@
+{
+  JsonNode stepsJsonNode=rootJsonNode.get("steps");
+  Iterator<JsonNode> stepJsonNodes=stepsJsonNode.elements();
+  while (stepJsonNodes.hasNext()) {
+    JsonNode stepJsonNode=stepJsonNodes.next();
+    String action=getString(stepJsonNode,"action");
+    if (action.equals("activateSite")) {
+      activateSite(stepJsonNode);
+    }
+ else     if (action.equals("addAccount")) {
+      addAccount(stepJsonNode);
+    }
+ else     if (action.equals("addFile")) {
+      addFile(testFilePath,stepJsonNode);
+    }
+ else     if (action.equals("pause")) {
+      pause(stepJsonNode);
+    }
+ else     if (action.equals("verifyFile")) {
+      verifyFile(stepJsonNode);
+    }
+  }
+}
