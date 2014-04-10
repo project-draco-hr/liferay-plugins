@@ -1,2 +1,19 @@
 {
+  long userId=portletDataContext.getUserId(sampleLARBooking.getUserUuid());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(sampleLARBooking);
+  SampleLARBooking importedSampleLARBooking=null;
+  if (portletDataContext.isDataStrategyMirror()) {
+    SampleLARBooking existingSampleLARBooking=SampleLARBookingLocalServiceUtil.fetchSampleLARBookingByUuidAndGroupId(sampleLARBooking.getUuid(),portletDataContext.getScopeGroupId());
+    if (existingSampleLARBooking == null) {
+      serviceContext.setUuid(sampleLARBooking.getUuid());
+      importedSampleLARBooking=SampleLARBookingLocalServiceUtil.addSampleLARBooking(userId,portletDataContext.getScopeGroupId(),sampleLARBooking.getBookingNumber(),serviceContext);
+    }
+ else {
+      importedSampleLARBooking=SampleLARBookingLocalServiceUtil.updateSampleLARBooking(userId,existingSampleLARBooking.getSampleLARBookingId(),sampleLARBooking.getBookingNumber(),serviceContext);
+    }
+  }
+ else {
+    importedSampleLARBooking=SampleLARBookingLocalServiceUtil.addSampleLARBooking(userId,portletDataContext.getScopeGroupId(),sampleLARBooking.getBookingNumber(),serviceContext);
+  }
+  portletDataContext.importClassedModel(sampleLARBooking,importedSampleLARBooking);
 }
