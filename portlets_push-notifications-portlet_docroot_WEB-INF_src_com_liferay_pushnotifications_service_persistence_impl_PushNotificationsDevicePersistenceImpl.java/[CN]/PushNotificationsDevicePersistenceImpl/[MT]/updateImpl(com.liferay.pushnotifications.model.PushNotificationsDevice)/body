@@ -1,0 +1,28 @@
+{
+  pushNotificationsDevice=toUnwrappedModel(pushNotificationsDevice);
+  boolean isNew=pushNotificationsDevice.isNew();
+  Session session=null;
+  try {
+    session=openSession();
+    if (pushNotificationsDevice.isNew()) {
+      session.save(pushNotificationsDevice);
+      pushNotificationsDevice.setNew(false);
+    }
+ else {
+      session.merge(pushNotificationsDevice);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  EntityCacheUtil.putResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,PushNotificationsDeviceImpl.class,pushNotificationsDevice.getPrimaryKey(),pushNotificationsDevice,false);
+  pushNotificationsDevice.resetOriginalValues();
+  return pushNotificationsDevice;
+}
