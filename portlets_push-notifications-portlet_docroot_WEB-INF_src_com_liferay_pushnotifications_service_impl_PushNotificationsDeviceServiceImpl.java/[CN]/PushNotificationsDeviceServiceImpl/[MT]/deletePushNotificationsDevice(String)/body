@@ -1,0 +1,15 @@
+{
+  PushNotificationsDevice pushNotificationsDevice=null;
+  try {
+    PushNotificationsDevice existingPushNotificationsDevice=pushNotificationsDeviceLocalService.getPushNotificationsDevices(token);
+    if (getUserId() == existingPushNotificationsDevice.getUserId()) {
+      pushNotificationsDevice=pushNotificationsDeviceLocalService.deletePushNotificationsDevice(token);
+    }
+  }
+ catch (  NoSuchDeviceException nsde) {
+    if (_log.isInfoEnabled()) {
+      _log.info("Device " + token + " does not exist");
+    }
+  }
+  return pushNotificationsDevice;
+}
