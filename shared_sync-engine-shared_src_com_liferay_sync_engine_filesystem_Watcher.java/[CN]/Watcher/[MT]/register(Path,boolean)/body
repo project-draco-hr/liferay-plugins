@@ -1,30 +1,8 @@
 {
   long startTime=System.currentTimeMillis();
-  if (recursive) {
-    Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
-      @Override public FileVisitResult preVisitDirectory(      Path filePath,      BasicFileAttributes basicFileAttributes) throws IOException {
-        register(filePath,false);
-        return FileVisitResult.CONTINUE;
-      }
-      @Override public FileVisitResult visitFile(      Path filePath,      BasicFileAttributes basicFileAttributes){
-        if (Files.exists(filePath)) {
-          fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
-        }
-        return FileVisitResult.CONTINUE;
-      }
-    }
-);
-  }
- else {
-    name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
-    WatchKey watchKey=jpathwatchFilePath.register(_watchService,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
-    _filePaths.put(watchKey,filePath);
-    fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
-    if (_logger.isTraceEnabled()) {
-      _logger.trace("Registered file path {}",filePath);
-    }
-  }
-  List<SyncFile> syncFiles=SyncFileService.findSyncFiles(startTime,_watchEventListener.getSyncAccountId());
+  doRegister(filePath,recursive);
+  String filePathName=FilePathNameUtil.getFilePathName(filePath);
+  List<SyncFile> syncFiles=SyncFileService.findSyncFiles(filePathName,startTime,_watchEventListener.getSyncAccountId());
   for (  SyncFile syncFile : syncFiles) {
     fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_DELETE,java.nio.file.Paths.get(syncFile.getFilePathName()));
   }

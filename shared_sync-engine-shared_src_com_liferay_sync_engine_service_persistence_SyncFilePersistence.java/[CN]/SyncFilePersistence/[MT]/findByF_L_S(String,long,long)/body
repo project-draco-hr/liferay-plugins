@@ -1,8 +1,12 @@
 {
   QueryBuilder<SyncFile,Long> queryBuilder=queryBuilder();
   Where<SyncFile,Long> where=queryBuilder.where();
+  where.like("filePathName",filePathName + "%");
+  where.and();
   where.lt("localSyncTime",localSyncTime);
   where.and();
   where.eq("syncAccountId",syncAccountId);
+  where.and();
+  where.ne("type",SyncFile.TYPE_SYSTEM);
   return query(queryBuilder.prepare());
 }

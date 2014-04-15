@@ -1,0 +1,26 @@
+{
+  if (recursive) {
+    Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
+      @Override public FileVisitResult preVisitDirectory(      Path filePath,      BasicFileAttributes basicFileAttributes) throws IOException {
+        doRegister(filePath,false);
+        return FileVisitResult.CONTINUE;
+      }
+      @Override public FileVisitResult visitFile(      Path filePath,      BasicFileAttributes basicFileAttributes){
+        if (Files.exists(filePath)) {
+          fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
+        }
+        return FileVisitResult.CONTINUE;
+      }
+    }
+);
+  }
+ else {
+    name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
+    WatchKey watchKey=jpathwatchFilePath.register(_watchService,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
+    _filePaths.put(watchKey,filePath);
+    fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
+    if (_logger.isTraceEnabled()) {
+      _logger.trace("Registered file path {}",filePath);
+    }
+  }
+}

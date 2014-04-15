@@ -1,6 +1,7 @@
 {
   HttpEntity httpEntity=httpResponse.getEntity();
   String response=EntityUtils.toString(httpEntity);
-  handlePortalException(response);
-  processResponse(response);
+  if (!handlePortalException(response)) {
+    processResponse(response);
+  }
 }
