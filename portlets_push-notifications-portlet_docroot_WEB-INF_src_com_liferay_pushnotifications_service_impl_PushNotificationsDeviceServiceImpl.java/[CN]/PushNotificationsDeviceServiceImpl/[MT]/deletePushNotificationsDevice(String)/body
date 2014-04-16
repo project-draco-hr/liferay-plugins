@@ -1,14 +1,13 @@
 {
-  PushNotificationsDevice pushNotificationsDevice=null;
-  try {
-    PushNotificationsDevice existingPushNotificationsDevice=pushNotificationsDeviceLocalService.getPushNotificationsDevices(token);
-    if (getUserId() == existingPushNotificationsDevice.getUserId()) {
-      pushNotificationsDevice=pushNotificationsDeviceLocalService.deletePushNotificationsDevice(token);
+  PushNotificationsDevice pushNotificationsDevice=pushNotificationsDevicePersistence.fetchByToken(token);
+  if (pushNotificationsDevice == null) {
+    if (_log.isInfoEnabled()) {
+      _log.info("No device found with token " + token);
     }
   }
- catch (  NoSuchDeviceException nsde) {
-    if (_log.isInfoEnabled()) {
-      _log.info("Device " + token + " does not exist");
+ else {
+    if (getUserId() == pushNotificationsDevice.getUserId()) {
+      pushNotificationsDevice=pushNotificationsDeviceLocalService.deletePushNotificationsDevice(token);
     }
   }
   return pushNotificationsDevice;
