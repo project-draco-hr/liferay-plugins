@@ -1,0 +1,19 @@
+{
+  SyncSite syncSite=getSyncSite(stepJsonNode);
+  String dependency=getString(stepJsonNode,"dependency");
+  final Path sourceFilePath=getSourceFilePath(testFilePath,dependency);
+  final Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
+  Files.walkFileTree(sourceFilePath,new SimpleFileVisitor<Path>(){
+    @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
+      Path relativeFilePath=sourceFilePath.relativize(filePath);
+      Files.createDirectories(targetFilePath.resolve(relativeFilePath));
+      return FileVisitResult.CONTINUE;
+    }
+    @Override public FileVisitResult visitFile(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
+      Path relativeFilePath=sourceFilePath.relativize(filePath);
+      Files.copy(filePath,targetFilePath.resolve(relativeFilePath));
+      return FileVisitResult.CONTINUE;
+    }
+  }
+);
+}

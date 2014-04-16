@@ -1,11 +1,8 @@
 {
-  String doAsSyncAccount=getString(stepJsonNode,"doAsSyncAccount");
-  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(_syncAccountIds.get(doAsSyncAccount));
-  String syncSiteName=getString(stepJsonNode,"site");
-  SyncSite syncSite=SyncSiteService.fetchSyncSite(_syncSiteIds.get(syncSiteName),syncAccount.getSyncAccountId());
+  SyncSite syncSite=getSyncSite(stepJsonNode);
   String source=getString(stepJsonNode,"source");
   Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + source);
-  String operation=getString(stepJsonNode,"operation");
+  String operation=getString(stepJsonNode,"operation","exists");
   String testName=FilenameUtils.removeExtension(_testFileName);
   if ((operation.equals("exists") && Files.notExists(targetFilePath)) || (operation.equals("notExists") && Files.exists(targetFilePath))) {
     Assert.fail("Test " + testName + " failed.");

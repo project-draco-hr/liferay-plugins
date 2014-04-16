@@ -1,8 +1,5 @@
 {
-  String doAsSyncAccount=getString(stepJsonNode,"doAsSyncAccount");
-  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(_syncAccountIds.get(doAsSyncAccount));
-  String syncSiteName=getString(stepJsonNode,"site");
-  SyncSite syncSite=SyncSiteService.fetchSyncSite(_syncSiteIds.get(syncSiteName),syncAccount.getSyncAccountId());
+  SyncSite syncSite=getSyncSite(stepJsonNode);
   String dependency=getString(stepJsonNode,"dependency");
   Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
   Files.copy(getSourceFilePath(testFilePath,dependency),targetFilePath);
