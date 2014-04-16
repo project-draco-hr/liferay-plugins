@@ -1,3 +1,8 @@
 {
+  SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),_watchEventListener.getSyncAccountId());
+  if (syncFile != null) {
+    syncFile.setLocalSyncTime(System.currentTimeMillis());
+    SyncFileService.update(syncFile);
+  }
   _watchEventListener.watchEvent(eventType,filePath);
 }
