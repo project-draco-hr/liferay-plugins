@@ -12,7 +12,19 @@
     return false;
   }
   String exception=exceptionJsonNode.asText();
-  if (exception.equals("java.lang.RuntimeException")) {
+  if (exception.equals("com.liferay.portal.security.auth.PrincipalException")) {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    syncFile.setState(SyncFile.STATE_ERROR);
+    syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_PERMISSIONS);
+    SyncFileService.update(syncFile);
+  }
+ else   if (exception.equals("com.liferay.portlet.documentlibrary." + "NoSuchFileEntryException")) {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    Path filePath=Paths.get(syncFile.getFilePathName());
+    Files.deleteIfExists(filePath);
+    SyncFileService.deleteSyncFile(syncFile);
+  }
+ else   if (exception.equals("java.lang.RuntimeException")) {
     SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
     syncAccount.setActive(false);
     syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
