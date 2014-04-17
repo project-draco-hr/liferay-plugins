@@ -6,14 +6,12 @@
     UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
     return null;
   }
-  StringBundler sb=new StringBundler(14);
-  sb.append("<div class=\"title\">");
+  String title=StringPool.BLANK;
   if (socialRequest.getType() == SocialRelationConstants.TYPE_BI_CONNECTION) {
     String creatorUserName=getUserNameLink(socialRequest.getUserId(),serviceContext);
-    sb.append(serviceContext.translate("request-social-networking-summary-add-connection",creatorUserName));
+    title=serviceContext.translate("request-social-networking-summary-add-connection",creatorUserName);
   }
-  sb.append("</div>");
-  sb.append("<div class=\"body\">");
+  String body=getNotificationTemplate();
   LiferayPortletResponse liferayPortletResponse=serviceContext.getLiferayPortletResponse();
   PortletURL confirmURL=liferayPortletResponse.createActionURL(PortletKeys.CONTACTS_CENTER);
   confirmURL.setParameter(ActionRequest.ACTION_NAME,"updateSocialRequest");
@@ -22,11 +20,6 @@
   confirmURL.setParameter("status",String.valueOf(SocialRequestConstants.STATUS_CONFIRM));
   confirmURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
   confirmURL.setWindowState(WindowState.NORMAL);
-  sb.append("<a class=\"btn btn-success\"href=\"");
-  sb.append(confirmURL);
-  sb.append("\">");
-  sb.append(serviceContext.translate("confirm"));
-  sb.append("</a>");
   PortletURL ignoreURL=liferayPortletResponse.createActionURL(PortletKeys.CONTACTS_CENTER);
   ignoreURL.setParameter(ActionRequest.ACTION_NAME,"updateSocialRequest");
   ignoreURL.setParameter("redirect",serviceContext.getLayoutFullURL());
@@ -34,10 +27,6 @@
   ignoreURL.setParameter("status",String.valueOf(SocialRequestConstants.STATUS_IGNORE));
   ignoreURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
   ignoreURL.setWindowState(WindowState.NORMAL);
-  sb.append("<a class=\"btn btn-warning\"href=\"");
-  sb.append(ignoreURL);
-  sb.append("\">");
-  sb.append(serviceContext.translate("ignore"));
-  sb.append("</a></div>");
-  return sb.toString();
+  body=StringUtil.replace(body,new String[]{"[$TITLE$]","[$CONFIRM_URL$]","[$CONFIRM$]","[$IGNORE_URL$]","[$IGNORE$]"},new String[]{title,confirmURL.toString(),serviceContext.translate("confirm"),ignoreURL.toString(),serviceContext.translate("ignore")});
+  return body;
 }

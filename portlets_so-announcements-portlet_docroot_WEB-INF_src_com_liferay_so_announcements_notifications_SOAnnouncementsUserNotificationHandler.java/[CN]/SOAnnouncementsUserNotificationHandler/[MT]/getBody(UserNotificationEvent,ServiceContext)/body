@@ -6,11 +6,8 @@
     UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
     return null;
   }
-  StringBundler sb=new StringBundler(5);
-  sb.append("<div class=\"title\">");
-  sb.append(serviceContext.translate("x-sent-a-new-announcement",HtmlUtil.escape(PortalUtil.getUserName(announcementEntry.getUserId(),StringPool.BLANK))));
-  sb.append("</div><div class=\"body\">");
-  sb.append(StringUtil.shorten(announcementEntry.getContent(),50));
-  sb.append("</div>");
-  return sb.toString();
+  String body=getNotificationTemplate();
+  String title=serviceContext.translate("x-sent-a-new-announcement",HtmlUtil.escape(PortalUtil.getUserName(announcementEntry.getUserId(),StringPool.BLANK)));
+  body=StringUtil.replace(body,new String[]{"[$TITLE$]","[$BODY$]"},new String[]{title,HtmlUtil.escape(StringUtil.shorten(announcementEntry.getContent(),50))});
+  return body;
 }
