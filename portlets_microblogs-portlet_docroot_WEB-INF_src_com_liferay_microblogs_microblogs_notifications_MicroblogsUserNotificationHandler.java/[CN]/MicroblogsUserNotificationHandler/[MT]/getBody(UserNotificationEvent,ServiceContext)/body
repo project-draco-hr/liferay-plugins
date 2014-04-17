@@ -6,12 +6,10 @@
     UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
     return null;
   }
-  String body=getNotificationTemplate();
   String title=StringPool.BLANK;
   if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPLY) {
     String userFullName=HtmlUtil.escape(PortalUtil.getUserName(microblogsEntry.getUserId(),StringPool.BLANK));
     title=serviceContext.translate("x-commented-on-your-post",userFullName);
   }
-  body=StringUtil.replace(body,new String[]{"[$BODY$]","[$TITLE$]"},new String[]{HtmlUtil.escape(StringUtil.shorten(microblogsEntry.getContent(),50)),title});
-  return body;
+  return StringUtil.replace(getBodyTemplate(),new String[]{"[$BODY$]","[$TITLE$]"},new String[]{HtmlUtil.escape(StringUtil.shorten(microblogsEntry.getContent(),50)),title});
 }

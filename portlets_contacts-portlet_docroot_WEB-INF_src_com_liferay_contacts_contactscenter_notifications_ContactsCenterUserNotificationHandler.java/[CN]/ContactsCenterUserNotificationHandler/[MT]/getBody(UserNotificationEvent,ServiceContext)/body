@@ -11,7 +11,6 @@
     String creatorUserName=getUserNameLink(socialRequest.getUserId(),serviceContext);
     title=serviceContext.translate("request-social-networking-summary-add-connection",creatorUserName);
   }
-  String body=getNotificationTemplate();
   LiferayPortletResponse liferayPortletResponse=serviceContext.getLiferayPortletResponse();
   PortletURL confirmURL=liferayPortletResponse.createActionURL(PortletKeys.CONTACTS_CENTER);
   confirmURL.setParameter(ActionRequest.ACTION_NAME,"updateSocialRequest");
@@ -27,6 +26,5 @@
   ignoreURL.setParameter("status",String.valueOf(SocialRequestConstants.STATUS_IGNORE));
   ignoreURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
   ignoreURL.setWindowState(WindowState.NORMAL);
-  body=StringUtil.replace(body,new String[]{"[$CONFIRM$]","[$CONFIRM_URL$]","[$IGNORE$]","[$IGNORE_URL$]","[$TITLE$]"},new String[]{serviceContext.translate("confirm"),confirmURL.toString(),serviceContext.translate("ignore"),ignoreURL.toString(),title});
-  return body;
+  return StringUtil.replace(getBodyTemplate(),new String[]{"[$CONFIRM$]","[$CONFIRM_URL$]","[$IGNORE$]","[$IGNORE_URL$]","[$TITLE$]"},new String[]{serviceContext.translate("confirm"),confirmURL.toString(),serviceContext.translate("ignore"),ignoreURL.toString(),title});
 }
