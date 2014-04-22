@@ -1,14 +1,13 @@
 {
   System.out.println("Executing session command: " + command);
   Session session=sshClient.startSession();
+  session.allocateDefaultPTY();
   try {
     Session.Command sessionCommand=session.exec(command);
-    ByteArrayOutputStream byteArrayOutputStream=IOUtils.readFully(sessionCommand.getInputStream());
-    String result=byteArrayOutputStream.toString();
-    if ((result != null) && (result.length() > 0)) {
-      System.out.println("Result: " + result);
+    if (_output) {
+      new StreamCopier(session.getInputStream(),System.out).copy();
     }
-    sessionCommand.join(5,TimeUnit.SECONDS);
+    sessionCommand.join();
   }
   finally {
     session.close();

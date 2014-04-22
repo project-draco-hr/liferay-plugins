@@ -3,8 +3,10 @@
   CmdLineParser.Option baseDirOption=cmdLineParser.addStringOption("base.dir");
   CmdLineParser.Option propertiesFileNameOption=cmdLineParser.addStringOption("properties.file.name");
   CmdLineParser.Option imageNameOption=cmdLineParser.addStringOption("image.name");
+  CmdLineParser.Option outputOption=cmdLineParser.addStringOption("output");
   cmdLineParser.parse(args);
-  AMIBuilder amiBuilder=new AMIBuilder((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
+  boolean output=Boolean.parseBoolean((String)cmdLineParser.getOptionValue(outputOption));
+  final AMIBuilder amiBuilder=new AMIBuilder((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),output,(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
   try {
     amiBuilder.start();
     amiBuilder.provision();
