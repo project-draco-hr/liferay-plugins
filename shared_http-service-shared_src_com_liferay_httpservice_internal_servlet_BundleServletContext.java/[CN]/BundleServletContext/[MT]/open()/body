@@ -6,7 +6,7 @@
   properties.put("bundle.version",_bundle.getVersion());
   properties.put("Web-ContextPath",StringPool.SLASH.concat(_servletContextName));
   BundleContext bundleContext=_bundle.getBundleContext();
-  _serviceRegistration=bundleContext.registerService(BundleServletContext.class,this,properties);
+  _serviceRegistration=(ServiceRegistration<ServletContext>)bundleContext.registerService(new String[]{BundleServletContext.class.getName(),ServletContext.class.getName()},this,properties);
   _httpServiceTracker=new HttpServiceTracker(bundleContext,_bundle);
   _httpServiceTracker.open();
 }
