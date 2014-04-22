@@ -7,6 +7,13 @@
   cmdLineParser.parse(args);
   boolean output=Boolean.parseBoolean((String)cmdLineParser.getOptionValue(outputOption));
   final AMIBuilder amiBuilder=new AMIBuilder((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),output,(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
+  Runtime runtime=Runtime.getRuntime();
+  runtime.addShutdownHook(new Thread(){
+    public void run(){
+      amiBuilder.destroy();
+    }
+  }
+);
   try {
     amiBuilder.start();
     amiBuilder.provision();
