@@ -1,0 +1,24 @@
+{
+  if (OSDetector.isWindows()) {
+    Matcher reservedNameMatcher=_windowsReservedNamePattern.matcher(name);
+    Matcher illegalCharMatcher=_windowsIllegalCharPattern.matcher(name);
+    if (!reservedNameMatcher.matches() && !illegalCharMatcher.find()) {
+      return true;
+    }
+ else {
+      return false;
+    }
+  }
+ else   if (OSDetector.isApple() || OSDetector.isUnix()) {
+    Matcher matcher=_unixIllegalCharPattern.matcher(name);
+    if (!matcher.find()) {
+      return true;
+    }
+ else {
+      return false;
+    }
+  }
+ else {
+    return true;
+  }
+}
