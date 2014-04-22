@@ -1,11 +1,24 @@
 {
-  sleep(45);
-  SSHClient sshClient=new SSHClient();
-  sshClient.addHostKeyVerifier(new PromiscuousVerifier());
-  sshClient.setTimeout(Integer.parseInt(properties.getProperty("ssh.timeout")) * 1000);
-  sshClient.useCompression();
+  SSHClient sshClient=null;
   System.out.println("Connecting via SSH to " + _publicIpAddress);
-  sshClient.connect(_publicIpAddress);
+  for (int i=0; i < 6; i++) {
+    sleep(30);
+    sshClient=new SSHClient();
+    sshClient.addHostKeyVerifier(new PromiscuousVerifier());
+    sshClient.setTimeout(Integer.parseInt(properties.getProperty("ssh.timeout")) * 1000);
+    sshClient.useCompression();
+    try {
+      sshClient.connect(_publicIpAddress);
+      break;
+    }
+ catch (    ConnectException ce) {
+      sshClient=null;
+      continue;
+    }
+  }
+  if (sshClient == null) {
+    throw new RuntimeException("Unable to connect via SSH to " + _publicIpAddress);
+  }
   FileKeyProvider fileKeyProvider=new PKCS8KeyFile();
   fileKeyProvider.init(new File(getKeyFileName()));
   sshClient.authPublickey(properties.getProperty("ssh.username"),fileKeyProvider);
