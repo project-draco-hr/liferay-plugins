@@ -1,6 +1,9 @@
 {
-  JSONObject payloadJSONObject=(JSONObject)message.getPayload();
+  JSONObject jsonObj=(JSONObject)message.getPayload();
   if (_log.isDebugEnabled()) {
-    _log.debug("Received message " + payloadJSONObject);
+    _log.debug("Received message " + jsonObj);
+  }
+  for (  PushNotificationSender pushNotificationSender : _pushNotificationSenders) {
+    pushNotificationSender.send(jsonObj);
   }
 }
