@@ -5,11 +5,10 @@
   CmdLineParser.Option imageNameOption=cmdLineParser.addStringOption("image.name");
   CmdLineParser.Option outputOption=cmdLineParser.addStringOption("output");
   cmdLineParser.parse(args);
-  boolean output=Boolean.parseBoolean((String)cmdLineParser.getOptionValue(outputOption));
-  final AMIBuilder amiBuilder=new AMIBuilder((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),output,(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
+  final AMIBuilder amiBuilder=new AMIBuilder((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),Boolean.parseBoolean((String)cmdLineParser.getOptionValue(outputOption)),(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
   Runtime runtime=Runtime.getRuntime();
   runtime.addShutdownHook(new Thread(){
-    public void run(){
+    @Override public void run(){
       amiBuilder.destroy();
     }
   }
