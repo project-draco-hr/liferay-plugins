@@ -4,7 +4,9 @@
   syncFile.setUiEvent(SyncFile.UI_EVENT_DOWNLOADING);
   SyncFileService.update(syncFile);
   StringBuilder sb=new StringBuilder(9);
-  sb.append(replaceURLPath(getSyncAccountId()));
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+  sb.append(syncAccount.getUrl());
+  sb.append(_URL_PATH);
   sb.append("/");
   sb.append(syncFile.getRepositoryId());
   sb.append("/");
