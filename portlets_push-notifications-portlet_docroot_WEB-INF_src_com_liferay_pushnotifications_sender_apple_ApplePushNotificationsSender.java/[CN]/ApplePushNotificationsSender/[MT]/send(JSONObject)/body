@@ -1,12 +1,12 @@
 {
-  long userId=jsonObj.getLong("userId");
   String payload=null;
   try {
-    List<String> tokens=PushNotificationsDeviceLocalServiceUtil.getTokens(userId,IOS,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    long userId=jsonObject.getLong("userId");
+    List<String> tokens=PushNotificationsDeviceLocalServiceUtil.getTokens(userId,"ios",QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     if (tokens.isEmpty()) {
       return;
     }
-    payload=buildPayload(jsonObj);
+    payload=buildPayload(jsonObject);
     _apnsService.push(tokens,payload);
   }
  catch (  Exception e) {

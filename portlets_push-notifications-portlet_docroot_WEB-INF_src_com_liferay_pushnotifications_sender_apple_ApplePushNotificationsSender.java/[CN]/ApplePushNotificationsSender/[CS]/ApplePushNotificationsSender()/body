@@ -1,11 +1,8 @@
 {
-  ApnsServiceBuilder builder=APNS.newService();
-  String path=PortletPropsValues.APPLE_CERTIFICATE_PATH;
-  String password=PortletPropsValues.APPLE_CERTIFICATE_PASSWORD;
-  boolean sandbox=PortletPropsValues.APPLE_SANDBOX;
-  builder.withCert(path,password);
-  if (sandbox) {
-    builder.withSandboxDestination();
+  ApnsServiceBuilder appleServiceBuilder=APNS.newService();
+  appleServiceBuilder.withCert(PortletPropsValues.APPLE_CERTIFICATE_PATH,PortletPropsValues.APPLE_CERTIFICATE_PASSWORD);
+  if (PortletPropsValues.APPLE_SANDBOX) {
+    appleServiceBuilder.withSandboxDestination();
   }
-  _apnsService=builder.build();
+  _apnsService=appleServiceBuilder.build();
 }
