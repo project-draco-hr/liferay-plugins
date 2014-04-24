@@ -10,5 +10,10 @@
   _syncAccountPersistence.create(syncAccount);
   Files.createDirectories(Paths.get(filePathName));
   SyncFileService.addSyncFile(null,null,filePathName,FileUtil.getFileKey(filePathName),filePathName,null,filePathName,0,0,syncAccount.getSyncAccountId(),SyncFile.TYPE_SYSTEM);
+  if (syncSites != null) {
+    for (    SyncSite syncSite : syncSites) {
+      SyncSiteService.update(syncSite);
+    }
+  }
   return syncAccount;
 }
