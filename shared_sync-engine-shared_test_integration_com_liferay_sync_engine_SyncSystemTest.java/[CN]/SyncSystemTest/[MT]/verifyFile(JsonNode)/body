@@ -3,11 +3,8 @@
   String source=getString(stepJsonNode,"source");
   Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + source);
   String operation=getString(stepJsonNode,"operation","exists");
-  String testName=FilenameUtils.removeExtension(_testFileName);
   if ((operation.equals("exists") && Files.notExists(targetFilePath)) || (operation.equals("notExists") && Files.exists(targetFilePath))) {
-    Assert.fail("Test " + testName + " failed.");
-  }
- else {
-    _logger.info("Test {} passed.",testName);
+    String testFileName=FilePathNameUtil.getFilePathName(_testFilePath.getFileName());
+    Assert.fail("Test " + testFileName + " failed.");
   }
 }

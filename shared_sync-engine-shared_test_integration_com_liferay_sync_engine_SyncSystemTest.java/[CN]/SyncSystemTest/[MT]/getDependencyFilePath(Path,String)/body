@@ -3,8 +3,10 @@
   sb.append("tests/dependencies/");
   Path testFileNameFilePath=testFilePath.getFileName();
   String testFileName=testFileNameFilePath.toString();
-  sb.append(FilenameUtils.removeExtension(testFileName));
-  sb.append("/");
+  if (!dependency.contains("common")) {
+    sb.append(FilenameUtils.removeExtension(testFileName));
+    sb.append("/");
+  }
   sb.append(dependency);
   return getResourceFilePath(sb.toString());
 }

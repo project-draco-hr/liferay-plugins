@@ -1,6 +1,8 @@
 {
   SyncSite syncSite=getSyncSite(stepJsonNode);
   String dependency=getString(stepJsonNode,"dependency");
+  Path dependencyFilePath=getDependencyFilePath(testFilePath,dependency);
+  dependency=dependency.replace("common/","");
   Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
-  Files.copy(getSourceFilePath(testFilePath,dependency),targetFilePath);
+  Files.copy(dependencyFilePath,targetFilePath);
 }
