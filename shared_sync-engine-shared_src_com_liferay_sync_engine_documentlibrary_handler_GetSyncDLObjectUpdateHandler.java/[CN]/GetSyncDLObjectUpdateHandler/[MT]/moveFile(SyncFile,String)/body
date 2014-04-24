@@ -2,6 +2,9 @@
   SyncFile sourceSyncFile=SyncFileService.fetchSyncFile(targetSyncFile.getRepositoryId(),getSyncAccountId(),targetSyncFile.getTypePK());
   Path sourceFilePath=Paths.get(sourceSyncFile.getFilePathName());
   Path targetFilePath=Paths.get(targetFilePathName);
+  if (Files.notExists(sourceFilePath)) {
+    return;
+  }
   Files.move(sourceFilePath,targetFilePath);
   sourceSyncFile.setFilePathName(targetFilePathName);
   sourceSyncFile.setModifiedTime(targetSyncFile.getModifiedTime());
