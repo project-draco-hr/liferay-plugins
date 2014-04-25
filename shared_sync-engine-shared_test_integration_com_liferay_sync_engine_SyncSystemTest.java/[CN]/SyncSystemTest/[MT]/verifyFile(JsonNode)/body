@@ -1,9 +1,30 @@
 {
-  SyncSite syncSite=getSyncSite(stepJsonNode);
-  String source=getString(stepJsonNode,"source");
-  Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + source);
+  boolean testPassed=true;
   String operation=getString(stepJsonNode,"operation","exists");
-  if ((operation.equals("exists") && Files.notExists(targetFilePath)) || (operation.equals("notExists") && Files.exists(targetFilePath))) {
+  if (operation.equals("exists")) {
+    if (Files.notExists(getTargetFilePath(stepJsonNode))) {
+      testPassed=false;
+    }
+  }
+ else   if (operation.equals("notExists")) {
+    if (Files.exists(getTargetFilePath(stepJsonNode))) {
+      testPassed=false;
+    }
+  }
+ else   if (operation.equals("equals")) {
+    List<File> files=new ArrayList<File>();
+    JsonNode filesJsonNode=stepJsonNode.get("files");
+    Iterator<JsonNode> filesJsonNodeIterator=filesJsonNode.elements();
+    while (filesJsonNodeIterator.hasNext()) {
+      JsonNode fileJsonNode=filesJsonNodeIterator.next();
+      Path targetFilePath=getTargetFilePath(fileJsonNode);
+      files.add(targetFilePath.toFile());
+    }
+    if (!FileUtils.contentEquals(files.get(0),files.get(1))) {
+      testPassed=false;
+    }
+  }
+  if (!testPassed) {
     String testFileName=FilePathNameUtil.getFilePathName(_testFilePath.getFileName());
     Assert.fail("Test " + testFileName + " failed.");
   }
