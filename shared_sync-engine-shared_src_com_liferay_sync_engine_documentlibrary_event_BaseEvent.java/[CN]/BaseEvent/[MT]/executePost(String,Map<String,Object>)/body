@@ -1,4 +1,5 @@
 {
   Session session=SessionManager.getSession(_syncAccountId);
-  return session.executePost(urlPath,parameters,(Handler<? extends T>)_handler);
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+  return session.executePost(syncAccount.getUrl() + "/api/jsonws" + urlPath,parameters,(Handler<? extends T>)_handler);
 }

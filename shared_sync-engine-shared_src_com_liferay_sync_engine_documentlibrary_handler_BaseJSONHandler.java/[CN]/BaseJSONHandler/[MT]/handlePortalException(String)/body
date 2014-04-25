@@ -18,6 +18,20 @@
     syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_PERMISSIONS);
     SyncFileService.update(syncFile);
   }
+ else   if (exception.equals("com.liferay.portlet.documentlibrary." + "DuplicateFileException")) {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    Path filePath=Paths.get(syncFile.getFilePathName());
+    String parentFilePathName=FilePathNameUtil.getFilePathName(filePath.getParent());
+    SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentFilePathName,getSyncAccountId());
+    Map<String,Object> parameters=new HashMap<String,Object>();
+    parameters.put("folderId",parentSyncFile.getTypePK());
+    parameters.put("groupId",parentSyncFile.getRepositoryId());
+    parameters.put("syncFile",syncFile);
+    parameters.put("title",syncFile.getName());
+    GetFileEntrySyncDLObjectEvent getFileEntrySyncDLObjectEvent=new GetFileEntrySyncDLObjectEvent(getSyncAccountId(),parameters);
+    getFileEntrySyncDLObjectEvent.run();
+    SyncFileService.updateFileSyncFile(Paths.get(syncFile.getFilePathName()),getSyncAccountId(),syncFile,true);
+  }
  else   if (exception.equals("com.liferay.portlet.documentlibrary." + "NoSuchFileEntryException")) {
     SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
     Path filePath=Paths.get(syncFile.getFilePathName());

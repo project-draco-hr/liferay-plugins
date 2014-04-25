@@ -1,4 +1,5 @@
 {
   Session session=SessionManager.getSession(_syncAccountId);
-  return session.executeGet(urlPath,(Handler<? extends T>)_handler);
+  SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+  return session.executeGet(syncAccount.getUrl() + urlPath,(Handler<? extends T>)_handler);
 }
