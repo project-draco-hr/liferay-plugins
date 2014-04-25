@@ -20,7 +20,7 @@
       String mimeType=KnowledgeBaseUtil.getMimeType(bytes,fileName);
       String shortFileName=FileUtil.getShortFileName(fileName);
       PortletFileRepositoryUtil.addPortletFileEntry(serviceContext.getScopeGroupId(),userId,KBArticle.class.getName(),kbArticle.getClassPK(),PortletKeys.KNOWLEDGE_BASE_ARTICLE,kbArticle.getAttachmentsFolderId(),inputStream,shortFileName,mimeType,true);
-      deleteTempAttachment(dirName,shortFileName,serviceContext);
+      DLStoreUtil.deleteFile(serviceContext.getCompanyId(),CompanyConstants.SYSTEM,dirName + StringPool.SLASH + shortFileName);
     }
   finally {
       StreamUtil.cleanUp(inputStream);
