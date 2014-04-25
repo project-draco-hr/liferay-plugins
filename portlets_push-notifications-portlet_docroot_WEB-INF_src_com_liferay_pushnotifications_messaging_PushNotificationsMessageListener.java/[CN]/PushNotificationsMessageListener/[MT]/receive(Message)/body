@@ -1,9 +1,21 @@
 {
   JSONObject jsonObject=(JSONObject)message.getPayload();
+  long userId=jsonObject.getLong("userId");
   if (_log.isDebugEnabled()) {
-    _log.debug("Received message " + jsonObject);
+    _log.debug("Received message " + jsonObject + " for userId "+ userId);
   }
-  for (  PushNotificationsSender pushNotificationsSender : _pushNotificationsSenders) {
-    pushNotificationsSender.send(jsonObject);
+  try {
+    for (    Entry<String,PushNotificationsSender> entry : _pushNotificationsSenders.entrySet()) {
+      String platform=entry.getKey();
+      List<String> tokens=PushNotificationsDeviceLocalServiceUtil.getTokens(userId,platform,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+      if (tokens.isEmpty()) {
+        continue;
+      }
+      PushNotificationsSender pushNotificationsSender=entry.getValue();
+      pushNotificationsSender.send(tokens,jsonObject);
+    }
+  }
+ catch (  Exception e) {
+    _log.error("Could not send notification",e);
   }
 }
