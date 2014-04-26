@@ -5,10 +5,7 @@
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("virtualHost","localhost");
   HttpResponse httpResponse=executePost("/company/get-company-by-virtual-host",parameters,syncAccountId);
-  HttpEntity httpEntity=httpResponse.getEntity();
-  String response=EntityUtils.toString(httpEntity);
-  ObjectMapper mapper=new ObjectMapper();
-  JsonNode rootJsonNode=mapper.readTree(response);
+  JsonNode rootJsonNode=toJsonNode(httpResponse);
   JsonNode companyIdJsonNode=rootJsonNode.get("companyId");
   _companyId=companyIdJsonNode.asLong();
   return _companyId;

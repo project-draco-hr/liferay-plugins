@@ -6,10 +6,7 @@
   parameters.put("companyId",getCompanyId(syncAccountId));
   parameters.put("name","Administrator");
   HttpResponse httpResponse=executePost("/role/get-role",parameters,syncAccountId);
-  HttpEntity httpEntity=httpResponse.getEntity();
-  String response=EntityUtils.toString(httpEntity);
-  ObjectMapper mapper=new ObjectMapper();
-  JsonNode rootJsonNode=mapper.readTree(response);
+  JsonNode rootJsonNode=toJsonNode(httpResponse);
   JsonNode roleIdJsonNode=rootJsonNode.get("roleId");
   _adminRoleId=roleIdJsonNode.asLong();
   return _adminRoleId;

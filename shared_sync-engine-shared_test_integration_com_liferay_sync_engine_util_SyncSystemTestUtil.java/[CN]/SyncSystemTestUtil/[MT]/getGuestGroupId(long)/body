@@ -6,10 +6,7 @@
   parameters.put("companyId",getCompanyId(syncAccountId));
   parameters.put("name","Guest");
   HttpResponse httpResponse=executePost("/group/get-group",parameters,syncAccountId);
-  HttpEntity httpEntity=httpResponse.getEntity();
-  String response=EntityUtils.toString(httpEntity);
-  ObjectMapper mapper=new ObjectMapper();
-  JsonNode rootJsonNode=mapper.readTree(response);
+  JsonNode rootJsonNode=toJsonNode(httpResponse);
   JsonNode groupIdJsonNode=rootJsonNode.get("groupId");
   _guestGroupId=groupIdJsonNode.asLong();
   return _guestGroupId;
