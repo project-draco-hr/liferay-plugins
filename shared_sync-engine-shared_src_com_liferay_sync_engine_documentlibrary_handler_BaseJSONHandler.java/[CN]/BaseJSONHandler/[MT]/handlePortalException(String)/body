@@ -12,7 +12,16 @@
     return false;
   }
   String exception=exceptionJsonNode.asText();
-  if (exception.equals("com.liferay.portal.security.auth.PrincipalException")) {
+  if (_logger.isDebugEnabled()) {
+    _logger.debug(exception);
+  }
+  if (exception.equals("com.liferay.portal.kernel.upload.UploadException")) {
+    SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
+    syncFile.setState(SyncFile.STATE_ERROR);
+    syncFile.setUiEvent(SyncFile.UI_EVENT_EXCEEDED_SIZE_LIMIT);
+    SyncFileService.update(syncFile);
+  }
+ else   if (exception.equals("com.liferay.portal.security.auth.PrincipalException")) {
     SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
     syncFile.setState(SyncFile.STATE_ERROR);
     syncFile.setUiEvent(SyncFile.UI_EVENT_INVALID_PERMISSIONS);
