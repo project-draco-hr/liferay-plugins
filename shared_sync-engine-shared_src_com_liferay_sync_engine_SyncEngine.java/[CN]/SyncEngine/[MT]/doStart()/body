@@ -3,9 +3,12 @@
   LoggerUtil.initLogger();
   _logger.info("Starting {}",PropsValues.SYNC_PRODUCT_NAME);
   UpgradeUtil.upgrade();
-  SyncAccountService.registerModelListener(new SyncAccountModelListener());
-  SyncFileService.registerModelListener(new SyncFileModelListener());
-  SyncSiteService.registerModelListener(new SyncSiteModelListener());
+  _syncAccountModelListener=new SyncAccountModelListener();
+  _syncFileModelListener=new SyncFileModelListener();
+  _syncSiteModelListener=new SyncSiteModelListener();
+  SyncAccountService.registerModelListener(_syncAccountModelListener);
+  SyncFileService.registerModelListener(_syncFileModelListener);
+  SyncSiteService.registerModelListener(_syncSiteModelListener);
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor();
   _syncWatchEventProcessorExecutorService=Executors.newSingleThreadScheduledExecutor();
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
