@@ -1,0 +1,18 @@
+{
+  if (Validator.isNotNull(urlTitle)) {
+    urlTitle=KnowledgeBaseUtil.getUrlTitle(kbArticleId,urlTitle);
+  }
+ else {
+    urlTitle=getUniqueUrlTitle(serviceContext.getScopeGroupId(),kbArticleId,title);
+  }
+  KBArticle urlTitleArticle=null;
+  try {
+    urlTitleArticle=getKBArticleByUrlTitle(serviceContext.getScopeGroupId(),urlTitle);
+  }
+ catch (  NoSuchArticleException nsae) {
+  }
+  if ((urlTitleArticle != null) && (kbArticleId != urlTitleArticle.getKbArticleId())) {
+    urlTitle=getUniqueUrlTitle(serviceContext.getScopeGroupId(),kbArticleId,urlTitle);
+  }
+  return urlTitle;
+}
