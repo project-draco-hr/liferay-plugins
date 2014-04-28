@@ -3,6 +3,9 @@
   syncFile.setParentFolderId(folderId);
   syncFile.setUiEvent(SyncFile.UI_EVENT_MOVED_LOCAL);
   update(syncFile);
+  if (syncFile.getState() == SyncFile.STATE_ERROR) {
+    return syncFile;
+  }
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("fileEntryId",syncFile.getTypePK());
   parameters.put("newFolderId",folderId);

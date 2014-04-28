@@ -16,6 +16,9 @@
   syncFile.setName(name);
   syncFile.setUiEvent(SyncFile.UI_EVENT_UPDATED_LOCAL);
   update(syncFile);
+  if (syncFile.getState() == SyncFile.STATE_ERROR) {
+    return syncFile;
+  }
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("changeLog",changeLog);
   parameters.put("checksum",targetChecksum);
