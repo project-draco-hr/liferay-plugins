@@ -1,17 +1,7 @@
 {
   boolean testPassed=true;
   String operation=getString(stepJsonNode,"operation","exists");
-  if (operation.equals("exists")) {
-    if (Files.notExists(getTargetFilePath(stepJsonNode))) {
-      testPassed=false;
-    }
-  }
- else   if (operation.equals("notExists")) {
-    if (Files.exists(getTargetFilePath(stepJsonNode))) {
-      testPassed=false;
-    }
-  }
- else   if (operation.equals("equals")) {
+  if (operation.equals("equals")) {
     List<File> files=new ArrayList<File>();
     JsonNode filesJsonNode=stepJsonNode.get("files");
     Iterator<JsonNode> iterator=filesJsonNode.elements();
@@ -21,6 +11,16 @@
       files.add(targetFilePath.toFile());
     }
     if (!FileUtils.contentEquals(files.get(0),files.get(1))) {
+      testPassed=false;
+    }
+  }
+ else   if (operation.equals("exists")) {
+    if (Files.notExists(getTargetFilePath(stepJsonNode))) {
+      testPassed=false;
+    }
+  }
+ else   if (operation.equals("notExists")) {
+    if (Files.exists(getTargetFilePath(stepJsonNode))) {
       testPassed=false;
     }
   }
