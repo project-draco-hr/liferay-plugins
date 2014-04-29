@@ -19,10 +19,12 @@
     int statusCode=hre.getStatusCode();
     if (statusCode == HttpServletResponse.SC_UNAUTHORIZED) {
       syncAccount.setUiEvent(SyncAccount.UI_EVENT_AUTHENTICATION_EXCEPTION);
+      SyncAccountService.update(syncAccount);
     }
  else {
       syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
+      SyncAccountService.update(syncAccount);
+      retryServerConnection();
     }
-    SyncAccountService.update(syncAccount);
   }
 }
