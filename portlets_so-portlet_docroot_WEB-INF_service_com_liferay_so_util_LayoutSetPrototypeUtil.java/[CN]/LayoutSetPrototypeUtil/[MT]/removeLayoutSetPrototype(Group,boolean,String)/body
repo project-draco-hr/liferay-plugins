@@ -16,6 +16,7 @@
     layoutUuids[i]=layout.getUuid();
   }
   layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout);
+  layouts=ListUtil.sort(layouts,new LayoutPriorityComparator(false));
   for (  Layout layout : layouts) {
     if (ArrayUtil.contains(layoutUuids,layout.getSourcePrototypeLayoutUuid())) {
       LayoutLocalServiceUtil.deleteLayout(layout.getGroupId(),privateLayout,layout.getLayoutId(),new ServiceContext());
