@@ -1,13 +1,8 @@
 {
-  String[] fullNames=null;
-  String[] emailAddresses=null;
-  boolean andOperator=false;
   if (Validator.isNotNull(keywords)) {
-    fullNames=CustomSQLUtil.keywords(keywords);
-    emailAddresses=CustomSQLUtil.keywords(keywords);
+    String[] fullNames=CustomSQLUtil.keywords(keywords);
+    String[] emailAddresses=CustomSQLUtil.keywords(keywords);
+    return findByU_FN_EA(userId,fullNames,emailAddresses,false,start,end);
   }
- else {
-    andOperator=true;
-  }
-  return findByU_FN_EA(userId,fullNames,emailAddresses,andOperator,start,end);
+  return EntryUtil.findByUserId(userId,start,end);
 }

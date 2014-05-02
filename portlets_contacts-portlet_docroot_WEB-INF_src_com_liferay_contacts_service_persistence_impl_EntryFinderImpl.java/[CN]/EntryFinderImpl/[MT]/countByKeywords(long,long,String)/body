@@ -1,15 +1,12 @@
 {
-  String[] fullNames=null;
-  String[] emailAddresses=null;
-  boolean andOperator=false;
   if (Validator.isNotNull(keywords)) {
-    fullNames=CustomSQLUtil.keywords(keywords);
-    emailAddresses=CustomSQLUtil.keywords(keywords);
+    String[] fullNames=CustomSQLUtil.keywords(keywords);
+    String[] emailAddresses=CustomSQLUtil.keywords(keywords);
+    int count=UserFinderUtil.countByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,false);
+    count+=countByU_FN_EA(userId,fullNames,emailAddresses,false);
+    return count;
   }
- else {
-    andOperator=true;
-  }
-  int count=UserFinderUtil.countByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,andOperator);
-  count+=countByU_FN_EA(userId,fullNames,emailAddresses,andOperator);
+  int count=UserUtil.countByC_DU_S(companyId,false,0);
+  count+=EntryUtil.countByUserId(userId);
   return count;
 }

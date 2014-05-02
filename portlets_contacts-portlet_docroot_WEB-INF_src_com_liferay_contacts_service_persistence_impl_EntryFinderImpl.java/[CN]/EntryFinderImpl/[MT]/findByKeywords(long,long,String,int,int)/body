@@ -1,21 +1,24 @@
 {
-  String[] fullNames=null;
-  String[] emailAddresses=null;
-  boolean andOperator=false;
+  List<BaseModel<?>> models=new ArrayList<BaseModel<?>>();
   if (Validator.isNotNull(keywords)) {
-    fullNames=CustomSQLUtil.keywords(keywords);
-    emailAddresses=CustomSQLUtil.keywords(keywords);
+    String[] fullNames=CustomSQLUtil.keywords(keywords);
+    String[] emailAddresses=CustomSQLUtil.keywords(keywords);
+    models.addAll(UserFinderUtil.findByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,false,start,end,new UserLastNameComparator(true)));
+    if (models.size() < (end - start)) {
+      int count=UserFinderUtil.countByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,false);
+      start-=count;
+      end-=count;
+      models.addAll(findByU_FN_EA(userId,fullNames,emailAddresses,false,start,end));
+    }
   }
  else {
-    andOperator=true;
-  }
-  List<BaseModel<?>> models=new ArrayList<BaseModel<?>>();
-  models.addAll(UserFinderUtil.findByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,andOperator,start,end,new UserLastNameComparator(true)));
-  if (models.size() < (end - start)) {
-    int count=UserFinderUtil.countByC_FN_MN_LN_SN_EA_S(companyId,fullNames,fullNames,fullNames,fullNames,emailAddresses,0,null,andOperator);
-    start-=count;
-    end-=count;
-    models.addAll(findByU_FN_EA(userId,fullNames,emailAddresses,andOperator,start,end));
+    models.addAll(UserUtil.findByC_DU_S(companyId,false,0,start,end,new UserLastNameComparator(true)));
+    if (models.size() < (end - start)) {
+      int count=UserUtil.countByC_DU_S(companyId,false,0);
+      start-=count;
+      end-=count;
+      models.addAll(EntryUtil.findByUserId(userId,start,end));
+    }
   }
   return models;
 }
