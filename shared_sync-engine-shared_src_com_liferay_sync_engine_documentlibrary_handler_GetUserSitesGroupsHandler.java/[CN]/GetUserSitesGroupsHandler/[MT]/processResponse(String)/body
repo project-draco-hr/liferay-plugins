@@ -8,7 +8,11 @@
     SyncSite localSyncSite=SyncSiteService.fetchSyncSite(remoteSyncSite.getGroupId(),getSyncAccountId());
     if (localSyncSite == null) {
       SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
-      remoteSyncSite.setFilePathName(syncAccount.getFilePathName() + "/" + remoteSyncSite.getName());
+      String name=remoteSyncSite.getName();
+      if (!FileUtil.isValidFileName(name)) {
+        name=String.valueOf(remoteSyncSite.getGroupId());
+      }
+      remoteSyncSite.setFilePathName(syncAccount.getFilePathName() + "/" + name);
       remoteSyncSite.setSyncAccountId(getSyncAccountId());
       SyncSiteService.update(remoteSyncSite);
       remoteSyncSiteIds.add(remoteSyncSite.getSyncSiteId());
