@@ -5,7 +5,10 @@
   }
   Set<WebRTCClient> webRTCClients=webRTCClient.getWebRTCClients();
   for (  WebRTCClient otherWebRTCClient : webRTCClients) {
-    WebRTCConnection webRTCConnection=webRTCClient.getWebRTCConnection(webRTCClient);
+    WebRTCConnection webRTCConnection=webRTCClient.getWebRTCConnection(otherWebRTCClient);
+    if (webRTCConnection == null) {
+      continue;
+    }
     WebRTCConnection.State state=webRTCConnection.getState();
     if (state != WebRTCConnection.State.DISCONNECTED) {
       pushLostConnectionStateWebRTCMail(webRTCClient,otherWebRTCClient,"reset");
