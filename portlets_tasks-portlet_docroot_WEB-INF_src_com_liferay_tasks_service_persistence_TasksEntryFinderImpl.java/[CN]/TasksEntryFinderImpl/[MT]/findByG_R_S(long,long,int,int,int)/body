@@ -1,0 +1,12 @@
+{
+  if (status != TasksEntryConstants.STATUS_ALL) {
+    if (groupId > 0) {
+      return TasksEntryUtil.findByG_U_S(groupId,reporterUserId,getStatusArray(status),start,end);
+    }
+    return TasksEntryUtil.findByU_S(reporterUserId,getStatusArray(status),start,end);
+  }
+  if (groupId > 0) {
+    return TasksEntryUtil.findByG_U(groupId,reporterUserId,start,end);
+  }
+  return TasksEntryUtil.findByUserId(reporterUserId,start,end);
+}

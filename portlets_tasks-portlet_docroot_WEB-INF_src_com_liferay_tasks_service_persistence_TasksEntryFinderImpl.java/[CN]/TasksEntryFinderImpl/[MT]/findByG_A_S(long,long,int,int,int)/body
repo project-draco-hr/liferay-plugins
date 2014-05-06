@@ -1,0 +1,12 @@
+{
+  if (status != TasksEntryConstants.STATUS_ALL) {
+    if (groupId > 0) {
+      return TasksEntryUtil.findByG_A_S(groupId,assigneeUserId,getStatusArray(status),start,end);
+    }
+    return TasksEntryUtil.findByA_S(assigneeUserId,getStatusArray(status),start,end);
+  }
+  if (groupId > 0) {
+    return TasksEntryUtil.findByG_A(groupId,assigneeUserId,start,end);
+  }
+  return TasksEntryUtil.findByAssigneeUserId(assigneeUserId,start,end);
+}
