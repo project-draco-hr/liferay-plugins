@@ -3,16 +3,21 @@
   try {
     session=openSession();
     String sql=CustomSQLUtil.get(FIND_BY_USER_ID);
-    sql=StringUtil.replace(sql,"[$JOIN_BY_SOCIAL_RELATION$]",_joinBySocialRelationSQL);
     SQLQuery q=session.createSynchronizedSQLQuery(sql);
-    q.addEntity("MicroblogsEntry",MicroblogsEntryImpl.class);
+    q.addScalar("microblogsEntryId",Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(MicroblogsEntryConstants.TYPE_EVERYONE);
     qPos.add(userId);
+    qPos.add(SocialRelationConstants.TYPE_UNI_ENEMY);
     qPos.add(userId);
     qPos.add(userId);
     qPos.add(MicroblogsEntryConstants.TYPE_REPLY);
-    return (List<MicroblogsEntry>)QueryUtil.list(q,getDialect(),start,end);
+    Iterator<Long> itr=(Iterator<Long>)QueryUtil.iterate(q,getDialect(),start,end);
+    List<MicroblogsEntry> microblogsEntries=new ArrayList<MicroblogsEntry>();
+    while (itr.hasNext()) {
+      microblogsEntries.add(MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry((Long)itr.next()));
+    }
+    return microblogsEntries;
   }
  catch (  Exception e) {
     throw new SystemException(e);
