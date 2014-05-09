@@ -13,7 +13,8 @@
   }
   String exception=exceptionJsonNode.asText();
   if (_logger.isDebugEnabled()) {
-    _logger.debug(exception);
+    JsonNode messageJsonNode=responseJsonNode.get("message");
+    _logger.debug("Handling exception {} message {}",exception,messageJsonNode.asText());
   }
   if (exception.equals("com.liferay.portal.kernel.upload.UploadException")) {
     SyncFile syncFile=(SyncFile)getParameterValue("syncFile");

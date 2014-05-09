@@ -2,6 +2,9 @@
   HttpEntity httpEntity=httpResponse.getEntity();
   String response=EntityUtils.toString(httpEntity);
   if (!handlePortalException(response)) {
+    if (_logger.isTraceEnabled()) {
+      _logger.trace("Handling response {}",response);
+    }
     processResponse(response);
   }
 }
