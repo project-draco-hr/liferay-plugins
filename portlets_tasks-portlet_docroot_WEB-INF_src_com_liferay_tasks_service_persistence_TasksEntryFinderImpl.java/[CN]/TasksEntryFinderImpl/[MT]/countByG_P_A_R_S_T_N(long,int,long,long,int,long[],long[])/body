@@ -10,58 +10,28 @@
   Session session=null;
   try {
     session=openSession();
-    StringBuilder sb=new StringBuilder();
-    sb.append("SELECT COUNT(DISTINCT tasksEntryId) AS COUNT_VALUE ");
-    sb.append("FROM TMS_TasksEntry WHERE");
-    if (groupId > 0) {
-      sb.append(" AND TMS_TasksEntry.groupId = ?");
+    String sql=CustomSQLUtil.get(COUNT_BY_G_P_A_R_S_T_N);
+    sql=StringUtil.replace(sql,"[$JOIN$]",getJoin(assetTagIds,notAssetTagIds));
+    String assetTagTagIds=getAssetTagTagIds(assetTagIds,notAssetTagIds);
+    sql=StringUtil.replace(sql,"[$ASSET_TAG_TAG_IDS$]",assetTagTagIds);
+    if (Validator.isNotNull(assetTagIds)) {
+      sql=StringUtil.replaceLast(sql,"WHERE",StringPool.BLANK);
     }
-    if (priority > 0) {
-      sb.append(" AND TMS_TasksEntry.priority = ?");
-    }
-    if (assigneeUserId > 0) {
-      sb.append(" AND TMS_TasksEntry.assigneeUserId = ?");
-    }
-    if (reporterUserId > 0) {
-      sb.append(" AND TMS_TasksEntry.userId = ?");
-    }
-    if (status == TasksEntryConstants.STATUS_ALL) {
-    }
- else     if (status == TasksEntryConstants.STATUS_RESOLVED) {
-      sb.append(" AND TMS_TasksEntry.finishDate IS NOT NULL");
-    }
- else {
-      sb.append(" AND TMS_TasksEntry.finishDate IS NULL");
-    }
-    if (assetTagIds.length > 0) {
-      sb.append(" AND TMS_TasksEntry.tasksEntryId IN (");
-      for (int i=0; i < assetTagIds.length; i++) {
-        sb.append(CustomSQLUtil.get(FIND_BY_C_T));
-        if ((i + 1) < assetTagIds.length) {
-          sb.append(" OR AssetEntry.classPK IN (");
-        }
-      }
-      for (int i=0; i < assetTagIds.length; i++) {
-        sb.append(StringPool.CLOSE_PARENTHESIS);
-      }
-    }
-    if (notAssetTagIds.length > 0) {
-      sb.append(" AND (");
-      for (int i=0; i < notAssetTagIds.length; i++) {
-        sb.append("TMS_TasksEntry.tasksEntryId NOT IN (");
-        sb.append(CustomSQLUtil.get(FIND_BY_C_T));
-        sb.append(StringPool.CLOSE_PARENTHESIS);
-        if ((i + 1) < notAssetTagIds.length) {
-          sb.append(" OR ");
-        }
-      }
-      sb.append(StringPool.CLOSE_PARENTHESIS);
-    }
-    String sql=sb.toString();
-    sql=StringUtil.replaceFirst(sql," WHERE AND "," WHERE ");
+    sql=StringUtil.replace(sql,"[$GROUP_ID$]",getGroupId(groupId));
+    sql=StringUtil.replace(sql,"[$PRIORITY$]",getPriority(priority));
+    sql=StringUtil.replace(sql,"[$ASSIGNEE_USER_ID$]",getAssigneeUserId(assigneeUserId));
+    sql=StringUtil.replace(sql,"[$REPORTER_USER_ID$]",getReporterUserId(reporterUserId));
+    int[] statusArray=getStatusArray(status);
+    sql=StringUtil.replace(sql,"[$STATUS$]",getStatus(statusArray));
+    sql=StringUtil.replaceLast(sql,"AND",StringPool.BLANK);
     SQLQuery q=session.createSynchronizedSQLQuery(sql);
     q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
+    if ((assetTagIds.length > 0) || (notAssetTagIds.length > 0)) {
+      qPos.add(PortalUtil.getClassNameId(TasksEntry.class.getName()));
+      setTagsEntryIds(qPos,assetTagIds);
+      setTagsEntryIds(qPos,notAssetTagIds);
+    }
     if (groupId > 0) {
       qPos.add(groupId);
     }
@@ -74,8 +44,11 @@
     if (reporterUserId > 0) {
       qPos.add(reporterUserId);
     }
-    setTagsEntryIds(qPos,assetTagIds);
-    setTagsEntryIds(qPos,notAssetTagIds);
+    if (statusArray != null) {
+      for (      int curStatus : statusArray) {
+        qPos.add(curStatus);
+      }
+    }
     Iterator<Long> itr=q.iterate();
     if (itr.hasNext()) {
       Long count=itr.next();
