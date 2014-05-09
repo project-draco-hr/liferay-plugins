@@ -8,7 +8,12 @@
       watchKey=_watchService.take();
     }
  catch (    Exception e) {
-      break;
+      if (e instanceof ConcurrentModificationException) {
+        continue;
+      }
+ else {
+        break;
+      }
     }
     Path parentFilePath=_filePaths.get(watchKey);
     if (parentFilePath == null) {
