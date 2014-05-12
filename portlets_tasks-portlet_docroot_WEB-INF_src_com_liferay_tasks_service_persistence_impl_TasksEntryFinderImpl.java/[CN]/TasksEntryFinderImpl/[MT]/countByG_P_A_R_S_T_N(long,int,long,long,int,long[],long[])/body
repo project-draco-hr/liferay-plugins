@@ -1,10 +1,10 @@
 {
   if ((assetTagIds.length == 0) && (notAssetTagIds.length == 0) && (priority <= 0)) {
-    if ((assigneeUserId > 0) && (reporterUserId <= 0)) {
+    if ((assigneeUserId > 0) && (userId <= 0)) {
       return countByG_A_S(groupId,assigneeUserId,status);
     }
-    if ((reporterUserId > 0) && (assigneeUserId <= 0)) {
-      return countByG_R_S(groupId,reporterUserId,status);
+    if ((userId > 0) && (assigneeUserId <= 0)) {
+      return countByG_R_S(groupId,userId,status);
     }
   }
   Session session=null;
@@ -17,9 +17,9 @@
       sql=StringUtil.replaceLast(sql,"WHERE",StringPool.BLANK);
     }
     sql=StringUtil.replace(sql,"[$GROUP_ID$]",getGroupId(groupId));
+    sql=StringUtil.replace(sql,"[$USER_ID$]",getUserId(userId));
     sql=StringUtil.replace(sql,"[$PRIORITY$]",getPriority(priority));
     sql=StringUtil.replace(sql,"[$ASSIGNEE_USER_ID$]",getAssigneeUserId(assigneeUserId));
-    sql=StringUtil.replace(sql,"[$REPORTER_USER_ID$]",getReporterUserId(reporterUserId));
     int[] statuses=getStatuses(status);
     sql=StringUtil.replace(sql,"[$STATUS$]",getStatus(statuses));
     sql=StringUtil.replaceLast(sql,"AND",StringPool.BLANK);
@@ -34,14 +34,14 @@
     if (groupId > 0) {
       qPos.add(groupId);
     }
+    if (userId > 0) {
+      qPos.add(userId);
+    }
     if (priority > 0) {
       qPos.add(priority);
     }
     if (assigneeUserId > 0) {
       qPos.add(assigneeUserId);
-    }
-    if (reporterUserId > 0) {
-      qPos.add(reporterUserId);
     }
     qPos.add(statuses);
     Iterator<Long> itr=q.iterate();
