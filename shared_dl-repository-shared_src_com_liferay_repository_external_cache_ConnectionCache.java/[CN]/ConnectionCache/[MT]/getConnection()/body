@@ -8,7 +8,7 @@
     }
   }
  else {
-    connection=_sharepointConnectionThreadLocal.get();
+    connection=_connectionThreadLocal.get();
   }
   if (connection != null) {
     return connection;
@@ -18,6 +18,6 @@
     TransientValue<T> transientValue=new TransientValue<T>(connection);
     httpSession.setAttribute(_sessionKey,transientValue);
   }
-  _sharepointConnectionThreadLocal.set(connection);
+  _connectionThreadLocal.set(connection);
   return connection;
 }
