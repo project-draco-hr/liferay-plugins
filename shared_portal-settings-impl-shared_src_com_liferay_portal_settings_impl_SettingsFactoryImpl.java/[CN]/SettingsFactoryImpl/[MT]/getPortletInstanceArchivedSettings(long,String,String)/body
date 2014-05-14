@@ -1,0 +1,11 @@
+{
+  List<ArchivedSettings> archivedSettingsList=getPortletInstanceArchivedSettingsList(groupId,portletId);
+  for (  ArchivedSettings archivedSettings : archivedSettingsList) {
+    if (archivedSettings.getName().equals(name)) {
+      return archivedSettings;
+    }
+  }
+  long userId=PrincipalThreadLocal.getUserId();
+  PortletItem portletItem=PortletItemLocalServiceUtil.updatePortletItem(userId,groupId,name,portletId,PortletPreferences.class.getName());
+  return new ArchivedSettingsImpl(portletItem);
+}
