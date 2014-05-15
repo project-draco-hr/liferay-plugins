@@ -6,7 +6,6 @@
   SyncSystemTestUtil.addUser(name,true,_syncAccount.getSyncAccountId());
   String filePathName=FilePathNameUtil.fixFilePathName(System.getProperty("user.home") + "/liferay-sync-test/" + name);
   SyncAccount syncAccount=SyncAccountService.addSyncAccount(filePathName,3,name + "@liferay.com",name,"test",null,false,"http://localhost:8080");
-  syncAccount.setActive(true);
-  SyncAccountService.update(syncAccount);
+  SyncAccountService.activateSyncAccount(syncAccount.getSyncAccountId(),false);
   _syncAccountIds.put(name,syncAccount.getSyncAccountId());
 }
