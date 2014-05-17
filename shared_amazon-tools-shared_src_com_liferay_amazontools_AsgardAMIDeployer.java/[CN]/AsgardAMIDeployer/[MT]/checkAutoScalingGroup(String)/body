@@ -18,8 +18,7 @@
     Map<String,String> parameters=new HashMap<String,String>();
     parameters.put("name",autoScalingGroupName);
     _jsonWebServiceClient.doPost("/" + availabilityZone + "/cluster/delete",parameters);
-    System.out.println("Unable to deploy Auto Scaling Group " + autoScalingGroupName);
-    return;
+    throw new RuntimeException("Unable to deploy Auto Scaling Group " + autoScalingGroupName);
   }
   String json=_jsonWebServiceClient.doGet("/" + availabilityZone + "/cluster/list.json",Collections.<String,String>emptyMap());
   JSONArray clustersJSONArray=new JSONArray(json);
