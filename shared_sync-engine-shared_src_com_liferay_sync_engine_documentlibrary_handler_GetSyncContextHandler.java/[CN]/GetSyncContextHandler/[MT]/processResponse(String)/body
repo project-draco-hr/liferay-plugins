@@ -4,6 +4,9 @@
   }
 );
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+  Map<String,String> portletPreferencesMap=syncContext.getPortletPreferencesMap();
+  int interval=Integer.valueOf(portletPreferencesMap.get("sync.client.poll.interval"));
+  syncAccount.setInterval(interval);
   syncAccount.setSocialOfficeInstalled(syncContext.isSocialOfficeInstalled());
   syncAccount.setState(SyncAccount.STATE_CONNECTED);
   syncAccount.setUserId(syncContext.getUserId());
