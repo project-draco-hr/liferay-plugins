@@ -1,13 +1,13 @@
 {
   String login=PrincipalThreadLocal.getName();
   if (Validator.isNull(login)) {
-    return login;
+    return PropsUtil.get(PropsKeys.DL_REPOSITORY_GUEST_USERNAME);
   }
   try {
-    Company company=companyLocalService.getCompany(getCompanyId());
-    String authType=company.getAuthType();
+    long userId=GetterUtil.getLong(login);
+    String authType=_extRepository.getAuthType();
     if (!authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
-      User user=userLocalService.getUser(GetterUtil.getLong(login));
+      User user=userLocalService.getUser(userId);
       if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
         login=user.getEmailAddress();
       }
