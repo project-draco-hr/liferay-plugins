@@ -8,7 +8,6 @@
       Class<?> clazz=portalClassLoader.loadClass(autoLoginClassName);
       Object object=clazz.newInstance();
       Method method=ReflectionUtil.getDeclaredMethod(clazz,"doLogin",HttpServletRequest.class,HttpServletResponse.class);
-      method.setAccessible(true);
       String[] credentials=(String[])method.invoke(object,request,response);
       if (credentials != null) {
         return credentials;
