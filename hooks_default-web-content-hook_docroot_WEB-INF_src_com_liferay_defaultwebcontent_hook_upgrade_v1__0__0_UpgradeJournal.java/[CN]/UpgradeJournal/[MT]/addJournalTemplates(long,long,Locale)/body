@@ -1,23 +1,26 @@
 {
+  DDMStructure ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),"ARTICLE");
   Map<Locale,String> nameMap=new HashMap<Locale,String>();
   nameMap.put(locale,"Regular Article Description");
   Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
   descriptionMap.put(locale,"This template only displays brief descriptions of web content");
-  String xsl=getFileAsString("/templates/article_description.vm");
+  String script=getFileAsString("/templates/article_description.vm");
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddCommunityPermissions(true);
   serviceContext.setAddGuestPermissions(true);
-  JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,"ARTICLE-DESCRIPTION",false,"ARTICLE",nameMap,descriptionMap,xsl,true,"vm",true,false,StringPool.BLANK,null,serviceContext);
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),"ARTICLE-DESCRIPTION",nameMap,descriptionMap,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,DDMTemplateConstants.TEMPLATE_MODE_CREATE,TemplateConstants.LANG_TYPE_VM,script,true,false,StringPool.BLANK,null,serviceContext);
   nameMap.put(locale,"Regular Article");
   descriptionMap.put(locale,"This is the regular article template, it handles basic article " + "content like, titles, main image, body, and author " + "information.");
-  xsl=getFileAsString("/templates/regular_article.vm");
-  JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,"REGULAR-ARTICLE",false,"ARTICLE",nameMap,descriptionMap,xsl,true,"vm",true,false,StringPool.BLANK,null,serviceContext);
+  script=getFileAsString("/templates/regular_article.vm");
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),"REGULAR-ARTICLE",nameMap,descriptionMap,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,DDMTemplateConstants.TEMPLATE_MODE_CREATE,TemplateConstants.LANG_TYPE_VM,script,true,false,StringPool.BLANK,null,serviceContext);
+  ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),"MULTIPLE-ITEM-CAROUSEL");
   nameMap.put(locale,"Carousel");
   descriptionMap.put(locale,"This is the carousel template that utilizes Alloy UI to display " + "repeatable content as a slideshow.");
-  xsl=getFileAsString("/templates/multiple_item_carousel.vm");
-  JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,"MULTIPLE-ITEM-CAROUSEL",false,"MULTIPLE-ITEM-CAROUSEL",nameMap,descriptionMap,xsl,true,"vm",true,false,StringPool.BLANK,null,serviceContext);
+  script=getFileAsString("/templates/multiple_item_carousel.vm");
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),"MULTIPLE-ITEM-CAROUSEL",nameMap,descriptionMap,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,DDMTemplateConstants.TEMPLATE_MODE_CREATE,TemplateConstants.LANG_TYPE_VM,script,true,false,StringPool.BLANK,null,serviceContext);
+  ddmStructure=DDMStructureLocalServiceUtil.getStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),"MULTIPLE-ITEM");
   nameMap.put(locale,"Featured Items");
   descriptionMap.put(locale,"This is a template that utilizes the Multiple Item Structure, " + "and displays the data as Featured Items.");
-  xsl=getFileAsString("/templates/multiple_item_feature.vm");
-  JournalTemplateLocalServiceUtil.addTemplate(userId,groupId,"MULTIPLE-ITEM-FEATURE",false,"MULTIPLE-ITEM",nameMap,descriptionMap,xsl,true,"vm",true,false,StringPool.BLANK,null,serviceContext);
+  script=getFileAsString("/templates/multiple_item_feature.vm");
+  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,PortalUtil.getClassNameId(DDMStructure.class),ddmStructure.getStructureId(),"MULTIPLE-ITEM-FEATURE",nameMap,descriptionMap,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,DDMTemplateConstants.TEMPLATE_MODE_CREATE,TemplateConstants.LANG_TYPE_VM,script,true,false,StringPool.BLANK,null,serviceContext);
 }
