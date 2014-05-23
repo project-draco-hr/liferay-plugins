@@ -23,6 +23,10 @@
   }
  else {
     SyncFileService.moveFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),syncWatchEvent.getSyncAccountId(),syncFile);
+    Path sourceFileNameFilePath=sourceFilePath.getFileName();
+    if (!sourceFileNameFilePath.equals(targetFilePath.getFileName())) {
+      SyncFileService.updateFileSyncFile(targetFilePath,syncWatchEvent.getSyncAccountId(),syncFile,false);
+    }
   }
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
   if (syncAccount.getState() != SyncAccount.STATE_DISCONNECTED) {
