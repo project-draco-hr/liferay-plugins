@@ -48,6 +48,15 @@
       tags.add(tag);
       createTagsRequest.setTags(tags);
       amazonEC2Client.createTags(createTagsRequest);
+      CreateOrUpdateTagsRequest createOrUpdateTagsRequest=new CreateOrUpdateTagsRequest();
+      com.amazonaws.services.autoscaling.model.Tag autoScalingTag=new com.amazonaws.services.autoscaling.model.Tag();
+      autoScalingTag.setKey("Name");
+      autoScalingTag.setPropagateAtLaunch(true);
+      autoScalingTag.setResourceId(autoScalingGroupName);
+      autoScalingTag.setResourceType("auto-scaling-group");
+      autoScalingTag.setValue(properties.getProperty("instance.name"));
+      createOrUpdateTagsRequest.withTags(autoScalingTag);
+      _amazonAutoScalingClient.createOrUpdateTags(createOrUpdateTagsRequest);
       created=true;
       break;
     }
