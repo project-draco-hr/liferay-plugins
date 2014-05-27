@@ -2,7 +2,7 @@
   SyncSite syncSite=getSyncSite(stepJsonNode);
   String dependency=getString(stepJsonNode,"dependency");
   Path dependencyFilePath=getDependencyFilePath(testFilePath,dependency);
-  dependency=dependency.replace("common/","");
+  dependency=getString(stepJsonNode,"target",dependency.replace("common/",""));
   Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
   Files.copy(dependencyFilePath,targetFilePath);
 }
