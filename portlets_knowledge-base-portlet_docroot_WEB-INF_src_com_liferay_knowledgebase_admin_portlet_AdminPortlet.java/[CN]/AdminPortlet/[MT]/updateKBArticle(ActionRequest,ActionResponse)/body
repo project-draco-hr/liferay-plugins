@@ -23,15 +23,11 @@
     return;
   }
   if (workflowAction == WorkflowConstants.ACTION_SAVE_DRAFT) {
-    String namespace=actionResponse.getNamespace();
-    String editURL=PortalUtil.getLayoutFullURL(themeDisplay);
-    editURL=HttpUtil.setParameter(editURL,"p_p_id",PortletKeys.KNOWLEDGE_BASE_ADMIN);
-    WindowState windowState=actionResponse.getWindowState();
-    editURL=HttpUtil.setParameter(editURL,"p_p_state",windowState.toString());
-    editURL=HttpUtil.setParameter(editURL,namespace + "mvcPath",templatePath + "edit_article.jsp");
-    String redirect=getRedirect(actionRequest,actionResponse);
-    editURL=HttpUtil.setParameter(editURL,namespace + "redirect",redirect);
-    editURL=HttpUtil.setParameter(editURL,namespace + "resourcePrimKey",kbArticle.getResourcePrimKey());
-    actionRequest.setAttribute(WebKeys.REDIRECT,editURL);
+    PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.KNOWLEDGE_BASE_ADMIN,themeDisplay.getPlid(),PortletRequest.RENDER_PHASE);
+    portletURL.setParameter("mvcPath","/admin/edit_article.jsp");
+    portletURL.setParameter("redirect",getRedirect(actionRequest,actionResponse));
+    portletURL.setParameter("resourcePrimKey",String.valueOf(kbArticle.getResourcePrimKey()));
+    portletURL.setWindowState(actionRequest.getWindowState());
+    actionRequest.setAttribute(WebKeys.REDIRECT,portletURL.toString());
   }
 }
