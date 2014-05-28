@@ -1,13 +1,5 @@
 {
-  List<JSONObject> instanceStateJSONObjects=new ArrayList<JSONObject>();
-  JSONArray instanceStatesJSONArray=loadBalancerJSONObject.getJSONArray("instanceStates");
-  for (int i=0; i < instanceStatesJSONArray.length(); i++) {
-    JSONObject instanceStateJSONObject=instanceStatesJSONArray.getJSONObject(i);
-    Object instanceStateAutoScalingGroupName=instanceStateJSONObject.get("autoScalingGroupName");
-    if (autoScalingGroupName.equals(instanceStateAutoScalingGroupName)) {
-      instanceStateJSONObjects.add(instanceStateJSONObject);
-    }
-  }
+  List<JSONObject> instanceStateJSONObjects=getInstanceStateJSONObjects(loadBalancerJSONObject,autoScalingGroupName);
   if (instanceStateJSONObjects.isEmpty()) {
     return false;
   }

@@ -1,5 +1,4 @@
 {
-  System.out.println("Creating Auto Scaling Group");
   DescribeAutoScalingGroupsResult describeAutoScalingGroupsResult=_amazonAutoScalingClient.describeAutoScalingGroups();
   List<AutoScalingGroup> autoScalingGroups=describeAutoScalingGroupsResult.getAutoScalingGroups();
   int oldAutoScalingGroupsSize=autoScalingGroups.size();
@@ -70,6 +69,7 @@
   }
   int minSize=Integer.parseInt(properties.getProperty("instance.min.size"));
   if (minSize > 1) {
+    checkAutoScalingGroup(autoScalingGroupName,1);
     parameters.clear();
     parameters.put("maxSize",String.valueOf(maxSize));
     parameters.put("minSize",String.valueOf(minSize));
@@ -88,19 +88,5 @@
       }
     }
   }
-  DescribeVolumesRequest describeVolumesRequest=new DescribeVolumesRequest();
-  Filter filter=new Filter();
-  filter.setName("status");
-  filter.withValues("available");
-  describeVolumesRequest.withFilters(filter);
-  DescribeVolumesResult describeVolumesResult=amazonEC2Client.describeVolumes(describeVolumesRequest);
-  List<Volume> volumes=describeVolumesResult.getVolumes();
-  for (int i=0; i < volumes.size(); i++) {
-    DeleteVolumeRequest deleteVolumeRequest=new DeleteVolumeRequest();
-    Volume volume=volumes.get(i);
-    deleteVolumeRequest.setVolumeId(volume.getVolumeId());
-    amazonEC2Client.deleteVolume(deleteVolumeRequest);
-  }
-  System.out.println("Created Auto Scaling Group " + autoScalingGroupName);
   return autoScalingGroupName;
 }

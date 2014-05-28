@@ -1,0 +1,15 @@
+{
+  DescribeVolumesRequest describeVolumesRequest=new DescribeVolumesRequest();
+  Filter filter=new Filter();
+  filter.setName("status");
+  filter.withValues("available");
+  describeVolumesRequest.withFilters(filter);
+  DescribeVolumesResult describeVolumesResult=amazonEC2Client.describeVolumes(describeVolumesRequest);
+  List<Volume> volumes=describeVolumesResult.getVolumes();
+  for (int i=0; i < volumes.size(); i++) {
+    DeleteVolumeRequest deleteVolumeRequest=new DeleteVolumeRequest();
+    Volume volume=volumes.get(i);
+    deleteVolumeRequest.setVolumeId(volume.getVolumeId());
+    amazonEC2Client.deleteVolume(deleteVolumeRequest);
+  }
+}
