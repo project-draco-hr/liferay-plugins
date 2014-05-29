@@ -1,0 +1,22 @@
+{
+  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  File file=uploadPortletRequest.getFile("file");
+  if (Validator.isNull(file)) {
+    throw new KBArticleImportException("Null import file");
+  }
+  String fileName=uploadPortletRequest.getParameter("uploadFileName");
+  if (Validator.isNull(fileName)) {
+    throw new KBArticleImportException("No import filename");
+  }
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(AdminPortlet.class.getName(),actionRequest);
+  serviceContext.setGuestPermissions(new String[]{ActionKeys.VIEW});
+  KBArticleImporterContext importerContext=new KBArticleImporterContext(fileName,serviceContext);
+  KBArticleHierarchyImporter importer=new KBArticleHierarchyImporter();
+  try {
+    importer.processZipFile(file,importerContext);
+  }
+ catch (  KBArticleImportException kbaie) {
+    actionResponse.setRenderParameter("exceptionArgs",kbaie.getLocalizedMessage());
+    throw kbaie;
+  }
+}

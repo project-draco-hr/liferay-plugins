@@ -1,0 +1,57 @@
+{
+  Set<Integer> indexes=new TreeSet<Integer>();
+  int index=0;
+  while ((index=html.indexOf("<img",index)) > -1) {
+    indexes.add(index);
+    index+=4;
+  }
+  StringBundler sb=new StringBundler();
+  if (indexes.isEmpty()) {
+    sb.append(html);
+    return sb.toString();
+  }
+  int previousIndex=0;
+  Iterator<Integer> iterator=indexes.iterator();
+  while (iterator.hasNext()) {
+    int currentIndex=iterator.next();
+    if (currentIndex < 0) {
+      break;
+    }
+    if (currentIndex > previousIndex) {
+      String text=html.substring(previousIndex,currentIndex);
+      sb.append(text);
+    }
+    int pos=html.indexOf("/>",currentIndex);
+    if (pos < 0) {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Expected close tag for image " + html.substring(currentIndex));
+      }
+      sb.append(html.substring(currentIndex));
+      previousIndex=currentIndex;
+      break;
+    }
+    String text=html.substring(currentIndex,pos);
+    FileEntry fileEntry=KBArticleImporterUtil.extractImageFileEntry(text,importerContext);
+    if (fileEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unable to find image source " + text);
+      }
+      sb.append("<img alt=\"missing image\" src=\"\" ");
+    }
+ else {
+      sb.append("<img alt=\"");
+      sb.append(HtmlUtil.escapeAttribute(fileEntry.getTitle()));
+      sb.append("\" src=\"/c/document_library/get_file?groupId=");
+      sb.append(fileEntry.getGroupId());
+      sb.append("&uuid=");
+      sb.append(fileEntry.getUuid());
+      sb.append("\" ");
+    }
+    previousIndex=pos;
+  }
+  if (previousIndex < html.length()) {
+    String text=html.substring(previousIndex);
+    sb.append(text);
+  }
+  return sb.toString();
+}
