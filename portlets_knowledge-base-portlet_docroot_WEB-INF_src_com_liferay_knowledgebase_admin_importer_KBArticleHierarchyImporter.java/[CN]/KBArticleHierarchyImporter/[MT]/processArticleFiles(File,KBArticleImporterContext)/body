@@ -28,25 +28,25 @@
   while (folderIter.hasNext()) {
     String folder=folderIter.next();
     List<String> zipFileEntries=_folderFileEntryMap.get(folder);
-    String chapterIntroFileEntry=null;
+    String chapterHomeFileEntry=null;
     List<String> chapterMarkdownFileEntries=new ArrayList<String>();
     for (    String fileEntry : zipFileEntries) {
       if (fileEntry.endsWith(_CHAPTER_HOME_MARKDOWN_FILE)) {
-        chapterIntroFileEntry=fileEntry;
+        chapterHomeFileEntry=fileEntry;
       }
  else {
         chapterMarkdownFileEntries.add(fileEntry);
       }
     }
-    if (Validator.isNull(chapterIntroFileEntry)) {
+    if (Validator.isNull(chapterHomeFileEntry)) {
       StringBuffer sb=new StringBuffer("Missing file entry: ");
       sb.append(folder);
       sb.append(StringPool.SLASH);
       sb.append(_CHAPTER_HOME_MARKDOWN_FILE);
       throw new KBArticleImportException(sb.toString());
     }
-    String chapterHomeMarkdown=zipReader.getEntryAsString(chapterIntroFileEntry);
-    KBArticle chapterHomeKBArticle=createKBArticleFromMarkdown(rootHomeKBArticle.getResourcePrimKey(),chapterHomeMarkdown,importerContext,chapterIntroFileEntry);
+    String chapterHomeMarkdown=zipReader.getEntryAsString(chapterHomeFileEntry);
+    KBArticle chapterHomeKBArticle=createKBArticleFromMarkdown(rootHomeKBArticle.getResourcePrimKey(),chapterHomeMarkdown,importerContext,chapterHomeFileEntry);
     for (    String tutorialFileEntry : chapterMarkdownFileEntries) {
       String tutorialMarkdown=zipReader.getEntryAsString(tutorialFileEntry);
       if (Validator.isNotNull(tutorialMarkdown)) {
