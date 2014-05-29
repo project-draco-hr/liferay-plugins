@@ -6,9 +6,11 @@
     String json=_jsonWebServiceClient.doGet("/" + availabilityZone + "/loadBalancer/show/"+ asgardClusterName+ ".json",Collections.<String,String>emptyMap());
     JSONObject loadBalancerJSONObject=new JSONObject(json);
     List<JSONObject> instanceStateJSONObjects=getInstanceStateJSONObjects(loadBalancerJSONObject,autoScalingGroupName);
-    if (instanceStateJSONObjects.size() < size) {
-      sleep(15);
-      continue;
+    if (size != -1) {
+      if (instanceStateJSONObjects.size() < size) {
+        sleep(15);
+        continue;
+      }
     }
     if (!isInService(loadBalancerJSONObject,autoScalingGroupName)) {
       sleep(15);

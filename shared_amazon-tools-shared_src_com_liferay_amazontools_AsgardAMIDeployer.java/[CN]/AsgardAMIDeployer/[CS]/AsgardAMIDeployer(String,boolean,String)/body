@@ -1,6 +1,7 @@
 {
   super(propertiesFileName);
   _imageName=imageName;
+  _parallelDeployment=parallelDeployment;
   _amazonAutoScalingClient=getAmazonAutoScalingClient(properties.getProperty("access.key"),properties.getProperty("secret.key"),properties.getProperty("autoscaling.endpoint"));
   _jsonWebServiceClient=getJSONWebServiceClient(properties.getProperty("asgard.host.name"),Integer.valueOf(properties.getProperty("asgard.host.port")),properties.getProperty("asgard.login"),properties.getProperty("asgard.password"));
   System.out.println("Deleting available Volumes");
@@ -8,7 +9,10 @@
   System.out.println("Creating Auto Scaling Group");
   String autoScalingGroupName=createAutoScalingGroup();
   System.out.println("Created Auto Scaling Group " + autoScalingGroupName);
-  int minSize=Integer.parseInt(properties.getProperty("instance.min.size"));
+  int minSize=-1;
+  if (!_parallelDeployment) {
+    minSize=Integer.parseInt(properties.getProperty("instance.min.size"));
+  }
   System.out.println("Checking Auto Scaling Group " + autoScalingGroupName);
   checkAutoScalingGroup(autoScalingGroupName,minSize);
   deactivateOldScalingGroup(autoScalingGroupName);
