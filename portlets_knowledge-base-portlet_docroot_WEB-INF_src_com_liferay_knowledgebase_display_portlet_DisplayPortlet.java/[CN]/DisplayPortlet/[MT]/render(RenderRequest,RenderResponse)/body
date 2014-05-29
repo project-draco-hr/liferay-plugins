@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   try {
     int status=getStatus(renderRequest);
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
@@ -6,6 +7,12 @@
     long resourcePrimKey=getResourcePrimKey(renderRequest);
     if (resourcePrimKey > 0) {
       kbArticle=KBArticleServiceUtil.getLatestKBArticle(resourcePrimKey,status);
+    }
+ else {
+      List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getGroupKBArticles(themeDisplay.getScopeGroupId(),status,0,1,new KBArticlePriorityComparator());
+      if (!kbArticles.isEmpty()) {
+        kbArticle=kbArticles.get(0);
+      }
     }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE,kbArticle);
   }
