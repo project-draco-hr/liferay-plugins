@@ -1,5 +1,5 @@
 {
-  DescribeAutoScalingGroupsResult describeAutoScalingGroupsResult=_amazonAutoScalingClient.describeAutoScalingGroups();
+  DescribeAutoScalingGroupsResult describeAutoScalingGroupsResult=amazonAutoScalingClient.describeAutoScalingGroups();
   List<AutoScalingGroup> autoScalingGroups=describeAutoScalingGroupsResult.getAutoScalingGroups();
   int oldAutoScalingGroupsSize=autoScalingGroups.size();
   String availabilityZone=properties.getProperty("availability.zone");
@@ -15,7 +15,7 @@
   }
   _jsonWebServiceClient.doPost("/" + availabilityZone + "/cluster/createNextGroup",parameters);
   for (int i=0; i < 12; i++) {
-    describeAutoScalingGroupsResult=_amazonAutoScalingClient.describeAutoScalingGroups();
+    describeAutoScalingGroupsResult=amazonAutoScalingClient.describeAutoScalingGroups();
     autoScalingGroups=describeAutoScalingGroupsResult.getAutoScalingGroups();
     int newAutoScalingGroupsSize=autoScalingGroups.size();
     if (oldAutoScalingGroupsSize == newAutoScalingGroupsSize) {
@@ -61,7 +61,7 @@
       autoScalingTag.setResourceType("auto-scaling-group");
       autoScalingTag.setValue(properties.getProperty("instance.name"));
       createOrUpdateTagsRequest.withTags(autoScalingTag);
-      _amazonAutoScalingClient.createOrUpdateTags(createOrUpdateTagsRequest);
+      amazonAutoScalingClient.createOrUpdateTags(createOrUpdateTagsRequest);
       created=true;
       break;
     }

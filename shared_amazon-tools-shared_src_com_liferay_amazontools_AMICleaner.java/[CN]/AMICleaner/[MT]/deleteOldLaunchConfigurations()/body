@@ -1,0 +1,15 @@
+{
+  DescribeLaunchConfigurationsRequest describeLaunchConfigurationsRequest=new DescribeLaunchConfigurationsRequest();
+  DescribeLaunchConfigurationsResult describeLaunchConfigurationsResult=amazonAutoScalingClient.describeLaunchConfigurations(describeLaunchConfigurationsRequest);
+  List<LaunchConfiguration> launchConfigurations=describeLaunchConfigurationsResult.getLaunchConfigurations();
+  for (int i=0; i < launchConfigurations.size(); i++) {
+    DeleteLaunchConfigurationRequest deleteLaunchConfigurationRequest=new DeleteLaunchConfigurationRequest();
+    LaunchConfiguration launchConfiguration=launchConfigurations.get(i);
+    deleteLaunchConfigurationRequest.setLaunchConfigurationName(launchConfiguration.getLaunchConfigurationName());
+    try {
+      amazonAutoScalingClient.deleteLaunchConfiguration(deleteLaunchConfigurationRequest);
+    }
+ catch (    ResourceInUseException riue) {
+    }
+  }
+}
