@@ -9,13 +9,7 @@
   if (Files.notExists(sourceFilePath)) {
     return;
   }
-  String sourceFileName=String.valueOf(sourceFilePath.getFileName());
-  if (!sourceFileName.equals(targetSyncFile.getName())) {
-    Path targetFilePath=sourceFilePath.resolveSibling(targetSyncFile.getName());
-    Files.move(sourceFilePath,targetFilePath);
-    sourceSyncFile.setFilePathName(FilePathNameUtil.getFilePathName(targetFilePath));
-    sourceSyncFile.setName(targetSyncFile.getName());
-  }
+  processFilePathChange(sourceSyncFile,targetSyncFile);
   sourceSyncFile.setChangeLog(targetSyncFile.getChangeLog());
   sourceSyncFile.setChecksum(targetSyncFile.getChecksum());
   sourceSyncFile.setDescription(targetSyncFile.getDescription());
