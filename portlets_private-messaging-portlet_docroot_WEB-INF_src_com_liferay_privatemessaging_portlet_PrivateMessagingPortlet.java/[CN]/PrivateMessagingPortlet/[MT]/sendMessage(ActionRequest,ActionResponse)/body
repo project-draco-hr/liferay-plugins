@@ -1,6 +1,6 @@
 {
-  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(resourceRequest);
-  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long userId=ParamUtil.getLong(uploadPortletRequest,"userId");
   long mbThreadId=ParamUtil.getLong(uploadPortletRequest,"mbThreadId");
   String to=ParamUtil.getString(uploadPortletRequest,"to");
@@ -21,14 +21,14 @@
         inputStreamOVPs.add(inputStreamOVP);
       }
  catch (      Exception e) {
-        _log.error(translate(resourceRequest,"unable to attach file ") + fileName,e);
+        _log.error(translate(actionRequest,"unable to attach file ") + fileName,e);
       }
     }
     UserThreadLocalServiceUtil.addPrivateMessage(userId,mbThreadId,to,subject,body,inputStreamOVPs,themeDisplay);
     jsonObject.put("success",Boolean.TRUE);
   }
  catch (  Exception e) {
-    jsonObject.put("message",getMessage(resourceRequest,e));
+    jsonObject.put("message",getMessage(actionRequest,e));
     jsonObject.put("success",Boolean.FALSE);
   }
  finally {
@@ -37,5 +37,5 @@
       StreamUtil.cleanUp(inputStream);
     }
   }
-  writeJSON(resourceRequest,resourceResponse,jsonObject);
+  writeJSON(actionRequest,actionResponse,jsonObject);
 }
