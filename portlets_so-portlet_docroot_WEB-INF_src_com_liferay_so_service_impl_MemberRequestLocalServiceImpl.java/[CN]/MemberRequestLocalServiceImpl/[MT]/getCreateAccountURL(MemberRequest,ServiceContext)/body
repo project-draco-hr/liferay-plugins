@@ -4,10 +4,7 @@
     createAccountURL=serviceContext.getPortalURL();
   }
   createAccountURL=addParameterWithPortletNamespace(createAccountURL,"key",memberRequest.getKey());
-  try {
-    WorkflowDefinitionLinkLocalServiceUtil.getDefaultWorkflowDefinitionLink(memberRequest.getCompanyId(),User.class.getName(),0,0);
-  }
- catch (  NoSuchWorkflowDefinitionLinkException nswdle) {
+  if (!WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(memberRequest.getCompanyId(),WorkflowConstants.DEFAULT_GROUP_ID,User.class.getName(),0)) {
     String redirectURL=getRedirectURL(serviceContext);
     createAccountURL=addParameterWithPortletNamespace(createAccountURL,"redirect",redirectURL);
   }
