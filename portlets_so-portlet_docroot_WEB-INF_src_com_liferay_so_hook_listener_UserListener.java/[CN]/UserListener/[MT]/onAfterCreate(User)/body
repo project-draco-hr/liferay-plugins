@@ -1,0 +1,19 @@
+{
+  try {
+    ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+    if (serviceContext != null) {
+      Map<String,String> headers=serviceContext.getHeaders();
+      String refererUrl=headers.get("referer");
+      String ppid=HttpUtil.getParameter(refererUrl,"p_p_id",false);
+      String portletNamespace=PortalUtil.getPortletNamespace(ppid);
+      String memberRequestKey=HttpUtil.getParameter(refererUrl,portletNamespace + "key",false);
+      if (Validator.isNull(memberRequestKey)) {
+        return;
+      }
+      MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,user.getUserId());
+    }
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}
