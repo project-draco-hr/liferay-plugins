@@ -1,6 +1,7 @@
 {
   PollerResponse pollerResponse=pollerRequest.createPollerResponse();
   int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(pollerRequest.getUserId(),false);
+  pollerResponse.setParameter("timestamp",String.valueOf(System.currentTimeMillis()));
   pollerResponse.setParameter("newUserNotificationsCount",String.valueOf(newUserNotificationsCount));
   int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(pollerRequest.getUserId(),false);
   pollerResponse.setParameter("unreadUserNotificationsCount",String.valueOf(unreadUserNotificationsCount));
