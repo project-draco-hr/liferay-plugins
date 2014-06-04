@@ -1,0 +1,14 @@
+{
+  Calendar calendar=(Calendar)object;
+  Document document=getBaseModelDocument(PORTLET_ID,calendar);
+  Locale defaultLocale=LocaleUtil.getSiteDefault();
+  String defaultLanguageId=LocaleUtil.toLanguageId(defaultLocale);
+  document.addLocalizedText(Field.DESCRIPTION,calendar.getDescriptionMap());
+  document.addLocalizedText(Field.NAME,calendar.getNameMap());
+  CalendarResource calendarResource=calendar.getCalendarResource();
+  document.addLocalizedText("resourceName",calendarResource.getNameMap());
+  String calendarId=String.valueOf(calendar.getCalendarId());
+  document.addKeyword("calendarId",calendarId);
+  document.addText("defaultLanguageId",defaultLanguageId);
+  return document;
+}
