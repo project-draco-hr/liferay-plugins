@@ -7,7 +7,7 @@
       SyncFileService.deleteSyncFile(syncFile);
     }
   }
- else   if (e instanceof HttpHostConnectException) {
+ else   if ((e instanceof HttpHostConnectException) || (e instanceof NoHttpResponseException)) {
     syncAccount.setState(SyncAccount.STATE_DISCONNECTED);
     syncAccount.setUiEvent(SyncAccount.UI_EVENT_CONNECTION_EXCEPTION);
     SyncAccountService.update(syncAccount);
