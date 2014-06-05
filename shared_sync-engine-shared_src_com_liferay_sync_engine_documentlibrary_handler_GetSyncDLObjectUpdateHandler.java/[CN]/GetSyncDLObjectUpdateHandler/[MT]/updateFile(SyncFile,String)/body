@@ -24,8 +24,7 @@
   sourceSyncFile.setVersion(targetSyncFile.getVersion());
   SyncFileService.update(sourceSyncFile);
   if (Files.exists(sourceFilePath) && !targetSyncFile.isFolder()) {
-    String checksum=FileUtil.getChecksum(sourceFilePath);
-    if (checksum.equals(targetSyncFile.getChecksum())) {
+    if (!FileUtil.hasFileChanged(targetSyncFile)) {
       return;
     }
     downloadFile(sourceSyncFile,sourceVersion,!IODeltaUtil.isIgnoredFilePatchingExtension(targetSyncFile));
