@@ -1,8 +1,9 @@
 {
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  PortletDisplay portletDisplay=themeDisplay.getPortletDisplay();
   String query=ParamUtil.getString(request,"query");
-  SocialInteractionsConfiguration socialInteractionsConfiguration=SocialInteractionsConfigurationUtil.getSocialInteractionsConfiguration(themeDisplay.getCompanyId());
+  SocialInteractionsConfiguration socialInteractionsConfiguration=SocialInteractionsConfigurationUtil.getSocialInteractionsConfiguration(themeDisplay.getCompanyId(),portletDisplay.getId());
   List<User> users=MentionsUserFinderUtil.getUsers(themeDisplay.getCompanyId(),themeDisplay.getUserId(),query,socialInteractionsConfiguration);
   for (  User user : users) {
     if (user.isDefaultUser() || (themeDisplay.getUserId() == user.getUserId())) {
