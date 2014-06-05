@@ -9,13 +9,7 @@
     if (filePathName.equals(syncAccount.getFilePathName()) || parentFilePathName.equals(syncAccount.getFilePathName())) {
       return;
     }
-    SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentFilePathName,getSyncAccountId());
-    if (parentSyncFile == null) {
-      Thread.sleep(1000);
-      addSyncWatchEvent(eventType,filePath);
-      return;
-    }
-    SyncSite syncSite=SyncSiteService.fetchSyncSite(parentSyncFile.getRepositoryId(),getSyncAccountId());
+    SyncSite syncSite=SyncSiteService.fetchSyncSite(getRepositoryId(filePath),getSyncAccountId());
     Set<Long> activeSyncSiteIds=SyncSiteService.getActiveSyncSiteIds(getSyncAccountId());
     if (!activeSyncSiteIds.contains(syncSite.getSyncSiteId())) {
       return;
