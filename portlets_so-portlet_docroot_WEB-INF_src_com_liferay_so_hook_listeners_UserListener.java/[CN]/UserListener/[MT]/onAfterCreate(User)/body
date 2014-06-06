@@ -3,14 +3,12 @@
     ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
     if (serviceContext != null) {
       Map<String,String> headers=serviceContext.getHeaders();
-      String refererUrl=headers.get("referer");
-      String ppid=HttpUtil.getParameter(refererUrl,"p_p_id",false);
-      String portletNamespace=PortalUtil.getPortletNamespace(ppid);
-      String memberRequestKey=HttpUtil.getParameter(refererUrl,portletNamespace + "key",false);
-      if (Validator.isNull(memberRequestKey)) {
-        return;
+      String refererURL=headers.get(WebKeys.REFERER);
+      String portletId=HttpUtil.getParameter(refererURL,"p_p_id",false);
+      String memberRequestKey=HttpUtil.getParameter(refererURL,PortalUtil.getPortletNamespace(portletId) + "key",false);
+      if (Validator.isNotNull(memberRequestKey)) {
+        MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,user.getUserId());
       }
-      MemberRequestLocalServiceUtil.updateMemberRequest(memberRequestKey,user.getUserId());
     }
   }
  catch (  Exception e) {
