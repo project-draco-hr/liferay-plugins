@@ -15,7 +15,10 @@
         continue;
       }
       updateStatus(userId,childCalendarBooking,CalendarBookingWorkflowConstants.STATUS_IN_TRASH,serviceContext);
-      sendNotification(childCalendarBooking,NotificationTemplateType.MOVED_TO_TRASH);
+      boolean sendEmail=ParamUtil.getBoolean(serviceContext,"sendEmail",true);
+      if (sendEmail) {
+        sendNotification(childCalendarBooking,NotificationTemplateType.MOVED_TO_TRASH);
+      }
     }
   }
  else   if (oldStatus == CalendarBookingWorkflowConstants.STATUS_IN_TRASH) {
@@ -25,7 +28,10 @@
         continue;
       }
       updateStatus(userId,childCalendarBooking,CalendarBookingWorkflowConstants.STATUS_PENDING,serviceContext);
-      sendNotification(childCalendarBooking,NotificationTemplateType.INVITE);
+      boolean sendEmail=ParamUtil.getBoolean(serviceContext,"sendEmail",true);
+      if (sendEmail) {
+        sendNotification(childCalendarBooking,NotificationTemplateType.INVITE);
+      }
     }
   }
   if (status == CalendarBookingWorkflowConstants.STATUS_APPROVED) {
