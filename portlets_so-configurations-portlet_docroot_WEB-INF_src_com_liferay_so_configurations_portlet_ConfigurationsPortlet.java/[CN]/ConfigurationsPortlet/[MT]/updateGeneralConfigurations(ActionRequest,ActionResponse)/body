@@ -1,0 +1,16 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  boolean addSitePermission=ParamUtil.get(actionRequest,"addSitePermission",true);
+  updateRolePermissions(themeDisplay.getCompanyId(),addSitePermission);
+  UnicodeProperties properties=PropertiesParamUtil.getProperties(actionRequest,"preferences--");
+  PortletPreferences portletPreferences=PortletPreferencesLocalServiceUtil.getPreferences(themeDisplay.getCompanyId(),themeDisplay.getCompanyId(),PortletKeys.PREFS_OWNER_TYPE_COMPANY,LayoutConstants.DEFAULT_PLID,PortletKeys.SO_CONFIGURATIONS);
+  for (  Map.Entry<String,String> entry : properties.entrySet()) {
+    portletPreferences.setValue(entry.getKey(),entry.getValue());
+  }
+  try {
+    portletPreferences.store();
+  }
+ catch (  ValidatorException ve) {
+    SessionErrors.add(actionRequest,ValidatorException.class.getName(),ve);
+  }
+}
