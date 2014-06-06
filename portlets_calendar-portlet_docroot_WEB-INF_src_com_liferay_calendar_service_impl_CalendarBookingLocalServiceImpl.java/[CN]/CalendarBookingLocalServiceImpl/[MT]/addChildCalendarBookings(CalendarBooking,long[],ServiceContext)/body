@@ -17,18 +17,10 @@
       continue;
     }
     CalendarBooking childCalendarBooking=addCalendarBooking(calendarBooking.getUserId(),calendarId,new long[0],calendarBooking.getCalendarBookingId(),calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartTime(),calendarBooking.getEndTime(),calendarBooking.getAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
-    try {
-      NotificationType notificationType=NotificationType.parse(PortletPropsValues.CALENDAR_NOTIFICATION_DEFAULT_TYPE);
-      NotificationTemplateType notificationTemplateType=NotificationTemplateType.INVITE;
-      if (existingCalendarBookingIds.contains(childCalendarBooking.getCalendarId())) {
-        notificationTemplateType=NotificationTemplateType.UPDATE;
-      }
-      NotificationUtil.notifyCalendarBookingRecipients(childCalendarBooking,notificationType,notificationTemplateType);
+    NotificationTemplateType notificationTemplateType=NotificationTemplateType.INVITE;
+    if (existingCalendarBookingIds.contains(childCalendarBooking.getCalendarId())) {
+      notificationTemplateType=NotificationTemplateType.UPDATE;
     }
- catch (    Exception e) {
-      if (_log.isWarnEnabled()) {
-        _log.warn(e,e);
-      }
-    }
+    sendNotification(childCalendarBooking,notificationTemplateType);
   }
 }
