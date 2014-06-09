@@ -1,3 +1,9 @@
 {
-  return PortalUtil.getUserValue(getToUserId(),"uuid",_toUserUuid);
+  try {
+    User user=UserLocalServiceUtil.getUserById(getToUserId());
+    return user.getUuid();
+  }
+ catch (  PortalException pe) {
+    return StringPool.BLANK;
+  }
 }

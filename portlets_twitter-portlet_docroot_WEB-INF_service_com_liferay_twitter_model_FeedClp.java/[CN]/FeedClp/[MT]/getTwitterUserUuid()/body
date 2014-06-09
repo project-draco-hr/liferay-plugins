@@ -1,3 +1,9 @@
 {
-  return PortalUtil.getUserValue(getTwitterUserId(),"uuid",_twitterUserUuid);
+  try {
+    User user=UserLocalServiceUtil.getUserById(getTwitterUserId());
+    return user.getUuid();
+  }
+ catch (  PortalException pe) {
+    return StringPool.BLANK;
+  }
 }
