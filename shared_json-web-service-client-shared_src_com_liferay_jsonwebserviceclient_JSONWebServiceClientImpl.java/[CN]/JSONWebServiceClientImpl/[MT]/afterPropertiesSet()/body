@@ -1,8 +1,6 @@
 {
   HttpClientBuilder httpClientBuilder=HttpClients.custom();
-  PoolingHttpClientConnectionManager poolingHttpClientConnectionManager=new PoolingHttpClientConnectionManager(60000,TimeUnit.MILLISECONDS);
-  poolingHttpClientConnectionManager.setMaxTotal(20);
-  httpClientBuilder.setConnectionManager(poolingHttpClientConnectionManager);
+  httpClientBuilder.setConnectionManager(getPoolingHttpClientConnectionManager());
   if ((_login != null) && (_password != null)) {
     CredentialsProvider credentialsProvider=new BasicCredentialsProvider();
     credentialsProvider.setCredentials(new AuthScope(_hostName,_hostPort),new UsernamePasswordCredentials(_login,_password));
@@ -14,7 +12,6 @@
     }
   }
   try {
-    setSSLConnectionSocketFactory(httpClientBuilder);
     _closeableHttpClient=httpClientBuilder.build();
     if (_logger.isDebugEnabled()) {
       _logger.debug("Configured client for " + _protocol + "://"+ _hostName);
