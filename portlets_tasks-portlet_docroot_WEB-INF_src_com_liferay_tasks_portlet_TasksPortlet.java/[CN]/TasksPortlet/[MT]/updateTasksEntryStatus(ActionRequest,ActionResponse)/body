@@ -1,7 +1,14 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long tasksEntryId=ParamUtil.getLong(actionRequest,"tasksEntryId");
   long resolverUserId=ParamUtil.getLong(actionRequest,"resolverUserId");
   int status=ParamUtil.getInteger(actionRequest,"status");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(TasksEntry.class.getName(),actionRequest);
   TasksEntryLocalServiceUtil.updateTasksEntryStatus(tasksEntryId,resolverUserId,status,serviceContext);
+  Layout layout=themeDisplay.getLayout();
+  PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.TASKS,layout.getPlid(),PortletRequest.RENDER_PHASE);
+  portletURL.setWindowState(LiferayWindowState.POP_UP);
+  portletURL.setParameter("mvcPath","/tasks/view_task.jsp");
+  portletURL.setParameter("tasksEntryId",String.valueOf(tasksEntryId));
+  actionResponse.sendRedirect(portletURL.toString());
 }
