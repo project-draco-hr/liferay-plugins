@@ -23,9 +23,18 @@
   }
  catch (  NoSuchRoleException nsre) {
   }
-  int total=UserLocalServiceUtil.searchCount(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
-  jsonObject.put("total",total);
-  List<User> users=UserLocalServiceUtil.search(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserFirstNameComparator(true));
+  List<User> users=new ArrayList<User>();
+  if (_USERS_INDEXER_ENABLED && _USERS_SEARCH_WITH_INDEX) {
+    Sort sort=SortFactoryUtil.getSort(User.class,"firstName","asc");
+    BaseModelSearchResult<User> baseModelSearchResult=UserLocalServiceUtil.searchUsers(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,sort);
+    jsonObject.put("total",baseModelSearchResult.getLength());
+    users=baseModelSearchResult.getBaseModels();
+  }
+ else {
+    int total=UserLocalServiceUtil.searchCount(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
+    jsonObject.put("total",total);
+    users=UserLocalServiceUtil.search(user.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserFirstNameComparator(true));
+  }
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  User curUser : users) {
     JSONObject userJSONObject=JSONFactoryUtil.createJSONObject();
