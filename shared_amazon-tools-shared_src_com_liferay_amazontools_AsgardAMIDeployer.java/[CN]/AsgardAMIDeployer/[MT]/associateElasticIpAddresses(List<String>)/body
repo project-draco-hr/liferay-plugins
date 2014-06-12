@@ -2,10 +2,10 @@
   if (!properties.containsKey("elastic.ip.addresses")) {
     return;
   }
-  String elasticIpAddressesProperty=properties.getProperty("elastic.ip.addresses");
-  String[] elasticIpAddresses=elasticIpAddressesProperty.split(",");
+  String elasticIpAddressesString=properties.getProperty("elastic.ip.addresses");
+  String[] elasticIpAddresses=elasticIpAddressesString.split(",");
   for (int i=0; i < elasticIpAddresses.length; i++) {
-    System.out.println("Associating IP Address " + elasticIpAddresses[i] + " with instance "+ instanceIds.get(i));
+    System.out.println("Associating IP address " + elasticIpAddresses[i] + " with instance "+ instanceIds.get(i));
     AssociateAddressRequest associateAddressRequest=new AssociateAddressRequest();
     associateAddressRequest.setInstanceId(instanceIds.get(i));
     associateAddressRequest.setPublicIp(elasticIpAddresses[i]);

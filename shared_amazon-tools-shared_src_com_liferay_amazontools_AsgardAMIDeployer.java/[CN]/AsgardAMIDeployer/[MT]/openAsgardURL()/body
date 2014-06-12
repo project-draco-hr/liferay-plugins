@@ -1,7 +1,14 @@
 {
   Desktop desktop=Desktop.getDesktop();
-  String asgardClusterName=properties.getProperty("asgard.cluster.name");
-  String availabilityZone=properties.getProperty("availability.zone");
-  String asgardURL=properties.getProperty("asgard.host.protocol") + "://" + properties.getProperty("asgard.host.name")+ ":"+ properties.getProperty("asgard.host.port")+ "/"+ availabilityZone+ "/cluster/show/"+ asgardClusterName;
-  desktop.browse(URI.create(asgardURL));
+  StringBuilder sb=new StringBuilder();
+  sb.append(properties.getProperty("asgard.host.protocol"));
+  sb.append("://");
+  sb.append(properties.getProperty("asgard.host.name"));
+  sb.append(":");
+  sb.append(properties.getProperty("asgard.host.port"));
+  sb.append("/");
+  sb.append(properties.getProperty("availability.zone"));
+  sb.append("/cluster/show/");
+  sb.append(properties.getProperty("asgard.cluster.name"));
+  desktop.browse(URI.create(sb.toString()));
 }
