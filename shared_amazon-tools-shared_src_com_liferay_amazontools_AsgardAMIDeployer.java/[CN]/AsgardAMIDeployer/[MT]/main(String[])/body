@@ -1,11 +1,12 @@
 {
   CmdLineParser cmdLineParser=new CmdLineParser();
+  CmdLineParser.Option baseDirOption=cmdLineParser.addStringOption("base.dir");
   CmdLineParser.Option imageNameOption=cmdLineParser.addStringOption("image.name");
   CmdLineParser.Option parallelDeploymentOption=cmdLineParser.addBooleanOption("parallel.deployment");
   CmdLineParser.Option propertiesFileNameOption=cmdLineParser.addStringOption("properties.file.name");
   cmdLineParser.parse(args);
   try {
-    new AsgardAMIDeployer((String)cmdLineParser.getOptionValue(imageNameOption),(Boolean)cmdLineParser.getOptionValue(parallelDeploymentOption,Boolean.FALSE),(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
+    new AsgardAMIDeployer((String)cmdLineParser.getOptionValue(baseDirOption),(String)cmdLineParser.getOptionValue(imageNameOption),(Boolean)cmdLineParser.getOptionValue(parallelDeploymentOption,Boolean.FALSE),(String)cmdLineParser.getOptionValue(propertiesFileNameOption));
   }
  catch (  Exception e) {
     e.printStackTrace();

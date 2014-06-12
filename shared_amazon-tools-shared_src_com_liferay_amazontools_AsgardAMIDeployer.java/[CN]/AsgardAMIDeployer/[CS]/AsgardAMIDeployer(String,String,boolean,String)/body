@@ -1,8 +1,9 @@
 {
   super(propertiesFileName);
+  _baseDirName=baseDirName;
   _imageName=imageName;
   _parallelDeployment=parallelDeployment;
-  _jsonWebServiceClient=getJSONWebServiceClient(properties.getProperty("asgard.host.name"),Integer.valueOf(properties.getProperty("asgard.host.port")),properties.getProperty("asgard.login"),properties.getProperty("asgard.password"));
+  _jsonWebServiceClient=getJSONWebServiceClient(properties.getProperty("asgard.host.name"),Integer.valueOf(properties.getProperty("asgard.host.port")),_baseDirName + File.separator + properties.getProperty("asgard.key.store.path"),properties.getProperty("asgard.key.store.password"),properties.getProperty("asgard.login"),properties.getProperty("asgard.password"));
   System.out.println("Creating Auto Scaling Group");
   String autoScalingGroupName=createAutoScalingGroup();
   System.out.println("Created Auto Scaling Group " + autoScalingGroupName);
@@ -11,7 +12,8 @@
     minSize=Integer.parseInt(properties.getProperty("instance.min.size"));
   }
   System.out.println("Checking Auto Scaling Group " + autoScalingGroupName);
-  checkAutoScalingGroup(autoScalingGroupName,minSize);
+  List<String> instanceIds=checkAutoScalingGroup(autoScalingGroupName,minSize);
+  associateElasticIpAddresses(instanceIds);
   deactivateOldScalingGroup(autoScalingGroupName);
   openAsgardURL();
   System.out.println("Deployed Auto Scaling Group " + autoScalingGroupName);

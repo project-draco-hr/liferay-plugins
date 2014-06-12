@@ -14,7 +14,7 @@
     parameters.put("min","1");
   }
   _jsonWebServiceClient.doPost("/" + availabilityZone + "/cluster/createNextGroup",parameters);
-  for (int i=0; i < 12; i++) {
+  for (int i=0; i < 30; i++) {
     describeAutoScalingGroupsResult=amazonAutoScalingClient.describeAutoScalingGroups();
     autoScalingGroups=describeAutoScalingGroupsResult.getAutoScalingGroups();
     int newAutoScalingGroupsSize=autoScalingGroups.size();
@@ -28,7 +28,7 @@
   String autoScalingGroupName=null;
   boolean created=false;
   int maxSize=0;
-  for (int i=0; i < 12; i++) {
+  for (int i=0; i < 30; i++) {
     String json=_jsonWebServiceClient.doGet("/" + availabilityZone + "/cluster/show/"+ asgardClusterName+ ".json",Collections.<String,String>emptyMap());
     JSONArray autoScalingGroupsJSONArray=new JSONArray(json);
     JSONObject autoScalingGroupJSONObject=autoScalingGroupsJSONArray.getJSONObject(autoScalingGroupsJSONArray.length() - 1);
@@ -78,7 +78,7 @@
       parameters.put("minSize",String.valueOf(minSize));
       parameters.put("name",autoScalingGroupName);
       _jsonWebServiceClient.doPost("/" + availabilityZone + "/cluster/resize",parameters);
-      for (int i=0; i < 12; i++) {
+      for (int i=0; i < 30; i++) {
         String json=_jsonWebServiceClient.doGet("/" + availabilityZone + "/cluster/show/"+ asgardClusterName+ ".json",Collections.<String,String>emptyMap());
         JSONArray autoScalingGroupsJSONArray=new JSONArray(json);
         JSONObject autoScalingGroupJSONObject=autoScalingGroupsJSONArray.getJSONObject(autoScalingGroupsJSONArray.length() - 1);
