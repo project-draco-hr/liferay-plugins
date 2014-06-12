@@ -4,6 +4,11 @@
   jsonWebServiceClientImpl.setHostPort(hostPort);
   jsonWebServiceClientImpl.setLogin(login);
   jsonWebServiceClientImpl.setPassword(password);
+  if ((keyStorePath != null) && (keyStorePassword != null)) {
+    KeyStore keyStore=getKeyStore(keyStorePath,keyStorePassword);
+    jsonWebServiceClientImpl.setKeyStore(keyStore);
+    jsonWebServiceClientImpl.setProtocol("https");
+  }
   jsonWebServiceClientImpl.afterPropertiesSet();
   return jsonWebServiceClientImpl;
 }

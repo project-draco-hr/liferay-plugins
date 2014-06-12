@@ -1,0 +1,20 @@
+{
+  InputStream inputStream=null;
+  KeyStore keyStore=null;
+  try {
+    keyStore=KeyStore.getInstance("JKS");
+    inputStream=new FileInputStream(keyStorePath);
+    keyStore.load(inputStream,password.toCharArray());
+  }
+ catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+ finally {
+    try {
+      inputStream.close();
+    }
+ catch (    Exception ignore) {
+    }
+  }
+  return keyStore;
+}
