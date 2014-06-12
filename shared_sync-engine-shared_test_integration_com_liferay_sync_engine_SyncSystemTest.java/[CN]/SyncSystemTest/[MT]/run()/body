@@ -1,7 +1,8 @@
 {
   SyncEngine.start();
   _rootFilePathName=FilePathNameUtil.fixFilePathName(System.getProperty("user.home") + "/liferay-sync-test");
-  _syncAccount=SyncAccountService.addSyncAccount(_rootFilePathName + "/test","test@liferay.com","test","test",null,false,"http://localhost:8080");
+  _syncAccount=SyncAccountService.addSyncAccount(_rootFilePathName + "/test","test@liferay.com",Integer.MAX_VALUE,"test","test",5,null,false,"http://localhost:8080");
+  SyncAccountService.update(_syncAccount);
   long guestGroupId=SyncSystemTestUtil.getGuestGroupId(_syncAccount.getSyncAccountId());
   _syncSiteIds.put("Guest",guestGroupId);
   BufferedReader bufferedReader=Files.newBufferedReader(_testFilePath,Charset.defaultCharset());
