@@ -1,0 +1,17 @@
+{
+  try {
+    SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.getClassActivitySet(_BLOGS_ENTRY_CLASS_NAME_ID,blogsEntry.getEntryId(),SocialActivityKeyConstants.BLOGS_ADD_ENTRY);
+    if (activitySet == null) {
+      return;
+    }
+    Date displayDate=blogsEntry.getDisplayDate();
+    if (activitySet.getModifiedDate() == displayDate.getTime()) {
+      return;
+    }
+    activitySet.setModifiedDate(displayDate.getTime());
+    SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}
