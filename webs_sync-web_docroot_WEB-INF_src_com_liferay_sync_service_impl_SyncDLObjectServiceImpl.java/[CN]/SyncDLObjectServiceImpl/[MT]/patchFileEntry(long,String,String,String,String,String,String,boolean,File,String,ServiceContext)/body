@@ -12,7 +12,10 @@
     }
     return syncDLObject;
   }
-  finally {
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
+ finally {
     FileUtil.delete(patchedFile);
   }
 }

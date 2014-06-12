@@ -1,7 +1,12 @@
 {
-  Folder folder=dlAppService.getFolder(folderId);
-  if (!SyncUtil.isSupportedFolder(folder)) {
-    return null;
+  try {
+    Folder folder=dlAppService.getFolder(folderId);
+    if (!SyncUtil.isSupportedFolder(folder)) {
+      return null;
+    }
+    return SyncUtil.toSyncDLObject(folder,SyncConstants.EVENT_GET);
   }
-  return SyncUtil.toSyncDLObject(folder,SyncConstants.EVENT_GET);
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

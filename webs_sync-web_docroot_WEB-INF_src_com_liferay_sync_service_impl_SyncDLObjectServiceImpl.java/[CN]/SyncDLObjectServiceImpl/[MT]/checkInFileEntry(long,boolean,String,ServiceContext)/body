@@ -1,5 +1,10 @@
 {
-  dlAppService.checkInFileEntry(fileEntryId,majorVersion,changeLog,serviceContext);
-  FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
-  return SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_CHECK_IN);
+  try {
+    dlAppService.checkInFileEntry(fileEntryId,majorVersion,changeLog,serviceContext);
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    return SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_CHECK_IN);
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

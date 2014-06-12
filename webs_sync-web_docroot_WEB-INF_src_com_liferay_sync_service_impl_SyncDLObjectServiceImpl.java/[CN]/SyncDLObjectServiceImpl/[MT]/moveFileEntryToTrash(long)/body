@@ -1,4 +1,9 @@
 {
-  FileEntry fileEntry=dlAppService.moveFileEntryToTrash(fileEntryId);
-  return SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_TRASH);
+  try {
+    FileEntry fileEntry=dlAppService.moveFileEntryToTrash(fileEntryId);
+    return SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_TRASH);
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

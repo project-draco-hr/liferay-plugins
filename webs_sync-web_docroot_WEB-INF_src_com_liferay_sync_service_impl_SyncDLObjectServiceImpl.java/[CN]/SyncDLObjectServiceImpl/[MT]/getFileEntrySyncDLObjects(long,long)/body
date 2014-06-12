@@ -1,9 +1,14 @@
 {
-  List<FileEntry> fileEntries=dlAppService.getFileEntries(repositoryId,folderId);
-  List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>(fileEntries.size());
-  for (  FileEntry fileEntry : fileEntries) {
-    SyncDLObject syncDLObject=SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_GET);
-    syncDLObjects.add(syncDLObject);
+  try {
+    List<FileEntry> fileEntries=dlAppService.getFileEntries(repositoryId,folderId);
+    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>(fileEntries.size());
+    for (    FileEntry fileEntry : fileEntries) {
+      SyncDLObject syncDLObject=SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_GET);
+      syncDLObjects.add(syncDLObject);
+    }
+    return syncDLObjects;
   }
-  return syncDLObjects;
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

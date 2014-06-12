@@ -1,6 +1,11 @@
 {
-  long lastAccessTime=System.currentTimeMillis();
-  List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>();
-  getAllSyncDLObjects(repositoryId,folderId,syncDLObjects);
-  return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+  try {
+    long lastAccessTime=System.currentTimeMillis();
+    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>();
+    getAllSyncDLObjects(repositoryId,folderId,syncDLObjects);
+    return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

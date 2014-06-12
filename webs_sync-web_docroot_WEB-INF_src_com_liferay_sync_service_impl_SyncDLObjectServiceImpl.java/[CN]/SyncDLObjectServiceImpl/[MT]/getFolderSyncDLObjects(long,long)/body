@@ -1,12 +1,17 @@
 {
-  List<Folder> folders=dlAppService.getFolders(repositoryId,parentFolderId);
-  List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>(folders.size());
-  for (  Folder folder : folders) {
-    if (!SyncUtil.isSupportedFolder(folder)) {
-      continue;
+  try {
+    List<Folder> folders=dlAppService.getFolders(repositoryId,parentFolderId);
+    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>(folders.size());
+    for (    Folder folder : folders) {
+      if (!SyncUtil.isSupportedFolder(folder)) {
+        continue;
+      }
+      SyncDLObject syncDLObject=SyncUtil.toSyncDLObject(folder,SyncConstants.EVENT_GET);
+      syncDLObjects.add(syncDLObject);
     }
-    SyncDLObject syncDLObject=SyncUtil.toSyncDLObject(folder,SyncConstants.EVENT_GET);
-    syncDLObjects.add(syncDLObject);
+    return syncDLObjects;
   }
-  return syncDLObjects;
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }

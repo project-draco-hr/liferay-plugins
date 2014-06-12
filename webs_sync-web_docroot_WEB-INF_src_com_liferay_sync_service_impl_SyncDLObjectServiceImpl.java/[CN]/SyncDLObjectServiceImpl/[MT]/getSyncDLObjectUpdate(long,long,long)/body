@@ -1,10 +1,15 @@
 {
-  repositoryService.checkRepository(repositoryId);
-  List<SyncDLObject> syncDLObjects=syncDLObjectFinder.filterFindByC_M_R(companyId,lastAccessTime,repositoryId);
-  for (  SyncDLObject syncDLObject : syncDLObjects) {
-    if (syncDLObject.getModifiedTime() > lastAccessTime) {
-      lastAccessTime=syncDLObject.getModifiedTime();
+  try {
+    repositoryService.checkRepository(repositoryId);
+    List<SyncDLObject> syncDLObjects=syncDLObjectFinder.filterFindByC_M_R(companyId,lastAccessTime,repositoryId);
+    for (    SyncDLObject syncDLObject : syncDLObjects) {
+      if (syncDLObject.getModifiedTime() > lastAccessTime) {
+        lastAccessTime=syncDLObject.getModifiedTime();
+      }
     }
+    return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
   }
-  return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+ catch (  PortalException pe) {
+    throw new PortalException(pe.getClass().getName(),pe);
+  }
 }
