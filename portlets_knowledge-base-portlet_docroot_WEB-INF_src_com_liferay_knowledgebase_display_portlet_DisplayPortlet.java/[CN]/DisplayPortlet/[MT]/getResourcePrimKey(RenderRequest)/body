@@ -1,5 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String urlTitle=ParamUtil.getString(renderRequest,"urlTitle");
+  if (Validator.isNotNull(urlTitle)) {
+    KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),urlTitle);
+    return kbArticle.getResourcePrimKey();
+  }
   PortletPreferences preferences=renderRequest.getPreferences();
   long defaultValue=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
   String mvcPath=ParamUtil.getString(renderRequest,"mvcPath");
