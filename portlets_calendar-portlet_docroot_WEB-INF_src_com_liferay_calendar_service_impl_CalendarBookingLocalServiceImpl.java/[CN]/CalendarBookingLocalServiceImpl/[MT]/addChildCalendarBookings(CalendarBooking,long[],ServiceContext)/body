@@ -4,7 +4,6 @@
   }
   List<CalendarBooking> childCalendarBookings=calendarBookingPersistence.findByParentCalendarBookingId(calendarBooking.getCalendarBookingId());
   Set<Long> existingCalendarBookingIds=new HashSet<Long>(childCalendarIds.length);
-  boolean sendEmail=ParamUtil.getBoolean(serviceContext,"sendEmail",true);
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
     if (childCalendarBooking.isMasterBooking() || childCalendarBooking.isDenied()) {
       continue;
@@ -22,8 +21,6 @@
     if (existingCalendarBookingIds.contains(childCalendarBooking.getCalendarId())) {
       notificationTemplateType=NotificationTemplateType.UPDATE;
     }
-    if (sendEmail) {
-      sendNotification(childCalendarBooking,notificationTemplateType);
-    }
+    sendNotification(childCalendarBooking,notificationTemplateType,serviceContext);
   }
 }
