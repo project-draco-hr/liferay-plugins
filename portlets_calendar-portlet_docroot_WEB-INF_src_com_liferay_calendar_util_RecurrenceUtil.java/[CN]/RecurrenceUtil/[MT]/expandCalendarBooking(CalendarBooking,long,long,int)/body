@@ -8,15 +8,19 @@
   }
   try {
     RecurrenceIterator recurrenceIterator=RecurrenceIteratorFactory.createRecurrenceIterator(calendarBooking.getRecurrence(),_toDateValue(calendarBooking.getStartTime()),TimeUtils.utcTimezone());
+    int count=0;
     while (recurrenceIterator.hasNext()) {
       DateValue dateValue=recurrenceIterator.next();
       if (dateValue.compareTo(startDateValue) < 0) {
+        count++;
         continue;
       }
       if (dateValue.compareTo(endDateValue) > 0) {
         break;
       }
       CalendarBooking newCalendarBooking=_copyCalendarBooking(calendarBooking,dateValue);
+      newCalendarBooking.setInstanceIndex(count);
+      count++;
       expandedCalendarBookings.add(newCalendarBooking);
       if ((maxSize > 0) && (expandedCalendarBookings.size() >= maxSize)) {
         break;
