@@ -1,10 +1,11 @@
 {
   String json=doGet(url,parametersArray);
-  if (Validator.isNull(json)) {
+  if ((json == null) || json.equals("")) {
     return null;
   }
   if (json.contains("exception")) {
     throw new Exception(getExceptionMessage(json));
   }
-  return JSONFactoryUtil.looseDeserialize(json,clazz);
+  JSONDeserializer<T> jsonDeserializer=new JSONDeserializer<T>();
+  return jsonDeserializer.deserialize(json,clazz);
 }
