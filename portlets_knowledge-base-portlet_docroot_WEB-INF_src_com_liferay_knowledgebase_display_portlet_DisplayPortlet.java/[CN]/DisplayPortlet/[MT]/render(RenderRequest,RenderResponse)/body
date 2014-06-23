@@ -5,10 +5,11 @@
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
     KBArticle kbArticle=null;
     long resourcePrimKey=getResourcePrimKey(renderRequest);
+    long parentResourcePrimKey=ParamUtil.getLong(renderRequest,"parentResourcePrimKey",KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY);
     if (resourcePrimKey > 0) {
       kbArticle=KBArticleServiceUtil.getLatestKBArticle(resourcePrimKey,status);
     }
- else {
+ else     if (parentResourcePrimKey == KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY) {
       List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getGroupKBArticles(themeDisplay.getScopeGroupId(),status,0,1,new KBArticlePriorityComparator(true));
       if (!kbArticles.isEmpty()) {
         kbArticle=kbArticles.get(0);
