@@ -1,0 +1,27 @@
+{
+  if (executionCount >= 5) {
+    return false;
+  }
+  if (exception instanceof ConnectTimeoutException) {
+    return false;
+  }
+  if (exception instanceof InterruptedIOException) {
+    return false;
+  }
+  if (exception instanceof SocketException) {
+    return true;
+  }
+  if (exception instanceof SSLException) {
+    return false;
+  }
+  if (exception instanceof UnknownHostException) {
+    return false;
+  }
+  HttpClientContext clientContext=HttpClientContext.adapt(httpContext);
+  HttpRequest httpRequest=clientContext.getRequest();
+  boolean idempotent=!(httpRequest instanceof HttpEntityEnclosingRequest);
+  if (idempotent) {
+    return true;
+  }
+  return false;
+}
