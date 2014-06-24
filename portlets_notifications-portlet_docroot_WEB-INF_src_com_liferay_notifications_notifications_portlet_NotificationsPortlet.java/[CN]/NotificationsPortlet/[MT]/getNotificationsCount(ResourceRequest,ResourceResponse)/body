@@ -2,10 +2,10 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   try {
-    int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),false);
+    int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
     jsonObject.put("newUserNotificationsCount",newUserNotificationsCount);
     jsonObject.put("timestamp",String.valueOf(System.currentTimeMillis()));
-    int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),false);
+    int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
     jsonObject.put("unreadUserNotificationsCount",unreadUserNotificationsCount);
     jsonObject.put("success",Boolean.TRUE);
   }
