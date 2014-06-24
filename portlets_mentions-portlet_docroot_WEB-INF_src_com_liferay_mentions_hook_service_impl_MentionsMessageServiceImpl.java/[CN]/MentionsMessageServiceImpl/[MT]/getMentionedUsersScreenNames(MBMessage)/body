@@ -1,9 +1,16 @@
 {
+  SocialInteractionsConfiguration socialInteractionsConfiguration=SocialInteractionsConfigurationUtil.getSocialInteractionsConfiguration(message.getCompanyId(),"1_WAR_mentionsportlet");
   Matcher matcher=_pattern.matcher(message.getBody());
   Set<String> mentionedUsersScreenNames=new HashSet<String>();
   while (matcher.find()) {
     String mentionedUserScreenName=matcher.group(1);
-    mentionedUsersScreenNames.add(mentionedUserScreenName);
+    List<User> users=MentionsUserFinderUtil.getUsers(message.getCompanyId(),message.getUserId(),mentionedUserScreenName,socialInteractionsConfiguration);
+    for (    User user : users) {
+      if (mentionedUserScreenName.equals(user.getScreenName())) {
+        mentionedUsersScreenNames.add(mentionedUserScreenName);
+        break;
+      }
+    }
   }
   return mentionedUsersScreenNames.toArray(new String[mentionedUsersScreenNames.size()]);
 }
