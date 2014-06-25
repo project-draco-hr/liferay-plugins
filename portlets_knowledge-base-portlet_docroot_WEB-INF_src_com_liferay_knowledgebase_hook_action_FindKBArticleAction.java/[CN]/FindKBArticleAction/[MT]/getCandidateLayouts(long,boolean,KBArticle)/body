@@ -1,0 +1,17 @@
+{
+  List<Layout> candidateLayouts=new ArrayList<Layout>();
+  Group group=GroupLocalServiceUtil.getGroup(kbArticle.getGroupId());
+  if (group.isLayout()) {
+    Layout layout=LayoutLocalServiceUtil.getLayout(group.getClassPK());
+    candidateLayouts.add(layout);
+    group=layout.getGroup();
+  }
+  List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(group.getGroupId(),privateLayout,LayoutConstants.TYPE_PORTLET);
+  candidateLayouts.addAll(layouts);
+  Layout selLayout=LayoutLocalServiceUtil.getLayout(plid);
+  if ((selLayout.getGroupId() == kbArticle.getGroupId()) && selLayout.isTypePortlet()) {
+    candidateLayouts.remove(selLayout);
+    candidateLayouts.add(0,selLayout);
+  }
+  return candidateLayouts;
+}
