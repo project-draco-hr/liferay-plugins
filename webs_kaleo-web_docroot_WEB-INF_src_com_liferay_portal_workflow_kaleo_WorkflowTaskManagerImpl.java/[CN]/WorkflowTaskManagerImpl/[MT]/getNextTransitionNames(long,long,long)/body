@@ -1,6 +1,9 @@
 {
   try {
     KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
+    if (kaleoTaskInstanceToken.isCompleted()) {
+      return Collections.emptyList();
+    }
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     KaleoNode kaleoNode=kaleoTask.getKaleoNode();
     List<KaleoTransition> kaleoTransitions=kaleoNode.getKaleoTransitions();
