@@ -1,8 +1,7 @@
 {
-  try {
-    return getLatestKBArticleByUrlTitle(groupId,urlTitle,WorkflowConstants.STATUS_APPROVED);
+  KBArticle kbArticle=fetchKBArticleByUrlTitle(groupId,urlTitle);
+  if (kbArticle == null) {
+    throw new NoSuchArticleException("No KBArticle exists with the key {groupId=" + groupId + ", urlTitle="+ urlTitle+ "}");
   }
- catch (  NoSuchArticleException nsae) {
-    return getLatestKBArticleByUrlTitle(groupId,urlTitle,WorkflowConstants.STATUS_PENDING);
-  }
+  return kbArticle;
 }

@@ -2,12 +2,13 @@
   if (Validator.isNull(markdown)) {
     throw new KBArticleImportException("Null or empty Markdown in file entry: " + fileEntry);
   }
-  String html;
+  String html=null;
   try {
     html=_markdownConverter.convert(markdown);
   }
  catch (  IOException ioe) {
-    StringBuffer sb=new StringBuffer("Unable to convert Markdown to HTML for file entry: ");
+    StringBuilder sb=new StringBuilder(4);
+    sb.append("Unable to convert Markdown to HTML for file entry: ");
     sb.append(fileEntry);
     sb.append(". ");
     sb.append(ioe.getLocalizedMessage());
@@ -15,7 +16,8 @@
   }
   String heading=getTitleLineFromHtml(html);
   if (Validator.isNull(heading)) {
-    StringBuffer sb=new StringBuffer("Unable to extract heading from HTML of converted file entry:");
+    StringBuilder sb=new StringBuilder(5);
+    sb.append("Unable to extract heading from HTML of converted file entry:");
     sb.append(StringPool.SPACE);
     sb.append(fileEntry);
     sb.append(", HTML: ");
@@ -31,7 +33,8 @@
     article=applyContentToKBArticle(userId,groupId,parentResourcePrimaryKey,title,urlTitle,html,serviceContext);
   }
  catch (  Exception e) {
-    StringBuffer sb=new StringBuffer("Unable to create KBArticle for file entry: ");
+    StringBuilder sb=new StringBuilder(4);
+    sb.append("Unable to create KBArticle for file entry: ");
     sb.append(fileEntry);
     sb.append(". ");
     sb.append(e.getLocalizedMessage());

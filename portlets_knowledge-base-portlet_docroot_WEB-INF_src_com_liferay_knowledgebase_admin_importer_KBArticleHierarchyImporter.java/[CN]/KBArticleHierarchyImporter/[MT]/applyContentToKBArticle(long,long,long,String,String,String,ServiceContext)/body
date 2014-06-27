@@ -1,21 +1,10 @@
 {
-  KBArticle article=null;
-  try {
-    article=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(groupId,urlTitle);
-  }
- catch (  PortalException pe) {
-    if (_log.isDebugEnabled()) {
-      _log.debug(pe.getLocalizedMessage());
-    }
-  }
-  String description=null;
-  String[] sections=null;
-  String attachmentDirName=null;
-  if (Validator.isNotNull(article)) {
-    article=KBArticleLocalServiceUtil.updateKBArticle(userId,article.getResourcePrimKey(),title,html,article.getDescription(),sections,attachmentDirName,serviceContext);
+  KBArticle article=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,urlTitle);
+  if (article != null) {
+    article=KBArticleLocalServiceUtil.updateKBArticle(userId,article.getResourcePrimKey(),title,html,article.getDescription(),null,null,serviceContext);
   }
  else {
-    article=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimaryKey,title,urlTitle,html,description,sections,attachmentDirName,serviceContext);
+    article=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimaryKey,title,urlTitle,html,null,null,null,serviceContext);
   }
   return article;
 }

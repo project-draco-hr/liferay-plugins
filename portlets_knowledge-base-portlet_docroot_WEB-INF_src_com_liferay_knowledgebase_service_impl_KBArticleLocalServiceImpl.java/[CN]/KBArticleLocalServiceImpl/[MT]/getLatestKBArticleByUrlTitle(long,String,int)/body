@@ -1,14 +1,7 @@
 {
-  List<KBArticle> kbArticles=null;
-  OrderByComparator orderByComparator=new KBArticleVersionComparator();
-  if (status == WorkflowConstants.STATUS_ANY) {
-    kbArticles=kbArticlePersistence.findByG_UT(groupId,urlTitle,0,1,orderByComparator);
-  }
- else {
-    kbArticles=kbArticlePersistence.findByG_UT_ST(groupId,urlTitle,status,0,1,orderByComparator);
-  }
-  if (kbArticles.isEmpty()) {
+  KBArticle latestKBArticle=fetchLatestKBArticleByUrlTitle(groupId,urlTitle,status);
+  if (latestKBArticle == null) {
     throw new NoSuchArticleException("No KBArticle exists with the key {groupId=" + groupId + ", urlTitle="+ urlTitle+ ", status="+ status+ "}");
   }
-  return kbArticles.get(0);
+  return latestKBArticle;
 }
