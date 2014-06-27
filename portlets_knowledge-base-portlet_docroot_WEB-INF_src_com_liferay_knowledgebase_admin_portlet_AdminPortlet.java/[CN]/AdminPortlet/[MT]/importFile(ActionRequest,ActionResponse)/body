@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
   String fileName=uploadPortletRequest.getFileName("file");
   if (Validator.isNull(fileName)) {
@@ -10,7 +11,7 @@
     ServiceContext serviceContext=ServiceContextFactory.getInstance(AdminPortlet.class.getName(),actionRequest);
     serviceContext.setGuestPermissions(new String[]{ActionKeys.VIEW});
     KBArticleHierarchyImporter kbArticleHierarchyImporter=new KBArticleHierarchyImporter();
-    kbArticleHierarchyImporter.processZipFile(fileName,inputStream,new HashMap<String,FileEntry>(),serviceContext);
+    kbArticleHierarchyImporter.processZipFile(themeDisplay.getUserId(),themeDisplay.getScopeGroupId(),fileName,inputStream,new HashMap<String,FileEntry>(),serviceContext);
   }
  catch (  KBArticleImportException kbaie) {
     SessionErrors.add(actionRequest,kbaie.getClass(),kbaie);
