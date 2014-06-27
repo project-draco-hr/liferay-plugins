@@ -1,0 +1,27 @@
+{
+  String imageSource=null;
+  String[] lines=StringUtil.split(html,"\"");
+  for (int i=0; i < lines.length; i++) {
+    if (lines[i].endsWith("src=")) {
+      if ((i + 1) < lines.length) {
+        imageSource=lines[i + 1];
+      }
+      break;
+    }
+  }
+  if (Validator.isNull(imageSource)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Missing src attribute for image " + html);
+    }
+    return null;
+  }
+  String[] paths=StringUtil.split(imageSource,StringPool.SLASH);
+  if (paths.length < 0) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Expected image file path to contain a slash " + html);
+    }
+    return null;
+  }
+  String name=paths[paths.length - 1];
+  return fileEntriesMap.get(name);
+}
