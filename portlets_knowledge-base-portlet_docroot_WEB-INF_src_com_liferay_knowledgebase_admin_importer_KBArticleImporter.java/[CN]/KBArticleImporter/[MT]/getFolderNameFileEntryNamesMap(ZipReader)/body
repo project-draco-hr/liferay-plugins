@@ -1,0 +1,17 @@
+{
+  Map<String,List<String>> folderNameFileEntryNamesMap=new TreeMap<String,List<String>>();
+  for (  String zipEntry : zipReader.getEntries()) {
+    String extension=FileUtil.getExtension(zipEntry);
+    if (!ArrayUtil.contains(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_EXTENSIONS,StringPool.PERIOD.concat(extension)) || zipEntry.equals(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME)) {
+      continue;
+    }
+    String folderName=zipEntry.substring(0,zipEntry.lastIndexOf(StringPool.SLASH));
+    List<String> fileEntryNames=folderNameFileEntryNamesMap.get(folderName);
+    if (fileEntryNames == null) {
+      fileEntryNames=new ArrayList<String>();
+    }
+    fileEntryNames.add(zipEntry);
+    folderNameFileEntryNamesMap.put(folderName,fileEntryNames);
+  }
+  return folderNameFileEntryNamesMap;
+}

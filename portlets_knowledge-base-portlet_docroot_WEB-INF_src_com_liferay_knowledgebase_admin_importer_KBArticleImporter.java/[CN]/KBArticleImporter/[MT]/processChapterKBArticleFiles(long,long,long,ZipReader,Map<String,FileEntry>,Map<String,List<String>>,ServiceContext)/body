@@ -1,0 +1,26 @@
+{
+  Set<String> folderNames=folderNameFileEntryNamesMap.keySet();
+  for (  String folderName : folderNames) {
+    List<String> fileEntryNames=folderNameFileEntryNamesMap.get(folderName);
+    String chapterIntroFileEntryName=null;
+    List<String> chapterFileEntryNames=new ArrayList<String>();
+    for (    String fileEntryName : fileEntryNames) {
+      if (fileEntryName.endsWith(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_INTRO)) {
+        chapterIntroFileEntryName=fileEntryName;
+      }
+ else {
+        chapterFileEntryNames.add(fileEntryName);
+      }
+    }
+    KBArticle chapterIntroKBArticle=addKBArticleMarkdown(userId,groupId,homeKBArticlePK,zipReader.getEntryAsString(chapterIntroFileEntryName),chapterIntroFileEntryName,fileEntriesMap,serviceContext);
+    for (    String chapterFileEntryName : chapterFileEntryNames) {
+      String chapterMarkdown=zipReader.getEntryAsString(chapterFileEntryName);
+      if (Validator.isNull(chapterMarkdown)) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Missing Markdown in file entry: " + chapterFileEntryName);
+        }
+      }
+      addKBArticleMarkdown(userId,groupId,chapterIntroKBArticle.getResourcePrimKey(),chapterMarkdown,chapterFileEntryName,fileEntriesMap,serviceContext);
+    }
+  }
+}
