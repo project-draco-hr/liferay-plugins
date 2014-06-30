@@ -1,0 +1,17 @@
+{
+  if (Validator.isNull(markdown)) {
+    throw new KBArticleImportException("Null or empty Markdown in file entry: " + fileEntry);
+  }
+  KBArticleMarkdownConverter kbArticleMarkdownConverter=new KBArticleMarkdownConverter(markdown,fileEntriesMap);
+  try {
+    return applyContentToKBArticle(userId,groupId,parentResourcePrimaryKey,kbArticleMarkdownConverter.getTitle(),kbArticleMarkdownConverter.getUrlTitle(),kbArticleMarkdownConverter.getHtml(),serviceContext);
+  }
+ catch (  Exception e) {
+    StringBuilder sb=new StringBuilder(4);
+    sb.append("Unable to create KBArticle for file entry: ");
+    sb.append(fileEntry);
+    sb.append(". ");
+    sb.append(e.getLocalizedMessage());
+    throw new KBArticleImportException(sb.toString(),e);
+  }
+}

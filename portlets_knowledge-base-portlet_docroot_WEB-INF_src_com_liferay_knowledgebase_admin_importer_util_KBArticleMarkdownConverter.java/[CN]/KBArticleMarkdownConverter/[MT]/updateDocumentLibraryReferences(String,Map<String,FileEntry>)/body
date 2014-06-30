@@ -1,0 +1,60 @@
+{
+  Set<Integer> indexes=new TreeSet<Integer>();
+  int index=0;
+  while ((index=html.indexOf("<img",index)) > -1) {
+    indexes.add(index);
+    index+=4;
+  }
+  if (indexes.isEmpty()) {
+    return html;
+  }
+  StringBundler sb=new StringBundler();
+  int previousIndex=0;
+  for (  int curIndex : indexes) {
+    if (curIndex < 0) {
+      break;
+    }
+    if (curIndex > previousIndex) {
+      String text=html.substring(previousIndex,curIndex);
+      sb.append(text);
+    }
+    int pos=html.indexOf("/>",curIndex);
+    if (pos < 0) {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Expected close tag for image " + html.substring(curIndex));
+      }
+      sb.append(html.substring(curIndex));
+      previousIndex=curIndex;
+      break;
+    }
+    String text=html.substring(curIndex,pos);
+    FileEntry fileEntry=KBArticleImporterUtil.extractImageFileEntry(text,fileEntriesMap);
+    if (fileEntry == null) {
+      if (_log.isWarnEnabled()) {
+        _log.warn("Unable to find image source " + text);
+      }
+      sb.append("<img alt=\"missing image\" src=\"\" ");
+    }
+ else {
+      String imageSrc=StringPool.BLANK;
+      try {
+        imageSrc=DLUtil.getPreviewURL(fileEntry,fileEntry.getFileVersion(),null,StringPool.BLANK);
+      }
+ catch (      PortalException pe) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to obtain image url from fileEntry " + fileEntry.getFileEntryId());
+        }
+      }
+      sb.append("<img alt=\"");
+      sb.append(HtmlUtil.escapeAttribute(fileEntry.getTitle()));
+      sb.append("\" src=\"");
+      sb.append(imageSrc);
+      sb.append("\" ");
+    }
+    previousIndex=pos;
+  }
+  if (previousIndex < html.length()) {
+    sb.append(html.substring(previousIndex));
+  }
+  return sb.toString();
+}

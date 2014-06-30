@@ -1,5 +1,5 @@
 {
-  String rootHomeMarkdown=zipReader.getEntryAsString(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME);
+  String homeMarkdown=zipReader.getEntryAsString(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME);
   for (  String zipEntry : zipReader.getEntries()) {
     String extension=FileUtil.getExtension(zipEntry);
     if (!ArrayUtil.contains(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_EXTENSIONS,StringPool.PERIOD.concat(extension)) || zipEntry.equals(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME)) {
@@ -13,10 +13,10 @@
     fileEntries.add(zipEntry);
     _folderFileEntryMap.put(folderName,fileEntries);
   }
-  if (Validator.isNull(rootHomeMarkdown)) {
+  if (Validator.isNull(homeMarkdown)) {
     throw new KBArticleImportException("Missing file entry: " + PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME);
   }
-  KBArticle rootHomeKBArticle=createKBArticleFromMarkdown(userId,groupId,KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,rootHomeMarkdown,PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME,fileEntriesMap,serviceContext);
+  KBArticle homeKBArticle=addKBArticleMarkdown(userId,groupId,KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,homeMarkdown,PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME,fileEntriesMap,serviceContext);
   Set<String> folders=_folderFileEntryMap.keySet();
   Iterator<String> folderIter=folders.iterator();
   while (folderIter.hasNext()) {
@@ -36,11 +36,11 @@
       throw new KBArticleImportException("Missing intro file entry in folder: " + folder);
     }
     String chapterIntroMarkdown=zipReader.getEntryAsString(chapterHomeFileEntry);
-    KBArticle chapterIntroKBArticle=createKBArticleFromMarkdown(userId,groupId,rootHomeKBArticle.getResourcePrimKey(),chapterIntroMarkdown,chapterHomeFileEntry,fileEntriesMap,serviceContext);
+    KBArticle chapterIntroKBArticle=addKBArticleMarkdown(userId,groupId,homeKBArticle.getResourcePrimKey(),chapterIntroMarkdown,chapterHomeFileEntry,fileEntriesMap,serviceContext);
     for (    String tutorialFileEntry : chapterMarkdownFileEntries) {
       String tutorialMarkdown=zipReader.getEntryAsString(tutorialFileEntry);
       if (Validator.isNotNull(tutorialMarkdown)) {
-        createKBArticleFromMarkdown(userId,groupId,chapterIntroKBArticle.getResourcePrimKey(),tutorialMarkdown,tutorialFileEntry,fileEntriesMap,serviceContext);
+        addKBArticleMarkdown(userId,groupId,chapterIntroKBArticle.getResourcePrimKey(),tutorialMarkdown,tutorialFileEntry,fileEntriesMap,serviceContext);
       }
  else {
         if (_log.isWarnEnabled()) {
