@@ -1,0 +1,21 @@
+{
+  List<KBArticle> siblings=getKBArticles(groupId,parentResourcePrimKey,status,QueryUtil.ALL_POS,QueryUtil.ALL_POS,new KBArticlePriorityComparator(true));
+  Iterator<KBArticle> iterator=siblings.iterator();
+  KBArticle sibling=null;
+  while (iterator.hasNext()) {
+    KBArticle kbArticle=iterator.next();
+    if (kbArticle.getResourcePrimKey() == resourcePrimKey) {
+      break;
+    }
+    sibling=kbArticle;
+  }
+  if (predecessor) {
+    return sibling;
+  }
+  if (iterator.hasNext()) {
+    return iterator.next();
+  }
+ else {
+    return null;
+  }
+}
