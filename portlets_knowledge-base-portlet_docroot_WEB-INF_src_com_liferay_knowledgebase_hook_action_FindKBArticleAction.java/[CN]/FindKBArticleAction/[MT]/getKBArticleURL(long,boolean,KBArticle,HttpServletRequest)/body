@@ -6,7 +6,7 @@
     for (    Portlet portlet : portlets) {
       String rootPortletId=PortletConstants.getRootPortletId(portlet.getPortletId());
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
-        return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+        return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),kbArticle,request);
       }
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SECTION)) {
         PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
@@ -23,7 +23,7 @@
           if (!ArrayUtil.contains(kbArticlesSections,section)) {
             continue;
           }
-          return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+          return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),kbArticle,request);
         }
       }
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_ARTICLE)) {
@@ -39,7 +39,7 @@
         long rootResourcePrimKey=kbArticle.getRootResourcePrimKey();
         long selRootResourcePrimKey=selKBArticle.getRootResourcePrimKey();
         if (rootResourcePrimKey == selRootResourcePrimKey) {
-          return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),request);
+          return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),kbArticle,request);
         }
       }
     }
