@@ -10,8 +10,7 @@
     inputStream=uploadPortletRequest.getFileAsStream("file");
     ServiceContext serviceContext=ServiceContextFactory.getInstance(AdminPortlet.class.getName(),actionRequest);
     serviceContext.setGuestPermissions(new String[]{ActionKeys.VIEW});
-    KBArticleHierarchyImporter kbArticleHierarchyImporter=new KBArticleHierarchyImporter();
-    kbArticleHierarchyImporter.processZipFile(themeDisplay.getUserId(),themeDisplay.getScopeGroupId(),fileName,inputStream,new HashMap<String,FileEntry>(),serviceContext);
+    KBArticleServiceUtil.addKBArticlesMarkdown(themeDisplay.getScopeGroupId(),fileName,inputStream,serviceContext);
   }
  catch (  KBArticleImportException kbaie) {
     SessionErrors.add(actionRequest,kbaie.getClass(),kbaie);
