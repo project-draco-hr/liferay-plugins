@@ -1,0 +1,13 @@
+{
+  KBArticle prevKBArticle=prevAndNext[0];
+  if (prevKBArticle != null) {
+    KBArticle lastSiblingChildKBArticle=kbArticlePersistence.fetchByG_P_L_Last(kbArticle.getGroupId(),prevKBArticle.getResourcePrimKey(),true,new KBArticlePriorityComparator(true));
+    if (lastSiblingChildKBArticle != null) {
+      prevKBArticle=lastSiblingChildKBArticle;
+    }
+  }
+ else {
+    prevKBArticle=kbArticle.getParentKBArticle();
+  }
+  return prevKBArticle;
+}

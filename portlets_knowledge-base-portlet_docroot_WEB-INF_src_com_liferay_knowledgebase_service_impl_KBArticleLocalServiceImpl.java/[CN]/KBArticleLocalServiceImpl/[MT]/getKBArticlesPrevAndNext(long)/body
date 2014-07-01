@@ -1,0 +1,8 @@
+{
+  KBArticle kbArticle=kbArticlePersistence.findByPrimaryKey(kbArticleId);
+  KBArticle[] prevAndNext=kbArticlePersistence.findByG_P_L_PrevAndNext(kbArticleId,kbArticle.getGroupId(),kbArticle.getParentResourcePrimKey(),true,new KBArticlePriorityComparator(true));
+  KBArticle prevKBArticle=getPrevKBArticle(kbArticle,prevAndNext);
+  KBArticle nextKBArticle=getNextKBArticle(kbArticle,prevAndNext);
+  KBArticle[] calculatedPrevAndNext=new KBArticle[]{prevKBArticle,kbArticle,nextKBArticle};
+  return calculatedPrevAndNext;
+}
