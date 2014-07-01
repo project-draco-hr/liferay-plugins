@@ -1,0 +1,13 @@
+{
+  if (!hasNext()) {
+    throw new NoSuchElementException();
+  }
+  CalendarBooking newCalendarBooking=(CalendarBooking)_calendarBooking.clone();
+  _currentDateValue=_recurrenceIterator.next();
+  Calendar jCalendar=_getStartTimeJCalendar(_currentDateValue);
+  newCalendarBooking.setEndTime(jCalendar.getTimeInMillis() + _calendarBooking.getDuration());
+  newCalendarBooking.setStartTime(jCalendar.getTimeInMillis());
+  newCalendarBooking.setInstanceIndex(_instanceIndex);
+  _instanceIndex++;
+  return newCalendarBooking;
+}
