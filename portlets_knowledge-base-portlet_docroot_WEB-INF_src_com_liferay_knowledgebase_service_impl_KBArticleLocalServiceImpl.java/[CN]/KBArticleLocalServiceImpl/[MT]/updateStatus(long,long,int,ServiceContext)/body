@@ -22,7 +22,8 @@
     kbArticlePersistence.update(oldKBArticle);
   }
   AssetEntry assetEntry=assetEntryLocalService.getEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
-  updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames());
+  long[] assetLinkEntryIds=getAssetLinksEntryIds(assetEntry);
+  updateKBArticleAsset(userId,kbArticle,assetEntry.getCategoryIds(),assetEntry.getTagNames(),assetLinkEntryIds);
   SystemEventHierarchyEntryThreadLocal.push(KBArticle.class);
   try {
     assetEntryLocalService.deleteEntry(KBArticle.class.getName(),kbArticle.getKbArticleId());
