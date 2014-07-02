@@ -1,10 +1,10 @@
 {
   String folderName=FileUtil.stripExtension(fileName);
   folderName=StringUtil.toLowerCase(folderName);
-  Folder imagesFolder=null;
+  Folder folder=null;
   try {
     KBArticleDLUtil.deleteFolder(groupId,folderName);
-    imagesFolder=KBArticleDLUtil.addFolder(groupId,folderName,serviceContext);
+    folder=KBArticleDLUtil.addFolder(groupId,folderName,serviceContext);
   }
  catch (  Exception e) {
     throw new KBArticleImportException(e);
@@ -25,7 +25,7 @@
     }
     try {
       int pos=zipEntry.lastIndexOf(StringPool.SLASH);
-      KBArticleDLUtil.addFile(imagesFolder,zipEntry.substring(pos + 1),zipReader.getEntryAsInputStream(zipEntry),fileEntriesMap,serviceContext);
+      KBArticleDLUtil.addFile(folder,zipEntry.substring(pos + 1),zipReader.getEntryAsInputStream(zipEntry),fileEntriesMap,serviceContext);
     }
  catch (    Exception e) {
       StringBuilder sb=new StringBuilder(4);
