@@ -1,6 +1,6 @@
 {
   if (Validator.isNull(markdown)) {
-    throw new KBArticleImportException("Null or empty Markdown in file: " + fileEntryName);
+    throw new KBArticleImportException("Markdown is null for file entry " + fileEntryName);
   }
   KBArticleMarkdownConverter kbArticleMarkdownConverter=new KBArticleMarkdownConverter(markdown,fileEntriesMap);
   try {
@@ -8,9 +8,9 @@
   }
  catch (  Exception e) {
     StringBuilder sb=new StringBuilder(4);
-    sb.append("Unable to create KBArticle for file entry: ");
+    sb.append("Unable to add KB article for file entry ");
     sb.append(fileEntryName);
-    sb.append(". ");
+    sb.append(": ");
     sb.append(e.getLocalizedMessage());
     throw new KBArticleImportException(sb.toString(),e);
   }
