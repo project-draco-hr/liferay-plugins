@@ -2,7 +2,12 @@
   if (inputStream == null) {
     throw new KBArticleImportException("Null import file");
   }
-  ZipReader zipReader=ZipReaderFactoryUtil.getZipReader(inputStream);
-  KBArticleImporterUtil.processImageFiles(groupId,fileName,zipReader,fileEntriesMap,serviceContext);
-  processArticleFiles(userId,groupId,zipReader,fileEntriesMap,serviceContext);
+  try {
+    ZipReader zipReader=ZipReaderFactoryUtil.getZipReader(inputStream);
+    KBArticleImporterUtil.processImageFiles(groupId,fileName,zipReader,fileEntriesMap,serviceContext);
+    processArticleFiles(userId,groupId,zipReader,fileEntriesMap,serviceContext);
+  }
+ catch (  IOException ioe) {
+    throw new KBArticleImportException(ioe);
+  }
 }
