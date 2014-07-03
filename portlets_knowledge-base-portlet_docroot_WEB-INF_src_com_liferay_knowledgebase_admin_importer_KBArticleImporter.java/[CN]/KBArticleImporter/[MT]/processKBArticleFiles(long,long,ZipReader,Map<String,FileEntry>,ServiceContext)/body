@@ -1,4 +1,12 @@
 {
-  KBArticle homeKBArticle=addKBArticleMarkdown(userId,groupId,KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,zipReader.getEntryAsString(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME),PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME,fileEntriesMap,serviceContext);
-  processSectionKBArticleFiles(userId,groupId,homeKBArticle.getResourcePrimKey(),zipReader,fileEntriesMap,getFolderNameFileEntryNamesMap(zipReader),serviceContext);
+  String homeMarkdown=zipReader.getEntryAsString(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME);
+  KBArticle parentKBArticle=null;
+  if (Validator.isNotNull(homeMarkdown)) {
+    parentKBArticle=addKBArticleMarkdown(userId,groupId,KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY,homeMarkdown,PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_HOME,fileEntriesMap,serviceContext);
+  }
+  long sectionParentPK=KBArticleConstants.DEFAULT_PARENT_RESOURCE_PRIM_KEY;
+  if (parentKBArticle != null) {
+    sectionParentPK=parentKBArticle.getResourcePrimKey();
+  }
+  processSectionKBArticleFiles(userId,groupId,sectionParentPK,zipReader,fileEntriesMap,getFolderNameFileEntryNamesMap(zipReader),serviceContext);
 }
