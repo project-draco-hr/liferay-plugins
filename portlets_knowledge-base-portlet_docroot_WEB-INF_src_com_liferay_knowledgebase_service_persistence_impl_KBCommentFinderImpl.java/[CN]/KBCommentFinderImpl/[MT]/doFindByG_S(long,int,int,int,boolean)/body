@@ -1,0 +1,19 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(_FIND_BY_G_S);
+    if (inlineSQLHelper && InlineSQLHelperUtil.isEnabled()) {
+      sql=InlineSQLHelperUtil.replacePermissionCheck(sql,KBComment.class.getName(),"KBComment.kbCommentId",groupId);
+    }
+    SQLQuery query=session.createSynchronizedSQLQuery(sql);
+    query.addEntity("KBComment",KBCommentImpl.class);
+    QueryPos qPos=QueryPos.getInstance(query);
+    qPos.add(groupId);
+    qPos.add(state);
+    return (List<KBComment>)QueryUtil.list(query,getDialect(),start,end,true);
+  }
+  finally {
+    closeSession(session);
+  }
+}
