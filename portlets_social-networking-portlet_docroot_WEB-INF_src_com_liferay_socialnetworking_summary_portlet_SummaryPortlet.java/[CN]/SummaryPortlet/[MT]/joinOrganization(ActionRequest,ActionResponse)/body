@@ -12,7 +12,11 @@
     userParams.put("usersRoles",adminRole.getRoleId());
     users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
   }
+  String portletId=PortalUtil.getPortletId(actionRequest);
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
+  JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
+  extraDataJSONObject.put(WebKeys.PORTLET_ID,rootPortletId);
   for (  User user : users) {
-    SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,Organization.class.getName(),organization.getOrganizationId(),MembersRequestKeys.ADD_MEMBER,StringPool.BLANK,user.getUserId());
+    SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,Organization.class.getName(),organization.getOrganizationId(),MembersRequestKeys.ADD_MEMBER,extraDataJSONObject.toString(),user.getUserId());
   }
 }

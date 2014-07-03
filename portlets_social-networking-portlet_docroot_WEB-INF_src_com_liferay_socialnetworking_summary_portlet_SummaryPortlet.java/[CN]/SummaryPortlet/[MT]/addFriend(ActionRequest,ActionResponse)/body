@@ -4,6 +4,9 @@
   User user=UserLocalServiceUtil.getUserById(group.getClassPK());
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
   String addFriendMessage=ParamUtil.getString(actionRequest,"addFriendMessage");
+  String portletId=PortalUtil.getPortletId(actionRequest);
+  String rootPortletId=PortletConstants.getRootPortletId(portletId);
   extraDataJSONObject.put("addFriendMessage",addFriendMessage);
+  extraDataJSONObject.put(WebKeys.PORTLET_ID,rootPortletId);
   SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),FriendsRequestKeys.ADD_FRIEND,extraDataJSONObject.toString(),user.getUserId());
 }
