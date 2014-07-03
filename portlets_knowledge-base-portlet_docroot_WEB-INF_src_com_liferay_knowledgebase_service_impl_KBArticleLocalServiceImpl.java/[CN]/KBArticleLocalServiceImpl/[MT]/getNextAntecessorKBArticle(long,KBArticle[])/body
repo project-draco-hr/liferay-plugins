@@ -1,6 +1,6 @@
 {
   KBArticle kbArticle=kbArticlePersistence.findByPrimaryKey(kbArticleId);
-  KBArticle nextKBArticle=prevAndNext[2];
+  KBArticle nextKBArticle=previousAndNextKBArticles[2];
   if (nextKBArticle != null) {
     return nextKBArticle;
   }
@@ -8,6 +8,6 @@
   if (parentKBArticle == null) {
     return null;
   }
-  prevAndNext=kbArticlePersistence.findByG_P_L_PrevAndNext(parentKBArticle.getKbArticleId(),kbArticle.getGroupId(),parentKBArticle.getParentResourcePrimKey(),true,new KBArticlePriorityComparator(true));
-  return getNextAntecessorKBArticle(parentKBArticle.getKbArticleId(),prevAndNext);
+  previousAndNextKBArticles=kbArticlePersistence.findByG_P_L_PrevAndNext(parentKBArticle.getKbArticleId(),kbArticle.getGroupId(),parentKBArticle.getParentResourcePrimKey(),true,new KBArticlePriorityComparator(true));
+  return getNextAntecessorKBArticle(parentKBArticle.getKbArticleId(),previousAndNextKBArticles);
 }
