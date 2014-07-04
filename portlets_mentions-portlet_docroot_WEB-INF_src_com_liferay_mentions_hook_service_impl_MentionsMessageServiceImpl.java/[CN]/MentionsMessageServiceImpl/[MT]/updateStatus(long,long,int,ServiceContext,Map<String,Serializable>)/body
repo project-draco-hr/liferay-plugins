@@ -9,6 +9,7 @@
   if (!MentionsUtil.isMentionsEnabled(siteGroupId)) {
     return message;
   }
-  notifyUsers(message,serviceContext);
+  MentionsNotifier mentionsNotifier=new MentionsNotifier();
+  mentionsNotifier.notify(message.getUserId(),message.getGroupId(),message.getBody(),message.getModelClassName(),message.getMessageId(),serviceContext);
   return message;
 }
