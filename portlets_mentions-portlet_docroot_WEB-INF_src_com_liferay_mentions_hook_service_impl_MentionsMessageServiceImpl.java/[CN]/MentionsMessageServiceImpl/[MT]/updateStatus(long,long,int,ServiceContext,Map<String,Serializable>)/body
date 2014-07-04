@@ -1,0 +1,14 @@
+{
+  MBMessage message=MBMessageLocalServiceUtil.getMessage(messageId);
+  int oldStatus=message.getStatus();
+  message=super.updateStatus(userId,messageId,status,serviceContext,workflowContext);
+  if (!message.isDiscussion() || (status != WorkflowConstants.STATUS_APPROVED) || (oldStatus == WorkflowConstants.STATUS_IN_TRASH)|| (oldStatus == WorkflowConstants.STATUS_APPROVED)) {
+    return message;
+  }
+  long siteGroupId=PortalUtil.getSiteGroupId(message.getGroupId());
+  if (!MentionsUtil.isMentionsEnabled(siteGroupId)) {
+    return message;
+  }
+  notifyUsers(message,serviceContext);
+  return message;
+}
