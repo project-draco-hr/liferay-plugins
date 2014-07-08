@@ -1,0 +1,12 @@
+{
+  if (inputStream == null) {
+    throw new KBArticleImportException("Input stream is null");
+  }
+  try {
+    ZipReader zipReader=ZipReaderFactoryUtil.getZipReader(inputStream);
+    processKBArticleFiles(userId,groupId,zipReader,serviceContext);
+  }
+ catch (  IOException ioe) {
+    throw new KBArticleImportException(ioe);
+  }
+}

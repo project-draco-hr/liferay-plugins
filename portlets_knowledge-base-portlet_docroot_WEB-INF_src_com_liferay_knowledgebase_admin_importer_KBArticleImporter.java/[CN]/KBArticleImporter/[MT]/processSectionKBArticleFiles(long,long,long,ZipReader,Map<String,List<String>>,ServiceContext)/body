@@ -1,0 +1,34 @@
+{
+  Set<String> folderNames=folderNameFileEntryNamesMap.keySet();
+  for (  String folderName : folderNames) {
+    List<String> fileEntryNames=folderNameFileEntryNamesMap.get(folderName);
+    String sectionIntroFileEntryName=null;
+    List<String> sectionFileEntryNames=new ArrayList<String>();
+    for (    String fileEntryName : fileEntryNames) {
+      if (fileEntryName.endsWith(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_INTRO)) {
+        sectionIntroFileEntryName=fileEntryName;
+      }
+ else {
+        sectionFileEntryNames.add(fileEntryName);
+      }
+    }
+    if (Validator.isNull(sectionIntroFileEntryName) && !sectionFileEntryNames.isEmpty()) {
+      StringBundler sb=new StringBundler(4);
+      sb.append("No file entry ending in ");
+      sb.append(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_INTRO);
+      sb.append(" accompanies file entry ");
+      sb.append(sectionFileEntryNames.get(0));
+      throw new KBArticleImportException(sb.toString());
+    }
+    KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,serviceContext);
+    for (    String sectionFileEntryName : sectionFileEntryNames) {
+      String sectionMarkdown=zipReader.getEntryAsString(sectionFileEntryName);
+      if (Validator.isNull(sectionMarkdown)) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Missing Markdown in file entry " + sectionFileEntryName);
+        }
+      }
+      addKBArticleMarkdown(userId,groupId,sectionIntroKBArticle.getResourcePrimKey(),sectionMarkdown,sectionFileEntryName,zipReader,serviceContext);
+    }
+  }
+}
