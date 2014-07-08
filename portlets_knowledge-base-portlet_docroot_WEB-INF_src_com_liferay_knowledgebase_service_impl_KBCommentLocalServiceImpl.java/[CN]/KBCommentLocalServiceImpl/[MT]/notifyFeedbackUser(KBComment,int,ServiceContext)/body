@@ -1,0 +1,36 @@
+{
+  try {
+    int status=kbComment.getStatus();
+    if (AdminUtil.isBackwardsStatusTransition(previousStatus,status)) {
+      return;
+    }
+    PortletPreferences preferences=portletPreferencesLocalService.getPreferences(kbComment.getCompanyId(),kbComment.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
+    if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(status,preferences)) {
+      return;
+    }
+    User user=userLocalService.getUser(kbComment.getUserId());
+    String fromName=AdminUtil.getEmailFromName(preferences,serviceContext.getCompanyId());
+    String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
+    InternetAddress from=new InternetAddress(fromAddress,fromName);
+    InternetAddress to=new InternetAddress(user.getEmailAddress());
+    String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(status,preferences);
+    String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(status,preferences);
+    KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+    String processedSubject=replaceContent(subject,kbArticle,kbComment,serviceContext);
+    String processedBody=replaceContent(body,kbArticle,kbComment,serviceContext);
+    final MailMessage mailMessage=new MailMessage(from,to,processedSubject,processedBody,false);
+    TransactionCommitCallbackRegistryUtil.registerCallback(new Callable<Void>(){
+      @Override public Void call() throws Exception {
+        MailServiceUtil.sendEmail(mailMessage);
+        return null;
+      }
+    }
+);
+  }
+ catch (  UnsupportedEncodingException uee) {
+    throw new SystemException(uee);
+  }
+catch (  AddressException ae) {
+    throw new PortalException(ae);
+  }
+}
