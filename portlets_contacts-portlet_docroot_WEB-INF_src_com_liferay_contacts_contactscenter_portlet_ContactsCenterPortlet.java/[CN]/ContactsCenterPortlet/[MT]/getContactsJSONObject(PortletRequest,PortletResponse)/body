@@ -30,6 +30,12 @@
       jsonArray.put(contactJSONObject);
     }
   }
+ else   if (filterBy.equals(ContactsConstants.FILTER_BY_FOLLOWERS) && !portletId.equals(PortletKeys.MEMBERS)) {
+    List<SocialRelation> socialRelations=SocialRelationLocalServiceUtil.getInverseRelations(themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_FOLLOWER,start,end);
+    for (    SocialRelation socialRelation : socialRelations) {
+      jsonArray.put(getUserJSONObject(portletResponse,themeDisplay,socialRelation.getUserId1()));
+    }
+  }
  else   if (filterBy.equals(ContactsConstants.FILTER_BY_TYPE_MY_CONTACTS) && !portletId.equals(PortletKeys.MEMBERS)) {
     List<Entry> entries=EntryLocalServiceUtil.search(themeDisplay.getUserId(),keywords,start,end);
     int entriesCount=EntryLocalServiceUtil.searchCount(themeDisplay.getUserId(),keywords);
