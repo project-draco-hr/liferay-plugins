@@ -14,6 +14,11 @@
   if (Validator.isNull(contentURL)) {
     serviceContext.setAttribute("contentURL",workflowContext.get("url"));
   }
-  mentionsNotifier.notify(message.getUserId(),message.getGroupId(),message.getBody(),message.getModelClassName(),message.getMessageId(),serviceContext);
+  String content=message.getBody();
+  if (message.isFormatBBCode()) {
+    content=BBCodeTranslatorUtil.getHTML(content);
+  }
+  content=HtmlUtil.extractText(content);
+  mentionsNotifier.notify(message.getUserId(),message.getGroupId(),content,message.getModelClassName(),message.getMessageId(),serviceContext);
   return message;
 }

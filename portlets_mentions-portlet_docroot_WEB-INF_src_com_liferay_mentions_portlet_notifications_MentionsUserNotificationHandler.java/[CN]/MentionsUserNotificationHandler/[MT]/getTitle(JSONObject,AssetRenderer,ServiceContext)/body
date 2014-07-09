@@ -1,5 +1,11 @@
 {
   AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetRenderer.getClassName());
   String typeName=assetRendererFactory.getTypeName(serviceContext.getLocale());
-  return serviceContext.translate("x-mentioned-you-in-a-comment-in-a-x",HtmlUtil.escape(assetRenderer.getUserName()),StringUtil.toLowerCase(HtmlUtil.escape(typeName)));
+  MBMessage mbMessage=MBMessageLocalServiceUtil.fetchMBMessage(jsonObject.getLong("classPK"));
+  if ((mbMessage != null) && mbMessage.isDiscussion()) {
+    return serviceContext.translate("x-mentioned-you-in-a-comment-in-a-x",HtmlUtil.escape(assetRenderer.getUserName()),StringUtil.toLowerCase(HtmlUtil.escape(typeName)));
+  }
+ else {
+    return serviceContext.translate("x-mentioned-you-in-a-x",HtmlUtil.escape(assetRenderer.getUserName()),StringUtil.toLowerCase(HtmlUtil.escape(typeName)));
+  }
 }
