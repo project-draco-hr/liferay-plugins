@@ -22,8 +22,10 @@
  else {
     boolean updateCalendarBookingInstance=ParamUtil.getBoolean(actionRequest,"updateCalendarBookingInstance");
     if (updateCalendarBookingInstance) {
+      calendarBooking=CalendarBookingLocalServiceUtil.getCalendarBooking(calendarBookingId);
+      int instanceIndex=RecurrenceUtil.getIndexOfInstance(recurrence,calendarBooking.getStartTime(),startTimeJCalendar.getTimeInMillis());
       boolean allFollowing=ParamUtil.getBoolean(actionRequest,"allFollowing");
-      calendarBooking=CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,allFollowing,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
+      calendarBooking=CalendarBookingServiceUtil.updateCalendarBookingInstance(calendarBookingId,instanceIndex,calendarId,childCalendarIds,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,allFollowing,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
     }
  else {
       calendarBooking=CalendarBookingServiceUtil.getCalendarBooking(calendarBookingId);
