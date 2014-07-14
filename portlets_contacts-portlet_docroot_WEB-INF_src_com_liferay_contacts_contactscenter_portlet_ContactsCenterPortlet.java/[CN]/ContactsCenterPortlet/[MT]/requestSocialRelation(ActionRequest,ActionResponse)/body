@@ -9,10 +9,9 @@
     if (SocialRelationLocalServiceUtil.hasRelation(userId,themeDisplay.getUserId(),SocialRelationConstants.TYPE_UNI_ENEMY) || SocialRequestLocalServiceUtil.hasRequest(themeDisplay.getUserId(),User.class.getName(),themeDisplay.getUserId(),type,userId,SocialRequestConstants.STATUS_PENDING)) {
       continue;
     }
-    String portletId=PortalUtil.getPortletId(actionRequest);
-    String rootPortletId=PortletConstants.getRootPortletId(portletId);
     JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
-    extraDataJSONObject.put(WebKeys.PORTLET_ID,rootPortletId);
+    String portletId=PortalUtil.getPortletId(actionRequest);
+    extraDataJSONObject.put(WebKeys.PORTLET_ID,PortletConstants.getRootPortletId(portletId));
     SocialRequest socialRequest=SocialRequestLocalServiceUtil.addRequest(themeDisplay.getUserId(),0,User.class.getName(),themeDisplay.getUserId(),type,extraDataJSONObject.toString(),userId);
     sendNotificationEvent(socialRequest);
   }
