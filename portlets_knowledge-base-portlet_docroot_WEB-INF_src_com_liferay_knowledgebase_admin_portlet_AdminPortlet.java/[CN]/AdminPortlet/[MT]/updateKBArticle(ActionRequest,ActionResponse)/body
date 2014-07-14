@@ -1,9 +1,5 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String[] selectedFileNames=ParamUtil.getParameterValues(actionRequest,"selectedFileName");
-  for (  String selectedFileName : selectedFileNames) {
-    addMultipleFileEntries(actionRequest,selectedFileName);
-  }
   String portletId=PortalUtil.getPortletId(actionRequest);
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
@@ -14,14 +10,15 @@
   String description=ParamUtil.getString(actionRequest,"description");
   String[] sections=actionRequest.getParameterValues("sections");
   String dirName=ParamUtil.getString(actionRequest,"dirName");
+  String[] selectedFileNames=ParamUtil.getParameterValues(actionRequest,"selectedFileName");
   int workflowAction=ParamUtil.getInteger(actionRequest,"workflowAction");
   KBArticle kbArticle=null;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,urlTitle,content,description,sections,dirName,serviceContext);
+    kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,urlTitle,content,description,sections,dirName,selectedFileNames,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,sections,dirName,serviceContext);
+    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,sections,dirName,selectedFileNames,serviceContext);
   }
   if (!cmd.equals(Constants.ADD) && !cmd.equals(Constants.UPDATE)) {
     return;

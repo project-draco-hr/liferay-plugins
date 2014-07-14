@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   UploadPortletRequest uploadPortletRequest=PortalUtil.getUploadPortletRequest(actionRequest);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
   String sourceFileName=uploadPortletRequest.getFileName("file");
@@ -6,7 +7,7 @@
   try {
     inputStream=uploadPortletRequest.getFileAsStream("file");
     String mimeType=uploadPortletRequest.getContentType("file");
-    KBArticleServiceUtil.addTempAttachment(resourcePrimKey,sourceFileName,_TEMP_FOLDER_NAME,inputStream,mimeType);
+    KBArticleServiceUtil.addTempAttachment(themeDisplay.getScopeGroupId(),resourcePrimKey,sourceFileName,_TEMP_FOLDER_NAME,inputStream,mimeType);
   }
   finally {
     StreamUtil.cleanUp(inputStream);
