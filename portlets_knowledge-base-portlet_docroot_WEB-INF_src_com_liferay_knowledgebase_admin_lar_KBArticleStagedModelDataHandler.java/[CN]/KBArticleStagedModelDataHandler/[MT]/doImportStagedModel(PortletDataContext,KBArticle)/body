@@ -18,11 +18,11 @@
       serviceContext.setUuid(kbArticle.getUuid());
       existingKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimaryKey,WorkflowConstants.STATUS_ANY);
       if (existingKBArticle == null) {
-        importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getUrlTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+        importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getUrlTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,null,serviceContext);
         KBArticleLocalServiceUtil.updatePriority(importedKBArticle.getResourcePrimKey(),kbArticle.getPriority());
       }
  else {
-        KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+        KBArticleLocalServiceUtil.updateKBArticle(userId,existingKBArticle.getResourcePrimKey(),kbArticle.getTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,null,serviceContext);
         KBArticleLocalServiceUtil.moveKBArticle(userId,existingKBArticle.getResourcePrimKey(),parentResourcePrimKey,kbArticle.getPriority());
         importedKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(existingKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
       }
@@ -32,7 +32,7 @@
     }
   }
  else {
-    importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getUrlTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,StringPool.BLANK,serviceContext);
+    importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getUrlTitle(),kbArticle.getContent(),kbArticle.getDescription(),sections,null,serviceContext);
     KBArticleLocalServiceUtil.updatePriority(importedKBArticle.getResourcePrimKey(),kbArticle.getPriority());
   }
   importKBArticleAttachments(portletDataContext,kbArticle,importedKBArticle);

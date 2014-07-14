@@ -1,17 +1,5 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  String portletId=PortalUtil.getPortletId(resourceRequest);
-  long resourcePrimKey=ParamUtil.getLong(resourceRequest,"resourcePrimKey");
   long fileEntryId=ParamUtil.getLong(resourceRequest,"fileEntryId");
-  String fileName=ParamUtil.getString(resourceRequest,"fileName");
-  if (fileEntryId <= 0) {
-    File attachmentFile=KBArticleServiceUtil.getAttachment(themeDisplay.getCompanyId(),themeDisplay.getScopeGroupId(),portletId,resourcePrimKey,fileName);
-    String attachmentFileName=fileName.substring(fileName.lastIndexOf(CharPool.SLASH) + 1);
-    String contentType=MimeTypesUtil.getContentType(attachmentFile,attachmentFileName);
-    PortletResponseUtil.sendFile(resourceRequest,resourceResponse,attachmentFileName,FileUtil.getBytes(attachmentFile),contentType);
-  }
- else {
-    FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(fileEntryId);
-    PortletResponseUtil.sendFile(resourceRequest,resourceResponse,fileEntry.getTitle(),fileEntry.getContentStream(),fileEntry.getMimeType());
-  }
+  FileEntry fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(fileEntryId);
+  PortletResponseUtil.sendFile(resourceRequest,resourceResponse,fileEntry.getTitle(),fileEntry.getContentStream(),fileEntry.getMimeType());
 }
