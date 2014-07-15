@@ -4,9 +4,6 @@
     return super.updatePage(userId,nodeId,title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,serviceContext);
   }
   boolean enabled=isWikiEnabled(userId,nodeId,serviceContext);
-  if (enabled) {
-    serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-  }
   WikiPage page=super.updatePage(userId,nodeId,title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,serviceContext);
   AkismetData akismetData=updateAkismetData(page,serviceContext);
   if (!enabled) {
@@ -30,7 +27,7 @@
       return super.revertPage(userId,nodeId,title,previousPage.getVersion(),newServiceContext);
     }
  else {
-      return super.updatePage(userId,nodeId,title,page.getVersion(),null,StringPool.BLANK,true,format,parentTitle,redirectTitle,newServiceContext);
+      return page;
     }
   }
   finally {
