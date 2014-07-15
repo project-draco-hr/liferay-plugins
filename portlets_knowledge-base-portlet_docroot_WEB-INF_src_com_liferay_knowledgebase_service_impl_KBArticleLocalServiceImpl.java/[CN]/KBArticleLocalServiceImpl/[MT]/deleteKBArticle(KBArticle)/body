@@ -11,7 +11,7 @@
   socialActivityLocalService.deleteActivities(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
   Indexer indexer=IndexerRegistryUtil.getIndexer(KBArticle.class);
   indexer.delete(kbArticle);
-  deleteKBArticleAttachments(kbArticle);
+  PortletFileRepositoryUtil.deletePortletFolder(kbArticle.getAttachmentsFolderId());
   deleteSubscriptions(kbArticle);
   workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(kbArticle.getCompanyId(),kbArticle.getGroupId(),KBArticle.class.getName(),kbArticle.getResourcePrimKey());
   return kbArticle;
