@@ -10,6 +10,7 @@
   String description=ParamUtil.getString(actionRequest,"description");
   String[] sections=actionRequest.getParameterValues("sections");
   String[] selectedFileNames=ParamUtil.getParameterValues(actionRequest,"selectedFileName");
+  long[] removeFileEntryIds=ParamUtil.getLongValues(actionRequest,"removeFileEntryIds");
   int workflowAction=ParamUtil.getInteger(actionRequest,"workflowAction");
   KBArticle kbArticle=null;
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBArticle.class.getName(),actionRequest);
@@ -17,7 +18,7 @@
     kbArticle=KBArticleServiceUtil.addKBArticle(portletId,parentResourcePrimKey,title,urlTitle,content,description,sections,selectedFileNames,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,sections,selectedFileNames,serviceContext);
+    kbArticle=KBArticleServiceUtil.updateKBArticle(resourcePrimKey,title,content,description,sections,selectedFileNames,removeFileEntryIds,serviceContext);
   }
   if (!cmd.equals(Constants.ADD) && !cmd.equals(Constants.UPDATE)) {
     return;
