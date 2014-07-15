@@ -1,0 +1,26 @@
+{
+  String json=null;
+  String controller=ParamUtil.getString(actionRequest,"controller");
+  BaseAlloyControllerImpl baseAlloyControllerImpl=alloyControllers.get(controller);
+  if (baseAlloyControllerImpl == null) {
+    throw new Exception("No controller exists with the given name.");
+  }
+  String action=ParamUtil.getString(actionRequest,"action");
+  try {
+    if (action.equals("custom")) {
+      json=baseAlloyControllerImpl.handleAsynchronousRequest(actionRequest);
+    }
+ else     if (action.equals("dynamicQuery")) {
+      json=performDynamicQuery(baseAlloyControllerImpl,actionRequest);
+    }
+ else     if (action.equals("search")) {
+      json=performSearch(baseAlloyControllerImpl,actionRequest);
+    }
+  }
+ catch (  Exception e) {
+    json="{ 'error': 'An unexpected exception occurred.' }";
+  }
+  if (json != null) {
+    writeJSON(actionRequest,actionResponse,json);
+  }
+}

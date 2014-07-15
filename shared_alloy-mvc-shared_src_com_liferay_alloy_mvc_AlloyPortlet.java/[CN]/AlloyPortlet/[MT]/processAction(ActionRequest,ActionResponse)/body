@@ -1,4 +1,14 @@
 {
+  String actionName=ParamUtil.getString(actionRequest,ActionRequest.ACTION_NAME);
+  if (actionName.equals("alloyAsynchronousRequest")) {
+    try {
+      AlloyAsynchronousRequestHandler.handle(actionRequest,actionResponse,_alloyControllers);
+    }
+ catch (    Exception e) {
+      throw new IOException(e);
+    }
+    return;
+  }
   String path=getPath(actionRequest);
   include(path,actionRequest,actionResponse);
 }
