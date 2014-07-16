@@ -7,7 +7,11 @@
   }
   DynamicActionRequest dynamicActionRequest=new DynamicActionRequest(actionRequest);
   User user=PortalUtil.getSelectedUser(actionRequest);
-  Role role=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+  Role role=RoleLocalServiceUtil.fetchRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
+  if (role == null) {
+    originalStrutsPortletAction.processAction(portletConfig,dynamicActionRequest,actionResponse);
+    return;
+  }
   long[] roleIds=getLongArray(actionRequest,"rolesSearchContainerPrimaryKeys");
   boolean newSocialOfficeUser=ArrayUtil.contains(roleIds,role.getRoleId());
   List<Role> roles=user.getRoles();
