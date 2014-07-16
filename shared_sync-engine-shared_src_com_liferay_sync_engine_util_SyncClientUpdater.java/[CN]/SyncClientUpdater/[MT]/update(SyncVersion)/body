@@ -9,18 +9,8 @@
   if (httpResponse == null) {
     return;
   }
-  Header header=httpResponse.getFirstHeader("Content-Type");
-  HeaderElement headerElement=header.getElements()[0];
-  String mimeType=headerElement.getName();
-  Path filePath=null;
-  if (mimeType.equals("application/x-msdownload")) {
-    filePath=Files.createTempFile(null,".msi");
-  }
- else {
-    filePath=Files.createTempFile(null,".dmg");
-  }
   HttpEntity httpEntity=httpResponse.getEntity();
-  Files.copy(httpEntity.getContent(),filePath,StandardCopyOption.REPLACE_EXISTING);
+  Files.copy(httpEntity.getContent(),getFilePath(httpResponse),StandardCopyOption.REPLACE_EXISTING);
   Desktop desktop=Desktop.getDesktop();
   desktop.open(filePath.toFile());
 }
