@@ -9,17 +9,17 @@
   if (httpResponse == null) {
     return;
   }
-  HttpEntity entity=httpResponse.getEntity();
-  Path filePath=null;
   Header header=httpResponse.getFirstHeader("Content-Type");
   HeaderElement headerElement=header.getElements()[0];
   String mimeType=headerElement.getName();
+  Path filePath=null;
   if (mimeType.equals("application/x-msdownload")) {
     filePath=Files.createTempFile(null,".msi");
   }
  else {
     filePath=Files.createTempFile(null,".dmg");
   }
+  HttpEntity entity=httpResponse.getEntity();
   Files.copy(entity.getContent(),filePath,StandardCopyOption.REPLACE_EXISTING);
   Desktop desktop=Desktop.getDesktop();
   desktop.open(filePath.toFile());
