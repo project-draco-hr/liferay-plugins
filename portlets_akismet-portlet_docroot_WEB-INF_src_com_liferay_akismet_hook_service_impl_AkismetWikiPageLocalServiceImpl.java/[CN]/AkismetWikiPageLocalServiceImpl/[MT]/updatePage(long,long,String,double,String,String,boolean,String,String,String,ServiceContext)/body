@@ -3,10 +3,9 @@
   if (workflowAction == WorkflowConstants.ACTION_SAVE_DRAFT) {
     return super.updatePage(userId,nodeId,title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,serviceContext);
   }
-  boolean enabled=isWikiEnabled(userId,nodeId,serviceContext);
   WikiPage page=super.updatePage(userId,nodeId,title,version,content,summary,minorEdit,format,parentTitle,redirectTitle,serviceContext);
   AkismetData akismetData=updateAkismetData(page,serviceContext);
-  if (!enabled) {
+  if (!isWikiEnabled(userId,nodeId,serviceContext)) {
     return page;
   }
   String akismetContent=page.getTitle() + "\n\n" + page.getContent();
@@ -21,14 +20,12 @@
     page.setStatus(WorkflowConstants.STATUS_APPROVED);
     page=super.updateWikiPage(page);
     WikiPage previousPage=AkismetUtil.getWikiPage(page.getNodeId(),page.getTitle(),page.getVersion(),true);
-    ServiceContext newServiceContext=new ServiceContext();
-    newServiceContext.setFormDate(page.getModifiedDate());
-    if (previousPage != null) {
-      return super.revertPage(userId,nodeId,title,previousPage.getVersion(),newServiceContext);
-    }
- else {
+    if (previousPage == null) {
       return page;
     }
+    ServiceContext newServiceContext=new ServiceContext();
+    newServiceContext.setFormDate(page.getModifiedDate());
+    return super.revertPage(userId,nodeId,title,previousPage.getVersion(),newServiceContext);
   }
   finally {
     NotificationThreadLocal.setEnabled(notificationEnabled);
