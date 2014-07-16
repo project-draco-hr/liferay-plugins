@@ -1,0 +1,18 @@
+{
+  HttpClient httpClient=HttpClients.createDefault();
+  HttpGet httpGet=new HttpGet(url);
+  Builder builder=RequestConfig.custom();
+  builder.setSocketTimeout(30000);
+  builder.setConnectTimeout(30000);
+  RequestConfig requestConfig=builder.build();
+  httpGet.setConfig(requestConfig);
+  try {
+    return httpClient.execute(httpGet);
+  }
+ catch (  Exception e) {
+    if (_logger.isDebugEnabled()) {
+      _logger.debug(e.getMessage(),e);
+    }
+    return null;
+  }
+}
