@@ -9,13 +9,13 @@
   long classPK=ParamUtil.getLong(actionRequest,"classPK");
   String content=ParamUtil.getString(actionRequest,"content");
   boolean helpful=ParamUtil.getBoolean(actionRequest,"helpful");
-  int state=ParamUtil.getInteger(actionRequest,"state",KBCommentConstants.STATUS_NONE);
+  int state=ParamUtil.getInteger(actionRequest,"state",KBCommentConstants.STATUS_ANY);
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBComment.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
     KBCommentLocalServiceUtil.addKBComment(themeDisplay.getUserId(),classNameId,classPK,content,helpful,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
-    if (state == KBCommentConstants.STATUS_NONE) {
+    if (state == KBCommentConstants.STATUS_ANY) {
       KBComment kbComment=KBCommentServiceUtil.getKBComment(kbCommentId);
       state=kbComment.getStatus();
     }
