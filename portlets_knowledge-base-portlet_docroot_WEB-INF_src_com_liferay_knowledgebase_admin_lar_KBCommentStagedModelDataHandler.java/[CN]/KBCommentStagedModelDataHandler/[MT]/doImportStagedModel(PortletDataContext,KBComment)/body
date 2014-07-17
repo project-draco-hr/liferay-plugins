@@ -5,7 +5,7 @@
   ServiceContext serviceContext=portletDataContext.createServiceContext(kbComment);
   KBComment importedKBComment=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBComment existingKBComment=fetchExistingStagedModel(kbComment.getUuid(),portletDataContext.getScopeGroupId());
+    KBComment existingKBComment=fetchStagedModelByUuidAndGroupId(kbComment.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBComment == null) {
       serviceContext.setUuid(kbComment.getUuid());
       importedKBComment=KBCommentLocalServiceUtil.addKBComment(userId,kbComment.getClassNameId(),newClassPK,kbComment.getContent(),kbComment.getHelpful(),serviceContext);
