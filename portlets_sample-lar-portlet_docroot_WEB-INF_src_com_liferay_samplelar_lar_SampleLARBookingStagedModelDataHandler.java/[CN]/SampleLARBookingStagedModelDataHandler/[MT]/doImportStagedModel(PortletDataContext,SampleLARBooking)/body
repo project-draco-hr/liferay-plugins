@@ -3,7 +3,7 @@
   ServiceContext serviceContext=portletDataContext.createServiceContext(sampleLARBooking);
   SampleLARBooking importedSampleLARBooking=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    SampleLARBooking existingSampleLARBooking=fetchExistingStagedModel(sampleLARBooking.getUuid(),portletDataContext.getScopeGroupId());
+    SampleLARBooking existingSampleLARBooking=fetchStagedModelByUuidAndGroupId(sampleLARBooking.getUuid(),portletDataContext.getScopeGroupId());
     if (existingSampleLARBooking == null) {
       serviceContext.setUuid(sampleLARBooking.getUuid());
       importedSampleLARBooking=SampleLARBookingLocalServiceUtil.addSampleLARBooking(userId,portletDataContext.getScopeGroupId(),sampleLARBooking.getBookingNumber(),serviceContext);
