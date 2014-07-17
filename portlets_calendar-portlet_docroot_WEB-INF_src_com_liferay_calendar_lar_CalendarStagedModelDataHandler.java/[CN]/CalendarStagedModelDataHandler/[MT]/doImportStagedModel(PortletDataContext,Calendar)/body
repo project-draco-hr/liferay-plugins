@@ -7,7 +7,7 @@
   ServiceContext serviceContext=portletDataContext.createServiceContext(calendar);
   Calendar importedCalendar=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    Calendar existingCalendar=fetchExistingStagedModel(calendar.getUuid(),portletDataContext.getScopeGroupId());
+    Calendar existingCalendar=fetchStagedModelByUuidAndGroupId(calendar.getUuid(),portletDataContext.getScopeGroupId());
     if (existingCalendar == null) {
       serviceContext.setUuid(calendar.getUuid());
       importedCalendar=CalendarLocalServiceUtil.addCalendar(userId,portletDataContext.getScopeGroupId(),calendarResourceId,calendarNameMap,calendar.getDescriptionMap(),calendar.getColor(),calendar.isDefaultCalendar(),calendar.isEnableComments(),calendar.isEnableRatings(),serviceContext);
