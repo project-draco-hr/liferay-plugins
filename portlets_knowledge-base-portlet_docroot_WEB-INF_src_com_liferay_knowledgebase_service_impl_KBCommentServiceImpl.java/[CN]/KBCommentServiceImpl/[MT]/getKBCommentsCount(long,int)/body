@@ -1,4 +1,7 @@
 {
-  AdminPermission.check(getPermissionChecker(),groupId,ActionKeys.VIEW_KB_FEEDBACK);
-  return kbCommentPersistence.countByG_S(groupId,status);
+  int kbCommentsCount=0;
+  if (AdminPermission.contains(getPermissionChecker(),groupId,ActionKeys.VIEW_KB_FEEDBACK)) {
+    kbCommentsCount=kbCommentPersistence.countByG_S(groupId,status);
+  }
+  return kbCommentsCount;
 }
