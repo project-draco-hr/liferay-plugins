@@ -1,32 +1,30 @@
 {
-  try {
-    PortletPreferences preferences=portletPreferencesLocalService.getPreferences(kbComment.getCompanyId(),kbComment.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
-    if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(kbComment.getStatus(),preferences)) {
-      return;
-    }
-    User user=userLocalService.getUser(kbComment.getUserId());
-    String fromName=AdminUtil.getEmailFromName(preferences,serviceContext.getCompanyId());
-    String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
-    InternetAddress from=new InternetAddress(fromAddress,fromName);
-    InternetAddress to=new InternetAddress(user.getEmailAddress(),user.getFullName());
-    String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(kbComment.getStatus(),preferences);
-    String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(kbComment.getStatus(),preferences);
-    KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
-    subject=replaceContent(subject,kbArticle,kbComment,serviceContext);
-    body=replaceContent(body,kbArticle,kbComment,serviceContext);
-    final MailMessage mailMessage=new MailMessage(from,to,subject,body,false);
-    TransactionCommitCallbackRegistryUtil.registerCallback(new Callable<Void>(){
-      @Override public Void call() throws Exception {
-        MailServiceUtil.sendEmail(mailMessage);
-        return null;
-      }
-    }
-);
+  PortletPreferences preferences=portletPreferencesLocalService.getPreferences(kbComment.getCompanyId(),kbComment.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
+  if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(kbComment.getStatus(),preferences)) {
+    return;
   }
- catch (  UnsupportedEncodingException uee) {
-    throw new SystemException(uee);
-  }
-catch (  AddressException ae) {
-    throw new PortalException(ae);
-  }
+  String fromName=AdminUtil.getEmailFromName(preferences,serviceContext.getCompanyId());
+  String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
+  KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+  String kbArticleContent=StringUtil.replace(kbArticle.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
+  String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(kbComment.getStatus(),preferences);
+  String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(kbComment.getStatus(),preferences);
+  SubscriptionSender subscriptionSender=new AdminSubscriptionSender(kbArticle,serviceContext);
+  subscriptionSender.setBody(body);
+  subscriptionSender.setCompanyId(kbArticle.getCompanyId());
+  subscriptionSender.setContextAttribute("[$ARTICLE_CONTENT$]",kbArticleContent,false);
+  subscriptionSender.setContextAttribute("[$ARTICLE_TITLE$]",kbArticle.getTitle(),false);
+  subscriptionSender.setContextAttribute("[$COMMENT_CONTENT$]",kbComment.getContent(),false);
+  subscriptionSender.setContextUserPrefix("ARTICLE");
+  subscriptionSender.setFrom(fromAddress,fromName);
+  subscriptionSender.setHtmlFormat(true);
+  subscriptionSender.setMailId("kb_article",kbArticle.getKbArticleId());
+  subscriptionSender.setPortletId(serviceContext.getPortletId());
+  subscriptionSender.setReplyToAddress(fromAddress);
+  subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
+  subscriptionSender.setSubject(subject);
+  subscriptionSender.setUserId(kbArticle.getUserId());
+  User user=userLocalService.getUser(kbComment.getUserId());
+  subscriptionSender.addRuntimeSubscribers(user.getEmailAddress(),user.getFullName());
+  subscriptionSender.flushNotificationsAsync();
 }
