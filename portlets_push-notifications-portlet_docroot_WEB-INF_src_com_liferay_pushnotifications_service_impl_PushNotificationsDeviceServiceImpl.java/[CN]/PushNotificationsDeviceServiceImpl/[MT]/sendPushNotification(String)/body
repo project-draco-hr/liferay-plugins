@@ -1,0 +1,13 @@
+{
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  jsonObject.put("message",message);
+  if (_log.isDebugEnabled()) {
+    _log.debug("Received message " + jsonObject + " for all users");
+  }
+  try {
+    pushNotificationsDeviceLocalService.sendPushNotification(jsonObject,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  }
+ catch (  Exception e) {
+    _log.error("Unable to send notification",e);
+  }
+}
