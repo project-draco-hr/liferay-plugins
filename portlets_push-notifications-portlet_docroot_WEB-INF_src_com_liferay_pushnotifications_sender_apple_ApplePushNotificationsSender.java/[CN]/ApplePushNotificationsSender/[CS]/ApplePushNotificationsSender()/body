@@ -1,6 +1,14 @@
 {
   ApnsServiceBuilder appleServiceBuilder=APNS.newService();
-  appleServiceBuilder.withCert(PortletPropsValues.APPLE_CERTIFICATE_PATH,PortletPropsValues.APPLE_CERTIFICATE_PASSWORD);
+  String path=PortletPropsValues.APPLE_CERTIFICATE_PATH;
+  String password=PortletPropsValues.APPLE_CERTIFICATE_PASSWORD;
+  if (Validator.isNull(path) || Validator.isNull(password)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Missing apple.certificate.password or " + "apple.certificate.path in portlet.properties");
+    }
+    return;
+  }
+  appleServiceBuilder.withCert(path,password);
   if (PortletPropsValues.APPLE_SANDBOX) {
     appleServiceBuilder.withSandboxDestination();
   }

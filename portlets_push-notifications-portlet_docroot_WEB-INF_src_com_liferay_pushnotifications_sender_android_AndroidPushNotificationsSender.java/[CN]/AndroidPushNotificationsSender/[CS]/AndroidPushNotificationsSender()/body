@@ -1,3 +1,10 @@
 {
-  _sender=new Sender(PortletPropsValues.ANDROID_API_KEY);
+  String key=PortletPropsValues.ANDROID_API_KEY;
+  if (Validator.isNull(key)) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Missing android.api.key in portlet.properties");
+    }
+    return;
+  }
+  _sender=new Sender(key);
 }
