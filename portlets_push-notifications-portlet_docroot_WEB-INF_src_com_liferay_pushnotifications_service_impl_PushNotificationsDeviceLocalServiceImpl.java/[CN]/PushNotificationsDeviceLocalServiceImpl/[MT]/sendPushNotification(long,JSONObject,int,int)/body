@@ -1,0 +1,21 @@
+{
+  for (  Map.Entry<String,PushNotificationsSender> entry : _pushNotificationsSenders.entrySet()) {
+    String platform=entry.getKey();
+    List<PushNotificationsDevice> pushNotificationsDevices=new ArrayList<PushNotificationsDevice>();
+    if (userId == _ALL_USERS) {
+      pushNotificationsDevices=pushNotificationsDevicePersistence.findByPlatform(platform,start,end);
+    }
+ else {
+      pushNotificationsDevices=pushNotificationsDevicePersistence.findByU_P(userId,platform,start,end);
+    }
+    List<String> tokens=new ArrayList<String>();
+    for (    PushNotificationsDevice pushNotificationsDevice : pushNotificationsDevices) {
+      tokens.add(pushNotificationsDevice.getToken());
+    }
+    if (tokens.isEmpty()) {
+      continue;
+    }
+    PushNotificationsSender pushNotificationsSender=entry.getValue();
+    pushNotificationsSender.send(tokens,jsonObject);
+  }
+}
