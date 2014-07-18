@@ -1,11 +1,7 @@
 {
   try {
-    int status=kbComment.getStatus();
-    if (AdminUtil.isBackwardsStatusTransition(previousStatus,status)) {
-      return;
-    }
     PortletPreferences preferences=portletPreferencesLocalService.getPreferences(kbComment.getCompanyId(),kbComment.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
-    if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(status,preferences)) {
+    if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(kbComment.getStatus(),preferences)) {
       return;
     }
     User user=userLocalService.getUser(kbComment.getUserId());
@@ -13,8 +9,8 @@
     String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
     InternetAddress from=new InternetAddress(fromAddress,fromName);
     InternetAddress to=new InternetAddress(user.getEmailAddress());
-    String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(status,preferences);
-    String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(status,preferences);
+    String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(kbComment.getStatus(),preferences);
+    String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(kbComment.getStatus(),preferences);
     KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
     String processedSubject=replaceContent(subject,kbArticle,kbComment,serviceContext);
     String processedBody=replaceContent(body,kbArticle,kbComment,serviceContext);
