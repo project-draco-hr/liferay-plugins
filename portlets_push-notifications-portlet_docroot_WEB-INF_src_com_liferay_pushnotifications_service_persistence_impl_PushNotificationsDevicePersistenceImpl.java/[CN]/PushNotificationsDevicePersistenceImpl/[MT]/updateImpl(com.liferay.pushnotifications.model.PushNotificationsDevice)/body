@@ -24,6 +24,14 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
+    if ((pushNotificationsDeviceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLATFORM.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{pushNotificationsDeviceModelImpl.getOriginalPlatform()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLATFORM,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLATFORM,args);
+      args=new Object[]{pushNotificationsDeviceModelImpl.getPlatform()};
+      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_PLATFORM,args);
+      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_PLATFORM,args);
+    }
     if ((pushNotificationsDeviceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{pushNotificationsDeviceModelImpl.getOriginalUserId(),pushNotificationsDeviceModelImpl.getOriginalPlatform()};
       FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_P,args);
