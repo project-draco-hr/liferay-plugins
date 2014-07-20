@@ -9,6 +9,14 @@
       continue;
     }
     PushNotificationsSender pushNotificationsSender=entry.getValue();
-    pushNotificationsSender.send(tokens,jsonObject);
+    try {
+      pushNotificationsSender.send(tokens,jsonObject);
+    }
+ catch (    PortalException pe) {
+      throw pe;
+    }
+catch (    Exception e) {
+      throw new PortalException(e);
+    }
   }
 }
