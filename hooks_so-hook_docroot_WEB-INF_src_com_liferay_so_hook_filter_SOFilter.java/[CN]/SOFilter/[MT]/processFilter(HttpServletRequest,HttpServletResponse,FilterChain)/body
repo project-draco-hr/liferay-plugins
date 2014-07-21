@@ -1,17 +1,15 @@
 {
   try {
-    HttpServletRequest request=(HttpServletRequest)servletRequest;
     User user=PortalUtil.getUser(request);
     if ((user == null) || !user.hasPrivateLayouts()) {
-      filterChain.doFilter(servletRequest,servletResponse);
+      filterChain.doFilter(request,response);
       return;
     }
     String portalURL=PortalUtil.getPortalURL(request,PortalUtil.isSecure(request));
     String redirect=user.getDisplayURL(portalURL,PortalUtil.getPathMain(),true);
-    HttpServletResponse response=(HttpServletResponse)servletResponse;
     response.sendRedirect(redirect);
   }
  catch (  Exception e) {
-    filterChain.doFilter(servletRequest,servletResponse);
+    filterChain.doFilter(request,response);
   }
 }

@@ -1,0 +1,19 @@
+{
+  try {
+    User user=PortalUtil.getUser(request);
+    if (user == null) {
+      return false;
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(e,e);
+    }
+    return false;
+  }
+  String uri=request.getRequestURI();
+  if (uri.equals("/user") || uri.equals(PortletPropsValues.LOGIN_REDIRECT)) {
+    return true;
+  }
+  return false;
+}
