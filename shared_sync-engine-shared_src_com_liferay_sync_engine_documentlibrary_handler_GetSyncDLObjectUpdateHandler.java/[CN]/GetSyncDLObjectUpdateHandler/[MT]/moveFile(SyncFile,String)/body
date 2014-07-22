@@ -1,10 +1,13 @@
 {
   SyncFile sourceSyncFile=SyncFileService.fetchSyncFile(targetSyncFile.getRepositoryId(),getSyncAccountId(),targetSyncFile.getTypePK());
+  if (sourceSyncFile == null) {
+    return;
+  }
   Path sourceFilePath=Paths.get(sourceSyncFile.getFilePathName());
-  Path targetFilePath=Paths.get(targetFilePathName);
   if (Files.notExists(sourceFilePath)) {
     return;
   }
+  Path targetFilePath=Paths.get(targetFilePathName);
   Files.move(sourceFilePath,targetFilePath);
   sourceSyncFile.setFilePathName(targetFilePathName);
   sourceSyncFile.setModifiedTime(targetSyncFile.getModifiedTime());
