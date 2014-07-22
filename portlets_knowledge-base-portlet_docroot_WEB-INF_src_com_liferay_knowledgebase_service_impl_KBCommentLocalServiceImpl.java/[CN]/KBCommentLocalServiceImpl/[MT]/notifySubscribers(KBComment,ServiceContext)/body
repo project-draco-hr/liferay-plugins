@@ -5,10 +5,10 @@
   }
   String fromName=AdminUtil.getEmailFromName(preferences,serviceContext.getCompanyId());
   String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
-  KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
-  String kbArticleContent=StringUtil.replace(kbArticle.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(kbComment.getStatus(),preferences);
   String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(kbComment.getStatus(),preferences);
+  KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
+  String kbArticleContent=StringUtil.replace(kbArticle.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(kbArticle,serviceContext);
   subscriptionSender.setBody(body);
   subscriptionSender.setCompanyId(kbArticle.getCompanyId());
