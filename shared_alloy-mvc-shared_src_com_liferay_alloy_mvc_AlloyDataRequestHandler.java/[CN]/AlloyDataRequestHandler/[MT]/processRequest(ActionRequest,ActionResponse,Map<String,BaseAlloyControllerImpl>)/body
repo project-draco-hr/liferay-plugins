@@ -1,5 +1,5 @@
 {
-  String json=null;
+  String jsonString=null;
   String controller=ParamUtil.getString(actionRequest,"controller");
   BaseAlloyControllerImpl baseAlloyControllerImpl=alloyControllers.get(controller);
   if (baseAlloyControllerImpl == null) {
@@ -8,19 +8,21 @@
   String action=ParamUtil.getString(actionRequest,"action");
   try {
     if (action.equals("custom")) {
-      json=baseAlloyControllerImpl.handleAsynchronousRequest(actionRequest);
+      jsonString=baseAlloyControllerImpl.processDataRequest(actionRequest);
     }
  else     if (action.equals("dynamicQuery")) {
-      json=performDynamicQuery(baseAlloyControllerImpl,actionRequest);
+      jsonString=executeDynamicQuery(baseAlloyControllerImpl,actionRequest);
     }
  else     if (action.equals("search")) {
-      json=performSearch(baseAlloyControllerImpl,actionRequest);
+      jsonString=executeSearch(baseAlloyControllerImpl,actionRequest);
     }
   }
  catch (  Exception e) {
-    json="{ 'error': 'An unexpected exception occurred.' }";
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+    jsonObject.put("error","An unexpected exception occurred.");
+    jsonString=jsonObject.toString();
   }
-  if (json != null) {
-    writeJSON(actionRequest,actionResponse,json);
+  if (jsonString != null) {
+    writeJSON(actionRequest,actionResponse,jsonString);
   }
 }
