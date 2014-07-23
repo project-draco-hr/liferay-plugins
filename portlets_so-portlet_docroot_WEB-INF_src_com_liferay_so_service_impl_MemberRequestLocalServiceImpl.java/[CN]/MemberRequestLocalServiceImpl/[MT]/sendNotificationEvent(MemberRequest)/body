@@ -3,8 +3,6 @@
     JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
     notificationEventJSONObject.put("classPK",memberRequest.getMemberRequestId());
     notificationEventJSONObject.put("userId",memberRequest.getUserId());
-    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),PortletKeys.SO_INVITE_MEMBERS,notificationEventJSONObject);
-    notificationEvent.setDeliveryRequired(0);
-    UserNotificationEventLocalServiceUtil.addUserNotificationEvent(memberRequest.getReceiverUserId(),notificationEvent);
+    UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(memberRequest.getReceiverUserId(),PortletKeys.SO_INVITE_MEMBERS,UserNotificationDeliveryConstants.TYPE_WEBSITE,true,notificationEventJSONObject);
   }
 }

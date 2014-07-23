@@ -62,9 +62,7 @@
     }
     for (    User user : users) {
       if (UserNotificationManagerUtil.isDeliver(user.getUserId(),PortletKeys.SO_ANNOUNCEMENTS,0,0,UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
-        NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),PortletKeys.SO_ANNOUNCEMENTS,notificationEventJSONObject);
-        notificationEvent.setDeliveryRequired(0);
-        UserNotificationEventLocalServiceUtil.addUserNotificationEvent(user.getUserId(),notificationEvent);
+        UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(user.getUserId(),PortletKeys.SO_ANNOUNCEMENTS,UserNotificationDeliveryConstants.TYPE_WEBSITE,notificationEventJSONObject);
       }
     }
   }
