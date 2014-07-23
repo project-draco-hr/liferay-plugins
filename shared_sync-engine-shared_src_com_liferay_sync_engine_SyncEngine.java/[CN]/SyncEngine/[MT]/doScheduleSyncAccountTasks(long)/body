@@ -26,6 +26,7 @@
   ScheduledFuture<?> scheduledFuture=_eventScheduledExecutorService.scheduleAtFixedRate(runnable,0,syncAccount.getPollInterval(),TimeUnit.SECONDS);
   Path filePath=Paths.get(syncAccount.getFilePathName());
   WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+  synchronizeSyncFiles(filePath,syncAccountId,watchEventListener);
   Watcher watcher=new Watcher(filePath,true,watchEventListener);
   _executorService.execute(watcher);
   _syncAccountTasks.put(syncAccountId,new Object[]{scheduledFuture,watcher});

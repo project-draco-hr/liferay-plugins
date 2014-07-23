@@ -3,10 +3,5 @@
     processMissingFilePath(filePath);
     return;
   }
-  long startTime=System.currentTimeMillis();
   doRegister(filePath,recursive);
-  List<SyncFile> syncFiles=SyncFileService.findSyncFiles(FilePathNameUtil.getFilePathName(filePath),startTime,_watchEventListener.getSyncAccountId());
-  for (  SyncFile syncFile : syncFiles) {
-    fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_DELETE,java.nio.file.Paths.get(syncFile.getFilePathName()));
-  }
 }
