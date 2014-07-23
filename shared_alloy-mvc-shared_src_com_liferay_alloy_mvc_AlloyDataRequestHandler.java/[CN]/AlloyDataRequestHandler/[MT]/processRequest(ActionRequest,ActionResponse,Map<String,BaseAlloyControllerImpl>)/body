@@ -19,7 +19,8 @@
   }
  catch (  Exception e) {
     JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-    jsonObject.put("error","An unexpected exception occurred.");
+    jsonObject.put("error","An unexpected exception occurred: " + e.getMessage());
+    jsonObject.put("stacktrace",StackTraceUtil.getStackTrace(e));
     jsonString=jsonObject.toString();
   }
   if (jsonString != null) {
