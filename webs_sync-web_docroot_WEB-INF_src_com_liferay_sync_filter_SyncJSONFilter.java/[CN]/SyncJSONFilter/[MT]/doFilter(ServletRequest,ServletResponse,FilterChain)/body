@@ -1,0 +1,18 @@
+{
+  String uri=(String)servletRequest.getAttribute(WebKeys.INVOKER_FILTER_URI);
+  if (!uri.startsWith("/api/jsonws/sync-web.")) {
+    filterChain.doFilter(servletRequest,servletResponse);
+    return;
+  }
+  HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
+  if (PrefsPropsUtil.getBoolean(PortalUtil.getCompanyId(httpServletRequest),PortletPropsKeys.SYNC_SERVICES_ENABLED,PortletPropsValues.SYNC_SERVICES_ENABLED)) {
+    filterChain.doFilter(servletRequest,servletResponse);
+    return;
+  }
+  servletResponse.setCharacterEncoding(StringPool.UTF8);
+  servletResponse.setContentType(ContentTypes.APPLICATION_JSON);
+  OutputStream outputStream=servletResponse.getOutputStream();
+  String json=JSONFactoryUtil.serializeThrowable(new SyncServicesUnavailableException(SyncServicesUnavailableException.class.getName()));
+  outputStream.write(json.getBytes(StringPool.UTF8));
+  outputStream.close();
+}
