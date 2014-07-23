@@ -1,0 +1,15 @@
+{
+  ObjectMapper objectMapper=new ObjectMapper();
+  JsonNode responseJsonNode=null;
+  try {
+    responseJsonNode=objectMapper.readTree(response);
+  }
+ catch (  Exception e) {
+    return "";
+  }
+  JsonNode exceptionJsonNode=responseJsonNode.get("exception");
+  if (exceptionJsonNode == null) {
+    return "";
+  }
+  return exceptionJsonNode.asText();
+}
