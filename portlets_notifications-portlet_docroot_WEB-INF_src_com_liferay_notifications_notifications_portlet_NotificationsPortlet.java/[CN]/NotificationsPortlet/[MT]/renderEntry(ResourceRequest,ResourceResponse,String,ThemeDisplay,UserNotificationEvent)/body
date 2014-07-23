@@ -1,0 +1,24 @@
+{
+  UserNotificationFeedEntry userNotificationFeedEntry=UserNotificationManagerUtil.interpret(StringPool.BLANK,userNotificationEvent,ServiceContextFactory.getInstance(resourceRequest));
+  if (userNotificationFeedEntry == null) {
+    return null;
+  }
+  Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),userNotificationEvent.getType());
+  String portletName=portlet.getDisplayName();
+  String portletIcon=portlet.getContextPath() + portlet.getIcon();
+  LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)resourceResponse;
+  PortletURL markAsReadURL=liferayPortletResponse.createActionURL(PortletKeys.NOTIFICATIONS);
+  markAsReadURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+  markAsReadURL.setWindowState(WindowState.NORMAL);
+  Format simpleDateFormat=FastDateFormatFactoryUtil.getSimpleDateFormat("EEEE, MMMMM dd, yyyy 'at' h:mm a",themeDisplay.getLocale(),themeDisplay.getTimeZone());
+  String timeStamp=simpleDateFormat.format(userNotificationEvent.getTimestamp());
+  JSONObject userNotificationEventJSONObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long userId=userNotificationEventJSONObject.getLong("userId");
+  String userFullName=HtmlUtil.escape(PortalUtil.getUserName(userId,StringPool.BLANK));
+  String userPortraitURL=StringPool.BLANK;
+  User user=UserLocalServiceUtil.fetchUserById(userId);
+  if (user != null) {
+    userPortraitURL=user.getPortraitURL((ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY));
+  }
+  return StringUtil.replace(ContentUtil.get(PortletProps.get(PortletPropsKeys.USER_NOTIFICATION_ENTRY)),new String[]{"[$BODY$]","[$LINK$]","[$MARK_AS_READ_URL$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$SEPARATOR$]","[$TIMESTAMP$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{userNotificationFeedEntry.getBody(),userNotificationFeedEntry.getLink(),markAsReadURL.toString(),portletIcon,portletName,separator,timeStamp,userFullName,userPortraitURL});
+}

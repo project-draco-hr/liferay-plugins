@@ -1,0 +1,35 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  int dockbarViewDelta=ParamUtil.getInteger(resourceRequest,"dockbarViewDelta");
+  int actionableNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,true,false);
+  List<UserNotificationEvent> actionableUserNotificationEvents=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,true,false,0,dockbarViewDelta);
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+  JSONArray jsonArray=null;
+  if (dockbarViewDelta <= actionableNotificationsCount) {
+    jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,null,resourceRequest,resourceResponse,themeDisplay);
+  }
+ else {
+    int maxNonActionableCount=dockbarViewDelta - actionableNotificationsCount;
+    int nonActionableNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false);
+    if (nonActionableNotificationsCount == 0) {
+      jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,null,resourceRequest,resourceResponse,themeDisplay);
+    }
+ else {
+      List<UserNotificationEvent> nonActionableUserNotificationEvents=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false,0,maxNonActionableCount);
+      jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,nonActionableUserNotificationEvents,resourceRequest,resourceResponse,themeDisplay);
+      jsonObject.put("markAsReadCount",nonActionableUserNotificationEvents.size());
+      List<Long> userNotificationEventIds=new ArrayList<Long>();
+      for (      UserNotificationEvent userNotificationEvent : nonActionableUserNotificationEvents) {
+        userNotificationEventIds.add(userNotificationEvent.getUserNotificationEventId());
+      }
+      jsonObject.put("userNotificationEventIds",StringUtil.merge(userNotificationEventIds));
+    }
+  }
+  if (jsonArray.length() > 0) {
+    jsonObject.put("entries",jsonArray);
+  }
+ else {
+    jsonObject.put("noResult",Boolean.TRUE);
+  }
+  writeJSON(resourceRequest,resourceResponse,jsonObject);
+}
