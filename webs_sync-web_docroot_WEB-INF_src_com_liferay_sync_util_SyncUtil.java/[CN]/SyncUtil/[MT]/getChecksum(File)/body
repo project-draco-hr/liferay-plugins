@@ -1,8 +1,11 @@
 {
+  if (file.length() > PortletPropsValues.SYNC_FILE_CHECKSUM_THRESHOLD_SIZE) {
+    return StringPool.BLANK;
+  }
   FileInputStream fileInputStream=null;
   try {
     fileInputStream=new FileInputStream(file);
-    return getChecksum(fileInputStream);
+    return DigesterUtil.digestBase64(Digester.MD5,fileInputStream);
   }
  catch (  Exception e) {
     throw new PortalException(e);
