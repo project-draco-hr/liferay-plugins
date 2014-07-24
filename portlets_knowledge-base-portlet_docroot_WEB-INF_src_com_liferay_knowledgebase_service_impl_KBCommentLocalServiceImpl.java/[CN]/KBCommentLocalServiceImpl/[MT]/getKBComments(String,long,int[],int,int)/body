@@ -1,0 +1,8 @@
+{
+  DynamicQuery query=DynamicQueryFactoryUtil.forClass(KBComment.class);
+  long classNameId=classNameLocalService.getClassNameId(className);
+  query.add(RestrictionsFactoryUtil.eq("classNameId",classNameId));
+  query.add(RestrictionsFactoryUtil.eq("classPK",classPK));
+  query.add(RestrictionsFactoryUtil.in("status",ListUtil.toList(status)));
+  return dynamicQuery(query,start,end,new KBCommentCreateDateComparator());
+}
