@@ -62,7 +62,8 @@
  else     if (filterBy.startsWith(ContactsConstants.FILTER_BY_GROUP)) {
       params.put("usersGroups",ContactsUtil.getGroupId(filterBy));
     }
-    List<User> users=new UniqueList<User>();
+    Set<User> users=new HashSet<User>();
+    List<User> usersList=new ArrayList<User>();
     if (filterBy.equals(ContactsConstants.FILTER_BY_ADMINS)) {
       Role siteAdministratorRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
       params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteAdministratorRole.getRoleId())});
@@ -70,14 +71,15 @@
       Role siteOwnerRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_OWNER);
       params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteOwnerRole.getRoleId())});
       users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
-      ListUtil.sort(users,new UserLastNameComparator(true));
+      usersList=new ArrayList<User>(users);
+      ListUtil.sort(usersList,new UserLastNameComparator(true));
     }
  else {
       int usersCount=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params);
       jsonObject.put("count",usersCount);
-      users=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
+      usersList=UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,start,end,new UserLastNameComparator(true));
     }
-    for (    User user : users) {
+    for (    User user : usersList) {
       JSONObject userJSONObject=getUserJSONObject(portletResponse,themeDisplay,user);
       jsonArray.put(userJSONObject);
     }
