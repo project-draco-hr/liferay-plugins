@@ -4,6 +4,11 @@
   }
   SyncSiteService.synchronizeSyncSites(syncAccountId);
   final SyncAccount syncAccount=SyncAccountService.synchronizeSyncAccount(syncAccountId);
+  Path filePath=Paths.get(syncAccount.getFilePathName());
+  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+  synchronizeSyncFiles(filePath,syncAccountId,watchEventListener);
+  Watcher watcher=new Watcher(filePath,true,watchEventListener);
+  _executorService.execute(watcher);
   Runnable runnable=new Runnable(){
     @Override public void run(){
       SyncAccount updatedSyncAccount=SyncAccountService.fetchSyncAccount(syncAccount.getSyncAccountId());
@@ -24,10 +29,5 @@
   }
 ;
   ScheduledFuture<?> scheduledFuture=_eventScheduledExecutorService.scheduleAtFixedRate(runnable,0,syncAccount.getPollInterval(),TimeUnit.SECONDS);
-  Path filePath=Paths.get(syncAccount.getFilePathName());
-  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
-  synchronizeSyncFiles(filePath,syncAccountId,watchEventListener);
-  Watcher watcher=new Watcher(filePath,true,watchEventListener);
-  _executorService.execute(watcher);
-  _syncAccountTasks.put(syncAccountId,new Object[]{scheduledFuture,watcher});
+  _syncAccountTasks.put(syncAccountId,new Object[]{watcher,scheduledFuture});
 }
