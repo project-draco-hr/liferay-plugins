@@ -2,10 +2,10 @@
   PushNotificationsPermission.check(getPermissionChecker(),ActionKeys.ADD_DEVICE);
   PushNotificationsDevice pushNotificationsDevice=pushNotificationsDevicePersistence.fetchByToken(token);
   if (pushNotificationsDevice == null) {
-    pushNotificationsDevice=pushNotificationsDeviceLocalService.addPushNotificationsDevice(getUserId(),platform,token);
+    pushNotificationsDevice=pushNotificationsDeviceLocalService.addPushNotificationsDevice(getGuestOrUserId(),platform,token);
   }
  else {
-    long userId=getUserId();
+    long userId=getGuestOrUserId();
     if (pushNotificationsDevice.getUserId() != userId) {
       pushNotificationsDevice=null;
       if (_log.isInfoEnabled()) {
