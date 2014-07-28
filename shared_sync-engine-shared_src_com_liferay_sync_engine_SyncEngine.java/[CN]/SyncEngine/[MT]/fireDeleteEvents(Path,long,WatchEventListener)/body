@@ -1,0 +1,26 @@
+{
+  long startTime=System.currentTimeMillis();
+  Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
+    @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
+      SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccountId);
+      if (syncFile != null) {
+        syncFile.setLocalSyncTime(System.currentTimeMillis());
+        SyncFileService.update(syncFile);
+      }
+      return FileVisitResult.CONTINUE;
+    }
+    @Override public FileVisitResult visitFile(    Path filePath,    BasicFileAttributes basicFileAttributes){
+      SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccountId);
+      if (syncFile != null) {
+        syncFile.setLocalSyncTime(System.currentTimeMillis());
+        SyncFileService.update(syncFile);
+      }
+      return FileVisitResult.CONTINUE;
+    }
+  }
+);
+  List<SyncFile> deletedSyncFiles=SyncFileService.findSyncFiles(FilePathNameUtil.getFilePathName(filePath),startTime,syncAccountId);
+  for (  SyncFile deletedSyncFile : deletedSyncFiles) {
+    watchEventListener.watchEvent(SyncWatchEvent.EVENT_TYPE_DELETE,Paths.get(deletedSyncFile.getFilePathName()));
+  }
+}

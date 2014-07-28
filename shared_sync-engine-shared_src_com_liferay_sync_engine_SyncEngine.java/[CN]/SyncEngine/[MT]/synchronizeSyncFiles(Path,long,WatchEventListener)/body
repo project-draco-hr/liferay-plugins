@@ -1,44 +1,4 @@
 {
-  long startTime=System.currentTimeMillis();
-  Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
-    @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
-      SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccountId);
-      if (syncFile != null) {
-        syncFile.setLocalSyncTime(System.currentTimeMillis());
-        SyncFileService.update(syncFile);
-      }
-      return FileVisitResult.CONTINUE;
-    }
-    @Override public FileVisitResult visitFile(    Path filePath,    BasicFileAttributes basicFileAttributes){
-      SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccountId);
-      if (syncFile != null) {
-        syncFile.setLocalSyncTime(System.currentTimeMillis());
-        SyncFileService.update(syncFile);
-      }
-      return FileVisitResult.CONTINUE;
-    }
-  }
-);
-  List<SyncFile> deletedSyncFiles=SyncFileService.findSyncFiles(FilePathNameUtil.getFilePathName(filePath),startTime,syncAccountId);
-  for (  SyncFile deletedSyncFile : deletedSyncFiles) {
-    watchEventListener.watchEvent(SyncWatchEvent.EVENT_TYPE_DELETE,Paths.get(deletedSyncFile.getFilePathName()));
-  }
-  List<SyncFile> downloadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_DOWNLOADING,syncAccountId);
-  for (  SyncFile downloadingSyncFile : downloadingSyncFiles) {
-    Map<String,Object> parameters=new HashMap<String,Object>();
-    parameters.put("patch",false);
-    parameters.put("syncFile",downloadingSyncFile);
-    DownloadFileEvent downloadFileEvent=new DownloadFileEvent(syncAccountId,parameters);
-    downloadFileEvent.run();
-  }
-  List<SyncFile> uploadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_UPLOADING,syncAccountId);
-  for (  SyncFile uploadingSyncFile : uploadingSyncFiles) {
-    if (uploadingSyncFile.getTypePK() > 0) {
-      uploadingSyncFile.setChecksum("");
-      SyncFileService.update(uploadingSyncFile);
-    }
- else {
-      SyncFileService.deleteSyncFile(uploadingSyncFile,true);
-    }
-  }
+  fireDeleteEvents(filePath,syncAccountId,watchEventListener);
+  retryFileTransfers(filePath,syncAccountId);
 }

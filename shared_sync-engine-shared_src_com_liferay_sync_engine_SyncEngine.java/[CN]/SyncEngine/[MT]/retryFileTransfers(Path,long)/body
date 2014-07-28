@@ -1,0 +1,20 @@
+{
+  List<SyncFile> downloadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_DOWNLOADING,syncAccountId);
+  for (  SyncFile downloadingSyncFile : downloadingSyncFiles) {
+    Map<String,Object> parameters=new HashMap<String,Object>();
+    parameters.put("patch",false);
+    parameters.put("syncFile",downloadingSyncFile);
+    DownloadFileEvent downloadFileEvent=new DownloadFileEvent(syncAccountId,parameters);
+    downloadFileEvent.run();
+  }
+  List<SyncFile> uploadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_UPLOADING,syncAccountId);
+  for (  SyncFile uploadingSyncFile : uploadingSyncFiles) {
+    if (uploadingSyncFile.getTypePK() > 0) {
+      uploadingSyncFile.setChecksum("");
+      SyncFileService.update(uploadingSyncFile);
+    }
+ else {
+      SyncFileService.deleteSyncFile(uploadingSyncFile,true);
+    }
+  }
+}

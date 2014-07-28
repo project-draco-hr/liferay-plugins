@@ -3,31 +3,11 @@
     return;
   }
   SyncSiteService.synchronizeSyncSites(syncAccountId);
-  final SyncAccount syncAccount=SyncAccountService.synchronizeSyncAccount(syncAccountId);
+  SyncAccount syncAccount=SyncAccountService.synchronizeSyncAccount(syncAccountId);
   Path filePath=Paths.get(syncAccount.getFilePathName());
-  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccount.getSyncAccountId());
+  WatchEventListener watchEventListener=new SyncSiteWatchEventListener(syncAccountId);
   synchronizeSyncFiles(filePath,syncAccountId,watchEventListener);
   Watcher watcher=new Watcher(filePath,true,watchEventListener);
   _executorService.execute(watcher);
-  Runnable runnable=new Runnable(){
-    @Override public void run(){
-      SyncAccount updatedSyncAccount=SyncAccountService.fetchSyncAccount(syncAccount.getSyncAccountId());
-      if (updatedSyncAccount.getState() == SyncAccount.STATE_DISCONNECTED) {
-        return;
-      }
-      Set<Long> syncSiteIds=SyncSiteService.getActiveSyncSiteIds(syncAccount.getSyncAccountId());
-      for (      long syncSiteId : syncSiteIds) {
-        SyncSite syncSite=SyncSiteService.fetchSyncSite(syncSiteId);
-        Map<String,Object> parameters=new HashMap<String,Object>();
-        parameters.put("companyId",syncSite.getCompanyId());
-        parameters.put("repositoryId",syncSite.getGroupId());
-        parameters.put("syncSite",syncSite);
-        GetSyncDLObjectUpdateEvent getSyncDLObjectUpdateEvent=new GetSyncDLObjectUpdateEvent(syncAccount.getSyncAccountId(),parameters);
-        getSyncDLObjectUpdateEvent.run();
-      }
-    }
-  }
-;
-  ScheduledFuture<?> scheduledFuture=_eventScheduledExecutorService.scheduleAtFixedRate(runnable,0,syncAccount.getPollInterval(),TimeUnit.SECONDS);
-  _syncAccountTasks.put(syncAccountId,new Object[]{watcher,scheduledFuture});
+  scheduleGetSyncDLObjectUpdateEvent(syncAccount,watcher);
 }
