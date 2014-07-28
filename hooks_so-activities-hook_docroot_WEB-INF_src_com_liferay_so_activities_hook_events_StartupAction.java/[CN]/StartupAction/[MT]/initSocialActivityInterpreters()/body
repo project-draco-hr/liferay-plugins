@@ -1,4 +1,5 @@
 {
+  List<SocialActivityInterpreter> activityInterpreters=SocialActivityInterpreterLocalServiceUtil.getActivityInterpreters("SO");
   String[] portletIds=PortletPropsValues.SOCIAL_ACTIVITY_INTERPRETER_PORTLET_IDS;
   for (  String portletId : portletIds) {
     Filter filter=new Filter(portletId);
@@ -6,6 +7,14 @@
     try {
       SocialActivityInterpreter activityInterpreter=(SocialActivityInterpreter)InstanceFactory.newInstance(activityInterpreterClassName);
       activityInterpreter=new SocialActivityInterpreterImpl(portletId,activityInterpreter);
+      if (activityInterpreters != null) {
+        for (        SocialActivityInterpreter curActivityInterpreter : activityInterpreters) {
+          if (ArrayUtil.containsAll(activityInterpreter.getClassNames(),curActivityInterpreter.getClassNames())) {
+            SocialActivityInterpreterLocalServiceUtil.deleteActivityInterpreter(curActivityInterpreter);
+            break;
+          }
+        }
+      }
       SocialActivityInterpreterLocalServiceUtil.addActivityInterpreter(activityInterpreter);
     }
  catch (    Exception e) {
