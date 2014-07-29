@@ -12,7 +12,8 @@
         if (Validator.isNull(value)) {
           continue;
         }
-        solrInputDocument.addField(name,value.trim(),boost);
+        value=value.trim();
+        doAddSolrField(solrInputDocument,field,boost,value,name);
       }
     }
  else {
@@ -25,11 +26,12 @@
         Locale locale=entry.getKey();
         String languageId=LocaleUtil.toLanguageId(locale);
         String defaultLanguageId=LocaleUtil.toLanguageId(LocaleUtil.getDefault());
+        value=value.trim();
         if (languageId.equals(defaultLanguageId)) {
-          solrInputDocument.addField(name,value.trim(),boost);
+          solrInputDocument.addField(name,value,boost);
         }
         String localizedName=DocumentImpl.getLocalizedName(locale,name);
-        solrInputDocument.addField(localizedName,value.trim(),boost);
+        doAddSolrField(solrInputDocument,field,boost,value,localizedName);
       }
     }
   }
