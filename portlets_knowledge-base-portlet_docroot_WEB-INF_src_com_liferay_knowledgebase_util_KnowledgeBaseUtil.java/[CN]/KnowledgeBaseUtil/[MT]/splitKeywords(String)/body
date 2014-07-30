@@ -1,10 +1,10 @@
 {
-  Set<String> keywords=new LinkedHashSet<String>();
+  Set<String> keywordsSet=new LinkedHashSet<String>();
   StringBundler sb=new StringBundler();
-  for (  char c : values.toCharArray()) {
+  for (  char c : keywords.toCharArray()) {
     if (Character.isWhitespace(c)) {
       if (sb.length() > 0) {
-        keywords.add(sb.toString());
+        keywordsSet.add(sb.toString());
         sb=new StringBundler();
       }
     }
@@ -12,11 +12,11 @@
       sb.append(c);
     }
  else {
-      return new String[]{values};
+      return new String[]{keywords};
     }
   }
   if (sb.length() > 0) {
-    keywords.add(sb.toString());
+    keywordsSet.add(sb.toString());
   }
-  return StringUtil.split(StringUtil.merge(keywords));
+  return StringUtil.split(StringUtil.merge(keywordsSet));
 }
