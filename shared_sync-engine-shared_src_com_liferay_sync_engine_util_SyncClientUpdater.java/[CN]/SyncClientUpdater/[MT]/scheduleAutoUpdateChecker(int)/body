@@ -9,6 +9,9 @@
     @Override public void run(){
       try {
         SyncVersion latestSyncVersion=getLatestSyncVersion();
+        if (latestSyncVersion == null) {
+          return;
+        }
         if ((SyncPropService.getInteger("ignoreUpdateBuild") != latestSyncVersion.getBuildNumber()) && isUpdateAvailable(latestSyncVersion)) {
           SyncEngineUtil.fireSyncEngineStateChanged(SyncEngineUtil.SYNC_ENGINE_UPDATE_AVAILABLE);
         }
