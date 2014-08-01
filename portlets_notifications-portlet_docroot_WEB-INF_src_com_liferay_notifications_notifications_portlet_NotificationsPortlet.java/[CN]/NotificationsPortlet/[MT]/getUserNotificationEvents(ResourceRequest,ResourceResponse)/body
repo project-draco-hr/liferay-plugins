@@ -9,17 +9,17 @@
     jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,null,resourceRequest,resourceResponse,themeDisplay);
   }
  else {
-    int maxNonActionableCount=dockbarViewDelta - actionableNotificationsCount;
-    int nonActionableNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false);
-    if (nonActionableNotificationsCount == 0) {
+    int maxNonactionableCount=dockbarViewDelta - actionableNotificationsCount;
+    int nonactionableNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false);
+    if (nonactionableNotificationsCount == 0) {
       jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,null,resourceRequest,resourceResponse,themeDisplay);
     }
  else {
-      List<UserNotificationEvent> nonActionableUserNotificationEvents=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false,0,maxNonActionableCount);
-      jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,nonActionableUserNotificationEvents,resourceRequest,resourceResponse,themeDisplay);
-      jsonObject.put("markAsReadCount",nonActionableUserNotificationEvents.size());
+      List<UserNotificationEvent> nonactionableUserNotificationEvents=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false,0,maxNonactionableCount);
+      jsonArray=getEntriesJSONArray(actionableUserNotificationEvents,nonactionableUserNotificationEvents,resourceRequest,resourceResponse,themeDisplay);
+      jsonObject.put("markAsReadCount",nonactionableUserNotificationEvents.size());
       List<Long> userNotificationEventIds=new ArrayList<Long>();
-      for (      UserNotificationEvent userNotificationEvent : nonActionableUserNotificationEvents) {
+      for (      UserNotificationEvent userNotificationEvent : nonactionableUserNotificationEvents) {
         userNotificationEventIds.add(userNotificationEvent.getUserNotificationEventId());
       }
       jsonObject.put("userNotificationEventIds",StringUtil.merge(userNotificationEventIds));
