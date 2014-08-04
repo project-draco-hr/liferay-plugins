@@ -1,7 +1,7 @@
 {
   Path targetFilePath=Paths.get(syncWatchEvent.getFilePathName());
   Path parentTargetFilePath=targetFilePath.getParent();
-  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(parentTargetFilePath),syncWatchEvent.getSyncAccountId());
+  SyncFile parentSyncFile=SyncFileService.fetchSyncFile(parentTargetFilePath.toString(),syncWatchEvent.getSyncAccountId());
   SyncFile syncFile=SyncFileService.fetchSyncFileByFileKey(FileUtil.getFileKey(targetFilePath),syncWatchEvent.getSyncAccountId());
   if (syncFile == null) {
     SyncFileService.addFolderSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());

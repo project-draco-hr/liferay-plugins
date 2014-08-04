@@ -2,8 +2,8 @@
   SyncSite syncSite=getSyncSite(stepJsonNode);
   String dependency=getString(stepJsonNode,"dependency");
   final Path dependencyFilePath=getDependencyFilePath(testFilePath,dependency);
-  dependency=dependency.replace("common/","");
-  final Path targetFilePath=Paths.get(syncSite.getFilePathName() + "/" + dependency);
+  FileSystem fileSystem=FileSystems.getDefault();
+  final Path targetFilePath=Paths.get(FileUtil.getFilePathName(syncSite.getFilePathName(),dependency.replace("common" + fileSystem.getSeparator(),"")));
   Files.walkFileTree(dependencyFilePath,new SimpleFileVisitor<Path>(){
     @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
       Path relativeFilePath=dependencyFilePath.relativize(filePath);

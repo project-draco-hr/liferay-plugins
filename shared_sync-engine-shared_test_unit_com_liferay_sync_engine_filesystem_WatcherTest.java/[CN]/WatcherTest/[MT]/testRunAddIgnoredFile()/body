@@ -1,16 +1,16 @@
 {
   setResponse("dependencies/watcher_test_add_file.json");
   if (OSDetector.isWindows()) {
-    Path hiddenFilePath=Paths.get(_syncSite.getFilePathName() + "/hidden_file.txt");
+    Path hiddenFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"hidden_file.txt"));
     Files.createFile(hiddenFilePath);
     Files.setAttribute(hiddenFilePath,"dos:hidden",true);
-    Path shortcutFilePath=Paths.get(_syncSite.getFilePathName() + "/test.txt - Shortcut.lnk");
+    Path shortcutFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"test.txt - Shortcut.lnk"));
     Files.createFile(shortcutFilePath);
   }
  else {
-    Path ignoredFilePath=Paths.get(_syncSite.getFilePathName() + "/.DS_Store");
+    Path ignoredFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),".DS_Store"));
     Files.createFile(ignoredFilePath);
-    Path symbolicLinkFilePath=Paths.get(_syncSite.getFilePathName() + "/symbolic_link");
+    Path symbolicLinkFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"symbolic_link"));
     Files.createSymbolicLink(symbolicLinkFilePath,ignoredFilePath);
   }
   sleep();

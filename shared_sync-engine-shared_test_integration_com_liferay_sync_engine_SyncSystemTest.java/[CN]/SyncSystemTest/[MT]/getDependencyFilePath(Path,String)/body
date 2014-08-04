@@ -1,12 +1,12 @@
 {
-  StringBuilder sb=new StringBuilder();
-  sb.append("tests/dependencies/");
-  Path testFileNameFilePath=testFilePath.getFileName();
-  String testFileName=testFileNameFilePath.toString();
-  if (!dependency.contains("common")) {
-    sb.append(FilenameUtils.removeExtension(testFileName));
-    sb.append("/");
+  String filePathName=null;
+  if (dependency.contains("common")) {
+    filePathName=FileUtil.getFilePathName("tests","dependencies",dependency);
   }
-  sb.append(dependency);
-  return getResourceFilePath(sb.toString());
+ else {
+    Path testFileNameFilePath=testFilePath.getFileName();
+    String testFileName=testFileNameFilePath.toString();
+    filePathName=FileUtil.getFilePathName("tests","dependencies",FilenameUtils.removeExtension(testFileName),dependency);
+  }
+  return getResourceFilePath(filePathName);
 }

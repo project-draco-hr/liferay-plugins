@@ -1,15 +1,15 @@
 {
   setResponse("dependencies/watcher_test_check_out_file.json");
-  Path filePath=Paths.get(_syncSite.getFilePathName() + "/test.txt");
+  Path filePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"test.txt"));
   Files.createFile(filePath);
   sleep();
-  SyncFile syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccount.getSyncAccountId());
+  SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccount.getSyncAccountId());
   syncFile.setLockExpirationDate(0);
   syncFile.setLockUserId(0);
   syncFile.setLockUserName(null);
   SyncFileService.update(syncFile);
   SyncFileService.checkOutSyncFile(syncAccount.getSyncAccountId(),syncFile);
-  syncFile=SyncFileService.fetchSyncFile(FilePathNameUtil.getFilePathName(filePath),syncAccount.getSyncAccountId());
+  syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccount.getSyncAccountId());
   Assert.assertNotEquals(0,syncFile.getLockExpirationDate());
   Assert.assertNotEquals(0,syncFile.getLockUserId());
   Assert.assertNotEquals("",syncFile.getLockUserName());

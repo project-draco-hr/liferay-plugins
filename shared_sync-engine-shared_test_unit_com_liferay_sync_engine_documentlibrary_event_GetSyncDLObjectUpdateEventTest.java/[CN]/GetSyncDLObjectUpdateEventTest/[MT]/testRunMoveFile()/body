@@ -1,14 +1,14 @@
 {
   setResponse("dependencies/get_sync_dl_object_update_event_move.json");
-  Path sourceFilePath=Paths.get(_syncSite.getFilePathName() + "/Document_1.txt");
+  Path sourceFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"Document_1.txt"));
   Files.createFile(sourceFilePath);
-  SyncFileTestUtil.addFileSyncFile(FilePathNameUtil.getFilePathName(sourceFilePath),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27382);
-  Path folderFilePath=Paths.get(_syncSite.getFilePathName() + "/test-folder");
+  SyncFileTestUtil.addFileSyncFile(sourceFilePath.toString(),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27382);
+  Path folderFilePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName() + "test-folder"));
   Files.createDirectory(folderFilePath);
-  SyncFileTestUtil.addFolderSyncFile(FilePathNameUtil.getFilePathName(folderFilePath),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27488);
+  SyncFileTestUtil.addFolderSyncFile(folderFilePath.toString(),0,_syncSite.getGroupId(),syncAccount.getSyncAccountId(),27488);
   run();
   _syncFiles=SyncFileService.findSyncFiles(syncAccount.getSyncAccountId());
   Assert.assertEquals(4,_syncFiles.size());
-  Path targetFilePath=Paths.get(folderFilePath + "/test.txt");
+  Path targetFilePath=Paths.get(FileUtil.getFilePathName(folderFilePath.toString(),"test.txt"));
   Assert.assertTrue(Files.exists(targetFilePath));
 }
