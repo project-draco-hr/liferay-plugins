@@ -9,14 +9,20 @@
     PermissionThreadLocal.setPermissionChecker(permissionChecker);
     String path=HttpUtil.fixPath(request.getPathInfo());
     String[] pathArray=StringUtil.split(path,CharPool.SLASH);
-    long groupId=GetterUtil.getLong(pathArray[0]);
-    String uuid=pathArray[1];
-    boolean patch=ParamUtil.getBoolean(request,"patch");
-    if (patch) {
-      sendPatch(request,response,user,groupId,uuid);
+    if (pathArray[0].equals("image")) {
+      long imageId=GetterUtil.getLong(pathArray[1]);
+      sendImage(response,imageId);
     }
  else {
-      sendFile(request,response,user,groupId,uuid);
+      long groupId=GetterUtil.getLong(pathArray[0]);
+      String uuid=pathArray[1];
+      boolean patch=ParamUtil.getBoolean(request,"patch");
+      if (patch) {
+        sendPatch(request,response,user,groupId,uuid);
+      }
+ else {
+        sendFile(request,response,groupId,uuid);
+      }
     }
   }
  catch (  NoSuchFileEntryException nsfee) {
