@@ -1,14 +1,41 @@
 {
+  DefaultHttpClient defaultHttpClient=new DefaultHttpClient(_poolingClientConnectionManager);
   if ((_username != null) && (_password != null)) {
     if (_authScope == null) {
       _authScope=AuthScope.ANY;
     }
-    DefaultHttpClient defaultHttpClient=(DefaultHttpClient)_server.getHttpClient();
     CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
     credentialsProvider.setCredentials(_authScope,new UsernamePasswordCredentials(_username,_password));
     for (    HttpRequestInterceptor httpRequestInterceptor : _httpRequestInterceptors) {
       defaultHttpClient.addRequestInterceptor(httpRequestInterceptor,0);
     }
   }
-  _server.setBaseURL(_url);
+  _server=new HttpSolrServer(_url,defaultHttpClient);
+  if (_allowCompression != null) {
+    _server.setAllowCompression(_allowCompression);
+  }
+  if (Validator.isNotNull(_baseURL)) {
+    _server.setBaseURL(_baseURL);
+  }
+  if (_connectionTimeout != null) {
+    _server.setConnectionTimeout(_connectionTimeout);
+  }
+  if (_defaultMaxConnectionsPerRoute != null) {
+    _server.setDefaultMaxConnectionsPerHost(_defaultMaxConnectionsPerRoute);
+  }
+  if (_followRedirects != null) {
+    _server.setFollowRedirects(_followRedirects);
+  }
+  if (_maxTotalConnections != null) {
+    _server.setMaxTotalConnections(_maxTotalConnections);
+  }
+  if (_maxRetries != null) {
+    _server.setMaxRetries(_maxRetries);
+  }
+  if (_responseParser != null) {
+    _server.setParser(_responseParser);
+  }
+  if (_socketTimeout != null) {
+    _server.setSoTimeout(_socketTimeout);
+  }
 }
