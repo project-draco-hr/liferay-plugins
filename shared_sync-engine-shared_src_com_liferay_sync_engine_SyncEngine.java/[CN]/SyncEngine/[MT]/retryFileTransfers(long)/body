@@ -1,5 +1,5 @@
 {
-  List<SyncFile> downloadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_DOWNLOADING,syncAccountId);
+  List<SyncFile> downloadingSyncFiles=SyncFileService.findSyncFiles(syncAccountId,SyncFile.UI_EVENT_DOWNLOADING);
   for (  SyncFile downloadingSyncFile : downloadingSyncFiles) {
     Map<String,Object> parameters=new HashMap<String,Object>();
     parameters.put("patch",false);
@@ -7,7 +7,7 @@
     DownloadFileEvent downloadFileEvent=new DownloadFileEvent(syncAccountId,parameters);
     downloadFileEvent.run();
   }
-  List<SyncFile> uploadingSyncFiles=SyncFileService.findSyncFiles(SyncFile.STATE_IN_PROGRESS_UPLOADING,syncAccountId);
+  List<SyncFile> uploadingSyncFiles=SyncFileService.findSyncFiles(syncAccountId,SyncFile.UI_EVENT_UPLOADING);
   for (  SyncFile uploadingSyncFile : uploadingSyncFiles) {
     if (uploadingSyncFile.getTypePK() > 0) {
       uploadingSyncFile.setChecksum("");
