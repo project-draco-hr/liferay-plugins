@@ -1,21 +1,14 @@
 {
-  if (!Files.exists(filePath)) {
+  if (!Files.exists(filePath) || (Files.size(filePath) > PropsValues.SYNC_FILE_CHECKSUM_THRESHOLD_SIZE)) {
     return "";
   }
   InputStream fileInputStream=null;
   try {
-    if (Files.size(filePath) > PropsValues.SYNC_FILE_CHECKSUM_THRESHOLD_SIZE) {
-      return "";
-    }
     fileInputStream=Files.newInputStream(filePath);
     byte[] bytes=DigestUtils.sha1(fileInputStream);
     return Base64.encodeBase64String(bytes);
   }
- catch (  Exception e) {
-    _logger.error(e.getMessage(),e);
-    return "";
-  }
- finally {
+  finally {
     StreamUtil.cleanUp(fileInputStream);
   }
 }

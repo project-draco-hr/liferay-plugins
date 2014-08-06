@@ -5,9 +5,16 @@
         doRegister(filePath,false);
         return FileVisitResult.CONTINUE;
       }
-      @Override public FileVisitResult visitFile(      Path filePath,      BasicFileAttributes basicFileAttributes){
-        if (Files.exists(filePath)) {
+      @Override public FileVisitResult visitFile(      Path filePath,      BasicFileAttributes basicFileAttributes) throws IOException {
+        if (Files.notExists(filePath)) {
+          return FileVisitResult.CONTINUE;
+        }
+        SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),_watchEventListener.getSyncAccountId());
+        if (syncFile == null) {
           fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
+        }
+ else         if (FileUtil.hasFileChanged(syncFile,filePath)) {
+          fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_MODIFY,filePath);
         }
         return FileVisitResult.CONTINUE;
       }
@@ -18,7 +25,10 @@
     name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
     WatchKey watchKey=jpathwatchFilePath.register(_watchService,ExtendedWatchEventKind.KEY_INVALID,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
     _filePaths.put(watchKey,filePath);
-    fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
+    SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),_watchEventListener.getSyncAccountId());
+    if (syncFile == null) {
+      fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
+    }
     if (_logger.isTraceEnabled()) {
       _logger.trace("Registered file path {}",filePath);
     }
