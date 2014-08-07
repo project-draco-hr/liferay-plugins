@@ -12,7 +12,8 @@
   servletResponse.setCharacterEncoding(StringPool.UTF8);
   servletResponse.setContentType(ContentTypes.APPLICATION_JSON);
   OutputStream outputStream=servletResponse.getOutputStream();
-  String json=JSONFactoryUtil.serializeThrowable(new SyncServicesUnavailableException(SyncServicesUnavailableException.class.getName()));
+  String json=SyncUtil.buildExceptionMessage(new SyncServicesUnavailableException());
+  json="{\"exception\": \"" + json + "\"}";
   outputStream.write(json.getBytes(StringPool.UTF8));
   outputStream.close();
 }

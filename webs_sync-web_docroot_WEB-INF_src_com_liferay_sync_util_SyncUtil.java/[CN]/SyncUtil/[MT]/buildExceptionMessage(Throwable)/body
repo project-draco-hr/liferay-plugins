@@ -21,7 +21,7 @@
   sb.append(throwable.toString());
   sb.append(StringPool.QUOTE);
   if (throwable.getCause() == null) {
-    return sb.toString();
+    return StringUtil.unquote(sb.toString());
   }
   sb.append(StringPool.COMMA_AND_SPACE);
   sb.append("\"rootCause\": ");
@@ -37,5 +37,5 @@
   rootCauseJSONObject.put("message",throwableMessage);
   rootCauseJSONObject.put("type",ClassUtil.getClassName(rootCauseThrowable));
   sb.append(rootCauseJSONObject);
-  return sb.toString();
+  return StringUtil.unquote(sb.toString());
 }
