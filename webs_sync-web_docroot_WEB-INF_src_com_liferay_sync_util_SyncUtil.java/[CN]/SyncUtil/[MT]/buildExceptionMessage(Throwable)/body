@@ -1,5 +1,5 @@
 {
-  JSONObject jsonObject=createJSONObject();
+  StringBundler sb=new StringBundler(13);
   if (throwable instanceof InvocationTargetException) {
     throwable=throwable.getCause();
   }
@@ -7,26 +7,35 @@
   if (Validator.isNull(throwableMessage)) {
     throwableMessage=throwable.toString();
   }
-  JSONObject errorJSONObject=createJSONObject();
+  sb.append(StringPool.QUOTE);
+  sb.append(throwableMessage);
+  sb.append(StringPool.QUOTE);
+  sb.append(StringPool.COMMA_AND_SPACE);
+  sb.append("\"error\": ");
+  JSONObject errorJSONObject=JSONFactoryUtil.createJSONObject();
   errorJSONObject.put("message",throwableMessage);
   errorJSONObject.put("type",ClassUtil.getClassName(throwable));
-  jsonObject.put("error",errorJSONObject);
-  jsonObject.put("exception",throwableMessage);
-  jsonObject.put("throwable",throwable.toString());
+  sb.append(errorJSONObject.toString());
+  sb.append(StringPool.COMMA_AND_SPACE);
+  sb.append("\"throwable\": \"");
+  sb.append(throwable.toString());
+  sb.append(StringPool.QUOTE);
   if (throwable.getCause() == null) {
-    return jsonObject.toString();
+    return sb.toString();
   }
+  sb.append(StringPool.COMMA_AND_SPACE);
+  sb.append("\"rootCause\": ");
   Throwable rootCauseThrowable=throwable;
   while (rootCauseThrowable.getCause() != null) {
     rootCauseThrowable=rootCauseThrowable.getCause();
   }
-  JSONObject rootCauseJSONObject=createJSONObject();
+  JSONObject rootCauseJSONObject=JSONFactoryUtil.createJSONObject();
   throwableMessage=rootCauseThrowable.getMessage();
   if (Validator.isNull(throwableMessage)) {
     throwableMessage=rootCauseThrowable.toString();
   }
   rootCauseJSONObject.put("message",throwableMessage);
   rootCauseJSONObject.put("type",ClassUtil.getClassName(rootCauseThrowable));
-  jsonObject.put("rootCause",rootCauseJSONObject);
-  return jsonObject.toString();
+  sb.append(rootCauseJSONObject);
+  return sb.toString();
 }
