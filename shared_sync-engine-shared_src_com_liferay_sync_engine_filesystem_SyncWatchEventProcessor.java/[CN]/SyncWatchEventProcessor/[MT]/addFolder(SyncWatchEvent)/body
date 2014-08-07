@@ -22,7 +22,7 @@
     }
   }
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(syncWatchEvent.getSyncAccountId());
-  if (syncAccount.getState() != SyncAccount.STATE_DISCONNECTED) {
+  if (syncAccount.getState() == SyncAccount.STATE_CONNECTED) {
     SyncWatchEvent relatedSyncWatchEvent=SyncWatchEventService.fetchSyncWatchEvent(SyncWatchEvent.EVENT_TYPE_DELETE,syncWatchEvent.getFilePathName(),syncWatchEvent.getTimestamp());
     if (relatedSyncWatchEvent != null) {
       _processedSyncWatchEventIds.add(relatedSyncWatchEvent.getSyncWatchEventId());
