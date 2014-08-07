@@ -1,10 +1,10 @@
 {
-  HttpEntity httpEntity=httpResponse.getEntity();
-  String response=EntityUtils.toString(httpEntity);
-  if (!handlePortalException(getException(response))) {
-    if (_logger.isTraceEnabled()) {
-      _logger.trace("Handling response {}",response);
-    }
-    processResponse(response);
+  String response=getResponseString(httpResponse);
+  if (handlePortalException(getException(response))) {
+    return;
   }
+  if (_logger.isTraceEnabled()) {
+    _logger.trace("Handling response {}",response);
+  }
+  processResponse(response);
 }
