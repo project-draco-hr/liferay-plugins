@@ -1,8 +1,9 @@
 {
   Builder builder=new Builder();
-  String message=jsonObject.getString("message");
-  if (message != null) {
-    builder.addData("data",message);
+  Iterator<String> keys=jsonObject.keys();
+  while (keys.hasNext()) {
+    String key=keys.next();
+    builder.addData(key,jsonObject.getString(key));
   }
   return builder.build();
 }

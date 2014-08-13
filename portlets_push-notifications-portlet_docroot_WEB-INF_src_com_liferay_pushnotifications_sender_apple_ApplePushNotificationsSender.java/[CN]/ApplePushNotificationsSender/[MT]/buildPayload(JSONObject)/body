@@ -4,5 +4,11 @@
   if (message != null) {
     builder.alertBody(message);
   }
+  jsonObject.remove("message");
+  Iterator<String> keys=jsonObject.keys();
+  while (keys.hasNext()) {
+    String key=keys.next();
+    builder.customField(key,jsonObject.getString(key));
+  }
   return builder.build();
 }
