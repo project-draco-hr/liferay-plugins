@@ -25,6 +25,9 @@
         continue;
       }
       Path childFilePath=parentFilePath.resolve(pathImpl.toString());
+      if (isIgnoredFilePath(childFilePath)) {
+        continue;
+      }
       fireWatchEventListener(childFilePath,watchEvent);
       WatchEvent.Kind<?> kind=watchEvent.kind();
       if (_recursive && (kind == StandardWatchEventKind.ENTRY_CREATE)) {
