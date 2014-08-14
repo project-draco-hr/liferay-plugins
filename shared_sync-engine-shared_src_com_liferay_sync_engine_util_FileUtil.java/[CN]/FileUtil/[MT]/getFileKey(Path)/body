@@ -3,11 +3,15 @@
     return "";
   }
   try {
-    BasicFileAttributes basicFileAttributes=Files.readAttributes(filePath,BasicFileAttributes.class);
     if (OSDetector.isWindows()) {
-      return String.valueOf(basicFileAttributes.creationTime());
+      UserDefinedFileAttributeView userDefinedFileAttributeView=Files.getFileAttributeView(filePath,UserDefinedFileAttributeView.class);
+      ByteBuffer byteBuffer=ByteBuffer.allocate(userDefinedFileAttributeView.size("fileKey"));
+      userDefinedFileAttributeView.read("fileKey",byteBuffer);
+      CharBuffer charBuffer=_CHARSET.decode((ByteBuffer)byteBuffer.flip());
+      return charBuffer.toString();
     }
  else {
+      BasicFileAttributes basicFileAttributes=Files.readAttributes(filePath,BasicFileAttributes.class);
       Object fileKey=basicFileAttributes.fileKey();
       return fileKey.toString();
     }
