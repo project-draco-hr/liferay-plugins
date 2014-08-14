@@ -1,0 +1,32 @@
+{
+  ReadableByteChannel readableByteChannel=Mockito.mock(ReadableByteChannel.class);
+  int length=128;
+  ByteChannelReader byteChannelReader=new ByteChannelReader(readableByteChannel,length);
+  ByteBuffer byteBuffer=byteChannelReader.getBuffer();
+  Answer answer=new Answer<Integer>(){
+    @Override public Integer answer(    InvocationOnMock invocationOnMock) throws Throwable {
+      int bytesRead=byteBuffer.remaining();
+      if (partialRead) {
+        bytesRead--;
+      }
+      byteBuffer.put(new byte[bytesRead],0,bytesRead);
+      partialRead=!partialRead;
+      return bytesRead;
+    }
+    private boolean partialRead=true;
+  }
+;
+  Mockito.when(readableByteChannel.read(byteBuffer)).then(answer);
+  int dataRemaining=1025;
+  while (dataRemaining > 0) {
+    if (dataRemaining > length) {
+      dataRemaining-=length;
+    }
+ else {
+      length=dataRemaining;
+      dataRemaining=0;
+    }
+    byteChannelReader.ensureData(length);
+    byteBuffer.get(new byte[length]);
+  }
+}
