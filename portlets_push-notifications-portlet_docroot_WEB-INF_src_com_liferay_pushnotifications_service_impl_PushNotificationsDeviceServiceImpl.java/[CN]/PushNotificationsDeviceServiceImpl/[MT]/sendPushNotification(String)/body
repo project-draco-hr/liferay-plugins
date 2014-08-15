@@ -1,10 +1,8 @@
 {
   PushNotificationsPermission.check(getPermissionChecker(),ActionKeys.SEND_NOTIFICATION);
-  JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  jsonObject.put(PushNotificationsConstants.FROM_USER_ID,getUserId());
-  jsonObject.put(PushNotificationsConstants.MESSAGE,message);
+  JSONObject jsonObject=createJSONObject(message);
   if (_log.isDebugEnabled()) {
-    _log.debug("Sending message " + jsonObject + " to all devices");
+    _log.debug("Sending message " + jsonObject + " to all users");
   }
   pushNotificationsDeviceLocalService.sendPushNotification(jsonObject,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
 }
