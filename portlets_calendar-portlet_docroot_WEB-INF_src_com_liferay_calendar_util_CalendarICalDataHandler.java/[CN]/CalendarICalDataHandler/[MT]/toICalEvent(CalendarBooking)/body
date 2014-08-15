@@ -21,10 +21,10 @@
   Summary summary=new Summary(calendarBooking.getTitle(user.getLocale()));
   propertyList.add(summary);
   Company company=CompanyLocalServiceUtil.getCompany(calendarBooking.getCompanyId());
-  String descriptionCalendarBooking=StringUtil.replace(calendarBooking.getDescription(user.getLocale()),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + company.getPortalURL(calendarBooking.getGroupId()) + "/","src=\"" + company.getPortalURL(calendarBooking.getGroupId()) + "/"});
-  Description description=new Description(descriptionCalendarBooking);
+  String calendarBookingDescription=StringUtil.replace(calendarBooking.getDescription(user.getLocale()),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + company.getPortalURL(calendarBooking.getGroupId()) + "/","src=\"" + company.getPortalURL(calendarBooking.getGroupId()) + "/"});
+  Description description=new Description(calendarBookingDescription);
   propertyList.add(description);
-  XProperty xProperty=new XProperty("X-ALT-DESC",descriptionCalendarBooking);
+  XProperty xProperty=new XProperty("X-ALT-DESC",calendarBookingDescription);
   ParameterList parameters=xProperty.getParameters();
   parameters.add(new XParameter("FMTTYPE","text/html"));
   propertyList.add(xProperty);
