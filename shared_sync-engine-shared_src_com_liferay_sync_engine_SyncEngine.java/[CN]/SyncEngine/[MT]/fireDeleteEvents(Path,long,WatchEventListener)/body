@@ -1,7 +1,7 @@
 {
   long startTime=System.currentTimeMillis();
   Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
-    @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes) throws IOException {
+    @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes){
       SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccountId);
       if (syncFile != null) {
         syncFile.setLocalSyncTime(System.currentTimeMillis());
