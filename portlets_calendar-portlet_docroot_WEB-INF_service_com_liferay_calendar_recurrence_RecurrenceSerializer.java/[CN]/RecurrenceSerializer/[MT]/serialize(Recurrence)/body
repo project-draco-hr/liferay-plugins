@@ -1,12 +1,14 @@
 {
   RRule rRule=new RRule();
   List<WeekdayNum> weekdayNums=new ArrayList<WeekdayNum>();
-  for (  Weekday weekday : recurrence.getWeekdays()) {
+  for (  PositionalWeekday weekday : recurrence.getWeekdays()) {
     com.google.ical.values.Weekday wday=_weekdaysMap.get(weekday);
     WeekdayNum weekdayNum=new WeekdayNum(weekday.getPosition(),wday);
     weekdayNums.add(weekdayNum);
   }
   rRule.setByDay(weekdayNums);
+  List<Integer> months=recurrence.getMonths();
+  rRule.setByMonth(ArrayUtil.toIntArray(months));
   rRule.setCount(recurrence.getCount());
   com.google.ical.values.Frequency frequency=com.google.ical.values.Frequency.valueOf(String.valueOf(recurrence.getFrequency()));
   rRule.setFreq(frequency);

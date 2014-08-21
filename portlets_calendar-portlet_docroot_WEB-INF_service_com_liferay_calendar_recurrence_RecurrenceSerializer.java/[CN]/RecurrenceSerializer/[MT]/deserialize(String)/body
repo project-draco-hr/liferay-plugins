@@ -20,13 +20,14 @@
       Calendar jCalendar=_toJCalendar(dateValue);
       recurrence.setUntilJCalendar(jCalendar);
     }
-    List<Weekday> weekdays=new ArrayList<Weekday>();
+    List<PositionalWeekday> weekdays=new ArrayList<PositionalWeekday>();
     for (    WeekdayNum weekdayNum : rRule.getByDay()) {
       Weekday weekday=Weekday.parse(weekdayNum.wday.toString());
-      weekday.setPosition(weekdayNum.num);
-      weekdays.add(weekday);
+      PositionalWeekday positionalWeekday=new PositionalWeekday(weekday,weekdayNum.num);
+      weekdays.add(positionalWeekday);
     }
     recurrence.setWeekdays(weekdays);
+    recurrence.setMonths(ListUtil.toList(rRule.getByMonth()));
     return recurrence;
   }
  catch (  ParseException pe) {
