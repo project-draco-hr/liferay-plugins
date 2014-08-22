@@ -31,7 +31,8 @@
         continue;
       }
       User user=UserLocalServiceUtil.getUserByScreenName(companyId,getScreenName(rosterEntry.getUser()));
-      Object[] jabberBuddy=new Object[8];
+      Contact contact=user.getContact();
+      Object[] jabberBuddy=new Object[10];
       jabberBuddy[0]=user.getUserUuid();
       jabberBuddy[1]=user.getUserId();
       jabberBuddy[2]=user.getScreenName();
@@ -40,6 +41,8 @@
       jabberBuddy[5]=user.getLastName();
       jabberBuddy[6]=user.getPortraitId();
       jabberBuddy[7]=true;
+      jabberBuddy[8]=contact.isMale();
+      jabberBuddy[9]=user.getGroupId();
       if (Collections.binarySearch(jabberBuddies,jabberBuddy,buddyComparator) < 0) {
         jabberBuddies.add(jabberBuddy);
       }

@@ -12,13 +12,17 @@
     q.addScalar("lastName",Type.STRING);
     q.addScalar("portraitId",Type.LONG);
     q.addScalar("awake",Type.BOOLEAN);
+    q.addScalar("male",Type.BOOLEAN);
+    q.addScalar("groupId",Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(userId);
     if (groupNames.length > 0) {
       qPos.add(groupNames);
     }
     qPos.add(modifiedDate);
+    qPos.add(CompanyThreadLocal.getCompanyId());
     qPos.add(userId);
+    qPos.add(ClassNameLocalServiceUtil.getClassNameId(User.class));
     return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
