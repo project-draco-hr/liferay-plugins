@@ -14,7 +14,11 @@
     return;
   }
   Path sourceFilePath=Paths.get(syncFile.getFilePathName());
-  if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
+  if (Files.exists(sourceFilePath)) {
+    SyncFileService.addFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
+    return;
+  }
+ else   if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
     if (!FileUtil.hasFileChanged(syncFile)) {
       return;
     }
