@@ -8,14 +8,13 @@
     return;
   }
   Path sourceFilePath=Paths.get(syncFile.getFilePathName());
-  if (Files.exists(sourceFilePath)) {
+  if (targetFilePath.equals(sourceFilePath)) {
+  }
+ else   if (Files.exists(sourceFilePath)) {
     SyncFileService.addFolderSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
  else   if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
-    if (targetFilePath.equals(sourceFilePath)) {
-      return;
-    }
     SyncFileService.updateFolderSyncFile(targetFilePath,syncWatchEvent.getSyncAccountId(),syncFile);
   }
  else {

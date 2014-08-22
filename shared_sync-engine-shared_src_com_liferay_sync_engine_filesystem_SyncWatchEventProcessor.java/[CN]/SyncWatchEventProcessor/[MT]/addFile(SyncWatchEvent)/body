@@ -14,14 +14,13 @@
     return;
   }
   Path sourceFilePath=Paths.get(syncFile.getFilePathName());
-  if (Files.exists(sourceFilePath)) {
+  if (targetFilePath.equals(sourceFilePath) && !FileUtil.hasFileChanged(syncFile)) {
+  }
+ else   if (Files.exists(sourceFilePath)) {
     SyncFileService.addFileSyncFile(targetFilePath,parentSyncFile.getTypePK(),parentSyncFile.getRepositoryId(),syncWatchEvent.getSyncAccountId());
     return;
   }
  else   if (parentTargetFilePath.equals(sourceFilePath.getParent())) {
-    if (!FileUtil.hasFileChanged(syncFile)) {
-      return;
-    }
     SyncFileService.updateFileSyncFile(targetFilePath,syncWatchEvent.getSyncAccountId(),syncFile,false);
   }
  else {
