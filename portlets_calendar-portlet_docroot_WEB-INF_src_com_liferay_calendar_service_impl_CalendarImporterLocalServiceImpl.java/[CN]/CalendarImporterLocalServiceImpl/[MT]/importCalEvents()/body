@@ -1,10 +1,11 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new CalEventActionableDynamicQuery(){
-    @Override protected void performAction(    Object object) throws PortalException {
+  ActionableDynamicQuery actionableDynamicQuery=CalEventLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
+    @Override public void performAction(    Object object) throws PortalException {
       CalEvent calEvent=(CalEvent)object;
       importCalEvent(calEvent);
     }
   }
-;
+);
   actionableDynamicQuery.performActions();
 }
