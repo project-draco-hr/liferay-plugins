@@ -2,7 +2,7 @@
   Runnable runnable=new Runnable(){
     @Override public void run(){
       SyncAccount updatedSyncAccount=SyncAccountService.fetchSyncAccount(syncAccount.getSyncAccountId());
-      if (updatedSyncAccount.getState() != SyncAccount.STATE_CONNECTED) {
+      if ((updatedSyncAccount.getState() != SyncAccount.STATE_CONNECTED) || syncWatchEventProcessor.isInProgress()) {
         return;
       }
       Set<Long> syncSiteIds=SyncSiteService.getActiveSyncSiteIds(syncAccount.getSyncAccountId());

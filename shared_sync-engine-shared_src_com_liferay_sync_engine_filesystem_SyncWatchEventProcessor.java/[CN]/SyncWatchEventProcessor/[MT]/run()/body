@@ -6,6 +6,7 @@
   SyncWatchEvent latestSyncWatchEvent=syncWatchEvents.get(syncWatchEvents.size() - 1);
   long delta=System.currentTimeMillis() - latestSyncWatchEvent.getTimestamp();
   if (delta <= 500) {
+    _inProgress=true;
     return;
   }
   if (_logger.isTraceEnabled()) {
@@ -56,5 +57,6 @@
       SyncWatchEventService.deleteSyncWatchEvent(syncWatchEvent.getSyncWatchEventId());
     }
   }
+  _inProgress=false;
   _processedSyncWatchEventIds.clear();
 }
