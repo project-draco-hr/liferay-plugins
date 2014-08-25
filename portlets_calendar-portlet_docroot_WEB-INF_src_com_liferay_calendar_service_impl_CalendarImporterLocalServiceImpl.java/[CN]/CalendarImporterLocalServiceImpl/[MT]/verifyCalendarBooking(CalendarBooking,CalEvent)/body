@@ -1,0 +1,11 @@
+{
+  if (!calendarBooking.isRecurring()) {
+    return;
+  }
+  if (DateUtil.compareTo(calendarBooking.getModifiedDate(),calEvent.getModifiedDate()) > 0) {
+    return;
+  }
+  String recurrence=getRecurrence(calEvent.getRecurrenceObj());
+  calendarBooking.setRecurrence(recurrence);
+  calendarBookingPersistence.update(calendarBooking);
+}
