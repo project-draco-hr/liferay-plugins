@@ -1,13 +1,11 @@
 {
-  if (!calendarBooking.isRecurring()) {
+  if (!hasDayAndPosition(calEvent.getRecurrenceObj())) {
     return;
   }
-  String calendarBookingRecurrence=calendarBooking.getRecurrence();
-  String calEventRecurrence=getRecurrence(calEvent.getRecurrenceObj());
-  String monthlyRRule="RRULE:FREQ=MONTHLY;INTERVAL=1";
-  String yearlyRRule="RRULE:FREQ=YEARLY;INTERVAL=1";
-  if ((calendarBookingRecurrence.equals(monthlyRRule) && !calEventRecurrence.equals(monthlyRRule)) || (calendarBookingRecurrence.equals(yearlyRRule) && !calEventRecurrence.equals(yearlyRRule))) {
-    calendarBooking.setRecurrence(calEventRecurrence);
+  TZSRecurrence tzsRecurrence=(TZSRecurrence)JSONFactoryUtil.deserialize(calEvent.getRecurrence());
+  tzsRecurrence.setByDay(null);
+  String oldRecurrence=getRecurrence(tzsRecurrence);
+  if (oldRecurrence.equals(calendarBooking.getRecurrence())) {
+    updateCalendarBookingRecurrence(calendarBooking,calEvent.getRecurrenceObj());
   }
-  calendarBookingPersistence.update(calendarBooking);
 }
