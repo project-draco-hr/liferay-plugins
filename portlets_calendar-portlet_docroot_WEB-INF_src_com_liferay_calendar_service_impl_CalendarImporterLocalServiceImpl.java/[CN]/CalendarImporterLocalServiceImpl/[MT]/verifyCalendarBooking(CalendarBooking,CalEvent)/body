@@ -2,10 +2,12 @@
   if (!calendarBooking.isRecurring()) {
     return;
   }
-  if (DateUtil.compareTo(calendarBooking.getModifiedDate(),calEvent.getModifiedDate()) > 0) {
-    return;
+  String calendarBookingRecurrence=calendarBooking.getRecurrence();
+  String calEventRecurrence=getRecurrence(calEvent.getRecurrenceObj());
+  String monthlyRRule="RRULE:FREQ=MONTHLY;INTERVAL=1";
+  String yearlyRRule="RRULE:FREQ=YEARLY;INTERVAL=1";
+  if ((calendarBookingRecurrence.equals(monthlyRRule) && !calEventRecurrence.equals(monthlyRRule)) || (calendarBookingRecurrence.equals(yearlyRRule) && !calEventRecurrence.equals(yearlyRRule))) {
+    calendarBooking.setRecurrence(calEventRecurrence);
   }
-  String recurrence=getRecurrence(calEvent.getRecurrenceObj());
-  calendarBooking.setRecurrence(recurrence);
   calendarBookingPersistence.update(calendarBooking);
 }
