@@ -15,14 +15,14 @@
     q.addScalar("userId",Type.LONG);
     q.addScalar("userUuid",Type.STRING);
     QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(ClassNameLocalServiceUtil.getClassNameId(User.class));
     qPos.add(userId);
     if (types.length > 0) {
       qPos.add(types);
     }
-    qPos.add(modifiedDate);
     qPos.add(CompanyThreadLocal.getCompanyId());
     qPos.add(userId);
-    qPos.add(ClassNameLocalServiceUtil.getClassNameId(User.class));
+    qPos.add(modifiedDate);
     return (List<Object[]>)QueryUtil.list(q,getDialect(),start,end);
   }
  catch (  Exception e) {
