@@ -2,6 +2,7 @@
   SolrQuery solrQuery=translateQuery(searchContext.getCompanyId(),query,searchContext.getSorts(),searchContext.getStart(),searchContext.getEnd());
   addFacets(solrQuery,searchContext);
   addHighlights(solrQuery,query.getQueryConfig());
+  addPagination(solrQuery,searchContext.getStart(),searchContext.getEnd());
   QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
   boolean allResults=false;
   if (solrQuery.getRows() == 0) {
