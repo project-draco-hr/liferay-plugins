@@ -25,13 +25,22 @@
 );
   }
  else {
-    name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
-    WatchKey watchKey=jpathwatchFilePath.register(_watchService,ExtendedWatchEventKind.KEY_INVALID,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
-    _filePaths.put(watchKey,filePath);
     SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),_watchEventListener.getSyncAccountId());
     if (syncFile == null) {
       fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_CREATE,filePath);
     }
+    if (OSDetector.isWindows() && !_filePaths.isEmpty()) {
+      return;
+    }
+    WatchKey watchKey=null;
+    name.pachler.nio.file.Path jpathwatchFilePath=Paths.get(filePath.toString());
+    if (OSDetector.isWindows()) {
+      watchKey=jpathwatchFilePath.register(_watchService,new WatchEvent.Kind[]{ExtendedWatchEventKind.KEY_INVALID,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY},ExtendedWatchEventModifier.FILE_TREE);
+    }
+ else {
+      watchKey=jpathwatchFilePath.register(_watchService,ExtendedWatchEventKind.KEY_INVALID,StandardWatchEventKind.ENTRY_CREATE,StandardWatchEventKind.ENTRY_DELETE,StandardWatchEventKind.ENTRY_MODIFY);
+    }
+    _filePaths.put(watchKey,filePath);
     if (_logger.isTraceEnabled()) {
       _logger.trace("Registered file path {}",filePath);
     }
