@@ -4,6 +4,9 @@
     Path parentFilePath=filePath.getParent();
     String parentFilePathName=parentFilePath.toString();
     SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
+    if (isDuplicateEvent(eventType,filePath.toString(),getSyncAccountId())) {
+      return;
+    }
     if (filePathName.equals(syncAccount.getFilePathName()) || parentFilePathName.equals(syncAccount.getFilePathName())) {
       return;
     }

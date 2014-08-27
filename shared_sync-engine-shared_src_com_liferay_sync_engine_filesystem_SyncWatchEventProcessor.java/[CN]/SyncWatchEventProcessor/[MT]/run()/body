@@ -1,10 +1,9 @@
 {
-  List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findBySyncAccountId(_syncAccountId,"eventType",true);
-  if (syncWatchEvents.isEmpty()) {
+  SyncWatchEvent lastSyncWatchEvent=SyncWatchEventService.fetchLastSyncWatchEvent(_syncAccountId);
+  if (lastSyncWatchEvent == null) {
     return;
   }
-  SyncWatchEvent latestSyncWatchEvent=syncWatchEvents.get(syncWatchEvents.size() - 1);
-  long delta=System.currentTimeMillis() - latestSyncWatchEvent.getTimestamp();
+  long delta=System.currentTimeMillis() - lastSyncWatchEvent.getTimestamp();
   if (delta <= 500) {
     _inProgress=true;
     return;
@@ -12,6 +11,7 @@
   if (_logger.isTraceEnabled()) {
     _logger.trace("Processing sync watch events");
   }
+  List<SyncWatchEvent> syncWatchEvents=SyncWatchEventService.findBySyncAccountId(_syncAccountId,"eventType",true);
   for (  SyncWatchEvent syncWatchEvent : syncWatchEvents) {
     SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(_syncAccountId);
     if (syncAccount.getState() != SyncAccount.STATE_CONNECTED) {
