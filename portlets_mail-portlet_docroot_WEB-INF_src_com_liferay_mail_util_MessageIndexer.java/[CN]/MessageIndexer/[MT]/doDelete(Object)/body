@@ -3,13 +3,13 @@
   searchContext.setSearchEngineId(getSearchEngineId());
   if (obj instanceof Account) {
     Account account=(Account)obj;
-    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
-    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
-    booleanQuery.addRequiredTerm("accountId",account.getAccountId());
     searchContext.setCompanyId(account.getCompanyId());
     searchContext.setEnd(QueryUtil.ALL_POS);
     searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
     searchContext.setStart(QueryUtil.ALL_POS);
+    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
+    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
+    booleanQuery.addRequiredTerm("accountId",account.getAccountId());
     Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
     List<String> uids=new ArrayList<String>(hits.getLength());
     for (int i=0; i < hits.getLength(); i++) {
@@ -20,13 +20,13 @@
   }
  else   if (obj instanceof Folder) {
     Folder folder=(Folder)obj;
-    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
-    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
-    booleanQuery.addRequiredTerm("folderId",folder.getFolderId());
     searchContext.setCompanyId(folder.getCompanyId());
     searchContext.setEnd(QueryUtil.ALL_POS);
     searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
     searchContext.setStart(QueryUtil.ALL_POS);
+    BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
+    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
+    booleanQuery.addRequiredTerm("folderId",folder.getFolderId());
     Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
     List<String> uids=new ArrayList<String>(hits.getLength());
     for (int i=0; i < hits.getLength(); i++) {
