@@ -6,27 +6,39 @@
     BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
     booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
     booleanQuery.addRequiredTerm("accountId",account.getAccountId());
-    Hits hits=SearchEngineUtil.search(getSearchEngineId(),account.getCompanyId(),booleanQuery,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    searchContext.setCompanyId(account.getCompanyId());
+    searchContext.setEnd(QueryUtil.ALL_POS);
+    searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
+    searchContext.setStart(QueryUtil.ALL_POS);
+    Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
+    List<String> uids=new ArrayList<String>(hits.getLength());
     for (int i=0; i < hits.getLength(); i++) {
       Document document=hits.doc(i);
-      SearchEngineUtil.deleteDocument(getSearchEngineId(),account.getCompanyId(),document.get(Field.UID));
+      uids.add(document.get(Field.UID));
     }
+    SearchEngineUtil.deleteDocuments(getSearchEngineId(),account.getCompanyId(),uids,isCommitImmediately());
   }
  else   if (obj instanceof Folder) {
     Folder folder=(Folder)obj;
     BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
     booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
     booleanQuery.addRequiredTerm("folderId",folder.getFolderId());
-    Hits hits=SearchEngineUtil.search(getSearchEngineId(),folder.getCompanyId(),booleanQuery,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    searchContext.setCompanyId(folder.getCompanyId());
+    searchContext.setEnd(QueryUtil.ALL_POS);
+    searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
+    searchContext.setStart(QueryUtil.ALL_POS);
+    Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
+    List<String> uids=new ArrayList<String>(hits.getLength());
     for (int i=0; i < hits.getLength(); i++) {
       Document document=hits.doc(i);
-      SearchEngineUtil.deleteDocument(getSearchEngineId(),folder.getCompanyId(),document.get(Field.UID));
+      uids.add(document.get(Field.UID));
     }
+    SearchEngineUtil.deleteDocuments(getSearchEngineId(),folder.getCompanyId(),uids,isCommitImmediately());
   }
  else   if (obj instanceof Message) {
     Message message=(Message)obj;
     Document document=new DocumentImpl();
     document.addUID(PORTLET_ID,message.getMessageId());
-    SearchEngineUtil.deleteDocument(getSearchEngineId(),message.getCompanyId(),document.get(Field.UID));
+    SearchEngineUtil.deleteDocument(getSearchEngineId(),message.getCompanyId(),document.get(Field.UID),isCommitImmediately());
   }
 }
