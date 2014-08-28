@@ -33,16 +33,7 @@
         snippets.add(snippet);
       }
     }
-    if (queryConfig.isScoreEnabled()) {
-      float score=GetterUtil.getFloat(String.valueOf(solrDocument.getFieldValue("score")));
-      if (score > maxScore) {
-        maxScore=score;
-      }
-      scores.add(score);
-    }
- else {
-      scores.add(maxScore);
-    }
+    maxScore=addScore(solrDocument,scores,maxScore,queryConfig.isScoreEnabled());
     subsetTotal++;
   }
   hits.setDocs(documents.toArray(new Document[subsetTotal]));
