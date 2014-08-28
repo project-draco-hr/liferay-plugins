@@ -1,0 +1,12 @@
+{
+  if (UserNotificationManagerUtil.isDeliver(userId,portletKey,0,notificationType,deliveryType)) {
+    JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
+    notificationEventJSONObject.put("classPK",classPK);
+    notificationEventJSONObject.put("userId",userId);
+    notificationEventJSONObject.put("title",title);
+    notificationEventJSONObject.put("body",body);
+    NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),portletKey,notificationEventJSONObject);
+    notificationEvent.setDeliveryRequired(0);
+    UserNotificationEventLocalServiceUtil.addUserNotificationEvent(userId,notificationEvent);
+  }
+}
