@@ -1,10 +1,14 @@
 {
+  if ((attributes.length == 0) || ((attributes.length % 2) != 0)) {
+    throw new IllegalArgumentException("Attributes length is not an even number");
+  }
   if (UserNotificationManagerUtil.isDeliver(userId,portletKey,0,notificationType,deliveryType)) {
     JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
-    notificationEventJSONObject.put("classPK",classPK);
-    notificationEventJSONObject.put("userId",userId);
-    notificationEventJSONObject.put("title",title);
-    notificationEventJSONObject.put("body",body);
+    for (int i=0; i < attributes.length; i+=2) {
+      String key=String.valueOf(attributes[i]);
+      String value=String.valueOf(attributes[i + 1]);
+      notificationEventJSONObject.put(key,value);
+    }
     NotificationEvent notificationEvent=NotificationEventFactoryUtil.createNotificationEvent(System.currentTimeMillis(),portletKey,notificationEventJSONObject);
     notificationEvent.setDeliveryRequired(0);
     UserNotificationEventLocalServiceUtil.addUserNotificationEvent(userId,notificationEvent);
