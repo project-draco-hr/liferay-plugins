@@ -13,20 +13,6 @@
   if (solrQuery.getRows() == 0) {
     allResults=true;
   }
-  List<FacetField> facetFields=queryResponse.getFacetFields();
-  if (facetFields != null) {
-    Map<String,Facet> facets=searchContext.getFacets();
-    for (    FacetField facetField : facetFields) {
-      Facet facet=facets.get(facetField.getName());
-      FacetCollector facetCollector=null;
-      if (facet instanceof RangeFacet) {
-        facetCollector=new SolrFacetQueryCollector(facetField.getName(),queryResponse.getFacetQuery());
-      }
- else {
-        facetCollector=new SolrFacetFieldCollector(facetField.getName(),facetField);
-      }
-      facet.setFacetCollector(facetCollector);
-    }
-  }
+  updateFacetCollectors(queryResponse,searchContext);
   return subset(solrQuery,query,query.getQueryConfig(),queryResponse,allResults);
 }
