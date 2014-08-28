@@ -1,6 +1,4 @@
 {
-  QueryConfig queryConfig=query.getQueryConfig();
-  SolrQuery solrQuery=new SolrQuery();
   QueryTranslatorUtil.translateForSolr(query);
   String queryString=query.toString();
   StringBundler sb=new StringBundler(6);
@@ -9,7 +7,6 @@
   sb.append(StringPool.PLUS);
   sb.append(Field.COMPANY_ID);
   sb.append(StringPool.COLON);
-  sb.append(companyId);
+  sb.append(searchContext.getCompanyId());
   solrQuery.setQuery(sb.toString());
-  return solrQuery;
 }

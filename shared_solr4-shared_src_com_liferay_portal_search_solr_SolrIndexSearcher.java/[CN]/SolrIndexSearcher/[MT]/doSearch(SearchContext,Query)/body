@@ -1,5 +1,5 @@
 {
-  SolrQuery solrQuery=translateQuery(searchContext.getCompanyId(),query,searchContext.getSorts(),searchContext.getStart(),searchContext.getEnd());
+  SolrQuery solrQuery=new SolrQuery();
   QueryConfig queryConfig=query.getQueryConfig();
   addFacets(solrQuery,searchContext);
   addHighlights(solrQuery,queryConfig);
@@ -7,6 +7,7 @@
   addSelectedFields(solrQuery,queryConfig);
   addSort(solrQuery,searchContext.getSorts());
   solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
+  translateQuery(solrQuery,searchContext,query);
   QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
   boolean allResults=false;
   if (solrQuery.getRows() == 0) {
