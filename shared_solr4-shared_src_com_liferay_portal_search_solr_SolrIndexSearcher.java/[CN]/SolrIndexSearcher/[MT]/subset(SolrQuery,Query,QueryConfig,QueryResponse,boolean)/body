@@ -49,12 +49,7 @@
   hits.setLength((int)total);
   hits.setQuery(query);
   hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
-  Float[] scoresArray=scores.toArray(new Float[subsetTotal]);
-  if (queryConfig.isScoreEnabled() && (subsetTotal > 0) && (maxScore > 0)) {
-    for (int i=0; i < scoresArray.length; i++) {
-      scoresArray[i]=scoresArray[i] / maxScore;
-    }
-  }
+  Float[] scoresArray=normalizeScores(scores,query.getQueryConfig(),maxScore,documents.size());
   hits.setScores(scoresArray);
   hits.setSearchTime(queryResponse.getQTime());
   hits.setSnippets(snippets.toArray(new String[subsetTotal]));
