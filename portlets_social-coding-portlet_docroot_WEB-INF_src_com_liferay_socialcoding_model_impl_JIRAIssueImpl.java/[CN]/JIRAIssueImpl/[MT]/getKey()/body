@@ -1,0 +1,12 @@
+{
+  if (Validator.isNotNull(_key)) {
+    return _key;
+  }
+  try {
+    JIRAProject jiraProject=JIRAProjectLocalServiceUtil.getJIRAProject(getProjectId());
+    _key=jiraProject.getKey() + StringPool.DASH + getIssueNumber();
+  }
+ catch (  Exception e) {
+  }
+  return _key;
+}

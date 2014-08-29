@@ -1,0 +1,27 @@
+{
+  String[] jiraIssueKeyArray=StringUtil.split(jiraIssueKey,StringPool.DASH);
+  if (jiraIssueKeyArray.length != 2) {
+    return null;
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    String sql=CustomSQLUtil.get(FIND_BY_KEY);
+    SQLQuery q=session.createSynchronizedSQLQuery(sql);
+    q.addEntity("jiraissue",JIRAIssueImpl.class);
+    QueryPos qPos=QueryPos.getInstance(q);
+    qPos.add(jiraIssueKeyArray[1]);
+    qPos.add(jiraIssueKeyArray[0]);
+    List<JIRAIssue> list=q.list();
+    if (list.isEmpty()) {
+      return null;
+    }
+    return list.get(0);
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
