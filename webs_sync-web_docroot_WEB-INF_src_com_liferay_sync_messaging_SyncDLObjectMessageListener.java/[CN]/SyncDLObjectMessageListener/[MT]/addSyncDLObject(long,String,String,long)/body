@@ -28,4 +28,20 @@
     syncDLObject=SyncUtil.toSyncDLObject(folder,event);
   }
   SyncDLObjectLocalServiceUtil.addSyncDLObject(syncDLObject.getCompanyId(),modifiedTime,syncDLObject.getRepositoryId(),syncDLObject.getParentFolderId(),syncDLObject.getName(),syncDLObject.getExtension(),syncDLObject.getMimeType(),syncDLObject.getDescription(),syncDLObject.getChangeLog(),syncDLObject.getExtraSettings(),syncDLObject.getVersion(),syncDLObject.getSize(),syncDLObject.getChecksum(),syncDLObject.getEvent(),syncDLObject.getLockExpirationDate(),syncDLObject.getLockUserId(),syncDLObject.getLockUserName(),syncDLObject.getType(),syncDLObject.getTypePK(),syncDLObject.getTypeUuid());
+  if (event.equals(SyncConstants.EVENT_RESTORE) && type.equals(SyncConstants.TYPE_FOLDER)) {
+    List<Object> foldersAndFileEntriesAndFileShortcuts=DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcuts(syncDLObject.getRepositoryId(),syncDLObject.getTypePK(),WorkflowConstants.STATUS_ANY,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    Object folderAndFileEntryAndFileShortcut : foldersAndFileEntriesAndFileShortcuts) {
+      if (folderAndFileEntryAndFileShortcut instanceof FileEntry) {
+        FileEntry fileEntry=(FileEntry)folderAndFileEntryAndFileShortcut;
+        addSyncDLObject(modifiedTime,SyncConstants.EVENT_RESTORE,SyncConstants.TYPE_FILE,fileEntry.getFileEntryId());
+      }
+ else       if (folderAndFileEntryAndFileShortcut instanceof Folder) {
+        Folder folder=(Folder)folderAndFileEntryAndFileShortcut;
+        if (!SyncUtil.isSupportedFolder(folder)) {
+          continue;
+        }
+        addSyncDLObject(modifiedTime,SyncConstants.EVENT_RESTORE,SyncConstants.TYPE_FOLDER,folder.getFolderId());
+      }
+    }
+  }
 }
