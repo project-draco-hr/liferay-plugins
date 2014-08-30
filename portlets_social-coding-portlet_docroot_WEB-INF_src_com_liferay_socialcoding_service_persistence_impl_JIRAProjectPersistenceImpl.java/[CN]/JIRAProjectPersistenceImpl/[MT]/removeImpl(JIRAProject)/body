@@ -1,0 +1,23 @@
+{
+  jiraProject=toUnwrappedModel(jiraProject);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(jiraProject)) {
+      jiraProject=(JIRAProject)session.get(JIRAProjectImpl.class,jiraProject.getPrimaryKeyObj());
+    }
+    if (jiraProject != null) {
+      session.delete(jiraProject);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (jiraProject != null) {
+    clearCache(jiraProject);
+  }
+  return jiraProject;
+}

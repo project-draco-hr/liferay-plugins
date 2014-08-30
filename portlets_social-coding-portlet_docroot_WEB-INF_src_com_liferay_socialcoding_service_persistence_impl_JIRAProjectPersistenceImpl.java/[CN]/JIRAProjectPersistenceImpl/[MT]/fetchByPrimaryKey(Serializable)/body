@@ -1,0 +1,27 @@
+{
+  JIRAProject jiraProject=(JIRAProject)EntityCacheUtil.getResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,primaryKey);
+  if (jiraProject == _nullJIRAProject) {
+    return null;
+  }
+  if (jiraProject == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      jiraProject=(JIRAProject)session.get(JIRAProjectImpl.class,primaryKey);
+      if (jiraProject != null) {
+        cacheResult(jiraProject);
+      }
+ else {
+        EntityCacheUtil.putResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,primaryKey,_nullJIRAProject);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return jiraProject;
+}
