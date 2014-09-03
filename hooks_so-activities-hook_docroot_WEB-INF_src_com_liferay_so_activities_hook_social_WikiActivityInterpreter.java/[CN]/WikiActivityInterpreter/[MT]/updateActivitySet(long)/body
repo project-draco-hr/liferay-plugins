@@ -13,12 +13,12 @@
       JSONObject extraDataJSONObject=null;
       if (Validator.isNull(activitySet.getExtraData())) {
         extraDataJSONObject=JSONFactoryUtil.createJSONObject();
-        extraDataJSONObject.put("sourceVersion",wikiPage.getVersion());
+        extraDataJSONObject.put("sourceVersion",MathUtil.format(wikiPage.getVersion() - 0.1,1,1));
       }
  else {
         extraDataJSONObject=JSONFactoryUtil.createJSONObject(activitySet.getExtraData());
       }
-      extraDataJSONObject.put("targetVersion",MathUtil.format(wikiPage.getVersion() + 0.1,1,1));
+      extraDataJSONObject.put("targetVersion",wikiPage.getVersion());
       activitySet.setExtraData(extraDataJSONObject.toString());
       SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
     }
@@ -29,8 +29,8 @@
       WikiPageResource pageResource=WikiPageResourceLocalServiceUtil.fetchWikiPageResource(activity.getClassPK());
       WikiPage wikiPage=WikiPageLocalServiceUtil.getPage(pageResource.getResourcePrimKey());
       JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
-      extraDataJSONObject.put("sourceVersion",wikiPage.getVersion());
-      extraDataJSONObject.put("targetVersion",MathUtil.format(wikiPage.getVersion() + 0.1,1,1));
+      extraDataJSONObject.put("sourceVersion",MathUtil.format(wikiPage.getVersion() - 0.1,1,1));
+      extraDataJSONObject.put("targetVersion",wikiPage.getVersion());
       activitySet.setExtraData(extraDataJSONObject.toString());
       SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
     }
