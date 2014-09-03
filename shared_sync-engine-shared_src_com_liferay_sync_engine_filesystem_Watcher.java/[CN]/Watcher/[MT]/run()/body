@@ -29,6 +29,9 @@ catch (    Exception e) {
       if (((kind == StandardWatchEventKind.ENTRY_CREATE) && isIgnoredFilePath(childFilePath)) || ((kind == StandardWatchEventKind.ENTRY_MODIFY) && Files.isDirectory(childFilePath))) {
         continue;
       }
+      if (kind == StandardWatchEventKind.ENTRY_DELETE) {
+        processMissingFilePath(childFilePath);
+      }
       fireWatchEventListener(childFilePath,watchEvent);
       if (_recursive && (kind == StandardWatchEventKind.ENTRY_CREATE)) {
         try {

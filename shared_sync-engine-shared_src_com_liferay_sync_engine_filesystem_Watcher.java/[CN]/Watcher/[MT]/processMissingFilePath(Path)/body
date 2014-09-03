@@ -7,11 +7,8 @@
     SyncAccountService.update(syncAccount);
   }
  else {
-    SyncSite syncSite=SyncSiteService.fetchSyncSite(syncAccount.getFilePathName(),syncAccount.getSyncAccountId());
-    if (syncSite == null) {
-      fireWatchEventListener(SyncWatchEvent.EVENT_TYPE_DELETE,filePath);
-    }
- else {
+    SyncSite syncSite=SyncSiteService.fetchSyncSite(filePath.toString(),syncAccount.getSyncAccountId());
+    if (syncSite != null) {
       syncSite.setActive(false);
       syncSite.setUiEvent(SyncSite.UI_EVENT_SYNC_SITE_FOLDER_MISSING);
       SyncSiteService.update(syncSite);
