@@ -1,6 +1,6 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
-  validate(title,content);
+  validate(title,content,sourceURL);
   KBArticle oldKBArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   int oldVersion=oldKBArticle.getVersion();
   KBArticle kbArticle=null;
@@ -34,6 +34,7 @@
   kbArticle.setTitle(title);
   kbArticle.setContent(content);
   kbArticle.setDescription(description);
+  kbArticle.setSourceURL(sourceURL);
   kbArticle.setSections(StringUtil.merge(AdminUtil.escapeSections(sections)));
   kbArticle.setLatest(true);
   kbArticle.setMain(false);

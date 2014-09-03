@@ -3,7 +3,7 @@
   long groupId=serviceContext.getScopeGroupId();
   double priority=getPriority(groupId,parentResourcePrimKey);
   Date now=new Date();
-  validate(title,content);
+  validate(title,content,sourceURL);
   long kbArticleId=counterLocalService.increment();
   long resourcePrimKey=counterLocalService.increment();
   long rootResourcePrimKey=getRootResourcePrimKey(resourcePrimKey,parentResourcePrimKey);
@@ -29,6 +29,7 @@
   kbArticle.setLatest(true);
   kbArticle.setMain(false);
   kbArticle.setStatus(WorkflowConstants.STATUS_DRAFT);
+  kbArticle.setSourceURL(sourceURL);
   kbArticlePersistence.update(kbArticle);
   if (serviceContext.isAddGroupPermissions() || serviceContext.isAddGuestPermissions()) {
     addKBArticleResources(kbArticle,serviceContext.isAddGroupPermissions(),serviceContext.isAddGuestPermissions());
