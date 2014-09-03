@@ -2,6 +2,6 @@
   Map<String,Object> parameters=new HashMap<String,Object>();
   parameters.put("uuid",null);
   GetSyncContextEvent getSyncContextEvent=new GetSyncContextEvent(syncAccountId,parameters);
-  getSyncContextEvent.run();
+  _scheduledExecutorService.schedule(getSyncContextEvent,delay,TimeUnit.MILLISECONDS);
   return SyncAccountService.fetchSyncAccount(syncAccountId);
 }

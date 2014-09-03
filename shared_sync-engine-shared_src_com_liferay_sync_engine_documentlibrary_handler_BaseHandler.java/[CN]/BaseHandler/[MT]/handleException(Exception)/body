@@ -1,5 +1,4 @@
 {
-  _logger.error(e.getMessage(),e);
   SyncAccount syncAccount=SyncAccountService.fetchSyncAccount(getSyncAccountId());
   if (e instanceof FileNotFoundException) {
     SyncFile syncFile=(SyncFile)getParameterValue("syncFile");
@@ -26,5 +25,8 @@
       SyncAccountService.update(syncAccount);
       retryServerConnection();
     }
+  }
+ else {
+    _logger.error(e.getMessage(),e);
   }
 }

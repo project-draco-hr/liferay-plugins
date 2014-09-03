@@ -2,9 +2,11 @@
   if (!_running) {
     return;
   }
-  SyncSiteService.synchronizeSyncSites(syncAccountId);
   SyncWatchEventService.deleteSyncWatchEvents(syncAccountId);
-  SyncAccount syncAccount=SyncAccountService.synchronizeSyncAccount(syncAccountId);
+  SyncAccount syncAccount=SyncAccountService.synchronizeSyncAccount(syncAccountId,0);
+  if (syncAccount.getState() == SyncAccount.STATE_CONNECTED) {
+    SyncSiteService.synchronizeSyncSites(syncAccountId);
+  }
   Path filePath=Paths.get(syncAccount.getFilePathName());
   SyncWatchEventProcessor syncWatchEventProcessor=new SyncWatchEventProcessor(syncAccountId);
   _syncWatchEventProcessorExecutorService.scheduleAtFixedRate(syncWatchEventProcessor,0,3,TimeUnit.SECONDS);
