@@ -1,10 +1,10 @@
 {
-  for (  String autoLoginClassName : _autoLoginClassNames) {
-    Thread currentThread=Thread.currentThread();
-    ClassLoader classLoader=currentThread.getContextClassLoader();
-    try {
-      ClassLoader portalClassLoader=PortalClassLoaderUtil.getClassLoader();
-      currentThread.setContextClassLoader(portalClassLoader);
+  Thread currentThread=Thread.currentThread();
+  ClassLoader contextClassLoader=currentThread.getContextClassLoader();
+  ClassLoader portalClassLoader=PortalClassLoaderUtil.getClassLoader();
+  try {
+    currentThread.setContextClassLoader(portalClassLoader);
+    for (    String autoLoginClassName : _autoLoginClassNames) {
       Class<?> clazz=portalClassLoader.loadClass(autoLoginClassName);
       Object object=clazz.newInstance();
       Method method=ReflectionUtil.getDeclaredMethod(clazz,"doLogin",HttpServletRequest.class,HttpServletResponse.class);
@@ -13,9 +13,9 @@
         return credentials;
       }
     }
+  }
   finally {
-      currentThread.setContextClassLoader(classLoader);
-    }
+    currentThread.setContextClassLoader(contextClassLoader);
   }
   return null;
 }
