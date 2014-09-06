@@ -1,0 +1,12 @@
+{
+  if (!GoogleGroupsUtil.isSync(group)) {
+    return;
+  }
+  try {
+    GGroupManager gGroupManager=GoogleAppsFactoryUtil.getGGroupManager(group.getCompanyId());
+    gGroupManager.deleteGGroup(GoogleGroupsUtil.getGroupEmailAddress(group));
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}

@@ -1,0 +1,29 @@
+{
+  if (!associationClassName.equals(UserGroup.class.getName()) && !associationClassName.equals(Organization.class.getName())) {
+    return;
+  }
+  try {
+    Group group=GroupLocalServiceUtil.getGroup((Long)classPK);
+    if (!GoogleGroupsUtil.isSync(group)) {
+      return;
+    }
+    GGroupManager gGroupManager=GoogleAppsFactoryUtil.getGGroupManager(group.getCompanyId());
+    String groupEmailAddress=GoogleGroupsUtil.getGroupEmailAddress(group);
+    List<User> users=new ArrayList<User>();
+    if (associationClassName.equals(UserGroup.class.getName())) {
+      users=UserLocalServiceUtil.getUserGroupUsers((Long)associationClassPK);
+    }
+ else {
+      users=UserLocalServiceUtil.getOrganizationUsers((Long)associationClassPK);
+    }
+    for (    User user : users) {
+      if (GroupLocalServiceUtil.hasUserGroup(user.getUserId(),group.getGroupId(),true)) {
+        continue;
+      }
+      gGroupManager.deleteGGroupMember(groupEmailAddress,user.getEmailAddress());
+    }
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}
