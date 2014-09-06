@@ -1,0 +1,16 @@
+{
+  if (oldFriendlyURL.equals(group.getFriendlyURL())) {
+    return;
+  }
+  GGroupManager gGroupManager=GoogleAppsFactoryUtil.getGGroupManager(group.getCompanyId());
+  gGroupManager.deleteGGroup(oldGroupEmailAddress);
+  String groupEmailAddress=GoogleGroupsUtil.getGroupEmailAddress(group);
+  gGroupManager.addGGroup(groupEmailAddress,group.getDescriptiveName(),StringPool.BLANK,PortletPropsValues.GOOGLE_GROUPS_EMAIL_PERMISSION);
+  LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
+  userParams.put("inherit",Boolean.TRUE);
+  userParams.put("usersGroups",new Long(group.getGroupId()));
+  List<User> users=UserLocalServiceUtil.search(group.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+  for (  User user : users) {
+    gGroupManager.addGGroupMember(groupEmailAddress,user.getEmailAddress());
+  }
+}

@@ -1,0 +1,13 @@
+{
+  Group group=GroupLocalServiceUtil.getGroup(groupId);
+  String oldFriendlyURL=group.getFriendlyURL();
+  String oldGroupEmailAddress=GoogleGroupsUtil.getGroupEmailAddress(group);
+  group=super.updateGroup(groupId,parentGroupId,name,description,type,manualMembership,membershipRestriction,friendlyURL,active,serviceContext);
+  try {
+    updateGGroup(oldFriendlyURL,oldGroupEmailAddress,group);
+  }
+ catch (  Exception e) {
+    _log.error(e);
+  }
+  return group;
+}
