@@ -1,0 +1,43 @@
+{
+  final GGroupManager gGroupManager=GoogleAppsFactoryUtil.getGGroupManager(companyId);
+  ActionableDynamicQuery actionableDynamicQuery=new GroupActionableDynamicQuery(){
+    @Override protected void performAction(    Object object) throws PortalException, SystemException {
+      Group group=(Group)object;
+      if (!isSync(group)) {
+        return;
+      }
+      List<String> gGroupMemberEmailAddresses=new ArrayList<String>();
+      String groupEmailAddress=getGroupEmailAddress(group);
+      GGroup gGroup=gGroupManager.getGGroup(groupEmailAddress);
+      if ((gGroup == null) || Validator.isNull(gGroup.getEmailAddress())) {
+        gGroupManager.addGGroup(groupEmailAddress,group.getDescriptiveName(),StringPool.BLANK,PortletPropsValues.GOOGLE_GROUPS_EMAIL_PERMISSION);
+      }
+      List<GGroupMember> gGroupMembers=gGroupManager.getGGroupMembers(groupEmailAddress);
+      for (      GGroupMember gGroupMember : gGroupMembers) {
+        gGroupMemberEmailAddresses.add(gGroupMember.getEmailAddress());
+      }
+      List<String> emailAddresses=new ArrayList<String>();
+      LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
+      userParams.put("inherit",Boolean.TRUE);
+      userParams.put("usersGroups",new Long(group.getGroupId()));
+      List<User> users=UserLocalServiceUtil.search(group.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+      for (      User user : users) {
+        emailAddresses.add(user.getEmailAddress());
+      }
+      for (      String gGroupMemberEmailAddress : gGroupMemberEmailAddresses) {
+        if (emailAddresses.contains(gGroupMemberEmailAddress)) {
+          continue;
+        }
+        gGroupManager.deleteGGroupMember(groupEmailAddress,gGroupMemberEmailAddress);
+      }
+      for (      String emailAddress : emailAddresses) {
+        if (gGroupMemberEmailAddresses.contains(emailAddress)) {
+          continue;
+        }
+        gGroupManager.addGGroupMember(groupEmailAddress,emailAddress);
+      }
+    }
+  }
+;
+  actionableDynamicQuery.performActions();
+}
