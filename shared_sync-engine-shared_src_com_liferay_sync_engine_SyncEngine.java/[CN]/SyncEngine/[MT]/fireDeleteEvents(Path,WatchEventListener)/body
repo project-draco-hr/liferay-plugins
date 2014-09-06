@@ -2,7 +2,7 @@
   long startTime=System.currentTimeMillis();
   Files.walkFileTree(filePath,new SimpleFileVisitor<Path>(){
     @Override public FileVisitResult preVisitDirectory(    Path filePath,    BasicFileAttributes basicFileAttributes){
-      SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccountId);
+      SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString());
       if (syncFile != null) {
         syncFile.setLocalSyncTime(System.currentTimeMillis());
         SyncFileService.update(syncFile);
@@ -10,7 +10,7 @@
       return FileVisitResult.CONTINUE;
     }
     @Override public FileVisitResult visitFile(    Path filePath,    BasicFileAttributes basicFileAttributes){
-      SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccountId);
+      SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString());
       if (syncFile != null) {
         syncFile.setLocalSyncTime(System.currentTimeMillis());
         SyncFileService.update(syncFile);
@@ -19,7 +19,7 @@
     }
   }
 );
-  List<SyncFile> deletedSyncFiles=SyncFileService.findSyncFiles(filePath.toString(),startTime,syncAccountId);
+  List<SyncFile> deletedSyncFiles=SyncFileService.findSyncFiles(filePath.toString(),startTime);
   for (  SyncFile deletedSyncFile : deletedSyncFiles) {
     if (deletedSyncFile.getUiEvent() == SyncFile.UI_EVENT_FILE_NAME_TOO_LONG) {
       continue;

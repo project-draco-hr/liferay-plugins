@@ -3,13 +3,13 @@
   Path filePath=Paths.get(FileUtil.getFilePathName(_syncSite.getFilePathName(),"test.txt"));
   Files.createFile(filePath);
   sleep();
-  SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccount.getSyncAccountId());
+  SyncFile syncFile=SyncFileService.fetchSyncFile(filePath.toString());
   syncFile.setLockExpirationDate(0);
   syncFile.setLockUserId(0);
   syncFile.setLockUserName(null);
   SyncFileService.update(syncFile);
   SyncFileService.checkOutSyncFile(syncAccount.getSyncAccountId(),syncFile);
-  syncFile=SyncFileService.fetchSyncFile(filePath.toString(),syncAccount.getSyncAccountId());
+  syncFile=SyncFileService.fetchSyncFile(filePath.toString());
   Assert.assertNotEquals(0,syncFile.getLockExpirationDate());
   Assert.assertNotEquals(0,syncFile.getLockUserId());
   Assert.assertNotEquals("",syncFile.getLockUserName());
