@@ -4,11 +4,11 @@
   }
   try {
     Group group=GroupLocalServiceUtil.getGroup((Long)classPK);
-    if (!GoogleGroupsUtil.isSync(group)) {
+    if (!GoogleMailGroupsUtil.isSync(group)) {
       return;
     }
     GGroupManager gGroupManager=GoogleAppsConnectionFactoryUtil.getGGroupManager(group.getCompanyId());
-    String groupEmailAddress=GoogleGroupsUtil.getGroupEmailAddress(group);
+    String groupEmailAddress=GoogleMailGroupsUtil.getGroupEmailAddress(group);
     List<User> users=new ArrayList<User>();
     if (associationClassName.equals(UserGroup.class.getName())) {
       users=UserLocalServiceUtil.getUserGroupUsers((Long)associationClassPK);
