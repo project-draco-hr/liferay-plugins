@@ -2,10 +2,10 @@
   try {
     User user=UserLocalServiceUtil.getUserById(userId);
     deleteEmailAddress(companyId,userId);
-    GNicknameManager gNicknameManager=GoogleAppsFactoryUtil.getGNicknameManager(companyId);
+    GNicknameManager gNicknameManager=GoogleAppsConnectionFactoryUtil.getGNicknameManager(companyId);
     String nickname=_getNickname(emailAddress);
     gNicknameManager.addGNickname(userId,nickname);
-    GEmailSettingsManager gEmailSettingsManager=GoogleAppsFactoryUtil.getGEmailSettingsManager(companyId);
+    GEmailSettingsManager gEmailSettingsManager=GoogleAppsConnectionFactoryUtil.getGEmailSettingsManager(companyId);
     gEmailSettingsManager.addSendAs(userId,user.getFullName(),emailAddress);
   }
  catch (  Exception e) {
