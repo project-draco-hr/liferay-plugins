@@ -18,7 +18,7 @@
       ZipEntry zipEntry=enu.nextElement();
       AutoDeploymentContext autoDeploymentContext=new AutoDeploymentContext();
       String fileName=zipEntry.getName();
-      if (!fileName.endsWith(".war") && !fileName.endsWith(".xml") && !fileName.endsWith(".zip")&& !fileName.equals("liferay-marketplace.properties")) {
+      if (!fileName.endsWith(".jar") && !fileName.endsWith(".war") && !fileName.endsWith(".xml")&& !fileName.endsWith(".zip")&& !fileName.equals("liferay-marketplace.properties")) {
         continue;
       }
       String contextName=getContextName(fileName);
@@ -39,7 +39,9 @@
           FileUtil.write(pluginPackageFile,zipInputStream);
           autoDeploymentContext.setFile(pluginPackageFile);
           DeployManagerUtil.deploy(autoDeploymentContext);
-          moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
+          if (Validator.isNotNull(contextName)) {
+            moduleLocalService.addModule(app.getUserId(),app.getAppId(),contextName);
+          }
         }
       }
   finally {
