@@ -1,0 +1,20 @@
+{
+  if (!associationClassName.equals(Organization.class.getName()) && !associationClassName.equals(UserGroup.class.getName())) {
+    return;
+  }
+  Group group=GroupLocalServiceUtil.getGroup((Long)classPK);
+  if (!GoogleMailGroupsUtil.isSync(group)) {
+    return;
+  }
+  List<User> users=new ArrayList<User>();
+  if (associationClassName.equals(Organization.class.getName())) {
+    users=UserLocalServiceUtil.getOrganizationUsers((Long)associationClassPK);
+  }
+ else {
+    users=UserLocalServiceUtil.getUserGroupUsers((Long)associationClassPK);
+  }
+  GGroupManager gGroupManager=GoogleAppsConnectionFactoryUtil.getGGroupManager(group.getCompanyId());
+  for (  User user : users) {
+    onAssociation(user,group,gGroupManager);
+  }
+}
