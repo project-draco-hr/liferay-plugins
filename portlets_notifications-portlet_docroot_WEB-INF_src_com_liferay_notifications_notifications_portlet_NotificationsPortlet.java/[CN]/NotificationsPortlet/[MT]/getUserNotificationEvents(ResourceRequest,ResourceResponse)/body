@@ -1,11 +1,11 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  boolean actionable=ParamUtil.getBoolean(resourceRequest,"actionable");
-  int end=ParamUtil.getInteger(resourceRequest,"end");
   boolean fullView=ParamUtil.getBoolean(resourceRequest,"fullView");
+  boolean actionable=ParamUtil.getBoolean(resourceRequest,"actionable");
   int start=ParamUtil.getInteger(resourceRequest,"start");
-  List<UserNotificationEvent> userNotificationEvents;
-  int total;
+  int end=ParamUtil.getInteger(resourceRequest,"end");
+  List<UserNotificationEvent> userNotificationEvents=null;
+  int total=0;
   if (fullView) {
     userNotificationEvents=NotificationsUtil.getUserNotificationEvents(themeDisplay.getUserId(),actionable,start,end);
     total=NotificationsUtil.getUserNotificationEventsCount(themeDisplay.getUserId(),actionable);
@@ -27,10 +27,10 @@
   }
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   jsonObject.put("entries",jsonArray);
+  int newTotalUuserNotificationEventsCount=NotificationsUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),actionable,false);
+  jsonObject.put("newTotalUuserNotificationEventsCount",newTotalUuserNotificationEventsCount);
   jsonObject.put("newUserNotificationEventIds",StringUtil.merge(newUserNotificationEventIds));
-  jsonObject.put("newUserNotificationEventCount",newUserNotificationEventIds.size());
-  int newNotificationsTotal=NotificationsUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),actionable,false);
-  jsonObject.put("newNotificationsTotal",newNotificationsTotal);
+  jsonObject.put("newUserNotificationEventsCount",newUserNotificationEventIds.size());
   jsonObject.put("total",total);
   writeJSON(resourceRequest,resourceResponse,jsonObject);
 }

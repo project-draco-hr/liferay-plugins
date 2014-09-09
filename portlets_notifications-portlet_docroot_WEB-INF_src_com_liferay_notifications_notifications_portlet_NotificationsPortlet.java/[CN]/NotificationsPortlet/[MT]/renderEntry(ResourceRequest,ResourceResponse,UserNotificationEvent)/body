@@ -1,6 +1,5 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-  userNotificationEvent.isArchived();
   UserNotificationFeedEntry userNotificationFeedEntry=UserNotificationManagerUtil.interpret(StringPool.BLANK,userNotificationEvent,ServiceContextFactory.getInstance(resourceRequest));
   if (userNotificationFeedEntry == null) {
     return null;
@@ -29,9 +28,7 @@
   Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),userNotificationEvent.getType());
   String portletName=portlet.getDisplayName();
   String portletIcon=portlet.getContextPath() + portlet.getIcon();
-  String timeStamp=Time.getRelativeTimeDescription(userNotificationEvent.getTimestamp(),themeDisplay.getLocale(),themeDisplay.getTimeZone());
   Format simpleDateFormat=FastDateFormatFactoryUtil.getSimpleDateFormat("EEEE, MMMMM dd, yyyy 'at' h:mm a",themeDisplay.getLocale(),themeDisplay.getTimeZone());
-  String timeTitle=simpleDateFormat.format(userNotificationEvent.getTimestamp());
   JSONObject userNotificationEventJSONObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
   long userId=userNotificationEventJSONObject.getLong("userId");
   String userFullName=HtmlUtil.escape(PortalUtil.getUserName(userId,StringPool.BLANK));
@@ -40,5 +37,5 @@
   if (user != null) {
     userPortraitURL=user.getPortraitURL(themeDisplay);
   }
-  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$ACTION_DIV$]","[$BODY$]","[$CSS_CLASS$]","[$MARK_AS_READ_ICON$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$TIMESTAMP$]","[$TIMETITLE$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{actionDiv,userNotificationFeedEntry.getBody(),cssClass,markAsReadIcon,portletIcon,portletName,timeStamp,timeTitle,userFullName,userPortraitURL});
+  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$ACTION_DIV$]","[$BODY$]","[$CSS_CLASS$]","[$MARK_AS_READ_ICON$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$TIMESTAMP$]","[$TIMETITLE$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{actionDiv,userNotificationFeedEntry.getBody(),cssClass,markAsReadIcon,portletIcon,portletName,Time.getRelativeTimeDescription(userNotificationEvent.getTimestamp(),themeDisplay.getLocale(),themeDisplay.getTimeZone()),simpleDateFormat.format(userNotificationEvent.getTimestamp()),userFullName,userPortraitURL});
 }
