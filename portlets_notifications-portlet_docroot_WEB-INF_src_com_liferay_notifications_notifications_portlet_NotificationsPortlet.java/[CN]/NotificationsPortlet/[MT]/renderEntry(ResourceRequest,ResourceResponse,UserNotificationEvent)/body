@@ -11,13 +11,13 @@
   String actionDiv=StringPool.BLANK;
   String cssClass=StringPool.BLANK;
   String markAsReadIcon=StringPool.BLANK;
-  if (actionable) {
+  if (userNotificationEvent.isActionRequired()) {
     actionURL.setParameter("javax.portlet.action","deleteUserNotificationEvent");
     actionDiv=StringUtil.replace(_DELETE_DIV,"[$DELETE_URL$]",actionURL.toString());
   }
  else {
     actionURL.setParameter("javax.portlet.action","markAsRead");
-    actionDiv=StringUtil.replace(_MARK_AS_READ_DIV,new String[]{"[$LINK$]","[$MARK_AS_READ_URL$]","[$OPEN_DIALOG$]"},new String[]{userNotificationFeedEntry.getLink(),actionURL.toString()});
+    actionDiv=StringUtil.replace(_MARK_AS_READ_DIV,new String[]{"[$LINK$]","[$MARK_AS_READ_URL$]"},new String[]{userNotificationFeedEntry.getLink(),actionURL.toString()});
     if (userNotificationEvent.isArchived()) {
       cssClass="archived";
     }
