@@ -1,9 +1,10 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   boolean actionable=ParamUtil.getBoolean(resourceRequest,"actionable");
-  int delta=ParamUtil.getInteger(resourceRequest,"delta");
+  int end=ParamUtil.getInteger(resourceRequest,"end");
+  int start=ParamUtil.getInteger(resourceRequest,"start");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  List<UserNotificationEvent> userNotificationEvents=NotificationsUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),actionable,false,0,delta);
+  List<UserNotificationEvent> userNotificationEvents=NotificationsUtil.getArchivedUserNotificationEvents(themeDisplay.getUserId(),actionable,false,start,end);
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   List<Long> userNotificationEventIds=new ArrayList<Long>();
   for (  UserNotificationEvent userNotificationEvent : userNotificationEvents) {
@@ -15,7 +16,7 @@
   }
   jsonObject.put("entries",jsonArray);
   jsonObject.put("userNotificationEventIds",StringUtil.merge(userNotificationEventIds));
-  int total=NotificationsUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),true,false);
+  int total=NotificationsUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),actionable,false);
   jsonObject.put("total",total);
   writeJSON(resourceRequest,resourceResponse,jsonObject);
 }
