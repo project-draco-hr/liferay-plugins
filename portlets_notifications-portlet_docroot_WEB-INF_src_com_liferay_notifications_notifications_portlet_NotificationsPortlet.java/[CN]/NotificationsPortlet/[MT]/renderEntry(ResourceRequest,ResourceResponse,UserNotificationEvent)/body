@@ -1,4 +1,5 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   UserNotificationFeedEntry userNotificationFeedEntry=UserNotificationManagerUtil.interpret(StringPool.BLANK,userNotificationEvent,ServiceContextFactory.getInstance(resourceRequest));
   if (userNotificationFeedEntry == null) {
     return null;
@@ -27,7 +28,7 @@
   String userPortraitURL=StringPool.BLANK;
   User user=UserLocalServiceUtil.fetchUserById(userId);
   if (user != null) {
-    userPortraitURL=user.getPortraitURL((ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY));
+    userPortraitURL=user.getPortraitURL(themeDisplay);
   }
-  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$BODY$]","[$ACTION_DIV$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$SEPARATOR$]","[$TIMESTAMP$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{userNotificationFeedEntry.getBody(),actionDiv,portletIcon,portletName,separator,timestamp,userFullName,userPortraitURL});
+  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$BODY$]","[$ACTION_DIV$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$TIMESTAMP$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{userNotificationFeedEntry.getBody(),actionDiv,portletIcon,portletName,timeStamp,userFullName,userPortraitURL});
 }
