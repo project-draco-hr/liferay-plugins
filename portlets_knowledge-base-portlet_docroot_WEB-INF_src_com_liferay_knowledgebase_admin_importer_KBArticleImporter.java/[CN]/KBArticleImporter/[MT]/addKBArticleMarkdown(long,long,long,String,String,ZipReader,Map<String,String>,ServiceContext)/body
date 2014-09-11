@@ -2,12 +2,12 @@
   if (Validator.isNull(markdown)) {
     throw new KBArticleImportException("Markdown is null for file entry " + fileEntryName);
   }
-  KBArticleMarkdownConverter kbArticleMarkdownConverter=new KBArticleMarkdownConverter(markdown);
+  KBArticleMarkdownConverter kbArticleMarkdownConverter=new KBArticleMarkdownConverter(markdown,fileEntryName,metadata);
   String urlTitle=kbArticleMarkdownConverter.getUrlTitle();
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,urlTitle);
   try {
     if (kbArticle == null) {
-      kbArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimaryKey,kbArticleMarkdownConverter.getTitle(),urlTitle,markdown,null,null,null,null,serviceContext);
+      kbArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourcePrimaryKey,kbArticleMarkdownConverter.getTitle(),urlTitle,markdown,null,kbArticleMarkdownConverter.getSourceURL(),null,null,serviceContext);
     }
   }
  catch (  Exception e) {
@@ -20,7 +20,7 @@
   }
   try {
     String html=kbArticleMarkdownConverter.processAttachmentsReferences(userId,kbArticle,zipReader,new HashMap<String,FileEntry>());
-    return KBArticleLocalServiceUtil.updateKBArticle(userId,kbArticle.getResourcePrimKey(),kbArticleMarkdownConverter.getTitle(),html,kbArticle.getDescription(),null,null,null,null,serviceContext);
+    return KBArticleLocalServiceUtil.updateKBArticle(userId,kbArticle.getResourcePrimKey(),kbArticleMarkdownConverter.getTitle(),html,kbArticle.getDescription(),kbArticleMarkdownConverter.getSourceURL(),null,null,null,serviceContext);
   }
  catch (  Exception e) {
     StringBundler sb=new StringBundler(4);

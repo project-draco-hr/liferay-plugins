@@ -20,7 +20,7 @@
       sb.append(sectionFileEntryNames.get(0));
       throw new KBArticleImportException(sb.toString());
     }
-    KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,serviceContext);
+    KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
     for (    String sectionFileEntryName : sectionFileEntryNames) {
       String sectionMarkdown=zipReader.getEntryAsString(sectionFileEntryName);
       if (Validator.isNull(sectionMarkdown)) {
@@ -28,7 +28,7 @@
           _log.warn("Missing Markdown in file entry " + sectionFileEntryName);
         }
       }
-      addKBArticleMarkdown(userId,groupId,sectionIntroKBArticle.getResourcePrimKey(),sectionMarkdown,sectionFileEntryName,zipReader,serviceContext);
+      addKBArticleMarkdown(userId,groupId,sectionIntroKBArticle.getResourcePrimKey(),sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
     }
   }
 }
