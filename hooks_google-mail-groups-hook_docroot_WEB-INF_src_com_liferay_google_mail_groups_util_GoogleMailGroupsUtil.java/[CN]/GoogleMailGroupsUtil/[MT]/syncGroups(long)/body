@@ -1,5 +1,5 @@
 {
-  final GGroupManager gGroupManager=GoogleAppsConnectionFactoryUtil.getGGroupManager(companyId);
+  final Directory directory=getDirectory();
   ActionableDynamicQuery actionableDynamicQuery=new GroupActionableDynamicQuery(){
     @Override protected void performAction(    Object object) throws PortalException {
       Group group=(Group)object;
@@ -8,13 +8,15 @@
       }
       List<String> gGroupMemberEmailAddresses=new ArrayList<String>();
       String groupEmailAddress=getGroupEmailAddress(group);
-      GGroup gGroup=gGroupManager.getGGroup(groupEmailAddress);
-      if ((gGroup == null) || Validator.isNull(gGroup.getEmailAddress())) {
-        gGroupManager.addGGroup(groupEmailAddress,group.getDescriptiveName(),StringPool.BLANK,PortletPropsValues.EMAIL_PERMISSION);
+      com.google.api.services.admin.directory.model.Group gGroup=getGGroup(directory,groupEmailAddress);
+      if (gGroup == null) {
+        addGGroup(directory,group.getDescriptiveName(),groupEmailAddress);
       }
-      List<GGroupMember> gGroupMembers=gGroupManager.getGGroupMembers(groupEmailAddress);
-      for (      GGroupMember gGroupMember : gGroupMembers) {
-        gGroupMemberEmailAddresses.add(gGroupMember.getEmailAddress());
+      Members members=getGGroupMembers(directory,groupEmailAddress);
+      if (members.getMembers() != null) {
+        for (        Member member : members.getMembers()) {
+          gGroupMemberEmailAddresses.add(member.getEmail());
+        }
       }
       List<String> emailAddresses=new ArrayList<String>();
       LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
@@ -28,13 +30,13 @@
         if (emailAddresses.contains(gGroupMemberEmailAddress)) {
           continue;
         }
-        gGroupManager.deleteGGroupMember(groupEmailAddress,gGroupMemberEmailAddress);
+        deleteGGroupMember(directory,groupEmailAddress,gGroupMemberEmailAddress);
       }
       for (      String emailAddress : emailAddresses) {
         if (gGroupMemberEmailAddresses.contains(emailAddress)) {
           continue;
         }
-        gGroupManager.addGGroupMember(groupEmailAddress,emailAddress);
+        addGGroupMember(directory,groupEmailAddress,emailAddress);
       }
     }
   }
