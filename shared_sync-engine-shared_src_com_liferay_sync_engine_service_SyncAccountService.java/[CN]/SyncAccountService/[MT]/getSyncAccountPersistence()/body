@@ -4,12 +4,13 @@
   }
   try {
     _syncAccountPersistence=new SyncAccountPersistence();
+    registerModelListener(new SyncAccountModelListener());
+    return _syncAccountPersistence;
   }
  catch (  SQLException sqle) {
     if (_logger.isDebugEnabled()) {
       _logger.debug(sqle.getMessage(),sqle);
     }
+    return null;
   }
-  registerModelListener(new SyncAccountModelListener());
-  return _syncAccountPersistence;
 }
