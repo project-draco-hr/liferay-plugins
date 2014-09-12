@@ -6,7 +6,13 @@
     Directory.Members.Insert insert=members.insert(groupEmailAddress,member);
     insert.execute();
   }
- catch (  Exception e) {
+ catch (  GoogleJsonResponseException gjre) {
+    if (gjre.getStatusCode() == _ERROR_CONFLICT) {
+      return;
+    }
+    throw new PortalException(gjre);
+  }
+catch (  Exception e) {
     throw new PortalException(e);
   }
 }
