@@ -1,5 +1,4 @@
 {
-  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String portletId=PortalUtil.getPortletId(actionRequest);
   String cmd=ParamUtil.getString(actionRequest,Constants.CMD);
   long resourcePrimKey=ParamUtil.getLong(actionRequest,"resourcePrimKey");
@@ -25,11 +24,7 @@
     return;
   }
   if (workflowAction == WorkflowConstants.ACTION_SAVE_DRAFT) {
-    PortletURL portletURL=PortletURLFactoryUtil.create(actionRequest,PortletKeys.KNOWLEDGE_BASE_ADMIN,themeDisplay.getPlid(),PortletRequest.RENDER_PHASE);
-    portletURL.setParameter("mvcPath",templatePath + "edit_article.jsp");
-    portletURL.setParameter("redirect",getRedirect(actionRequest,actionResponse));
-    portletURL.setParameter("resourcePrimKey",String.valueOf(kbArticle.getResourcePrimKey()));
-    portletURL.setWindowState(actionRequest.getWindowState());
+    PortletURL portletURL=buildEditURL(actionRequest,actionResponse,kbArticle);
     actionRequest.setAttribute(WebKeys.REDIRECT,portletURL.toString());
   }
 }
