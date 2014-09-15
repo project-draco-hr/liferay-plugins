@@ -1,8 +1,10 @@
 {
   SolrQuery solrQuery=translateQuery(searchContext.getCompanyId(),query,searchContext.getSorts(),searchContext.getStart(),searchContext.getEnd());
+  QueryConfig queryConfig=query.getQueryConfig();
   addFacets(solrQuery,searchContext);
-  addHighlights(solrQuery,query.getQueryConfig());
+  addHighlights(solrQuery,queryConfig);
   addPagination(solrQuery,searchContext.getStart(),searchContext.getEnd());
+  addSelectedFields(solrQuery,queryConfig);
   QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
   boolean allResults=false;
   if (solrQuery.getRows() == 0) {
