@@ -1,0 +1,12 @@
+{
+  if (!queryConfig.isHighlightEnabled()) {
+    return;
+  }
+  solrQuery.setHighlight(true);
+  solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
+  solrQuery.setHighlightRequireFieldMatch(true);
+  solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
+  addHighlightedField(solrQuery,queryConfig,Field.CONTENT);
+  addHighlightedField(solrQuery,queryConfig,Field.DESCRIPTION);
+  addHighlightedField(solrQuery,queryConfig,Field.TITLE);
+}

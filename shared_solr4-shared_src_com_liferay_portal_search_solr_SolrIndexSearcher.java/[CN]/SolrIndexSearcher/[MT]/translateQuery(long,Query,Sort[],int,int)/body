@@ -1,15 +1,6 @@
 {
   QueryConfig queryConfig=query.getQueryConfig();
   SolrQuery solrQuery=new SolrQuery();
-  if (queryConfig.isHighlightEnabled()) {
-    solrQuery.setHighlight(true);
-    solrQuery.setHighlightFragsize(queryConfig.getHighlightFragmentSize());
-    solrQuery.setHighlightRequireFieldMatch(true);
-    solrQuery.setHighlightSnippets(queryConfig.getHighlightSnippetSize());
-    String localizedContentName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.CONTENT);
-    String localizedTitleName=DocumentImpl.getLocalizedName(queryConfig.getLocale(),Field.TITLE);
-    solrQuery.setParam("hl.fl",Field.CONTENT,localizedContentName,Field.TITLE,localizedTitleName);
-  }
   solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   QueryTranslatorUtil.translateForSolr(query);
   String queryString=query.toString();
