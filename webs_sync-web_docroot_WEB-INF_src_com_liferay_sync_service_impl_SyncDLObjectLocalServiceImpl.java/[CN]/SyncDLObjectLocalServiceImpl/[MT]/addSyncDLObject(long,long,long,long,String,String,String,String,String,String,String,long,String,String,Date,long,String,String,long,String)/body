@@ -20,7 +20,7 @@
     SyncDLObject pwcSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_PRIVATE_WORKING_COPY,typePK);
     if (pwcSyncDLObject != null) {
       DLFileEntry dlFileEntry=dlFileEntryLocalService.fetchDLFileEntry(typePK);
-      if ((dlFileEntry != null) && !dlFileEntry.isCheckedOut()) {
+      if ((dlFileEntry == null) || !dlFileEntry.isCheckedOut()) {
         syncDLObjectPersistence.remove(pwcSyncDLObject);
       }
     }
