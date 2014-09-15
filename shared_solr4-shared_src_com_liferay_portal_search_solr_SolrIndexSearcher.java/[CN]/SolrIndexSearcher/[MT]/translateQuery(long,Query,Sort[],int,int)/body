@@ -1,7 +1,6 @@
 {
   QueryConfig queryConfig=query.getQueryConfig();
   SolrQuery solrQuery=new SolrQuery();
-  solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   QueryTranslatorUtil.translateForSolr(query);
   String queryString=query.toString();
   StringBundler sb=new StringBundler(6);
@@ -12,18 +11,5 @@
   sb.append(StringPool.COLON);
   sb.append(companyId);
   solrQuery.setQuery(sb.toString());
-  if (sorts != null) {
-    for (    Sort sort : sorts) {
-      if (sort == null) {
-        continue;
-      }
-      String sortFieldName=DocumentImpl.getSortFieldName(sort,"score");
-      ORDER order=ORDER.asc;
-      if (sort.isReverse() || sortFieldName.equals("score")) {
-        order=ORDER.desc;
-      }
-      solrQuery.addSort(new SortClause(sortFieldName,order));
-    }
-  }
   return solrQuery;
 }

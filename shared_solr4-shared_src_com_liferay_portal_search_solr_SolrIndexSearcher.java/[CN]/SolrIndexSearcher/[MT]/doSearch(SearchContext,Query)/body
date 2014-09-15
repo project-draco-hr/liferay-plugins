@@ -5,6 +5,8 @@
   addHighlights(solrQuery,queryConfig);
   addPagination(solrQuery,searchContext.getStart(),searchContext.getEnd());
   addSelectedFields(solrQuery,queryConfig);
+  addSort(solrQuery,searchContext.getSorts());
+  solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
   boolean allResults=false;
   if (solrQuery.getRows() == 0) {
