@@ -1,10 +1,10 @@
 {
-  Map<String,Map> bundles=new HashMap<String,Map>();
+  Map<String,Map<String,Object>> bundles=new HashMap<String,Map<String,Object>>();
   try {
     MBeanServer mBeanServer=ManagementFactory.getPlatformMBeanServer();
     ObjectName objectName=new ObjectName(_BUNDLE_STATE_OBJECT_NAME);
-    TabularData data=(TabularData)mBeanServer.invoke(objectName,"listBundles",null,null);
-    Collection<CompositeData> values=(Collection<CompositeData>)data.values();
+    TabularData tabularData=(TabularData)mBeanServer.invoke(objectName,"listBundles",null,null);
+    Collection<CompositeData> values=(Collection<CompositeData>)tabularData.values();
     for (    CompositeData compositeData : values) {
       String state=(String)compositeData.get("State");
       if (!state.equals("ACTIVE")) {
