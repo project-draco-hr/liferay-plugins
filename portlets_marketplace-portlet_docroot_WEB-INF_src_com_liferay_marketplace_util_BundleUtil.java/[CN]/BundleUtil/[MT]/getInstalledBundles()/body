@@ -1,0 +1,29 @@
+{
+  Map<String,Map> bundles=new HashMap<String,Map>();
+  try {
+    MBeanServer mBeanServer=ManagementFactory.getPlatformMBeanServer();
+    ObjectName objectName=new ObjectName(_BUNDLE_STATE_OBJECT_NAME);
+    TabularData data=(TabularData)mBeanServer.invoke(objectName,"listBundles",null,null);
+    Collection<CompositeData> values=(Collection<CompositeData>)data.values();
+    for (    CompositeData compositeData : values) {
+      Map<String,Object> bundleDataMap=new HashMap<String,Object>();
+      String state=(String)compositeData.get("State");
+      if (!state.equals("ACTIVE")) {
+        continue;
+      }
+      String bundleSymbolicName=(String)compositeData.get("SymbolicName");
+      if (Validator.isNull(bundleSymbolicName)) {
+        continue;
+      }
+      bundleDataMap.put("bundleId",compositeData.get("Identifier"));
+      bundleDataMap.put("location",compositeData.get("Location"));
+      bundleDataMap.put("version",compositeData.get("Version"));
+      bundleDataMap.put("state",state);
+      bundles.put(bundleSymbolicName,bundleDataMap);
+    }
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+  return bundles;
+}
