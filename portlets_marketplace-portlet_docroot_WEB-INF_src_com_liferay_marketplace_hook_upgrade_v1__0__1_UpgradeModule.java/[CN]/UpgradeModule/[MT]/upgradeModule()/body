@@ -1,0 +1,12 @@
+{
+  if (tableHasColumn("Marketplace_Module","bundleSymbolicName")) {
+    return;
+  }
+  runSQL("alter table Marketplace_Module add column bundleSymbolicName" + "VARCHAR(500)");
+  try {
+    runSQL("create index IX_E3A93ED9 on Marketplace_Module" + "(appId, bundleSymbolicName)");
+    runSQL("create index IX_DD03D499 on Marketplace_Module" + "(bundleSymbolicName)");
+  }
+ catch (  Exception e) {
+  }
+}
