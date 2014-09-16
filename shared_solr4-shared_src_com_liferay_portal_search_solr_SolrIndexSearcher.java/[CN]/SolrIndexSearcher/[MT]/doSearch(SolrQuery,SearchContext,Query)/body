@@ -1,5 +1,4 @@
 {
-  SolrQuery solrQuery=new SolrQuery();
   QueryConfig queryConfig=query.getQueryConfig();
   addFacets(solrQuery,searchContext);
   addHighlights(solrQuery,queryConfig);
@@ -8,11 +7,5 @@
   addSort(solrQuery,searchContext.getSorts());
   solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   translateQuery(searchContext,query,solrQuery);
-  QueryResponse queryResponse=_solrServer.query(solrQuery,METHOD.POST);
-  boolean allResults=false;
-  if (solrQuery.getRows() == 0) {
-    allResults=true;
-  }
-  updateFacetCollectors(queryResponse,searchContext);
-  return subset(solrQuery,query,query.getQueryConfig(),queryResponse,allResults);
+  return _solrServer.query(solrQuery,METHOD.POST);
 }
