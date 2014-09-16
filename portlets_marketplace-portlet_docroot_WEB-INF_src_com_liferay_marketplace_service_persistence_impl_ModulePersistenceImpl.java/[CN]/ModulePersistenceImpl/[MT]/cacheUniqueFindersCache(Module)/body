@@ -1,15 +1,23 @@
 {
   if (module.isNew()) {
-    Object[] args=new Object[]{module.getAppId(),module.getContextName()};
-    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_C,args,Long.valueOf(1));
-    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_C,args,module);
+    Object[] args=new Object[]{module.getAppId(),module.getBundleSymbolicName()};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_BSN,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_BSN,args,module);
+    args=new Object[]{module.getAppId(),module.getContextName()};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_CN,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_CN,args,module);
   }
  else {
     ModuleModelImpl moduleModelImpl=(ModuleModelImpl)module;
-    if ((moduleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_C.getColumnBitmask()) != 0) {
+    if ((moduleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_BSN.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{module.getAppId(),module.getBundleSymbolicName()};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_BSN,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_BSN,args,module);
+    }
+    if ((moduleModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_A_CN.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{module.getAppId(),module.getContextName()};
-      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_C,args,Long.valueOf(1));
-      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_C,args,module);
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_A_CN,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_A_CN,args,module);
     }
   }
 }
