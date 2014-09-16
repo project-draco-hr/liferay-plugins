@@ -6,7 +6,6 @@
     TabularData data=(TabularData)mBeanServer.invoke(objectName,"listBundles",null,null);
     Collection<CompositeData> values=(Collection<CompositeData>)data.values();
     for (    CompositeData compositeData : values) {
-      Map<String,Object> bundleDataMap=new HashMap<String,Object>();
       String state=(String)compositeData.get("State");
       if (!state.equals("ACTIVE")) {
         continue;
@@ -15,11 +14,12 @@
       if (Validator.isNull(bundleSymbolicName)) {
         continue;
       }
-      bundleDataMap.put("bundleId",compositeData.get("Identifier"));
-      bundleDataMap.put("location",compositeData.get("Location"));
-      bundleDataMap.put("version",compositeData.get("Version"));
-      bundleDataMap.put("state",state);
-      bundles.put(bundleSymbolicName,bundleDataMap);
+      Map<String,Object> bundleData=new HashMap<String,Object>();
+      bundleData.put("bundleId",compositeData.get("Identifier"));
+      bundleData.put("location",compositeData.get("Location"));
+      bundleData.put("state",state);
+      bundleData.put("version",compositeData.get("Version"));
+      bundles.put(bundleSymbolicName,bundleData);
     }
   }
  catch (  Exception e) {

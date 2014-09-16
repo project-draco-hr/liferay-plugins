@@ -3,11 +3,11 @@
     MBeanServer mBeanServer=ManagementFactory.getPlatformMBeanServer();
     ObjectName objectName=new ObjectName(_FRAMEWORK_OBJECT_NAME);
     Map<String,Map> bundles=getInstalledBundles();
-    Map<String,Object> bundle=bundles.get(bundleSymbolicName);
-    if (bundle == null || bundle.isEmpty()) {
+    Map<String,Object> bundleData=bundles.get(bundleSymbolicName);
+    if ((bundleData == null) || bundleData.isEmpty()) {
       return;
     }
-    long bundleId=(Long)bundle.get("bundleId");
+    long bundleId=(Long)bundleData.get("bundleId");
     if (bundleId > 0) {
       mBeanServer.invoke(objectName,"uninstallBundle",new Object[]{bundleId},new String[]{long.class.getName()});
     }
