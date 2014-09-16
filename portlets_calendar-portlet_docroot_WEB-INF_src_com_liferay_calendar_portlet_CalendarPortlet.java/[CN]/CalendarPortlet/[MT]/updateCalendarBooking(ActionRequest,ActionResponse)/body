@@ -14,7 +14,6 @@
   int status=ParamUtil.getInteger(actionRequest,"status");
   ServiceContext serviceContext=ServiceContextFactory.getInstance(CalendarBooking.class.getName(),actionRequest);
   CalendarBooking calendarBooking=null;
-  String redirect=getRedirect(actionRequest,actionResponse);
   if (calendarBookingId <= 0) {
     calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],serviceContext);
   }
@@ -34,7 +33,8 @@
       calendarBooking=CalendarBookingServiceUtil.updateCalendarBooking(calendarBookingId,calendarId,childCalendarIds,titleMap,descriptionMap,location,calendarBooking.getStartTime(),calendarBooking.getEndTime(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],status,serviceContext);
     }
   }
-  redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "calendarBookingId",calendarBooking.getCalendarBookingId());
   actionRequest.setAttribute(WebKeys.CALENDAR_BOOKING,calendarBooking);
+  String redirect=getRedirect(actionRequest,actionResponse);
+  redirect=HttpUtil.setParameter(redirect,actionResponse.getNamespace() + "calendarBookingId",calendarBooking.getCalendarBookingId());
   actionRequest.setAttribute(WebKeys.REDIRECT,redirect);
 }
