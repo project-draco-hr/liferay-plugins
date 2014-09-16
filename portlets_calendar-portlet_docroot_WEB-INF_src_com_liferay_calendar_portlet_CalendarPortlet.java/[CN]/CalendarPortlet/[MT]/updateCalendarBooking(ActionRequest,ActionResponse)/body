@@ -1,6 +1,5 @@
 {
   long calendarBookingId=ParamUtil.getLong(actionRequest,"calendarBookingId");
-  int instanceIndex=ParamUtil.getInteger(actionRequest,"instanceIndex");
   long calendarId=ParamUtil.getLong(actionRequest,"calendarId");
   long[] childCalendarIds=ParamUtil.getLongValues(actionRequest,"childCalendarIds");
   Map<Locale,String> titleMap=LocalizationUtil.getLocalizationMap(actionRequest,"title");
@@ -19,6 +18,7 @@
     calendarBooking=CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIds,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,location,startTimeJCalendar.getTimeInMillis(),endTimeJCalendar.getTimeInMillis(),allDay,recurrence,reminders[0],remindersType[0],reminders[1],remindersType[1],serviceContext);
   }
  else {
+    int instanceIndex=ParamUtil.getInteger(actionRequest,"instanceIndex");
     boolean updateCalendarBookingInstance=ParamUtil.getBoolean(actionRequest,"updateCalendarBookingInstance");
     if (updateCalendarBookingInstance) {
       calendarBooking=CalendarBookingLocalServiceUtil.getCalendarBooking(calendarBookingId);
