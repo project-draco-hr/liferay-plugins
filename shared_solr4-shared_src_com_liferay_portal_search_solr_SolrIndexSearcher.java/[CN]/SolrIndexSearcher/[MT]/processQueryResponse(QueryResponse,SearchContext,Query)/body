@@ -1,7 +1,49 @@
 {
+  long startTime=System.currentTimeMillis();
   boolean allResults=false;
   if ((searchContext.getStart() == QueryUtil.ALL_POS) && (searchContext.getEnd() == QueryUtil.ALL_POS)) {
     allResults=true;
   }
-  return subset(searchContext,query,query.getQueryConfig(),queryResponse,allResults);
+  SolrDocumentList solrDocumentList=queryResponse.getResults();
+  long total=solrDocumentList.getNumFound();
+  if (allResults && (total > 0)) {
+    queryResponse=search(searchContext,query,0,(int)total);
+    solrDocumentList=queryResponse.getResults();
+    total=solrDocumentList.getNumFound();
+  }
+  updateFacetCollectors(queryResponse,searchContext);
+  Hits hits=new HitsImpl();
+  List<Document> documents=new ArrayList<Document>();
+  List<Float> scores=new ArrayList<Float>();
+  List<String> snippets=new ArrayList<String>();
+  float maxScore=-1;
+  Set<String> queryTerms=new HashSet<String>();
+  int subsetTotal=0;
+  QueryConfig queryConfig=query.getQueryConfig();
+  for (  SolrDocument solrDocument : solrDocumentList) {
+    Document document=processSolrDocument(solrDocument);
+    documents.add(document);
+    String snippet=StringPool.BLANK;
+    if (queryConfig.isHighlightEnabled()) {
+      snippet=getSnippet(solrDocument,queryConfig,queryTerms,queryResponse.getHighlighting(),Field.CONTENT);
+      if (Validator.isNull(snippet)) {
+        snippet=getSnippet(solrDocument,queryConfig,queryTerms,queryResponse.getHighlighting(),Field.TITLE);
+      }
+      if (Validator.isNotNull(snippet)) {
+        snippets.add(snippet);
+      }
+    }
+    maxScore=addScore(solrDocument,scores,maxScore,queryConfig.isScoreEnabled());
+    subsetTotal++;
+  }
+  hits.setDocs(documents.toArray(new Document[subsetTotal]));
+  hits.setLength((int)total);
+  hits.setQuery(query);
+  hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
+  Float[] scoresArray=normalizeScores(scores,query.getQueryConfig(),maxScore,documents.size());
+  hits.setScores(scoresArray);
+  hits.setSearchTime(queryResponse.getQTime());
+  hits.setSnippets(snippets.toArray(new String[subsetTotal]));
+  hits.setStart(startTime);
+  return hits;
 }
