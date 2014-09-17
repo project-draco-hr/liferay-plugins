@@ -1,0 +1,41 @@
+{
+  if (MapUtil.isEmpty(highlights)) {
+    return;
+  }
+  String key=(String)solrDocument.getFieldValue(Field.UID);
+  Map<String,List<String>> uidHighlights=highlights.get(key);
+  boolean localizedSearch=true;
+  String defaultLanguageId=LocaleUtil.toLanguageId(LocaleUtil.getDefault());
+  String queryLanguageId=LocaleUtil.toLanguageId(locale);
+  if (defaultLanguageId.equals(queryLanguageId)) {
+    localizedSearch=false;
+  }
+  List<String> snippets=null;
+  String snippetFieldName=fieldName;
+  if (localizedSearch) {
+    String localizedFieldName=DocumentImpl.getLocalizedName(locale,fieldName);
+    snippets=uidHighlights.get(localizedFieldName);
+    if (snippets != null) {
+      snippetFieldName=localizedFieldName;
+    }
+  }
+  if (snippets == null) {
+    snippets=uidHighlights.get(fieldName);
+  }
+  String snippet=StringUtil.merge(snippets,StringPool.TRIPLE_PERIOD);
+  if (Validator.isNotNull(snippet)) {
+    snippet=snippet.concat(StringPool.TRIPLE_PERIOD);
+  }
+ else {
+    snippet=StringPool.BLANK;
+  }
+  if (!snippet.equals(StringPool.BLANK)) {
+    Matcher matcher=_pattern.matcher(snippet);
+    while (matcher.find()) {
+      queryTerms.add(matcher.group(1));
+    }
+    snippet=StringUtil.replace(snippet,"<em>","");
+    snippet=StringUtil.replace(snippet,"</em>","");
+  }
+  document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetFieldName),snippet);
+}

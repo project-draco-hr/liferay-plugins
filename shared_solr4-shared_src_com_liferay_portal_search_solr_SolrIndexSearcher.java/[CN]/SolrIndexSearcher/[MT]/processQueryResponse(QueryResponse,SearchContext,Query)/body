@@ -20,19 +20,11 @@
   Set<String> queryTerms=new HashSet<String>();
   int subsetTotal=0;
   QueryConfig queryConfig=query.getQueryConfig();
+  Map<String,Map<String,List<String>>> highlights=queryResponse.getHighlighting();
   for (  SolrDocument solrDocument : solrDocumentList) {
     Document document=processSolrDocument(solrDocument);
     documents.add(document);
-    String snippet=StringPool.BLANK;
-    if (queryConfig.isHighlightEnabled()) {
-      snippet=getSnippet(solrDocument,queryConfig,queryTerms,queryResponse.getHighlighting(),Field.CONTENT);
-      if (Validator.isNull(snippet)) {
-        snippet=getSnippet(solrDocument,queryConfig,queryTerms,queryResponse.getHighlighting(),Field.TITLE);
-      }
-      if (Validator.isNotNull(snippet)) {
-        snippets.add(snippet);
-      }
-    }
+    addSnippets(solrDocument,document,queryConfig,queryTerms,highlights);
     maxScore=addScore(solrDocument,scores,maxScore,queryConfig.isScoreEnabled());
     subsetTotal++;
   }
