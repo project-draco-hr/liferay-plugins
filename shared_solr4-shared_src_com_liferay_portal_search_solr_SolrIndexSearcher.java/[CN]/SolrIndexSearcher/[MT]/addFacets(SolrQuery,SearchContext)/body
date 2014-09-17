@@ -5,28 +5,7 @@
       continue;
     }
     FacetConfiguration facetConfiguration=facet.getFacetConfiguration();
-    if (facet instanceof RangeFacet) {
-      solrQuery.addFacetField(facetConfiguration.getFieldName());
-      JSONObject dataJSONObject=facetConfiguration.getData();
-      JSONArray rangesJSONArray=dataJSONObject.getJSONArray("ranges");
-      if (rangesJSONArray == null) {
-        continue;
-      }
-      for (int i=0; i < rangesJSONArray.length(); i++) {
-        JSONObject rangeJSONObject=rangesJSONArray.getJSONObject(i);
-        String range=rangeJSONObject.getString("range");
-        String facetQuery=facetConfiguration.getFieldName() + StringPool.COLON + range;
-        solrQuery.addFacetQuery(facetQuery);
-      }
-      Serializable modified=searchContext.getAttribute("modified");
-      if (Validator.isNotNull(modified)) {
-        String facetQuery=facetConfiguration.getFieldName() + StringPool.COLON + GetterUtil.getString(modified);
-        solrQuery.addFacetQuery(facetQuery);
-      }
-    }
- else {
-      solrQuery.addFacetField(facetConfiguration.getFieldName());
-    }
+    _facetProcessor.processFacet(solrQuery,facet);
     String facetSort=FacetParams.FACET_SORT_COUNT;
     String order=facetConfiguration.getOrder();
     if (order.equals("OrderValueAsc")) {
