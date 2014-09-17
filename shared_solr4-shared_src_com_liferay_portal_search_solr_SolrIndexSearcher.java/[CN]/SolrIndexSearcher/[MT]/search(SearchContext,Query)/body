@@ -2,9 +2,8 @@
   StopWatch stopWatch=new StopWatch();
   stopWatch.start();
   try {
-    SolrQuery solrQuery=new SolrQuery();
-    QueryResponse queryResponse=search(solrQuery,searchContext,query);
-    Hits hits=processQueryResponse(solrQuery,queryResponse,searchContext,query);
+    QueryResponse queryResponse=search(searchContext,query,searchContext.getStart(),searchContext.getEnd());
+    Hits hits=processQueryResponse(queryResponse,searchContext,query);
     hits.setStart(stopWatch.getStartTime());
     return hits;
   }

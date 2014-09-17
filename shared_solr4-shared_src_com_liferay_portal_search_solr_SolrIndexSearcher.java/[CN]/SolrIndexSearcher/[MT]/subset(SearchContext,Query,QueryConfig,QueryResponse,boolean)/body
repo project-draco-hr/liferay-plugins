@@ -4,10 +4,11 @@
   SolrDocumentList solrDocumentList=queryResponse.getResults();
   long total=solrDocumentList.getNumFound();
   if (allResults && (total > 0)) {
-    solrQuery.setRows((int)total);
-    queryResponse=_solrServer.query(solrQuery);
-    return subset(solrQuery,query,queryConfig,queryResponse,false);
+    queryResponse=search(searchContext,query,0,(int)total);
+    solrDocumentList=queryResponse.getResults();
+    total=solrDocumentList.getNumFound();
   }
+  updateFacetCollectors(queryResponse,searchContext);
   List<Document> documents=new ArrayList<Document>();
   List<Float> scores=new ArrayList<Float>();
   List<String> snippets=new ArrayList<String>();
