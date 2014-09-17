@@ -1,16 +1,6 @@
 {
   long startTime=System.currentTimeMillis();
-  boolean allResults=false;
-  if ((searchContext.getStart() == QueryUtil.ALL_POS) && (searchContext.getEnd() == QueryUtil.ALL_POS)) {
-    allResults=true;
-  }
   SolrDocumentList solrDocumentList=queryResponse.getResults();
-  long total=solrDocumentList.getNumFound();
-  if (allResults && (total > 0)) {
-    queryResponse=search(searchContext,query,0,(int)total,false);
-    solrDocumentList=queryResponse.getResults();
-    total=solrDocumentList.getNumFound();
-  }
   updateFacetCollectors(queryResponse,searchContext);
   Hits hits=new HitsImpl();
   List<Document> documents=new ArrayList<Document>();
@@ -26,7 +16,7 @@
     scores.add(score);
   }
   hits.setDocs(documents.toArray(new Document[documents.size()]));
-  hits.setLength((int)total);
+  hits.setLength((int)solrDocumentList.getNumFound());
   hits.setQuery(query);
   hits.setQueryTerms(queryTerms.toArray(new String[queryTerms.size()]));
   hits.setScores(scores.toArray(new Float[scores.size()]));

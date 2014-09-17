@@ -2,7 +2,17 @@
   StopWatch stopWatch=new StopWatch();
   stopWatch.start();
   try {
-    QueryResponse queryResponse=search(searchContext,query,searchContext.getStart(),searchContext.getEnd(),false);
+    int total=(int)searchCount(searchContext,query);
+    int start=searchContext.getStart();
+    int end=searchContext.getEnd();
+    if ((searchContext.getStart() == QueryUtil.ALL_POS) && (searchContext.getEnd() == QueryUtil.ALL_POS)) {
+      start=0;
+      end=total;
+    }
+    int[] startAndEnd=SearchPaginationUtil.calculateStartAndEnd(start,end,total);
+    start=startAndEnd[0];
+    end=startAndEnd[1];
+    QueryResponse queryResponse=search(searchContext,query,start,end,false);
     Hits hits=processQueryResponse(queryResponse,searchContext,query);
     hits.setStart(stopWatch.getStartTime());
     return hits;
