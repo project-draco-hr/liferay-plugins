@@ -2,10 +2,9 @@
   StopWatch stopWatch=new StopWatch();
   stopWatch.start();
   try {
-    QueryResponse queryResponse=search(searchContext,query,searchContext.getStart(),searchContext.getEnd(),false);
-    Hits hits=processQueryResponse(queryResponse,searchContext,query);
-    hits.setStart(stopWatch.getStartTime());
-    return hits;
+    QueryResponse queryResponse=search(searchContext,query,searchContext.getStart(),searchContext.getEnd(),true);
+    SolrDocumentList solrDocumentList=queryResponse.getResults();
+    return solrDocumentList.getNumFound();
   }
  catch (  Exception e) {
     if (_log.isWarnEnabled()) {
@@ -14,7 +13,7 @@
     if (!_swallowException) {
       throw new SearchException(e.getMessage());
     }
-    return new HitsImpl();
+    return 0;
   }
  finally {
     if (_log.isInfoEnabled()) {

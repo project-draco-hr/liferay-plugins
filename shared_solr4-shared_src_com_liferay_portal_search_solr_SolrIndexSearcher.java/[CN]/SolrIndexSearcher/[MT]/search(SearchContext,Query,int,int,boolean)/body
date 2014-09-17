@@ -1,0 +1,17 @@
+{
+  SolrQuery solrQuery=new SolrQuery();
+  if (count) {
+    solrQuery.setRows(0);
+  }
+ else {
+    QueryConfig queryConfig=query.getQueryConfig();
+    addFacets(solrQuery,searchContext);
+    addHighlights(solrQuery,queryConfig);
+    addPagination(solrQuery,start,end);
+    addSelectedFields(solrQuery,queryConfig);
+    addSort(solrQuery,searchContext.getSorts());
+    solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
+  }
+  translateQuery(solrQuery,searchContext,query);
+  return _solrServer.query(solrQuery,METHOD.POST);
+}
