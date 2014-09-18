@@ -45,7 +45,7 @@
   subscriptionSender.setUserId(kbArticle.getUserId());
   subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getGroupId());
   subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
-  while (!kbArticle.isRoot()) {
+  while (!kbArticle.isRoot() && (kbArticle.getClassNameId() == kbArticle.getParentResourceClassNameId())) {
     kbArticle=getLatestKBArticle(kbArticle.getParentResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
     subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
   }
