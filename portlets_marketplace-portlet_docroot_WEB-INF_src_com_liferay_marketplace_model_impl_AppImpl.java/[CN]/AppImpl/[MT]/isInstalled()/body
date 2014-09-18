@@ -1,14 +1,12 @@
 {
   List<Module> modules=ModuleLocalServiceUtil.getModules(getAppId());
   for (  Module module : modules) {
-    String contextName=module.getContextName();
-    if (Validator.isNotNull(contextName) && DeployManagerUtil.isDeployed(contextName)) {
-      return true;
+    if (Validator.isNotNull(module.getBundleSymbolicName()) && !BundleUtil.isActive(module.getBundleSymbolicName(),module.getBundleVersion())) {
+      return false;
     }
-    String bundleSymbolicName=module.getBundleSymbolicName();
-    if (Validator.isNotNull(bundleSymbolicName) && BundleUtil.isActive(bundleSymbolicName,module.getBundleVersion())) {
-      return true;
+ else     if (Validator.isNotNull(module.getContextName()) && !DeployManagerUtil.isDeployed(module.getContextName())) {
+      return false;
     }
   }
-  return false;
+  return true;
 }

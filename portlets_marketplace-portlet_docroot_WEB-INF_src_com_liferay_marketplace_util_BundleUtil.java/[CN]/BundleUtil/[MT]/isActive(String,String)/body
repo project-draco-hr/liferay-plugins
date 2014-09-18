@@ -1,11 +1,12 @@
 {
-  Map<String,Map<String,Object>> bundles=getInstalledBundles();
-  for (  Map.Entry<String,Map<String,Object>> entry : bundles.entrySet()) {
-    if (!bundleSymbolicName.equals(entry.getKey())) {
+  List<Map<String,Object>> bundles=getInstalledBundles();
+  for (  Map<String,Object> bundle : bundles) {
+    String curSymbolicName=GetterUtil.getString(bundle.get("symbolicName"));
+    if (!symbolicName.equals(curSymbolicName)) {
       continue;
     }
-    Map<String,Object> bundleData=entry.getValue();
-    if (bundleVersion.equals(GetterUtil.getString(bundleData.get("version")))) {
+    String curVersion=GetterUtil.getString(bundle.get("version"));
+    if (version.equals(curVersion)) {
       return true;
     }
   }
