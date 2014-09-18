@@ -1,0 +1,13 @@
+{
+  Map<String,Map<String,Object>> bundles=getInstalledBundles();
+  for (  Map.Entry<String,Map<String,Object>> entry : bundles.entrySet()) {
+    if (!bundleSymbolicName.equals(entry.getKey())) {
+      continue;
+    }
+    Map<String,Object> bundleData=entry.getValue();
+    if (bundleVersion.equals(GetterUtil.getString(bundleData.get("version")))) {
+      return true;
+    }
+  }
+  return false;
+}

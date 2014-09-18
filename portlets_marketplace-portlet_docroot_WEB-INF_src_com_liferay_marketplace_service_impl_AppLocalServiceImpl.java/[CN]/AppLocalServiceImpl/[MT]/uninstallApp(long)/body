@@ -4,6 +4,10 @@
   List<Module> modules=modulePersistence.findByAppId(app.getAppId());
   for (  Module module : modules) {
     moduleLocalService.deleteModule(module.getModuleId());
+    if (Validator.isNotNull(module.getBundleSymbolicName()) && Validator.isNotNull(module.getBundleVersion())) {
+      BundleUtil.uninstallBundle(module.getBundleSymbolicName(),module.getBundleVersion());
+      continue;
+    }
     if (hasDependentApp(module)) {
       continue;
     }

@@ -10,16 +10,17 @@
       if (!state.equals("ACTIVE")) {
         continue;
       }
-      String bundleSymbolicName=(String)compositeData.get("SymbolicName");
-      if (Validator.isNull(bundleSymbolicName)) {
+      String symbolicName=(String)compositeData.get("SymbolicName");
+      String version=(String)compositeData.get("Version");
+      if (Validator.isNull(symbolicName) && Validator.isNull(version)) {
         continue;
       }
       Map<String,Object> bundleData=new HashMap<String,Object>();
       bundleData.put("bundleId",compositeData.get("Identifier"));
       bundleData.put("location",compositeData.get("Location"));
       bundleData.put("state",state);
-      bundleData.put("version",compositeData.get("Version"));
-      bundles.put(bundleSymbolicName,bundleData);
+      bundleData.put("version",version);
+      bundles.put(symbolicName,bundleData);
     }
   }
  catch (  Exception e) {

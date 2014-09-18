@@ -1,0 +1,30 @@
+{
+  try {
+    Map<String,Map<String,Object>> bundles=getInstalledBundles();
+    List<Long> bundleIds=new ArrayList<Long>();
+    for (    Map.Entry<String,Map<String,Object>> entry : bundles.entrySet()) {
+      Map<String,Object> bundleData=null;
+      if (bundleSymbolicName.equals(entry.getKey())) {
+        bundleData=entry.getValue();
+      }
+      if ((bundleData == null) || bundleData.isEmpty()) {
+        continue;
+      }
+      long bundleId=0;
+      if (bundleVersion.equals(GetterUtil.getString(bundleData.get("version")))) {
+        bundleId=GetterUtil.getLong(bundleData.get("bundleId"));
+      }
+      if (bundleId > 0) {
+        bundleIds.add(bundleId);
+      }
+    }
+    if (bundleIds.size() > 0) {
+      MBeanServer mBeanServer=ManagementFactory.getPlatformMBeanServer();
+      ObjectName objectName=new ObjectName(_FRAMEWORK_OBJECT_NAME);
+      mBeanServer.invoke(objectName,"uninstallBundle",bundleIds.toArray(new Object[bundleIds.size()]),new String[]{long.class.getName()});
+    }
+  }
+ catch (  Exception e) {
+    throw new SystemException(e);
+  }
+}

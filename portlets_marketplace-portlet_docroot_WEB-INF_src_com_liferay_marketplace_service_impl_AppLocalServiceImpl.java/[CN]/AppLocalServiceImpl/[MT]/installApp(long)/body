@@ -35,10 +35,12 @@
           File pluginPackageFile=new File(tmpDir + StringPool.SLASH + fileName);
           FileUtil.write(pluginPackageFile,zipInputStream);
           String bundleSymbolicName=StringPool.BLANK;
+          String bundleVersion=StringPool.BLANK;
           String contextName=StringPool.BLANK;
           if (fileName.endsWith(".jar")) {
             Properties properties=BundleUtil.getManifestProperties(pluginPackageFile);
             bundleSymbolicName=GetterUtil.getString(properties.getProperty("Bundle-SymbolicName"));
+            bundleVersion=GetterUtil.getString(properties.getProperty("Bundle-Version"));
             contextName=GetterUtil.getString(properties.getProperty("Web-ContextPath"));
           }
  else {
@@ -48,8 +50,8 @@
           autoDeploymentContext.setContext(contextName);
           autoDeploymentContext.setFile(pluginPackageFile);
           DeployManagerUtil.deploy(autoDeploymentContext);
-          if (Validator.isNotNull(contextName)) {
-            moduleLocalService.addModule(app.getUserId(),app.getAppId(),bundleSymbolicName,contextName);
+          if (Validator.isNotNull(contextName) || (Validator.isNotNull(bundleSymbolicName) && Validator.isNotNull(bundleVersion))) {
+            moduleLocalService.addModule(app.getUserId(),app.getAppId(),bundleSymbolicName,bundleVersion,contextName);
           }
         }
       }
