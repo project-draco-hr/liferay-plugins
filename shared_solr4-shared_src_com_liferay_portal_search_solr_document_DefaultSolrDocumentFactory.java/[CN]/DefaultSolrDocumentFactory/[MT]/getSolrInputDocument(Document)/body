@@ -1,7 +1,7 @@
 {
   SolrInputDocument solrInputDocument=new SolrInputDocument();
-  Collection<Field> fields=document.getFields().values();
-  for (  Field field : fields) {
+  Map<String,Field> fields=document.getFields();
+  for (  Field field : fields.values()) {
     String name=field.getName();
     float boost=field.getBoost();
     if (ArrayUtil.contains(Field.UNSCORED_FIELD_NAMES,name)) {
@@ -13,7 +13,7 @@
           continue;
         }
         value=value.trim();
-        doAddSolrField(solrInputDocument,field,boost,value,name);
+        addField(solrInputDocument,field,boost,value,name);
       }
     }
  else {
@@ -31,7 +31,7 @@
           solrInputDocument.addField(name,value,boost);
         }
         String localizedName=DocumentImpl.getLocalizedName(locale,name);
-        doAddSolrField(solrInputDocument,field,boost,value,localizedName);
+        addField(solrInputDocument,field,boost,value,localizedName);
       }
     }
   }
