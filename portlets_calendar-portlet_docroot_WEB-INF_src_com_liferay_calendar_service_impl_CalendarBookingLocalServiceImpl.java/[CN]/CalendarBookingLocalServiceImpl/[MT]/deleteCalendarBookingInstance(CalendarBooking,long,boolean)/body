@@ -17,7 +17,13 @@
     recurrenceObj.addExceptionDate(startTimeJCalendar);
   }
   String recurrence=RecurrenceSerializer.serialize(recurrenceObj);
-  List<CalendarBooking> childCalendarBookings=getCalendarBookingWithChildren(calendarBooking);
+  List<CalendarBooking> childCalendarBookings=new ArrayList<CalendarBooking>();
+  if (calendarBooking.isMasterBooking()) {
+    childCalendarBookings=getChildCalendarBookings(calendarBooking.getCalendarBookingId());
+  }
+ else {
+    childCalendarBookings.add(calendarBooking);
+  }
   for (  CalendarBooking childCalendarBooking : childCalendarBookings) {
     childCalendarBooking.setModifiedDate(now);
     childCalendarBooking.setRecurrence(recurrence);
