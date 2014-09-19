@@ -1,0 +1,32 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getUpgradeOptimizedConnection();
+    ps=con.prepareStatement("select portletPreferencesId from PortletPreferences where " + "preferences like '%classNameIds%'");
+    rs=ps.executeQuery();
+    while (rs.next()) {
+      long portletPreferencesId=rs.getLong("portletPreferencesId");
+      String calendarBookingId=String.valueOf(PortalUtil.getClassNameId(CalendarBooking.class));
+      String calEventId=String.valueOf(PortalUtil.getClassNameId(CalEvent.class));
+      com.liferay.portal.model.PortletPreferences portletPreferencesModel=PortletPreferencesLocalServiceUtil.getPortletPreferences(portletPreferencesId);
+      Layout layout=LayoutLocalServiceUtil.getLayout(portletPreferencesModel.getPlid());
+      PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.fromXML(layout.getCompanyId(),portletPreferencesModel.getOwnerId(),portletPreferencesModel.getOwnerType(),portletPreferencesModel.getPlid(),portletPreferencesModel.getPortletId(),portletPreferencesModel.getPreferences());
+      String[] classNameIds=GetterUtil.getStringValues(portletPreferences.getValues("classNameIds",null));
+      for (      String classNameId : classNameIds) {
+        if (classNameId.equals(calEventId)) {
+          ArrayUtil.replace(classNameIds,String.valueOf(classNameId),calendarBookingId);
+          portletPreferences.setValues("classNameIds",classNameIds);
+          break;
+        }
+      }
+      String preferences=PortletPreferencesFactoryUtil.toXML(portletPreferences);
+      portletPreferencesModel.setPreferences(preferences);
+      PortletPreferencesLocalServiceUtil.updatePortletPreferences(portletPreferencesModel);
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+}
