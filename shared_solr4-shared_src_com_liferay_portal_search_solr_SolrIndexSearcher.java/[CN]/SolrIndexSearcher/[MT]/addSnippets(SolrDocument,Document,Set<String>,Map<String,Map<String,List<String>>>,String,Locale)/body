@@ -18,13 +18,5 @@
       snippet=snippet.concat(StringPool.TRIPLE_PERIOD);
     }
   }
-  if (!snippet.equals(StringPool.BLANK)) {
-    Matcher matcher=_pattern.matcher(snippet);
-    while (matcher.find()) {
-      queryTerms.add(matcher.group(1));
-    }
-    snippet=StringUtil.replace(snippet,"<liferay-hl>",StringPool.BLANK);
-    snippet=StringUtil.replace(snippet,"</liferay-hl>",StringPool.BLANK);
-  }
-  document.addText(Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetFieldName),snippet);
+  SearchUtil.addSnippet(document,queryTerms,snippet,snippetFieldName);
 }
