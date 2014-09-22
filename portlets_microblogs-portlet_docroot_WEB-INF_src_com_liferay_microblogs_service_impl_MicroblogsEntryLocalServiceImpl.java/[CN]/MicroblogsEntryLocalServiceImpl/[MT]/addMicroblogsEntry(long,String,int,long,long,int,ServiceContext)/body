@@ -31,6 +31,11 @@
   extraDataJSONObject.put("content",microblogsEntry.getContent());
   extraDataJSONObject.put("receiverMicroblogsEntryId",receiverMicroblogsEntryId);
   SocialActivityLocalServiceUtil.addActivity(userId,0,MicroblogsEntry.class.getName(),microblogsEntryId,activityKey,extraDataJSONObject.toString(),receiverUserId);
+  long microblogsSubscriptionEntryId=receiverMicroblogsEntryId;
+  if (microblogsSubscriptionEntryId == 0) {
+    microblogsSubscriptionEntryId=microblogsEntryId;
+  }
+  SubscriptionLocalServiceUtil.addSubscription(userId,serviceContext.getScopeGroupId(),MicroblogsEntry.class.getName(),microblogsSubscriptionEntryId);
   if (type == MicroblogsEntryConstants.TYPE_REPLY) {
     sendNotificationEvent(microblogsEntry,serviceContext);
   }
