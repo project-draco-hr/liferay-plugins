@@ -1,0 +1,21 @@
+{
+  PortletURL portletURL=renderResponse.createRenderURL();
+  portletURL.setParameter("mvcPath",mvcPath);
+  portletURL.setParameter("parentResourcePrimKey",String.valueOf(parentResourcePrimKey));
+  portletURL.setParameter("parentResourceClassNameId",String.valueOf(parentResourceClassNameId));
+  String entryURL=portletURL.toString();
+  if (parentResourcePrimKey == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+    Locale locale=PortalUtil.getLocale(request);
+    PortalUtil.addPortletBreadcrumbEntry(request,LanguageUtil.get(locale,"home"),entryURL);
+  }
+ else   if (parentResourceClassNameId == PortalUtil.getClassNameId(KBFolderConstants.getClassName())) {
+    KBFolder kbFolder=KBFolderServiceUtil.getKBFolder(parentResourcePrimKey);
+    addPortletBreadcrumbEntries(kbFolder.getClassNameId(),kbFolder.getParentKBFolderId(),mvcPath,request,renderResponse);
+    PortalUtil.addPortletBreadcrumbEntry(request,kbFolder.getName(),entryURL);
+  }
+ else {
+    KBArticle kbArticle=KBArticleServiceUtil.getLatestKBArticle(parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
+    addPortletBreadcrumbEntries(kbArticle.getParentResourceClassNameId(),kbArticle.getParentResourcePrimKey(),mvcPath,request,renderResponse);
+    PortalUtil.addPortletBreadcrumbEntry(request,kbArticle.getTitle(),entryURL);
+  }
+}
