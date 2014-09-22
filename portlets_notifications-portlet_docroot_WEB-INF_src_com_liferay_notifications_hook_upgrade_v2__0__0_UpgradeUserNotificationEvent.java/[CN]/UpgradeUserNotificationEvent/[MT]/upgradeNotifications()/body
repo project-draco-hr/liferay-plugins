@@ -10,8 +10,8 @@
     ps=con.prepareStatement("select userNotificationEventId, actionRequired from " + "Notifications_UserNotificationEvent");
     rs=ps.executeQuery();
     while (rs.next()) {
-      int actionRequired=rs.getInt("actionRequired");
       long userNotificationEventId=rs.getLong("userNotificationEventId");
+      int actionRequired=rs.getInt("actionRequired");
       StringBundler sb=new StringBundler(4);
       sb.append("update UserNotificationEvent set actionRequired = ");
       sb.append(actionRequired);
@@ -23,5 +23,5 @@
   finally {
     DataAccess.cleanUp(con,ps,rs);
   }
-  runSQL("Notifications_UserNotificationEvent");
+  runSQL("drop table Notifications_UserNotificationEvent");
 }
