@@ -14,15 +14,11 @@
         sectionFileEntryNames.add(fileEntryName);
       }
     }
-    if (Validator.isNull(sectionIntroFileEntryName) && !sectionFileEntryNames.isEmpty()) {
-      StringBundler sb=new StringBundler(4);
-      sb.append("No file entry ending in ");
-      sb.append(PortletPropsValues.MARKDOWN_IMPORTER_ARTICLE_INTRO);
-      sb.append(" accompanies file entry ");
-      sb.append(sectionFileEntryNames.get(0));
-      throw new KBArticleImportException(sb.toString());
+    long sectionResourcePrimaryKey=parentResourcePrimaryKey;
+    if (Validator.isNotNull(sectionIntroFileEntryName)) {
+      KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
+      sectionResourcePrimaryKey=sectionIntroKBArticle.getResourcePrimKey();
     }
-    KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
     for (    String sectionFileEntryName : sectionFileEntryNames) {
       String sectionMarkdown=zipReader.getEntryAsString(sectionFileEntryName);
       if (Validator.isNull(sectionMarkdown)) {
@@ -30,7 +26,7 @@
           _log.warn("Missing Markdown in file entry " + sectionFileEntryName);
         }
       }
-      addKBArticleMarkdown(userId,groupId,sectionIntroKBArticle.getResourcePrimKey(),sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
+      addKBArticleMarkdown(userId,groupId,sectionResourcePrimaryKey,sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
     }
   }
 }
