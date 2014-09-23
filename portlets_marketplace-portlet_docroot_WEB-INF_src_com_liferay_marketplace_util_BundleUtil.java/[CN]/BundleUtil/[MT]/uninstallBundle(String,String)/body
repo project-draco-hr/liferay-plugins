@@ -21,7 +21,7 @@
     }
     MBeanServer mBeanServer=ManagementFactory.getPlatformMBeanServer();
     ObjectName objectName=new ObjectName(_FRAMEWORK_OBJECT_NAME);
-    mBeanServer.invoke(objectName,"uninstallBundle",bundleIds.toArray(new Object[bundleIds.size()]),new String[]{long.class.getName()});
+    mBeanServer.invoke(objectName,"uninstallBundles",new Object[]{ArrayUtil.toArray(bundleIds.toArray(new Long[bundleIds.size()]))},new String[]{long[].class.getName()});
   }
  catch (  Exception e) {
     throw new SystemException(e);
