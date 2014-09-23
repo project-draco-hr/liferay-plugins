@@ -8,9 +8,9 @@
       }
       List<String> gGroupMemberEmailAddresses=new ArrayList<String>();
       String groupEmailAddress=getGroupEmailAddress(group);
-      com.google.api.services.admin.directory.model.Group gGroup=getGGroup(directory,groupEmailAddress);
+      com.google.api.services.admin.directory.model.Group gGroup=getGGroup(groupEmailAddress);
       if (gGroup == null) {
-        addGGroup(directory,group.getDescriptiveName(),groupEmailAddress);
+        addGGroup(group.getDescriptiveName(),groupEmailAddress);
       }
       Members members=getGGroupMembers(directory,groupEmailAddress);
       if (members.getMembers() != null) {
@@ -30,13 +30,13 @@
         if (emailAddresses.contains(gGroupMemberEmailAddress)) {
           continue;
         }
-        deleteGGroupMember(directory,groupEmailAddress,gGroupMemberEmailAddress);
+        deleteGGroupMember(groupEmailAddress,gGroupMemberEmailAddress);
       }
       for (      String emailAddress : emailAddresses) {
         if (gGroupMemberEmailAddresses.contains(emailAddress)) {
           continue;
         }
-        addGGroupMember(directory,groupEmailAddress,emailAddress);
+        addGGroupMember(groupEmailAddress,emailAddress);
       }
     }
   }

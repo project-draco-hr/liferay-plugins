@@ -1,11 +1,11 @@
 {
   try {
     new OnAssociation(classPK,associationClassName,associationClassPK){
-      @Override public void onAssociation(      User user,      Group group,      Directory directory) throws Exception {
+      @Override public void onAssociation(      User user,      Group group) throws Exception {
         if (GroupLocalServiceUtil.hasUserGroup(user.getUserId(),group.getGroupId(),true)) {
           return;
         }
-        GoogleMailGroupsUtil.deleteGGroupMember(directory,GoogleMailGroupsUtil.getGroupEmailAddress(group),GoogleMailGroupsUtil.getUserEmailAddress(user));
+        GoogleMailGroupsUtil.deleteGGroupMember(GoogleMailGroupsUtil.getGroupEmailAddress(group),GoogleMailGroupsUtil.getUserEmailAddress(user));
       }
     }
 ;
