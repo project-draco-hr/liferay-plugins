@@ -1,0 +1,24 @@
+{
+  Role role=RoleLocalServiceUtil.getRole((Long)classPK);
+  String roleName=role.getName();
+  if (!roleName.equals(PortletPropsValues.EMAIL_LARGE_GROUP_ROLE)) {
+    return;
+  }
+  List<User> users=new ArrayList<User>();
+  if (associationClassName.equals(Group.class.getName())) {
+    LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
+    userParams.put("inherit",Boolean.TRUE);
+    userParams.put("usersGroups",associationClassPK);
+    users=UserLocalServiceUtil.search(role.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
+  }
+ else   if (associationClassName.equals(Organization.class.getName())) {
+    users=UserLocalServiceUtil.getOrganizationUsers((Long)associationClassPK);
+  }
+ else   if (associationClassName.equals(User.class.getName())) {
+    users.add(UserLocalServiceUtil.getUser((Long)associationClassPK));
+  }
+ else   if (associationClassName.equals(UserGroup.class.getName())) {
+    users=UserLocalServiceUtil.getUserGroupUsers((Long)associationClassPK);
+  }
+  onAssociation(users);
+}
