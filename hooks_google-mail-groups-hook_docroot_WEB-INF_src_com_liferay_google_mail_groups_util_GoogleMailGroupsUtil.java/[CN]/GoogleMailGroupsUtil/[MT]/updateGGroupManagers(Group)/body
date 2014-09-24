@@ -1,0 +1,18 @@
+{
+  Role role=RoleLocalServiceUtil.fetchRole(group.getCompanyId(),PortletPropsValues.EMAIL_LARGE_GROUP_ROLE);
+  if (role == null) {
+    return;
+  }
+  List<User> users=UserLocalServiceUtil.getRoleUsers(role.getRoleId());
+  for (  User user : users) {
+    try {
+      String groupEmailAddress=getGroupEmailAddress(group);
+      String userEmailAddress=getUserEmailAddress(user);
+      Member member=getGGroupMember(groupEmailAddress,userEmailAddress);
+      member.setRole("MANAGER");
+      updateGGroupMember(groupEmailAddress,userEmailAddress,member);
+    }
+ catch (    Exception e) {
+    }
+  }
+}

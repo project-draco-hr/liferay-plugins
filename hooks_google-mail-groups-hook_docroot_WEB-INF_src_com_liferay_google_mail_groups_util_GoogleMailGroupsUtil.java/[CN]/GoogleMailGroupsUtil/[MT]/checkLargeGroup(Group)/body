@@ -1,0 +1,32 @@
+{
+  if ((PortletPropsValues.EMAIL_LARGE_GROUP_SIZE == 0) || Validator.isNull(PortletPropsValues.EMAIL_LARGE_GROUP_ROLE)) {
+    return;
+  }
+  String whoCanPostMessage=null;
+  boolean largeGroup=isLargeGroup(group);
+  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  params.put("inherit",Boolean.TRUE);
+  params.put("usersGroups",group.getGroupId());
+  int count=UserLocalServiceUtil.searchCount(group.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params);
+  if (!largeGroup && (count >= PortletPropsValues.EMAIL_LARGE_GROUP_SIZE)) {
+    ExpandoValueLocalServiceUtil.addValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"largeGroup",group.getGroupId(),true);
+    whoCanPostMessage="ALL_MANAGERS_CAN_POST";
+    updateGGroupManagers(group);
+  }
+ else   if (largeGroup && (count < PortletPropsValues.EMAIL_LARGE_GROUP_SIZE)) {
+    ExpandoValue expandoValue=ExpandoValueLocalServiceUtil.getValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"largeGroup",group.getGroupId());
+    expandoValue.setBoolean(false);
+    ExpandoValueLocalServiceUtil.updateExpandoValue(expandoValue);
+    whoCanPostMessage="ANYONE_CAN_POST";
+  }
+ else {
+    return;
+  }
+  String groupEmailAddress=getGroupEmailAddress(group);
+  Groups groups=getGroupssettingsGroup(groupEmailAddress);
+  if (groups == null) {
+    return;
+  }
+  groups.setWhoCanPostMessage(whoCanPostMessage);
+  updateGroupssettingsGroup(groupEmailAddress,groups);
+}
