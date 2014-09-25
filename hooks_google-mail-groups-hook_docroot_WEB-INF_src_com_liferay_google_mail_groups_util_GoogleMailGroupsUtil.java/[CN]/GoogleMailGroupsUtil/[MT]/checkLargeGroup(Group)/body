@@ -9,12 +9,12 @@
   params.put("usersGroups",group.getGroupId());
   int count=UserLocalServiceUtil.searchCount(group.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,params);
   if (!largeGroup && (count >= PortletPropsValues.EMAIL_LARGE_GROUP_SIZE)) {
-    ExpandoValueLocalServiceUtil.addValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"largeGroup",group.getGroupId(),true);
+    ExpandoValueLocalServiceUtil.addValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"googleMailGroupsLargeGroup",group.getGroupId(),true);
     whoCanPostMessage="ALL_MANAGERS_CAN_POST";
     updateGGroupManagers(group);
   }
  else   if (largeGroup && (count < PortletPropsValues.EMAIL_LARGE_GROUP_SIZE)) {
-    ExpandoValue expandoValue=ExpandoValueLocalServiceUtil.getValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"largeGroup",group.getGroupId());
+    ExpandoValue expandoValue=ExpandoValueLocalServiceUtil.getValue(group.getCompanyId(),Group.class.getName(),ExpandoTableConstants.DEFAULT_TABLE_NAME,"googleMailGroupsLargeGroup",group.getGroupId());
     expandoValue.setBoolean(false);
     ExpandoValueLocalServiceUtil.updateExpandoValue(expandoValue);
     whoCanPostMessage="ANYONE_CAN_POST";
