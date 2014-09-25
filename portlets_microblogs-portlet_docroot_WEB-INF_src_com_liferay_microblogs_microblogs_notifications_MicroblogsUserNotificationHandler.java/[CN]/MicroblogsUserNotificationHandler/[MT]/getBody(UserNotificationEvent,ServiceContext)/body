@@ -17,5 +17,6 @@
       }
     }
   }
-  return StringUtil.replace(getBodyTemplate(),new String[]{"[$BODY$]","[$TITLE$]"},new String[]{HtmlUtil.escape(StringUtil.shorten(microblogsEntry.getContent(),50)),title});
+  String body=MicroblogsUtil.getTaggedContent(StringUtil.shorten(microblogsEntry.getContent(),50),serviceContext);
+  return StringUtil.replace(getBodyTemplate(),new String[]{"[$BODY$]","[$TITLE$]"},new String[]{body,title});
 }
