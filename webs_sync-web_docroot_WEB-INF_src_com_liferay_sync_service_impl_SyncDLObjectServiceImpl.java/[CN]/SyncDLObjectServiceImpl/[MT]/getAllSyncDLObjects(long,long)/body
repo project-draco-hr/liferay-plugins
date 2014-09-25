@@ -1,8 +1,16 @@
 {
   try {
     long lastAccessTime=System.currentTimeMillis();
-    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>();
-    getAllSyncDLObjects(repositoryId,folderId,syncDLObjects);
+    long companyId=0;
+    Repository repository=repositoryLocalService.fetchRepository(repositoryId);
+    if (repository != null) {
+      companyId=repository.getCompanyId();
+    }
+ else {
+      Group group=groupLocalService.getGroup(repositoryId);
+      companyId=group.getCompanyId();
+    }
+    List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByC_M_R(companyId,0,repositoryId);
     return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
   }
  catch (  PortalException pe) {
