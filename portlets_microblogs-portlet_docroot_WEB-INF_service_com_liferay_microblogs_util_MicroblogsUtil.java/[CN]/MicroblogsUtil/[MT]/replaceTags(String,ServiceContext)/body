@@ -1,7 +1,7 @@
 {
-  String content=HtmlUtil.escape(microblogsEntry.getContent());
+  String escapedContent=HtmlUtil.escape(content);
   ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
-  Matcher matcher=_pattern1.matcher(microblogsEntry.getContent());
+  Matcher matcher=_pattern1.matcher(content);
   while (matcher.find()) {
     String result=matcher.group();
     StringBuilder sb=new StringBuilder(5);
@@ -35,7 +35,7 @@
     sb.append(assetTagName);
     sb.append("</a>");
     String tagLink=sb.toString();
-    content=StringUtil.replace(content,result,tagLink);
+    escapedContent=StringUtil.replace(escapedContent,result,tagLink);
   }
-  return content;
+  return escapedContent;
 }
