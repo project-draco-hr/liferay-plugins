@@ -38,10 +38,11 @@
           String bundleVersion=StringPool.BLANK;
           String contextName=StringPool.BLANK;
           if (fileName.endsWith(".jar")) {
-            Properties properties=BundleUtil.getManifestProperties(pluginPackageFile);
-            bundleSymbolicName=GetterUtil.getString(properties.getProperty("Bundle-SymbolicName"));
-            bundleVersion=GetterUtil.getString(properties.getProperty("Bundle-Version"));
-            contextName=GetterUtil.getString(properties.getProperty("Web-ContextPath"));
+            Manifest manifest=BundleUtil.getManifest(pluginPackageFile);
+            Attributes attributes=manifest.getMainAttributes();
+            bundleSymbolicName=GetterUtil.getString(attributes.getValue("Bundle-SymbolicName"));
+            bundleVersion=GetterUtil.getString(attributes.getValue("Bundle-Version"));
+            contextName=GetterUtil.getString(attributes.getValue("Web-ContextPath"));
           }
  else {
             contextName=getContextName(fileName);
