@@ -5,16 +5,16 @@
       if (!isSync(group)) {
         return;
       }
-      List<String> gGroupMemberEmailAddresses=new ArrayList<String>();
+      List<String> groupMemberEmailAddresses=new ArrayList<String>();
       String groupEmailAddress=getGroupEmailAddress(group);
-      com.google.api.services.admin.directory.model.Group gGroup=getGGroup(groupEmailAddress);
+      com.google.api.services.admin.directory.model.Group gGroup=GoogleDirectoryUtil.getGroup(groupEmailAddress);
       if (gGroup == null) {
-        addGGroup(group.getDescriptiveName(),groupEmailAddress);
+        GoogleDirectoryUtil.addGroup(group.getDescriptiveName(),groupEmailAddress);
       }
-      Members members=getGGroupMembers(groupEmailAddress);
+      Members members=GoogleDirectoryUtil.getGroupMembers(groupEmailAddress);
       if ((members != null) && (members.getMembers() != null)) {
         for (        Member member : members.getMembers()) {
-          gGroupMemberEmailAddresses.add(member.getEmail());
+          groupMemberEmailAddresses.add(member.getEmail());
         }
       }
       List<String> emailAddresses=new ArrayList<String>();
@@ -25,17 +25,17 @@
       for (      User user : users) {
         emailAddresses.add(getUserEmailAddress(user));
       }
-      for (      String gGroupMemberEmailAddress : gGroupMemberEmailAddresses) {
-        if (emailAddresses.contains(gGroupMemberEmailAddress)) {
+      for (      String groupMemberEmailAddress : groupMemberEmailAddresses) {
+        if (emailAddresses.contains(groupMemberEmailAddress)) {
           continue;
         }
-        deleteGGroupMember(groupEmailAddress,gGroupMemberEmailAddress);
+        GoogleDirectoryUtil.deleteGroupMember(groupEmailAddress,groupMemberEmailAddress);
       }
       for (      String emailAddress : emailAddresses) {
-        if (gGroupMemberEmailAddresses.contains(emailAddress)) {
+        if (groupMemberEmailAddresses.contains(emailAddress)) {
           continue;
         }
-        addGGroupMember(groupEmailAddress,emailAddress);
+        GoogleDirectoryUtil.addGroupMember(groupEmailAddress,emailAddress);
       }
       checkLargeGroup(group);
     }
