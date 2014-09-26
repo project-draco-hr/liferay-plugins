@@ -1,0 +1,11 @@
+{
+  KBFolderModelImpl kbFolderModelImpl=(KBFolderModelImpl)kbFolder;
+  Object[] args=new Object[]{kbFolder.getUuid(),kbFolder.getGroupId()};
+  FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
+  FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
+  if ((kbFolderModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_UUID_G.getColumnBitmask()) != 0) {
+    args=new Object[]{kbFolderModelImpl.getOriginalUuid(),kbFolderModelImpl.getOriginalGroupId()};
+    FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_UUID_G,args);
+    FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,args);
+  }
+}
