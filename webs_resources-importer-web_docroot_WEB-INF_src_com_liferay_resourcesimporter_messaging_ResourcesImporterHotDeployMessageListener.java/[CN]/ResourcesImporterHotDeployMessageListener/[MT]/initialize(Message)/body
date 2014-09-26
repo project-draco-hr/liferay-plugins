@@ -1,10 +1,11 @@
 {
   String servletContextName=message.getString("servletContextName");
   ServletContext servletContext=ServletContextPool.get(servletContextName);
-  if ((servletContext.getResource(_RESOURCES_DIR) == null) && (servletContext.getResource(_TEMPLATES_DIR) == null)) {
+  Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
+  String resourcesDir=pluginPackageProperties.getProperty("resources-importer-external-dir");
+  if ((servletContext.getResource(_RESOURCES_DIR) == null) && (servletContext.getResource(_TEMPLATES_DIR) == null) && Validator.isNull(resourcesDir)) {
     return;
   }
-  Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
   String targetClassName=pluginPackageProperties.getProperty("resources-importer-target-class-name",LayoutSetPrototype.class.getName());
   Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
   Set<String> templatePaths=servletContext.getResourcePaths(_TEMPLATES_DIR);
@@ -44,12 +45,9 @@
         importer.setGroupId(group.getGroupId());
         importer.setResourcesDir(_TEMPLATES_DIR);
       }
- else {
-        String resourcesDir=pluginPackageProperties.getProperty("resources-importer-external-dir");
-        if (Validator.isNotNull(resourcesDir)) {
-          importer=getFileSystemImporter();
-          importer.setResourcesDir(resourcesDir);
-        }
+ else       if (Validator.isNotNull(resourcesDir)) {
+        importer=getFileSystemImporter();
+        importer.setResourcesDir(resourcesDir);
       }
       if (importer == null) {
         throw new ImporterException("No valid importer found");
