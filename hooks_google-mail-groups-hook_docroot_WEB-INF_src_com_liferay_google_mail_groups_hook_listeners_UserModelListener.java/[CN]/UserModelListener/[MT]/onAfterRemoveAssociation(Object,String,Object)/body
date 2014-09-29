@@ -1,17 +1,3 @@
 {
-  try {
-    new OnAssociation(classPK,associationClassName,associationClassPK){
-      @Override public void onAssociation(      User user,      Group group) throws Exception {
-        if (GroupLocalServiceUtil.hasUserGroup(user.getUserId(),group.getGroupId(),true)) {
-          return;
-        }
-        GoogleDirectoryUtil.deleteGroupMember(GoogleMailGroupsUtil.getGroupEmailAddress(group),GoogleMailGroupsUtil.getUserEmailAddress(user));
-        GoogleMailGroupsUtil.checkLargeGroup(group);
-      }
-    }
-;
-  }
- catch (  Exception e) {
-    _log.error(e,e);
-  }
+  MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new OnAssociationProcessCallable(classPK,associationClassName,associationClassPK,"deleteGroupMembers"));
 }

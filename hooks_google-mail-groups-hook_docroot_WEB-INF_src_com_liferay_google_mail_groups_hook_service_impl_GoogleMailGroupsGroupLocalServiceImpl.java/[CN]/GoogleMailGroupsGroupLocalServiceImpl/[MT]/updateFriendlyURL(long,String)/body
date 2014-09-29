@@ -3,11 +3,6 @@
   String oldFriendlyURL=group.getFriendlyURL();
   String oldGroupEmailAddress=GoogleMailGroupsUtil.getGroupEmailAddress(group);
   group=super.updateFriendlyURL(groupId,friendlyURL);
-  try {
-    updateGGroup(group,oldFriendlyURL,oldGroupEmailAddress);
-  }
- catch (  Exception e) {
-    _log.error(e);
-  }
+  MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new UpdateGGroupProcessCallable(group,oldFriendlyURL,oldGroupEmailAddress));
   return group;
 }

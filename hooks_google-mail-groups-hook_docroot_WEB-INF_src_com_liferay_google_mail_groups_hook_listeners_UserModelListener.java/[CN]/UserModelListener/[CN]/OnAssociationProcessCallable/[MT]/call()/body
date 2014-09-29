@@ -1,0 +1,35 @@
+{
+  try {
+    List<Group> groups=new ArrayList<Group>();
+    if (_associationClassName.equals(Group.class.getName())) {
+      groups.add(GroupLocalServiceUtil.getGroup(_associationClassPK));
+    }
+ else     if (_associationClassName.equals(Organization.class.getName())) {
+      Organization organization=OrganizationLocalServiceUtil.getOrganization(_associationClassPK);
+      groups.add(organization.getGroup());
+    }
+ else     if (_associationClassName.equals(UserGroup.class.getName())) {
+      groups=GroupLocalServiceUtil.getUserGroupGroups(_associationClassPK);
+    }
+    User user=UserLocalServiceUtil.getUser(_classPK);
+    for (    Group group : groups) {
+      if (!GoogleMailGroupsUtil.isSync(group)) {
+        continue;
+      }
+      if (_action.equals("addGroupMembers")) {
+        GoogleDirectoryUtil.addGroupMember(GoogleMailGroupsUtil.getGroupEmailAddress(group),GoogleMailGroupsUtil.getUserEmailAddress(user));
+      }
+ else {
+        if (GroupLocalServiceUtil.hasUserGroup(user.getUserId(),group.getGroupId(),true)) {
+          continue;
+        }
+        GoogleDirectoryUtil.deleteGroupMember(GoogleMailGroupsUtil.getGroupEmailAddress(group),GoogleMailGroupsUtil.getUserEmailAddress(user));
+      }
+      GoogleMailGroupsUtil.checkLargeGroup(group);
+    }
+  }
+ catch (  Exception e) {
+    throw new ProcessException(e);
+  }
+  return null;
+}

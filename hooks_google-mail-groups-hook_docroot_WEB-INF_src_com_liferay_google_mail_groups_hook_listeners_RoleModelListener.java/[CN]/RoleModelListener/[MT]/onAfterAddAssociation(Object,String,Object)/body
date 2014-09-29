@@ -1,13 +1,3 @@
 {
-  try {
-    new OnAssociation(classPK,associationClassName,associationClassPK){
-      @Override public void onAssociation(      List<User> users) throws Exception {
-        GoogleMailGroupsUtil.addGroupManagers(users);
-      }
-    }
-;
-  }
- catch (  Exception e) {
-    _log.error(e,e);
-  }
+  MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new OnAssociationProcessCallable(classPK,associationClassName,associationClassPK,"addGroupManagers"));
 }
