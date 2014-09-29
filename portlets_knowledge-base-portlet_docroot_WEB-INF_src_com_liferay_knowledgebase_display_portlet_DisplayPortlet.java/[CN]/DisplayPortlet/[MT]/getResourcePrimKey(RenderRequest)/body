@@ -2,8 +2,17 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String urlTitle=ParamUtil.getString(renderRequest,"urlTitle");
   if (Validator.isNotNull(urlTitle)) {
-    KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID,urlTitle);
-    return kbArticle.getResourcePrimKey();
+    String kbFolderUrlTitle=ParamUtil.getString(renderRequest,"kbFolderUrlTitle");
+    KBArticle kbArticle=null;
+    if (Validator.isNotNull(kbFolderUrlTitle)) {
+      kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),kbFolderUrlTitle,urlTitle);
+    }
+ else {
+      kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID,urlTitle);
+    }
+    if (kbArticle != null) {
+      return kbArticle.getResourcePrimKey();
+    }
   }
   PortletPreferences preferences=renderRequest.getPreferences();
   long defaultValue=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
