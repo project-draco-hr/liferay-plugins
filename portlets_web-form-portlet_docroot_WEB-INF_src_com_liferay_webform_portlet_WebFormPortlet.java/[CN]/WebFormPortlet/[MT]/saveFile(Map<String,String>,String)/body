@@ -4,9 +4,10 @@
     String fieldValue=fieldsMap.get(fieldLabel);
     sb.append("\"");
     sb.append(StringUtil.replace(fieldValue,"\"","\"\""));
-    sb.append("\";");
+    sb.append("\"");
+    sb.append(PortletPropsValues.CSV_SEPARATOR);
   }
-  String s=sb.substring(0,sb.length() - 1) + "\n";
+  String s=sb.substring(0,sb.length() - PortletPropsValues.CSV_SEPARATOR.length()) + "\n";
   try {
     FileUtil.write(fileName,s,false,true);
     return true;
