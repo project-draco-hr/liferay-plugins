@@ -2,12 +2,12 @@
   StringBuilder sb=new StringBuilder();
   for (  String fieldLabel : fieldsMap.keySet()) {
     String fieldValue=fieldsMap.get(fieldLabel);
-    sb.append("\"");
-    sb.append(StringUtil.replace(fieldValue,"\"","\"\""));
-    sb.append("\"");
+    sb.append(CharPool.QUOTE);
+    sb.append(StringUtil.replace(fieldValue,CharPool.QUOTE,StringPool.DOUBLE_QUOTE));
+    sb.append(CharPool.QUOTE);
     sb.append(PortletPropsValues.CSV_SEPARATOR);
   }
-  String s=sb.substring(0,sb.length() - PortletPropsValues.CSV_SEPARATOR.length()) + "\n";
+  String s=sb.substring(0,sb.length() - PortletPropsValues.CSV_SEPARATOR.length()) + StringPool.NEW_LINE;
   try {
     FileUtil.write(fileName,s,false,true);
     return true;

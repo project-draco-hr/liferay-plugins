@@ -14,26 +14,26 @@
       break;
     }
     fieldLabels.add(fieldLabel);
-    sb.append("\"");
-    sb.append(localizedfieldLabel.replaceAll("\"","\\\""));
-    sb.append("\"");
+    sb.append(CharPool.QUOTE);
+    sb.append(localizedfieldLabel.replaceAll(StringPool.QUOTE,StringPool.BACK_SLASH + StringPool.QUOTE));
+    sb.append(CharPool.QUOTE);
     sb.append(PortletPropsValues.CSV_SEPARATOR);
   }
   sb.delete(sb.length() - PortletPropsValues.CSV_SEPARATOR.length(),sb.length());
-  sb.append("\n");
+  sb.append(CharPool.NEW_LINE);
   if (Validator.isNotNull(databaseTableName)) {
     List<ExpandoRow> rows=ExpandoRowLocalServiceUtil.getRows(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     for (    ExpandoRow row : rows) {
       for (      String fieldName : fieldLabels) {
         String data=ExpandoValueLocalServiceUtil.getData(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName,fieldName,row.getClassPK(),StringPool.BLANK);
-        data=data.replaceAll("\"","\\\"");
-        sb.append("\"");
+        data=data.replaceAll(StringPool.QUOTE,StringPool.BACK_SLASH + StringPool.QUOTE);
+        sb.append(CharPool.QUOTE);
         sb.append(data);
-        sb.append("\"");
+        sb.append(CharPool.QUOTE);
         sb.append(PortletPropsValues.CSV_SEPARATOR);
       }
       sb.delete(sb.length() - PortletPropsValues.CSV_SEPARATOR.length(),sb.length());
-      sb.append("\n");
+      sb.append(CharPool.NEW_LINE);
     }
   }
   String fileName=title + ".csv";
