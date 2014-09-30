@@ -1,31 +1,10 @@
 {
   try {
-    Role role=RoleLocalServiceUtil.getRole(_classPK);
-    String roleName=role.getName();
-    if (!roleName.equals(PortletPropsValues.EMAIL_LARGE_GROUP_ROLE)) {
-      return null;
-    }
-    List<User> users=new ArrayList<User>();
-    if (_associationClassName.equals(Group.class.getName())) {
-      LinkedHashMap<String,Object> userParams=new LinkedHashMap<String,Object>();
-      userParams.put("inherit",Boolean.TRUE);
-      userParams.put("usersGroups",_associationClassPK);
-      users=UserLocalServiceUtil.search(role.getCompanyId(),null,WorkflowConstants.STATUS_APPROVED,userParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null);
-    }
- else     if (_associationClassName.equals(Organization.class.getName())) {
-      users=UserLocalServiceUtil.getOrganizationUsers(_associationClassPK);
-    }
- else     if (_associationClassName.equals(User.class.getName())) {
-      users.add(UserLocalServiceUtil.getUser(_associationClassPK));
-    }
- else     if (_associationClassName.equals(UserGroup.class.getName())) {
-      users=UserLocalServiceUtil.getUserGroupUsers(_associationClassPK);
-    }
     if (_action.equals("addGroupManagers")) {
-      GoogleMailGroupsUtil.addGroupManagers(users);
+      GoogleMailGroupsUtil.addGroupManagers(_users);
     }
  else {
-      GoogleMailGroupsUtil.removeGroupManagers(users);
+      GoogleMailGroupsUtil.removeGroupManagers(_users);
     }
   }
  catch (  Exception e) {

@@ -1,3 +1,9 @@
 {
-  MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new OnAssociationProcessCallable(classPK,associationClassName,associationClassPK,"addGroupManagers"));
+  try {
+    List<User> users=getUsers(classPK,associationClassName,associationClassPK);
+    MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new OnAssociationProcessCallable(users,"addGroupManagers"));
+  }
+ catch (  Exception e) {
+    _log.error(e,e);
+  }
 }

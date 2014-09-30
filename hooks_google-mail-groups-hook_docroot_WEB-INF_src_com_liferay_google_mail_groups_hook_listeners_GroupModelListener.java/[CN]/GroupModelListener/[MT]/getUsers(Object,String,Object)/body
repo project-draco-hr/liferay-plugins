@@ -1,0 +1,13 @@
+{
+  if (!associationClassName.equals(Organization.class.getName()) && !associationClassName.equals(UserGroup.class.getName())) {
+    return new ArrayList<User>();
+  }
+  Group group=GroupLocalServiceUtil.getGroup((Long)classPK);
+  if (!GoogleMailGroupsUtil.isSync(group)) {
+    return new ArrayList<User>();
+  }
+  if (associationClassName.equals(Organization.class.getName())) {
+    return UserLocalServiceUtil.getOrganizationUsers((Long)associationClassPK);
+  }
+  return UserLocalServiceUtil.getUserGroupUsers((Long)associationClassPK);
+}

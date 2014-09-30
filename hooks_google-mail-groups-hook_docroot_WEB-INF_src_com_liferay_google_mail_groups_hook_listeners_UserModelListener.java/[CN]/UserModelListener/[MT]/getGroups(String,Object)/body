@@ -1,0 +1,13 @@
+{
+  if (associationClassName.equals(Group.class.getName())) {
+    return Arrays.asList(GroupLocalServiceUtil.getGroup((Long)associationClassPK));
+  }
+  if (associationClassName.equals(Organization.class.getName())) {
+    Organization organization=OrganizationLocalServiceUtil.getOrganization((Long)associationClassPK);
+    return Arrays.asList(organization.getGroup());
+  }
+  if (associationClassName.equals(UserGroup.class.getName())) {
+    return GroupLocalServiceUtil.getUserGroupGroups((Long)associationClassPK);
+  }
+  return new ArrayList<Group>();
+}
