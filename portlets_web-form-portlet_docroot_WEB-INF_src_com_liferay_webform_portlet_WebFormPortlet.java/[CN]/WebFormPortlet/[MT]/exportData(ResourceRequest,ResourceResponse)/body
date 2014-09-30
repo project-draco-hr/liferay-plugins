@@ -14,10 +14,7 @@
       break;
     }
     fieldLabels.add(fieldLabel);
-    sb.append(CharPool.QUOTE);
-    sb.append(localizedfieldLabel.replaceAll(StringPool.QUOTE,StringPool.BACK_SLASH + StringPool.QUOTE));
-    sb.append(CharPool.QUOTE);
-    sb.append(PortletPropsValues.CSV_SEPARATOR);
+    sb.append(prepareFieldForCSVExport(localizedfieldLabel));
   }
   sb.delete(sb.length() - PortletPropsValues.CSV_SEPARATOR.length(),sb.length());
   sb.append(CharPool.NEW_LINE);
@@ -26,11 +23,7 @@
     for (    ExpandoRow row : rows) {
       for (      String fieldName : fieldLabels) {
         String data=ExpandoValueLocalServiceUtil.getData(themeDisplay.getCompanyId(),WebFormUtil.class.getName(),databaseTableName,fieldName,row.getClassPK(),StringPool.BLANK);
-        data=data.replaceAll(StringPool.QUOTE,StringPool.BACK_SLASH + StringPool.QUOTE);
-        sb.append(CharPool.QUOTE);
-        sb.append(data);
-        sb.append(CharPool.QUOTE);
-        sb.append(PortletPropsValues.CSV_SEPARATOR);
+        sb.append(prepareFieldForCSVExport(data));
       }
       sb.delete(sb.length() - PortletPropsValues.CSV_SEPARATOR.length(),sb.length());
       sb.append(CharPool.NEW_LINE);
