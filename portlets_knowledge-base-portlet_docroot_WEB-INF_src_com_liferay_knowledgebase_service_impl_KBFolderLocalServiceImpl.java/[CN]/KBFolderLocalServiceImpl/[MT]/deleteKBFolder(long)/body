@@ -1,9 +1,9 @@
 {
-  KBFolder kbFolder=getKBFolder(kbFolderId);
+  KBFolder kbFolder=kbFolderPersistence.findByPrimaryKey(kbFolderId);
   kbArticleLocalService.deleteKBArticles(kbFolder.getGroupId(),kbFolder.getKbFolderId());
   List<KBFolder> subfolders=kbFolderPersistence.findByG_P(kbFolder.getGroupId(),kbFolder.getKbFolderId());
   for (  KBFolder subfolder : subfolders) {
-    deleteFolder(subfolder.getKbFolderId());
+    deleteKBFolder(subfolder.getKbFolderId());
   }
-  deleteKBFolder(kbFolder);
+  return kbFolderPersistence.remove(kbFolder);
 }
