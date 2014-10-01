@@ -1,5 +1,8 @@
 {
   for (  User user : users) {
+    if (role.equals("MEMBER") && RoleLocalServiceUtil.hasUserRole(user.getUserId(),user.getCompanyId(),PortletPropsValues.EMAIL_LARGE_GROUP_ROLE,true)) {
+      continue;
+    }
     List<Group> groups=GroupLocalServiceUtil.getUserGroups(user.getUserId(),true);
     for (    Group group : groups) {
       if (!isSync(group)) {
@@ -12,10 +15,10 @@
         continue;
       }
       String gRole=member.getRole();
-      if (gRole.equals("MANAGER") || gRole.equals("OWNER")) {
+      if (gRole.equals(role) || gRole.equals("OWNER")) {
         continue;
       }
-      member.setRole("MANAGER");
+      member.setRole(role);
       GoogleDirectoryUtil.updateGroupMember(groupEmailAddress,userEmailAddress,member);
     }
   }
