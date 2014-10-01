@@ -5,8 +5,8 @@
   portletURL.setParameter("parentResourceClassNameId",String.valueOf(parentResourceClassNameId));
   String entryURL=portletURL.toString();
   if (parentResourcePrimKey == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-    Locale locale=PortalUtil.getLocale(request);
-    PortalUtil.addPortletBreadcrumbEntry(request,LanguageUtil.get(locale,"home"),entryURL);
+    ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+    PortalUtil.addPortletBreadcrumbEntry(request,themeDisplay.translate("home"),entryURL);
   }
  else   if (parentResourceClassNameId == PortalUtil.getClassNameId(KBFolderConstants.getClassName())) {
     KBFolder kbFolder=KBFolderServiceUtil.getKBFolder(parentResourcePrimKey);
