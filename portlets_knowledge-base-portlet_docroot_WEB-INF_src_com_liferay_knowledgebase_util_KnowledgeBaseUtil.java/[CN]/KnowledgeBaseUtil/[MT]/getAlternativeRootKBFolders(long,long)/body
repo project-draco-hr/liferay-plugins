@@ -1,0 +1,17 @@
+{
+  List<KBFolder> kbFolders=KBFolderServiceUtil.getKBFolders(groupId,kbFolderId,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  kbFolders=new ArrayList<KBFolder>(kbFolders);
+  Iterator<KBFolder> i=kbFolders.iterator();
+  while (i.hasNext()) {
+    KBFolder kbFolder=i.next();
+    if (kbFolder.isLeaf()) {
+      i.remove();
+    }
+  }
+  return ListUtil.sort(kbFolders,new Comparator<KBFolder>(){
+    @Override public int compare(    KBFolder kbFolder1,    KBFolder kbFolder2){
+      return -(kbFolder1.getName().compareTo(kbFolder2.getName()));
+    }
+  }
+);
+}

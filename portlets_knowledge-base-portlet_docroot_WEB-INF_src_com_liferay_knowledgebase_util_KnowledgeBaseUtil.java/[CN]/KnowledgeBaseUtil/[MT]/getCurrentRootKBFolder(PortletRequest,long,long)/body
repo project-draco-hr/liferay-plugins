@@ -1,0 +1,17 @@
+{
+  PortalPreferences portalPreferences=PortletPreferencesFactoryUtil.getPortalPreferences(portletRequest);
+  String kbFolderUrlTitle=portalPreferences.getValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"preferredKBFolderUrlTitle",null);
+  long childKbFolderId=KBFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+  if (kbFolderUrlTitle == null) {
+    List<KBFolder> kbFolders=getAlternativeRootKBFolders(groupId,kbFolderId);
+    if (!kbFolders.isEmpty()) {
+      KBFolder kbFolder=kbFolders.get(0);
+      childKbFolderId=kbFolder.getKbFolderId();
+    }
+  }
+ else {
+    KBFolder kbFolder=KBFolderServiceUtil.getKBFolderByUrlTitle(groupId,kbFolderId,kbFolderUrlTitle);
+    childKbFolderId=kbFolder.getKbFolderId();
+  }
+  return childKbFolderId;
+}
