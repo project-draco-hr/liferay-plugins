@@ -1,10 +1,19 @@
 {
   String urlTitle=KnowledgeBaseUtil.getUrlTitle(kbArticleId,title);
   String uniqueUrlTitle=urlTitle;
-  int kbArticleCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
+  if (kbFolderId == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+    int kbArticleCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
+    for (int i=1; kbArticleCount > 0; i++) {
+      uniqueUrlTitle=urlTitle + StringPool.DASH + i;
+      kbArticleCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
+    }
+    return uniqueUrlTitle;
+  }
+  KBFolder kbFolder=kbFolderPersistence.findByPrimaryKey(kbFolderId);
+  int kbArticleCount=kbArticleFinder.countByUrlTitle(groupId,kbFolder.getUrlTitle(),uniqueUrlTitle,_STATUSES);
   for (int i=1; kbArticleCount > 0; i++) {
     uniqueUrlTitle=urlTitle + StringPool.DASH + i;
-    kbArticleCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
+    kbArticleCount=kbArticleFinder.countByUrlTitle(groupId,kbFolder.getUrlTitle(),uniqueUrlTitle,_STATUSES);
   }
   return uniqueUrlTitle;
 }
