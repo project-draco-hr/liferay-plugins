@@ -1,0 +1,12 @@
+{
+  long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
+  if (parentResourceClassNameId == kbFolderClassNameId) {
+    return parentResourcePrimKey;
+  }
+  while (parentResourceClassNameId != kbFolderClassNameId) {
+    KBArticle kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
+    parentResourceClassNameId=kbArticle.getParentResourceClassNameId();
+    parentResourcePrimKey=kbArticle.getParentResourcePrimKey();
+  }
+  return parentResourcePrimKey;
+}

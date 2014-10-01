@@ -8,6 +8,14 @@
     kbArticle.setPriority(priority);
     kbArticlePersistence.update(kbArticle);
   }
+  long kbFolderClassNameId=classNameLocalService.getClassNameId(KBFolderConstants.getClassName());
+  if (parentResourceClassNameId == kbFolderClassNameId) {
+    List<KBArticle> descendantKBArticles=getAllDescendantKBArticles(resourcePrimKey,WorkflowConstants.STATUS_ANY,null);
+    for (    KBArticle kbArticle : descendantKBArticles) {
+      kbArticle.setKbFolderId(parentResourcePrimKey);
+      kbArticlePersistence.update(kbArticle);
+    }
+  }
   KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
   extraDataJSONObject.put("title",kbArticle.getTitle());
