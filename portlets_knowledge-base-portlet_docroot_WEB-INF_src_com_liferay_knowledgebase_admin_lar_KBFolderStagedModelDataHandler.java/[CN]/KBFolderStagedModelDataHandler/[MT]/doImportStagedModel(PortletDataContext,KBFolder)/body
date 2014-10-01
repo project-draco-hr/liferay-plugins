@@ -1,12 +1,12 @@
 {
+  long userId=portletDataContext.getUserId(kbFolder.getUserUuid());
   if (kbFolder.getParentKBFolderId() != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
     StagedModelDataHandlerUtil.importReferenceStagedModels(portletDataContext,kbFolder,KBFolder.class);
   }
-  long userId=portletDataContext.getUserId(kbFolder.getUserUuid());
   ServiceContext serviceContext=portletDataContext.createServiceContext(kbFolder);
   KBFolder importedKBFolder=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBFolder existingKBFolder=KBFolderLocalServiceUtil.fetchKBFolderByUuidAndGroupId(kbFolder.getUuid(),portletDataContext.getScopeGroupId());
+    KBFolder existingKBFolder=KBFolderUtil.fetchByUUID_G(kbFolder.getUuid(),portletDataContext.getScopeGroupId());
     if (existingKBFolder == null) {
       importedKBFolder=KBFolderLocalServiceUtil.addKBFolder(userId,portletDataContext.getScopeGroupId(),kbFolder.getClassNameId(),kbFolder.getParentKBFolderId(),kbFolder.getName(),kbFolder.getDescription(),serviceContext);
     }
@@ -18,6 +18,6 @@
     importedKBFolder=KBFolderLocalServiceUtil.addKBFolder(userId,portletDataContext.getScopeGroupId(),kbFolder.getClassNameId(),kbFolder.getParentKBFolderId(),kbFolder.getName(),kbFolder.getDescription(),serviceContext);
   }
   portletDataContext.importClassedModel(kbFolder,importedKBFolder);
-  Map<Long,Long> kbFolderPrimaryKeysMap=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBFolder.class);
-  kbFolderPrimaryKeysMap.put(kbFolder.getKbFolderId(),importedKBFolder.getKbFolderId());
+  Map<Long,Long> kbFolderPrimKeysMap=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBFolder.class);
+  kbFolderPrimKeysMap.put(kbFolder.getKbFolderId(),importedKBFolder.getKbFolderId());
 }
