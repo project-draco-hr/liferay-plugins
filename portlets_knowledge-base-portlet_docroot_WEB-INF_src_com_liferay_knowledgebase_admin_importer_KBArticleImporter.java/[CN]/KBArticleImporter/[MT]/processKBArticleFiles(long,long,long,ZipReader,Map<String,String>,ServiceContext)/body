@@ -18,7 +18,7 @@
     long sectionResourceClassNameId=parentResourceClassNameId;
     long sectionResourcePrimaryKey=parentResourcePrimaryKey;
     if (Validator.isNotNull(sectionIntroFileEntryName)) {
-      KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentResourceClassNameId,parentResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
+      KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
       sectionResourceClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
       sectionResourcePrimaryKey=sectionIntroKBArticle.getResourcePrimKey();
     }
@@ -29,7 +29,7 @@
           _log.warn("Missing Markdown in file entry " + sectionFileEntryName);
         }
       }
-      addKBArticleMarkdown(userId,groupId,sectionResourceClassNameId,sectionResourcePrimaryKey,sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
+      addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
     }
   }
 }
