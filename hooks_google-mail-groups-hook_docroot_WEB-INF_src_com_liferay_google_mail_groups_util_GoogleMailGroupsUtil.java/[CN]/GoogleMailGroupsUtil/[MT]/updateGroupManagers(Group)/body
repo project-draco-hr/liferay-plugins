@@ -6,15 +6,7 @@
   List<User> users=UserLocalServiceUtil.getRoleUsers(role.getRoleId());
   for (  User user : users) {
     try {
-      String groupEmailAddress=getGroupEmailAddress(group);
-      String userEmailAddress=getUserEmailAddress(user);
-      Member member=GoogleDirectoryUtil.getGroupMember(groupEmailAddress,userEmailAddress);
-      String gRole=member.getRole();
-      if (gRole.equals("MANAGER") || gRole.equals("OWNER")) {
-        continue;
-      }
-      member.setRole("MANAGER");
-      GoogleDirectoryUtil.updateGroupMember(groupEmailAddress,userEmailAddress,member);
+      updateGroupMemberRole(group,user,"MANAGER");
     }
  catch (    Exception e) {
     }

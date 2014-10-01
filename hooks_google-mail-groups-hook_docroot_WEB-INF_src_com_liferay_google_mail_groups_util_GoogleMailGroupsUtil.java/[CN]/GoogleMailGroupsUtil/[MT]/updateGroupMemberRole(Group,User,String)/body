@@ -1,0 +1,11 @@
+{
+  String groupEmailAddress=getGroupEmailAddress(group);
+  String userEmailAddress=getUserEmailAddress(user);
+  Member member=GoogleDirectoryUtil.getGroupMember(groupEmailAddress,userEmailAddress);
+  String memberRole=member.getRole();
+  if (memberRole.equals(role) || memberRole.equals("OWNER")) {
+    return;
+  }
+  member.setRole(role);
+  GoogleDirectoryUtil.updateGroupMember(groupEmailAddress,userEmailAddress,member);
+}
