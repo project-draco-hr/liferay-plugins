@@ -1,0 +1,42 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  String urlTitle=ParamUtil.getString(renderRequest,"urlTitle");
+  if (Validator.isNotNull(urlTitle)) {
+    String kbFolderUrlTitle=ParamUtil.getString(renderRequest,"kbFolderUrlTitle");
+    KBArticle kbArticle=null;
+    if (Validator.isNotNull(kbFolderUrlTitle)) {
+      kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),kbFolderUrlTitle,urlTitle);
+    }
+ else {
+      kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID,urlTitle);
+    }
+    if (kbArticle != null) {
+      return new Tuple(kbArticle.getClassNameId(),kbArticle.getResourcePrimKey());
+    }
+  }
+  PortletPreferences preferences=renderRequest.getPreferences();
+  long defaultResourceClassNameId=GetterUtil.getLong(preferences.getValue("resourceClassNameId",null));
+  long defaultResourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
+  String mvcPath=ParamUtil.getString(renderRequest,"mvcPath");
+  if (((defaultResourcePrimKey == 0) && mvcPath.equals(viewTemplate)) || mvcPath.equals("/display/select_configuration_article.jsp")) {
+    return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+  }
+  long resourceClassNameId=ParamUtil.getLong(renderRequest,"resourceClassNameId",defaultResourceClassNameId);
+  long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey",defaultResourcePrimKey);
+  if ((resourcePrimKey == 0) || (resourcePrimKey != defaultResourcePrimKey)) {
+    return new Tuple(resourceClassNameId,resourcePrimKey);
+  }
+  long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  if (resourceClassNameId == kbFolderClassNameId) {
+    if (!KBFolderPermission.contains(permissionChecker,themeDisplay.getScopeGroupId(),defaultResourcePrimKey,ActionKeys.VIEW)) {
+      return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+    }
+  }
+ else {
+    if (!KBArticlePermission.contains(permissionChecker,defaultResourcePrimKey,ActionKeys.VIEW)) {
+      return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+    }
+  }
+  return new Tuple(defaultResourceClassNameId,defaultResourcePrimKey);
+}

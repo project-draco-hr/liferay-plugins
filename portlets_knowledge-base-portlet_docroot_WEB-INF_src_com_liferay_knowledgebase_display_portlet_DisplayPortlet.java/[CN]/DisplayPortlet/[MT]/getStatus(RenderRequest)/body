@@ -8,12 +8,15 @@
   if ((value != null) && (status == WorkflowConstants.STATUS_APPROVED)) {
     return WorkflowConstants.STATUS_APPROVED;
   }
-  long resourcePrimKey=getResourcePrimKey(renderRequest);
-  if (resourcePrimKey == 0) {
+  Tuple resourceIds=getResourceIds(renderRequest);
+  long resourceClassNameId=(Long)resourceIds.getObject(0);
+  long resourcePrimKey=(Long)resourceIds.getObject(1);
+  if (resourcePrimKey == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
     return WorkflowConstants.STATUS_APPROVED;
   }
+  long kbArticleClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
   PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-  if (KBArticlePermission.contains(permissionChecker,resourcePrimKey,ActionKeys.UPDATE)) {
+  if ((resourceClassNameId == kbArticleClassNameId) && KBArticlePermission.contains(permissionChecker,resourcePrimKey,ActionKeys.UPDATE)) {
     return ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_ANY);
   }
   return WorkflowConstants.STATUS_APPROVED;

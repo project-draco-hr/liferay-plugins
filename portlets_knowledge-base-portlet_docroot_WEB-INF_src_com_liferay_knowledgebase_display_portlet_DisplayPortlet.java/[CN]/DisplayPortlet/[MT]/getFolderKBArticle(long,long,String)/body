@@ -1,0 +1,20 @@
+{
+  if (Validator.isNotNull(kbFolderUrlTitle)) {
+    KBFolder kbFolder=KBFolderServiceUtil.fetchKBFolderByUrlTitle(groupId,kbFolderId,kbFolderUrlTitle);
+    if (kbFolder != null) {
+      kbFolderId=kbFolder.getKbFolderId();
+    }
+  }
+  List<KBArticle> kbArticles=KBArticleServiceUtil.getKBArticles(groupId,kbFolderId,WorkflowConstants.STATUS_APPROVED,0,1,new KBArticlePriorityComparator(true));
+  if (!kbArticles.isEmpty()) {
+    return kbArticles.get(0);
+  }
+  List<KBFolder> kbFolders=KnowledgeBaseUtil.getAlternativeRootKBFolders(groupId,kbFolderId);
+  for (  KBFolder kbFolder : kbFolders) {
+    KBArticle kbArticle=getFolderKBArticle(groupId,kbFolder.getKbFolderId(),kbFolder.getUrlTitle());
+    if (kbArticle != null) {
+      return kbArticle;
+    }
+  }
+  return null;
+}
