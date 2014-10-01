@@ -1,6 +1,6 @@
 {
   for (  User user : users) {
-    if (role.equals("MEMBER") && RoleLocalServiceUtil.hasUserRole(user.getUserId(),user.getCompanyId(),PortletPropsValues.EMAIL_LARGE_GROUP_ROLE,true)) {
+    if (groupMemberRole.equals("MEMBER") && RoleLocalServiceUtil.hasUserRole(user.getUserId(),user.getCompanyId(),PortletPropsValues.EMAIL_LARGE_GROUP_ROLE,true)) {
       continue;
     }
     List<Group> groups=GroupLocalServiceUtil.getUserGroups(user.getUserId(),true);
@@ -8,7 +8,7 @@
       if (!isSync(group)) {
         continue;
       }
-      updateGroupMemberRole(group,user,role);
+      updateGroupMemberRole(group,user,groupMemberRole);
     }
   }
 }
