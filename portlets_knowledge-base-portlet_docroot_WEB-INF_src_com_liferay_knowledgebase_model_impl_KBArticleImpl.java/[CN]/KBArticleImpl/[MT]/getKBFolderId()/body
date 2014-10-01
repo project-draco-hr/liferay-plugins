@@ -1,0 +1,10 @@
+{
+  if (getParentResourcePrimKey() == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+    return getParentResourcePrimKey();
+  }
+  KBArticle kbArticle=this;
+  while (kbArticle.getParentResourceClassNameId() == getClassNameId()) {
+    kbArticle=KBArticleServiceUtil.getLatestKBArticle(kbArticle.getParentResourcePrimKey(),WorkflowConstants.STATUS_ANY);
+  }
+  return kbArticle.getParentResourcePrimKey();
+}
