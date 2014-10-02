@@ -15,26 +15,25 @@
     }
   }
   PortletPreferences portletPreferences=renderRequest.getPreferences();
-  long defaultResourceClassNameId=GetterUtil.getLong(portletPreferences.getValue("resourceClassNameId",null));
   long defaultResourcePrimKey=GetterUtil.getLong(portletPreferences.getValue("resourcePrimKey",null));
   String mvcPath=ParamUtil.getString(renderRequest,"mvcPath");
   if (((defaultResourcePrimKey == 0) && mvcPath.equals(viewTemplate)) || mvcPath.equals("/display/select_configuration_article.jsp")) {
     return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
   }
+  long defaultResourceClassNameId=GetterUtil.getLong(portletPreferences.getValue("resourceClassNameId",null));
   long resourceClassNameId=ParamUtil.getLong(renderRequest,"resourceClassNameId",defaultResourceClassNameId);
   long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey",defaultResourcePrimKey);
   if ((resourcePrimKey == 0) || (resourcePrimKey != defaultResourcePrimKey)) {
     return new Tuple(resourceClassNameId,resourcePrimKey);
   }
   long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
-  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
   if (resourceClassNameId == kbFolderClassNameId) {
-    if (!KBFolderPermission.contains(permissionChecker,themeDisplay.getScopeGroupId(),defaultResourcePrimKey,ActionKeys.VIEW)) {
+    if (!KBFolderPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),defaultResourcePrimKey,ActionKeys.VIEW)) {
       return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
   }
  else {
-    if (!KBArticlePermission.contains(permissionChecker,defaultResourcePrimKey,ActionKeys.VIEW)) {
+    if (!KBArticlePermission.contains(themeDisplay.getPermissionChecker(),defaultResourcePrimKey,ActionKeys.VIEW)) {
       return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
   }

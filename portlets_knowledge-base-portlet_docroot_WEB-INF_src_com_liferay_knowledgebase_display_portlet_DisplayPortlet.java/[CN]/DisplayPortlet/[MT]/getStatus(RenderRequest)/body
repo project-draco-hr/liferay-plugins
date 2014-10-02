@@ -3,20 +3,19 @@
   if (!themeDisplay.isSignedIn()) {
     return WorkflowConstants.STATUS_APPROVED;
   }
-  String value=renderRequest.getParameter("status");
-  int status=GetterUtil.getInteger(value);
-  if ((value != null) && (status == WorkflowConstants.STATUS_APPROVED)) {
+  String statusString=renderRequest.getParameter("status");
+  int status=GetterUtil.getInteger(statusString);
+  if ((statusString != null) && (status == WorkflowConstants.STATUS_APPROVED)) {
     return WorkflowConstants.STATUS_APPROVED;
   }
   Tuple resourceTuple=getResourceTuple(renderRequest);
-  long resourceClassNameId=(Long)resourceTuple.getObject(0);
   long resourcePrimKey=(Long)resourceTuple.getObject(1);
   if (resourcePrimKey == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
     return WorkflowConstants.STATUS_APPROVED;
   }
+  long resourceClassNameId=(Long)resourceTuple.getObject(0);
   long kbArticleClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
-  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-  if ((resourceClassNameId == kbArticleClassNameId) && KBArticlePermission.contains(permissionChecker,resourcePrimKey,ActionKeys.UPDATE)) {
+  if ((resourceClassNameId == kbArticleClassNameId) && KBArticlePermission.contains(themeDisplay.getPermissionChecker(),resourcePrimKey,ActionKeys.UPDATE)) {
     return ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_ANY);
   }
   return WorkflowConstants.STATUS_APPROVED;
