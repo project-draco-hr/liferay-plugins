@@ -1,0 +1,20 @@
+{
+  try {
+    repositoryService.checkRepository(repositoryId);
+    List<SyncDLObject> syncDLObjects=new ArrayList<SyncDLObject>();
+    if (parentFolderId > 0) {
+      PermissionChecker permissionChecker=getPermissionChecker();
+      if (permissionChecker.hasPermission(repositoryId,DLFolderConstants.getClassName(),parentFolderId,ActionKeys.VIEW)) {
+        SyncDLObject syncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_FOLDER,parentFolderId);
+        if (syncDLObject != null) {
+          syncDLObjects.add(syncDLObject);
+        }
+      }
+    }
+    syncDLObjects=getSyncDLObjects(syncDLObjects,companyId,repositoryId,parentFolderId,lastAccessTime);
+    return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
+  }
+}
