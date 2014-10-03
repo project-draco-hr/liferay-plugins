@@ -15,8 +15,14 @@
   }
   long resourceClassNameId=(Long)resourceTuple.getObject(0);
   long kbArticleClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
-  if ((resourceClassNameId == kbArticleClassNameId) && KBArticlePermission.contains(themeDisplay.getPermissionChecker(),resourcePrimKey,ActionKeys.UPDATE)) {
-    return ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_ANY);
+  if (resourceClassNameId == kbArticleClassNameId) {
+    KBArticle kbArticle=KBArticleServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+    if (kbArticle == null) {
+      return WorkflowConstants.STATUS_APPROVED;
+    }
+    if (KBArticlePermission.contains(themeDisplay.getPermissionChecker(),resourcePrimKey,ActionKeys.UPDATE)) {
+      return ParamUtil.getInteger(renderRequest,"status",WorkflowConstants.STATUS_ANY);
+    }
   }
   return WorkflowConstants.STATUS_APPROVED;
 }

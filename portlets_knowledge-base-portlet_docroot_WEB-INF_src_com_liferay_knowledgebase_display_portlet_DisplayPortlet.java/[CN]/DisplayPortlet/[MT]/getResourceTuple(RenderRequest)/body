@@ -33,7 +33,8 @@
     }
   }
  else {
-    if (!KBArticlePermission.contains(themeDisplay.getPermissionChecker(),defaultResourcePrimKey,ActionKeys.VIEW)) {
+    KBArticle kbArticle=KBArticleServiceUtil.fetchLatestKBArticle(defaultResourcePrimKey,WorkflowConstants.STATUS_ANY);
+    if ((kbArticle != null) && !KBArticlePermission.contains(themeDisplay.getPermissionChecker(),defaultResourcePrimKey,ActionKeys.VIEW)) {
       return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
   }
