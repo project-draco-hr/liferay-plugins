@@ -6,7 +6,7 @@
   if (json.contains("exception\":\"")) {
     throw new Exception(getExceptionMessage(json));
   }
-  JSONDeserializer<List<T>> jsonDeserializer=new JSONDeserializer<List<T>>();
-  jsonDeserializer.use("values",clazz);
-  return jsonDeserializer.deserialize(json);
+  TypeFactory typeFactory=_objectMapper.getTypeFactory();
+  JavaType type=typeFactory.constructCollectionType(List.class,clazz);
+  return _objectMapper.readValue(json,type);
 }
