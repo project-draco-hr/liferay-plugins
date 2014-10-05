@@ -1,0 +1,10 @@
+{
+  StringEntity entity=new StringEntity(json.toString(),StandardCharsets.UTF_8);
+  entity.setContentType("application/json");
+  HttpPost httpPost=new HttpPost(url);
+  for (  String key : _headers.keySet()) {
+    httpPost.addHeader(key,_headers.get(key));
+  }
+  httpPost.setEntity(entity);
+  return execute(httpPost);
+}
