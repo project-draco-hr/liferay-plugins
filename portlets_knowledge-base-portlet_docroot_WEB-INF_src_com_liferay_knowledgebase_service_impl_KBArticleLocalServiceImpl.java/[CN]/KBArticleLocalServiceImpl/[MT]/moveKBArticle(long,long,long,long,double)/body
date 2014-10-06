@@ -4,7 +4,7 @@
   long kbFolderClassNameId=classNameLocalService.getClassNameId(KBFolderConstants.getClassName());
   long kbFolderId=KBFolderConstants.DEFAULT_PARENT_FOLDER_ID;
   if (parentResourceClassNameId == kbFolderClassNameId) {
-    kbFolderId=parentResourceClassNameId;
+    kbFolderId=parentResourcePrimKey;
   }
  else {
     KBArticle latestKBArticle=getLatestKBArticle(parentResourcePrimKey,WorkflowConstants.STATUS_ANY);
@@ -20,7 +20,7 @@
     curKBArticle.setPriority(priority);
     kbArticlePersistence.update(curKBArticle);
   }
-  KBArticle kbArticle=kbArticlePersistence.findByPrimaryKey(resourcePrimKey);
+  KBArticle kbArticle=getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
   if (kbArticle.getKbFolderId() != kbFolderId) {
     List<KBArticle> descendantKBArticles=getAllDescendantKBArticles(resourcePrimKey,WorkflowConstants.STATUS_ANY,null);
     for (    KBArticle curKBArticle : descendantKBArticles) {
