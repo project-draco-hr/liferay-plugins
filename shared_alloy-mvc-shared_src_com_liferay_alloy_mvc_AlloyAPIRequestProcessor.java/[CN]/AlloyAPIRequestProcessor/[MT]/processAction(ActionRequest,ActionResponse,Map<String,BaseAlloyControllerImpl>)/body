@@ -1,0 +1,26 @@
+{
+  JSONObject jsonResponse=JSONFactoryUtil.createJSONObject();
+  jsonResponse.put("success",false);
+  String controller=ParamUtil.getString(actionRequest,"controller");
+  BaseAlloyControllerImpl baseAlloyControllerImpl=alloyControllers.get(controller);
+  if (baseAlloyControllerImpl == null) {
+    throw new Exception("Unable to find controller " + controller);
+  }
+  String action=ParamUtil.getString(actionRequest,"action");
+  try {
+    Method method=baseAlloyControllerImpl.getMethod(action);
+    HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+    baseAlloyControllerImpl.setRequest(request);
+    baseAlloyControllerImpl.initFormat();
+    baseAlloyControllerImpl.initPortletVariables();
+    method.invoke(baseAlloyControllerImpl);
+    String JSONData=GetterUtil.getString(request.getAttribute("JSONData"));
+    jsonResponse.put("data",JSONData);
+    jsonResponse.put("success",true);
+  }
+ catch (  Exception e) {
+    jsonResponse.put("error","An unexpected exception occurred: " + e.getMessage());
+    jsonResponse.put("stacktrace",StackTraceUtil.getStackTrace(e));
+  }
+  writeJSON(actionRequest,actionResponse,jsonResponse);
+}

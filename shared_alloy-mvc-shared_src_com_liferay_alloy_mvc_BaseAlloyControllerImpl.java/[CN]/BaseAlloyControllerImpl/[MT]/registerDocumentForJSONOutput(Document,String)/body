@@ -1,0 +1,15 @@
+{
+  if (!JSONFormat) {
+    return;
+  }
+  if (document == null) {
+    throw new Exception("Document can not be null");
+  }
+  String JSONData=asJSON(document,arguments).toString();
+  if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
+    portletRequest.setAttribute("JSONData",JSONData.toString());
+  }
+ else   if (lifecycle.equals(PortletRequest.RENDER_PHASE)) {
+    renderRequest.setAttribute("JSONData",JSONData.toString());
+  }
+}
