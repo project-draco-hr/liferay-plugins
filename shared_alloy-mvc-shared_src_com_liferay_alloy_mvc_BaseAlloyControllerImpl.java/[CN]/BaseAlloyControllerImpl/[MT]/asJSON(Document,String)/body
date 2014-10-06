@@ -2,17 +2,17 @@
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   Map<String,Field> fields=document.getFields();
   if (arguments.length > 0) {
-    for (int i=0; i < arguments.length; ++i) {
-      if (fields.containsKey(arguments[i])) {
-        jsonObject.put(arguments[i],document.get(arguments[i]));
+    for (int i=0; i < arguments.length; i++) {
+      if (!fields.containsKey(arguments[i])) {
+        continue;
       }
+      jsonObject.put(arguments[i],document.get(arguments[i]));
+      return jsonObject;
     }
   }
- else {
-    for (    Map.Entry<String,Field> entry : fields.entrySet()) {
-      Field field=(Field)entry.getValue();
-      jsonObject.put(field.getName(),field.getValue());
-    }
+  for (  Map.Entry<String,Field> entry : fields.entrySet()) {
+    Field field=(Field)entry.getValue();
+    jsonObject.put(field.getName(),field.getValue());
   }
   return jsonObject;
 }
