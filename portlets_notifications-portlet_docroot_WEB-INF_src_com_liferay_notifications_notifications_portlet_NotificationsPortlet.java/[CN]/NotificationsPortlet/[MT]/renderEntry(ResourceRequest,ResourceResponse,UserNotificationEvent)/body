@@ -26,7 +26,6 @@
   Portlet portlet=PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(),userNotificationEvent.getType());
   String portletName=portlet.getDisplayName();
   String portletIcon=portlet.getContextPath() + portlet.getIcon();
-  Format simpleDateFormat=FastDateFormatFactoryUtil.getSimpleDateFormat("EEEE, MMMMM dd, yyyy 'at' h:mm a",themeDisplay.getLocale(),themeDisplay.getTimeZone());
   JSONObject userNotificationEventJSONObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
   long userId=userNotificationEventJSONObject.getLong("userId");
   String userFullName=HtmlUtil.escape(PortalUtil.getUserName(userId,StringPool.BLANK));
@@ -35,5 +34,7 @@
   if (user != null) {
     userPortraitURL=user.getPortraitURL(themeDisplay);
   }
-  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$ACTION_DIV$]","[$BODY$]","[$CSS_CLASS$]","[$ICON_MENU$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$TIMESTAMP$]","[$TIMETITLE$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{actionDiv,userNotificationFeedEntry.getBody(),cssClass,iconMenu,portletIcon,portletName,Time.getRelativeTimeDescription(userNotificationEvent.getTimestamp(),themeDisplay.getLocale(),themeDisplay.getTimeZone()),simpleDateFormat.format(userNotificationEvent.getTimestamp()),userFullName,userPortraitURL});
+  Format dateFormatDate=FastDateFormatFactoryUtil.getDate(DateFormat.FULL,themeDisplay.getLocale(),themeDisplay.getTimeZone());
+  Format dateTimeFormat=FastDateFormatFactoryUtil.getDateTime(DateFormat.FULL,DateFormat.SHORT,themeDisplay.getLocale(),themeDisplay.getTimeZone());
+  return StringUtil.replace(ContentUtil.get(PortletPropsValues.USER_NOTIFICATION_ENTRY),new String[]{"[$ACTION_DIV$]","[$BODY$]","[$CSS_CLASS$]","[$ICON_MENU$]","[$PORTLET_ICON$]","[$PORTLET_NAME$]","[$TIMESTAMP$]","[$TIMETITLE$]","[$USER_FULL_NAME$]","[$USER_PORTRAIT_URL$]"},new String[]{actionDiv,userNotificationFeedEntry.getBody(),cssClass,iconMenu,portletIcon,portletName,Time.getRelativeTimeDescription(userNotificationEvent.getTimestamp(),themeDisplay.getLocale(),themeDisplay.getTimeZone(),dateFormatDate),dateTimeFormat.format(userNotificationEvent.getTimestamp()),userFullName,userPortraitURL});
 }
