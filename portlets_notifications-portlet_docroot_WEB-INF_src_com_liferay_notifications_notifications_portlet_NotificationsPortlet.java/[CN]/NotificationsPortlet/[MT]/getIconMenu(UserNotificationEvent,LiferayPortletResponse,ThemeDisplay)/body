@@ -3,7 +3,24 @@
   if (!userNotificationEvent.isArchived()) {
     markAsReadLI=StringUtil.replace(_MARK_AS_READ_LI,"[$MARK_AS_READ_LABEL$]",LanguageUtil.get(themeDisplay.getLocale(),"mark-as-read"));
   }
-  String listItems=markAsReadLI;
+  String unsubscribeLI=StringPool.BLANK;
+  JSONObject jsonObject=JSONFactoryUtil.createJSONObject(userNotificationEvent.getPayload());
+  long subscriptionId=jsonObject.getLong("subscriptionId");
+  if (subscriptionId > 0) {
+    Subscription subscription=SubscriptionLocalServiceUtil.fetchSubscription(subscriptionId);
+    if (subscription == null) {
+      subscriptionId=0;
+    }
+  }
+  if (subscriptionId > 0) {
+    PortletURL unsubscribeActionURL=liferayPortletResponse.createActionURL(PortletKeys.NOTIFICATIONS);
+    unsubscribeActionURL.setParameter("subscriptionId",String.valueOf(subscriptionId));
+    unsubscribeActionURL.setParameter("userNotificationEventId",String.valueOf(userNotificationEvent.getUserNotificationEventId()));
+    unsubscribeActionURL.setWindowState(WindowState.NORMAL);
+    unsubscribeActionURL.setParameter("javax.portlet.action","unsubscribe");
+    unsubscribeLI=StringUtil.replace(_UNSUBSCRIBE_LI,new String[]{"[$UNSUBSCRIBE_LINK$]","[$UNSUBSCRIBE_LABEL$]","[$UNSUBSCRIBE_INFO$]"},new String[]{unsubscribeActionURL.toString(),LanguageUtil.get(themeDisplay.getLocale(),"unsubscribe"),LanguageUtil.get(themeDisplay.getLocale(),"stop-receiving-notifications-from-this-asset")});
+  }
+  String listItems=markAsReadLI + unsubscribeLI;
   if (!Validator.isBlank(listItems)) {
     return StringUtil.replace(_ICON_MENU_DIV,"[$LIST_ITEMS$]",listItems);
   }
