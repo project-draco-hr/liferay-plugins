@@ -1,9 +1,6 @@
 {
-  KBArticle kbArticle=null;
-  try {
-    kbArticle=KBArticleLocalServiceUtil.getLatestKBArticle(resourcePrimKey,status);
-  }
- catch (  NoSuchArticleException nsae) {
+  KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,status);
+  if (kbArticle == null) {
     return null;
   }
   PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();

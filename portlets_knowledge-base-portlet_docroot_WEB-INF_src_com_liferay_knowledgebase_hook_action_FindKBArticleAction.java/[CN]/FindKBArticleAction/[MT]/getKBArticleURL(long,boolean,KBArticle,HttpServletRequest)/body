@@ -26,11 +26,8 @@
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SECTION)) {
         PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
         String[] kbArticlesSections=preferences.getValues("kbArticlesSections",new String[0]);
-        KBArticle rootKBArticle=null;
-        try {
-          rootKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(kbArticle.getRootResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
-        }
- catch (        NoSuchArticleException nsae) {
+        KBArticle rootKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(kbArticle.getRootResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
+        if (rootKBArticle == null) {
           continue;
         }
         String[] sections=AdminUtil.unescapeSections(rootKBArticle.getSections());
@@ -44,11 +41,8 @@
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_ARTICLE)) {
         PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
         long resourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
-        KBArticle selKBArticle=null;
-        try {
-          selKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
-        }
- catch (        NoSuchArticleException nsae) {
+        KBArticle selKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+        if (selKBArticle == null) {
           continue;
         }
         long rootResourcePrimKey=kbArticle.getRootResourcePrimKey();
