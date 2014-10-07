@@ -5,7 +5,7 @@
   if (!KnowledgeBaseUtil.isValidUrlTitle(urlTitle)) {
     throw new InvalidUrlTitleException("KBArticle urlTitle must start with a '/' and contain only " + "alphanumeric characters, dashes and underscores");
   }
-  Collection<KBArticle> kbArticles=kbArticlePersistence.findByG_KBFI_UT(groupId,kbFolderId,urlTitle);
+  Collection<KBArticle> kbArticles=kbArticlePersistence.findByG_KBFI_UT(groupId,kbFolderId,urlTitle.substring(1));
   if (!kbArticles.isEmpty()) {
     throw new DuplicateUrlTitleException("Duplicate urlTitle " + urlTitle);
   }
