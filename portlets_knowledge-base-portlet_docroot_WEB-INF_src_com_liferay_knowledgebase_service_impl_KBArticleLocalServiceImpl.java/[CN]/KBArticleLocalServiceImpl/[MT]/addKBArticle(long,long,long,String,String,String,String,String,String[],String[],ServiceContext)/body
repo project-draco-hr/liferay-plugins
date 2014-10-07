@@ -5,6 +5,8 @@
   Date now=new Date();
   validate(title,content,sourceURL);
   validateParent(parentResourceClassNameId,parentResourcePrimKey);
+  long kbFolderId=KnowledgeBaseUtil.getKBFolderId(parentResourceClassNameId,parentResourcePrimKey);
+  validateUrlTitle(groupId,kbFolderId,urlTitle);
   long kbArticleId=counterLocalService.increment();
   long resourcePrimKey=counterLocalService.increment();
   long rootResourcePrimKey=getRootResourcePrimKey(resourcePrimKey,parentResourceClassNameId,parentResourcePrimKey);
@@ -20,7 +22,6 @@
   kbArticle.setRootResourcePrimKey(rootResourcePrimKey);
   kbArticle.setParentResourceClassNameId(parentResourceClassNameId);
   kbArticle.setParentResourcePrimKey(parentResourcePrimKey);
-  long kbFolderId=KnowledgeBaseUtil.getKBFolderId(parentResourceClassNameId,parentResourcePrimKey);
   kbArticle.setKbFolderId(kbFolderId);
   kbArticle.setVersion(KBArticleConstants.DEFAULT_VERSION);
   kbArticle.setTitle(title);
