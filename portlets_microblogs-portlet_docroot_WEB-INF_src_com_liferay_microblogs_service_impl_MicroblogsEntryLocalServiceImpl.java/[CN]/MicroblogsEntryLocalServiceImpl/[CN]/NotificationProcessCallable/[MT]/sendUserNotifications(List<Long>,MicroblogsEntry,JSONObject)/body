@@ -8,6 +8,8 @@
       end=count;
     }
     for (int j=start; j < end; j++) {
+      long subscriptionId=getSubscriptionId(receiverUserIds.get(j),microblogsEntry);
+      notificationEventJSONObject.put("subscriptionId",subscriptionId);
       if (UserNotificationManagerUtil.isDeliver(receiverUserIds.get(j),PortletKeys.MICROBLOGS,0,MicroblogsEntryConstants.TYPE_REPLY,UserNotificationDeliveryConstants.TYPE_PUSH)) {
         UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(receiverUserIds.get(j),PortletKeys.MICROBLOGS,UserNotificationDeliveryConstants.TYPE_PUSH,notificationEventJSONObject);
       }
