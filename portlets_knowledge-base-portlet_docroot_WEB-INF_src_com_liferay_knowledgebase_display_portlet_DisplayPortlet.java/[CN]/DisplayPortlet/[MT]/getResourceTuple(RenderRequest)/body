@@ -10,7 +10,7 @@
  else {
       kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(themeDisplay.getScopeGroupId(),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID,urlTitle);
     }
-    if (kbArticle != null) {
+    if ((kbArticle != null) && KBArticlePermission.contains(themeDisplay.getPermissionChecker(),kbArticle,ActionKeys.VIEW)) {
       return new Tuple(kbArticle.getClassNameId(),kbArticle.getResourcePrimKey());
     }
   }
@@ -28,12 +28,13 @@
   }
   long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
   if (resourceClassNameId == kbFolderClassNameId) {
-    if (!KBFolderPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),defaultResourcePrimKey,ActionKeys.VIEW)) {
+    KBFolder kbFolder=KBFolderLocalServiceUtil.fetchKBFolder(resourcePrimKey);
+    if ((kbFolder != null) && !KBFolderPermission.contains(themeDisplay.getPermissionChecker(),themeDisplay.getScopeGroupId(),defaultResourcePrimKey,ActionKeys.VIEW)) {
       return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
   }
  else {
-    KBArticle kbArticle=KBArticleServiceUtil.fetchLatestKBArticle(defaultResourcePrimKey,WorkflowConstants.STATUS_ANY);
+    KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(defaultResourcePrimKey,WorkflowConstants.STATUS_ANY);
     if ((kbArticle != null) && !KBArticlePermission.contains(themeDisplay.getPermissionChecker(),defaultResourcePrimKey,ActionKeys.VIEW)) {
       return new Tuple(PortalUtil.getClassNameId(KBFolderConstants.getClassName()),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
     }
