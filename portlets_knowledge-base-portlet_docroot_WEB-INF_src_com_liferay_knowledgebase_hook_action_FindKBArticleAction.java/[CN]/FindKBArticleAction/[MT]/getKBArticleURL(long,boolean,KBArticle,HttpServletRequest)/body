@@ -7,10 +7,10 @@
     for (    Portlet portlet : portlets) {
       String rootPortletId=PortletConstants.getRootPortletId(portlet.getPortletId());
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_DISPLAY)) {
-        PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
+        PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
         long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
-        long resourceClassNameId=GetterUtil.getLong(preferences.getValue("resourceClassNameId",null),kbFolderClassNameId);
-        long resourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+        long resourceClassNameId=GetterUtil.getLong(portletPreferences.getValue("resourceClassNameId",null),kbFolderClassNameId);
+        long resourcePrimKey=GetterUtil.getLong(portletPreferences.getValue("resourcePrimKey",null),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
         if (resourceClassNameId == kbFolderClassNameId) {
           if (isParentFolder(resourcePrimKey,kbArticle.getKbFolderId())) {
             return getKBArticleURL(layout.getPlid(),portlet.getPortletId(),kbArticle,request);
@@ -24,8 +24,8 @@
         }
       }
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_SECTION)) {
-        PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
-        String[] kbArticlesSections=preferences.getValues("kbArticlesSections",new String[0]);
+        PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
+        String[] kbArticlesSections=portletPreferences.getValues("kbArticlesSections",new String[0]);
         KBArticle rootKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(kbArticle.getRootResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
         if (rootKBArticle == null) {
           continue;
@@ -39,8 +39,8 @@
         }
       }
       if (rootPortletId.equals(PortletKeys.KNOWLEDGE_BASE_ARTICLE)) {
-        PortletPreferences preferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
-        long resourcePrimKey=GetterUtil.getLong(preferences.getValue("resourcePrimKey",null));
+        PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.getPortletSetup(layout,portlet.getPortletId(),StringPool.BLANK);
+        long resourcePrimKey=GetterUtil.getLong(portletPreferences.getValue("resourcePrimKey",null));
         KBArticle selKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
         if (selKBArticle == null) {
           continue;
