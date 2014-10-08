@@ -1,12 +1,38 @@
 {
-  HttpSession session=request.getSession();
   URLConnection urlConnection=url.openConnection();
+  HttpSession session=request.getSession();
   String cookie=(String)session.getAttribute(WebKeys.COOKIE);
-  if (cookie != null) {
+  if (Validator.isNotNull(cookie)) {
     urlConnection.setRequestProperty(HttpHeaders.COOKIE,cookie);
   }
+  Enumeration<String> enu=request.getHeaderNames();
+  boolean useCaches=true;
+  while (enu.hasMoreElements()) {
+    String header=enu.nextElement();
+    if (StringUtil.equalsIgnoreCase(header,HttpHeaders.COOKIE) || StringUtil.equalsIgnoreCase(header,HttpHeaders.IF_MODIFIED_SINCE)) {
+      continue;
+    }
+    String value=request.getHeader(header);
+    if (Validator.isNotNull(value)) {
+      if (StringUtil.equalsIgnoreCase(header,HttpHeaders.CACHE_CONTROL) && value.contains(HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE)) {
+        useCaches=false;
+      }
+      urlConnection.setRequestProperty(header,value);
+    }
+  }
+  urlConnection.setIfModifiedSince(request.getDateHeader(HttpHeaders.IF_MODIFIED_SINCE));
+  urlConnection.setUseCaches(useCaches);
   urlConnection.connect();
   response.setContentLength(urlConnection.getContentLength());
   response.setContentType(urlConnection.getContentType());
+  Map<String,List<String>> headers=urlConnection.getHeaderFields();
+  for (  Map.Entry<String,List<String>> entry : headers.entrySet()) {
+    if (Validator.isNotNull(entry.getKey()) && !response.containsHeader(entry.getKey())) {
+      response.setHeader(entry.getKey(),urlConnection.getHeaderField(entry.getKey()));
+    }
+  }
+  if (urlConnection instanceof HttpURLConnection) {
+    response.setStatus(((HttpURLConnection)urlConnection).getResponseCode());
+  }
   ServletResponseUtil.write(response,urlConnection.getInputStream());
 }
