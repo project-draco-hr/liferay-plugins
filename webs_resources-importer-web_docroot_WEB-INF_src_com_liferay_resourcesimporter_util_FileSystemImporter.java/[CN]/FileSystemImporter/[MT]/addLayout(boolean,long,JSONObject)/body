@@ -2,29 +2,8 @@
   if (targetClassName.equals(LayoutSetPrototype.class.getName())) {
     privateLayout=true;
   }
-  Map<Locale,String> nameMap=new HashMap<Locale,String>();
-  JSONObject nameMapJSONObject=layoutJSONObject.getJSONObject("nameMap");
-  if (nameMapJSONObject != null) {
-    nameMap=(Map<Locale,String>)LocalizationUtil.deserialize(nameMapJSONObject);
-    if (!nameMap.containsKey(LocaleUtil.getDefault())) {
-      Collection<String> values=nameMap.values();
-      Iterator iterator=values.iterator();
-      nameMap.put(LocaleUtil.getDefault(),(String)iterator.next());
-    }
-  }
- else {
-    String name=layoutJSONObject.getString("name");
-    nameMap.put(LocaleUtil.getDefault(),name);
-  }
-  Map<Locale,String> titleMap=new HashMap<Locale,String>();
-  JSONObject titleMapJSONObject=layoutJSONObject.getJSONObject("titleMap");
-  if (titleMapJSONObject != null) {
-    titleMap=(Map<Locale,String>)LocalizationUtil.deserialize(titleMapJSONObject);
-  }
- else {
-    String title=layoutJSONObject.getString("title");
-    titleMap.put(LocaleUtil.getDefault(),title);
-  }
+  Map<Locale,String> nameMap=getMap(layoutJSONObject,"name",true);
+  Map<Locale,String> titleMap=getMap(layoutJSONObject,"title",true);
   String type=GetterUtil.getString(layoutJSONObject.getString("type"),LayoutConstants.TYPE_PORTLET);
   String typeSettings=layoutJSONObject.getString("typeSettings");
   boolean hidden=layoutJSONObject.getBoolean("hidden");

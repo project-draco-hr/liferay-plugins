@@ -1,0 +1,17 @@
+{
+  Map<Locale,String> localizedMap=new HashMap<Locale,String>();
+  JSONObject nameMapJSONObject=layoutJSONObject.getJSONObject(fieldName.concat("Map"));
+  if (nameMapJSONObject != null) {
+    localizedMap=(Map<Locale,String>)LocalizationUtil.deserialize(nameMapJSONObject);
+    if (!localizedMap.containsKey(LocaleUtil.getDefault()) && requiresDefaultLocale) {
+      Collection<String> values=localizedMap.values();
+      Iterator iterator=values.iterator();
+      localizedMap.put(LocaleUtil.getDefault(),(String)iterator.next());
+    }
+  }
+ else {
+    String name=layoutJSONObject.getString(fieldName);
+    localizedMap.put(LocaleUtil.getDefault(),name);
+  }
+  return localizedMap;
+}
