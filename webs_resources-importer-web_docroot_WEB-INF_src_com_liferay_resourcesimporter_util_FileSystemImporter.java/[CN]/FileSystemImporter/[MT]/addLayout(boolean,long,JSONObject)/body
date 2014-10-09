@@ -33,7 +33,8 @@
     friendlyURL=StringPool.SLASH + friendlyURL;
   }
   friendlyURLMap.put(LocaleUtil.getDefault(),friendlyURL);
-  Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,LayoutConstants.TYPE_PORTLET,typeSettings,hidden,friendlyURLMap,serviceContext);
+  String type=GetterUtil.getString(layoutJSONObject.getString("type"),LayoutConstants.TYPE_PORTLET);
+  Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,type,typeSettings,hidden,friendlyURLMap,serviceContext);
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
   if (Validator.isNotNull(layoutTemplateId)) {
