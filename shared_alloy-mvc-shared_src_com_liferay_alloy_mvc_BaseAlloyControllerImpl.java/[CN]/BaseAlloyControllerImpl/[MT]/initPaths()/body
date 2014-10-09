@@ -20,11 +20,19 @@
   if (log.isDebugEnabled()) {
     log.debug("View path " + viewPath);
   }
+  format=ParamUtil.getString(request,"format");
+  if (Validator.isNull(format)) {
+    Map<String,String> defaultRouteParameters=alloyPortlet.getDefaultRouteParameters();
+    format=defaultRouteParameters.get("format");
+  }
+  if (log.isDebugEnabled()) {
+    log.debug("Format " + format);
+  }
   if (mimeResponse != null) {
     portletURL=mimeResponse.createRenderURL();
     portletURL.setParameter("action",actionPath);
     portletURL.setParameter("controller",controllerPath);
-    portletURL.setParameter("format","html");
+    portletURL.setParameter("format",format);
     if (log.isDebugEnabled()) {
       log.debug("Portlet URL " + portletURL);
     }
