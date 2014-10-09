@@ -25,6 +25,7 @@
     String title=layoutJSONObject.getString("title");
     titleMap.put(LocaleUtil.getDefault(),title);
   }
+  String type=GetterUtil.getString(layoutJSONObject.getString("type"),LayoutConstants.TYPE_PORTLET);
   String typeSettings=layoutJSONObject.getString("typeSettings");
   boolean hidden=layoutJSONObject.getBoolean("hidden");
   Map<Locale,String> friendlyURLMap=new HashMap<Locale,String>();
@@ -33,7 +34,6 @@
     friendlyURL=StringPool.SLASH + friendlyURL;
   }
   friendlyURLMap.put(LocaleUtil.getDefault(),friendlyURL);
-  String type=GetterUtil.getString(layoutJSONObject.getString("type"),LayoutConstants.TYPE_PORTLET);
   Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,type,typeSettings,hidden,friendlyURLMap,serviceContext);
   LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
   String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
