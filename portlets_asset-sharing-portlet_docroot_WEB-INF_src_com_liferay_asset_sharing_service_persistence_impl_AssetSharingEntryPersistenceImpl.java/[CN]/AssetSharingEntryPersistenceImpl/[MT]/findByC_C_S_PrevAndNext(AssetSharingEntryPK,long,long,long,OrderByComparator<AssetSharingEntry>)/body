@@ -1,0 +1,18 @@
+{
+  AssetSharingEntry assetSharingEntry=findByPrimaryKey(assetSharingEntryPK);
+  Session session=null;
+  try {
+    session=openSession();
+    AssetSharingEntry[] array=new AssetSharingEntryImpl[3];
+    array[0]=getByC_C_S_PrevAndNext(session,assetSharingEntry,classNameId,classPK,sharedToClassNameId,orderByComparator,true);
+    array[1]=assetSharingEntry;
+    array[2]=getByC_C_S_PrevAndNext(session,assetSharingEntry,classNameId,classPK,sharedToClassNameId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

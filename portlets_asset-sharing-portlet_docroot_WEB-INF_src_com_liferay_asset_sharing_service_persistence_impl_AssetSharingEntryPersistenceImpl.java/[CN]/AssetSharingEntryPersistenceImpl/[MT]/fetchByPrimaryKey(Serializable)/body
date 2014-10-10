@@ -1,0 +1,27 @@
+{
+  AssetSharingEntry assetSharingEntry=(AssetSharingEntry)EntityCacheUtil.getResult(AssetSharingEntryModelImpl.ENTITY_CACHE_ENABLED,AssetSharingEntryImpl.class,primaryKey);
+  if (assetSharingEntry == _nullAssetSharingEntry) {
+    return null;
+  }
+  if (assetSharingEntry == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      assetSharingEntry=(AssetSharingEntry)session.get(AssetSharingEntryImpl.class,primaryKey);
+      if (assetSharingEntry != null) {
+        cacheResult(assetSharingEntry);
+      }
+ else {
+        EntityCacheUtil.putResult(AssetSharingEntryModelImpl.ENTITY_CACHE_ENABLED,AssetSharingEntryImpl.class,primaryKey,_nullAssetSharingEntry);
+      }
+    }
+ catch (    Exception e) {
+      EntityCacheUtil.removeResult(AssetSharingEntryModelImpl.ENTITY_CACHE_ENABLED,AssetSharingEntryImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return assetSharingEntry;
+}

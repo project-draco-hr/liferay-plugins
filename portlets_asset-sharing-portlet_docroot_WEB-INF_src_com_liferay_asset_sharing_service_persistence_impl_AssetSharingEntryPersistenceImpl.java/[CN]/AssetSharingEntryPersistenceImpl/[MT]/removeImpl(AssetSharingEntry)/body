@@ -1,0 +1,23 @@
+{
+  assetSharingEntry=toUnwrappedModel(assetSharingEntry);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(assetSharingEntry)) {
+      assetSharingEntry=(AssetSharingEntry)session.get(AssetSharingEntryImpl.class,assetSharingEntry.getPrimaryKeyObj());
+    }
+    if (assetSharingEntry != null) {
+      session.delete(assetSharingEntry);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (assetSharingEntry != null) {
+    clearCache(assetSharingEntry);
+  }
+  return assetSharingEntry;
+}
