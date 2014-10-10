@@ -1,12 +1,14 @@
 {
-  StringBuilder sb=new StringBuilder();
+  StringBundler sb=new StringBundler();
   for (  String fieldLabel : fieldsMap.keySet()) {
     String fieldValue=fieldsMap.get(fieldLabel);
-    sb.append(prepareFieldForCSVExport(fieldValue));
+    sb.append(getCSVFormatedValue(fieldValue));
+    sb.append(PortletPropsValues.CSV_SEPARATOR);
   }
-  String s=sb.substring(0,sb.length() - PortletPropsValues.CSV_SEPARATOR.length()) + StringPool.NEW_LINE;
+  sb.setIndex(sb.index() - 1);
+  sb.append(CharPool.NEW_LINE);
   try {
-    FileUtil.write(fileName,s,false,true);
+    FileUtil.write(fileName,sb.toString(),false,true);
     return true;
   }
  catch (  Exception e) {
