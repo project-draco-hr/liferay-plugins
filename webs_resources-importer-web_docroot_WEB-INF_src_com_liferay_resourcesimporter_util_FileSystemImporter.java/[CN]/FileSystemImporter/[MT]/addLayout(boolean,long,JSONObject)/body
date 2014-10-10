@@ -17,22 +17,31 @@
   }
   friendlyURLMap.put(LocaleUtil.getDefault(),friendlyURL);
   ServiceContext serviceContext=new ServiceContext();
-  String layoutPrototypeName=layoutJSONObject.getString("layoutPrototypeName");
-  if (Validator.isNotNull(layoutPrototypeName)) {
-    boolean layoutPrototypeLinkEnabled=GetterUtil.getBoolean(layoutJSONObject.getString("layoutPrototypeLinkEnabled"),false);
-    serviceContext.setAttribute("layoutPrototypeLinkEnabled",layoutPrototypeLinkEnabled);
-    LayoutPrototype layoutPrototype=getLayoutPrototype(companyId,layoutPrototypeName);
-    serviceContext.setAttribute("layoutPrototypeUuid",layoutPrototype.getUuid());
+  serviceContext.setCompanyId(companyId);
+  serviceContext.setScopeGroupId(groupId);
+  serviceContext.setUserId(userId);
+  ServiceContextThreadLocal.pushServiceContext(serviceContext);
+  try {
+    String layoutPrototypeName=layoutJSONObject.getString("layoutPrototypeName");
+    if (Validator.isNotNull(layoutPrototypeName)) {
+      boolean layoutPrototypeLinkEnabled=GetterUtil.getBoolean(layoutJSONObject.getString("layoutPrototypeLinkEnabled"),false);
+      serviceContext.setAttribute("layoutPrototypeLinkEnabled",layoutPrototypeLinkEnabled);
+      LayoutPrototype layoutPrototype=getLayoutPrototype(companyId,layoutPrototypeName);
+      serviceContext.setAttribute("layoutPrototypeUuid",layoutPrototype.getUuid());
+    }
+    Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,type,typeSettings,hidden,friendlyURLMap,serviceContext);
+    LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+    String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
+    if (Validator.isNotNull(layoutTemplateId)) {
+      layoutTypePortlet.setLayoutTemplateId(userId,layoutTemplateId,false);
+    }
+    JSONArray columnsJSONArray=layoutJSONObject.getJSONArray("columns");
+    addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
+    LayoutLocalServiceUtil.updateLayout(groupId,layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+    JSONArray layoutsJSONArray=layoutJSONObject.getJSONArray("layouts");
+    addLayouts(privateLayout,layout.getLayoutId(),layoutsJSONArray);
   }
-  Layout layout=LayoutLocalServiceUtil.addLayout(userId,groupId,privateLayout,parentLayoutId,nameMap,titleMap,null,null,null,type,typeSettings,hidden,friendlyURLMap,serviceContext);
-  LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
-  String layoutTemplateId=layoutJSONObject.getString("layoutTemplateId",_defaultLayoutTemplateId);
-  if (Validator.isNotNull(layoutTemplateId)) {
-    layoutTypePortlet.setLayoutTemplateId(userId,layoutTemplateId,false);
+  finally {
+    ServiceContextThreadLocal.popServiceContext();
   }
-  JSONArray columnsJSONArray=layoutJSONObject.getJSONArray("columns");
-  addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
-  LayoutLocalServiceUtil.updateLayout(groupId,layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
-  JSONArray layoutsJSONArray=layoutJSONObject.getJSONArray("layouts");
-  addLayouts(privateLayout,layout.getLayoutId(),layoutsJSONArray);
 }
