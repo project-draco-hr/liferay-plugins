@@ -1,17 +1,6 @@
 {
   List<String> assetTagNames=new ArrayList<String>();
-  Matcher matcher=_assetTagPattern.matcher(content);
-  while (matcher.find()) {
-    String assetTagName=matcher.group();
-    assetTagName=assetTagName.substring(1);
-    assetTagNames.add(assetTagName);
-  }
-  matcher=_userTagPattern.matcher(content);
-  while (matcher.find()) {
-    String assetTagName=matcher.group();
-    assetTagName=assetTagName.replace("[@",StringPool.BLANK);
-    assetTagName=assetTagName.replace("]",StringPool.BLANK);
-    assetTagNames.add(assetTagName);
-  }
+  assetTagNames.addAll(MicroblogsUtil.getHashtags(content));
+  assetTagNames.addAll(MicroblogsUtil.getTaggedUsersScreenNames(content));
   return assetTagNames.toArray(new String[assetTagNames.size()]);
 }
