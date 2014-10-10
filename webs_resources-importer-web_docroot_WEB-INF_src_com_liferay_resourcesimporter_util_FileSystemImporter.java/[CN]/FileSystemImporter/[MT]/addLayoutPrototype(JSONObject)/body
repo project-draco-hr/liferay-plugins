@@ -1,0 +1,25 @@
+{
+  Map<Locale,String> nameMap=getMap(layoutPrototypeJSONObject,"name",true);
+  Map<Locale,String> descriptionMap=getMap(layoutPrototypeJSONObject,"description",true);
+  ServiceContext serviceContext=new ServiceContext();
+  String uuid=layoutPrototypeJSONObject.getString("uuid");
+  LayoutPrototype layoutPrototype=null;
+  if (Validator.isNotNull(uuid)) {
+    serviceContext.setUuid(uuid);
+    layoutPrototype=LayoutPrototypeLocalServiceUtil.fetchLayoutPrototypeByUuidAndCompanyId(uuid,companyId);
+  }
+  if (layoutPrototype == null) {
+    layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,nameMap,descriptionMap,true,serviceContext);
+  }
+ else {
+    LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(layoutPrototype.getLayoutPrototypeId(),nameMap,descriptionMap,layoutPrototype.isActive(),serviceContext);
+  }
+  Layout layout=layoutPrototype.getLayout();
+  String typeSettings=layoutPrototypeJSONObject.getString("typeSettings");
+  if (Validator.isNotNull(typeSettings)) {
+    layout=LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),typeSettings);
+  }
+  JSONArray columnsJSONArray=layoutPrototypeJSONObject.getJSONArray("columns");
+  addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
+  LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),layout.isPrivateLayout(),layout.getLayoutId(),layout.getTypeSettings());
+}
