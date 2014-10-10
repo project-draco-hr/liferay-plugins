@@ -3,7 +3,7 @@
   String userFullName=HtmlUtil.escape(PortalUtil.getUserName(microblogsEntry.getUserId(),StringPool.BLANK));
   long parentMicroblogsEntryId=MicroblogsUtil.getParentMicroblogsEntryId(microblogsEntry);
   if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPLY) {
-    if (microblogsEntry.getReceiverUserId() == serviceContext.getUserId()) {
+    if (MicroblogsUtil.getParentMicroblogsUserId(microblogsEntry) == serviceContext.getUserId()) {
       title=serviceContext.translate("x-commented-on-your-post",userFullName);
     }
  else     if (MicroblogsUtil.hasReplied(parentMicroblogsEntryId,serviceContext.getUserId())) {
