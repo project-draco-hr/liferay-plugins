@@ -7,17 +7,17 @@
     }
     Directory.Members members=directory.members();
     Directory.Members.Delete delete=members.delete(groupEmailAddress,emailAddress);
-    for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
+    for (int i=0; i < PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
       try {
         delete.execute();
         return;
       }
  catch (      GoogleJsonResponseException gjre) {
-        if (i >= (PortletPropsValues.GOOGLE_API_MAX_RETRIES - 1)) {
+        if (i >= (PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS - 1)) {
           throw new PortalException(gjre);
         }
  else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_WAIT_TIME);
+          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
         }
       }
     }

@@ -5,7 +5,7 @@
     Member member=new Member();
     member.setEmail(emailAddress);
     Directory.Members.Insert insert=members.insert(groupEmailAddress,member);
-    for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
+    for (int i=0; i < PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
       try {
         insert.execute();
         return;
@@ -14,11 +14,11 @@
         if (gjre.getStatusCode() == _ERROR_CONFLICT) {
           return;
         }
-        if (i >= (PortletPropsValues.GOOGLE_API_MAX_RETRIES - 1)) {
+        if (i >= (PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS - 1)) {
           throw new PortalException(gjre);
         }
  else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_WAIT_TIME);
+          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
         }
       }
     }

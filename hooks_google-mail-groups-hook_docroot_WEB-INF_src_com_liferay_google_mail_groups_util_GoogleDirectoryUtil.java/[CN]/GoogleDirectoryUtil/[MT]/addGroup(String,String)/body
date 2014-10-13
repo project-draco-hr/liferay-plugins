@@ -6,17 +6,17 @@
     group.setEmail(groupEmailAddress);
     group.setName(name);
     Directory.Groups.Insert insert=groups.insert(group);
-    for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
+    for (int i=0; i < PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
       try {
         insert.execute();
         return;
       }
  catch (      GoogleJsonResponseException gjre) {
-        if (i >= (PortletPropsValues.GOOGLE_API_MAX_RETRIES - 1)) {
+        if (i >= (PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS - 1)) {
           throw new PortalException(gjre);
         }
  else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_WAIT_TIME);
+          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
         }
       }
     }
