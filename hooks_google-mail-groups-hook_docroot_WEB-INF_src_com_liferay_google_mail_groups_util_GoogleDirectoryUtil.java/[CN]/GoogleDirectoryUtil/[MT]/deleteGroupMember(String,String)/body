@@ -1,6 +1,10 @@
 {
   try {
     Directory directory=getDirectory();
+    Group group=getGroup(groupEmailAddress);
+    if (group == null) {
+      return;
+    }
     Directory.Members members=directory.members();
     Directory.Members.Delete delete=members.delete(groupEmailAddress,emailAddress);
     for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
