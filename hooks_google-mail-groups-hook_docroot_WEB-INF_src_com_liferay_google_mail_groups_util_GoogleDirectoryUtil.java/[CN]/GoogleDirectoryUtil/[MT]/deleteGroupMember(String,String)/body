@@ -3,7 +3,20 @@
     Directory directory=getDirectory();
     Directory.Members members=directory.members();
     Directory.Members.Delete delete=members.delete(groupEmailAddress,emailAddress);
-    delete.execute();
+    for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
+      try {
+        delete.execute();
+        return;
+      }
+ catch (      GoogleJsonResponseException gjre) {
+        if (i >= (PortletPropsValues.GOOGLE_API_MAX_RETRIES - 1)) {
+          throw new PortalException(gjre);
+        }
+ else {
+          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_WAIT_TIME);
+        }
+      }
+    }
   }
  catch (  Exception e) {
     throw new PortalException(e);

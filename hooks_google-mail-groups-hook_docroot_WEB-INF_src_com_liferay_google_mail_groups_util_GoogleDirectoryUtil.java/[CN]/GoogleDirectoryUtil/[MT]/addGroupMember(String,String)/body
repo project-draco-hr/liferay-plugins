@@ -5,15 +5,25 @@
     Member member=new Member();
     member.setEmail(emailAddress);
     Directory.Members.Insert insert=members.insert(groupEmailAddress,member);
-    insert.execute();
-  }
- catch (  GoogleJsonResponseException gjre) {
-    if (gjre.getStatusCode() == _ERROR_CONFLICT) {
-      return;
+    for (int i=0; i < PortletPropsValues.GOOGLE_API_MAX_RETRIES; i++) {
+      try {
+        insert.execute();
+        return;
+      }
+ catch (      GoogleJsonResponseException gjre) {
+        if (gjre.getStatusCode() == _ERROR_CONFLICT) {
+          return;
+        }
+        if (i >= (PortletPropsValues.GOOGLE_API_MAX_RETRIES - 1)) {
+          throw new PortalException(gjre);
+        }
+ else {
+          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_WAIT_TIME);
+        }
+      }
     }
-    throw new PortalException(gjre);
   }
-catch (  Exception e) {
+ catch (  Exception e) {
     throw new PortalException(e);
   }
 }
