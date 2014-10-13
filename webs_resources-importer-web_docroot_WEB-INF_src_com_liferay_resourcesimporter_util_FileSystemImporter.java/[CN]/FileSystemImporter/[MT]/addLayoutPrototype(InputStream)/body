@@ -17,7 +17,9 @@
       }
       return;
     }
-    LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(layoutPrototype);
+    if (!updateModeEnabled) {
+      LayoutPrototypeLocalServiceUtil.deleteLayoutPrototype(layoutPrototype);
+    }
   }
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setCompanyId(companyId);
@@ -25,7 +27,12 @@
   if (Validator.isNotNull(uuid)) {
     serviceContext.setUuid(uuid);
   }
-  layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,getMap(name),descriptionMap,true,serviceContext);
+  if (!updateModeEnabled || (layoutPrototype == null)) {
+    layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,getMap(name),descriptionMap,true,serviceContext);
+  }
+ else {
+    layoutPrototype=LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(layoutPrototype.getLayoutPrototypeId(),getMap(name),descriptionMap,layoutPrototype.isActive(),serviceContext);
+  }
   JSONArray columnsJSONArray=layoutTemplateJSONObject.getJSONArray("columns");
   Layout layout=layoutPrototype.getLayout();
   addLayoutColumns(layout,LayoutTypePortletConstants.COLUMN_PREFIX,columnsJSONArray);
