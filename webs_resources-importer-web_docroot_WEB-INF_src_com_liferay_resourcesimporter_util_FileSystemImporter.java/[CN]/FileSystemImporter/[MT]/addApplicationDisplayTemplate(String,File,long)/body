@@ -9,7 +9,14 @@
       }
       return;
     }
-    DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
+    if (!updateModeEnabled) {
+      DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
+    }
   }
-  DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
+  if (!updateModeEnabled || (ddmTemplate == null)) {
+    DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
+  }
+ else {
+    DDMTemplateLocalServiceUtil.updateTemplate(ddmTemplate.getTemplateId(),ddmTemplate.getClassPK(),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,serviceContext);
+  }
 }

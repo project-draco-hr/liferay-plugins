@@ -9,14 +9,22 @@
       }
       return;
     }
-    DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
+    if (!updateModeEnabled) {
+      DDMStructureLocalServiceUtil.deleteDDMStructure(ddmStructure);
+    }
   }
   String xsd=StringUtil.read(inputStream);
   if (isJournalStructureXSD(xsd)) {
     xsd=JournalConverterUtil.getDDMXSD(xsd);
   }
   setServiceContext(fileName);
-  ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),getMap(name),null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  if (!updateModeEnabled || (ddmStructure == null)) {
+    ddmStructure=DDMStructureLocalServiceUtil.addStructure(userId,groupId,parentDDMStructureKey,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),getMap(name),null,xsd,PropsUtil.get(PropsKeys.JOURNAL_ARTICLE_STORAGE_TYPE),DDMStructureConstants.TYPE_DEFAULT,serviceContext);
+  }
+ else {
+    DDMStructure parentStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),parentDDMStructureKey);
+    ddmStructure=DDMStructureLocalServiceUtil.updateStructure(ddmStructure.getStructureId(),parentStructure.getStructureId(),getMap(name),null,xsd,serviceContext);
+  }
   addDDMTemplates(ddmStructure.getStructureKey(),_JOURNAL_DDM_TEMPLATES_DIR_NAME + fileName);
   if (Validator.isNull(parentDDMStructureKey)) {
     addDDMStructures(ddmStructure.getStructureKey(),_JOURNAL_DDM_STRUCTURES_DIR_NAME + fileName);
