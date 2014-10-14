@@ -10,11 +10,17 @@
     type=SyncConstants.TYPE_FILE;
   }
  else {
-    dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(dlFileEntry.getFileEntryId(),DLFileEntryConstants.PRIVATE_WORKING_COPY_VERSION);
-    lockExpirationDate=lock.getExpirationDate();
-    lockUserId=lock.getUserId();
-    lockUserName=lock.getUserName();
-    type=SyncConstants.TYPE_PRIVATE_WORKING_COPY;
+    try {
+      dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(dlFileEntry.getFileEntryId(),DLFileEntryConstants.PRIVATE_WORKING_COPY_VERSION);
+      lockExpirationDate=lock.getExpirationDate();
+      lockUserId=lock.getUserId();
+      lockUserName=lock.getUserName();
+      type=SyncConstants.TYPE_PRIVATE_WORKING_COPY;
+    }
+ catch (    NoSuchFileVersionException nsfve) {
+      dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(dlFileEntry.getFileEntryId(),dlFileEntry.getVersion());
+      type=SyncConstants.TYPE_FILE;
+    }
   }
   SyncDLObject syncDLObject=new SyncDLObjectImpl();
   syncDLObject.setCompanyId(dlFileVersion.getCompanyId());
