@@ -2,6 +2,9 @@
   if (queryConfig.isAllFieldsSelected()) {
     return;
   }
-  String[] selectedFieldNames=queryConfig.getSelectedFieldNames();
-  solrQuery.setFields(selectedFieldNames);
+  Set<String> selectedFieldNamesSet=SetUtil.fromArray(queryConfig.getSelectedFieldNames());
+  if (!selectedFieldNamesSet.contains(Field.UID)) {
+    selectedFieldNamesSet.add(Field.UID);
+  }
+  solrQuery.setFields(selectedFieldNamesSet.toArray(new String[selectedFieldNamesSet.size()]));
 }
