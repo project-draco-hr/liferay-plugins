@@ -1,11 +1,11 @@
 {
-  setServiceContext(fileName);
   String title=FileUtil.stripExtension(fileName);
+  setServiceContext(fileName);
   FileEntry fileEntry=null;
   try {
     fileEntry=DLAppLocalServiceUtil.addFileEntry(userId,groupId,parentFolderId,fileName,MimeTypesUtil.getContentType(fileName),title,StringPool.BLANK,StringPool.BLANK,inputStream,length,serviceContext);
   }
- catch (  DuplicateFileException e) {
+ catch (  DuplicateFileException dfe) {
     fileEntry=DLAppLocalServiceUtil.getFileEntry(groupId,parentFolderId,title);
     String previousVersion=fileEntry.getVersion();
     fileEntry=DLAppLocalServiceUtil.updateFileEntry(userId,fileEntry.getFileEntryId(),fileName,MimeTypesUtil.getContentType(fileName),title,StringPool.BLANK,StringPool.BLANK,true,inputStream,length,serviceContext);
