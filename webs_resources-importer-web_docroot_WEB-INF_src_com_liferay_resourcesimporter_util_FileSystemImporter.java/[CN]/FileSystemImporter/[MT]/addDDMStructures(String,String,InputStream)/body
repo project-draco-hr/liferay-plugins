@@ -23,7 +23,11 @@
   }
  else {
     DDMStructure parentStructure=DDMStructureLocalServiceUtil.fetchStructure(groupId,PortalUtil.getClassNameId(JournalArticle.class),parentDDMStructureKey);
-    ddmStructure=DDMStructureLocalServiceUtil.updateStructure(ddmStructure.getStructureId(),parentStructure.getStructureId(),getMap(name),null,xsd,serviceContext);
+    long parentStructureId=DDMStructureConstants.DEFAULT_PARENT_STRUCTURE_ID;
+    if (parentStructure != null) {
+      parentStructureId=parentStructure.getStructureId();
+    }
+    ddmStructure=DDMStructureLocalServiceUtil.updateStructure(ddmStructure.getStructureId(),parentStructureId,getMap(name),null,xsd,serviceContext);
   }
   addDDMTemplates(ddmStructure.getStructureKey(),_JOURNAL_DDM_TEMPLATES_DIR_NAME + fileName);
   if (Validator.isNull(parentDDMStructureKey)) {
