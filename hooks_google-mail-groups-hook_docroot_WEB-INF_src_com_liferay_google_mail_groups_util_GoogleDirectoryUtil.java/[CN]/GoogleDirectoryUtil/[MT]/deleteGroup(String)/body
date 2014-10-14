@@ -3,13 +3,13 @@
     Directory directory=getDirectory();
     Directory.Groups groups=directory.groups();
     Directory.Groups.Delete delete=groups.delete(groupEmailAddress);
-    for (int i=0; i < PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
+    for (int i=1; i <= PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
       try {
         delete.execute();
         return;
       }
  catch (      GoogleJsonResponseException gjre) {
-        if (i >= (PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS - 1)) {
+        if (i == PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS) {
           throw new PortalException(gjre);
         }
  else {
