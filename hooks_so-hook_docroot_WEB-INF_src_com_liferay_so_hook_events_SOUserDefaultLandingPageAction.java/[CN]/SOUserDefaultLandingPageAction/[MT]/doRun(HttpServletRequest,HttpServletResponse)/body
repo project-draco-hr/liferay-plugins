@@ -1,0 +1,20 @@
+{
+  long companyId=PortalUtil.getCompanyId(request);
+  String path=PrefsPropsUtil.getString(companyId,PropsKeys.DEFAULT_LANDING_PAGE_PATH);
+  if (_log.isInfoEnabled()) {
+    _log.info(PropsKeys.DEFAULT_LANDING_PAGE_PATH + StringPool.EQUAL + path);
+  }
+  if (Validator.isNull(path)) {
+    return;
+  }
+  HttpSession session=request.getSession();
+  if (path.contains("${liferay:screenName}") || path.contains("${liferay:userId}")) {
+    User user=(User)session.getAttribute(WebKeys.USER);
+    if (user == null) {
+      return;
+    }
+    path=StringUtil.replace(path,new String[]{"${liferay:screenName}","${liferay:userId}"},new String[]{HtmlUtil.escapeURL(user.getScreenName()),String.valueOf(user.getUserId())});
+  }
+  LastPath lastPath=new LastPath(StringPool.BLANK,path);
+  session.setAttribute(WebKeys.LAST_PATH,lastPath);
+}
