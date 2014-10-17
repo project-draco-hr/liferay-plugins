@@ -10,15 +10,14 @@
     for (int j=start; j < end; j++) {
       long subscriptionId=getSubscriptionId(receiverUserIds.get(j),microblogsEntry);
       notificationEventJSONObject.put("subscriptionId",subscriptionId);
-      int notificationType=MicroblogsUtil.getNotificationType(microblogsEntry,receiverUserIds.get(j));
-      if (notificationType == 0) {
-        continue;
-      }
-      notificationEventJSONObject.put("notificationType",notificationType);
-      if (UserNotificationManagerUtil.isDeliver(receiverUserIds.get(j),PortletKeys.MICROBLOGS,0,notificationType,UserNotificationDeliveryConstants.TYPE_PUSH)) {
+      int notificationType=MicroblogsUtil.getNotificationType(microblogsEntry,receiverUserIds.get(j),UserNotificationDeliveryConstants.TYPE_PUSH);
+      if (notificationType != 0) {
+        notificationEventJSONObject.put("notificationType",notificationType);
         UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(receiverUserIds.get(j),PortletKeys.MICROBLOGS,UserNotificationDeliveryConstants.TYPE_PUSH,notificationEventJSONObject);
       }
-      if (UserNotificationManagerUtil.isDeliver(receiverUserIds.get(j),PortletKeys.MICROBLOGS,0,notificationType,UserNotificationDeliveryConstants.TYPE_WEBSITE)) {
+      notificationType=MicroblogsUtil.getNotificationType(microblogsEntry,receiverUserIds.get(j),UserNotificationDeliveryConstants.TYPE_WEBSITE);
+      if (notificationType != 0) {
+        notificationEventJSONObject.put("notificationType",notificationType);
         UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(receiverUserIds.get(j),PortletKeys.MICROBLOGS,UserNotificationDeliveryConstants.TYPE_WEBSITE,notificationEventJSONObject);
       }
     }
