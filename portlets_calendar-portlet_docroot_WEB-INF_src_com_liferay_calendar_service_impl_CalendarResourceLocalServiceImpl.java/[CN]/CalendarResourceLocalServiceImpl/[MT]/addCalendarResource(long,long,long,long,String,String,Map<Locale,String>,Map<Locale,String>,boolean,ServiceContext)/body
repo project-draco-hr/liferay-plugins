@@ -33,7 +33,11 @@
   if (!ExportImportThreadLocal.isImportInProcess()) {
     serviceContext.setAddGroupPermissions(true);
     serviceContext.setAddGuestPermissions(true);
-    calendarLocalService.addCalendar(userId,calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,false,false,serviceContext);
+    TimeZone timeZone=TimeZoneUtil.getDefault();
+    if (calendarResource.getClassNameId() == classNameLocalService.getClassNameId(User.class)) {
+      timeZone=user.getTimeZone();
+    }
+    calendarLocalService.addCalendar(userId,calendarResource.getGroupId(),calendarResourceId,nameMap,descriptionMap,timeZone.getID(),PortletPropsValues.CALENDAR_COLOR_DEFAULT,true,false,false,serviceContext);
   }
   updateAsset(calendarResource.getUserId(),calendarResource,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames());
   return calendarResource;
