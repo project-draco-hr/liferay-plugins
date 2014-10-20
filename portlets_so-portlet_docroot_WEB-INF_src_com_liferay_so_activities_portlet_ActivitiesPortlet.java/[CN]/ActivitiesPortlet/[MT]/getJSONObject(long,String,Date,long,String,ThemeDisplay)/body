@@ -5,7 +5,8 @@
     jsonObject.put("commentControlsClass","hide");
   }
   jsonObject.put("mbMessageIdOrMicroblogsEntryId",mbMessageIdOrMicroblogsEntryId);
-  jsonObject.put("modifiedDate",Time.getRelativeTimeDescription(modifiedDate,themeDisplay.getLocale(),themeDisplay.getTimeZone()));
+  Format dateFormat=FastDateFormatFactoryUtil.getDate(DateFormat.FULL,themeDisplay.getLocale(),themeDisplay.getTimeZone());
+  jsonObject.put("modifiedDate",Time.getRelativeTimeDescription(modifiedDate.getTime(),themeDisplay.getLocale(),themeDisplay.getTimeZone(),dateFormat));
   User user=UserLocalServiceUtil.fetchUser(userId);
   if (user != null) {
     jsonObject.put("userDisplayURL",user.getDisplayURL(themeDisplay));
