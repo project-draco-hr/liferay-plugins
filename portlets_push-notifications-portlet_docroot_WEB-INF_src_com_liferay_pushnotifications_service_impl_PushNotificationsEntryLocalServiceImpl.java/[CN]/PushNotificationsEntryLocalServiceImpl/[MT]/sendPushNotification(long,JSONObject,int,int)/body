@@ -1,5 +1,8 @@
 {
-  addFromUserDetails(jsonObject);
+  long fromUserId=addFromUserDetails(jsonObject);
+  JSONObject payload=jsonObject.getJSONObject(PushNotificationsConstants.KEY_PAYLOAD);
+  long parentEntryId=jsonObject.getLong(PushNotificationsConstants.PARENT_ENTRY_ID,PushNotificationsConstants.DEFAULT_PARENT_ENTRY_ID);
+  addPushNotificationsEntry(fromUserId,parentEntryId,payload);
   for (  Map.Entry<String,PushNotificationsSender> entry : _pushNotificationsSenders.entrySet()) {
     List<String> tokens=new ArrayList<String>();
     List<PushNotificationsDevice> pushNotificationsDevices=pushNotificationsDeviceLocalService.getPushNotificationsDevices(toUserId,entry.getKey(),start,end);
