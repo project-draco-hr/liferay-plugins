@@ -1,0 +1,19 @@
+{
+  PushNotificationsEntryCacheModel pushNotificationsEntryCacheModel=new PushNotificationsEntryCacheModel();
+  pushNotificationsEntryCacheModel.pushNotificationsEntryId=getPushNotificationsEntryId();
+  pushNotificationsEntryCacheModel.userId=getUserId();
+  Date createDate=getCreateDate();
+  if (createDate != null) {
+    pushNotificationsEntryCacheModel.createDate=createDate.getTime();
+  }
+ else {
+    pushNotificationsEntryCacheModel.createDate=Long.MIN_VALUE;
+  }
+  pushNotificationsEntryCacheModel.parentPushNotificationsEntryId=getParentPushNotificationsEntryId();
+  pushNotificationsEntryCacheModel.payload=getPayload();
+  String payload=pushNotificationsEntryCacheModel.payload;
+  if ((payload != null) && (payload.length() == 0)) {
+    pushNotificationsEntryCacheModel.payload=null;
+  }
+  return pushNotificationsEntryCacheModel;
+}
