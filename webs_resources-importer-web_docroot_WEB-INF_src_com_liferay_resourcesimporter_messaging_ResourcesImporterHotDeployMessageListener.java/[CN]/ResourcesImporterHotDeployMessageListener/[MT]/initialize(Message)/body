@@ -22,38 +22,7 @@
     ExportImportThreadLocal.setPortletImportInProcess(true);
     try {
       CompanyThreadLocal.setCompanyId(company.getCompanyId());
-      Importer importer=null;
-      if ((privateLARURL != null) || (publicLARURL != null)) {
-        LARImporter larImporter=getLARImporter();
-        URLConnection privateLARURLConnection=null;
-        if (privateLARURL != null) {
-          privateLARURLConnection=privateLARURL.openConnection();
-          larImporter.setPrivateLARInputStream(privateLARURLConnection.getInputStream());
-        }
-        URLConnection publicLARURLConnection=null;
-        if (publicLARURL != null) {
-          publicLARURLConnection=publicLARURL.openConnection();
-          larImporter.setPublicLARInputStream(publicLARURLConnection.getInputStream());
-        }
-        importer=larImporter;
-      }
- else       if ((resourcePaths != null) && !resourcePaths.isEmpty()) {
-        importer=getResourceImporter();
-        importer.setResourcesDir(_RESOURCES_DIR);
-      }
- else       if ((templatePaths != null) && !templatePaths.isEmpty()) {
-        importer=getResourceImporter();
-        Group group=GroupLocalServiceUtil.getCompanyGroup(company.getCompanyId());
-        importer.setGroupId(group.getGroupId());
-        importer.setResourcesDir(_TEMPLATES_DIR);
-      }
- else       if (Validator.isNotNull(resourcesDir)) {
-        importer=getFileSystemImporter();
-        importer.setResourcesDir(resourcesDir);
-      }
-      if (importer == null) {
-        throw new ImporterException("No valid importer found");
-      }
+      Importer importer=createImporter(company.getCompanyId(),resourcesDir,resourcePaths,templatePaths,privateLARURL,publicLARURL);
       boolean appendVersion=GetterUtil.getBoolean(pluginPackageProperties.getProperty("resources-importer-append-version"),true);
       importer.setAppendVersion(appendVersion);
       importer.setCompanyId(company.getCompanyId());
