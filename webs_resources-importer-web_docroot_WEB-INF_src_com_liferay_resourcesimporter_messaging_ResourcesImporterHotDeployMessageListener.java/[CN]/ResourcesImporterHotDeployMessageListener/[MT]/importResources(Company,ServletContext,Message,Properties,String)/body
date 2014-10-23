@@ -3,8 +3,7 @@
   try {
     CompanyThreadLocal.setCompanyId(company.getCompanyId());
     ImporterFactory importerFactory=ImporterFactory.getInstance();
-    Importer importer=importerFactory.createImporter(company.getCompanyId(),servletContext,resourcesDir);
-    configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties);
+    Importer importer=importerFactory.createImporter(company.getCompanyId(),servletContext,pluginPackageProperties,resourcesDir);
     if (!importer.isDeveloperModeEnabled() && importer.isExisting() && !importer.isCompanyGroup()) {
       if (_log.isInfoEnabled()) {
         _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
@@ -38,7 +37,7 @@
     newMessage.put("companyId",company.getCompanyId());
     newMessage.put("error",ie.getMessage());
     newMessage.put("servletContextName",servletContext.getServletContextName());
-    newMessage.put("targetClassName",getTargetClassName(pluginPackageProperties));
+    newMessage.put("targetClassName",ImporterFactory.getTargetClassName(pluginPackageProperties));
     newMessage.put("targetClassPK",0);
     MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
   }
