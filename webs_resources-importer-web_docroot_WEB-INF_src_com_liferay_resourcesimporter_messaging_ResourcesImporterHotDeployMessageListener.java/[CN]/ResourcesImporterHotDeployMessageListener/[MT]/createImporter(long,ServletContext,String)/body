@@ -1,4 +1,12 @@
 {
+  Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
+  Set<String> templatePaths=servletContext.getResourcePaths(_TEMPLATES_DIR);
+  URL privateLARURL=null;
+  URL publicLARURL=servletContext.getResource(_RESOURCES_DIR.concat("archive.lar"));
+  if (publicLARURL == null) {
+    privateLARURL=servletContext.getResource(_RESOURCES_DIR.concat("private.lar"));
+    publicLARURL=servletContext.getResource(_RESOURCES_DIR.concat("public.lar"));
+  }
   Importer importer=null;
   if ((privateLARURL != null) || (publicLARURL != null)) {
     LARImporter larImporter=getLARImporter();
