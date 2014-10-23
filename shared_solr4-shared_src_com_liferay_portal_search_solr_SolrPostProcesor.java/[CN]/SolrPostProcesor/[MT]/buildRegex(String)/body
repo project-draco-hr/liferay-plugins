@@ -1,18 +1,16 @@
 {
-  StringBuilder regex=new StringBuilder(phrase.length());
-  int p=0;
+  StringBuilder sb=new StringBuilder(phrase.length());
+  int x=0;
   while (true) {
-    int q=phrase.indexOf(StringPool.QUESTION,p);
-    if (q == -1) {
+    int y=phrase.indexOf(StringPool.QUESTION,x);
+    if (y == -1) {
       break;
     }
-    String part=phrase.substring(p,q);
-    regex.append(Pattern.quote(part));
-    regex.append(StringPool.PERIOD);
-    regex.append(StringPool.PLUS);
-    p=q + 1;
+    sb.append(Pattern.quote(phrase.substring(x,y)));
+    sb.append(StringPool.PERIOD);
+    sb.append(StringPool.PLUS);
+    x=y + 1;
   }
-  String remainder=phrase.substring(p);
-  regex.append(Pattern.quote(remainder));
-  return regex.toString();
+  sb.append(Pattern.quote(phrase.substring(x)));
+  return sb.toString();
 }
