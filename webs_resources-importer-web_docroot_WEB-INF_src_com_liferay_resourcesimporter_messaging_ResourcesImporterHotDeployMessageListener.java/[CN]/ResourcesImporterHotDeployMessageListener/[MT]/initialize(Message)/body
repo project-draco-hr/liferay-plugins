@@ -2,7 +2,7 @@
   String servletContextName=message.getString("servletContextName");
   ServletContext servletContext=ServletContextPool.get(servletContextName);
   Properties pluginPackageProperties=getPluginPackageProperties(servletContext);
-  String resourcesDir=pluginPackageProperties.getProperty("resources-importer-external-dir");
+  String resourcesDir=ImporterFactory.getResourcesDir(pluginPackageProperties);
   if ((servletContext.getResource(ImporterFactory.RESOURCES_DIR) == null) && (servletContext.getResource(ImporterFactory.TEMPLATES_DIR) == null) && Validator.isNull(resourcesDir)) {
     return;
   }
@@ -11,7 +11,7 @@
     ExportImportThreadLocal.setLayoutImportInProcess(true);
     ExportImportThreadLocal.setPortletImportInProcess(true);
     for (    Company company : companies) {
-      importResources(company,servletContext,message,pluginPackageProperties,resourcesDir);
+      importResources(company,servletContext,message,pluginPackageProperties);
     }
   }
   finally {
