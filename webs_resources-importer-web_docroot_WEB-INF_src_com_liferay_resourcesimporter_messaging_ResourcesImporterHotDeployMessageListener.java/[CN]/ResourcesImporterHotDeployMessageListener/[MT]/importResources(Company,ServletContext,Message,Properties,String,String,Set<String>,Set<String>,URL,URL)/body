@@ -3,8 +3,8 @@
   try {
     CompanyThreadLocal.setCompanyId(company.getCompanyId());
     Importer importer=createImporter(company.getCompanyId(),resourcesDir,resourcePaths,templatePaths,privateLARURL,publicLARURL);
-    boolean developerModeEnabled=configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties,targetClassName);
-    if (!developerModeEnabled && importer.isExisting() && !importer.isCompanyGroup()) {
+    configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties,targetClassName);
+    if (!importer.isDeveloperModeEnabled() && importer.isExisting() && !importer.isCompanyGroup()) {
       if (_log.isInfoEnabled()) {
         _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
       }
