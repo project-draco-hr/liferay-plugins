@@ -19,27 +19,27 @@
       long endTime=System.currentTimeMillis() - startTime;
       _log.info("Importing resources from " + servletContext.getServletContextName() + " to group "+ importer.getGroupId()+ " takes "+ endTime+ " ms");
     }
-    Message newMessage=new Message();
-    newMessage.put("companyId",company.getCompanyId());
-    newMessage.put("servletContextName",servletContext.getServletContextName());
-    newMessage.put("targetClassName",importer.getTargetClassName());
-    newMessage.put("targetClassPK",importer.getTargetClassPK());
-    if (message.getResponseId() != null) {
+    Message message=new Message();
+    message.put("companyId",company.getCompanyId());
+    message.put("servletContextName",servletContext.getServletContextName());
+    message.put("targetClassName",importer.getTargetClassName());
+    message.put("targetClassPK",importer.getTargetClassPK());
+    if (Validator.isNotNull(messageResponseId)) {
       Map<String,Object> responseMap=new HashMap<String,Object>();
       responseMap.put("groupId",importer.getTargetClassPK());
-      newMessage.setPayload(responseMap);
-      newMessage.setResponseId(message.getResponseId());
+      message.setPayload(responseMap);
+      message.setResponseId(messageResponseId);
     }
-    MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
+    MessageBusUtil.sendMessage("liferay/resources_importer",message);
   }
  catch (  ImporterException ie) {
-    Message newMessage=new Message();
-    newMessage.put("companyId",company.getCompanyId());
-    newMessage.put("error",ie.getMessage());
-    newMessage.put("servletContextName",servletContext.getServletContextName());
-    newMessage.put("targetClassName",pluginPackageProperties.getTargetClassName());
-    newMessage.put("targetClassPK",0);
-    MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
+    Message message=new Message();
+    message.put("companyId",company.getCompanyId());
+    message.put("error",ie.getMessage());
+    message.put("servletContextName",servletContext.getServletContextName());
+    message.put("targetClassName",pluginPackageProperties.getTargetClassName());
+    message.put("targetClassPK",0);
+    MessageBusUtil.sendMessage("liferay/resources_importer",message);
   }
  finally {
     CompanyThreadLocal.setCompanyId(companyId);
