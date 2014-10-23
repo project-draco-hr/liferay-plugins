@@ -1,16 +1,16 @@
 {
-  String before=_query.substring(i,a);
-  _sb.append(before);
-  i=b + 1;
-  String phrase=_query.substring(a,i);
+  String before=query.substring(index,firstQuoteIndex);
+  sb.append(before);
+  index=secondQuoteIndex + 1;
+  String phrase=query.substring(firstQuoteIndex,index);
   if (questionMark) {
     String regex=buildRegex(phrase);
     Pattern pattern=Pattern.compile(regex);
-    Matcher matcher=pattern.matcher(_keywords);
+    Matcher matcher=pattern.matcher(keywords);
     if (matcher.find()) {
-      _sb.append(matcher.group());
+      sb.append(matcher.group());
       return;
     }
   }
-  _sb.append(phrase);
+  sb.append(phrase);
 }

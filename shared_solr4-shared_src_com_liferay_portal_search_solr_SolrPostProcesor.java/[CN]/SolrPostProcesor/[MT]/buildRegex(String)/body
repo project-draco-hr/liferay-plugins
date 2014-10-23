@@ -2,13 +2,14 @@
   StringBuilder regex=new StringBuilder(phrase.length());
   int p=0;
   while (true) {
-    int q=phrase.indexOf('?',p);
+    int q=phrase.indexOf(StringPool.QUESTION,p);
     if (q == -1) {
       break;
     }
     String part=phrase.substring(p,q);
     regex.append(Pattern.quote(part));
-    regex.append(".+");
+    regex.append(StringPool.PERIOD);
+    regex.append(StringPool.PLUS);
     p=q + 1;
   }
   String remainder=phrase.substring(p);
