@@ -2,7 +2,8 @@
   long companyId=CompanyThreadLocal.getCompanyId();
   try {
     CompanyThreadLocal.setCompanyId(company.getCompanyId());
-    Importer importer=createImporter(company.getCompanyId(),servletContext,resourcesDir);
+    ImporterFactory importerFactory=ImporterFactory.getInstance();
+    Importer importer=importerFactory.createImporter(company.getCompanyId(),servletContext,resourcesDir);
     configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties);
     if (!importer.isDeveloperModeEnabled() && importer.isExisting() && !importer.isCompanyGroup()) {
       if (_log.isInfoEnabled()) {
