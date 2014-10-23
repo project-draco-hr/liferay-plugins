@@ -6,7 +6,6 @@
   if ((servletContext.getResource(_RESOURCES_DIR) == null) && (servletContext.getResource(_TEMPLATES_DIR) == null) && Validator.isNull(resourcesDir)) {
     return;
   }
-  String targetClassName=pluginPackageProperties.getProperty("resources-importer-target-class-name",LayoutSetPrototype.class.getName());
   Set<String> resourcePaths=servletContext.getResourcePaths(_RESOURCES_DIR);
   Set<String> templatePaths=servletContext.getResourcePaths(_TEMPLATES_DIR);
   URL privateLARURL=null;
@@ -20,7 +19,7 @@
     ExportImportThreadLocal.setLayoutImportInProcess(true);
     ExportImportThreadLocal.setPortletImportInProcess(true);
     for (    Company company : companies) {
-      importResources(company,servletContext,message,pluginPackageProperties,resourcesDir,targetClassName,resourcePaths,templatePaths,privateLARURL,publicLARURL);
+      importResources(company,servletContext,message,pluginPackageProperties,resourcesDir,resourcePaths,templatePaths,privateLARURL,publicLARURL);
     }
   }
   finally {

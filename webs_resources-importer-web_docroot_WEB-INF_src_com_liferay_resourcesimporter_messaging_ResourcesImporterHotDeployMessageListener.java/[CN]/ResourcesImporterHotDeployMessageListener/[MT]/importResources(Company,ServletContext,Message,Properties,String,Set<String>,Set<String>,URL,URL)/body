@@ -3,7 +3,7 @@
   try {
     CompanyThreadLocal.setCompanyId(company.getCompanyId());
     Importer importer=createImporter(company.getCompanyId(),resourcesDir,resourcePaths,templatePaths,privateLARURL,publicLARURL);
-    configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties,targetClassName);
+    configureImporter(company.getCompanyId(),importer,servletContext,pluginPackageProperties);
     if (!importer.isDeveloperModeEnabled() && importer.isExisting() && !importer.isCompanyGroup()) {
       if (_log.isInfoEnabled()) {
         _log.info("Group or layout set prototype already exists " + "for company " + company.getWebId());
@@ -22,7 +22,7 @@
     Message newMessage=new Message();
     newMessage.put("companyId",company.getCompanyId());
     newMessage.put("servletContextName",servletContext.getServletContextName());
-    newMessage.put("targetClassName",targetClassName);
+    newMessage.put("targetClassName",importer.getTargetClassName());
     newMessage.put("targetClassPK",importer.getTargetClassPK());
     if (message.getResponseId() != null) {
       Map<String,Object> responseMap=new HashMap<String,Object>();
@@ -37,7 +37,7 @@
     newMessage.put("companyId",company.getCompanyId());
     newMessage.put("error",ie.getMessage());
     newMessage.put("servletContextName",servletContext.getServletContextName());
-    newMessage.put("targetClassName",targetClassName);
+    newMessage.put("targetClassName",getTargetClassName(pluginPackageProperties));
     newMessage.put("targetClassPK",0);
     MessageBusUtil.sendMessage("liferay/resources_importer",newMessage);
   }
