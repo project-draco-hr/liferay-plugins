@@ -13,10 +13,18 @@
       DDMTemplateLocalServiceUtil.deleteTemplate(ddmTemplate);
     }
   }
-  if (!updateModeEnabled || (ddmTemplate == null)) {
-    DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
-  }
+  try {
+    if (!updateModeEnabled || (ddmTemplate == null)) {
+      DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,false,StringPool.BLANK,null,serviceContext);
+    }
  else {
-    DDMTemplateLocalServiceUtil.updateTemplate(ddmTemplate.getTemplateId(),ddmTemplate.getClassPK(),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,serviceContext);
+      DDMTemplateLocalServiceUtil.updateTemplate(ddmTemplate.getTemplateId(),ddmTemplate.getClassPK(),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(name),script,false,serviceContext);
+    }
+  }
+ catch (  PortalException e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Error importing application display template: " + file.getName(),e);
+    }
+    throw e;
   }
 }

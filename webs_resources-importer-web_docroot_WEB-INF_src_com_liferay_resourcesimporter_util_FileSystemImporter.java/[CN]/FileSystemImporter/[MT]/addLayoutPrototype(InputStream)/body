@@ -27,11 +27,19 @@
   if (Validator.isNotNull(uuid)) {
     serviceContext.setUuid(uuid);
   }
-  if (!updateModeEnabled || (layoutPrototype == null)) {
-    layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,getMap(name),descriptionMap,true,serviceContext);
-  }
+  try {
+    if (!updateModeEnabled || (layoutPrototype == null)) {
+      layoutPrototype=LayoutPrototypeLocalServiceUtil.addLayoutPrototype(userId,companyId,getMap(name),descriptionMap,true,serviceContext);
+    }
  else {
-    layoutPrototype=LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(layoutPrototype.getLayoutPrototypeId(),getMap(name),descriptionMap,layoutPrototype.isActive(),serviceContext);
+      layoutPrototype=LayoutPrototypeLocalServiceUtil.updateLayoutPrototype(layoutPrototype.getLayoutPrototypeId(),getMap(name),descriptionMap,layoutPrototype.isActive(),serviceContext);
+    }
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Error importing layout prototype: " + name,e);
+    }
+    throw e;
   }
   JSONArray columnsJSONArray=layoutTemplateJSONObject.getJSONArray("columns");
   Layout layout=layoutPrototype.getLayout();

@@ -48,7 +48,13 @@
     JSONArray layoutsJSONArray=layoutJSONObject.getJSONArray("layouts");
     addLayouts(privateLayout,layout.getLayoutId(),layoutsJSONArray);
   }
-  finally {
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Error importing layout: " + layoutJSONObject,e);
+    }
+    throw e;
+  }
+ finally {
     ServiceContextThreadLocal.popServiceContext();
   }
 }
