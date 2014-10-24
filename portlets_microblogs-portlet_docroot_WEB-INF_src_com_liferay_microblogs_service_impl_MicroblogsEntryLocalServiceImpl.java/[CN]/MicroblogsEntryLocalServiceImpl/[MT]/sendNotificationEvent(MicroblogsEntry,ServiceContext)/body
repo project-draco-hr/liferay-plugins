@@ -1,5 +1,5 @@
 {
-  JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
+  final JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
   notificationEventJSONObject.put("className",MicroblogsEntry.class.getName());
   notificationEventJSONObject.put("classPK",microblogsEntry.getMicroblogsEntryId());
   notificationEventJSONObject.put("entryTitle",microblogsEntry.getContent());
@@ -13,6 +13,13 @@
   }
   notificationEventJSONObject.put("entryURL",entryURL);
   notificationEventJSONObject.put("userId",microblogsEntry.getUserId());
-  List<Long> receiverUserIds=MicroblogsUtil.getSubscriberUserIds(microblogsEntry);
-  MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new NotificationProcessCallable(receiverUserIds,microblogsEntry,notificationEventJSONObject));
+  final List<Long> receiverUserIds=MicroblogsUtil.getSubscriberUserIds(microblogsEntry);
+  Callable<Void> callable=new Callable<Void>(){
+    @Override public Void call() throws Exception {
+      MessageBusUtil.sendMessage(DestinationNames.ASYNC_SERVICE,new NotificationProcessCallable(receiverUserIds,microblogsEntry,notificationEventJSONObject));
+      return null;
+    }
+  }
+;
+  TransactionCommitCallbackRegistryUtil.registerCallback(callable);
 }
