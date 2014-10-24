@@ -1,0 +1,15 @@
+{
+  if (tableHasColumn("MicroblogsEntry","creatorClassNameId") || tableHasColumn("MicroblogsEntry","creatorClassPK")) {
+    return;
+  }
+  runSQL("alter table MicroblogsEntry add column creatorClassNameId LONG");
+  runSQL("alter table MicroblogsEntry add column creatorClassPK LONG");
+  runSQL("create index IX_6AA6B164 on MicroblogsEntry (creatorClassNameId," + " type_)");
+  runSQL("create index IX_14ACFA9 on MicroblogsEntry (creatorClassNameId, " + "creatorClassPK, type_)");
+  long classNameId=PortalUtil.getClassNameId(User.class);
+  List<MicroblogsEntry> microBlogsEntries=MicroblogsEntryLocalServiceUtil.getMicroblogsEntries(QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  MicroblogsEntry microblogsEntry : microBlogsEntries) {
+    runSQL("update MicroblogsEntry set creatorClassNameId = " + classNameId);
+    runSQL("update MicroblogsEntry set creatorClassPK = " + microblogsEntry.getUserId());
+  }
+}
