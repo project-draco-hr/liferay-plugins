@@ -10,15 +10,13 @@
     setUpSettings("settings.json");
     setUpSitemap("sitemap.json");
     SearchEngineUtil.setIndexReadOnly(false);
-    StopWatch stopWatch=new StopWatch();
+    long startTime=System.currentTimeMillis();
     if (_log.isDebugEnabled()) {
       _log.debug("Commence indexing");
-      stopWatch.start();
     }
     index();
     if (_log.isDebugEnabled()) {
-      stopWatch.stop();
-      _log.debug("Indexing completed in: " + stopWatch.getTime() + "ms");
+      _log.debug("Indexing completed in " + (System.currentTimeMillis() - startTime) + "ms");
     }
   }
   finally {
