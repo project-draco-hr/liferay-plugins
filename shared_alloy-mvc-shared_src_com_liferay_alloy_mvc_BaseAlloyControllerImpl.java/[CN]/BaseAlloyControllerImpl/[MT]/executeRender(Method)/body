@@ -8,6 +8,14 @@
   if (Validator.isNull(viewPath)) {
     viewPath=actionPath;
   }
+  if (Validator.isNotNull(format)) {
+    if (format.equals("json")) {
+      renderResponse.setContentType(ContentTypes.APPLICATION_JSON);
+    }
+    HttpServletResponse response=PortalUtil.getHttpServletResponse(renderResponse);
+    ServletResponseUtil.write(response,_data);
+    return;
+  }
   String includePath=buildIncludePath(viewPath);
   PortletRequestDispatcher portletRequestDispatcher=portletContext.getRequestDispatcher(includePath);
   if (portletRequestDispatcher == null) {
