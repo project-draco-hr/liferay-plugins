@@ -11,12 +11,12 @@
       long subscriptionId=getSubscriptionId(receiverUserIds.get(j),microblogsEntry);
       notificationEventJSONObject.put("subscriptionId",subscriptionId);
       int notificationType=MicroblogsUtil.getNotificationType(microblogsEntry,receiverUserIds.get(j),UserNotificationDeliveryConstants.TYPE_PUSH);
-      if (notificationType != 0) {
+      if (notificationType != MicroblogsEntryConstants.NOTIFICATION_TYPE_UNKNOWN) {
         notificationEventJSONObject.put("notificationType",notificationType);
         UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(receiverUserIds.get(j),PortletKeys.MICROBLOGS,UserNotificationDeliveryConstants.TYPE_PUSH,notificationEventJSONObject);
       }
       notificationType=MicroblogsUtil.getNotificationType(microblogsEntry,receiverUserIds.get(j),UserNotificationDeliveryConstants.TYPE_WEBSITE);
-      if (notificationType != 0) {
+      if (notificationType != MicroblogsEntryConstants.NOTIFICATION_TYPE_UNKNOWN) {
         notificationEventJSONObject.put("notificationType",notificationType);
         UserNotificationEventLocalServiceUtil.sendUserNotificationEvents(receiverUserIds.get(j),PortletKeys.MICROBLOGS,UserNotificationDeliveryConstants.TYPE_WEBSITE,notificationEventJSONObject);
       }
