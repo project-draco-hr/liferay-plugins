@@ -1,0 +1,27 @@
+{
+  Connection con=null;
+  PreparedStatement ps=null;
+  ResultSet rs=null;
+  try {
+    con=DataAccess.getUpgradeOptimizedConnection();
+    ps=con.prepareStatement("select * from UserNotificationEvent");
+    rs=ps.executeQuery();
+    while (rs.next()) {
+      long userNotificationEventId=rs.getLong("userNotificationEventId");
+      long companyId=rs.getLong("companyId");
+      long userId=rs.getLong("userId");
+      String type=rs.getString("type_");
+      long timestamp=rs.getLong("timestamp");
+      boolean delivered=rs.getBoolean("delivered");
+      boolean archived=rs.getBoolean("archived");
+      boolean actionRequired=false;
+      if (_actionRequiredTypes.contains(type)) {
+        actionRequired=true;
+      }
+      addUserNotificationEvent(companyId,userId,userNotificationEventId,timestamp,actionRequired,delivered,archived);
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con,ps,rs);
+  }
+}
