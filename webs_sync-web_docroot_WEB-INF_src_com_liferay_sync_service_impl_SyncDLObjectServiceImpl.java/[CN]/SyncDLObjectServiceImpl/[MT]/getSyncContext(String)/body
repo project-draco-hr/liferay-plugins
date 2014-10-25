@@ -1,19 +1,22 @@
 {
   try {
+    User user=getGuestOrUser();
     SyncContext syncContext=new SyncContext();
     PluginPackage syncWebPluginPackage=DeployManagerUtil.getInstalledPluginPackage("sync-web");
     syncContext.setPluginVersion(syncWebPluginPackage.getVersion());
-    syncContext.setPortalBuildNumber(ReleaseInfo.getBuildNumber());
-    PluginPackage soPortletPluginPackage=DeployManagerUtil.getInstalledPluginPackage("so-portlet");
-    syncContext.setPortletPreferencesMap(getPortletPreferencesMap());
-    if (soPortletPluginPackage != null) {
-      syncContext.setSocialOfficeInstalled(true);
-    }
+    if (!user.isDefaultUser()) {
+      syncContext.setPortalBuildNumber(ReleaseInfo.getBuildNumber());
+      PluginPackage soPortletPluginPackage=DeployManagerUtil.getInstalledPluginPackage("so-portlet");
+      syncContext.setPortletPreferencesMap(getPortletPreferencesMap());
+      if (soPortletPluginPackage != null) {
+        syncContext.setSocialOfficeInstalled(true);
+      }
  else {
-      syncContext.setSocialOfficeInstalled(false);
+        syncContext.setSocialOfficeInstalled(false);
+      }
+      syncContext.setUser(user);
+      syncContext.setUserSitesGroups(getUserSitesGroups());
     }
-    syncContext.setUser(getUser());
-    syncContext.setUserSitesGroups(getUserSitesGroups());
     return syncContext;
   }
  catch (  PortalException pe) {
