@@ -1,8 +1,5 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
-  if (receiverUserId == 0) {
-    receiverUserId=userId;
-  }
   Date now=new Date();
   validate(type,receiverMicroblogsEntryId);
   long microblogsEntryId=counterLocalService.increment();
@@ -19,7 +16,6 @@
   microblogsEntry.setCreatorClassPK(creatorClassPK);
   microblogsEntry.setContent(content);
   microblogsEntry.setType(type);
-  microblogsEntry.setReceiverUserId(receiverUserId);
   microblogsEntry.setReceiverMicroblogsEntryId(receiverMicroblogsEntryId);
   microblogsEntry.setSocialRelationType(socialRelationType);
   microblogsEntryPersistence.update(microblogsEntry);
