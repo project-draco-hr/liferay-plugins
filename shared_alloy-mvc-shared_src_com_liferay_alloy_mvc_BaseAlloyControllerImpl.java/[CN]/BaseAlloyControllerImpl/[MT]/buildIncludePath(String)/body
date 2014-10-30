@@ -1,11 +1,17 @@
 {
-  if (viewPath.equals(_VIEW_PATH_ERROR)) {
-    return "/WEB-INF/jsp/".concat(portlet.getFriendlyURLMapping()).concat("/views/error.jsp");
-  }
-  StringBundler sb=new StringBundler(7);
+  StringBundler sb=new StringBundler(4);
   sb.append("/WEB-INF/jsp/");
   sb.append(portlet.getFriendlyURLMapping());
   sb.append("/views/");
+  if (Validator.isNotNull(format)) {
+    sb.append("format.jsp");
+    return sb.toString();
+  }
+  if (viewPath.equals(_VIEW_PATH_ERROR)) {
+    sb.append("error.jsp");
+    return sb.toString();
+  }
+  sb=new StringBundler(new String[]{sb.toString()},4);
   sb.append(controllerPath);
   sb.append(StringPool.SLASH);
   sb.append(viewPath);

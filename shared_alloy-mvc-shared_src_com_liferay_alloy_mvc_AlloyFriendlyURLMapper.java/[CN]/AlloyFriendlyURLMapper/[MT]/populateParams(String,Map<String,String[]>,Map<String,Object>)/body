@@ -17,6 +17,10 @@
   }
   String namespace=PortalUtil.getPortletNamespace(portletId);
   addParameter(namespace,parameterMap,"p_p_id",portletId);
-  addParameter(parameterMap,"p_p_lifecycle",getLifecycle(request,routeParameters.get("format")));
+  addParameter(parameterMap,"p_p_lifecycle",getLifecycle(request));
+  String format=routeParameters.get("format");
+  if (Validator.isNotNull(format)) {
+    addParameter(parameterMap,"p_p_state","exclusive");
+  }
   populateParams(parameterMap,namespace,routeParameters);
 }
