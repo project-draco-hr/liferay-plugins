@@ -2,6 +2,11 @@
   if (method != null) {
     method.invoke(this);
   }
+  if (format.equals(JSON)) {
+    JSONObject jsonData=JSONFactoryUtil.createJSONObject(String.valueOf(request.getAttribute("jsonData")));
+    writeJSON(actionRequest,actionResponse,jsonData);
+    return;
+  }
   actionRequest.setAttribute(CALLED_PROCESS_ACTION,Boolean.TRUE.toString());
   if (Validator.isNotNull(viewPath)) {
     actionRequest.setAttribute(VIEW_PATH,viewPath);
