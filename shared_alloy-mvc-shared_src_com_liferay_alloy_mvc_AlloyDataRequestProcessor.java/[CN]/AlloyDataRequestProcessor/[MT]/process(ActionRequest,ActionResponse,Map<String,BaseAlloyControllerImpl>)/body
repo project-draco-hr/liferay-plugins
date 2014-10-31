@@ -8,7 +8,9 @@
   String action=ParamUtil.getString(actionRequest,"action");
   try {
     if (action.equals("custom")) {
-      jsonString=baseAlloyControllerImpl.processDataRequest(actionRequest);
+      Class<?> clazz=BaseAlloyControllerImpl.class;
+      Method method=clazz.getDeclaredMethod("processDataRequest",new Class<?>[]{ActionRequest.class});
+      jsonString=(String)ServiceBeanMethodInvocationFactoryUtil.proceed(baseAlloyControllerImpl,clazz,method,new Object[]{actionRequest},new String[]{"transactionAdvice"});
     }
  else     if (action.equals("dynamicQuery")) {
       jsonString=executeDynamicQuery(baseAlloyControllerImpl,actionRequest);
@@ -19,8 +21,13 @@
   }
  catch (  Exception e) {
     JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-    jsonObject.put("error","An unexpected exception occurred: " + e.getMessage());
+    String message=e.getMessage();
+    if (Validator.isNull(message)) {
+      message=baseAlloyControllerImpl.translate("an-unexpected-error-occurred");
+    }
+    jsonObject.put("message",message);
     jsonObject.put("stacktrace",StackTraceUtil.getStackTrace(e));
+    jsonObject.put("success",false);
     jsonString=jsonObject.toString();
   }
   if (jsonString != null) {
