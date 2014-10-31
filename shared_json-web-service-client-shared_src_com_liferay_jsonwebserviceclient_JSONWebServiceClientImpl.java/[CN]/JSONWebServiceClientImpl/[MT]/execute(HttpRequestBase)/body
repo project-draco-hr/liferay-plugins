@@ -7,14 +7,17 @@
     HttpResponse httpResponse=_closeableHttpClient.execute(httpHost,httpRequestBase);
     StatusLine statusLine=httpResponse.getStatusLine();
     if (statusLine.getStatusCode() == HttpServletResponse.SC_UNAUTHORIZED) {
-      throw new CredentialException("Not authorized to access JSON web service");
+      throw new JSONWebServiceTransportException.AuthenticationFailure("Not authorized to access JSON web service");
     }
  else     if (statusLine.getStatusCode() != HttpServletResponse.SC_OK) {
-      throw new JSONWebServiceUnavailableException(statusLine.getStatusCode());
+      throw new JSONWebServiceTransportException.CommunicationFailure(statusLine.getStatusCode());
     }
     return EntityUtils.toString(httpResponse.getEntity(),"utf8");
   }
-  finally {
+ catch (  IOException ie) {
+    throw new JSONWebServiceTransportException.CommunicationFailure("Error while transmitting request",ie);
+  }
+ finally {
     httpRequestBase.releaseConnection();
   }
 }

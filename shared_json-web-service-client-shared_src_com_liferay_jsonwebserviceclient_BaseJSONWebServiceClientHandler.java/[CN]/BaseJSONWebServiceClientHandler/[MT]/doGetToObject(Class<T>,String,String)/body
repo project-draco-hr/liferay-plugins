@@ -4,7 +4,12 @@
     return null;
   }
   if (json.contains("exception\":\"")) {
-    throw new Exception(getExceptionMessage(json));
+    throw new JSONWebServiceInvocationException(getExceptionMessage(json));
   }
-  return _objectMapper.readValue(json,clazz);
+  try {
+    return _objectMapper.readValue(json,clazz);
+  }
+ catch (  IOException ie) {
+    throw new JSONWebServiceInvocationException(ie);
+  }
 }

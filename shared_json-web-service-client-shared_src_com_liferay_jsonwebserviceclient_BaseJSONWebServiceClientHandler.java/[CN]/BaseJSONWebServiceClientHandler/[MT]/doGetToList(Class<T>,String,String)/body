@@ -4,9 +4,14 @@
     return Collections.emptyList();
   }
   if (json.contains("exception\":\"")) {
-    throw new Exception(getExceptionMessage(json));
+    throw new JSONWebServiceInvocationException(getExceptionMessage(json));
   }
-  TypeFactory typeFactory=_objectMapper.getTypeFactory();
-  JavaType javaType=typeFactory.constructCollectionType(List.class,clazz);
-  return _objectMapper.readValue(json,javaType);
+  try {
+    TypeFactory typeFactory=_objectMapper.getTypeFactory();
+    JavaType javaType=typeFactory.constructCollectionType(List.class,clazz);
+    return _objectMapper.readValue(json,javaType);
+  }
+ catch (  IOException ie) {
+    throw new JSONWebServiceInvocationException(ie);
+  }
 }
