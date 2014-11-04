@@ -1,10 +1,10 @@
 {
   User user=userPersistence.findByPrimaryKey(userId);
   Date now=new Date();
-  validate(type,receiverMicroblogsEntryId);
+  validate(type,parentMicroblogsEntryId);
   long microblogsEntryId=counterLocalService.increment();
-  if (receiverMicroblogsEntryId == 0) {
-    receiverMicroblogsEntryId=microblogsEntryId;
+  if (parentMicroblogsEntryId == 0) {
+    parentMicroblogsEntryId=microblogsEntryId;
   }
   MicroblogsEntry microblogsEntry=microblogsEntryPersistence.create(microblogsEntryId);
   microblogsEntry.setCompanyId(user.getCompanyId());
@@ -16,7 +16,7 @@
   microblogsEntry.setCreatorClassPK(user.getUserId());
   microblogsEntry.setContent(content);
   microblogsEntry.setType(type);
-  microblogsEntry.setReceiverMicroblogsEntryId(receiverMicroblogsEntryId);
+  microblogsEntry.setParentMicroblogsEntryId(parentMicroblogsEntryId);
   microblogsEntry.setSocialRelationType(socialRelationType);
   microblogsEntryPersistence.update(microblogsEntry);
   resourceLocalService.addModelResources(microblogsEntry,serviceContext);
@@ -30,7 +30,7 @@
   }
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject();
   extraDataJSONObject.put("content",microblogsEntry.getContent());
-  extraDataJSONObject.put("receiverMicroblogsEntryId",receiverMicroblogsEntryId);
+  extraDataJSONObject.put("parentMicroblogsEntryId",parentMicroblogsEntryId);
   SocialActivityLocalServiceUtil.addActivity(userId,0,MicroblogsEntry.class.getName(),microblogsEntryId,activityKey,extraDataJSONObject.toString(),microblogsEntry.getReceiverUserId());
   subscribeUsers(microblogsEntry,serviceContext);
   sendNotificationEvent(microblogsEntry,serviceContext);
