@@ -2,11 +2,23 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   try {
-    int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
-    jsonObject.put("newUserNotificationsCount",newUserNotificationsCount);
     jsonObject.put("timestamp",String.valueOf(System.currentTimeMillis()));
-    int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
-    jsonObject.put("unreadUserNotificationsCount",unreadUserNotificationsCount);
+    if (PortletPropsValues.USER_NOTIFICATION_DOCKBAR_SPLIT) {
+      int newActionableUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,true);
+      jsonObject.put("newActionableUserNotificationsCount",newActionableUserNotificationsCount);
+      int newNonActionableUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false);
+      jsonObject.put("newNonActionableUserNotificationsCount",newNonActionableUserNotificationsCount);
+      int unreadActionableUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,true,false);
+      jsonObject.put("unreadActionableUserNotificationsCount",unreadActionableUserNotificationsCount);
+      int unreadNonActionableUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false,false);
+      jsonObject.put("unreadNonActionableUserNotificationsCount",unreadNonActionableUserNotificationsCount);
+    }
+ else {
+      int newUserNotificationsCount=UserNotificationEventLocalServiceUtil.getDeliveredUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
+      jsonObject.put("newUserNotificationsCount",newUserNotificationsCount);
+      int unreadUserNotificationsCount=UserNotificationEventLocalServiceUtil.getArchivedUserNotificationEventsCount(themeDisplay.getUserId(),UserNotificationDeliveryConstants.TYPE_WEBSITE,false);
+      jsonObject.put("unreadUserNotificationsCount",unreadUserNotificationsCount);
+    }
     jsonObject.put("success",Boolean.TRUE);
   }
  catch (  Exception e) {
