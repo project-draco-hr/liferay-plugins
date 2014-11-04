@@ -5,9 +5,9 @@
     title=serviceContext.translate("x-commented-on-your-post",userFullName);
   }
  else   if (notificationType == MicroblogsEntryConstants.NOTIFICATION_TYPE_REPLY_TO_REPLIED) {
-    User receiverUser=UserLocalServiceUtil.fetchUser(microblogsEntry.getReceiverUserId());
-    if (receiverUser != null) {
-      title=serviceContext.translate("x-also-commented-on-x's-post",userFullName,receiverUser.getFullName());
+    User user=UserLocalServiceUtil.fetchUser(microblogsEntry.getParentMicroblogsUserId());
+    if (user != null) {
+      title=serviceContext.translate("x-also-commented-on-x's-post",userFullName,user.getFullName());
     }
   }
  else   if (notificationType == MicroblogsEntryConstants.NOTIFICATION_TYPE_REPLY_TO_TAGGED) {
