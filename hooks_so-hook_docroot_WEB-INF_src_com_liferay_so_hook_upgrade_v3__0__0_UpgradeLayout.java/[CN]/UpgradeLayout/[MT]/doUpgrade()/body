@@ -16,6 +16,19 @@
     ps=con.prepareStatement(sb.toString());
     rs=ps.executeQuery();
     while (rs.next()) {
+      long plid=rs.getLong("plid");
+      Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+      LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+      LayoutTemplate layoutTemplate=layoutTypePortlet.getLayoutTemplate();
+      UnicodeProperties typeSettingsProperties=layout.getTypeSettingsProperties();
+      for (      String columnName : layoutTemplate.getColumns()) {
+        String columnValue=typeSettingsProperties.getProperty(columnName);
+        columnValue=StringUtil.replace(columnValue,PortletKeys.ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
+        typeSettingsProperties.setProperty(columnName,columnValue);
+      }
+      layout.setTypeSettingsProperties(typeSettingsProperties);
+      LayoutLocalServiceUtil.updateLayout(layout);
+      LayoutUtil.addResources(layout,PortletKeys.SO_ANNOUNCEMENTS);
     }
     sb=new StringBuilder(6);
     sb.append("select Layout.plid from Layout ");
@@ -27,12 +40,29 @@
     ps=con.prepareStatement(sb.toString());
     rs=ps.executeQuery();
     while (rs.next()) {
+      long plid=rs.getLong("plid");
+      Layout layout=LayoutLocalServiceUtil.getLayout(plid);
+      long layoutSetPrototypeGroupId=getLayoutSetPrototypeGroupId(layout.getCompanyId(),SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PUBLIC);
+      if (layout.getGroupId() == layoutSetPrototypeGroupId) {
+        return;
+      }
+      LayoutTypePortlet layoutTypePortlet=(LayoutTypePortlet)layout.getLayoutType();
+      UnicodeProperties typeSettingsProperties=layout.getTypeSettingsProperties();
+      String columnValue=typeSettingsProperties.getProperty("column-1");
+      if (Validator.isNull(columnValue)) {
+        return;
+      }
+      int columnPos=0;
+      if (StringUtil.contains(columnValue,PortletKeys.MICROBLOGS_STATUS_UPDATE)) {
+        columnPos=1;
+      }
+      layoutTypePortlet.addPortletId(0,PortletKeys.SO_ANNOUNCEMENTS,"column-1",columnPos,false);
+      layout=layoutTypePortlet.getLayout();
+      LayoutLocalServiceUtil.updateLayout(layout);
+      LayoutUtil.addResources(layout,PortletKeys.SO_ANNOUNCEMENTS);
     }
   }
   finally {
     DataAccess.cleanUp(con,ps,rs);
-  }
-  for (  long companyId : PortalUtil.getCompanyIds()) {
-    updateSOAnnouncements(companyId);
   }
 }
