@@ -4,15 +4,15 @@
     return;
   }
   JSONObject extraDataJSONObject=JSONFactoryUtil.createJSONObject(activity.getExtraData());
-  long receiverMicroblogsEntryId=extraDataJSONObject.getLong("receiverMicroblogsEntryId");
-  long activitySetId=getActivitySetId(activityId,receiverMicroblogsEntryId);
+  long parentMicroblogsEntryId=extraDataJSONObject.getLong("parentMicroblogsEntryId");
+  long activitySetId=getActivitySetId(activityId,parentMicroblogsEntryId);
   if (activitySetId > 0) {
     SocialActivitySetLocalServiceUtil.incrementActivityCount(activitySetId,activityId);
   }
  else {
     SocialActivitySet activitySet=SocialActivitySetLocalServiceUtil.addActivitySet(activityId);
     if (activity.getType() == SocialActivityKeyConstants.MICROBLOGS_REPLY_ENTRY) {
-      activitySet.setClassPK(receiverMicroblogsEntryId);
+      activitySet.setClassPK(parentMicroblogsEntryId);
       SocialActivitySetLocalServiceUtil.updateSocialActivitySet(activitySet);
     }
   }

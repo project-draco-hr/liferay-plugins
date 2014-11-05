@@ -1,8 +1,8 @@
 {
   MicroblogsEntry microblogsEntry=MicroblogsEntryLocalServiceUtil.getMicroblogsEntry(activity.getClassPK());
   if (microblogsEntry.getType() == MicroblogsEntryConstants.TYPE_REPLY) {
-    MicroblogsEntry receiverMicroblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(microblogsEntry.getReceiverMicroblogsEntryId());
-    if ((receiverMicroblogsEntry == null) || !MicroblogsEntryPermission.contains(permissionChecker,receiverMicroblogsEntry,ActionKeys.VIEW)) {
+    MicroblogsEntry parentMicroblogsEntry=MicroblogsEntryLocalServiceUtil.fetchMicroblogsEntry(microblogsEntry.getParentMicroblogsEntryId());
+    if ((parentMicroblogsEntry == null) || !MicroblogsEntryPermission.contains(permissionChecker,parentMicroblogsEntry,ActionKeys.VIEW)) {
       return false;
     }
   }
