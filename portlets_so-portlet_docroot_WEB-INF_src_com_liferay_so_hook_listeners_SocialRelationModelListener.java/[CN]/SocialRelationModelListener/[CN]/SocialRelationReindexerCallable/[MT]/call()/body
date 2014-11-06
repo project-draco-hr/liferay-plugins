@@ -1,0 +1,13 @@
+{
+  Indexer indexer=IndexerRegistryUtil.nullSafeGetIndexer(User.class);
+  long[] userIds=ArrayUtil.toArray(_userIds.toArray(new Long[0]));
+  try {
+    indexer.reindex(userIds);
+  }
+ catch (  SearchException se) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(se,se);
+    }
+  }
+  return null;
+}
