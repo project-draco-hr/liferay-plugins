@@ -2,7 +2,7 @@
   final JSONObject notificationEventJSONObject=JSONFactoryUtil.createJSONObject();
   notificationEventJSONObject.put("className",MicroblogsEntry.class.getName());
   notificationEventJSONObject.put("classPK",microblogsEntry.getMicroblogsEntryId());
-  notificationEventJSONObject.put("entryTitle",microblogsEntry.getContent());
+  notificationEventJSONObject.put("entryTitle",MicroblogsUtil.getProcessedContent(StringUtil.shorten(microblogsEntry.getContent(),50),serviceContext));
   AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(MicroblogsEntry.class.getName());
   AssetRenderer assetRenderer=assetRendererFactory.getAssetRenderer(microblogsEntry.getMicroblogsEntryId());
   String entryURL=StringPool.BLANK;
