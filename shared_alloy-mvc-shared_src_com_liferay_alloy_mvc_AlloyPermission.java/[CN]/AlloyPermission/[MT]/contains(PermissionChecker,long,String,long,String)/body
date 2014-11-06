@@ -1,12 +1,3 @@
 {
-  try {
-    ResourceActionsUtil.checkAction(name,actionId);
-  }
- catch (  NoSuchResourceActionException nsrae) {
-    return true;
-  }
-  if ((name.indexOf(CharPool.PERIOD) != -1) && permissionChecker.hasOwnerPermission(permissionChecker.getCompanyId(),name,primKey,getOwnerId(name,primKey),actionId)) {
-    return true;
-  }
-  return permissionChecker.hasPermission(groupId,name,primKey,actionId);
+  return contains(permissionChecker,groupId,name,primKey,actionId,0);
 }
