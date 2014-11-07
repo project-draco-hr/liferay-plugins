@@ -7,17 +7,10 @@
     title=serviceContext.translate("x-commented-on-your-post",userFullName);
   }
  else   if (notificationType == MicroblogsEntryConstants.NOTIFICATION_TYPE_REPLY_TO_REPLIED) {
-    long parentMicroblogsEntryUserId=UserConstants.USER_ID_DEFAULT;
-    try {
-      parentMicroblogsEntryUserId=microblogsEntry.getParentMicroblogsEntryUserId();
-    }
- catch (    PortalException pe) {
-    }
-    if (parentMicroblogsEntryUserId > UserConstants.USER_ID_DEFAULT) {
-      User user=UserLocalServiceUtil.fetchUser(parentMicroblogsEntryUserId);
-      if (user != null) {
-        title=serviceContext.translate("x-also-commented-on-x's-post",userFullName,user.getFullName());
-      }
+    long parentMicroblogsEntryUserId=microblogsEntry.fetchParentMicroblogsEntryUserId();
+    User user=UserLocalServiceUtil.fetchUser(parentMicroblogsEntryUserId);
+    if (user != null) {
+      title=serviceContext.translate("x-also-commented-on-x's-post",userFullName,user.getFullName());
     }
   }
  else   if (notificationType == MicroblogsEntryConstants.NOTIFICATION_TYPE_REPLY_TO_TAGGED) {
