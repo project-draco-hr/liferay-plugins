@@ -1,16 +1,38 @@
 {
   try {
+    User user=getUser();
     List<Group> groups=new ArrayList<Group>();
-    for (    Group userSiteGroup : groupService.getUserSitesGroups()) {
-      boolean syncEnabled=GetterUtil.getBoolean(userSiteGroup.getTypeSettingsProperty("syncEnabled"),true);
-      if (syncEnabled) {
+    new ArrayList<Group>();
+    LinkedHashMap<String,Object> groupParams=new LinkedHashMap<String,Object>();
+    groupParams.put("active",true);
+    groupParams.put("usersGroups",user.getUserId());
+    List<Group> userSiteGroups=groupLocalService.search(user.getCompanyId(),null,groupParams,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    for (    Group userSiteGroup : userSiteGroups) {
+      if (isSyncEnabled(userSiteGroup)) {
         if (userSiteGroup.isGuest()) {
           userSiteGroup.setName(userSiteGroup.getDescriptiveName());
         }
         groups.add(userSiteGroup);
       }
     }
-    return groups;
+    List<Organization> organizations=organizationLocalService.getOrganizations(user.getUserId(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    for (    Organization organization : organizations) {
+      Group userOrganizationGroup=organization.getGroup();
+      if (isSyncEnabled(userOrganizationGroup)) {
+        groups.add(userOrganizationGroup);
+      }
+      if (!GetterUtil.getBoolean(PropsUtil.get(PropsKeys.ORGANIZATIONS_MEMBERSHIP_STRICT))) {
+        for (        Organization ancestorOrganization : organization.getAncestors()) {
+          Group userAncestorOrganizationGroup=ancestorOrganization.getGroup();
+          if (isSyncEnabled(userAncestorOrganizationGroup)) {
+            groups.add(userAncestorOrganizationGroup);
+          }
+        }
+      }
+    }
+    groups.add(user.getGroup());
+    Collections.sort(groups,new GroupNameComparator());
+    return ListUtil.unique(groups);
   }
  catch (  PortalException pe) {
     throw new PortalException(pe.getClass().getName(),pe);
