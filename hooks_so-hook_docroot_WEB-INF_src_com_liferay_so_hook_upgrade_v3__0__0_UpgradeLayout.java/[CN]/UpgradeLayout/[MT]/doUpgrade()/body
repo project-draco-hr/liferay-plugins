@@ -4,13 +4,12 @@
   ResultSet rs=null;
   try {
     con=DataAccess.getUpgradeOptimizedConnection();
-    StringBuilder sb=new StringBuilder(8);
+    StringBuilder sb=new StringBuilder(7);
     sb.append("select Layout.plid from Layout ");
     sb.append(getJoinSQL());
     sb.append("where (Layout.typeSettings like '%");
     sb.append(PortletKeys.ANNOUNCEMENTS);
-    sb.append("%') and ");
-    sb.append("(Layout.typeSettings not like '%");
+    sb.append("%') and (Layout.typeSettings not like '%");
     sb.append(PortletKeys.SO_ANNOUNCEMENTS);
     sb.append("%')");
     ps=con.prepareStatement(sb.toString());
@@ -30,13 +29,12 @@
       LayoutLocalServiceUtil.updateLayout(layout);
       LayoutUtil.addResources(layout,PortletKeys.SO_ANNOUNCEMENTS);
     }
-    sb=new StringBuilder(6);
+    sb=new StringBuilder(5);
     sb.append("select Layout.plid from Layout ");
     sb.append(getJoinSQL());
     sb.append("where (Layout.typeSettings not like '%");
     sb.append(PortletKeys.SO_ANNOUNCEMENTS);
-    sb.append("%') and ");
-    sb.append("(Layout.priority = 0)");
+    sb.append("%') and (Layout.priority = 0)");
     ps=con.prepareStatement(sb.toString());
     rs=ps.executeQuery();
     while (rs.next()) {
