@@ -2,6 +2,14 @@
   AssetVocabulary assetVocabulary=assetVocabularyPersistence.fetchByG_N(groupId,_ASSET_VOCABULARY_NAME);
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setScopeGroupId(groupId);
+  User user=null;
+  try {
+    user=userPersistence.findByPrimaryKey(userId);
+  }
+ catch (  NoSuchUserException e) {
+    user=userPersistence.fetchByC_DU(companyId,true);
+    userId=user.getUserId();
+  }
   serviceContext.setUserId(userId);
   if (assetVocabulary == null) {
     assetVocabulary=assetVocabularyLocalService.addVocabulary(userId,_ASSET_VOCABULARY_NAME,serviceContext);
