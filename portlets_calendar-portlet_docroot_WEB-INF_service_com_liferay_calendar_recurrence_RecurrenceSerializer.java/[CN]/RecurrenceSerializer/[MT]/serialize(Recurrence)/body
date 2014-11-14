@@ -9,7 +9,11 @@
   rRule.setByDay(weekdayNums);
   List<Integer> months=recurrence.getMonths();
   if (months != null) {
-    rRule.setByMonth(ArrayUtil.toIntArray(months));
+    int[] monthsArray=ArrayUtil.toIntArray(months);
+    for (int i=0; i < monthsArray.length; i++) {
+      monthsArray[i]++;
+    }
+    rRule.setByMonth(monthsArray);
   }
   rRule.setCount(recurrence.getCount());
   com.google.ical.values.Frequency frequency=com.google.ical.values.Frequency.valueOf(String.valueOf(recurrence.getFrequency()));
