@@ -2,14 +2,22 @@
   Session session=null;
   try {
     session=openSession();
-    String sql=CustomSQLUtil.get(FIND_BY_CCNI_CCPK_ATN);
+    String sql=CustomSQLUtil.get(COUNT_BY_CCNI_CCPK_ATN);
+    sql=CustomSQLUtil.replaceAndOperator(sql,andOperator);
     SQLQuery q=session.createSynchronizedSQLQuery(sql);
-    q.addEntity("MicroblogsEntry",MicroblogsEntryImpl.class);
+    q.addScalar(COUNT_COLUMN_NAME,Type.LONG);
     QueryPos qPos=QueryPos.getInstance(q);
     qPos.add(creatorClassNameId);
     qPos.add(creatorClassPK);
     qPos.add(assetTagName);
-    return (List<MicroblogsEntry>)QueryUtil.list(q,getDialect(),start,end);
+    Iterator<Long> itr=q.iterate();
+    if (itr.hasNext()) {
+      Long count=itr.next();
+      if (count != null) {
+        return count.intValue();
+      }
+    }
+    return 0;
   }
  catch (  Exception e) {
     throw new SystemException(e);
