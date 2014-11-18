@@ -1,0 +1,14 @@
+{
+  String currentKBFolderUrlTitle=_portalPreferences.getValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"preferredKBFolderUrlTitle");
+  long rootResourcePrimKey=getRootResourcePrimKey();
+  if (rootResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+    KBFolder kbFolder=KBFolderServiceUtil.getKBFolder(rootResourcePrimKey);
+    String pageTitle=getContentRootPrefix() + " " + kbFolder.getName();
+    if (_kbArticle != null) {
+      pageTitle=_kbArticle.getTitle() + " - " + pageTitle;
+    }
+    PortalUtil.setPageTitle(pageTitle,_request);
+    currentKBFolderUrlTitle=kbFolder.getUrlTitle();
+  }
+  return currentKBFolderUrlTitle;
+}
