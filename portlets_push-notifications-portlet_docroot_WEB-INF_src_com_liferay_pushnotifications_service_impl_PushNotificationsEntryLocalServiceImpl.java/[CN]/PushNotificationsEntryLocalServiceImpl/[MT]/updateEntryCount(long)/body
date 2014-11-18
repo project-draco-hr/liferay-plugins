@@ -1,0 +1,10 @@
+{
+  if (parentPushNotificationsEntryId == PushNotificationsConstants.VALUE_PARENT_PUSH_NOTIFICATIONS_ENTRY_ID_DEFAULT) {
+    return null;
+  }
+  int childrenPushNotificationsEntryCount=pushNotificationsEntryPersistence.countByParentPushNotificationsEntryId(parentPushNotificationsEntryId);
+  PushNotificationsEntry pushNotificationsEntry=pushNotificationsEntryPersistence.findByPrimaryKey(parentPushNotificationsEntryId);
+  pushNotificationsEntry.setChildrenPushNotificationsEntryCount(childrenPushNotificationsEntryCount);
+  pushNotificationsEntryPersistence.update(pushNotificationsEntry);
+  return pushNotificationsEntry;
+}
