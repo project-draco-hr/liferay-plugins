@@ -1,0 +1,9 @@
+{
+  String className=PushNotificationsEntry.class.getName();
+  ratingsEntryLocalService.updateEntry(userId,className,pushNotificationsEntryId,score,new ServiceContext());
+  PushNotificationsEntry pushNotificationsEntry=pushNotificationsEntryPersistence.findByPrimaryKey(pushNotificationsEntryId);
+  RatingsStats ratingsStats=ratingsStatsLocalService.getStats(className,pushNotificationsEntryId);
+  pushNotificationsEntry.setRatingsTotalScore((long)ratingsStats.getTotalScore());
+  pushNotificationsEntryPersistence.update(pushNotificationsEntry);
+  return pushNotificationsEntry;
+}
