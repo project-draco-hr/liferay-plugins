@@ -1,0 +1,29 @@
+{
+  int activityType=activity.getType();
+  if ((activityType == SocialActivityConstants.TYPE_ADD_ATTACHMENT) || (activityType == SocialActivityConstants.TYPE_MOVE_ATTACHMENT_TO_TRASH) || (activityType == SocialActivityConstants.TYPE_RESTORE_ATTACHMENT_FROM_TRASH)) {
+    String link=null;
+    FileEntry fileEntry=null;
+    try {
+      long fileEntryId=GetterUtil.getLong(activity.getExtraDataValue("fileEntryId"));
+      fileEntry=PortletFileRepositoryUtil.getPortletFileEntry(fileEntryId);
+    }
+ catch (    NoSuchModelException nsme) {
+    }
+    String fileEntryTitle=activity.getExtraDataValue("fileEntryTitle");
+    if ((fileEntry != null) && !fileEntry.isInTrash()) {
+      StringBundler sb=new StringBundler(9);
+      sb.append(serviceContext.getPathMain());
+      sb.append("/wiki/get_page_attachment?p_l_id=");
+      sb.append(serviceContext.getPlid());
+      sb.append("&nodeId=");
+      sb.append(pageResource.getNodeId());
+      sb.append("&title=");
+      sb.append(HttpUtil.encodeURL(pageResource.getTitle()));
+      sb.append("&fileName=");
+      sb.append(fileEntryTitle);
+      link=sb.toString();
+    }
+    return wrapLink(link,fileEntryTitle);
+  }
+  return StringPool.BLANK;
+}
