@@ -1,0 +1,18 @@
+{
+  PushNotificationsEntry pushNotificationsEntry=findByPrimaryKey(pushNotificationsEntryId);
+  Session session=null;
+  try {
+    session=openSession();
+    PushNotificationsEntry[] array=new PushNotificationsEntryImpl[3];
+    array[0]=getByParentPushNotificationsEntryId_PrevAndNext(session,pushNotificationsEntry,parentPushNotificationsEntryId,orderByComparator,true);
+    array[1]=pushNotificationsEntry;
+    array[2]=getByParentPushNotificationsEntryId_PrevAndNext(session,pushNotificationsEntry,parentPushNotificationsEntryId,orderByComparator,false);
+    return array;
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}
