@@ -1,0 +1,11 @@
+{
+  PortletPreferences portletPreferences=PortletPreferencesFactoryUtil.fromXML(companyId,ownerId,ownerType,plid,portletId,xml);
+  for (int i=0; i < _NAME_MAPPING.length; i++) {
+    String sourcePreferenceName=_NAME_MAPPING[i][0];
+    String targetPreferenceName=_NAME_MAPPING[i][1];
+    String value=portletPreferences.getValue(sourcePreferenceName,null);
+    portletPreferences.setValue(targetPreferenceName,value);
+    portletPreferences.reset(sourcePreferenceName);
+  }
+  return PortletPreferencesFactoryUtil.toXML(portletPreferences);
+}
