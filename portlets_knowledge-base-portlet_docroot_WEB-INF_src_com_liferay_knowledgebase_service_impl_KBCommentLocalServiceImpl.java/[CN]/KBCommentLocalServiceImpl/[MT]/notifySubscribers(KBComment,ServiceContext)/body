@@ -1,12 +1,12 @@
 {
   PortletPreferences preferences=portletPreferencesLocalService.getPreferences(kbComment.getCompanyId(),kbComment.getGroupId(),PortletKeys.PREFS_OWNER_TYPE_GROUP,PortletKeys.PREFS_PLID_SHARED,PortletKeys.KNOWLEDGE_BASE_ADMIN,null);
-  if (!AdminUtil.isFeedbackStatusChangeNotificationEnabled(kbComment.getStatus(),preferences)) {
+  if (!AdminUtil.isSuggestionStatusChangeNotificationEnabled(kbComment.getStatus(),preferences)) {
     return;
   }
   String fromName=AdminUtil.getEmailFromName(preferences,serviceContext.getCompanyId());
   String fromAddress=AdminUtil.getEmailFromAddress(preferences,kbComment.getCompanyId());
-  String subject=AdminUtil.getEmailKBArticleFeedbackNotificationSubject(kbComment.getStatus(),preferences);
-  String body=AdminUtil.getEmailKBArticleFeedbackNotificationBody(kbComment.getStatus(),preferences);
+  String subject=AdminUtil.getEmailKBArticleSuggestionNotificationSubject(kbComment.getStatus(),preferences);
+  String body=AdminUtil.getEmailKBArticleSuggestionNotificationBody(kbComment.getStatus(),preferences);
   KBArticle kbArticle=kbArticleLocalService.getLatestKBArticle(kbComment.getClassPK(),WorkflowConstants.STATUS_APPROVED);
   String kbArticleContent=StringUtil.replace(kbArticle.getContent(),new String[]{"href=\"/","src=\"/"},new String[]{"href=\"" + serviceContext.getPortalURL() + "/","src=\"" + serviceContext.getPortalURL() + "/"});
   SubscriptionSender subscriptionSender=new AdminSubscriptionSender(kbArticle,serviceContext);
