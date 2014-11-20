@@ -11,10 +11,16 @@
 ;
     _extRepository.initRepository(getTypeSettingsProperties(),credentialsProvider);
   }
- catch (  PortalException|SystemException e) {
+ catch (  PortalException pe) {
     if (_log.isWarnEnabled()) {
-      _log.warn("Unable to initialize repository " + _extRepository,e);
+      _log.warn("Unable to initialize repository " + _extRepository,pe);
     }
-    throw e;
+    throw pe;
+  }
+catch (  SystemException se) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Unable to initialize repository " + _extRepository,se);
+    }
+    throw se;
   }
 }
