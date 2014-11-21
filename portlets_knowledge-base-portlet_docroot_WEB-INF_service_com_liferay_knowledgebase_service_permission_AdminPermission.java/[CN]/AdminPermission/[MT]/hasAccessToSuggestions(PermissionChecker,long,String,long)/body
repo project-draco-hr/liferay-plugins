@@ -1,0 +1,14 @@
+{
+  if (!AdminPermission.contains(permissionChecker,groupId,ActionKeys.VIEW_KB_SUGGESTIONS)) {
+    return false;
+  }
+  if (className.equals(KBArticleConstants.getClassName())) {
+    return KBArticlePermission.contains(permissionChecker,classPK,ActionKeys.UPDATE);
+  }
+ else   if (className.equals(KBFolderConstants.getClassName())) {
+    throw new IllegalArgumentException("KBFolders don't support comments");
+  }
+ else {
+    throw new IllegalArgumentException(String.format("Received className %s; expected %s",className,KBArticleConstants.getClassName()));
+  }
+}
