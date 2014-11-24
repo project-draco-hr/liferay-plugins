@@ -1,11 +1,13 @@
 {
   long[] companyIds=PortalUtil.getCompanyIds();
   String[][] renameClassNamesArray={new String[]{"com.liferay.portlet.calendar","com.liferay.calendar.model.Calendar"},new String[]{"com.liferay.portlet.calendar.model.CalEvent","com.liferay.calendar.model.CalendarBooking"}};
-  for (int i=0; i < renameClassNamesArray.length; i++) {
-    for (int j=0; j < companyIds.length; j++) {
-      importResourcePermissions(companyIds[j],renameClassNamesArray[i][0],renameClassNamesArray[i][1],ResourceConstants.SCOPE_COMPANY);
-      importResourcePermissions(companyIds[j],renameClassNamesArray[i][0],renameClassNamesArray[i][1],ResourceConstants.SCOPE_GROUP_TEMPLATE);
-      importResourcePermissions(companyIds[j],renameClassNamesArray[i][0],renameClassNamesArray[i][1],ResourceConstants.SCOPE_GROUP);
+  for (  String[] renameClassNames : renameClassNamesArray) {
+    String oldClassName=renameClassNames[0];
+    String newClassName=renameClassNames[1];
+    for (    long companyId : companyIds) {
+      importResourcePermissions(companyId,oldClassName,newClassName,ResourceConstants.SCOPE_COMPANY);
+      importResourcePermissions(companyId,oldClassName,newClassName,ResourceConstants.SCOPE_GROUP);
+      importResourcePermissions(companyId,oldClassName,newClassName,ResourceConstants.SCOPE_GROUP_TEMPLATE);
     }
   }
 }
