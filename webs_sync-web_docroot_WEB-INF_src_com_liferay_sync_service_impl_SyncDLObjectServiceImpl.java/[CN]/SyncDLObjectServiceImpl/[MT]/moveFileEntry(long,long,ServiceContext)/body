@@ -1,6 +1,8 @@
 {
   try {
-    FileEntry fileEntry=dlAppService.moveFileEntry(fileEntryId,newFolderId,serviceContext);
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    SyncUtil.checkSyncEnabled(fileEntry.getGroupId());
+    fileEntry=dlAppService.moveFileEntry(fileEntryId,newFolderId,serviceContext);
     return toSyncDLObject(fileEntry,SyncConstants.EVENT_MOVE);
   }
  catch (  PortalException pe) {

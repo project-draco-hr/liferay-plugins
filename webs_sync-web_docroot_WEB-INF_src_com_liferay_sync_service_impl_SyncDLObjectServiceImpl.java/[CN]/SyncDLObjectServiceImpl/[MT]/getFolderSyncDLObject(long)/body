@@ -1,6 +1,8 @@
 {
   try {
-    Folder folder=dlAppService.getFolder(folderId);
+    Folder folder=dlAppLocalService.getFolder(folderId);
+    SyncUtil.checkSyncEnabled(folder.getGroupId());
+    folder=dlAppService.getFolder(folderId);
     if (!SyncUtil.isSupportedFolder(folder)) {
       return null;
     }

@@ -1,9 +1,11 @@
 {
   try {
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    SyncUtil.checkSyncEnabled(fileEntry.getGroupId());
     if (TrashUtil.isInTrash(DLFileEntryConstants.getClassName(),fileEntryId)) {
       return null;
     }
-    FileEntry fileEntry=dlAppService.moveFileEntryToTrash(fileEntryId);
+    fileEntry=dlAppService.moveFileEntryToTrash(fileEntryId);
     return toSyncDLObject(fileEntry,SyncConstants.EVENT_TRASH);
   }
  catch (  NoSuchFileEntryException nsfee) {

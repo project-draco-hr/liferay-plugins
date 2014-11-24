@@ -1,6 +1,8 @@
 {
   File patchedFile=null;
   try {
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    SyncUtil.checkSyncEnabled(fileEntry.getGroupId());
     File sourceFile=dlFileEntryLocalService.getFile(getUserId(),fileEntryId,sourceVersion,false);
     patchedFile=FileUtil.createTempFile();
     SyncUtil.patchFile(sourceFile,deltaFile,patchedFile);

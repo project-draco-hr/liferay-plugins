@@ -16,6 +16,12 @@
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
       String uuid=pathArray[1];
+      Group group=GroupLocalServiceUtil.fetchGroup(groupId);
+      if ((group == null) || !SyncUtil.isSyncEnabled(group)) {
+        response.setHeader(_ERROR_HEADER,SyncSiteUnavailableException.class.getName());
+        ServletResponseUtil.write(response,new byte[0]);
+        return;
+      }
       boolean patch=ParamUtil.getBoolean(request,"patch");
       if (patch) {
         sendPatch(request,response,user,groupId,uuid);

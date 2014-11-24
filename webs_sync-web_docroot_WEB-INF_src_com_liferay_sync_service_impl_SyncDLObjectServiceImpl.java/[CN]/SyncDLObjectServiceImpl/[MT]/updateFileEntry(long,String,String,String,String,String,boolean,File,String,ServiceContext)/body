@@ -1,6 +1,8 @@
 {
   try {
-    FileEntry fileEntry=dlAppService.updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,file,serviceContext);
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    SyncUtil.checkSyncEnabled(fileEntry.getGroupId());
+    fileEntry=dlAppService.updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,file,serviceContext);
     return toSyncDLObject(fileEntry,SyncConstants.EVENT_UPDATE);
   }
  catch (  PortalException pe) {

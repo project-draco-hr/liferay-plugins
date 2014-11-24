@@ -1,6 +1,8 @@
 {
   try {
-    FileEntry fileEntry=dlAppService.checkOutFileEntry(fileEntryId,owner,expirationTime,serviceContext);
+    FileEntry fileEntry=dlAppLocalService.getFileEntry(fileEntryId);
+    SyncUtil.checkSyncEnabled(fileEntry.getGroupId());
+    fileEntry=dlAppService.checkOutFileEntry(fileEntryId,owner,expirationTime,serviceContext);
     return toSyncDLObject(fileEntry,SyncConstants.EVENT_CHECK_OUT);
   }
  catch (  PortalException pe) {

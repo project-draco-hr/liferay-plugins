@@ -1,6 +1,8 @@
 {
   try {
-    Folder folder=dlAppService.updateFolder(folderId,name,description,serviceContext);
+    Folder folder=dlAppLocalService.getFolder(folderId);
+    SyncUtil.checkSyncEnabled(folder.getGroupId());
+    folder=dlAppService.updateFolder(folderId,name,description,serviceContext);
     return toSyncDLObject(folder,SyncConstants.EVENT_UPDATE);
   }
  catch (  PortalException pe) {
