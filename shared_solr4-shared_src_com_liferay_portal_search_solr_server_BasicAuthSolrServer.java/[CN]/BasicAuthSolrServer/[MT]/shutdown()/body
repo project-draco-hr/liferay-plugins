@@ -1,26 +1,5 @@
 {
   _stopped=true;
   _server.shutdown();
-  int retry=0;
-  while (retry < 10) {
-    PoolStats poolStats=_poolingClientConnectionManager.getTotalStats();
-    int availableConnections=poolStats.getAvailable();
-    if (availableConnections <= 0) {
-      break;
-    }
-    if (_log.isDebugEnabled()) {
-      _log.debug(toString() + " waiting on " + availableConnections+ " connections");
-    }
-    _poolingClientConnectionManager.closeIdleConnections(200,TimeUnit.MILLISECONDS);
-    try {
-      Thread.sleep(500);
-    }
- catch (    InterruptedException ie) {
-    }
-    retry++;
-  }
-  _poolingClientConnectionManager.shutdown();
-  if (_log.isDebugEnabled()) {
-    _log.debug(toString() + " is shutdown");
-  }
+  _httpClientFactory.shutdown();
 }

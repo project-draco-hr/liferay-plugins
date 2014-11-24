@@ -1,16 +1,14 @@
 {
-  DefaultHttpClient defaultHttpClient=new DefaultHttpClient(_poolingClientConnectionManager);
-  if ((_username != null) && (_password != null)) {
-    if (_authScope == null) {
-      _authScope=AuthScope.ANY;
-    }
-    CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
-    credentialsProvider.setCredentials(_authScope,new UsernamePasswordCredentials(_username,_password));
-    for (    HttpRequestInterceptor httpRequestInterceptor : _httpRequestInterceptors) {
-      defaultHttpClient.addRequestInterceptor(httpRequestInterceptor,0);
-    }
-  }
-  _server=new HttpSolrServer(_url,defaultHttpClient);
+  PoolingClientConnectionManager poolingClientConnectionManager=new PoolingClientConnectionManager();
+  BasicAuthPoolingHttpClientFactory httpClientFactory=new BasicAuthPoolingHttpClientFactory(poolingClientConnectionManager);
+  httpClientFactory.setAuthScope(_authScope);
+  httpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
+  httpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
+  httpClientFactory.setMaxTotalConnections(_maxTotalConnections);
+  httpClientFactory.setPassword(_password);
+  httpClientFactory.setUsername(_username);
+  _httpClientFactory=httpClientFactory;
+  _server=new HttpSolrServer(_url,httpClientFactory.createInstance());
   if (_allowCompression != null) {
     _server.setAllowCompression(_allowCompression);
   }
@@ -20,14 +18,8 @@
   if (_connectionTimeout != null) {
     _server.setConnectionTimeout(_connectionTimeout);
   }
-  if (_defaultMaxConnectionsPerRoute != null) {
-    _poolingClientConnectionManager.setDefaultMaxPerRoute(_defaultMaxConnectionsPerRoute);
-  }
   if (_followRedirects != null) {
     _server.setFollowRedirects(_followRedirects);
-  }
-  if (_maxTotalConnections != null) {
-    _poolingClientConnectionManager.setMaxTotal(_maxTotalConnections);
   }
   if (_maxRetries != null) {
     _server.setMaxRetries(_maxRetries);
