@@ -1,0 +1,18 @@
+{
+  if (_log.isDebugEnabled()) {
+    _log.debug("Loading file: " + fileName);
+  }
+  InputStream inputStream=null;
+  if (fileName.startsWith("classpath:")) {
+    fileName=fileName.substring(10);
+    Class<?> clazz=KeyStoreLoader.class;
+    inputStream=clazz.getResourceAsStream(fileName);
+  }
+  if (inputStream != null) {
+    return inputStream;
+  }
+  if (_log.isDebugEnabled()) {
+    _log.debug(fileName + " hasn't been found on the classpath; trying to " + "load from the filesystem.");
+  }
+  return new FileInputStream(fileName);
+}

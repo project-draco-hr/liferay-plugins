@@ -1,0 +1,36 @@
+{
+  KeyStore keyStore=KeyStoreLoader.load(_keyStoreType,_keyStoreLocation,_keyStorePassword);
+  if (keyStore == null) {
+    if (_log.isDebugEnabled()) {
+      _log.debug("Custom keyStore has not been initialized, falling back " + "to system's defaults.");
+    }
+    return SSLSocketFactory.getSystemSocketFactory();
+  }
+  KeyStore trustStore=null;
+  TrustStrategy trustStrategy=null;
+  if (_verifyServerCertificate) {
+    trustStore=KeyStoreLoader.load(_trustStoreType,_trustStoreLocation,_trustStorePassword);
+    if (trustStore == null) {
+      if (_log.isDebugEnabled()) {
+        _log.debug("Custom trustStore has not been initialized, falling " + "back to system's defaults.");
+      }
+      return SSLSocketFactory.getSystemSocketFactory();
+    }
+  }
+ else {
+    trustStrategy=new TrustSelfSignedStrategy();
+  }
+  X509HostnameVerifier hostnameVerifier=SSLSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER;
+  if (!_verifyServerHostname) {
+    hostnameVerifier=SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+  }
+  try {
+    return new SSLSocketFactory(_DEFAULT_ALGORITHM,keyStore,String.valueOf(_keyStorePassword),trustStore,null,trustStrategy,hostnameVerifier);
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Custom SSLSocketFactory initialization has failed; " + "falling back to system's default.",e);
+    }
+    return SSLSocketFactory.getSystemSocketFactory();
+  }
+}
