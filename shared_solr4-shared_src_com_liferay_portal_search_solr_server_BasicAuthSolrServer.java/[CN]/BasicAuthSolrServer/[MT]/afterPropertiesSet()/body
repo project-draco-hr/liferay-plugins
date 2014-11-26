@@ -1,4 +1,12 @@
 {
+  if (_log.isWarnEnabled()) {
+    StringBundler sb=new StringBundler(4);
+    sb.append(BasicAuthSolrServer.class);
+    sb.append(" has been deprecated; please use ");
+    sb.append(HttpSolrServer.class);
+    sb.append(" instead.");
+    _log.warn(sb.toString());
+  }
   PoolingClientConnectionManager poolingClientConnectionManager=new PoolingClientConnectionManager();
   BasicAuthPoolingHttpClientFactory httpClientFactory=new BasicAuthPoolingHttpClientFactory(poolingClientConnectionManager);
   httpClientFactory.setAuthScope(_authScope);
@@ -8,26 +16,5 @@
   httpClientFactory.setPassword(_password);
   httpClientFactory.setUsername(_username);
   _httpClientFactory=httpClientFactory;
-  _server=new HttpSolrServer(_url,httpClientFactory.createInstance());
-  if (_allowCompression != null) {
-    _server.setAllowCompression(_allowCompression);
-  }
-  if (Validator.isNotNull(_baseURL)) {
-    _server.setBaseURL(_baseURL);
-  }
-  if (_connectionTimeout != null) {
-    _server.setConnectionTimeout(_connectionTimeout);
-  }
-  if (_followRedirects != null) {
-    _server.setFollowRedirects(_followRedirects);
-  }
-  if (_maxRetries != null) {
-    _server.setMaxRetries(_maxRetries);
-  }
-  if (_responseParser != null) {
-    _server.setParser(_responseParser);
-  }
-  if (_soTimeout != null) {
-    _server.setSoTimeout(_soTimeout);
-  }
+  initServer(httpClientFactory.createInstance());
 }
