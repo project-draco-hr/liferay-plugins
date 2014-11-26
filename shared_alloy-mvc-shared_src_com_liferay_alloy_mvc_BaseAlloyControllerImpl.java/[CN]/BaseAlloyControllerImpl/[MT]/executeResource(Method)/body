@@ -1,5 +1,25 @@
 {
-  if (method != null) {
-    method.invoke(this);
+  try {
+    if (method != null) {
+      method.invoke(this);
+    }
+  }
+ catch (  Exception e) {
+    log.error(e,e);
+    String message="an-unexpected-system-error-occurred";
+    Throwable rootCause=getRootCause(e);
+    if (rootCause instanceof AlloyException) {
+      message=rootCause.getMessage();
+    }
+    renderError(HTTP_STATUS_BAD_REQUEST,e,message);
+  }
+ finally {
+    if (respondingTo()) {
+      String contentType=response.getContentType();
+      if (respondingTo("json")) {
+        contentType=ContentTypes.APPLICATION_JSON;
+      }
+      writeResponse(responseContent,contentType);
+    }
   }
 }

@@ -1,0 +1,13 @@
+{
+  Throwable rootCause=getRootCause(e);
+  if (respondingTo()) {
+    responseContent=buildResponseContent(rootCause,translate(pattern,arguments),status);
+    return;
+  }
+  portletRequest.setAttribute("arguments",arguments);
+  String stackTrace=getStackTrace((Exception)rootCause);
+  portletRequest.setAttribute("data",stackTrace);
+  portletRequest.setAttribute("pattern",pattern);
+  portletRequest.setAttribute("status",status);
+  render(_VIEW_PATH_ERROR);
+}

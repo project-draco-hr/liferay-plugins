@@ -1,0 +1,17 @@
+{
+  String responseContent=StringPool.BLANK;
+  if (respondingTo("json")) {
+    JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+    if (data instanceof Exception) {
+      String stackTrace=getStackTrace((Exception)data);
+      jsonObject.put("data",stackTrace);
+    }
+ else {
+      jsonObject.put("data",JSONFactoryUtil.createJSONObject(String.valueOf(data)));
+    }
+    jsonObject.put("message",message);
+    jsonObject.put("status",status);
+    responseContent=jsonObject.toString();
+  }
+  return responseContent;
+}

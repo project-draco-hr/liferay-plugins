@@ -1,18 +1,10 @@
 {
   boolean calledProcessAction=GetterUtil.getBoolean((String)request.getAttribute(CALLED_PROCESS_ACTION));
   if (!calledProcessAction) {
-    if (method != null) {
-      method.invoke(this);
-    }
+    executeResource(method);
   }
   if (Validator.isNull(viewPath)) {
     viewPath=actionPath;
-  }
-  if (Validator.isNotNull(format)) {
-    if (format.equals("json")) {
-      writeResponse(responseContent,ContentTypes.APPLICATION_JSON);
-    }
-    return;
   }
   String includePath=buildIncludePath(viewPath);
   PortletRequestDispatcher portletRequestDispatcher=portletContext.getRequestDispatcher(includePath);
