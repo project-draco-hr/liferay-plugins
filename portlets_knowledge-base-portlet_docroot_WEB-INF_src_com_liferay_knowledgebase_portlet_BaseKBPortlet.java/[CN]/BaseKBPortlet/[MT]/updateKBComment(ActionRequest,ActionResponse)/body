@@ -8,18 +8,17 @@
   long classNameId=ParamUtil.getLong(actionRequest,"classNameId");
   long classPK=ParamUtil.getLong(actionRequest,"classPK");
   String content=ParamUtil.getString(actionRequest,"content");
-  boolean helpful=ParamUtil.getBoolean(actionRequest,"helpful");
   int status=ParamUtil.getInteger(actionRequest,"status",KBCommentConstants.STATUS_ANY);
   ServiceContext serviceContext=ServiceContextFactory.getInstance(KBComment.class.getName(),actionRequest);
   if (cmd.equals(Constants.ADD)) {
-    KBCommentLocalServiceUtil.addKBComment(themeDisplay.getUserId(),classNameId,classPK,content,helpful,serviceContext);
+    KBCommentLocalServiceUtil.addKBComment(themeDisplay.getUserId(),classNameId,classPK,content,serviceContext);
   }
  else   if (cmd.equals(Constants.UPDATE)) {
     if (status == KBCommentConstants.STATUS_ANY) {
       KBComment kbComment=KBCommentServiceUtil.getKBComment(kbCommentId);
       status=kbComment.getStatus();
     }
-    KBCommentServiceUtil.updateKBComment(kbCommentId,classNameId,classPK,content,helpful,status,serviceContext);
+    KBCommentServiceUtil.updateKBComment(kbCommentId,classNameId,classPK,content,status,serviceContext);
   }
   SessionMessages.add(actionRequest,"suggestionSaved");
 }
