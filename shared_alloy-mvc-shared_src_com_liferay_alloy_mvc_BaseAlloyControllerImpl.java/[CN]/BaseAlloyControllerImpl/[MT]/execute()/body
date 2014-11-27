@@ -10,9 +10,7 @@
     method=null;
   }
   if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
-    Class<?> superClass=clazz.getSuperclass();
-    Method executeActionMethod=superClass.getDeclaredMethod("executeAction",new Class<?>[]{Method.class});
-    ServiceBeanMethodInvocationFactoryUtil.proceed(this,BaseAlloyControllerImpl.class,executeActionMethod,new Object[]{method},new String[]{"transactionAdvice"});
+    executeAction(method);
   }
  else   if (lifecycle.equals(PortletRequest.RENDER_PHASE)) {
     executeRender(method);

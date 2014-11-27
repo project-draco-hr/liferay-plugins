@@ -1,7 +1,9 @@
 {
   try {
     if (method != null) {
-      method.invoke(this);
+      Class<?> superClass=clazz.getSuperclass();
+      Method invokeMethod=superClass.getDeclaredMethod("invoke",new Class<?>[]{Method.class});
+      ServiceBeanMethodInvocationFactoryUtil.proceed(this,BaseAlloyControllerImpl.class,invokeMethod,new Object[]{method},new String[]{"transactionAdvice"});
     }
   }
  catch (  Exception e) {
@@ -11,7 +13,7 @@
     if (rootCause instanceof AlloyException) {
       message=rootCause.getMessage();
     }
-    renderError(HTTP_STATUS_BAD_REQUEST,e,message);
+    renderError(HttpServletResponse.SC_BAD_REQUEST,e,message);
   }
  finally {
     if (respondingTo()) {
