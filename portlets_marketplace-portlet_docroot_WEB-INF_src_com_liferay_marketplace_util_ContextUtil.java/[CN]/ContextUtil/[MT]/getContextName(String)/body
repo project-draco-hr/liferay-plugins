@@ -1,0 +1,25 @@
+{
+  String contextName=context;
+  if (contextName.length() == 0) {
+    return StringPool.BLANK;
+  }
+  if (contextName.startsWith(StringPool.FORWARD_SLASH)) {
+    contextName=contextName.substring(1);
+  }
+  if (contextName.endsWith(StringPool.FORWARD_SLASH)) {
+    contextName=StringUtil.replaceLast(contextName,StringPool.FORWARD_SLASH,StringPool.BLANK);
+  }
+  while (contextName.contains(StringPool.DASH)) {
+    if (contextName.endsWith("-ext") || contextName.endsWith("-hook") || contextName.endsWith("-layouttpl")|| contextName.endsWith("-portlet")|| contextName.endsWith("-theme")|| contextName.endsWith("-web")) {
+      return contextName;
+    }
+    int pos=contextName.lastIndexOf(StringPool.DASH);
+    if (pos > 0) {
+      contextName=contextName.substring(0,pos);
+    }
+ else {
+      break;
+    }
+  }
+  return contextName;
+}

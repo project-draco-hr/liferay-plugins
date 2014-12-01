@@ -43,10 +43,11 @@
             Attributes attributes=manifest.getMainAttributes();
             bundleSymbolicName=GetterUtil.getString(attributes.getValue("Bundle-SymbolicName"));
             bundleVersion=GetterUtil.getString(attributes.getValue("Bundle-Version"));
-            contextName=GetterUtil.getString(attributes.getValue("Web-ContextPath"));
+            String webContextPath=GetterUtil.getString(attributes.getValue("Web-ContextPath"));
+            contextName=ContextUtil.getContextName(webContextPath);
           }
  else {
-            contextName=getContextName(fileName);
+            contextName=ContextUtil.getContextName(fileName);
             autoDeploymentContext.setContext(contextName);
           }
           autoDeploymentContext.setFile(pluginPackageFile);
