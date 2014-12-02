@@ -1,0 +1,8 @@
+{
+  if (!tableHasColumn("KBComment","helpful")) {
+    return;
+  }
+  runSQL("update KBComment set userOpinion = " + KBCommentConstants.OPINION_LIKED_IT + " where helpful = TRUE");
+  runSQL("update KBComment set userOpinion = " + KBCommentConstants.OPINION_DID_NOT_LIKE_IT + " where helpful = FALSE");
+  runSQL("alter table KBComment drop column helpful");
+}
