@@ -7,6 +7,9 @@
   fromUserJSONObject.put(PushNotificationsConstants.KEY_USER_ID,fromUserId);
   fromUserJSONObject.put(PushNotificationsConstants.KEY_UUID,user.getUuid());
   jsonObject.put(PushNotificationsConstants.KEY_FROM_USER,fromUserJSONObject);
+  jsonObject.put(PushNotificationsConstants.KEY_PUSH_NOTIFICATIONS_ENTRY_ID,pushNotificationsEntry.getPushNotificationsEntryId());
+  jsonObject.put(PushNotificationsConstants.KEY_PARENT_PUSH_NOTIFICATIONS_ENTRY_ID,pushNotificationsEntry.getParentPushNotificationsEntryId());
+  JSONObject payloadJSONObject=JSONFactoryUtil.createJSONObject(pushNotificationsEntry.getPayload());
   jsonObject.put(PushNotificationsConstants.KEY_PAYLOAD,payloadJSONObject);
-  return jsonObject;
+  pushNotificationsDeviceLocalService.sendPushNotification(fromUserId,jsonObject);
 }
