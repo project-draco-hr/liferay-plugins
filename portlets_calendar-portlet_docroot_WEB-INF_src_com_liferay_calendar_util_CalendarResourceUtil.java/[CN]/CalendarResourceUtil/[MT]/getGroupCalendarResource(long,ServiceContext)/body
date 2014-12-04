@@ -11,5 +11,10 @@
   Map<Locale,String> nameMap=new HashMap<Locale,String>();
   nameMap.put(LocaleUtil.getDefault(),group.getDescriptiveName());
   Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
-  return CalendarResourceLocalServiceUtil.addCalendarResource(group.getCreatorUserId(),groupId,PortalUtil.getClassNameId(Group.class),groupId,null,null,nameMap,descriptionMap,true,serviceContext);
+  long userId=group.getCreatorUserId();
+  User user=UserLocalServiceUtil.fetchUserById(userId);
+  if (user == null) {
+    userId=UserLocalServiceUtil.getDefaultUserId(group.getCompanyId());
+  }
+  return CalendarResourceLocalServiceUtil.addCalendarResource(userId,groupId,PortalUtil.getClassNameId(Group.class),groupId,null,null,nameMap,descriptionMap,true,serviceContext);
 }
