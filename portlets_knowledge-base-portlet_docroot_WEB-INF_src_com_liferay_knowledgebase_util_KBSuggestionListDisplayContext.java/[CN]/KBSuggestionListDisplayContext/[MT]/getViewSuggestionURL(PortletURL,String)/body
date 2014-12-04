@@ -4,5 +4,16 @@
   if (_kbArticle == null) {
     portletURL.setParameter("mvcPath","/admin/view_suggestions.jsp");
   }
+ else   if (Validator.isNull(_kbArticle.getUrlTitle())) {
+    portletURL.setParameter("resourceClassNameId",String.valueOf(_kbArticle.getClassNameId()));
+    portletURL.setParameter("resourcePrimKey",String.valueOf(_kbArticle.getResourcePrimKey()));
+  }
+ else {
+    portletURL.setParameter("urlTitle",_kbArticle.getUrlTitle());
+    if (_kbArticle.getKbFolderId() != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+      KBFolder kbFolder=KBFolderLocalServiceUtil.getKBFolder(_kbArticle.getKbFolderId());
+      portletURL.setParameter("kbFolderUrlTitle",kbFolder.getUrlTitle());
+    }
+  }
   return portletURL.toString() + "#kbSuggestions";
 }
