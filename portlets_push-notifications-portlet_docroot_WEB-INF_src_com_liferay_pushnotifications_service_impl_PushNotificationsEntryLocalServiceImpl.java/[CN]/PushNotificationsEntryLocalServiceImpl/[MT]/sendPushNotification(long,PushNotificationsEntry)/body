@@ -1,12 +1,7 @@
 {
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
-  JSONObject fromUserJSONObject=JSONFactoryUtil.createJSONObject();
-  User user=userLocalService.getUser(fromUserId);
-  fromUserJSONObject.put(PushNotificationsConstants.KEY_FULL_NAME,user.getFullName());
-  fromUserJSONObject.put(PushNotificationsConstants.KEY_PORTRAIT_ID,user.getPortraitId());
-  fromUserJSONObject.put(PushNotificationsConstants.KEY_USER_ID,fromUserId);
-  fromUserJSONObject.put(PushNotificationsConstants.KEY_UUID,user.getUuid());
-  jsonObject.put(PushNotificationsConstants.KEY_FROM_USER,fromUserJSONObject);
+  JSONObject userJSONObject=createUserJSONObject(fromUserId);
+  jsonObject.put(PushNotificationsConstants.KEY_USER,userJSONObject);
   jsonObject.put(PushNotificationsConstants.KEY_PARENT_PUSH_NOTIFICATIONS_ENTRY_ID,pushNotificationsEntry.getParentPushNotificationsEntryId());
   JSONObject payloadJSONObject=JSONFactoryUtil.createJSONObject(pushNotificationsEntry.getPayload());
   jsonObject.put(PushNotificationsConstants.KEY_PAYLOAD,payloadJSONObject);
