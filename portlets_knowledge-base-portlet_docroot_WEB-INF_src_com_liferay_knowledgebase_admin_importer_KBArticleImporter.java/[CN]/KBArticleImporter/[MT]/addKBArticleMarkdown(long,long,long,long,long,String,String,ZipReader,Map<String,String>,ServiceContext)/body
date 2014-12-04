@@ -7,7 +7,10 @@
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,parentKBFolderId,urlTitle);
   try {
     if (kbArticle == null) {
+      int workflowAction=serviceContext.getWorkflowAction();
+      serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
       kbArticle=KBArticleLocalServiceUtil.addKBArticle(userId,parentResourceClassNameId,parentResourcePrimaryKey,kbArticleMarkdownConverter.getTitle(),urlTitle,markdown,null,kbArticleMarkdownConverter.getSourceURL(),null,null,serviceContext);
+      serviceContext.setWorkflowAction(workflowAction);
     }
   }
  catch (  Exception e) {
