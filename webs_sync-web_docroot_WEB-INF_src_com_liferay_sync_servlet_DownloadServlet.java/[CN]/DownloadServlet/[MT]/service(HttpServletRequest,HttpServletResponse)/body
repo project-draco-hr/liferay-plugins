@@ -13,6 +13,14 @@
       long imageId=GetterUtil.getLong(pathArray[1]);
       sendImage(response,imageId);
     }
+ else     if (pathArray[0].equals("zip")) {
+      String zipIdsJSONString=ParamUtil.get(request,"zipIds","");
+      if (Validator.isNull(zipIdsJSONString)) {
+        throw new IllegalArgumentException("Missing parameter zipIds");
+      }
+      JSONArray zipIdsJSONArray=JSONFactoryUtil.createJSONArray(zipIdsJSONString);
+      sendZipFile(response,user,zipIdsJSONArray);
+    }
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
       String uuid=pathArray[1];

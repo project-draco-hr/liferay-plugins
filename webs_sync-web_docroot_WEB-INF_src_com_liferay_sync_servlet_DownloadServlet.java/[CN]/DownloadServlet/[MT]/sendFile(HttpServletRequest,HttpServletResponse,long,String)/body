@@ -1,12 +1,6 @@
 {
-  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
-  String contentType=fileEntry.getMimeType();
-  response.setContentType(contentType);
   String version=ParamUtil.getString(request,"version");
-  if (Validator.isNull(version)) {
-    version=fileEntry.getVersion();
-  }
-  FileVersion fileVersion=fileEntry.getFileVersion(version);
-  InputStream inputStream=fileVersion.getContentStream(false);
-  ServletResponseUtil.write(response,inputStream,fileVersion.getSize());
+  DownloadServletInputStream downloadServletInputStream=_getFileDownloadServletInputStream(groupId,uuid,version);
+  response.setContentType(downloadServletInputStream.getMimeType());
+  ServletResponseUtil.write(response,downloadServletInputStream,downloadServletInputStream.getSize());
 }

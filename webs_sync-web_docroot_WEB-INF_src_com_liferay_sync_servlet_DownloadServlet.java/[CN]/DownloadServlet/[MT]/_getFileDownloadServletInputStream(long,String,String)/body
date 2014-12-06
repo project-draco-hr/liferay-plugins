@@ -1,0 +1,9 @@
+{
+  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  if (Validator.isNull(version)) {
+    version=fileEntry.getVersion();
+  }
+  FileVersion fileVersion=fileEntry.getFileVersion(version);
+  InputStream inputStream=fileVersion.getContentStream(false);
+  return new DownloadServletInputStream(inputStream,fileVersion.getSize(),fileVersion.getMimeType());
+}

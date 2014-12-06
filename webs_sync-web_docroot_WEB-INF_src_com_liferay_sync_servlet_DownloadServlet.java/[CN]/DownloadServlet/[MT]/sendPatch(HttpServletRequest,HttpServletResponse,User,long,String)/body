@@ -1,5 +1,4 @@
 {
-  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
   String sourceVersion=ParamUtil.getString(request,"sourceVersion");
   if (Validator.isNull(sourceVersion)) {
     throw new IllegalArgumentException("Missing source version");
@@ -8,21 +7,6 @@
   if (Validator.isNull(targetVersion)) {
     throw new IllegalArgumentException("Missing target version");
   }
-  DLFileVersion sourceFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),sourceVersion);
-  DLFileVersion targetFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),targetVersion);
-  if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
-    ServletResponseUtil.write(response,new FileInputStream(deltaFile),deltaFile.length());
-    return;
-  }
-  SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId());
-  if (syncDLFileVersionDiff != null) {
-    SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getSyncDLFileVersionDiffId());
-  }
- else {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
-    syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId(),deltaFile);
-  }
-  FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
-  ServletResponseUtil.write(response,dataFileEntry.getContentStream(),dataFileEntry.getSize());
+  DownloadServletInputStream downloadServletInputStream=_getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersion,targetVersion);
+  ServletResponseUtil.write(response,downloadServletInputStream,downloadServletInputStream.getSize());
 }
