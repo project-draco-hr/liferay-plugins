@@ -1,7 +1,7 @@
 {
   List<ResourcePermission> resourcePermissions=resourcePermissionPersistence.findByC_N_S(companyId,oldClassName,scope);
   for (  ResourcePermission resourcePermission : resourcePermissions) {
-    long actionIds=getActionIds(resourcePermission,oldClassName,newClassName);
+    long actionIds=convertActionId(resourcePermission,oldClassName,oldAction,newClassName,newAction);
     if (scope == ResourceConstants.SCOPE_GROUP) {
       resourceBlockLocalService.addGroupScopePermissions(companyId,GetterUtil.getLong(resourcePermission.getPrimKey()),newClassName,resourcePermission.getRoleId(),actionIds);
     }
