@@ -9,17 +9,9 @@
   if (contextName.endsWith(StringPool.FORWARD_SLASH)) {
     contextName=contextName.substring(0,contextName.length() - 1);
   }
-  while (contextName.contains(StringPool.DASH)) {
-    if (contextName.endsWith("-ext") || contextName.endsWith("-hook") || contextName.endsWith("-layouttpl")|| contextName.endsWith("-portlet")|| contextName.endsWith("-theme")|| contextName.endsWith("-web")) {
-      return contextName;
-    }
-    int pos=contextName.lastIndexOf(StringPool.DASH);
-    if (pos > 0) {
-      contextName=contextName.substring(0,pos);
-    }
- else {
-      break;
-    }
+  int pos=getPluginTypeEndingIndex(contextName);
+  if (pos >= 0) {
+    contextName=contextName.substring(0,pos);
   }
   return contextName;
 }
