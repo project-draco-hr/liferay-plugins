@@ -1,0 +1,20 @@
+{
+  String creatorUserName=getUserName(request.getUserId(),themeDisplay);
+  User creatorUser=UserLocalServiceUtil.getUserById(request.getUserId());
+  int requestType=request.getType();
+  String title=StringPool.BLANK;
+  if (requestType == SocialRelationConstants.TYPE_BI_CONNECTION) {
+    StringBuilder sb=new StringBuilder();
+    sb.append("<a href=\"");
+    sb.append(themeDisplay.getPortalURL());
+    sb.append(themeDisplay.getPathFriendlyURLPublic());
+    sb.append(StringPool.SLASH);
+    sb.append(creatorUser.getScreenName());
+    sb.append("/profile\">");
+    sb.append(creatorUserName);
+    sb.append("</a>");
+    String creatorUserNameURL=sb.toString();
+    title=themeDisplay.translate("request-social-networking-summary-add-friend",new Object[]{creatorUserNameURL});
+  }
+  return new SocialRequestFeedEntry(title,StringPool.BLANK);
+}
