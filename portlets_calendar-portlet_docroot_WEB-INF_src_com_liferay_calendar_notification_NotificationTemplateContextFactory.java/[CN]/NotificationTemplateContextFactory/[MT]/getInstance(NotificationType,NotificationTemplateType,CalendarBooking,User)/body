@@ -11,7 +11,7 @@
   notificationTemplateContext.setNotificationType(notificationType);
   Map<String,Serializable> attributes=new HashMap<String,Serializable>();
   TimeZone userTimezone=user.getTimeZone();
-  Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),userTimezone);
+  Format dateFormatDateTime=FastDateFormatFactoryUtil.getDateTime(user.getLocale(),CalendarUtil.getCalendarBookingDisplayTimeZone(calendarBooking,userTimezone));
   String userTimezoneDisplayName=userTimezone.getDisplayName(false,TimeZone.SHORT,user.getLocale());
   String endTime=dateFormatDateTime.format(calendarBooking.getEndTime()) + StringPool.SPACE + userTimezoneDisplayName;
   attributes.put("endTime",endTime);
