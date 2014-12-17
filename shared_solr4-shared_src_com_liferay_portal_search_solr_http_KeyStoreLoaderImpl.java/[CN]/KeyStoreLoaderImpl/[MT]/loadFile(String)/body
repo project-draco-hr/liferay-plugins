@@ -5,14 +5,14 @@
   InputStream inputStream=null;
   if (fileName.startsWith("classpath:")) {
     fileName=fileName.substring(10);
-    Class<?> clazz=KeyStoreLoader.class;
+    Class<?> clazz=KeyStoreLoaderImpl.class;
     inputStream=clazz.getResourceAsStream(fileName);
   }
   if (inputStream != null) {
     return inputStream;
   }
-  if (_log.isDebugEnabled()) {
-    _log.debug(fileName + " hasn't been found on the classpath; trying to " + "load from the filesystem.");
+  if (_log.isInfoEnabled()) {
+    _log.info(fileName + " not found on classpath. Attempting to load from " + "filesystem");
   }
   return new FileInputStream(fileName);
 }

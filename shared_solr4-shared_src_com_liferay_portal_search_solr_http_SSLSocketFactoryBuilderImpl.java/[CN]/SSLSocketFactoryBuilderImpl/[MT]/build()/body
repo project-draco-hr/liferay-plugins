@@ -1,5 +1,5 @@
 {
-  KeyStore keyStore=KeyStoreLoader.load(_keyStoreType,_keyStoreLocation,_keyStorePassword);
+  KeyStore keyStore=_keyStoreLoader.load(_keyStoreType,_keyStoreLocation,_keyStorePassword);
   if (keyStore == null) {
     if (_log.isDebugEnabled()) {
       _log.debug("Custom keyStore has not been initialized, falling back " + "to system's defaults.");
@@ -9,7 +9,7 @@
   KeyStore trustStore=null;
   TrustStrategy trustStrategy=null;
   if (_verifyServerCertificate) {
-    trustStore=KeyStoreLoader.load(_trustStoreType,_trustStoreLocation,_trustStorePassword);
+    trustStore=_keyStoreLoader.load(_trustStoreType,_trustStoreLocation,_trustStorePassword);
     if (trustStore == null) {
       if (_log.isDebugEnabled()) {
         _log.debug("Custom trustStore has not been initialized, falling " + "back to system's defaults.");
