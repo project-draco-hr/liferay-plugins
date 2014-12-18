@@ -1,27 +1,3 @@
 {
-  try {
-    User user=getGuestOrUser();
-    SyncContext syncContext=new SyncContext();
-    String authType=PropsUtil.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE);
-    syncContext.setAuthType(authType);
-    PluginPackage syncWebPluginPackage=DeployManagerUtil.getInstalledPluginPackage("sync-web");
-    syncContext.setPluginVersion(syncWebPluginPackage.getVersion());
-    if (!user.isDefaultUser()) {
-      syncContext.setPortalBuildNumber(ReleaseInfo.getBuildNumber());
-      PluginPackage soPortletPluginPackage=DeployManagerUtil.getInstalledPluginPackage("so-portlet");
-      syncContext.setPortletPreferencesMap(getPortletPreferencesMap());
-      if (soPortletPluginPackage != null) {
-        syncContext.setSocialOfficeInstalled(true);
-      }
- else {
-        syncContext.setSocialOfficeInstalled(false);
-      }
-      syncContext.setUser(user);
-      syncContext.setUserSitesGroups(getUserSitesGroups());
-    }
-    return syncContext;
-  }
- catch (  PortalException pe) {
-    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
-  }
+  return getSyncContext();
 }
