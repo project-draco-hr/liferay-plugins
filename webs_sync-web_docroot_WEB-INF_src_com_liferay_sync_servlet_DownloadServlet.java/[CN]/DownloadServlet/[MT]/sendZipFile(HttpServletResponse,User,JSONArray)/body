@@ -4,34 +4,31 @@
   for (int i=0; i < zipObjectsJSONArray.length(); i++) {
     JSONObject zipObjectJSONObject=zipObjectsJSONArray.getJSONObject(i);
     long groupId=zipObjectJSONObject.getLong("groupId");
-    String zipId=zipObjectJSONObject.getString("zipId");
+    String zipFileId=zipObjectJSONObject.getString("zipFileId");
     Group group=GroupLocalServiceUtil.fetchGroup(groupId);
     if ((group == null) || !SyncUtil.isSyncEnabled(group)) {
-      _writeExceptionJSONObject(zipId,SyncSiteUnavailableException.class.getName(),errorsJSONArray);
+      processException(zipFileId,SyncSiteUnavailableException.class.getName(),errorsJSONArray);
       continue;
     }
-    boolean patch=zipObjectJSONObject.getBoolean("patch");
-    String uuid=zipObjectJSONObject.getString("uuid");
     try {
-      if (patch) {
+      String uuid=zipObjectJSONObject.getString("uuid");
+      if (zipObjectJSONObject.getBoolean("patch")) {
         String sourceVersion=zipObjectJSONObject.getString("sourceVersion");
         String targetVersion=zipObjectJSONObject.getString("targetVersion");
         if (Validator.isNull(sourceVersion) || Validator.isNull(targetVersion)) {
-          _writeExceptionJSONObject(zipId,IllegalArgumentException.class.getName(),errorsJSONArray);
+          processException(zipFileId,IllegalArgumentException.class.getName(),errorsJSONArray);
           continue;
         }
-        InputStream inputStream=_getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersion,targetVersion);
-        zipWriter.addEntry(zipId,inputStream);
+        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersion,targetVersion);
+        zipWriter.addEntry(zipFileId,downloadServletInputStream.getInputStream());
       }
  else {
-        String version=zipObjectJSONObject.getString("version");
-        InputStream inputStream=_getFileDownloadServletInputStream(groupId,uuid,version);
-        zipWriter.addEntry(zipId,inputStream);
+        DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(groupId,uuid,zipObjectJSONObject.getString("version"));
+        zipWriter.addEntry(zipFileId,downloadServletInputStream.getInputStream());
       }
     }
  catch (    Exception e) {
-      _writeExceptionJSONObject(zipId,e.getClass().getName(),errorsJSONArray);
-      continue;
+      processException(zipFileId,e.getClass().getName(),errorsJSONArray);
     }
   }
   zipWriter.addEntry("errors.json",errorsJSONArray.toString());

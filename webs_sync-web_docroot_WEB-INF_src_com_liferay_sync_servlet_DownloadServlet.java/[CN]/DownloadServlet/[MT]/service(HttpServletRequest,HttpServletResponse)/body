@@ -14,12 +14,12 @@
       sendImage(response,imageId);
     }
  else     if (pathArray[0].equals("zip")) {
-      String zipIdsJSONString=ParamUtil.get(request,"zipIds","");
-      if (Validator.isNull(zipIdsJSONString)) {
-        throw new IllegalArgumentException("Missing parameter zipIds");
+      String zipFileIds=ParamUtil.get(request,"zipFileIds",StringPool.BLANK);
+      if (Validator.isNull(zipFileIds)) {
+        throw new IllegalArgumentException("Missing parameter zipFileIds");
       }
-      JSONArray zipIdsJSONArray=JSONFactoryUtil.createJSONArray(zipIdsJSONString);
-      sendZipFile(response,user,zipIdsJSONArray);
+      JSONArray jsonArray=JSONFactoryUtil.createJSONArray(zipFileIds);
+      sendZipFile(response,user,jsonArray);
     }
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
