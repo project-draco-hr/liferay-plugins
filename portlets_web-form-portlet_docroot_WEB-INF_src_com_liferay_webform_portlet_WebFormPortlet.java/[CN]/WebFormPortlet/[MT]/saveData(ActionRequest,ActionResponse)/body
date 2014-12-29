@@ -8,7 +8,9 @@
   boolean saveToDatabase=GetterUtil.getBoolean(preferences.getValue("saveToDatabase",StringPool.BLANK));
   String databaseTableName=GetterUtil.getString(preferences.getValue("databaseTableName",StringPool.BLANK));
   boolean saveToFile=GetterUtil.getBoolean(preferences.getValue("saveToFile",StringPool.BLANK));
-  String fileName=GetterUtil.getString(preferences.getValue("fileName",StringPool.BLANK));
+  String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+  String fileName=WebFormUtil.getFileName(themeDisplay,portletResource);
+  fileName=PropsUtil.get(PropsKeys.LIFERAY_HOME) + fileName;
   if (requireCaptcha) {
     try {
       CaptchaUtil.check(actionRequest);

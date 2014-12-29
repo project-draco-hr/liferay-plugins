@@ -24,8 +24,18 @@
     }
   }
   if (saveToFile) {
-    String fileName=getParameter(actionRequest,"fileName");
+    ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    String portletResource=ParamUtil.getString(actionRequest,"portletResource");
+    String fileName=WebFormUtil.getFileName(themeDisplay,portletResource);
+    fileName=PropsUtil.get(PropsKeys.LIFERAY_HOME) + fileName;
     try {
+      File file=new File(fileName);
+      if (!file.exists()) {
+        int endIndex=fileName.lastIndexOf(StringPool.FORWARD_SLASH);
+        String folderName=fileName.substring(0,endIndex);
+        file=new File(folderName);
+        file.mkdirs();
+      }
       FileOutputStream fileOutputStream=new FileOutputStream(fileName,true);
       fileOutputStream.close();
     }
