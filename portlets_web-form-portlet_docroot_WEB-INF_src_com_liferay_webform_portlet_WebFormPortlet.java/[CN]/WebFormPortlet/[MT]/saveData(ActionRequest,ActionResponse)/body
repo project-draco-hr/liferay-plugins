@@ -8,7 +8,6 @@
   boolean saveToDatabase=GetterUtil.getBoolean(preferences.getValue("saveToDatabase",StringPool.BLANK));
   String databaseTableName=GetterUtil.getString(preferences.getValue("databaseTableName",StringPool.BLANK));
   boolean saveToFile=GetterUtil.getBoolean(preferences.getValue("saveToFile",StringPool.BLANK));
-  String fileName=WebFormUtil.getFileName(themeDisplay,portletId);
   if (requireCaptcha) {
     try {
       CaptchaUtil.check(actionRequest);
@@ -54,6 +53,7 @@
       databaseSuccess=saveDatabase(themeDisplay.getCompanyId(),fieldsMap,preferences,databaseTableName);
     }
     if (saveToFile) {
+      String fileName=WebFormUtil.getFileName(themeDisplay,portletId);
       fileSuccess=saveFile(fieldsMap,fileName);
     }
     if (emailSuccess && databaseSuccess && fileSuccess) {
