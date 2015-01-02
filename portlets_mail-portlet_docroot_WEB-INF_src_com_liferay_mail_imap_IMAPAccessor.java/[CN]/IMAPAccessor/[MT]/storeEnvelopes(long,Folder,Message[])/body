@@ -16,11 +16,12 @@
       String subject=jxMessage.getSubject();
       String flags=getFlags(jxMessage);
       long remoteMessageId=getUID(jxFolder,jxMessage);
+      String contentType=jxMessage.getContentType();
       try {
         MessageLocalServiceUtil.getMessage(folderId,remoteMessageId);
       }
  catch (      NoSuchMessageException nsme) {
-        MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,flags,remoteMessageId);
+        MessageLocalServiceUtil.addMessage(_user.getUserId(),folderId,sender,to,cc,bcc,sentDate,subject,StringPool.BLANK,flags,remoteMessageId,contentType);
       }
     }
     com.liferay.mail.model.Folder folder=FolderLocalServiceUtil.getFolder(folderId);
