@@ -9,7 +9,7 @@
   QueryConfig queryConfig=query.getQueryConfig();
   Map<String,Map<String,List<String>>> highlights=queryResponse.getHighlighting();
   for (  SolrDocument solrDocument : solrDocumentList) {
-    Document document=processSolrDocument(solrDocument);
+    Document document=processSolrDocument(solrDocument,queryConfig);
     documents.add(document);
     addSnippets(solrDocument,document,queryConfig,queryTerms,highlights);
     float score=GetterUtil.getFloat(String.valueOf(solrDocument.getFieldValue("score")));
