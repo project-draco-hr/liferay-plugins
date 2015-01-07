@@ -1,12 +1,12 @@
 {
-  CalendarResource guestCalendarResource=CalendarResourceUtil.getGuestCalendarResource(portletDataContext.getCompanyId());
-  final long guestCalendarResourceId=guestCalendarResource.getCalendarResourceId();
-  final ActionableDynamicQuery.AddCriteriaMethod addCriteriaMethod=actionableDynamicQuery.getAddCriteriaMethod();
+  final CalendarResource guestCalendarResource=CalendarResourceUtil.fetchGuestCalendarResource(portletDataContext.getCompanyId());
+  if (guestCalendarResource == null) {
+    return;
+  }
   actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
-      addCriteriaMethod.addCriteria(dynamicQuery);
       Property calendarResourceIdProperty=PropertyFactoryUtil.forName("calendarResourceId");
-      dynamicQuery.add(calendarResourceIdProperty.ne(guestCalendarResourceId));
+      dynamicQuery.add(calendarResourceIdProperty.ne(guestCalendarResource.getCalendarResourceId()));
     }
   }
 );
