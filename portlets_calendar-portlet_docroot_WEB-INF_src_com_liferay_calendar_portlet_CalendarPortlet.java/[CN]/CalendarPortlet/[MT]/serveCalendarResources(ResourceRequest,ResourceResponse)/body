@@ -1,7 +1,7 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   String keywords=ParamUtil.getString(resourceRequest,"keywords");
-  Set<Calendar> calendarsSet=new LinkedHashSet<Calendar>();
+  Set<Calendar> calendarsSet=new LinkedHashSet<>();
   Hits hits=search(themeDisplay.getCompanyId(),themeDisplay.getUserId(),keywords);
   for (  Document document : hits.getDocs()) {
     long calendarId=GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
@@ -10,7 +10,7 @@
   }
   long groupClassNameId=PortalUtil.getClassNameId(Group.class);
   String name=StringUtil.merge(CustomSQLUtil.keywords(keywords),StringPool.BLANK);
-  LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();
+  LinkedHashMap<String,Object> params=new LinkedHashMap<>();
   params.put("usersGroups",themeDisplay.getUserId());
   List<Group> groups=GroupLocalServiceUtil.search(themeDisplay.getCompanyId(),name,null,params,true,0,SearchContainer.DEFAULT_DELTA);
   for (  Group group : groups) {

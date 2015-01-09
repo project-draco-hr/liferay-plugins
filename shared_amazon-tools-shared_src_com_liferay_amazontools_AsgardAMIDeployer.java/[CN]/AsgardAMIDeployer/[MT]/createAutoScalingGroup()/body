@@ -3,7 +3,7 @@
   List<AutoScalingGroup> autoScalingGroups=describeAutoScalingGroupsResult.getAutoScalingGroups();
   int oldAutoScalingGroupsSize=autoScalingGroups.size();
   String availabilityZone=properties.getProperty("availability.zone");
-  Map<String,String> parameters=new HashMap<String,String>();
+  Map<String,String> parameters=new HashMap<>();
   parameters.put("checkHealth","true");
   parameters.put("imageId",getImageId(_imageName));
   String asgardClusterName=properties.getProperty("asgard.cluster.name");
@@ -34,7 +34,7 @@
     JSONObject autoScalingGroupJSONObject=autoScalingGroupsJSONArray.getJSONObject(autoScalingGroupsJSONArray.length() - 1);
     autoScalingGroupName=autoScalingGroupJSONObject.getString("autoScalingGroupName");
     maxSize=autoScalingGroupJSONObject.getInt("maxSize");
-    List<String> instanceIds=new ArrayList<String>();
+    List<String> instanceIds=new ArrayList<>();
     JSONArray instancesJSONArray=autoScalingGroupJSONObject.getJSONArray("instances");
     for (int j=0; j < instancesJSONArray.length(); j++) {
       JSONObject instanceJSONObject=instancesJSONArray.getJSONObject(j);
@@ -46,7 +46,7 @@
  else {
       CreateTagsRequest createTagsRequest=new CreateTagsRequest();
       createTagsRequest.setResources(instanceIds);
-      List<Tag> tags=new ArrayList<Tag>();
+      List<Tag> tags=new ArrayList<>();
       Tag tag=new Tag();
       tag.withKey("Name");
       tag.withValue(properties.getProperty("instance.name"));

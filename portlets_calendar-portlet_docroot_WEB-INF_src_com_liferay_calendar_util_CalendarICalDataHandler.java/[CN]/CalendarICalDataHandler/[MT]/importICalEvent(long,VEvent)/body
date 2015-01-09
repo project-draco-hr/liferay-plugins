@@ -1,13 +1,13 @@
 {
   Calendar calendar=CalendarLocalServiceUtil.getCalendar(calendarId);
   User user=UserLocalServiceUtil.getUser(calendar.getUserId());
-  Map<Locale,String> titleMap=new HashMap<Locale,String>();
+  Map<Locale,String> titleMap=new HashMap<>();
   Summary summary=vEvent.getSummary();
   if (summary != null) {
     String title=ModelHintsUtil.trimString(CalendarBooking.class.getName(),"title",summary.getValue());
     titleMap.put(user.getLocale(),title);
   }
-  Map<Locale,String> descriptionMap=new HashMap<Locale,String>();
+  Map<Locale,String> descriptionMap=new HashMap<>();
   Description description=vEvent.getDescription();
   if (description != null) {
     descriptionMap.put(user.getLocale(),description.getValue());
@@ -111,7 +111,7 @@
     secondReminderType=reminderTypes[1];
   }
   PropertyList propertyList=vEvent.getProperties(Property.ATTENDEE);
-  List<Long> childCalendarIds=new ArrayList<Long>();
+  List<Long> childCalendarIds=new ArrayList<>();
   for (Iterator<Attendee> iterator=propertyList.iterator(); iterator.hasNext(); ) {
     Attendee attendee=iterator.next();
     URI uri=attendee.getCalAddress();
