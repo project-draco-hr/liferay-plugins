@@ -22,8 +22,8 @@
  else {
     importedCalendarBooking=CalendarBookingLocalServiceUtil.addCalendarBooking(userId,calendarId,new long[0],parentCalendarBookingId,calendarBooking.getTitleMap(),calendarBooking.getDescriptionMap(),calendarBooking.getLocation(),calendarBooking.getStartTime(),calendarBooking.getEndTime(),calendarBooking.isAllDay(),calendarBooking.getRecurrence(),calendarBooking.getFirstReminder(),calendarBooking.getFirstReminderType(),calendarBooking.getSecondReminder(),calendarBooking.getSecondReminderType(),serviceContext);
   }
-  List<Element> discussions=portletDataContext.getReferenceElements(calendarBooking,MBMessage.class);
-  if (ListUtil.isNotEmpty(discussions)) {
+  List<Element> discussionMBMessageElements=portletDataContext.getReferenceElements(calendarBooking,MBMessage.class);
+  if (ListUtil.isNotEmpty(discussionMBMessageElements)) {
     MBMessageLocalServiceUtil.addDiscussionMessage(userId,importedCalendarBooking.getUserName(),importedCalendarBooking.getGroupId(),CalendarBooking.class.getName(),importedCalendarBooking.getCalendarBookingId(),WorkflowConstants.ACTION_PUBLISH);
   }
   portletDataContext.importClassedModel(calendarBooking,importedCalendarBooking);
