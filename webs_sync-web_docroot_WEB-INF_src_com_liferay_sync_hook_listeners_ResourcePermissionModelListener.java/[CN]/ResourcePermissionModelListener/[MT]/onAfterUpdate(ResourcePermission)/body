@@ -1,0 +1,16 @@
+{
+  String modelName=resourcePermission.getName();
+  try {
+    if (modelName.equals(DLFileEntry.class.getName())) {
+      SyncDLObject syncDLObject=SyncDLObjectLocalServiceUtil.getSyncDLObject(SyncConstants.TYPE_FILE,GetterUtil.getLong(resourcePermission.getPrimKey()));
+      SyncDLObjectLocalServiceUtil.updateSyncDLObject(syncDLObject);
+    }
+ else     if (modelName.equals(DLFolder.class.getName())) {
+      SyncDLObject syncDLObject=SyncDLObjectLocalServiceUtil.getSyncDLObject(SyncConstants.TYPE_FOLDER,GetterUtil.getLong(resourcePermission.getPrimKey()));
+      SyncDLObjectLocalServiceUtil.updateSyncDLObject(syncDLObject);
+    }
+  }
+ catch (  Exception e) {
+    throw new ModelListenerException(e);
+  }
+}
