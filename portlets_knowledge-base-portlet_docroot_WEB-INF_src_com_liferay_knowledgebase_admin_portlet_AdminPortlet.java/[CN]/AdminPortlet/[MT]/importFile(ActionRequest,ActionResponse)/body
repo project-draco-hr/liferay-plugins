@@ -11,7 +11,8 @@
     inputStream=uploadPortletRequest.getFileAsStream("file");
     ServiceContext serviceContext=ServiceContextFactory.getInstance(AdminPortlet.class.getName(),actionRequest);
     serviceContext.setGuestPermissions(new String[]{ActionKeys.VIEW});
-    KBArticleServiceUtil.addKBArticlesMarkdown(themeDisplay.getScopeGroupId(),parentKBFolderId,fileName,inputStream,serviceContext);
+    int kbArticleCount=KBArticleServiceUtil.addKBArticlesMarkdown(themeDisplay.getScopeGroupId(),parentKBFolderId,fileName,inputStream,serviceContext);
+    SessionMessages.add(actionRequest,"aTotalOfXArticlesHaveBeenImported",kbArticleCount);
   }
  catch (  KBArticleImportException kbaie) {
     SessionErrors.add(actionRequest,kbaie.getClass(),kbaie);
