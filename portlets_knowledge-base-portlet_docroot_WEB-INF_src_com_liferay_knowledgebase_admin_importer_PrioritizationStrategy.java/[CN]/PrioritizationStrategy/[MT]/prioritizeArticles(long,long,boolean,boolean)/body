@@ -22,18 +22,40 @@
         if (_importedParentUrlTitles.contains(key)) {
           _importedParentUrlTitles.remove(key);
         }
+        if (_newParentArticles.contains(article)) {
+          _newParentArticles.remove(article);
+        }
+        if (_newParentUrlTitles.contains(key)) {
+          _newParentUrlTitles.remove(key);
+        }
         Set<String> childArticlesKeySet=_importedChildArticlesMap.keySet();
         for (        String childArticlesKey : childArticlesKeySet) {
-          List<KBArticle> childArticles=_importedChildArticlesMap.get(childArticlesKey);
-          if (childArticles.contains(article)) {
-            childArticles.remove(article);
+          List<KBArticle> importedChildArticles=_importedChildArticlesMap.get(childArticlesKey);
+          if (importedChildArticles.contains(article)) {
+            importedChildArticles.remove(article);
           }
-          _importedChildArticlesMap.put(childArticlesKey,childArticles);
-          List<String> childArticlesUrlTitles=_importedChildUrlTitlesMap.get(childArticlesKey);
-          if (childArticlesUrlTitles.contains(key)) {
-            childArticlesUrlTitles.remove(key);
+          _importedChildArticlesMap.put(childArticlesKey,importedChildArticles);
+          List<String> importedChildArticlesUrlTitles=_importedChildUrlTitlesMap.get(childArticlesKey);
+          if (importedChildArticlesUrlTitles.contains(key)) {
+            importedChildArticlesUrlTitles.remove(key);
           }
-          _importedChildUrlTitlesMap.put(childArticlesKey,childArticlesUrlTitles);
+          _importedChildUrlTitlesMap.put(childArticlesKey,importedChildArticlesUrlTitles);
+          List<KBArticle> newChildArticles=_newChildArticlesMap.get(childArticlesKey);
+          if (newChildArticles == null) {
+            continue;
+          }
+          if (newChildArticles.contains(article)) {
+            newChildArticles.remove(article);
+          }
+          _newChildArticlesMap.put(childArticlesKey,newChildArticles);
+          List<String> newChildArticlesUrlTitles=_newChildUrlTitlesMap.get(childArticlesKey);
+          if (newChildArticlesUrlTitles == null) {
+            continue;
+          }
+          if (newChildArticlesUrlTitles.contains(key)) {
+            newChildArticlesUrlTitles.remove(key);
+          }
+          _newChildUrlTitlesMap.put(childArticlesKey,newChildArticlesUrlTitles);
         }
       }
  catch (      PortalException pe) {
