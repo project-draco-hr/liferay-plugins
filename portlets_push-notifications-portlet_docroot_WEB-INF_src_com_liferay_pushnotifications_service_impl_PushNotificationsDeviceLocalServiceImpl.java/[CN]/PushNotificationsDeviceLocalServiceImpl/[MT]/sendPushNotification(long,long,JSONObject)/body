@@ -12,7 +12,12 @@
     try {
       pushNotificationsSender.send(tokens,jsonObject);
     }
- catch (    PortalException pe) {
+ catch (    PushNotificationsException pne) {
+      if (_log.isWarnEnabled()) {
+        _log.warn(pne.getMessage());
+      }
+    }
+catch (    PortalException pe) {
       throw pe;
     }
 catch (    Exception e) {

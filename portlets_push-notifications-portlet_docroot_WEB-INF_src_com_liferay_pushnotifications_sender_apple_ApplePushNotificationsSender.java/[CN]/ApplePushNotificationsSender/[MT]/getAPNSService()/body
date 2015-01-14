@@ -3,17 +3,11 @@
     ApnsServiceBuilder appleServiceBuilder=APNS.newService();
     String path=PrefsPropsUtil.getString(PortletPropsKeys.APPLE_CERTIFICATE_PATH,PortletPropsValues.APPLE_CERTIFICATE_PATH);
     if (Validator.isNull(path)) {
-      if (_log.isWarnEnabled()) {
-        _log.warn("The property \"apple.certificate.path\" is not set " + "in portlet.properties");
-      }
-      return null;
+      throw new PushNotificationsException("The property \"apple.certificate.path\" is not set in " + "portlet.properties");
     }
     String password=PrefsPropsUtil.getString(PortletPropsKeys.APPLE_CERTIFICATE_PASSWORD,PortletPropsValues.APPLE_CERTIFICATE_PASSWORD);
     if (Validator.isNull(password)) {
-      if (_log.isWarnEnabled()) {
-        _log.warn("The property \"apple.certificate.password\" is not " + "set in portlet.properties");
-      }
-      return null;
+      throw new PushNotificationsException("The property \"apple.certificate.password\" is not set " + "in portlet.properties");
     }
     appleServiceBuilder.withCert(path,password);
     boolean sandbox=PrefsPropsUtil.getBoolean(PortletPropsKeys.APPLE_SANDBOX,PortletPropsValues.APPLE_SANDBOX);
