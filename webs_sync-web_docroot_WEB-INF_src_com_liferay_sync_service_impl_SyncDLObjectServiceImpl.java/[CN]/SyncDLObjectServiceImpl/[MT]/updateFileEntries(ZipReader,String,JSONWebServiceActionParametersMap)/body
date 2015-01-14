@@ -74,8 +74,11 @@
     String description=MapUtil.getString(jsonWebServiceActionParametersMap,"description");
     String changeLog=MapUtil.getString(jsonWebServiceActionParametersMap,"changeLog");
     boolean majorVersion=MapUtil.getBoolean(jsonWebServiceActionParametersMap,"majorVersion");
+    File tempFile=null;
     InputStream inputStream=zipReader.getEntryAsInputStream(zipFileId);
-    File tempFile=FileUtil.createTempFile(inputStream);
+    if (inputStream != null) {
+      tempFile=FileUtil.createTempFile(inputStream);
+    }
     String checksum=MapUtil.getString(jsonWebServiceActionParametersMap,"checksum");
     return updateFileEntry(fileEntryId,sourceFileName,mimeType,title,description,changeLog,majorVersion,tempFile,checksum,serviceContext);
   }
