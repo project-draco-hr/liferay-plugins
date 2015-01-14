@@ -5,7 +5,9 @@
   }
   KBFolder kbFolder=KBFolderServiceUtil.getKBFolder(kbFolderId);
   PortalPreferences portalPreferences=PortletPreferencesFactoryUtil.getPortalPreferences(PortalUtil.getLiferayPortletRequest(actionRequest));
-  portalPreferences.setValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"preferredKBFolderURLTitle",kbFolder.getUrlTitle());
+  PortletPreferences preferences=actionRequest.getPreferences();
+  String contentRootPrefix=GetterUtil.getString(preferences.getValue("contentRootPrefix",null));
+  KnowledgeBaseUtil.setPreferredKBFolderURLTitle(portalPreferences,contentRootPrefix,kbFolder.getUrlTitle());
   String urlTitle=ParamUtil.getString(actionRequest,"urlTitle");
   if (Validator.isNull(urlTitle)) {
     return;

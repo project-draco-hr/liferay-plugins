@@ -11,7 +11,9 @@
       long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
       if (resourceClassNameId == kbFolderClassNameId) {
         PortalPreferences portalPreferences=PortletPreferencesFactoryUtil.getPortalPreferences(renderRequest);
-        String preferredKBFolderURLTitle=portalPreferences.getValue(PortletKeys.KNOWLEDGE_BASE_DISPLAY,"preferredKBFolderURLTitle");
+        PortletPreferences preferences=renderRequest.getPreferences();
+        String contentRootPrefix=GetterUtil.getString(preferences.getValue("contentRootPrefix",null));
+        String preferredKBFolderURLTitle=KnowledgeBaseUtil.getPreferredKBFolderURLTitle(portalPreferences,contentRootPrefix);
         kbArticle=getKBFolderKBArticle(themeDisplay.getScopeGroupId(),resourcePrimKey,preferredKBFolderURLTitle);
       }
  else {
