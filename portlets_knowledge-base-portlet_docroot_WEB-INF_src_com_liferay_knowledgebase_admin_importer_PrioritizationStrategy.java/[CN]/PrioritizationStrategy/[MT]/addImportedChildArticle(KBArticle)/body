@@ -1,0 +1,37 @@
+{
+  KBArticle parentArticle=null;
+  try {
+    parentArticle=childArticle.getParentKBArticle();
+  }
+ catch (  PortalException pe) {
+    _log.error(pe.getLocalizedMessage());
+  }
+catch (  SystemException se) {
+    _log.error(se.getLocalizedMessage());
+  }
+  String parentUrlTitle=StringPool.BLANK;
+  if (parentArticle != null) {
+    parentUrlTitle=parentArticle.getUrlTitle();
+  }
+ else {
+    return;
+  }
+  List<KBArticle> childArticles=null;
+  if (_importedChildArticlesMap.containsKey(parentUrlTitle)) {
+    childArticles=_importedChildArticlesMap.get(parentUrlTitle);
+  }
+ else {
+    childArticles=new ArrayList<KBArticle>();
+  }
+  childArticles.add(childArticle);
+  _importedChildArticlesMap.put(parentUrlTitle,childArticles);
+  List<String> childUrlTitles=null;
+  if (_importedChildUrlTitlesMap.containsKey(parentUrlTitle)) {
+    childUrlTitles=_importedChildUrlTitlesMap.get(parentUrlTitle);
+  }
+ else {
+    childUrlTitles=new ArrayList<String>();
+  }
+  childUrlTitles.add(childArticle.getUrlTitle());
+  _importedChildUrlTitlesMap.put(parentUrlTitle,childUrlTitles);
+}

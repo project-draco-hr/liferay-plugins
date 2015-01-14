@@ -1,0 +1,38 @@
+{
+  List<KBArticle> existingParentArticles=null;
+  try {
+    existingParentArticles=KBArticleServiceUtil.getKBArticles(groupId,parentKBFolderId,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+  }
+ catch (  SystemException se) {
+    _log.error(se.getLocalizedMessage());
+  }
+  List<String> existingParentUrlTitles=new ArrayList<String>();
+  for (  KBArticle existingParentArticle : existingParentArticles) {
+    existingParentUrlTitles.add(existingParentArticle.getUrlTitle());
+  }
+  Map<String,List<KBArticle>> existingChildArticlesMap=new HashMap<String,List<KBArticle>>();
+  Map<String,List<String>> existingChildUrlTitlesMap=new HashMap<String,List<String>>();
+  for (  KBArticle existingParentArticle : existingParentArticles) {
+    long resourcePrimKey=existingParentArticle.getResourcePrimKey();
+    List<KBArticle> existingChildArticles=null;
+    try {
+      existingChildArticles=KBArticleServiceUtil.getKBArticles(groupId,resourcePrimKey,WorkflowConstants.STATUS_ANY,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+    }
+ catch (    SystemException se) {
+      _log.error(se.getLocalizedMessage());
+    }
+    List<String> existingChildUrlTitles=new ArrayList<String>();
+    for (    KBArticle existingChildArticle : existingChildArticles) {
+      existingChildUrlTitles.add(existingChildArticle.getUrlTitle());
+    }
+    existingChildArticlesMap.put(existingParentArticle.getUrlTitle(),existingChildArticles);
+    existingChildUrlTitlesMap.put(existingParentArticle.getUrlTitle(),existingChildUrlTitles);
+  }
+  List<KBArticle> importedParentArticles=new ArrayList<KBArticle>();
+  List<String> importedParentUrlTitles=new ArrayList<String>();
+  Map<String,List<KBArticle>> importedChildArticlesMap=new HashMap<String,List<KBArticle>>();
+  Map<String,List<String>> importedChildUrlTitlesMap=new HashMap<String,List<String>>();
+  Map<String,Double> importedUrlTitlesPrioritiesMap=new HashMap<String,Double>();
+  PrioritizationStrategy prioritizationStrategy=new PrioritizationStrategy(groupId,parentKBFolderId,prioritizeUpdatedArticles,prioritizeByNumericalPrefix,existingParentArticles,existingParentUrlTitles,existingChildArticlesMap,existingChildUrlTitlesMap,importedParentArticles,importedParentUrlTitles,importedChildArticlesMap,importedChildUrlTitlesMap,importedUrlTitlesPrioritiesMap);
+  return prioritizationStrategy;
+}

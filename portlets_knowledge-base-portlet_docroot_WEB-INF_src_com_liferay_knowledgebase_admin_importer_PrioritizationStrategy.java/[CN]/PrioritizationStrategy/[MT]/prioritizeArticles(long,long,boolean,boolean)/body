@@ -1,0 +1,177 @@
+{
+  if (prioritizeUpdatedArticles) {
+    _initNonImportedArticles();
+  }
+ else {
+    _initNewArticles();
+  }
+  if (prioritizeByNumericalPrefix) {
+    Set<String> keySet=_importedUrlTitlesPrioritiesMap.keySet();
+    KBArticle article=null;
+    long resourcePrimKey=0;
+    Double priority=null;
+    for (    String key : keySet) {
+      try {
+        article=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(groupId,parentKBFolderId,key);
+        resourcePrimKey=article.getResourcePrimKey();
+        priority=_importedUrlTitlesPrioritiesMap.get(key);
+        KBArticleLocalServiceUtil.updatePriority(resourcePrimKey,priority);
+        if (_importedParentArticles.contains(article)) {
+          _importedParentArticles.remove(article);
+        }
+        if (_importedParentUrlTitles.contains(key)) {
+          _importedParentUrlTitles.remove(key);
+        }
+        Set<String> childArticlesKeySet=_importedChildArticlesMap.keySet();
+        for (        String childArticlesKey : childArticlesKeySet) {
+          List<KBArticle> childArticles=_importedChildArticlesMap.get(childArticlesKey);
+          if (childArticles.contains(article)) {
+            childArticles.remove(article);
+          }
+          _importedChildArticlesMap.put(childArticlesKey,childArticles);
+          List<String> childArticlesUrlTitles=_importedChildUrlTitlesMap.get(childArticlesKey);
+          if (childArticlesUrlTitles.contains(key)) {
+            childArticlesUrlTitles.remove(key);
+          }
+          _importedChildUrlTitlesMap.put(childArticlesKey,childArticlesUrlTitles);
+        }
+      }
+ catch (      PortalException pe) {
+        _log.error(pe.getLocalizedMessage());
+      }
+catch (      SystemException se) {
+        _log.error(se.getLocalizedMessage());
+      }
+    }
+  }
+  KBArticleComparator comparator=new KBArticleComparator();
+  if (prioritizeUpdatedArticles) {
+    double maxParentPriority=0.0;
+    Map<String,Double> maxChildPriorityMap=new HashMap<String,Double>();
+    for (    KBArticle parentArticle : _nonImportedParentArticles) {
+      double parentPriority=parentArticle.getPriority();
+      if (parentPriority > maxParentPriority) {
+        maxParentPriority=parentPriority;
+      }
+      String parentUrlTitle=parentArticle.getUrlTitle();
+      List<KBArticle> childArticles=_nonImportedChildArticlesMap.get(parentUrlTitle);
+      if (childArticles == null) {
+        continue;
+      }
+      double maxChildPriority=0.0;
+      for (      KBArticle childArticle : childArticles) {
+        double childPriority=childArticle.getPriority();
+        if (childPriority > maxChildPriority) {
+          maxChildPriority=childPriority;
+        }
+      }
+      maxChildPriorityMap.put(parentUrlTitle,maxChildPriority);
+    }
+    ListUtil.sort(_importedParentUrlTitles);
+    int parentSize=_importedParentUrlTitles.size();
+    for (int i=0; i < parentSize; i++) {
+      KBArticle parentArticle=null;
+      try {
+        parentArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(groupId,parentKBFolderId,_importedParentUrlTitles.get(i));
+      }
+ catch (      PortalException pe) {
+        _log.error(pe.getLocalizedMessage());
+      }
+catch (      SystemException se) {
+        _log.error(se.getLocalizedMessage());
+      }
+      long parentResourcePrimKey=parentArticle.getResourcePrimKey();
+      try {
+        KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentPriority + 1 + i);
+      }
+ catch (      SystemException se) {
+        _log.error(se.getLocalizedMessage());
+      }
+    }
+    Set<String> childKeySet=maxChildPriorityMap.keySet();
+    for (    String childKey : childKeySet) {
+      List<KBArticle> childArticles=_importedChildArticlesMap.get(childKey);
+      if (childArticles != null) {
+        ListUtil.sort(childArticles,comparator);
+        int childSize=childArticles.size();
+        for (int i=0; i < childSize; i++) {
+          KBArticle childArticle=childArticles.get(i);
+          long childArticleResourcePrimKey=childArticle.getResourcePrimKey();
+          Double maxChildArticlePriority=maxChildPriorityMap.get(childKey);
+          if (maxChildArticlePriority == null) {
+            maxChildArticlePriority=0.0;
+          }
+          try {
+            KBArticleLocalServiceUtil.updatePriority(childArticleResourcePrimKey,maxChildArticlePriority + 1 + i);
+          }
+ catch (          SystemException se) {
+            _log.error(se.getLocalizedMessage());
+          }
+        }
+      }
+    }
+  }
+ else {
+    double maxParentPriority=0.0;
+    Map<String,Double> maxChildPriorityMap=new HashMap<String,Double>();
+    for (    KBArticle parentArticle : _existingParentArticles) {
+      double parentPriority=parentArticle.getPriority();
+      if (parentPriority > maxParentPriority) {
+        maxParentPriority=parentPriority;
+      }
+      String parentUrlTitle=parentArticle.getUrlTitle();
+      List<KBArticle> childArticles=_existingChildArticlesMap.get(parentUrlTitle);
+      double maxChildPriority=0.0;
+      for (      KBArticle childArticle : childArticles) {
+        double childPriority=childArticle.getPriority();
+        if (childPriority > maxChildPriority) {
+          maxChildPriority=childPriority;
+        }
+      }
+      maxChildPriorityMap.put(parentUrlTitle,maxChildPriority);
+    }
+    ListUtil.sort(_newParentUrlTitles);
+    int parentSize=_newParentUrlTitles.size();
+    for (int i=0; i < parentSize; i++) {
+      KBArticle parentArticle=null;
+      try {
+        parentArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(groupId,parentKBFolderId,_newParentUrlTitles.get(i));
+      }
+ catch (      PortalException pe) {
+        _log.error(pe.getLocalizedMessage());
+      }
+catch (      SystemException se) {
+        _log.error(se.getLocalizedMessage());
+      }
+      long parentResourcePrimKey=parentArticle.getResourcePrimKey();
+      try {
+        KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentPriority + 1 + i);
+      }
+ catch (      SystemException se) {
+        _log.error(se.getLocalizedMessage());
+      }
+    }
+    Set<String> childKeySet=maxChildPriorityMap.keySet();
+    for (    String childKey : childKeySet) {
+      List<KBArticle> childArticles=_newChildArticlesMap.get(childKey);
+      if (childArticles != null) {
+        ListUtil.sort(childArticles,comparator);
+        int childSize=childArticles.size();
+        for (int i=0; i < childSize; i++) {
+          KBArticle childArticle=childArticles.get(i);
+          long childArticleResourcePrimKey=childArticle.getResourcePrimKey();
+          Double maxChildArticlePriority=maxChildPriorityMap.get(childKey);
+          if (maxChildArticlePriority == null) {
+            maxChildArticlePriority=0.0;
+          }
+          try {
+            KBArticleLocalServiceUtil.updatePriority(childArticleResourcePrimKey,maxChildArticlePriority + 1 + i);
+          }
+ catch (          SystemException se) {
+            _log.error(se.getLocalizedMessage());
+          }
+        }
+      }
+    }
+  }
+}
