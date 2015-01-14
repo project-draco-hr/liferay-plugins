@@ -1,5 +1,5 @@
 {
-  int importedKBArticleCount=0;
+  int importedKBArticlesCount=0;
   Map<String,List<String>> folderNameFileEntryNamesMap=getFolderNameFileEntryNamesMap(zipReader);
   Set<String> folderNames=folderNameFileEntryNamesMap.keySet();
   for (  String folderName : folderNames) {
@@ -22,7 +22,7 @@
       KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
       sectionResourceClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
       sectionResourcePrimaryKey=sectionIntroKBArticle.getResourcePrimKey();
-      importedKBArticleCount++;
+      importedKBArticlesCount++;
     }
     for (    String sectionFileEntryName : sectionFileEntryNames) {
       String sectionMarkdown=zipReader.getEntryAsString(sectionFileEntryName);
@@ -32,8 +32,8 @@
         }
       }
       addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
-      importedKBArticleCount++;
+      importedKBArticlesCount++;
     }
   }
-  return importedKBArticleCount;
+  return importedKBArticlesCount;
 }
