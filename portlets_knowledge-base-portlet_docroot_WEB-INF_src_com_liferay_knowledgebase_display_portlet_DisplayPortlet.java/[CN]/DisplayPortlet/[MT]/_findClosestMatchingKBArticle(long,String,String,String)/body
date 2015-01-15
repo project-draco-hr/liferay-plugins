@@ -1,0 +1,11 @@
+{
+  KBArticle oldKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(groupId,oldKBFolderURLTitle,urlTitle);
+  KBArticle kbArticle=null;
+  while ((kbArticle == null) && (oldKBArticle != null)) {
+    kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,newKBFolderUrlTitle,oldKBArticle.getUrlTitle());
+    if (kbArticle == null) {
+      oldKBArticle=oldKBArticle.getParentKBArticle();
+    }
+  }
+  return kbArticle;
+}
