@@ -1,40 +1,12 @@
 {
-  String[] pathArray=path.split(File.separator);
-  int pathArrayLength=pathArray.length;
-  String name=StringPool.BLANK;
-  if (pathArrayLength > 0) {
-    name=pathArray[pathArrayLength - 1];
+  int i=path.lastIndexOf(CharPool.SLASH);
+  if (i == -1) {
+    return KBArticleConstants.DEFAULT_PRIORITY;
   }
- else {
-    return 1.0;
+  String name=path.substring(i);
+  String numericalPrefix=StringUtil.extractLeadingDigits(name);
+  if (Validator.isNull(numericalPrefix)) {
+    return KBArticleConstants.DEFAULT_PRIORITY;
   }
-  StringBundler numericalPrefixBundler=new StringBundler(8);
-  for (int i=0; i < name.length(); i++) {
-    char c=name.charAt(i);
-    if (Character.isDigit(c)) {
-      numericalPrefixBundler.append(c);
-    }
- else {
-      break;
-    }
-  }
-  String numericalPrefix=numericalPrefixBundler.toString();
-  if (numericalPrefix.length() > 0) {
-    try {
-      double prefix=Double.parseDouble(numericalPrefix);
-      if (prefix <= 0.0) {
-        return 1.0;
-      }
- else {
-        return prefix;
-      }
-    }
- catch (    NumberFormatException nfe) {
-      _log.error(nfe.getLocalizedMessage());
-      return 1.0;
-    }
-  }
- else {
-    return 1.0;
-  }
+  return Double.parseDouble(numericalPrefix);
 }
