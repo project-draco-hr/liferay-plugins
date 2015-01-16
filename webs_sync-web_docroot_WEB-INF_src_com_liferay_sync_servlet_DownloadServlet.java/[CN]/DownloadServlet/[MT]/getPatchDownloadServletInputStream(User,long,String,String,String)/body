@@ -3,16 +3,28 @@
   DLFileVersion sourceFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),sourceVersion);
   DLFileVersion targetFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(fileEntry.getFileEntryId(),targetVersion);
   if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
-    return new DownloadServletInputStream(new FileInputStream(deltaFile),deltaFile.length());
+    File deltaFile=null;
+    try {
+      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
+      return new DownloadServletInputStream(new FileInputStream(deltaFile),deltaFile.length());
+    }
+  finally {
+      FileUtil.delete(deltaFile);
+    }
   }
   SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId());
   if (syncDLFileVersionDiff != null) {
     SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getSyncDLFileVersionDiffId());
   }
  else {
-    File deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
-    syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId(),deltaFile);
+    File deltaFile=null;
+    try {
+      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersion,targetVersion);
+      syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceFileVersion.getFileVersionId(),targetFileVersion.getFileVersionId(),deltaFile);
+    }
+  finally {
+      FileUtil.delete(deltaFile);
+    }
   }
   FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
   return new DownloadServletInputStream(dataFileEntry.getContentStream(),dataFileEntry.getSize());
