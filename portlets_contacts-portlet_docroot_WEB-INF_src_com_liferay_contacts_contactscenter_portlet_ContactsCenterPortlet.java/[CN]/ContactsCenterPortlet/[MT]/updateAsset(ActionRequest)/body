@@ -1,7 +1,8 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   User user=themeDisplay.getUser();
-  long[] assetCategoryIds=StringUtil.split(ParamUtil.getString(actionRequest,"assetCategoryNames"),0L);
-  String[] assetTagNames=StringUtil.split(ParamUtil.getString(actionRequest,"assetTagNames"));
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(User.class.getName(),actionRequest);
+  long[] assetCategoryIds=serviceContext.getAssetCategoryIds();
+  String[] assetTagNames=serviceContext.getAssetTagNames();
   UserLocalServiceUtil.updateAsset(user.getUserId(),user,assetCategoryIds,assetTagNames);
 }
