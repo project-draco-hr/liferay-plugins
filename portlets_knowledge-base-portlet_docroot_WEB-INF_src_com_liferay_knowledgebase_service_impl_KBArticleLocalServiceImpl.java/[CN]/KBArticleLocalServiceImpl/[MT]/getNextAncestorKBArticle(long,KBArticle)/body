@@ -1,0 +1,12 @@
+{
+  KBArticle kbArticle=kbArticlePersistence.findByPrimaryKey(kbArticleId);
+  if (nextKBArticle != null) {
+    return nextKBArticle;
+  }
+  KBArticle parentKBArticle=kbArticle.getParentKBArticle();
+  if (parentKBArticle == null) {
+    return null;
+  }
+  KBArticle[] previousAndNextKBArticles=kbArticlePersistence.findByG_P_L_PrevAndNext(parentKBArticle.getKbArticleId(),kbArticle.getGroupId(),parentKBArticle.getParentResourcePrimKey(),true,new KBArticlePriorityComparator(true));
+  return getNextAncestorKBArticle(parentKBArticle.getKbArticleId(),previousAndNextKBArticles[2]);
+}
