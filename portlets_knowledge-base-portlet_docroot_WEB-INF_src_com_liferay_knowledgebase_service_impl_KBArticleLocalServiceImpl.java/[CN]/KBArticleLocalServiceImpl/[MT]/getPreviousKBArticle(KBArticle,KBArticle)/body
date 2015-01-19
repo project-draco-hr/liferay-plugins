@@ -1,12 +1,10 @@
 {
-  if (previousKBArticle != null) {
-    KBArticle lastSiblingChildKBArticle=kbArticlePersistence.fetchByG_P_L_Last(kbArticle.getGroupId(),previousKBArticle.getResourcePrimKey(),true,new KBArticlePriorityComparator(true));
-    if (lastSiblingChildKBArticle != null) {
-      previousKBArticle=lastSiblingChildKBArticle;
-    }
+  if (previousKBArticle == null) {
+    return kbArticle.getParentKBArticle();
   }
- else {
-    previousKBArticle=kbArticle.getParentKBArticle();
+  KBArticle lastSiblingChildKBArticle=kbArticlePersistence.fetchByG_P_L_Last(kbArticle.getGroupId(),previousKBArticle.getResourcePrimKey(),true,new KBArticlePriorityComparator(true));
+  if (lastSiblingChildKBArticle == null) {
+    return previousKBArticle;
   }
-  return previousKBArticle;
+  return lastSiblingChildKBArticle;
 }
