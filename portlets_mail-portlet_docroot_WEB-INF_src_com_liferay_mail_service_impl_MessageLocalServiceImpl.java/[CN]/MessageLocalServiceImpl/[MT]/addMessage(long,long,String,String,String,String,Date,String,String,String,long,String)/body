@@ -22,7 +22,7 @@
   message.setFlags(flags);
   message.setSize(getSize(messageId,body));
   message.setRemoteMessageId(remoteMessageId);
-  message.setContentType(contentType);
+  message.setContentType(_removeBoundaryMarker(contentType));
   messagePersistence.update(message);
   Indexer indexer=IndexerRegistryUtil.getIndexer(Message.class);
   indexer.reindex(message);
