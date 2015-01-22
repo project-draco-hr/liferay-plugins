@@ -106,15 +106,14 @@
       List<KBArticle> childKBArticles=_importedChildArticlesMap.get(parentKBArticleUrlTitle);
       if (childKBArticles != null) {
         ListUtil.sort(childKBArticles,comparator);
-        int childSize=childKBArticles.size();
-        for (int i=0; i < childSize; i++) {
-          KBArticle childKBArticle=childKBArticles.get(i);
+        for (        KBArticle childKBArticle : childKBArticles) {
           long childKBArticleResourcePrimKey=childKBArticle.getResourcePrimKey();
           Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
           if (maxChildKBArticlePriority == null) {
             maxChildKBArticlePriority=0.0;
           }
-          KBArticleLocalServiceUtil.updatePriority(childKBArticleResourcePrimKey,maxChildKBArticlePriority + 1 + i);
+          maxChildKBArticlePriority++;
+          KBArticleLocalServiceUtil.updatePriority(childKBArticleResourcePrimKey,maxChildKBArticlePriority);
         }
       }
     }
@@ -139,26 +138,25 @@
       maxChildPriorityMap.put(parentUrlTitle,maxChildPriority);
     }
     ListUtil.sort(_newParentUrlTitles);
-    int parentSize=_newParentUrlTitles.size();
-    for (int i=0; i < parentSize; i++) {
-      KBArticle parentArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,_newParentUrlTitles.get(i));
-      long parentResourcePrimKey=parentArticle.getResourcePrimKey();
-      KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentPriority + 1 + i);
+    for (    String parentKBArticleUrlTitle : _newParentUrlTitles) {
+      KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,parentKBArticleUrlTitle);
+      long parentResourcePrimKey=parentKBArticle.getResourcePrimKey();
+      maxParentPriority++;
+      KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentPriority);
     }
     Set<String> childKeySet=_newChildArticlesMap.keySet();
     for (    String childKey : childKeySet) {
       List<KBArticle> childArticles=_newChildArticlesMap.get(childKey);
       if (childArticles != null) {
         ListUtil.sort(childArticles,comparator);
-        int childSize=childArticles.size();
-        for (int i=0; i < childSize; i++) {
-          KBArticle childArticle=childArticles.get(i);
-          long childArticleResourcePrimKey=childArticle.getResourcePrimKey();
+        for (        KBArticle childKBArticle : childArticles) {
+          long childArticleResourcePrimKey=childKBArticle.getResourcePrimKey();
           Double maxChildArticlePriority=maxChildPriorityMap.get(childKey);
           if (maxChildArticlePriority == null) {
             maxChildArticlePriority=0.0;
           }
-          KBArticleLocalServiceUtil.updatePriority(childArticleResourcePrimKey,maxChildArticlePriority + 1 + i);
+          maxChildArticlePriority++;
+          KBArticleLocalServiceUtil.updatePriority(childArticleResourcePrimKey,maxChildArticlePriority);
         }
       }
     }
