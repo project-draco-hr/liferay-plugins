@@ -104,14 +104,14 @@
     Set<String> parentKBArticleUrlTitles=_importedChildArticlesMap.keySet();
     for (    String parentKBArticleUrlTitle : parentKBArticleUrlTitles) {
       List<KBArticle> childKBArticles=_importedChildArticlesMap.get(parentKBArticleUrlTitle);
+      Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
+      if (maxChildKBArticlePriority == null) {
+        maxChildKBArticlePriority=0.0;
+      }
       if (childKBArticles != null) {
         ListUtil.sort(childKBArticles,comparator);
         for (        KBArticle childKBArticle : childKBArticles) {
           long childKBArticleResourcePrimKey=childKBArticle.getResourcePrimKey();
-          Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
-          if (maxChildKBArticlePriority == null) {
-            maxChildKBArticlePriority=0.0;
-          }
           maxChildKBArticlePriority++;
           KBArticleLocalServiceUtil.updatePriority(childKBArticleResourcePrimKey,maxChildKBArticlePriority);
         }
@@ -147,14 +147,14 @@
     Set<String> parentKBArticleUrlTitles=_newChildArticlesMap.keySet();
     for (    String parentKBArticleUrlTitle : parentKBArticleUrlTitles) {
       List<KBArticle> childKBArticles=_newChildArticlesMap.get(parentKBArticleUrlTitle);
+      Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
+      if (maxChildKBArticlePriority == null) {
+        maxChildKBArticlePriority=0.0;
+      }
       if (childKBArticles != null) {
         ListUtil.sort(childKBArticles,comparator);
         for (        KBArticle childKBArticle : childKBArticles) {
           long childKBArticleResourcePrimKey=childKBArticle.getResourcePrimKey();
-          Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
-          if (maxChildKBArticlePriority == null) {
-            maxChildKBArticlePriority=0.0;
-          }
           maxChildKBArticlePriority++;
           KBArticleLocalServiceUtil.updatePriority(childKBArticleResourcePrimKey,maxChildKBArticlePriority);
         }
