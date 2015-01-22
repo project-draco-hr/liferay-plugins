@@ -9,9 +9,8 @@
     Set<String> importedKBArticleUrlTitles=_importedUrlTitlesPrioritiesMap.keySet();
     for (    String importedKBArticleUrlTitle : importedKBArticleUrlTitles) {
       KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,importedKBArticleUrlTitle);
-      long resourcePrimKey=kbArticle.getResourcePrimKey();
       double priority=_importedUrlTitlesPrioritiesMap.get(importedKBArticleUrlTitle);
-      KBArticleLocalServiceUtil.updatePriority(resourcePrimKey,priority);
+      KBArticleLocalServiceUtil.updatePriority(kbArticle.getResourcePrimKey(),priority);
       if (_importedParentArticles != null) {
         if (_importedParentArticles.contains(kbArticle)) {
           _importedParentArticles.remove(kbArticle);
@@ -96,9 +95,8 @@
     ListUtil.sort(_importedParentUrlTitles);
     for (    String importedParentKBArticleUrlTitle : _importedParentUrlTitles) {
       KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,importedParentKBArticleUrlTitle);
-      long parentResourcePrimKey=parentKBArticle.getResourcePrimKey();
       maxParentKBArticlePriority++;
-      KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentKBArticlePriority);
+      KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxParentKBArticlePriority);
     }
     updateChildKBArticlesPriorities(_importedChildArticlesMap,maxChildKBArticlePriorityMap);
   }
@@ -124,9 +122,8 @@
     ListUtil.sort(_newParentUrlTitles);
     for (    String parentKBArticleUrlTitle : _newParentUrlTitles) {
       KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,parentKBArticleUrlTitle);
-      long parentResourcePrimKey=parentKBArticle.getResourcePrimKey();
       maxParentKBArticlePriority++;
-      KBArticleLocalServiceUtil.updatePriority(parentResourcePrimKey,maxParentKBArticlePriority);
+      KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxParentKBArticlePriority);
     }
     updateChildKBArticlesPriorities(_newChildArticlesMap,maxChildKBArticlePriorityMap);
   }
