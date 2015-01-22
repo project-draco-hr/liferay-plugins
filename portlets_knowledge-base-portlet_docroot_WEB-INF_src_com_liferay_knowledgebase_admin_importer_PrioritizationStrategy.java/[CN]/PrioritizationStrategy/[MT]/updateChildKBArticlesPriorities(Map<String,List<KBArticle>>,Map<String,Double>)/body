@@ -2,17 +2,17 @@
   Set<String> parentKBArticleUrlTitles=childKBArticlesMap.keySet();
   for (  String parentKBArticleUrlTitle : parentKBArticleUrlTitles) {
     List<KBArticle> childKBArticles=childKBArticlesMap.get(parentKBArticleUrlTitle);
+    if (childKBArticles == null) {
+      return;
+    }
     Double maxChildKBArticlePriority=maxChildKBArticlePriorityMap.get(parentKBArticleUrlTitle);
     if (maxChildKBArticlePriority == null) {
       maxChildKBArticlePriority=0.0;
     }
-    if (childKBArticles != null) {
-      ListUtil.sort(childKBArticles,new KBArticleComparator());
-      for (      KBArticle childKBArticle : childKBArticles) {
-        long childKBArticleResourcePrimKey=childKBArticle.getResourcePrimKey();
-        maxChildKBArticlePriority++;
-        KBArticleLocalServiceUtil.updatePriority(childKBArticleResourcePrimKey,maxChildKBArticlePriority);
-      }
+    ListUtil.sort(childKBArticles,new KBArticleComparator());
+    for (    KBArticle childKBArticle : childKBArticles) {
+      maxChildKBArticlePriority++;
+      KBArticleLocalServiceUtil.updatePriority(childKBArticle.getResourcePrimKey(),maxChildKBArticlePriority);
     }
   }
 }
