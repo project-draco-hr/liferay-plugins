@@ -1,31 +1,31 @@
 {
   _nonImportedParentArticles=new ArrayList<KBArticle>();
-  for (  KBArticle article : _existingParentArticles) {
-    String urlTitle=article.getUrlTitle();
+  for (  KBArticle kbArticle : _existingParentArticles) {
+    String urlTitle=kbArticle.getUrlTitle();
     if (!_importedParentUrlTitles.contains(urlTitle)) {
-      _nonImportedParentArticles.add(article);
+      _nonImportedParentArticles.add(kbArticle);
     }
   }
   _nonImportedChildArticlesMap=new HashMap<String,List<KBArticle>>();
-  Set<String> keySet=_existingChildArticlesMap.keySet();
-  for (  String key : keySet) {
-    List<KBArticle> nonImportedChildArticles=new ArrayList<KBArticle>();
-    List<KBArticle> existingChildArticles=_existingChildArticlesMap.get(key);
-    if (_importedChildArticlesMap.containsKey(key)) {
-      List<String> importedChildUrlTitles=_importedChildUrlTitlesMap.get(key);
-      for (      KBArticle article : existingChildArticles) {
-        String urlTitle=article.getUrlTitle();
-        if (!importedChildUrlTitles.contains(urlTitle)) {
-          nonImportedChildArticles.add(article);
+  Set<String> parentKBArticleUrlTitles=_existingChildArticlesMap.keySet();
+  for (  String parentKBArticleUrlTitle : parentKBArticleUrlTitles) {
+    List<KBArticle> nonImportedChildKBArticles=new ArrayList<KBArticle>();
+    List<KBArticle> existingChildKBArticles=_existingChildArticlesMap.get(parentKBArticleUrlTitle);
+    if (_importedChildArticlesMap.containsKey(parentKBArticleUrlTitle)) {
+      List<String> importedChildKBArticleUrlTitles=_importedChildUrlTitlesMap.get(parentKBArticleUrlTitle);
+      for (      KBArticle kbArticle : existingChildKBArticles) {
+        String urlTitle=kbArticle.getUrlTitle();
+        if (!importedChildKBArticleUrlTitles.contains(urlTitle)) {
+          nonImportedChildKBArticles.add(kbArticle);
         }
       }
-      _nonImportedChildArticlesMap.put(key,nonImportedChildArticles);
+      _nonImportedChildArticlesMap.put(parentKBArticleUrlTitle,nonImportedChildKBArticles);
     }
  else {
-      for (      KBArticle article : existingChildArticles) {
-        nonImportedChildArticles.add(article);
+      for (      KBArticle kbArticle : existingChildKBArticles) {
+        nonImportedChildKBArticles.add(kbArticle);
       }
-      _nonImportedChildArticlesMap.put(key,nonImportedChildArticles);
+      _nonImportedChildArticlesMap.put(parentKBArticleUrlTitle,nonImportedChildKBArticles);
     }
   }
 }
