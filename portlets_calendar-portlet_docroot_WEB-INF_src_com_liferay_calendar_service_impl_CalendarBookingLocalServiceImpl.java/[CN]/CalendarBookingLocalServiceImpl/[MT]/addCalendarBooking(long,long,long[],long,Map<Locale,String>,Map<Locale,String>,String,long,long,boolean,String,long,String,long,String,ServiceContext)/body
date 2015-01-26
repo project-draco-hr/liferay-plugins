@@ -49,6 +49,13 @@
   calendarBooking.setExpandoBridgeAttributes(serviceContext);
   calendarBooking.setStatus(CalendarBookingWorkflowConstants.STATUS_PENDING);
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
+  if (calendarBooking.getUuid().length() > 75) {
+    calendarBooking.setOutlookUid(calendarBooking.getUuid());
+    calendarBooking.setUuid(StringPool.BLANK);
+  }
+ else {
+    calendarBooking.setOutlookUid(StringPool.BLANK);
+  }
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
   resourceLocalService.addModelResources(calendarBooking,serviceContext);
