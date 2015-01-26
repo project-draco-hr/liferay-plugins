@@ -1,0 +1,16 @@
+{
+  PortletURL portletURL=_renderResponse.createRenderURL();
+  if (Validator.isNull(kbArticle.getUrlTitle())) {
+    portletURL.setParameter("mvcPath",_templatePath + "view_article.jsp");
+    portletURL.setParameter("resourceClassNameId",String.valueOf(kbArticle.getClassNameId()));
+    portletURL.setParameter("resourcePrimKey",String.valueOf(kbArticle.getResourcePrimKey()));
+  }
+ else {
+    portletURL.setParameter("urlTitle",kbArticle.getUrlTitle());
+    if (kbArticle.getKbFolderId() != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+      KBFolder kbFolder=KBFolderServiceUtil.getKBFolder(kbArticle.getKbFolderId());
+      portletURL.setParameter("kbFolderUrlTitle",kbFolder.getUrlTitle());
+    }
+  }
+  return portletURL;
+}
