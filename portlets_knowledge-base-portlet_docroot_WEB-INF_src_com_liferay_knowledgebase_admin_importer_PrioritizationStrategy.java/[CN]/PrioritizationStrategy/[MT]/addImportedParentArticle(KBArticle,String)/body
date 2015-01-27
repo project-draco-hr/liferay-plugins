@@ -1,7 +1,11 @@
 {
-  _importedParentArticles.add(parentArticle);
-  String importedParentUrlTitle=parentArticle.getUrlTitle();
-  _importedParentUrlTitles.add(importedParentUrlTitle);
+  List<KBArticle> parentArticles=_importedArticlesMap.get(StringPool.BLANK);
+  parentArticles.add(parentArticle);
+  _importedArticlesMap.put(StringPool.BLANK,parentArticles);
+  List<String> parentUrlTitles=_importedUrlTitlesMap.get(StringPool.BLANK);
+  String parentUrlTitle=parentArticle.getUrlTitle();
+  parentUrlTitles.add(parentUrlTitle);
+  _importedUrlTitlesMap.put(StringPool.BLANK,parentUrlTitles);
   if (_prioritizeByNumericalPrefix) {
     double folderNamePrefix=_getNumericalPrefix(fileName);
     if (folderNamePrefix > 0) {
