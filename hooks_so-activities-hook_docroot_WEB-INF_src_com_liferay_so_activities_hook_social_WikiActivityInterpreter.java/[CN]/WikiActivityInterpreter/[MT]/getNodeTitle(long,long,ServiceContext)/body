@@ -7,11 +7,11 @@
   if (node == null) {
     return null;
   }
-  long plid=PortalUtil.getPlidFromPortletId(groupId,PortletKeys.WIKI);
+  long plid=PortalUtil.getPlidFromPortletId(groupId,WikiPortletKeys.WIKI);
   if (plid == LayoutConstants.DEFAULT_PLID) {
     return HtmlUtil.escape(node.getName());
   }
-  PortletURL nodeURL=PortletURLFactoryUtil.create(serviceContext.getLiferayPortletRequest(),PortletKeys.WIKI,plid,PortletRequest.RENDER_PHASE);
+  PortletURL nodeURL=PortletURLFactoryUtil.create(serviceContext.getLiferayPortletRequest(),WikiPortletKeys.WIKI,plid,PortletRequest.RENDER_PHASE);
   nodeURL.setParameter("struts_action","/wiki/view");
   nodeURL.setParameter("nodeId",String.valueOf(node.getNodeId()));
   return wrapLink(nodeURL.toString(),node.getName());
