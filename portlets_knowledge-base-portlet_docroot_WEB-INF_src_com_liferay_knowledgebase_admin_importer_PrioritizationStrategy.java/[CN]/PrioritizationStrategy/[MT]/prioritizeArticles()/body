@@ -52,60 +52,61 @@
     }
   }
   if (_prioritizeUpdatedArticles) {
-    double maxParentKBArticlePriority=0.0;
-    Map<String,Double> maxChildKBArticlePriorityMap=new HashMap<String,Double>();
-    for (    KBArticle parentKBArticle : _nonImportedParentArticles) {
-      double parentKBArticlePriority=parentKBArticle.getPriority();
-      if (parentKBArticlePriority > maxParentKBArticlePriority) {
-        maxParentKBArticlePriority=parentKBArticlePriority;
-      }
-      String parentKBArticleUrlTitle=parentKBArticle.getUrlTitle();
-      List<KBArticle> childKBArticles=_nonImportedChildArticlesMap.get(parentKBArticleUrlTitle);
-      if (childKBArticles == null) {
-        continue;
-      }
-      double maxChildKBArticlePriority=0.0;
-      for (      KBArticle childArticle : childKBArticles) {
-        double childKBArticlePriority=childArticle.getPriority();
-        if (childKBArticlePriority > maxChildKBArticlePriority) {
-          maxChildKBArticlePriority=childKBArticlePriority;
+    Map<String,Double> maxKBArticlePriorityMap=new HashMap<String,Double>();
+    Set<String> keySet=_nonImportedArticlesMap.keySet();
+    for (    String parentUrlTitle : keySet) {
+      double maxKBArticlePriority=0.0;
+      List<KBArticle> kbArticles=_nonImportedArticlesMap.get(parentUrlTitle);
+      for (      KBArticle kbArticle : kbArticles) {
+        double kbArticlePriority=kbArticle.getPriority();
+        if (kbArticlePriority > maxKBArticlePriority) {
+          maxKBArticlePriority=kbArticlePriority;
         }
       }
-      maxChildKBArticlePriorityMap.put(parentKBArticleUrlTitle,maxChildKBArticlePriority);
+      maxKBArticlePriorityMap.put(parentUrlTitle,maxKBArticlePriority);
     }
-    ListUtil.sort(_importedParentUrlTitles);
-    for (    String importedParentKBArticleUrlTitle : _importedParentUrlTitles) {
-      KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,importedParentKBArticleUrlTitle);
-      maxParentKBArticlePriority++;
-      KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxParentKBArticlePriority);
+    keySet=_importedArticlesMap.keySet();
+    for (    String parentUrlTitle : keySet) {
+      List<KBArticle> kbArticles=_importedArticlesMap.get(parentUrlTitle);
+      ListUtil.sort(kbArticles);
+      _importedArticlesMap.put(parentUrlTitle,kbArticles);
+      for (      KBArticle kbArticle : kbArticles) {
+        String urlTitle=kbArticle.getUrlTitle();
+        KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,urlTitle);
+        double maxPriority=maxKBArticlePriorityMap.get(parentUrlTitle);
+        maxPriority++;
+        maxKBArticlePriorityMap.put(parentUrlTitle,maxPriority);
+        KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxPriority);
+      }
     }
-    updateChildKBArticlesPriorities(_importedChildArticlesMap,maxChildKBArticlePriorityMap);
   }
  else {
-    double maxParentKBArticlePriority=0.0;
-    Map<String,Double> maxChildKBArticlePriorityMap=new HashMap<String,Double>();
-    for (    KBArticle parentKBArticle : _existingParentArticles) {
-      double parentKBArticlePriority=parentKBArticle.getPriority();
-      if (parentKBArticlePriority > maxParentKBArticlePriority) {
-        maxParentKBArticlePriority=parentKBArticlePriority;
-      }
-      String parentKBArticleUrlTitle=parentKBArticle.getUrlTitle();
-      List<KBArticle> childKBArticles=_existingChildArticlesMap.get(parentKBArticleUrlTitle);
-      double maxChildKBArticlePriority=0.0;
-      for (      KBArticle childKBArticle : childKBArticles) {
-        double childKBArticlePriority=childKBArticle.getPriority();
-        if (childKBArticlePriority > maxChildKBArticlePriority) {
-          maxChildKBArticlePriority=childKBArticlePriority;
+    Map<String,Double> maxKBArticlePriorityMap=new HashMap<String,Double>();
+    Set<String> keySet=_existingArticlesMap.keySet();
+    for (    String parentUrlTitle : keySet) {
+      double maxKBArticlePriority=0.0;
+      List<KBArticle> kbArticles=_existingArticlesMap.get(parentUrlTitle);
+      for (      KBArticle kbArticle : kbArticles) {
+        double kbArticlePriority=kbArticle.getPriority();
+        if (kbArticlePriority > maxKBArticlePriority) {
+          maxKBArticlePriority=kbArticlePriority;
         }
       }
-      maxChildKBArticlePriorityMap.put(parentKBArticleUrlTitle,maxChildKBArticlePriority);
+      maxKBArticlePriorityMap.put(parentUrlTitle,maxKBArticlePriority);
     }
-    ListUtil.sort(_newParentUrlTitles);
-    for (    String parentKBArticleUrlTitle : _newParentUrlTitles) {
-      KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,parentKBArticleUrlTitle);
-      maxParentKBArticlePriority++;
-      KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxParentKBArticlePriority);
+    keySet=_newArticlesMap.keySet();
+    for (    String parentUrlTitle : keySet) {
+      List<KBArticle> kbArticles=_newArticlesMap.get(parentUrlTitle);
+      ListUtil.sort(kbArticles);
+      _newArticlesMap.put(parentUrlTitle,kbArticles);
+      for (      KBArticle kbArticle : kbArticles) {
+        String urlTitle=kbArticle.getUrlTitle();
+        KBArticle parentKBArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,urlTitle);
+        double maxPriority=maxKBArticlePriorityMap.get(parentUrlTitle);
+        maxPriority++;
+        maxKBArticlePriorityMap.put(parentUrlTitle,maxPriority);
+        KBArticleLocalServiceUtil.updatePriority(parentKBArticle.getResourcePrimKey(),maxPriority);
+      }
     }
-    updateChildKBArticlesPriorities(_newChildArticlesMap,maxChildKBArticlePriorityMap);
   }
 }
