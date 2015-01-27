@@ -1,3 +1,11 @@
 {
-  throw new UnsupportedOperationException();
+  KBArticle ancestorKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(ancestorResourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  if (ancestorKBArticle == null) {
+    return null;
+  }
+  KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBArticle)) {
+    return ancestorKBArticle;
+  }
+  return kbArticle;
 }
