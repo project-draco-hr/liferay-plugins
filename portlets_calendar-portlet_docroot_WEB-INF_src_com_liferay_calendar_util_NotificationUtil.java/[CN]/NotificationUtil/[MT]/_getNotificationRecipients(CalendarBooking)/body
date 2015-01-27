@@ -1,28 +1,11 @@
 {
-  Calendar calendar=calendarBooking.getCalendar();
   CalendarResource calendarResource=calendarBooking.getCalendarResource();
-  List<Role> roles=RoleLocalServiceUtil.getResourceBlockRoles(calendar.getResourceBlockId(),Calendar.class.getName(),ActionKeys.MANAGE_BOOKINGS);
+  Set<User> users=new HashSet<>();
+  users.add(UserLocalServiceUtil.getUser(calendarBooking.getUserId()));
+  users.add(UserLocalServiceUtil.getUser(calendarResource.getUserId()));
   List<NotificationRecipient> notificationRecipients=new ArrayList<>();
-  for (  Role role : roles) {
-    String name=role.getName();
-    if (name.equals(RoleConstants.OWNER)) {
-      User calendarResourceUser=UserLocalServiceUtil.getUser(calendarResource.getUserId());
-      notificationRecipients.add(new NotificationRecipient(calendarResourceUser));
-      User calendarUser=UserLocalServiceUtil.getUser(calendar.getUserId());
-      if (calendarResourceUser.getUserId() != calendarUser.getUserId()) {
-        notificationRecipients.add(new NotificationRecipient(calendarUser));
-      }
-    }
- else {
-      List<User> roleUsers=UserLocalServiceUtil.getRoleUsers(role.getRoleId());
-      for (      User roleUser : roleUsers) {
-        PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(roleUser);
-        if (!CalendarPermission.contains(permissionChecker,calendar,ActionKeys.MANAGE_BOOKINGS)) {
-          continue;
-        }
-        notificationRecipients.add(new NotificationRecipient(roleUser));
-      }
-    }
+  for (  User user : users) {
+    notificationRecipients.add(new NotificationRecipient(user));
   }
   return notificationRecipients;
 }
