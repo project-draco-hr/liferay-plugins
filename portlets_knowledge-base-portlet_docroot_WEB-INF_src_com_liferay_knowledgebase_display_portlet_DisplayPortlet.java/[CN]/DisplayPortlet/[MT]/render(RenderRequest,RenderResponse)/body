@@ -1,34 +1,8 @@
 {
   try {
-    ThemeDisplay themeDisplay=(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
     int status=getStatus(renderRequest);
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
-    KBArticle kbArticle=null;
-    Tuple resourceTuple=getResourceTuple(renderRequest);
-    long resourcePrimKey=(Long)resourceTuple.getObject(1);
-    if (resourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-      long resourceClassNameId=(Long)resourceTuple.getObject(0);
-      long kbFolderClassNameId=PortalUtil.getClassNameId(KBFolderConstants.getClassName());
-      if (resourceClassNameId == kbFolderClassNameId) {
-        PortalPreferences portalPreferences=PortletPreferencesFactoryUtil.getPortalPreferences(renderRequest);
-        PortletPreferences portletPreferences=renderRequest.getPreferences();
-        String contentRootPrefix=GetterUtil.getString(portletPreferences.getValue("contentRootPrefix",null));
-        String preferredKBFolderURLTitle=KnowledgeBaseUtil.getPreferredKBFolderURLTitle(portalPreferences,contentRootPrefix);
-        kbArticle=getKBFolderKBArticle(themeDisplay.getScopeGroupId(),resourcePrimKey,preferredKBFolderURLTitle);
-      }
- else {
-        kbArticle=KBArticleServiceUtil.fetchLatestKBArticle(resourcePrimKey,status);
-      }
-    }
- else {
-      long parentResourcePrimKey=ParamUtil.getLong(renderRequest,"parentResourcePrimKey",KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-      if (parentResourcePrimKey == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-        List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getGroupKBArticles(themeDisplay.getScopeGroupId(),status,0,1,new KBArticlePriorityComparator(true));
-        if (!kbArticles.isEmpty()) {
-          kbArticle=kbArticles.get(0);
-        }
-      }
-    }
+    KBArticle kbArticle=getKBArticle(renderRequest);
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE,kbArticle);
   }
  catch (  Exception e) {
