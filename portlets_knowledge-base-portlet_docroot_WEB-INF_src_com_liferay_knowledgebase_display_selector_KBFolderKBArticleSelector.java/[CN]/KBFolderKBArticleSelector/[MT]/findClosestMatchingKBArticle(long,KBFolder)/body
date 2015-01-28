@@ -1,15 +1,7 @@
 {
-  List<KBFolder> kbFolders=KBFolderLocalServiceUtil.getKBFolders(groupId,ancestorKBFolder.getKbFolderId(),0,1);
-  KBFolder kbFolder=null;
-  if (!kbFolders.isEmpty()) {
-    kbFolder=kbFolders.get(0);
-  }
- else {
+  KBFolder kbFolder=KBFolderLocalServiceUtil.fetchFirstChildKBFolder(groupId,ancestorKBFolder.getKbFolderId());
+  if (kbFolder == null) {
     kbFolder=ancestorKBFolder;
   }
-  List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getKBArticles(groupId,kbFolder.getKbFolderId(),WorkflowConstants.STATUS_APPROVED,0,1,new KBArticlePriorityComparator());
-  if (kbArticles.isEmpty()) {
-    return null;
-  }
-  return kbArticles.get(0);
+  return KBArticleLocalServiceUtil.fetchFirstChildKBArticle(groupId,kbFolder.getKbFolderId());
 }

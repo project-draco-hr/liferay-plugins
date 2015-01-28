@@ -4,9 +4,5 @@
   if (kbArticle != null) {
     return kbArticle;
   }
-  List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getKBArticles(groupId,kbFolder.getKbFolderId(),WorkflowConstants.STATUS_APPROVED,0,1,new KBArticlePriorityComparator());
-  if (kbArticles.isEmpty()) {
-    return null;
-  }
-  return kbArticles.get(0);
+  return KBArticleLocalServiceUtil.fetchFirstChildKBArticle(groupId,kbFolder.getKbFolderId());
 }
