@@ -6,7 +6,11 @@
       return null;
     }
   }
-  KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,kbFolderUrlTitle,urlTitle);
+  KBFolder kbFolder=_ROOT_KB_FOLDER;
+  if (Validator.isNotNull(kbFolderUrlTitle)) {
+    kbFolder=KBFolderLocalServiceUtil.fetchKBFolderByUrlTitle(groupId,ancestorKBFolder.getKbFolderId(),kbFolderUrlTitle);
+  }
+  KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,kbFolder.getKbFolderId(),urlTitle);
   if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBFolder)) {
     return findClosestMatchingKBArticle(groupId,ancestorKBFolder,preferredKBFolderUrlTitle,kbFolderUrlTitle,urlTitle);
   }
