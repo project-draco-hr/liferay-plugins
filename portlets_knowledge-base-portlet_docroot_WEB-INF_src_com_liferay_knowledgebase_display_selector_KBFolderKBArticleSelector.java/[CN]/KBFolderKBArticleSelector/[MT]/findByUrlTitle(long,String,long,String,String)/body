@@ -1,7 +1,10 @@
 {
-  KBFolder ancestorKBFolder=KBFolderLocalServiceUtil.fetchKBFolder(ancestorResourcePrimKey);
-  if (ancestorKBFolder == null) {
-    return null;
+  KBFolder ancestorKBFolder=_ROOT_KB_FOLDER;
+  if (ancestorResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+    ancestorKBFolder=KBFolderLocalServiceUtil.fetchKBFolder(ancestorResourcePrimKey);
+    if (ancestorKBFolder == null) {
+      return null;
+    }
   }
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,kbFolderUrlTitle,urlTitle);
   if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBFolder)) {
