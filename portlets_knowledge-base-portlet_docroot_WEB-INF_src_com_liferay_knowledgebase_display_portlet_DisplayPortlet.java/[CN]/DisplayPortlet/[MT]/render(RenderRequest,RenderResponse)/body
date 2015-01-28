@@ -1,8 +1,11 @@
 {
   try {
-    int status=getStatus(renderRequest);
-    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
     KBArticle kbArticle=getKBArticle(renderRequest);
+    int status=getStatus(renderRequest,kbArticle);
+    renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_STATUS,status);
+    if ((kbArticle != null) && (kbArticle.getStatus() != status)) {
+      kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(kbArticle.getResourcePrimKey(),status);
+    }
     renderRequest.setAttribute(WebKeys.KNOWLEDGE_BASE_KB_ARTICLE,kbArticle);
   }
  catch (  Exception e) {
