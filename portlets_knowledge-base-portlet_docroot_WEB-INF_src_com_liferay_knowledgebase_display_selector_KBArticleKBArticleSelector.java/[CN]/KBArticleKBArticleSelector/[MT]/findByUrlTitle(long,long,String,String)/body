@@ -4,8 +4,11 @@
     return null;
   }
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticleByUrlTitle(groupId,ancestorKBArticle.getKbFolderId(),urlTitle,WorkflowConstants.STATUS_APPROVED);
-  if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBArticle)) {
+  if (kbArticle == null) {
     return ancestorKBArticle;
+  }
+  if (!isDescendant(kbArticle,ancestorKBArticle)) {
+    return findClosestMatchingKBArticle(groupId,ancestorKBArticle,kbArticle);
   }
   return kbArticle;
 }
