@@ -1,3 +1,11 @@
 {
-  throw new UnsupportedOperationException();
+  KBFolder ancestorKBFolder=KBFolderLocalServiceUtil.fetchKBFolder(ancestorResourcePrimKey);
+  if (ancestorKBFolder == null) {
+    return null;
+  }
+  KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBFolder)) {
+    return findClosestMatchingKBArticle(groupId,ancestorKBFolder);
+  }
+  return kbArticle;
 }
