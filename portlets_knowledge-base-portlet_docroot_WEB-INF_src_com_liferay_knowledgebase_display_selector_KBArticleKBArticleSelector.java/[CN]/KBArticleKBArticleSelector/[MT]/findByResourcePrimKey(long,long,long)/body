@@ -4,11 +4,5 @@
     return null;
   }
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
-  if (kbArticle == null) {
-    return ancestorKBArticle;
-  }
-  if (!isDescendant(kbArticle,ancestorKBArticle)) {
-    return findClosestMatchingKBArticle(groupId,ancestorKBArticle,kbArticle);
-  }
-  return kbArticle;
+  return getClosestMatchingDescendantKBArticle(groupId,ancestorKBArticle,kbArticle);
 }
