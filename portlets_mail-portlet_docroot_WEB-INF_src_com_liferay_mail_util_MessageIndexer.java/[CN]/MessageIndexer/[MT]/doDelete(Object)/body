@@ -8,7 +8,7 @@
     searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
     searchContext.setStart(QueryUtil.ALL_POS);
     BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
-    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
+    booleanQuery.addRequiredTerm(Field.ENTRY_CLASS_NAME,CLASS_NAME);
     booleanQuery.addRequiredTerm("accountId",account.getAccountId());
     Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
     List<String> uids=new ArrayList<>(hits.getLength());
@@ -25,7 +25,7 @@
     searchContext.setSorts(SortFactoryUtil.getDefaultSorts());
     searchContext.setStart(QueryUtil.ALL_POS);
     BooleanQuery booleanQuery=BooleanQueryFactoryUtil.create(searchContext);
-    booleanQuery.addRequiredTerm(Field.PORTLET_ID,PORTLET_ID);
+    booleanQuery.addRequiredTerm(Field.ENTRY_CLASS_NAME,CLASS_NAME);
     booleanQuery.addRequiredTerm("folderId",folder.getFolderId());
     Hits hits=SearchEngineUtil.search(searchContext,booleanQuery);
     List<String> uids=new ArrayList<>(hits.getLength());
@@ -38,7 +38,7 @@
  else   if (obj instanceof Message) {
     Message message=(Message)obj;
     Document document=new DocumentImpl();
-    document.addUID(PORTLET_ID,message.getMessageId());
+    document.addUID(CLASS_NAME,message.getMessageId());
     SearchEngineUtil.deleteDocument(getSearchEngineId(),message.getCompanyId(),document.get(Field.UID),isCommitImmediately());
   }
 }
