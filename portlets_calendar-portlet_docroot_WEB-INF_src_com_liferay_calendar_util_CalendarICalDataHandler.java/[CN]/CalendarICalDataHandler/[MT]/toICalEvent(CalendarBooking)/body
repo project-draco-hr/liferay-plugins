@@ -1,12 +1,12 @@
 {
   VEvent vEvent=new VEvent();
   PropertyList propertyList=vEvent.getProperties();
-  Uid uid;
-  if (calendarBooking.getOutlookUid() == null || calendarBooking.getOutlookUid() == StringPool.BLANK || calendarBooking.getOutlookUid() == StringPool.NULL_CHAR) {
-    uid=new Uid(calendarBooking.getUuid());
+  Uid uid=null;
+  if (Validator.isNotNull(calendarBooking.getVEventUid())) {
+    uid=new Uid(calendarBooking.getVEventUid());
   }
  else {
-    uid=new Uid(calendarBooking.getOutlookUid());
+    uid=new Uid(calendarBooking.getUuid());
   }
   propertyList.add(uid);
   if (calendarBooking.isAllDay()) {

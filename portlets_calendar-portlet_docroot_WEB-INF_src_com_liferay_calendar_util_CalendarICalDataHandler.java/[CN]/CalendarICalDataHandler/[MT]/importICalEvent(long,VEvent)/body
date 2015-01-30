@@ -133,14 +133,11 @@
   }
   long[] childCalendarIdsArray=ArrayUtil.toArray(childCalendarIds.toArray(new Long[childCalendarIds.size()]));
   CalendarBooking calendarBooking=null;
-  String uuid=null;
+  String vEventUidValue=null;
   Uid uid=vEvent.getUid();
   if (uid != null) {
-    uuid=uid.getValue();
-    calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(uuid,calendar.getGroupId());
-    if (calendarBooking == null) {
-      calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(calendarId,uuid);
-    }
+    vEventUidValue=uid.getValue();
+    calendarBooking=CalendarBookingLocalServiceUtil.fetchCalendarBooking(calendarId,vEventUidValue);
   }
   ServiceContext serviceContext=new ServiceContext();
   serviceContext.setAddGroupPermissions(true);
@@ -148,8 +145,7 @@
   serviceContext.setAttribute("sendNotification",Boolean.FALSE);
   serviceContext.setScopeGroupId(calendar.getGroupId());
   if (calendarBooking == null) {
-    serviceContext.setUuid(uuid);
-    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIdsArray,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,locationString,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,serviceContext);
+    CalendarBookingServiceUtil.addCalendarBooking(calendarId,childCalendarIdsArray,CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,titleMap,descriptionMap,locationString,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,vEventUidValue,serviceContext);
   }
  else {
     CalendarBookingServiceUtil.updateCalendarBooking(calendarBooking.getCalendarBookingId(),calendarId,childCalendarIdsArray,titleMap,descriptionMap,locationString,startDate.getTime(),endDate.getTime(),allDay,recurrence,firstReminder,firstReminderType,secondReminder,secondReminderType,calendarBooking.getStatus(),serviceContext);
