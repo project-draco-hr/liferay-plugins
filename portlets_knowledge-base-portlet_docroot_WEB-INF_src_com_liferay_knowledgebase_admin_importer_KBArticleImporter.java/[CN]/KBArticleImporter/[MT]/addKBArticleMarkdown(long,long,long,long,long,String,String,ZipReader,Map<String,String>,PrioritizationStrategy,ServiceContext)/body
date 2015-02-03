@@ -26,10 +26,10 @@
     String html=kbArticleMarkdownConverter.processAttachmentsReferences(userId,kbArticle,zipReader,new HashMap<String,FileEntry>());
     kbArticle=KBArticleLocalServiceUtil.updateKBArticle(userId,kbArticle.getResourcePrimKey(),kbArticleMarkdownConverter.getTitle(),html,kbArticle.getDescription(),kbArticleMarkdownConverter.getSourceURL(),null,null,null,serviceContext);
     if (newKBArticle) {
-      prioritizationStrategy.addNewKBArticle(kbArticle,fileEntryName);
+      prioritizationStrategy.addKBArticle(kbArticle,fileEntryName);
     }
  else {
-      prioritizationStrategy.addKBArticle(kbArticle,fileEntryName);
+      prioritizationStrategy.updateKBArticle(kbArticle,fileEntryName);
     }
     return kbArticle;
   }
