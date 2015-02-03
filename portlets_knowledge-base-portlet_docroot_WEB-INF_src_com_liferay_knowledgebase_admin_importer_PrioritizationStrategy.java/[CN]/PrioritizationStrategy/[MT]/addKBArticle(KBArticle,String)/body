@@ -4,18 +4,10 @@
   if (parentKBArticle != null) {
     parentKBArticleUrlTitle=parentKBArticle.getUrlTitle();
   }
-  List<KBArticle> kbArticles=_importedArticlesMap.get(parentKBArticleUrlTitle);
-  if (kbArticles == null) {
-    kbArticles=new ArrayList<KBArticle>();
-  }
+  List<KBArticle> kbArticles=getList(_importedArticlesMap,parentKBArticleUrlTitle);
   kbArticles.add(kbArticle);
-  _importedArticlesMap.put(parentKBArticleUrlTitle,kbArticles);
-  List<String> importedUrlTitles=_importedUrlTitlesMap.get(parentKBArticleUrlTitle);
-  if (importedUrlTitles == null) {
-    importedUrlTitles=new ArrayList<String>();
-  }
+  List<String> importedUrlTitles=getList(_importedUrlTitlesMap,parentKBArticleUrlTitle);
   importedUrlTitles.add(kbArticle.getUrlTitle());
-  _importedUrlTitlesMap.put(parentKBArticleUrlTitle,importedUrlTitles);
   if (_prioritizeByNumericalPrefix) {
     double sectionFileEntryNamePrefix=_getNumericalPrefix(fileName);
     if (sectionFileEntryNamePrefix > 0) {
