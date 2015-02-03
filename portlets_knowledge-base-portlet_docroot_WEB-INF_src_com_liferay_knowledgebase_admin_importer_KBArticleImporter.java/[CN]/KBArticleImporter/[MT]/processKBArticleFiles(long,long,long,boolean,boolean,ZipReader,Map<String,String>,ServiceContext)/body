@@ -21,7 +21,7 @@
     long sectionResourcePrimaryKey=parentResourcePrimaryKey;
     if (Validator.isNotNull(sectionIntroFileEntryName)) {
       KBArticle sectionIntroKBArticle=addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,zipReader.getEntryAsString(sectionIntroFileEntryName),sectionIntroFileEntryName,zipReader,metadata,serviceContext);
-      strategy.addImportedParentArticle(sectionIntroKBArticle,folderName);
+      strategy.addKBArticle(sectionIntroKBArticle,folderName);
       sectionResourceClassNameId=PortalUtil.getClassNameId(KBArticleConstants.getClassName());
       sectionResourcePrimaryKey=sectionIntroKBArticle.getResourcePrimKey();
       importedKBArticlesCount++;
@@ -34,7 +34,7 @@
         }
       }
       KBArticle sectionKBArticle=addKBArticleMarkdown(userId,groupId,parentKBFolderId,sectionResourceClassNameId,sectionResourcePrimaryKey,sectionMarkdown,sectionFileEntryName,zipReader,metadata,serviceContext);
-      strategy.addImportedChildArticle(sectionKBArticle,sectionFileEntryName);
+      strategy.addKBArticle(sectionKBArticle,sectionFileEntryName);
       importedKBArticlesCount++;
     }
   }
