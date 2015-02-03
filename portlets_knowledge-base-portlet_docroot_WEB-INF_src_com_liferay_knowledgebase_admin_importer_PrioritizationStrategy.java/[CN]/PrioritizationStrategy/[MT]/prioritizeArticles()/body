@@ -6,48 +6,10 @@
     for (    Map.Entry<String,Double> entry : _importedUrlTitlesPrioritiesMap.entrySet()) {
       KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,entry.getKey());
       KBArticleLocalServiceUtil.updatePriority(kbArticle.getResourcePrimKey(),entry.getValue());
-      for (      Map.Entry<String,List<KBArticle>> entry : _importedArticlesMap.entrySet()) {
-        List<KBArticle> kbArticles=entry.getValue();
-        if (kbArticles == null) {
-          continue;
-        }
-        if (kbArticles.contains(kbArticle)) {
-          kbArticles.remove(kbArticle);
-        }
-        _importedArticlesMap.put(entry.getKey(),kbArticles);
-      }
-      for (      Map.Entry<String,List<String>> entry : _importedUrlTitlesMap.entrySet()) {
-        List<String> urlTitles=entry.getValue();
-        if (urlTitles == null) {
-          continue;
-        }
-        String urlTitle=kbArticle.getUrlTitle();
-        if (urlTitles.contains(urlTitle)) {
-          urlTitles.remove(urlTitle);
-        }
-        _importedUrlTitlesMap.put(entry.getKey(),urlTitles);
-      }
-      for (      Map.Entry<String,List<KBArticle>> entry : _newArticlesMap.entrySet()) {
-        List<KBArticle> kbArticles=entry.getValue();
-        if (kbArticles == null) {
-          continue;
-        }
-        if (kbArticles.contains(kbArticle)) {
-          kbArticles.remove(kbArticle);
-        }
-        _newArticlesMap.put(entry.getKey(),kbArticles);
-      }
-      for (      Map.Entry<String,List<String>> entry : _newUrlTitlesMap.entrySet()) {
-        List<String> urlTitles=entry.getValue();
-        if (urlTitles == null) {
-          continue;
-        }
-        String urlTitle=kbArticle.getUrlTitle();
-        if (urlTitles.contains(urlTitle)) {
-          urlTitles.remove(urlTitle);
-        }
-        _newUrlTitlesMap.put(entry.getKey(),urlTitles);
-      }
+      remove(_importedArticlesMap,kbArticle);
+      remove(_importedUrlTitlesMap,kbArticle.getUrlTitle());
+      remove(_newArticlesMap,kbArticle);
+      remove(_newUrlTitlesMap,kbArticle.getUrlTitle());
     }
   }
   if (_prioritizeUpdatedArticles) {
