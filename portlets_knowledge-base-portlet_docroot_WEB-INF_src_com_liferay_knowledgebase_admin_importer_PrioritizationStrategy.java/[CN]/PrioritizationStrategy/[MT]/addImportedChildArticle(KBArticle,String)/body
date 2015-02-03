@@ -1,31 +1,25 @@
 {
-  KBArticle parentArticle=childArticle.getParentKBArticle();
-  if (parentArticle == null) {
+  KBArticle parentKBArticle=kbArticle.getParentKBArticle();
+  if (parentKBArticle == null) {
     return;
   }
-  String parentUrlTitle=parentArticle.getUrlTitle();
-  List<KBArticle> childArticles=null;
-  if (_importedArticlesMap.containsKey(parentUrlTitle)) {
-    childArticles=_importedArticlesMap.get(parentUrlTitle);
+  String parentKBArticleUrlTitle=parentKBArticle.getUrlTitle();
+  List<KBArticle> kbArticles=_importedArticlesMap.get(parentKBArticleUrlTitle);
+  if (kbArticles == null) {
+    kbArticles=new ArrayList<KBArticle>();
   }
- else {
-    childArticles=new ArrayList<KBArticle>();
+  kbArticles.add(kbArticle);
+  _importedArticlesMap.put(parentKBArticleUrlTitle,kbArticles);
+  List<String> importedUrlTitles=_importedUrlTitlesMap.get(parentKBArticleUrlTitle);
+  if (importedUrlTitles == null) {
+    importedUrlTitles=new ArrayList<String>();
   }
-  childArticles.add(childArticle);
-  _importedArticlesMap.put(parentUrlTitle,childArticles);
-  List<String> childUrlTitles=null;
-  if (_importedUrlTitlesMap.containsKey(parentUrlTitle)) {
-    childUrlTitles=_importedUrlTitlesMap.get(parentUrlTitle);
-  }
- else {
-    childUrlTitles=new ArrayList<String>();
-  }
-  childUrlTitles.add(childArticle.getUrlTitle());
-  _importedUrlTitlesMap.put(parentUrlTitle,childUrlTitles);
+  importedUrlTitles.add(kbArticle.getUrlTitle());
+  _importedUrlTitlesMap.put(parentKBArticleUrlTitle,importedUrlTitles);
   if (_prioritizeByNumericalPrefix) {
     double sectionFileEntryNamePrefix=_getNumericalPrefix(fileName);
     if (sectionFileEntryNamePrefix > 0) {
-      _importedUrlTitlesPrioritiesMap.put(childArticle.getUrlTitle(),sectionFileEntryNamePrefix);
+      _importedUrlTitlesPrioritiesMap.put(kbArticle.getUrlTitle(),sectionFileEntryNamePrefix);
     }
   }
 }

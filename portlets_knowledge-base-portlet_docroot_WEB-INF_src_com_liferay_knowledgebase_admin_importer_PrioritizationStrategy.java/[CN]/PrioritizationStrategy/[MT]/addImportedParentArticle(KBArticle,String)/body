@@ -1,21 +1,21 @@
 {
-  List<KBArticle> parentArticles=_importedArticlesMap.get(StringPool.BLANK);
-  if (parentArticles == null) {
-    parentArticles=new ArrayList<KBArticle>();
+  String parentKBArticleUrlTitle=StringPool.BLANK;
+  List<KBArticle> kbArticles=_importedArticlesMap.get(parentKBArticleUrlTitle);
+  if (kbArticles == null) {
+    kbArticles=new ArrayList<KBArticle>();
   }
-  parentArticles.add(parentArticle);
-  _importedArticlesMap.put(StringPool.BLANK,parentArticles);
-  List<String> parentUrlTitles=_importedUrlTitlesMap.get(StringPool.BLANK);
-  if (parentUrlTitles == null) {
-    parentUrlTitles=new ArrayList<String>();
+  kbArticles.add(kbArticle);
+  _importedArticlesMap.put(parentKBArticleUrlTitle,kbArticles);
+  List<String> importedUrlTitles=_importedUrlTitlesMap.get(parentKBArticleUrlTitle);
+  if (importedUrlTitles == null) {
+    importedUrlTitles=new ArrayList<String>();
   }
-  String parentUrlTitle=parentArticle.getUrlTitle();
-  parentUrlTitles.add(parentUrlTitle);
-  _importedUrlTitlesMap.put(StringPool.BLANK,parentUrlTitles);
+  importedUrlTitles.add(kbArticle.getUrlTitle());
+  _importedUrlTitlesMap.put(parentKBArticleUrlTitle,importedUrlTitles);
   if (_prioritizeByNumericalPrefix) {
     double folderNamePrefix=_getNumericalPrefix(fileName);
     if (folderNamePrefix > 0) {
-      _importedUrlTitlesPrioritiesMap.put(parentArticle.getUrlTitle(),folderNamePrefix);
+      _importedUrlTitlesPrioritiesMap.put(kbArticle.getUrlTitle(),folderNamePrefix);
     }
   }
 }
