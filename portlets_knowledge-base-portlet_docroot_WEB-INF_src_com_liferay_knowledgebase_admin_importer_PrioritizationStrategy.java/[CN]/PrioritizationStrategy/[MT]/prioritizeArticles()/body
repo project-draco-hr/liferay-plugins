@@ -27,24 +27,22 @@
           _importedUrlTitlesMap.put(parentUrlTitle,urlTitles);
         }
       }
-      if (_newArticlesMap != null) {
-        Set<String> keySet=_newArticlesMap.keySet();
-        for (        String parentUrlTitle : keySet) {
-          List<KBArticle> kbArticles=_newArticlesMap.get(parentUrlTitle);
-          if (kbArticles.contains(kbArticle)) {
-            kbArticles.remove(kbArticle);
-          }
-          _newArticlesMap.put(parentUrlTitle,kbArticles);
+      Set<String> keySet=_newArticlesMap.keySet();
+      for (      String parentUrlTitle : keySet) {
+        List<KBArticle> kbArticles=_newArticlesMap.get(parentUrlTitle);
+        if (kbArticles.contains(kbArticle)) {
+          kbArticles.remove(kbArticle);
         }
-        keySet=_newUrlTitlesMap.keySet();
-        for (        String parentUrlTitle : keySet) {
-          List<String> urlTitles=_newUrlTitlesMap.get(parentUrlTitle);
-          String urlTitle=kbArticle.getUrlTitle();
-          if (urlTitles.contains(urlTitle)) {
-            urlTitles.remove(urlTitle);
-          }
-          _newUrlTitlesMap.put(parentUrlTitle,urlTitles);
+        _newArticlesMap.put(parentUrlTitle,kbArticles);
+      }
+      keySet=_newUrlTitlesMap.keySet();
+      for (      String parentUrlTitle : keySet) {
+        List<String> urlTitles=_newUrlTitlesMap.get(parentUrlTitle);
+        String urlTitle=kbArticle.getUrlTitle();
+        if (urlTitles.contains(urlTitle)) {
+          urlTitles.remove(urlTitle);
         }
+        _newUrlTitlesMap.put(parentUrlTitle,urlTitles);
       }
     }
   }
