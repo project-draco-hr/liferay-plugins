@@ -1,16 +1,14 @@
 {
   _nonImportedArticlesMap=new HashMap<String,List<KBArticle>>();
-  Set<String> keySet=_existingArticlesMap.keySet();
-  for (  String parentUrlTitle : keySet) {
-    List<KBArticle> existingArticles=getList(_existingArticlesMap,parentUrlTitle);
-    List<String> importedUrlTitles=getList(_importedUrlTitlesMap,parentUrlTitle);
+  for (  Map.Entry<String,List<KBArticle>> entry : _existingArticlesMap.entrySet()) {
+    List<String> importedUrlTitles=getList(_importedUrlTitlesMap,entry.getKey());
     List<KBArticle> nonImportedArticles=new ArrayList<KBArticle>();
-    for (    KBArticle kbArticle : existingArticles) {
+    for (    KBArticle kbArticle : entry.getValue()) {
       String urlTitle=kbArticle.getUrlTitle();
       if (!importedUrlTitles.contains(urlTitle)) {
         nonImportedArticles.add(kbArticle);
       }
     }
-    _nonImportedArticlesMap.put(parentUrlTitle,nonImportedArticles);
+    _nonImportedArticlesMap.put(entry.getKey(),nonImportedArticles);
   }
 }
