@@ -13,39 +13,11 @@
     }
   }
   if (_prioritizeUpdatedArticles) {
-    Map<String,Double> maxKBArticlePriorityMap=new HashMap<String,Double>();
-    for (    Map.Entry<String,List<KBArticle>> entry : _nonImportedArticlesMap.entrySet()) {
-      double maxKBArticlePriority=0.0;
-      List<KBArticle> kbArticles=entry.getValue();
-      if (kbArticles == null) {
-        continue;
-      }
-      for (      KBArticle kbArticle : kbArticles) {
-        double kbArticlePriority=kbArticle.getPriority();
-        if (kbArticlePriority > maxKBArticlePriority) {
-          maxKBArticlePriority=kbArticlePriority;
-        }
-      }
-      maxKBArticlePriorityMap.put(entry.getKey(),maxKBArticlePriority);
-    }
+    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_nonImportedArticlesMap);
     prioritizeKBArticles(_importedArticlesMap,maxKBArticlePriorityMap);
   }
  else {
-    Map<String,Double> maxKBArticlePriorityMap=new HashMap<String,Double>();
-    for (    Map.Entry<String,List<KBArticle>> entry : _existingArticlesMap.entrySet()) {
-      double maxKBArticlePriority=0.0;
-      List<KBArticle> kbArticles=entry.getValue();
-      if (kbArticles == null) {
-        continue;
-      }
-      for (      KBArticle kbArticle : kbArticles) {
-        double kbArticlePriority=kbArticle.getPriority();
-        if (kbArticlePriority > maxKBArticlePriority) {
-          maxKBArticlePriority=kbArticlePriority;
-        }
-      }
-      maxKBArticlePriorityMap.put(entry.getKey(),maxKBArticlePriority);
-    }
+    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_existingArticlesMap);
     prioritizeKBArticles(_newArticlesMap,maxKBArticlePriorityMap);
   }
 }

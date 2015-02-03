@@ -1,0 +1,18 @@
+{
+  Map<String,Double> maxKBArticlePriorityMap=new HashMap<String,Double>();
+  for (  Map.Entry<String,List<KBArticle>> entry : kbArticlesMap.entrySet()) {
+    double maxKBArticlePriority=0.0;
+    List<KBArticle> kbArticles=entry.getValue();
+    if (kbArticles == null) {
+      continue;
+    }
+    for (    KBArticle kbArticle : kbArticles) {
+      double kbArticlePriority=kbArticle.getPriority();
+      if (kbArticlePriority > maxKBArticlePriority) {
+        maxKBArticlePriority=kbArticlePriority;
+      }
+    }
+    maxKBArticlePriorityMap.put(entry.getKey(),maxKBArticlePriority);
+  }
+  return maxKBArticlePriorityMap;
+}
