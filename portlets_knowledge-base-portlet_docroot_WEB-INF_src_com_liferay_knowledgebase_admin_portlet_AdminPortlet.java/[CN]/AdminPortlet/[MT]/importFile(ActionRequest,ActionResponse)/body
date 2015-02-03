@@ -6,14 +6,14 @@
   if (Validator.isNull(fileName)) {
     throw new KBArticleImportException("File name is null");
   }
-  boolean prioritizeUpdatedArticles=ParamUtil.getBoolean(uploadPortletRequest,"prioritizeUpdatedArticles");
+  boolean prioritizeUpdatedKBArticles=ParamUtil.getBoolean(uploadPortletRequest,"prioritizeUpdatedKBArticles");
   boolean prioritizeByNumericalPrefix=ParamUtil.getBoolean(uploadPortletRequest,"prioritizeByNumericalPrefix");
   InputStream inputStream=null;
   try {
     inputStream=uploadPortletRequest.getFileAsStream("file");
     ServiceContext serviceContext=ServiceContextFactory.getInstance(AdminPortlet.class.getName(),actionRequest);
     serviceContext.setGuestPermissions(new String[]{ActionKeys.VIEW});
-    int importedKBArticlesCount=KBArticleServiceUtil.addKBArticlesMarkdown(themeDisplay.getScopeGroupId(),parentKBFolderId,fileName,prioritizeUpdatedArticles,prioritizeByNumericalPrefix,inputStream,serviceContext);
+    int importedKBArticlesCount=KBArticleServiceUtil.addKBArticlesMarkdown(themeDisplay.getScopeGroupId(),parentKBFolderId,fileName,prioritizeUpdatedKBArticles,prioritizeByNumericalPrefix,inputStream,serviceContext);
     SessionMessages.add(actionRequest,"importedKBArticlesCount",importedKBArticlesCount);
   }
  catch (  KBArticleImportException kbaie) {

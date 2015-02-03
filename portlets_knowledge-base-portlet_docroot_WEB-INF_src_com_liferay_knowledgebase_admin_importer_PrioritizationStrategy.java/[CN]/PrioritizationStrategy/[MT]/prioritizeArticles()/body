@@ -1,22 +1,22 @@
 {
-  if (_prioritizeUpdatedArticles) {
+  if (_prioritizeUpdatedKBArticles) {
     _initNonImportedArticles();
   }
   if (_prioritizeByNumericalPrefix) {
-    for (    Map.Entry<String,Double> entry : _importedUrlTitlesPrioritiesMap.entrySet()) {
+    for (    Map.Entry<String,Double> entry : _importedKBArticleUrlTitlesPrioritiesMap.entrySet()) {
       KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,entry.getKey());
       KBArticleLocalServiceUtil.updatePriority(kbArticle.getResourcePrimKey(),entry.getValue());
-      remove(_importedArticlesMap,kbArticle);
-      remove(_importedUrlTitlesMap,kbArticle.getUrlTitle());
-      remove(_newArticlesMap,kbArticle);
+      remove(_importedKBArticlesMap,kbArticle);
+      remove(_importedKBArticleUrlTitlesMap,kbArticle.getUrlTitle());
+      remove(_newKBArticlesMap,kbArticle);
     }
   }
-  if (_prioritizeUpdatedArticles) {
-    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_nonImportedArticlesMap);
-    prioritizeKBArticles(_importedArticlesMap,maxKBArticlePriorityMap);
+  if (_prioritizeUpdatedKBArticles) {
+    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_nonImportedKBArticlesMap);
+    prioritizeKBArticles(_importedKBArticlesMap,maxKBArticlePriorityMap);
   }
  else {
-    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_existingArticlesMap);
-    prioritizeKBArticles(_newArticlesMap,maxKBArticlePriorityMap);
+    Map<String,Double> maxKBArticlePriorityMap=computeMaxKBArticlePriorityMap(_existingKBArticlesMap);
+    prioritizeKBArticles(_newKBArticlesMap,maxKBArticlePriorityMap);
   }
 }
