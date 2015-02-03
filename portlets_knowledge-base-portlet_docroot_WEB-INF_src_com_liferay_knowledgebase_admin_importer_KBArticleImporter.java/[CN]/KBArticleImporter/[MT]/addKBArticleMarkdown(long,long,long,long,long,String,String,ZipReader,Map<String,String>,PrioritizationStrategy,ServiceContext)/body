@@ -5,6 +5,7 @@
   KBArticleMarkdownConverter kbArticleMarkdownConverter=new KBArticleMarkdownConverter(markdown,fileEntryName,metadata);
   String urlTitle=kbArticleMarkdownConverter.getUrlTitle();
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,parentKBFolderId,urlTitle);
+  boolean newKBArticle=kbArticle == null;
   try {
     if (kbArticle == null) {
       int workflowAction=serviceContext.getWorkflowAction();
@@ -23,7 +24,14 @@
   }
   try {
     String html=kbArticleMarkdownConverter.processAttachmentsReferences(userId,kbArticle,zipReader,new HashMap<String,FileEntry>());
-    return KBArticleLocalServiceUtil.updateKBArticle(userId,kbArticle.getResourcePrimKey(),kbArticleMarkdownConverter.getTitle(),html,kbArticle.getDescription(),kbArticleMarkdownConverter.getSourceURL(),null,null,null,serviceContext);
+    kbArticle=KBArticleLocalServiceUtil.updateKBArticle(userId,kbArticle.getResourcePrimKey(),kbArticleMarkdownConverter.getTitle(),html,kbArticle.getDescription(),kbArticleMarkdownConverter.getSourceURL(),null,null,null,serviceContext);
+    if (newKBArticle) {
+      prioritizationStrategy.addNewKBArticle(kbArticle,fileEntryName);
+    }
+ else {
+      prioritizationStrategy.addKBArticle(kbArticle,fileEntryName);
+    }
+    return kbArticle;
   }
  catch (  Exception e) {
     StringBundler sb=new StringBundler(4);
