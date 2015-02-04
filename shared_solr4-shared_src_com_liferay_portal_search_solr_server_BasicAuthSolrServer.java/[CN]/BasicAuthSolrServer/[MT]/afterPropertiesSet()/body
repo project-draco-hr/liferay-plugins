@@ -1,15 +1,15 @@
 {
   if (_log.isWarnEnabled()) {
-    _log.warn(getClass().getName() + " has been deprecated. Please use " + com.liferay.portal.search.solr.server.HttpSolrServer.class.getName());
+    _log.warn(ClassUtil.getClassName(this) + " is deprecated in favor of " + com.liferay.portal.search.solr.server.HttpSolrServer.class.getName());
   }
   PoolingClientConnectionManager poolingClientConnectionManager=new PoolingClientConnectionManager();
-  BasicAuthPoolingHttpClientFactory httpClientFactory=new BasicAuthPoolingHttpClientFactory(poolingClientConnectionManager);
-  httpClientFactory.setAuthScope(_authScope);
-  httpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
-  httpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
-  httpClientFactory.setMaxTotalConnections(_maxTotalConnections);
-  httpClientFactory.setPassword(_password);
-  httpClientFactory.setUsername(_username);
-  _httpClientFactory=httpClientFactory;
-  initServer(httpClientFactory.createInstance());
+  BasicAuthPoolingHttpClientFactory basicAuthPoolingHttpClientFactory=new BasicAuthPoolingHttpClientFactory(poolingClientConnectionManager);
+  basicAuthPoolingHttpClientFactory.setAuthScope(_authScope);
+  basicAuthPoolingHttpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
+  basicAuthPoolingHttpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
+  basicAuthPoolingHttpClientFactory.setMaxTotalConnections(_maxTotalConnections);
+  basicAuthPoolingHttpClientFactory.setPassword(_password);
+  basicAuthPoolingHttpClientFactory.setUsername(_username);
+  _httpClientFactory=basicAuthPoolingHttpClientFactory;
+  initServer(basicAuthPoolingHttpClientFactory.createInstance());
 }
