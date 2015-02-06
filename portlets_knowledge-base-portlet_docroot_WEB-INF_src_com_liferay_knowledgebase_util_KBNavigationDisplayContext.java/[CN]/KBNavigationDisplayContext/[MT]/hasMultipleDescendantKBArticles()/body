@@ -4,14 +4,14 @@
   if (getResourceClassNameId() == kbFolderClassNameId) {
     List<KBFolder> kbFolders=KnowledgeBaseUtil.getAlternateRootKBFolders(scopeGroupId,getResourcePrimKey());
     if (kbFolders.size() > 1) {
-      int maxKBArticleCount=0;
+      int maxKBArticlesCount=0;
       for (      KBFolder kbFolder : kbFolders) {
-        int kbArticleCount=KBArticleLocalServiceUtil.getKBFolderKBArticlesCount(scopeGroupId,kbFolder.getKbFolderId(),WorkflowConstants.STATUS_APPROVED);
-        if (kbArticleCount > maxKBArticleCount) {
-          maxKBArticleCount=kbArticleCount;
+        int kbArticlesCount=KBArticleLocalServiceUtil.getKBFolderKBArticlesCount(scopeGroupId,kbFolder.getKbFolderId(),WorkflowConstants.STATUS_APPROVED);
+        if (kbArticlesCount > maxKBArticlesCount) {
+          maxKBArticlesCount=kbArticlesCount;
         }
       }
-      if (maxKBArticleCount > 1) {
+      if (maxKBArticlesCount > 1) {
         return true;
       }
       return false;
@@ -19,11 +19,11 @@
   }
   boolean showNavigation=true;
   long rootResourcePrimKey=getRootResourcePrimKey();
-  int kbArticleCount=KBArticleLocalServiceUtil.getKBArticlesCount(scopeGroupId,rootResourcePrimKey,WorkflowConstants.STATUS_APPROVED);
-  if (kbArticleCount == 0) {
+  int kbArticlesCount=KBArticleLocalServiceUtil.getKBArticlesCount(scopeGroupId,rootResourcePrimKey,WorkflowConstants.STATUS_APPROVED);
+  if (kbArticlesCount == 0) {
     showNavigation=false;
   }
- else   if (kbArticleCount == 1) {
+ else   if (kbArticlesCount == 1) {
     List<KBArticle> kbArticles=KBArticleLocalServiceUtil.getKBArticles(scopeGroupId,rootResourcePrimKey,WorkflowConstants.STATUS_APPROVED,0,1,null);
     KBArticle navigationKBArticle=kbArticles.get(0);
     int navigationKBArticleChildCount=KBArticleLocalServiceUtil.getKBArticlesCount(scopeGroupId,navigationKBArticle.getResourcePrimKey(),WorkflowConstants.STATUS_APPROVED);
