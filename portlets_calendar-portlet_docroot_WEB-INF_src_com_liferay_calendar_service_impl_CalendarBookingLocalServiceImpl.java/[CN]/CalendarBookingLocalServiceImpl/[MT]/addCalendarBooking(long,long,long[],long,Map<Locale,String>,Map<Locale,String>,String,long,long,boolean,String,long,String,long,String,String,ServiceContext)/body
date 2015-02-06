@@ -20,11 +20,12 @@
   Date now=new Date();
   validate(titleMap,startTimeJCalendar,endTimeJCalendar);
   CalendarBooking calendarBooking=calendarBookingPersistence.create(calendarBookingId);
+  calendarBooking.setUuid(serviceContext.getUuid());
   if (vEventUid != null) {
     calendarBooking.setVEventUid(vEventUid);
   }
  else {
-    calendarBooking.setUuid(serviceContext.getUuid());
+    calendarBooking.setVEventUid(PortalUUIDUtil.generate());
   }
   calendarBooking.setGroupId(calendar.getGroupId());
   calendarBooking.setCompanyId(user.getCompanyId());
