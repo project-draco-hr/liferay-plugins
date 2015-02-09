@@ -65,11 +65,11 @@
     List<User> usersList=null;
     if (filterBy.equals(ContactsConstants.FILTER_BY_ADMINS)) {
       Role siteAdministratorRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_ADMINISTRATOR);
-      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteAdministratorRole.getRoleId())});
+      params.put("userGroupRole",new Long[]{group.getGroupId(),siteAdministratorRole.getRoleId()});
       Set<User> users=new HashSet<>();
       users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
       Role siteOwnerRole=RoleLocalServiceUtil.getRole(group.getCompanyId(),RoleConstants.SITE_OWNER);
-      params.put("userGroupRole",new Long[]{new Long(group.getGroupId()),new Long(siteOwnerRole.getRoleId())});
+      params.put("userGroupRole",new Long[]{group.getGroupId(),siteOwnerRole.getRoleId()});
       users.addAll(UserLocalServiceUtil.search(themeDisplay.getCompanyId(),keywords,WorkflowConstants.STATUS_APPROVED,params,QueryUtil.ALL_POS,QueryUtil.ALL_POS,(OrderByComparator)null));
       usersList=new ArrayList<>(users);
       ListUtil.sort(usersList,new UserLastNameComparator(true));
