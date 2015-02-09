@@ -9,7 +9,8 @@
       if ((role.getType() == RoleConstants.TYPE_SITE) || (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
         List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupRole userGroupRole : userGroupRoles) {
-          pooledActorsMap.put(userGroupRole.getUser().getFullName(),userGroupRole.getUserId());
+          User user=userGroupRole.getUser();
+          pooledActorsMap.put(user.getFullName(),user.getUserId());
         }
         List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
@@ -28,8 +29,8 @@
     }
     long[] pooledActors=new long[pooledActorsMap.size()];
     int count=0;
-    for (    Object actor : pooledActorsMap.values()) {
-      pooledActors[count++]=(Long)actor;
+    for (    Long actor : pooledActorsMap.values()) {
+      pooledActors[count++]=actor;
     }
     return pooledActors;
   }
