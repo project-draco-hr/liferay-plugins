@@ -1,0 +1,12 @@
+{
+  Boolean touch=(Boolean)portletContext.getAttribute(TOUCH + portlet.getRootPortletId());
+  if (touch != null) {
+    return;
+  }
+  String touchPath="/WEB-INF/jsp/" + portlet.getFriendlyURLMapping() + "/views/touch.jsp";
+  if (log.isDebugEnabled()) {
+    log.debug("Touch " + portlet.getRootPortletId() + " by including "+ touchPath);
+  }
+  portletContext.setAttribute(TOUCH + portlet.getRootPortletId(),Boolean.FALSE);
+  include(touchPath);
+}
