@@ -1,0 +1,12 @@
+{
+  String enableSyncSites=ParamUtil.getString(actionRequest,"enableSyncSites");
+  long[] groupIds=ParamUtil.getLongValues(actionRequest,"groupIds");
+  for (  long groupId : groupIds) {
+    Group group=GroupLocalServiceUtil.fetchGroup(groupId);
+    UnicodeProperties typeSettingsProperties=group.getTypeSettingsProperties();
+    typeSettingsProperties.setProperty("syncEnabled",enableSyncSites);
+    group.setTypeSettingsProperties(typeSettingsProperties);
+    GroupLocalServiceUtil.updateGroup(group);
+  }
+  sendRedirect(actionRequest,actionResponse);
+}

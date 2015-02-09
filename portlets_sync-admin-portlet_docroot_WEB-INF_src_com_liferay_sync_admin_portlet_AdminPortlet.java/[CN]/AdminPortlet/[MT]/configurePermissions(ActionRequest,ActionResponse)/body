@@ -1,0 +1,12 @@
+{
+  long[] groupIds=ParamUtil.getLongValues(actionRequest,"groupIds");
+  String permissions=ParamUtil.getString(actionRequest,"permissions");
+  for (  long groupId : groupIds) {
+    Group group=GroupLocalServiceUtil.fetchGroup(groupId);
+    UnicodeProperties typeSettingsProperties=group.getTypeSettingsProperties();
+    typeSettingsProperties.setProperty("permissions",permissions);
+    group.setTypeSettingsProperties(typeSettingsProperties);
+    GroupLocalServiceUtil.updateGroup(group);
+  }
+  sendRedirect(actionRequest,actionResponse);
+}
