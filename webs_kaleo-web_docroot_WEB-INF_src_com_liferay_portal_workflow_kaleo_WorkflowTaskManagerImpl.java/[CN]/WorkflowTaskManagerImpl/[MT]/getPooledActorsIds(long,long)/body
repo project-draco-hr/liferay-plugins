@@ -3,31 +3,31 @@
     KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
     KaleoTask kaleoTask=kaleoTaskInstanceToken.getKaleoTask();
     List<KaleoTaskAssignment> kaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTask.getKaleoTaskId(),Role.class.getName());
-    Map<String,Long> pooledActorsMap=new TreeMap<>(new NaturalOrderStringComparator());
+    Map<String,Long> pooledActors=new TreeMap<>(new NaturalOrderStringComparator());
     for (    KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
       Role role=RoleLocalServiceUtil.getRole(kaleoTaskAssignment.getAssigneeClassPK());
       if ((role.getType() == RoleConstants.TYPE_SITE) || (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
         List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupRole userGroupRole : userGroupRoles) {
           User user=userGroupRole.getUser();
-          pooledActorsMap.put(user.getFullName(),user.getUserId());
+          pooledActors.put(user.getFullName(),user.getUserId());
         }
         List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
         for (        UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
           List<User> userGroupUsers=UserLocalServiceUtil.getUserGroupUsers(userGroupGroupRole.getUserGroupId());
           for (          User user : userGroupUsers) {
-            pooledActorsMap.put(user.getFullName(),user.getUserId());
+            pooledActors.put(user.getFullName(),user.getUserId());
           }
         }
       }
  else {
         List<User> inheritedRoleUsers=UserLocalServiceUtil.getInheritedRoleUsers(kaleoTaskAssignment.getAssigneeClassPK(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
         for (        User user : inheritedRoleUsers) {
-          pooledActorsMap.put(user.getFullName(),user.getUserId());
+          pooledActors.put(user.getFullName(),user.getUserId());
         }
       }
     }
-    return ArrayUtil.toLongArray(pooledActorsMap.values());
+    return ArrayUtil.toLongArray(pooledActors.values());
   }
  catch (  Exception e) {
     throw new WorkflowException(e);
