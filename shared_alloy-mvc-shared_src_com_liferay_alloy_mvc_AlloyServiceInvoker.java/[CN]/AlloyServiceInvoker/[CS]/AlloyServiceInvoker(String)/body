@@ -6,6 +6,7 @@
   String serviceClassName=className.substring(0,pos) + ".service." + simpleClassName+ "LocalServiceUtil";
   try {
     Class<?> serviceClass=classLoader.loadClass(serviceClassName);
+    deleteModelMethod=serviceClass.getMethod("delete" + simpleClassName,new Class[]{long.class});
     dynamicQueryCountMethod=serviceClass.getMethod("dynamicQueryCount",new Class[]{DynamicQuery.class});
     dynamicQueryMethod1=serviceClass.getMethod("dynamicQuery",new Class[0]);
     dynamicQueryMethod2=serviceClass.getMethod("dynamicQuery",new Class[]{DynamicQuery.class});
