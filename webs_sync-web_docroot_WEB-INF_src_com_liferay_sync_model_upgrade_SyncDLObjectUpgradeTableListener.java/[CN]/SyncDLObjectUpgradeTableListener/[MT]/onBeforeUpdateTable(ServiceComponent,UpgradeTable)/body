@@ -2,6 +2,12 @@
   if (previousServiceComponent.getBuildNumber() >= 2) {
     return;
   }
+  if (!containsObjectIdColumn()) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("SyncDLObject table already updated");
+      return;
+    }
+  }
   String createSQL=upgradeTable.getCreateSQL();
   createSQL=StringUtil.replace(createSQL," primary key",StringPool.BLANK);
   upgradeTable.setCreateSQL(createSQL);
