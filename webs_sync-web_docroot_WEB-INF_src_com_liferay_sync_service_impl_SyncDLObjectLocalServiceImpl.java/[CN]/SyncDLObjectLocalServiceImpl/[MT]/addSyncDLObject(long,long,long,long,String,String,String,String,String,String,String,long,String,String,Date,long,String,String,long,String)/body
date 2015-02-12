@@ -57,7 +57,12 @@
   syncDLObject.setLockUserName(lockUserName);
   syncDLObject=syncDLObjectPersistence.update(syncDLObject);
   if ((event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH)) && !type.equals(SyncConstants.TYPE_FOLDER)) {
-    syncDLFileVersionDiffLocalService.deleteSyncDLFileVersionDiffs(typePK);
+    try {
+      syncDLFileVersionDiffLocalService.deleteSyncDLFileVersionDiffs(typePK);
+    }
+ catch (    Exception e) {
+      _log.error(e,e);
+    }
   }
   return syncDLObject;
 }
