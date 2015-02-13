@@ -21,6 +21,17 @@
       JSONArray zipFileIdsJSONArray=JSONFactoryUtil.createJSONArray(zipFileIds);
       sendZipFile(response,user,zipFileIdsJSONArray);
     }
+ else     if (pathArray[0].equals("zipfolder")) {
+      long repositoryId=ParamUtil.getLong(request,"repositoryId");
+      long folderId=ParamUtil.getLong(request,"folderId");
+      if (repositoryId == 0) {
+        throw new IllegalArgumentException("Missing parameter repositoryId");
+      }
+ else       if (folderId == 0) {
+        throw new IllegalArgumentException("Missing parameter folderId");
+      }
+      sendZipFolder(response,repositoryId,folderId);
+    }
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
       String uuid=pathArray[1];

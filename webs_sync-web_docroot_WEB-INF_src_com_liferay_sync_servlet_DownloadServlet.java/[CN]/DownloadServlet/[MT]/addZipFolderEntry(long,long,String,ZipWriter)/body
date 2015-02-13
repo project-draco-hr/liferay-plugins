@@ -1,0 +1,14 @@
+{
+  List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(repositoryId,folderId);
+  for (  FileEntry fileEntry : fileEntries) {
+    FileVersion fileVersion=fileEntry.getLatestFileVersion();
+    InputStream inputStream=fileVersion.getContentStream(false);
+    String filePath=folderPath + fileEntry.getTitle();
+    zipWriter.addEntry(filePath,inputStream);
+  }
+  List<Folder> folders=DLAppServiceUtil.getFolders(repositoryId,folderId);
+  for (  Folder folder : folders) {
+    String subFolderPath=folderPath + folder.getName() + StringPool.FORWARD_SLASH;
+    addZipFolderEntry(repositoryId,folder.getFolderId(),subFolderPath,zipWriter);
+  }
+}

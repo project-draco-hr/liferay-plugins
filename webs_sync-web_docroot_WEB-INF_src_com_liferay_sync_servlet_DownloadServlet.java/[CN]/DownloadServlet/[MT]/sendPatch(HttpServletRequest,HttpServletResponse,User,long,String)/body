@@ -3,9 +3,15 @@
   if (Validator.isNull(sourceVersion)) {
     throw new IllegalArgumentException("Missing source version");
   }
+ else   if (sourceVersion.equals(DLFileEntryConstants.PRIVATE_WORKING_COPY_VERSION)) {
+    throw new IllegalArgumentException("PWC versions not supported");
+  }
   String targetVersion=ParamUtil.getString(request,"targetVersion");
   if (Validator.isNull(targetVersion)) {
     throw new IllegalArgumentException("Missing target version");
+  }
+ else   if (targetVersion.equals(DLFileEntryConstants.PRIVATE_WORKING_COPY_VERSION)) {
+    throw new IllegalArgumentException("PWC versions not supported");
   }
   DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersion,targetVersion);
   ServletResponseUtil.write(response,downloadServletInputStream.getInputStream(),downloadServletInputStream.getSize());
