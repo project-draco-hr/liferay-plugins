@@ -60,7 +60,7 @@
   }
  else   if (urlPath.endsWith("/patch-file-entry")) {
     long fileEntryId=MapUtil.getLong(jsonWebServiceActionParametersMap,"fileEntryId");
-    String sourceVersion=MapUtil.getString(jsonWebServiceActionParametersMap,"sourceVersion");
+    long sourceVersionId=MapUtil.getLong(jsonWebServiceActionParametersMap,"sourceVersionId");
     String sourceFileName=MapUtil.getString(jsonWebServiceActionParametersMap,"sourceFileName");
     String mimeType=MapUtil.getString(jsonWebServiceActionParametersMap,"mimeType");
     String title=MapUtil.getString(jsonWebServiceActionParametersMap,"title");
@@ -72,7 +72,7 @@
     try {
       tempFile=FileUtil.createTempFile(inputStream);
       String checksum=MapUtil.getString(jsonWebServiceActionParametersMap,"checksum");
-      return patchFileEntry(fileEntryId,sourceVersion,sourceFileName,mimeType,title,description,changeLog,majorVersion,tempFile,checksum,serviceContext);
+      return patchFileEntry(fileEntryId,sourceVersionId,sourceFileName,mimeType,title,description,changeLog,majorVersion,tempFile,checksum,serviceContext);
     }
   finally {
       FileUtil.delete(tempFile);

@@ -1,0 +1,31 @@
+{
+  FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  DLFileVersion sourceDLFileVersion=DLFileVersionLocalServiceUtil.getDLFileVersion(sourceVersionId);
+  DLFileVersion targetDLFileVersion=DLFileVersionLocalServiceUtil.getDLFileVersion(targetVersionId);
+  if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
+    File deltaFile=null;
+    try {
+      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceDLFileVersion,targetDLFileVersion);
+      return new DownloadServletInputStream(new FileInputStream(deltaFile),deltaFile.length());
+    }
+  finally {
+      FileUtil.delete(deltaFile);
+    }
+  }
+  SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
+  if (syncDLFileVersionDiff != null) {
+    SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getSyncDLFileVersionDiffId());
+  }
+ else {
+    File deltaFile=null;
+    try {
+      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceDLFileVersion,targetDLFileVersion);
+      syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId,deltaFile);
+    }
+  finally {
+      FileUtil.delete(deltaFile);
+    }
+  }
+  FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
+  return new DownloadServletInputStream(dataFileEntry.getContentStream(),dataFileEntry.getSize());
+}

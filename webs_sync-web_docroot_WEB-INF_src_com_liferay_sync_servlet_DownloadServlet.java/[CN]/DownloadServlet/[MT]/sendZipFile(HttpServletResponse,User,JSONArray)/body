@@ -1,25 +1,21 @@
 {
   ZipWriter zipWriter=ZipWriterFactoryUtil.getZipWriter();
-  JSONArray errorsJSONArray=JSONFactoryUtil.createJSONArray();
+  JSONObject errorsJSONObject=JSONFactoryUtil.createJSONObject();
   for (int i=0; i < zipFileIdsJSONArray.length(); i++) {
     JSONObject zipObjectJSONObject=zipFileIdsJSONArray.getJSONObject(i);
     long groupId=zipObjectJSONObject.getLong("groupId");
     String zipFileId=zipObjectJSONObject.getString("zipFileId");
     Group group=GroupLocalServiceUtil.fetchGroup(groupId);
     if ((group == null) || !SyncUtil.isSyncEnabled(group)) {
-      processException(zipFileId,SyncSiteUnavailableException.class.getName(),errorsJSONArray);
+      processException(zipFileId,SyncSiteUnavailableException.class.getName(),errorsJSONObject);
       continue;
     }
     try {
       String uuid=zipObjectJSONObject.getString("uuid");
       if (zipObjectJSONObject.getBoolean("patch")) {
-        String sourceVersion=zipObjectJSONObject.getString("sourceVersion");
-        String targetVersion=zipObjectJSONObject.getString("targetVersion");
-        if (Validator.isNull(sourceVersion) || Validator.isNull(targetVersion)) {
-          processException(zipFileId,IllegalArgumentException.class.getName(),errorsJSONArray);
-          continue;
-        }
-        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersion,targetVersion);
+        long sourceVersionId=zipObjectJSONObject.getLong("sourceVersionId",0);
+        long targetVersionId=zipObjectJSONObject.getLong("targetVersionId",0);
+        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersionId,targetVersionId);
         zipWriter.addEntry(zipFileId,downloadServletInputStream.getInputStream());
       }
  else {
@@ -28,10 +24,10 @@
       }
     }
  catch (    Exception e) {
-      processException(zipFileId,e.getClass().getName(),errorsJSONArray);
+      processException(zipFileId,e.getClass().getName(),errorsJSONObject);
     }
   }
-  zipWriter.addEntry("errors.json",errorsJSONArray.toString());
+  zipWriter.addEntry("errors.json",errorsJSONObject.toString());
   File file=zipWriter.getFile();
   ServletResponseUtil.write(response,new FileInputStream(file),file.length());
 }
