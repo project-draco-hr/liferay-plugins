@@ -13,7 +13,11 @@
         responseMap.put(zipFileId,updateFileEntries(zipReader,zipFileId,jsonWebServiceActionParametersMap));
       }
  catch (      Exception e) {
-        String json="{\"exception\": \"" + e.getMessage() + "\"}";
+        String message=e.getMessage();
+        if (!message.startsWith(StringPool.QUOTE) && !message.endsWith(StringPool.QUOTE)) {
+          message=StringUtil.quote(message,StringPool.QUOTE);
+        }
+        String json="{\"exception\": " + message + "}";
         responseMap.put(zipFileId,json);
       }
     }
