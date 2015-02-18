@@ -1,18 +1,3 @@
 {
-  if (_logger.isDebugEnabled()) {
-    _logger.debug("Sending POST request to " + _login + "@"+ _hostName+ url);
-  }
-  try {
-    HttpPost httpPost=new HttpPost(url);
-    List<NameValuePair> nameValuePairs=toNameValuePairs(parameters);
-    HttpEntity httpEntity=new UrlEncodedFormEntity(nameValuePairs,"utf8");
-    for (    String key : _headers.keySet()) {
-      httpPost.addHeader(key,_headers.get(key));
-    }
-    httpPost.setEntity(httpEntity);
-    return execute(httpPost);
-  }
- catch (  UnsupportedEncodingException uee) {
-    throw new JSONWebServiceTransportException.CommunicationFailure(uee);
-  }
+  return doPost(url,parameters,Collections.<String,String>emptyMap());
 }
