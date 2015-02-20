@@ -1,0 +1,30 @@
+{
+  Connection con=null;
+  try {
+    con=DataAccess.getUpgradeOptimizedConnection();
+    PreparedStatement ps=con.prepareStatement("select C.calendarId, CR.classNameId, U.timeZoneId from " + "Calendar C inner join CalendarResource CR on " + "C.calendarResourceId = CR.calendarResourceId inner join "+ "User_ U on CR.userId = U.userId");
+    ResultSet rs=ps.executeQuery();
+    long userClassNameId=getClassNameId(con,User.class.getName());
+    String portalTimeZoneId=PropsUtil.get(PropsKeys.COMPANY_DEFAULT_TIME_ZONE);
+    PreparedStatement updatePs=con.prepareStatement("update Calendar set timeZoneId = ? where calendarId = ?");
+    while (rs.next()) {
+      long calendarId=rs.getLong(1);
+      long classNameId=rs.getLong(2);
+      String timeZoneId=portalTimeZoneId;
+      if (classNameId == userClassNameId) {
+        timeZoneId=rs.getString(3);
+      }
+      updatePs.setString(1,timeZoneId);
+      updatePs.setLong(2,calendarId);
+      int count=updatePs.executeUpdate();
+      if (count <= 0) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Calendar " + calendarId + " did not get its time zone set");
+        }
+      }
+    }
+  }
+  finally {
+    DataAccess.cleanUp(con);
+  }
+}
