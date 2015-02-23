@@ -6,6 +6,9 @@
     args=new Object[]{calendarBooking.getCalendarId(),calendarBooking.getParentCalendarBookingId()};
     FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_P,args,Long.valueOf(1));
     FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_P,args,calendarBooking);
+    args=new Object[]{calendarBooking.getCalendarId(),calendarBooking.getVEventUid()};
+    FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_V,args,Long.valueOf(1));
+    FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_V,args,calendarBooking);
   }
  else {
     CalendarBookingModelImpl calendarBookingModelImpl=(CalendarBookingModelImpl)calendarBooking;
@@ -18,6 +21,11 @@
       Object[] args=new Object[]{calendarBooking.getCalendarId(),calendarBooking.getParentCalendarBookingId()};
       FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_P,args,Long.valueOf(1));
       FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_P,args,calendarBooking);
+    }
+    if ((calendarBookingModelImpl.getColumnBitmask() & FINDER_PATH_FETCH_BY_C_V.getColumnBitmask()) != 0) {
+      Object[] args=new Object[]{calendarBooking.getCalendarId(),calendarBooking.getVEventUid()};
+      FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_C_V,args,Long.valueOf(1));
+      FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_V,args,calendarBooking);
     }
   }
 }
