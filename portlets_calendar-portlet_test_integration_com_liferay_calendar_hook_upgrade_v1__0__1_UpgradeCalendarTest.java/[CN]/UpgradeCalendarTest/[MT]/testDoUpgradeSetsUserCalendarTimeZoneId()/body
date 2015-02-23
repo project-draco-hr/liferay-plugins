@@ -1,0 +1,13 @@
+{
+  User user=UserTestUtil.addUser();
+  user.setTimeZoneId("Asia/Shangai");
+  UserLocalServiceUtil.updateUser(user);
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCompanyId(user.getCompanyId());
+  CalendarResource calendarResource=CalendarResourceUtil.getUserCalendarResource(user.getUserId(),serviceContext);
+  UpgradeCalendar upgradeCalendar=new UpgradeCalendar();
+  upgradeCalendar.doUpgrade();
+  List<Calendar> calendars=CalendarLocalServiceUtil.getCalendarResourceCalendars(user.getGroupId(),calendarResource.getCalendarResourceId());
+  Calendar calendar=calendars.get(0);
+  Assert.assertEquals("Asia/Shangai",calendar.getTimeZoneId());
+}
