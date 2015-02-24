@@ -1,8 +1,10 @@
 {
   try {
     Group group=groupLocalService.getGroup(repositoryId);
-    SyncUtil.isSyncEnabled(group);
-    SyncUtil.checkDefaultPermissions(group,serviceContext);
+    SyncUtil.checkSyncEnabled(group.getGroupId());
+    if (serviceContext.getGroupPermissions() == null) {
+      SyncUtil.setFilePermissions(group,false,serviceContext);
+    }
     FileEntry fileEntry=dlAppService.addFileEntry(repositoryId,folderId,sourceFileName,mimeType,title,description,changeLog,file,serviceContext);
     return toSyncDLObject(fileEntry,SyncConstants.EVENT_ADD);
   }
