@@ -1,15 +1,14 @@
 {
   PayloadBuilder builder=PayloadBuilder.newPayload();
-  JSONObject payloadJSONObject=jsonObject.getJSONObject(PushNotificationsConstants.KEY_PAYLOAD);
-  String message=payloadJSONObject.getString(PushNotificationsConstants.KEY_MESSAGE);
-  if (message != null) {
-    builder.alertBody(message);
+  String body=payloadJSONObject.getString(PushNotificationsConstants.KEY_BODY);
+  if (body != null) {
+    builder.alertBody(body);
   }
-  payloadJSONObject.remove(PushNotificationsConstants.KEY_MESSAGE);
-  Iterator<String> keys=jsonObject.keys();
+  payloadJSONObject.remove(PushNotificationsConstants.KEY_BODY);
+  Iterator<String> keys=payloadJSONObject.keys();
   while (keys.hasNext()) {
     String key=keys.next();
-    builder.customField(key,jsonObject.getString(key));
+    builder.customField(key,payloadJSONObject.getString(key));
   }
   return builder.build();
 }
