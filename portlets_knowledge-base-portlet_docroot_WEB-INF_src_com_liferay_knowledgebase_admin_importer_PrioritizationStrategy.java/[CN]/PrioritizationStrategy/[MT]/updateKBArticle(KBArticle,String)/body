@@ -5,7 +5,11 @@
   List<String> importedUrlTitles=getList(_importedKBArticleUrlTitlesMap,parentKBArticleUrlTitle);
   importedUrlTitles.add(kbArticle.getUrlTitle());
   if (_prioritizeByNumericalPrefix) {
-    double sectionFileEntryNamePrefix=getNumericalPrefix(fileName);
+    boolean isChildArticle=true;
+    if (kbArticle.getParentKBArticle() == null) {
+      isChildArticle=false;
+    }
+    double sectionFileEntryNamePrefix=getNumericalPrefix(filePath,isChildArticle);
     if (sectionFileEntryNamePrefix > 0) {
       _importedKBArticleUrlTitlesPrioritiesMap.put(kbArticle.getUrlTitle(),sectionFileEntryNamePrefix);
     }
