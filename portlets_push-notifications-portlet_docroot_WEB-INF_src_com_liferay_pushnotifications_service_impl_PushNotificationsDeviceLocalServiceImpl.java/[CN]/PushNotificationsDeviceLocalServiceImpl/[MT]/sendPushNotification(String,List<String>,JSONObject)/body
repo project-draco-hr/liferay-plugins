@@ -1,0 +1,17 @@
+{
+  PushNotificationsSender pushNotificationsSender=_pushNotificationsSenders.get(platform);
+  try {
+    pushNotificationsSender.send(tokens,payload);
+  }
+ catch (  PushNotificationsException pne) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(pne.getMessage());
+    }
+  }
+catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}
