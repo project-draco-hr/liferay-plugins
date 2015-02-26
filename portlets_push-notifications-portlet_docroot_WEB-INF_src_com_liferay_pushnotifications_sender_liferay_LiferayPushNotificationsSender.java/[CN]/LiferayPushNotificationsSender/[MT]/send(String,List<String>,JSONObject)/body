@@ -1,0 +1,17 @@
+{
+  HttpRequest httpRequest=HttpRequest.post(PortletPropsValues.LIFERAY_SERVER);
+  httpRequest.basicAuthentication(PortletPropsValues.LIFERAY_USERNAME,PortletPropsValues.LIFERAY_PASSWORD);
+  httpRequest.path("/api/jsonws/push-notifications-portlet.pushnotificationsdevice" + "/send-push-notification");
+  httpRequest.timeout(PortletPropsValues.LIFERAY_TIMEOUT);
+  httpRequest.form("platform",platform);
+  JSONArray tokensJSONArray=JSONFactoryUtil.createJSONArray();
+  for (  String token : tokens) {
+    tokensJSONArray.put(token);
+  }
+  httpRequest.form("tokens",tokensJSONArray.toString());
+  httpRequest.form("payload",payloadJSONObject.toString());
+  HttpResponse httpResponse=httpRequest.send();
+  if (httpResponse.statusCode() != 200) {
+    throw new PushNotificationsException("Could not send push notification to Liferay Push " + httpResponse.bodyText());
+  }
+}
