@@ -1,10 +1,7 @@
 {
+  QueryConfig queryConfig=query.getQueryConfig();
   SolrQuery solrQuery=new SolrQuery();
-  if (count) {
-    solrQuery.setRows(0);
-  }
- else {
-    QueryConfig queryConfig=query.getQueryConfig();
+  if (!count) {
     addFacets(solrQuery,searchContext);
     addHighlights(solrQuery,queryConfig);
     addPagination(solrQuery,start,end);
@@ -12,8 +9,15 @@
     addSort(solrQuery,searchContext.getSorts());
     solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   }
+ else {
+    solrQuery.setRows(0);
+  }
   QueryTranslatorUtil.translateForSolr(query);
   String queryString=translateQuery(searchContext,query);
   solrQuery.setQuery(queryString);
-  return _solrServer.query(solrQuery,METHOD.POST);
+  QueryResponse queryResponse=doRequest(solrQuery);
+  if (_log.isInfoEnabled()) {
+    _log.info("The search engine processed " + solrQuery.toString() + " in "+ queryResponse.getElapsedTime()+ " ms");
+  }
+  return queryResponse;
 }
