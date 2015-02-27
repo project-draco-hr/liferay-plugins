@@ -1,5 +1,4 @@
 {
-  initializeNonImportedKBArticles();
   if (_prioritizeByNumericalPrefix) {
     for (    Map.Entry<String,Double> entry : _importedKBArticleUrlTitlesPrioritiesMap.entrySet()) {
       if (entry.getValue() < 1.0) {
@@ -8,8 +7,6 @@
       KBArticle kbArticle=KBArticleLocalServiceUtil.getKBArticleByUrlTitle(_groupId,_parentKBFolderId,entry.getKey());
       KBArticleLocalServiceUtil.updatePriority(kbArticle.getResourcePrimKey(),entry.getValue());
       remove(_importedKBArticlesMap,kbArticle);
-      remove(_importedKBArticleUrlTitlesMap,kbArticle.getUrlTitle());
-      remove(_newKBArticlesMap,kbArticle);
     }
   }
   prioritizeKBArticles(_importedKBArticlesMap);
