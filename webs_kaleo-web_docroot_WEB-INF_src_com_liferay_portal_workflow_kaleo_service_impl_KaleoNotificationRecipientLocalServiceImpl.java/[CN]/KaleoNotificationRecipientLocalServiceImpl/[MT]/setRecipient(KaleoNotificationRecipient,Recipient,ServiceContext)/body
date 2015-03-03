@@ -16,6 +16,14 @@
     kaleoNotificationRecipient.setRecipientClassPK(role.getClassPK());
     kaleoNotificationRecipient.setRecipientRoleType(roleType);
   }
+ else   if (recipientType.equals(RecipientType.SCRIPT)) {
+    kaleoNotificationRecipient.setRecipientClassName(RecipientType.SCRIPT.name());
+    ScriptRecipient scriptRecipient=(ScriptRecipient)recipient;
+    kaleoNotificationRecipient.setRecipientScript(scriptRecipient.getScript());
+    ScriptLanguage scriptLanguage=scriptRecipient.getScriptLanguage();
+    kaleoNotificationRecipient.setRecipientScriptLanguage(scriptLanguage.getValue());
+    kaleoNotificationRecipient.setRecipientScriptRequiredContexts(scriptRecipient.getScriptRequiredContexts());
+  }
  else   if (recipientType.equals(RecipientType.USER)) {
     kaleoNotificationRecipient.setRecipientClassName(User.class.getName());
     UserRecipient userRecipient=(UserRecipient)recipient;

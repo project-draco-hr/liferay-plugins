@@ -21,6 +21,12 @@
       RoleRecipient roleRecipient=(RoleRecipient)recipient;
       populateRoleElement(roleElement,roleRecipient.getRoleId(),roleRecipient.getRoleType(),roleRecipient.getRoleName(),roleRecipient.isAutoCreate());
     }
+ else     if (recipientType.equals(RecipientType.SCRIPT)) {
+      Element scriptedRecipientElement=recipientsElement.addElement("scripted-recipient");
+      ScriptRecipient scriptRecipient=(ScriptRecipient)recipient;
+      ScriptLanguage scriptLanguage=scriptRecipient.getScriptLanguage();
+      populateScriptingElement(scriptedRecipientElement,scriptRecipient.getScript(),scriptLanguage.getValue(),scriptRecipient.getScriptRequiredContexts());
+    }
  else     if (recipientType.equals(RecipientType.USER)) {
       Element userElement=recipientsElement.addElement("user");
       UserRecipient userRecipient=(UserRecipient)recipient;

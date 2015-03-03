@@ -14,6 +14,9 @@
       Role role=_roleLocalService.fetchRole(recipientClassPK);
       recipient=new RoleRecipient(role.getName(),role.getTypeLabel());
     }
+ else     if (recipientClassName.equals(RecipientType.SCRIPT.name())) {
+      recipient=new ScriptRecipient(kaleoNotificationRecipient.getRecipientScript(),kaleoNotificationRecipient.getRecipientScriptLanguage(),kaleoNotificationRecipient.getRecipientScriptRequiredContexts());
+    }
  else     if (recipientClassName.equals(User.class.getName())) {
       if (recipientClassPK > 0) {
         User user=_userLocalService.getUser(recipientClassPK);

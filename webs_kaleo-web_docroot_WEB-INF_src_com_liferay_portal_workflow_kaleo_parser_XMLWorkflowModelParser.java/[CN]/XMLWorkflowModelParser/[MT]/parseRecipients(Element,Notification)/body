@@ -31,6 +31,14 @@
       notification.addRecipients(roleRecipient);
     }
   }
+  List<Element> scriptedRecipientElements=recipientsElement.elements("scripted-recipient");
+  for (  Element scriptedRecipientElement : scriptedRecipientElements) {
+    String script=scriptedRecipientElement.elementText("script");
+    String scriptLanguage=scriptedRecipientElement.elementText("script-language");
+    String scriptRequiredContexts=scriptedRecipientElement.elementText("script-required-contexts");
+    ScriptRecipient scriptRecipient=new ScriptRecipient(script,scriptLanguage,scriptRequiredContexts);
+    notification.addRecipients(scriptRecipient);
+  }
   List<Element> userRecipientElements=recipientsElement.elements("user");
   for (  Element userRecipientElement : userRecipientElements) {
     long userId=GetterUtil.getLong(userRecipientElement.elementText("user-id"));

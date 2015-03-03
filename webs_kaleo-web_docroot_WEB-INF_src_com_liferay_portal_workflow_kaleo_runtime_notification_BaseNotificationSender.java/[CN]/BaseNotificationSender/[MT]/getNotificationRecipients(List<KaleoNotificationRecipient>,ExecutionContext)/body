@@ -1,5 +1,5 @@
 {
-  Set<NotificationRecipient> notificationRecipients=new HashSet<>();
+  Set<NotificationRecipient> notificationRecipients=new HashSet<NotificationRecipient>();
   if (kaleoNotificationRecipients.isEmpty()) {
     addAssignedRecipients(notificationRecipients,executionContext);
     return notificationRecipients;
@@ -16,6 +16,9 @@
     }
  else     if (recipientClassName.equals(Role.class.getName())) {
       addRoleRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),executionContext);
+    }
+ else     if (recipientClassName.equals(RecipientType.SCRIPT.name())) {
+      addScriptRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientScript(),kaleoNotificationRecipient.getRecipientScriptLanguage(),kaleoNotificationRecipient.getRecipientScriptRequiredContexts(),executionContext);
     }
  else     if (recipientClassName.equals(User.class.getName())) {
       addUserNotificationRecipient(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),executionContext);
