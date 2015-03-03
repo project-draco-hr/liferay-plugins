@@ -12,6 +12,8 @@
     addSort(solrQuery,searchContext.getSorts());
     solrQuery.setIncludeScore(queryConfig.isScoreEnabled());
   }
-  translateQuery(solrQuery,searchContext,query);
+  QueryTranslatorUtil.translateForSolr(query);
+  String queryString=translateQuery(searchContext,query);
+  solrQuery.setQuery(queryString);
   return _solrServer.query(solrQuery,METHOD.POST);
 }
