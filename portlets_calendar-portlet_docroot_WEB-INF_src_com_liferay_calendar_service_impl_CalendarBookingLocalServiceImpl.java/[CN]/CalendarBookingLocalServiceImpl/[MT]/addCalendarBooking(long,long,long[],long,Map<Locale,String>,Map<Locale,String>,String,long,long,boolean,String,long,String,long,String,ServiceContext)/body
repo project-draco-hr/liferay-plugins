@@ -51,7 +51,7 @@
   calendarBooking.setSecondReminder(secondReminder);
   calendarBooking.setSecondReminderType(secondReminderType);
   calendarBooking.setExpandoBridgeAttributes(serviceContext);
-  calendarBooking.setStatus(CalendarBookingWorkflowConstants.STATUS_PENDING);
+  calendarBooking.setStatus(CalendarBookingWorkflowConstants.STATUS_DRAFT);
   calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
   calendarBookingPersistence.update(calendarBooking);
   addChildCalendarBookings(calendarBooking,childCalendarIds,serviceContext);
@@ -59,6 +59,6 @@
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
   socialActivityLocalService.addActivity(userId,calendarBooking.getGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.ADD_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking),0);
   sendNotification(calendarBooking,NotificationTemplateType.INVITE,serviceContext);
-  calendarBookingApprovalWorkflow.startWorkflow(userId,calendarBooking,serviceContext);
+  calendarBooking=startWorkflowInstance(userId,calendarBooking,serviceContext);
   return calendarBooking;
 }
