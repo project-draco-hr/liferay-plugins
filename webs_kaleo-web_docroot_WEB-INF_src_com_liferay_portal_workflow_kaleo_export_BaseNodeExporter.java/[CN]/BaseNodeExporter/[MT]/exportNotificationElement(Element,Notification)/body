@@ -9,7 +9,11 @@
   for (  NotificationType notificationType : notificationTypes) {
     addTextElement(notificationElement,"notification-type",notificationType.getValue());
   }
-  Set<Recipient> recipients=notification.getRecipients();
-  exportRecipientsElement(notificationElement,recipients);
+  Map<Integer,Set<Recipient>> recipientsMap=notification.getRecipientsMap();
+  for (  Map.Entry<Integer,Set<Recipient>> recipientsEntry : recipientsMap.entrySet()) {
+    Set<Recipient> recipients=recipientsEntry.getValue();
+    int emailRecipientType=recipientsEntry.getKey();
+    exportRecipientsElement(notificationElement,recipients,emailRecipientType);
+  }
   addTextElement(notificationElement,"execution-type",notification.getExecutionType().getValue());
 }
