@@ -12,12 +12,11 @@
  else {
     solrQuery.setRows(0);
   }
-  QueryTranslatorUtil.translateForSolr(query);
-  String queryString=translateQuery(searchContext,query);
+  String queryString=translateQuery(query,searchContext);
   solrQuery.setQuery(queryString);
   QueryResponse queryResponse=doRequest(solrQuery);
   if (_log.isInfoEnabled()) {
-    _log.info("The search engine processed " + solrQuery.toString() + " in "+ queryResponse.getElapsedTime()+ " ms");
+    _log.info("The search engine processed " + solrQuery.getQuery() + " in "+ queryResponse.getElapsedTime()+ " ms");
   }
   return queryResponse;
 }
