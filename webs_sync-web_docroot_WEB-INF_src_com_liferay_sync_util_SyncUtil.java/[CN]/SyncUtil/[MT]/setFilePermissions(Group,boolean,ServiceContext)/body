@@ -1,28 +1,15 @@
 {
   int syncSiteMemberFilePermissions=GetterUtil.getInteger(group.getTypeSettingsProperty("syncSiteMemberFilePermissions"));
-  if (syncSiteMemberFilePermissions == SyncConstants.PERMISSIONS_DEFAULT) {
+  if (syncSiteMemberFilePermissions == SyncPermissionsConstants.PERMISSIONS_DEFAULT) {
     serviceContext.setDeriveDefaultPermissions(true);
+    return;
   }
- else   if (syncSiteMemberFilePermissions == SyncConstants.PERMISSIONS_NONE) {
-    serviceContext.setGroupPermissions(new String[0]);
+  String[] resourceActions=null;
+  if (folder) {
+    resourceActions=SyncPermissionsConstants.getFolderResourceActions(syncSiteMemberFilePermissions);
   }
- else   if (syncSiteMemberFilePermissions == SyncConstants.PERMISSIONS_VIEW_ONLY) {
-    serviceContext.setGroupPermissions(new String[]{"VIEW"});
-  }
- else   if (syncSiteMemberFilePermissions == SyncConstants.PERMISSIONS_VIEW_AND_ADD_DISCUSSION) {
-    if (folder) {
-      serviceContext.setGroupPermissions(new String[]{"VIEW"});
-    }
  else {
-      serviceContext.setGroupPermissions(new String[]{"ADD_DISCUSSION","VIEW"});
-    }
+    resourceActions=SyncPermissionsConstants.getFileResourceActions(syncSiteMemberFilePermissions);
   }
- else   if (syncSiteMemberFilePermissions == SyncConstants.PERMISSIONS_FULL_ACCESS) {
-    if (folder) {
-      serviceContext.setGroupPermissions(new String[]{"ADD_DOCUMENT","ADD_SHORTCUT","ADD_SUBFOLDER","DELETE","UPDATE","VIEW"});
-    }
- else {
-      serviceContext.setGroupPermissions(new String[]{"ADD_DISCUSSION","DELETE","UPDATE","VIEW"});
-    }
-  }
+  serviceContext.setGroupPermissions(resourceActions);
 }
