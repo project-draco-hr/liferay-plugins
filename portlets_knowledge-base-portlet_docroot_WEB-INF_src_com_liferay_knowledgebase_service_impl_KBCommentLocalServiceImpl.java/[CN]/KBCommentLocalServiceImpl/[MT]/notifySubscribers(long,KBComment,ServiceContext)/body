@@ -16,6 +16,8 @@
   subscriptionSender.setContextAttribute("[$COMMENT_CONTENT$]",kbComment.getContent(),false);
   subscriptionSender.setContextAttribute("[$COMMENT_CREATE_DATE$]",getFormattedKBCommentCreateDate(kbComment,serviceContext),false);
   subscriptionSender.setContextCreatorUserPrefix("ARTICLE");
+  subscriptionSender.setCreatorUserId(kbArticle.getUserId());
+  subscriptionSender.setCurrentUserId(userId);
   subscriptionSender.setFrom(fromAddress,fromName);
   subscriptionSender.setHtmlFormat(true);
   subscriptionSender.setMailId("kb_article",kbArticle.getKbArticleId());
@@ -23,7 +25,6 @@
   subscriptionSender.setReplyToAddress(fromAddress);
   subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
   subscriptionSender.setSubject(subject);
-  subscriptionSender.setUserId(kbArticle.getUserId());
   User user=userLocalService.getUser(kbComment.getUserId());
   subscriptionSender.addRuntimeSubscribers(user.getEmailAddress(),user.getFullName());
   subscriptionSender.flushNotificationsAsync();

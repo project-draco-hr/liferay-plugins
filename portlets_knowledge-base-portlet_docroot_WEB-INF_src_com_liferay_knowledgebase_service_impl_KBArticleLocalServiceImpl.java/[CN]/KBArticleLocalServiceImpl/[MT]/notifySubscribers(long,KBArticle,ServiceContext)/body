@@ -35,7 +35,8 @@
   subscriptionSender.setContextAttribute("[$ARTICLE_TITLE$]",kbArticle.getTitle(),false);
   subscriptionSender.setContextAttribute("[$ARTICLE_TITLE_DIFF$]",kbArticleDiffs.get("title"),false);
   subscriptionSender.setContextCreatorUserPrefix("ARTICLE");
-  subscriptionSender.setCreatorUserId(creatorUserId);
+  subscriptionSender.setCreatorUserId(kbArticle.getUserId());
+  subscriptionSender.setCurrentUserId(userId);
   subscriptionSender.setFrom(fromAddress,fromName);
   subscriptionSender.setHtmlFormat(true);
   subscriptionSender.setMailId("kb_article",kbArticle.getKbArticleId());
@@ -43,7 +44,6 @@
   subscriptionSender.setReplyToAddress(fromAddress);
   subscriptionSender.setScopeGroupId(kbArticle.getGroupId());
   subscriptionSender.setSubject(subject);
-  subscriptionSender.setUserId(kbArticle.getUserId());
   subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getGroupId());
   subscriptionSender.addPersistedSubscribers(KBArticle.class.getName(),kbArticle.getResourcePrimKey());
   while (!kbArticle.isRoot() && (kbArticle.getClassNameId() == kbArticle.getParentResourceClassNameId())) {
