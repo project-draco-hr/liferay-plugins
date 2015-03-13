@@ -17,9 +17,12 @@
     while (rs.next()) {
       long calendarId=rs.getLong(1);
       long classNameId=rs.getLong(2);
-      String timeZoneId=_PORTAL_TIME_ZONE_ID;
+      String timeZoneId=null;
       if (classNameId == userClassNameId) {
         timeZoneId=rs.getString(3);
+      }
+ else {
+        timeZoneId=PropsUtil.get(PropsKeys.COMPANY_DEFAULT_TIME_ZONE);
       }
       updateCalendarTimeZoneId(con,calendarId,timeZoneId);
     }
