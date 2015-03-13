@@ -16,6 +16,7 @@
   subscriptionSender.setCompanyId(user.getCompanyId());
   subscriptionSender.setContextAttribute("[$CONTENT$]",content,false);
   subscriptionSender.setContextAttributes("[$ASSET_ENTRY_NAME$]",getAssetEntryName(className,serviceContext),"[$USER_ADDRESS$]",messageUserEmailAddress,"[USER_NAME$]",messageUserName,"[$CONTENT_URL$]",contentURL);
+  subscriptionSender.setCurrentUserId(userId);
   subscriptionSender.setEntryTitle(title);
   subscriptionSender.setEntryURL(contentURL);
   subscriptionSender.setFrom(fromAddress,fromName);
@@ -26,7 +27,6 @@
   subscriptionSender.setScopeGroupId(groupId);
   subscriptionSender.setServiceContext(serviceContext);
   subscriptionSender.setSubject(subject);
-  subscriptionSender.setCurrentUserId(userId);
   for (int i=0; i < mentionedUsersScreenNames.length; i++) {
     String mentionedUserScreenName=mentionedUsersScreenNames[i];
     User mentionedUser=UserLocalServiceUtil.fetchUserByScreenName(user.getCompanyId(),mentionedUserScreenName);
