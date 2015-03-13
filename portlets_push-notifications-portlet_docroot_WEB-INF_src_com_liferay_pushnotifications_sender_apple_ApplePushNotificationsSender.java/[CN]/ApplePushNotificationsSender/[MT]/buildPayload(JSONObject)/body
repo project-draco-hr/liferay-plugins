@@ -5,10 +5,6 @@
     builder.alertBody(body);
   }
   payloadJSONObject.remove(PushNotificationsConstants.KEY_BODY);
-  Iterator<String> keys=payloadJSONObject.keys();
-  while (keys.hasNext()) {
-    String key=keys.next();
-    builder.customField(key,payloadJSONObject.getString(key));
-  }
+  builder.customField(PushNotificationsConstants.KEY_PAYLOAD,payloadJSONObject.toString());
   return builder.build();
 }
