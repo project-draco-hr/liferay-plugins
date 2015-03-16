@@ -4,11 +4,8 @@
   try {
     extRepositorySearchResults=_extRepository.search(searchContext,query,new ExtRepositoryQueryMapperImpl(this));
   }
- catch (  PortalException pe) {
-    throw new SearchException("Unable to perform search",pe);
-  }
-catch (  SystemException se) {
-    throw new SearchException("Unable to perform search",se);
+ catch (  PortalException|SystemException e) {
+    throw new SearchException("Unable to perform search",e);
   }
   QueryConfig queryConfig=searchContext.getQueryConfig();
   List<Document> documents=new ArrayList<>();
@@ -32,14 +29,9 @@ catch (  SystemException se) {
       snippets.add(extRepositorySearchResult.getSnippet());
       total++;
     }
- catch (    SystemException se) {
+ catch (    PortalException|SystemException e) {
       if (_log.isWarnEnabled()) {
-        _log.warn("Invalid entry returned from search",se);
-      }
-    }
-catch (    PortalException pe) {
-      if (_log.isWarnEnabled()) {
-        _log.warn("Invalid entry returned from search",pe);
+        _log.warn("Invalid entry returned from search",e);
       }
     }
   }
