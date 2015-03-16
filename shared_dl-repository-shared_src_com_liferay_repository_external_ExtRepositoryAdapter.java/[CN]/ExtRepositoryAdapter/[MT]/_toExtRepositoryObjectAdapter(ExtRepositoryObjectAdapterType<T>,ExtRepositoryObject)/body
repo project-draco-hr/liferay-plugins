@@ -3,9 +3,9 @@
   String extRepositoryModelKey=extRepositoryObject.getExtRepositoryModelKey();
   ExtRepositoryObjectAdapter<?> extRepositoryObjectAdapter=extRepositoryAdapterCache.get(extRepositoryModelKey);
   if (extRepositoryObjectAdapter == null) {
-    Object[] repositoryEntryIds=getRepositoryEntryIds(extRepositoryModelKey);
-    long extRepositoryObjectId=(Long)repositoryEntryIds[0];
-    String uuid=(String)repositoryEntryIds[1];
+    RepositoryEntry repositoryEntry=getRepositoryEntry(extRepositoryModelKey);
+    long extRepositoryObjectId=repositoryEntry.getRepositoryEntryId();
+    String uuid=repositoryEntry.getUuid();
     if (extRepositoryObject instanceof ExtRepositoryFolder) {
       ExtRepositoryFolder extRepositoryFolder=(ExtRepositoryFolder)extRepositoryObject;
       extRepositoryObjectAdapter=new ExtRepositoryFolderAdapter(this,extRepositoryObjectId,uuid,extRepositoryFolder);

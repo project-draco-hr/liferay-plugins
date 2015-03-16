@@ -3,9 +3,9 @@
   String extRepositoryModelKey=extRepositoryFileVersion.getExtRepositoryModelKey();
   ExtRepositoryFileVersionAdapter extRepositoryVersionAdapter=extRepositoryAdapterCache.get(extRepositoryModelKey);
   if (extRepositoryVersionAdapter == null) {
-    Object[] repositoryEntryIds=getRepositoryEntryIds(extRepositoryModelKey);
-    long extRepositoryObjectId=(Long)repositoryEntryIds[0];
-    String uuid=(String)repositoryEntryIds[1];
+    RepositoryEntry repositoryEntry=getRepositoryEntry(extRepositoryModelKey);
+    long extRepositoryObjectId=repositoryEntry.getRepositoryEntryId();
+    String uuid=repositoryEntry.getUuid();
     extRepositoryVersionAdapter=new ExtRepositoryFileVersionAdapter(this,extRepositoryObjectId,uuid,extRepositoryFileEntryAdapter,extRepositoryFileVersion);
     extRepositoryAdapterCache.put(extRepositoryVersionAdapter);
   }
