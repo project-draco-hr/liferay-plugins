@@ -4,7 +4,8 @@
   if (session != null) {
     TransientValue<Map<String,WSRPConsumerManager>> transientValue=(TransientValue<Map<String,WSRPConsumerManager>>)session.getAttribute(WebKeys.WSRP_CONSUMER_MANAGERS);
     if (transientValue == null) {
-      transientValue=new TransientValue<>(new ConcurrentHashMap<String,WSRPConsumerManager>());
+      wsrpConsumerManagers=new ConcurrentHashMap<>();
+      transientValue=new TransientValue<>(wsrpConsumerManagers);
       session.setAttribute(WebKeys.WSRP_CONSUMER_MANAGERS,transientValue);
     }
     wsrpConsumerManagers=transientValue.getValue();
