@@ -5,6 +5,9 @@
   if (!callActionMethod(actionRequest,actionResponse)) {
     return;
   }
+  if (SessionErrors.isEmpty(actionRequest)) {
+    SessionMessages.add(actionRequest,PortalUtil.getPortletId(actionRequest) + SessionMessages.KEY_SUFFIX_REFRESH_PORTLET,PortletKeys.TASKS);
+  }
   String redirect=ParamUtil.getString(actionRequest,"redirect");
   if (Validator.isNotNull(redirect)) {
     actionResponse.sendRedirect(redirect);
