@@ -4,7 +4,24 @@
     if (_closeableHttpClient == null) {
       afterPropertiesSet();
     }
-    HttpResponse httpResponse=_closeableHttpClient.execute(httpHost,httpRequestBase);
+    HttpResponse httpResponse=null;
+    if ((_login != null) && (_password != null)) {
+      AuthScheme authScheme=null;
+      if (_proxyHostName != null) {
+        authScheme=new BasicScheme(ChallengeState.PROXY);
+      }
+ else {
+        authScheme=new BasicScheme(ChallengeState.TARGET);
+      }
+      AuthCache authCache=new BasicAuthCache();
+      authCache.put(httpHost,authScheme);
+      HttpClientContext httpClientContext=HttpClientContext.create();
+      httpClientContext.setAttribute(ClientContext.AUTH_CACHE,authCache);
+      httpResponse=_closeableHttpClient.execute(httpHost,httpRequestBase,httpClientContext);
+    }
+ else {
+      httpResponse=_closeableHttpClient.execute(httpHost,httpRequestBase);
+    }
     StatusLine statusLine=httpResponse.getStatusLine();
     if (statusLine.getStatusCode() == HttpServletResponse.SC_UNAUTHORIZED) {
       throw new JSONWebServiceTransportException.AuthenticationFailure("Not authorized to access JSON web service");
