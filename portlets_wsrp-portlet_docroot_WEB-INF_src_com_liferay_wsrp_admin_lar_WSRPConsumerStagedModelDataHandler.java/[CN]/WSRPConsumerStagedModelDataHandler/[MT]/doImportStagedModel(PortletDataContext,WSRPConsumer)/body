@@ -2,7 +2,7 @@
   ServiceContext serviceContext=portletDataContext.createServiceContext(wsrpConsumer);
   WSRPConsumer importedWSRPConsumer=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    WSRPConsumer existingWSRPConsumer=fetchStagedModelByUuidAndCompanyId(wsrpConsumer.getUuid(),portletDataContext.getCompanyId());
+    WSRPConsumer existingWSRPConsumer=WSRPConsumerLocalServiceUtil.fetchWSRPConsumerByUuidAndCompanyId(wsrpConsumer.getUuid(),portletDataContext.getCompanyId());
     if (existingWSRPConsumer == null) {
       serviceContext.setUuid(wsrpConsumer.getUuid());
       importedWSRPConsumer=WSRPConsumerLocalServiceUtil.addWSRPConsumer(portletDataContext.getCompanyId(),null,wsrpConsumer.getName(),wsrpConsumer.getUrl(),wsrpConsumer.getForwardCookies(),wsrpConsumer.getForwardHeaders(),wsrpConsumer.getMarkupCharacterSets(),serviceContext);
