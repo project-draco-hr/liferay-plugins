@@ -6,6 +6,8 @@
     }
     HttpResponse httpResponse=null;
     if ((_login != null) && (_password != null)) {
+      HttpClientContext httpClientContext=HttpClientContext.create();
+      AuthCache authCache=new BasicAuthCache();
       AuthScheme authScheme=null;
       if (_proxyHostName != null) {
         authScheme=new BasicScheme(ChallengeState.PROXY);
@@ -13,9 +15,7 @@
  else {
         authScheme=new BasicScheme(ChallengeState.TARGET);
       }
-      AuthCache authCache=new BasicAuthCache();
       authCache.put(httpHost,authScheme);
-      HttpClientContext httpClientContext=HttpClientContext.create();
       httpClientContext.setAttribute(ClientContext.AUTH_CACHE,authCache);
       httpResponse=_closeableHttpClient.execute(httpHost,httpRequestBase,httpClientContext);
     }
