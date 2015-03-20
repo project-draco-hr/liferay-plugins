@@ -2,9 +2,9 @@
   HttpClientBuilder httpClientBuilder=HttpClients.custom();
   HttpClientConnectionManager httpClientConnectionManager=getPoolingHttpClientConnectionManager();
   httpClientBuilder.setConnectionManager(httpClientConnectionManager);
-  if (((_login != null) && (_password != null)) || ((_proxyLogin != null) && (_proxyPassword != null))) {
+  if ((!isNull(_login) && !isNull(_password)) || (!isNull(_proxyLogin) && !isNull(_proxyPassword))) {
     CredentialsProvider credentialsProvider=new BasicCredentialsProvider();
-    if (_login != null) {
+    if (!isNull(_login)) {
       credentialsProvider.setCredentials(new AuthScope(_hostName,_hostPort),new UsernamePasswordCredentials(_login,_password));
     }
  else {
@@ -12,7 +12,7 @@
         _logger.info("No credentials are used");
       }
     }
-    if (_proxyLogin != null) {
+    if (!isNull(_proxyLogin)) {
       credentialsProvider.setCredentials(new AuthScope(_proxyHostName,_proxyHostPort),new UsernamePasswordCredentials(_proxyLogin,_proxyPassword));
     }
     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
