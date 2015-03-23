@@ -5,15 +5,14 @@
     int total=(int)searchCount(searchContext,query);
     int start=searchContext.getStart();
     int end=searchContext.getEnd();
-    if ((searchContext.getStart() == QueryUtil.ALL_POS) && (searchContext.getEnd() == QueryUtil.ALL_POS)) {
+    if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
       start=0;
       end=total;
     }
     int[] startAndEnd=SearchPaginationUtil.calculateStartAndEnd(start,end,total);
     start=startAndEnd[0];
     end=startAndEnd[1];
-    QueryResponse queryResponse=search(searchContext,query,start,end,false);
-    Hits hits=processQueryResponse(queryResponse,searchContext,query);
+    Hits hits=doSearchHits(searchContext,query,start,end);
     hits.setStart(stopWatch.getStartTime());
     return hits;
   }
@@ -22,7 +21,7 @@
       _log.warn(e,e);
     }
     if (!_swallowException) {
-      throw new SearchException(e.getMessage());
+      throw new SearchException(e.getMessage(),e);
     }
     return new HitsImpl();
   }
