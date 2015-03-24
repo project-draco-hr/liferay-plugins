@@ -1,5 +1,8 @@
 {
   FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  if (fileEntry.isInTrash()) {
+    throw new NoSuchFileEntryException();
+  }
   if (Validator.isNull(version)) {
     version=fileEntry.getVersion();
   }

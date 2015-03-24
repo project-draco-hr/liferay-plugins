@@ -1,5 +1,8 @@
 {
   FileEntry fileEntry=DLAppServiceUtil.getFileEntryByUuidAndGroupId(uuid,groupId);
+  if (fileEntry.isInTrash()) {
+    throw new NoSuchFileEntryException();
+  }
   DLFileVersion sourceDLFileVersion=DLFileVersionLocalServiceUtil.getDLFileVersion(sourceVersionId);
   DLFileVersion targetDLFileVersion=DLFileVersionLocalServiceUtil.getDLFileVersion(targetVersionId);
   if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
