@@ -1,0 +1,34 @@
+{
+  if (indexer == null) {
+    throw new Exception("No indexer found for " + controllerPath);
+  }
+  AlloySearchResult alloySearchResult=new AlloySearchResult();
+  alloySearchResult.setAlloyServiceInvoker(alloyServiceInvoker);
+  SearchContext searchContext=SearchContextFactory.getInstance(request);
+  boolean andOperator=ParamUtil.getBoolean(request,"andOperator");
+  searchContext.setAndSearch(andOperator);
+  if ((attributes != null) && !attributes.isEmpty()) {
+    searchContext.setAttributes(attributes);
+  }
+  searchContext.setEnd(end);
+  Class<?> indexerClass=Class.forName(indexer.getClassNames()[0]);
+  if (!GroupedModel.class.isAssignableFrom(indexerClass)) {
+    searchContext.setGroupIds(null);
+  }
+ else   if (searchContext.getAttribute(Field.GROUP_ID) != null) {
+    long groupId=GetterUtil.getLong(searchContext.getAttribute(Field.GROUP_ID));
+    searchContext.setGroupIds(new long[]{groupId});
+  }
+  if (Validator.isNotNull(keywords)) {
+    searchContext.setKeywords(keywords);
+  }
+  if (ArrayUtil.isNotEmpty(sorts)) {
+    searchContext.setSorts(sorts);
+  }
+  searchContext.setStart(start);
+  Hits hits=indexer.search(searchContext);
+  alloySearchResult.setHits(hits);
+  alloySearchResult.setPortletURL(portletURL,searchContext.getAttributes());
+  alloySearchResult.afterPropertiesSet();
+  return alloySearchResult;
+}
