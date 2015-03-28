@@ -22,5 +22,15 @@
   syncDLObject.setType(SyncConstants.TYPE_FOLDER);
   syncDLObject.setTypePK(dlFolder.getFolderId());
   syncDLObject.setTypeUuid(dlFolder.getUuid());
+  long userId=0;
+  String userName=StringPool.BLANK;
+  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+  if (permissionChecker != null) {
+    User user=permissionChecker.getUser();
+    userId=user.getUserId();
+    userName=user.getFullName();
+  }
+  syncDLObject.setUserId(userId);
+  syncDLObject.setUserName(userName);
   return syncDLObject;
 }
