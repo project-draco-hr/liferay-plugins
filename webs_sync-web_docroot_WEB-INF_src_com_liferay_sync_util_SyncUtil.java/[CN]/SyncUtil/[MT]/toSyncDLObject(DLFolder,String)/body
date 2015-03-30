@@ -1,6 +1,16 @@
 {
   SyncDLObject syncDLObject=new SyncDLObjectImpl();
   syncDLObject.setCompanyId(dlFolder.getCompanyId());
+  long userId=0;
+  String userName=StringPool.BLANK;
+  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+  if (permissionChecker != null) {
+    User user=permissionChecker.getUser();
+    userId=user.getUserId();
+    userName=user.getFullName();
+  }
+  syncDLObject.setUserId(userId);
+  syncDLObject.setUserName(userName);
   syncDLObject.setCreateDate(dlFolder.getCreateDate());
   syncDLObject.setModifiedDate(dlFolder.getModifiedDate());
   syncDLObject.setRepositoryId(dlFolder.getRepositoryId());
@@ -22,15 +32,5 @@
   syncDLObject.setType(SyncConstants.TYPE_FOLDER);
   syncDLObject.setTypePK(dlFolder.getFolderId());
   syncDLObject.setTypeUuid(dlFolder.getUuid());
-  long userId=0;
-  String userName=StringPool.BLANK;
-  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
-  if (permissionChecker != null) {
-    User user=permissionChecker.getUser();
-    userId=user.getUserId();
-    userName=user.getFullName();
-  }
-  syncDLObject.setUserId(userId);
-  syncDLObject.setUserName(userName);
   return syncDLObject;
 }
