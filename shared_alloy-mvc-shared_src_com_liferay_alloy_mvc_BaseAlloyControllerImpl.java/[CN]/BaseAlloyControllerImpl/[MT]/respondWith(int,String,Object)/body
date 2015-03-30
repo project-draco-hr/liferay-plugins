@@ -1,0 +1,32 @@
+{
+  Object data=null;
+  if (isRespondingTo("json")) {
+    if (object instanceof AlloySearchResult) {
+      Hits hits=((AlloySearchResult)object).getHits();
+      Document[] documents=hits.getDocs();
+      data=toJSONArray(documents);
+    }
+ else     if (object instanceof Collection) {
+      Object[] objects=((Collection)object).toArray(new BaseModel[0]);
+      data=toJSONArray(objects);
+    }
+ else     if (object instanceof JSONArray) {
+      data=object;
+    }
+ else {
+      data=toJSONObject(object);
+    }
+    if (Validator.isNotNull(key)) {
+      JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
+      if (data instanceof JSONArray) {
+        jsonObject.put(key,(JSONArray)data);
+      }
+ else {
+        jsonObject.put(key,(JSONObject)data);
+      }
+      data=jsonObject;
+    }
+  }
+  responseContent=buildResponseContent(data,StringPool.BLANK,status);
+  return true;
+}
