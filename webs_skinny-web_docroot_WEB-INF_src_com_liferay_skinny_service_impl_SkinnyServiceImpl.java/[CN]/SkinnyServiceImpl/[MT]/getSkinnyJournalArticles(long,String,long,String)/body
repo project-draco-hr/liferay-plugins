@@ -1,0 +1,24 @@
+{
+  List<SkinnyJournalArticle> skinnyJournalArticles=new ArrayList<>();
+  Group group=groupLocalService.getGroup(companyId,groupName);
+  DDMStructure ddmStructure=ddmStructureLocalService.getDDMStructure(ddmStructureId);
+  Set<String> journalArticleIds=new HashSet<>();
+  List<JournalArticle> journalArticles=journalArticleLocalService.getStructureArticles(group.getGroupId(),ddmStructure.getStructureKey());
+  for (  JournalArticle journalArticle : journalArticles) {
+    if (journalArticleIds.contains(journalArticle.getArticleId())) {
+      continue;
+    }
+    journalArticleIds.add(journalArticle.getArticleId());
+    try {
+      PermissionChecker permissionChecker=getPermissionChecker();
+      if (permissionChecker.hasPermission(group.getGroupId(),JournalArticle.class.getName(),journalArticle.getResourcePrimKey(),ActionKeys.VIEW)) {
+        JournalArticle latestJournalArticle=journalArticleLocalService.getLatestArticle(group.getGroupId(),journalArticle.getArticleId(),WorkflowConstants.STATUS_APPROVED);
+        SkinnyJournalArticle skinnyJournalArticle=getSkinnyJournalArticle(latestJournalArticle,locale);
+        skinnyJournalArticles.add(skinnyJournalArticle);
+      }
+    }
+ catch (    NoSuchArticleException nsae) {
+    }
+  }
+  return skinnyJournalArticles;
+}

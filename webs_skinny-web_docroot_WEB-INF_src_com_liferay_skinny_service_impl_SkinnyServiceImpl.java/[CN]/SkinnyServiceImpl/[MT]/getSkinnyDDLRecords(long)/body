@@ -1,0 +1,12 @@
+{
+  List<SkinnyDDLRecord> skinnyDDLRecords=new ArrayList<>();
+  PermissionChecker permissionChecker=getPermissionChecker();
+  DDLRecordSet ddlRecordSet=ddlRecordSetLocalService.getRecordSet(ddlRecordSetId);
+  if (permissionChecker.hasPermission(ddlRecordSet.getGroupId(),DDLRecordSet.class.getName(),ddlRecordSet.getRecordSetId(),ActionKeys.VIEW)) {
+    for (    DDLRecord ddlRecord : ddlRecordSet.getRecords()) {
+      SkinnyDDLRecord skinnyDDLRecord=getSkinnyDDLRecord(ddlRecord);
+      skinnyDDLRecords.add(skinnyDDLRecord);
+    }
+  }
+  return skinnyDDLRecords;
+}

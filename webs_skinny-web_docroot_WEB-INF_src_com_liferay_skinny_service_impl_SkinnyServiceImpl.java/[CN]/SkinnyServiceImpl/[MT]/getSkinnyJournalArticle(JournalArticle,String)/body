@@ -1,0 +1,14 @@
+{
+  SkinnyJournalArticle skinnyJournalArticle=new SkinnyJournalArticle();
+  String content=null;
+  if (ArrayUtil.contains(journalArticle.getAvailableLocales(),locale)) {
+    content=journalArticle.getContentByLocale(locale);
+  }
+ else {
+    content=journalArticle.getContent();
+  }
+  Document document=SAXReaderUtil.read(content);
+  Element rootElement=document.getRootElement();
+  populateSkinnyJournalArticle(skinnyJournalArticle,rootElement);
+  return skinnyJournalArticle;
+}
