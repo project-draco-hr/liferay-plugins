@@ -59,6 +59,6 @@
   updateAsset(userId,calendarBooking,serviceContext.getAssetCategoryIds(),serviceContext.getAssetTagNames(),serviceContext.getAssetLinkEntryIds());
   socialActivityLocalService.addActivity(userId,calendarBooking.getGroupId(),CalendarBooking.class.getName(),calendarBookingId,CalendarActivityKeys.ADD_CALENDAR_BOOKING,getExtraDataJSON(calendarBooking),0);
   sendNotification(calendarBooking,NotificationTemplateType.INVITE,serviceContext);
-  calendarBooking=startWorkflowInstance(userId,calendarBooking,serviceContext);
+  WorkflowHandlerRegistryUtil.startWorkflowInstance(calendarBooking.getCompanyId(),calendarBooking.getGroupId(),userId,CalendarBooking.class.getName(),calendarBooking.getCalendarBookingId(),calendarBooking,serviceContext);
   return calendarBooking;
 }
