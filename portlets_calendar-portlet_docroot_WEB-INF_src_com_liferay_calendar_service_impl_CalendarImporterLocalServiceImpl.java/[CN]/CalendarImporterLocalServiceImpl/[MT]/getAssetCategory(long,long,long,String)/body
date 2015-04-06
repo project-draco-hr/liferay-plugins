@@ -9,11 +9,11 @@
   }
   serviceContext.setUserId(userId);
   if (assetVocabulary == null) {
-    assetVocabulary=assetVocabularyLocalService.addVocabulary(userId,_ASSET_VOCABULARY_NAME,serviceContext);
+    assetVocabulary=assetVocabularyLocalService.addVocabulary(userId,groupId,_ASSET_VOCABULARY_NAME,serviceContext);
   }
   AssetCategory assetCategory=assetCategoryPersistence.fetchByP_N_V(AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,name,assetVocabulary.getVocabularyId());
   if (assetCategory != null) {
     return assetCategory;
   }
-  return assetCategoryLocalService.addCategory(userId,name,assetVocabulary.getVocabularyId(),serviceContext);
+  return assetCategoryLocalService.addCategory(userId,groupId,name,assetVocabulary.getVocabularyId(),serviceContext);
 }
