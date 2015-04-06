@@ -1,10 +1,10 @@
 {
-  Userinfoplus userinfo=getUserinfo(credential);
-  if (userinfo == null) {
+  Userinfoplus userinfoplus=getUserinfoplus(credential);
+  if (userinfoplus == null) {
     return null;
   }
   User user=null;
-  String emailAddress=userinfo.getEmail();
+  String emailAddress=userinfoplus.getEmail();
   if ((user == null) && Validator.isNotNull(emailAddress)) {
     user=UserLocalServiceUtil.fetchUserByEmailAddress(companyId,emailAddress);
     if ((user != null) && (user.getStatus() != WorkflowConstants.STATUS_INCOMPLETE)) {
@@ -13,19 +13,19 @@
   }
   if (user != null) {
     if (user.getStatus() == WorkflowConstants.STATUS_INCOMPLETE) {
-      session.setAttribute(WebKeys.GOOGLE_INCOMPLETE_USER_ID,userinfo.getId());
-      user.setEmailAddress(userinfo.getEmail());
-      user.setFirstName(userinfo.getGivenName());
-      user.setLastName(userinfo.getFamilyName());
+      session.setAttribute(WebKeys.GOOGLE_INCOMPLETE_USER_ID,userinfoplus.getId());
+      user.setEmailAddress(userinfoplus.getEmail());
+      user.setFirstName(userinfoplus.getGivenName());
+      user.setLastName(userinfoplus.getFamilyName());
       return user;
     }
-    user=updateUser(user,userinfo);
+    user=updateUser(user,userinfoplus);
   }
  else {
-    user=addUser(session,companyId,userinfo);
+    user=addUser(session,companyId,userinfoplus);
   }
   if (DeployManagerUtil.isDeployed(_GOOGLE_DRIVE_CONTEXT)) {
-    updateExpandoValues(user,userinfo,credential.getAccessToken(),credential.getRefreshToken());
+    updateExpandoValues(user,userinfoplus,credential.getAccessToken(),credential.getRefreshToken());
   }
   return user;
 }
