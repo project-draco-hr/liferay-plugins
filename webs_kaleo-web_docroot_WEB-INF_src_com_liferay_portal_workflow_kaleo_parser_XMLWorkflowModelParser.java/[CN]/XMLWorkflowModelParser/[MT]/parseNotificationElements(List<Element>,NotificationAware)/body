@@ -14,12 +14,10 @@
     for (    Element notificationTypeElement : notificationTypeElements) {
       notification.addNotificationType(notificationTypeElement.getText());
     }
-    Element bccRecipientsElement=notificationElement.element("bcc-recipients");
-    parseRecipients(bccRecipientsElement,notification,NotificationConstants.EMAIL_RECIPIENT_TYPE.BCC.type);
-    Element ccRecipientsElement=notificationElement.element("cc-recipients");
-    parseRecipients(ccRecipientsElement,notification,NotificationConstants.EMAIL_RECIPIENT_TYPE.CC.type);
-    Element recipientsElement=notificationElement.element("recipients");
-    parseRecipients(recipientsElement,notification,NotificationConstants.EMAIL_RECIPIENT_TYPE.TO.type);
+    List<Element> recipientsElements=notificationElement.elements("recipients");
+    for (    Element recipientsElement : recipientsElements) {
+      parseRecipients(recipientsElement,notification,NotificationReceptionType.parse(recipientsElement.attributeValue("receptionType")));
+    }
     notifications.add(notification);
   }
   notificationAware.setNotifications(notifications);

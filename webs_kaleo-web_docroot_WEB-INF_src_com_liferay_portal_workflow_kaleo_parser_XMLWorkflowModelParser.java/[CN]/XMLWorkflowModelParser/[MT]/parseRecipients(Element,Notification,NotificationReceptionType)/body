@@ -5,13 +5,13 @@
   List<Element> addressRecipientElements=recipientsElement.elements("address");
   for (  Element addressRecipientElement : addressRecipientElements) {
     AddressRecipient addressRecipient=new AddressRecipient(addressRecipientElement.getText());
-    addressRecipient.setEmailRecipientType(recipientType);
+    addressRecipient.setNotificationReceptionType(notificationReceptionType);
     notification.addRecipients(addressRecipient);
   }
   Element assigneesRecipientElement=recipientsElement.element("assignees");
   if (assigneesRecipientElement != null) {
     AssigneesRecipient assigneesRecipient=new AssigneesRecipient();
-    assigneesRecipient.setEmailRecipientType(recipientType);
+    assigneesRecipient.setNotificationReceptionType(notificationReceptionType);
     notification.addRecipients(assigneesRecipient);
   }
   Element rolesElement=recipientsElement.element("roles");
@@ -30,7 +30,7 @@
         boolean autoCreate=GetterUtil.getBoolean(roleReceipientElement.elementText("auto-create"),true);
         roleRecipient.setAutoCreate(autoCreate);
       }
-      roleRecipient.setEmailRecipientType(recipientType);
+      roleRecipient.setNotificationReceptionType(notificationReceptionType);
       notification.addRecipients(roleRecipient);
     }
   }
@@ -40,7 +40,7 @@
     String scriptLanguage=scriptedRecipientElement.elementText("script-language");
     String scriptRequiredContexts=scriptedRecipientElement.elementText("script-required-contexts");
     ScriptRecipient scriptRecipient=new ScriptRecipient(script,scriptLanguage,scriptRequiredContexts);
-    scriptRecipient.setEmailRecipientType(recipientType);
+    scriptRecipient.setNotificationReceptionType(notificationReceptionType);
     notification.addRecipients(scriptRecipient);
   }
   List<Element> userRecipientElements=recipientsElement.elements("user");
@@ -49,7 +49,7 @@
     String screenName=userRecipientElement.elementText("screen-name");
     String emailAddress=userRecipientElement.elementText("email-address");
     UserRecipient userRecipient=new UserRecipient(userId,screenName,emailAddress);
-    userRecipient.setEmailRecipientType(recipientType);
+    userRecipient.setNotificationReceptionType(notificationReceptionType);
     notification.addRecipients(userRecipient);
   }
 }

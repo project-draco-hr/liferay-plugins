@@ -2,16 +2,8 @@
   if (recipients.isEmpty()) {
     return;
   }
-  Element recipientsElement=null;
-  if (emailRecipientType == NotificationConstants.EMAIL_RECIPIENT_TYPE.BCC.type) {
-    recipientsElement=notificationElement.addElement("bcc-recipients");
-  }
- else   if (emailRecipientType == NotificationConstants.EMAIL_RECIPIENT_TYPE.CC.type) {
-    recipientsElement=notificationElement.addElement("cc-recipients");
-  }
- else {
-    recipientsElement=notificationElement.addElement("recipients");
-  }
+  Element recipientsElement=notificationElement.addElement("recipients");
+  recipientsElement.addAttribute("receptionType",notificationReceptionType.getValue());
   Element rolesElement=null;
   for (  Recipient recipient : recipients) {
     RecipientType recipientType=recipient.getRecipientType();
