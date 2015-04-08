@@ -6,13 +6,11 @@
   List<KaleoTaskAssignmentInstance> kaleoTaskAssignmentInstances=kaleoTaskInstanceToken.getKaleoTaskAssignmentInstances();
   for (  KaleoTaskAssignmentInstance kaleoTaskAssignmentInstance : kaleoTaskAssignmentInstances) {
     String assigneeClassName=kaleoTaskAssignmentInstance.getAssigneeClassName();
+    RecipientType recipientType=RecipientType.ROLE;
     if (assigneeClassName.equals(User.class.getName())) {
-      addUserNotificationRecipient(notificationRecipients,kaleoTaskAssignmentInstance.getAssigneeClassPK(),notificationReceptionType,executionContext);
+      recipientType=RecipientType.USER;
     }
- else {
-      long roleId=kaleoTaskAssignmentInstance.getAssigneeClassPK();
-      Role role=RoleLocalServiceUtil.getRole(roleId);
-      addRoleRecipientAddresses(notificationRecipients,roleId,role.getType(),notificationReceptionType,executionContext);
-    }
+    NotificationRecipientBuilder notificationRecipientBuilder=_notificationRecipientBuilderRegistry.getKaleoNotificationRecipientHandler(recipientType);
+    notificationRecipientBuilder.processKaleoTaskAssignmentInstance(notificationRecipients,kaleoTaskAssignmentInstance,notificationReceptionType,executionContext);
   }
 }

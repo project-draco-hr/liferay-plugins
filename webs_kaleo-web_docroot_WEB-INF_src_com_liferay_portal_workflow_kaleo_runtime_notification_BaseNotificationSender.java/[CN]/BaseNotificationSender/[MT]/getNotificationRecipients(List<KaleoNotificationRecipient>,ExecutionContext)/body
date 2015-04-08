@@ -2,35 +2,16 @@
   Map<NotificationReceptionType,Set<NotificationRecipient>> notificationRecipients=new HashMap<>();
   if (kaleoNotificationRecipients.isEmpty()) {
     Set<NotificationRecipient> notificationRecipientsSet=retrieveNotificationRecipients(notificationRecipients,NotificationReceptionType.TO);
-    addAssignedRecipients(notificationRecipientsSet,NotificationReceptionType.TO,executionContext);
+    NotificationRecipientBuilder notificationRecipientBuilder=_notificationRecipientBuilderRegistry.getKaleoNotificationRecipientHandler(RecipientType.ASSIGNEES);
+    notificationRecipientBuilder.processKaleoNotificationRecipient(notificationRecipientsSet,null,NotificationReceptionType.TO,executionContext);
     return notificationRecipients;
   }
   for (  KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
-    String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
     NotificationReceptionType notificationReceptionType=NotificationReceptionType.parse(kaleoNotificationRecipient.getReceiptionType());
     Set<NotificationRecipient> notificationRecipientsSet=retrieveNotificationRecipients(notificationRecipients,notificationReceptionType);
-    if (recipientClassName.equals(RecipientType.ADDRESS.name())) {
-      String address=kaleoNotificationRecipient.getAddress();
-      NotificationRecipient notificationRecipient=new NotificationRecipient(address,notificationReceptionType);
-      notificationRecipientsSet.add(notificationRecipient);
-    }
- else     if (recipientClassName.equals(RecipientType.ASSIGNEES.name())) {
-      addAssignedRecipients(notificationRecipientsSet,notificationReceptionType,executionContext);
-    }
- else     if (recipientClassName.equals(Role.class.getName())) {
-      addRoleRecipientAddresses(notificationRecipientsSet,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),notificationReceptionType,executionContext);
-    }
- else     if (recipientClassName.equals(RecipientType.SCRIPT.name())) {
-      addScriptRecipientAddresses(notificationRecipientsSet,kaleoNotificationRecipient.getRecipientScript(),kaleoNotificationRecipient.getRecipientScriptLanguage(),kaleoNotificationRecipient.getRecipientScriptRequiredContexts(),notificationReceptionType,executionContext);
-    }
- else     if (recipientClassName.equals(User.class.getName())) {
-      addUserNotificationRecipient(notificationRecipientsSet,kaleoNotificationRecipient.getRecipientClassPK(),notificationReceptionType,executionContext);
-    }
- else {
-      if (_log.isWarnEnabled()) {
-        _log.warn("Unsupported recipient " + kaleoNotificationRecipient);
-      }
-    }
+    RecipientType recipientType=RecipientType.valueOf(kaleoNotificationRecipient.getRecipientClassName());
+    NotificationRecipientBuilder notificationRecipientBuilder=_notificationRecipientBuilderRegistry.getKaleoNotificationRecipientHandler(recipientType);
+    notificationRecipientBuilder.processKaleoNotificationRecipient(notificationRecipientsSet,kaleoNotificationRecipient,notificationReceptionType,executionContext);
   }
   return notificationRecipients;
 }
