@@ -14,8 +14,8 @@
     subject=defaultSubject;
   }
   MailMessage mailMessage=new MailMessage(from,subject,notificationMessage,true);
-  mailMessage.setTo(getInternetAddresses(notificationRecipients,NotificationConstants.EMAIL_RECIPIENT_TYPE.TO.type));
-  mailMessage.setCC(getInternetAddresses(notificationRecipients,NotificationConstants.EMAIL_RECIPIENT_TYPE.CC.type));
-  mailMessage.setBCC(getInternetAddresses(notificationRecipients,NotificationConstants.EMAIL_RECIPIENT_TYPE.BCC.type));
+  mailMessage.setTo(getInternetAddresses(notificationRecipients.get(NotificationReceptionType.TO)));
+  mailMessage.setCC(getInternetAddresses(notificationRecipients.get(NotificationReceptionType.CC)));
+  mailMessage.setBCC(getInternetAddresses(notificationRecipients.get(NotificationReceptionType.BCC)));
   MailServiceUtil.sendEmail(mailMessage);
 }
