@@ -1,28 +1,28 @@
 {
   Set<NotificationRecipient> notificationRecipients=new HashSet<>();
   if (kaleoNotificationRecipients.isEmpty()) {
-    addAssignedRecipients(notificationRecipients,NotificationConstants.EMAIL_RECIPIENT_TYPE.TO.type,executionContext);
+    addAssignedRecipients(notificationRecipients,NotificationReceptionType.TO,executionContext);
     return notificationRecipients;
   }
   for (  KaleoNotificationRecipient kaleoNotificationRecipient : kaleoNotificationRecipients) {
     String recipientClassName=kaleoNotificationRecipient.getRecipientClassName();
+    NotificationReceptionType notificationReceptionType=NotificationReceptionType.parse(kaleoNotificationRecipient.getReceiptionType());
     if (recipientClassName.equals(RecipientType.ADDRESS.name())) {
       String address=kaleoNotificationRecipient.getAddress();
-      int emailRecipientType=kaleoNotificationRecipient.getEmailRecipientType();
-      NotificationRecipient notificationRecipient=new NotificationRecipient(address,emailRecipientType);
+      NotificationRecipient notificationRecipient=new NotificationRecipient(address,notificationReceptionType);
       notificationRecipients.add(notificationRecipient);
     }
  else     if (recipientClassName.equals(RecipientType.ASSIGNEES.name())) {
-      addAssignedRecipients(notificationRecipients,kaleoNotificationRecipient.getEmailRecipientType(),executionContext);
+      addAssignedRecipients(notificationRecipients,notificationReceptionType,executionContext);
     }
  else     if (recipientClassName.equals(Role.class.getName())) {
-      addRoleRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),kaleoNotificationRecipient.getEmailRecipientType(),executionContext);
+      addRoleRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getRecipientRoleType(),notificationReceptionType,executionContext);
     }
  else     if (recipientClassName.equals(RecipientType.SCRIPT.name())) {
-      addScriptRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientScript(),kaleoNotificationRecipient.getRecipientScriptLanguage(),kaleoNotificationRecipient.getRecipientScriptRequiredContexts(),kaleoNotificationRecipient.getEmailRecipientType(),executionContext);
+      addScriptRecipientAddresses(notificationRecipients,kaleoNotificationRecipient.getRecipientScript(),kaleoNotificationRecipient.getRecipientScriptLanguage(),kaleoNotificationRecipient.getRecipientScriptRequiredContexts(),notificationReceptionType,executionContext);
     }
  else     if (recipientClassName.equals(User.class.getName())) {
-      addUserNotificationRecipient(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),kaleoNotificationRecipient.getEmailRecipientType(),executionContext);
+      addUserNotificationRecipient(notificationRecipients,kaleoNotificationRecipient.getRecipientClassPK(),notificationReceptionType,executionContext);
     }
  else {
       if (_log.isWarnEnabled()) {
