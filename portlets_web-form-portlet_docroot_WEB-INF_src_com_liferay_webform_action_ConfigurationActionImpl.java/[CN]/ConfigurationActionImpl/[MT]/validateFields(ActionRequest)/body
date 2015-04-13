@@ -20,13 +20,16 @@
       SessionErrors.add(actionRequest,"emailAddressInvalid");
     }
     String[] emailAdresses=WebFormUtil.split(getParameter(actionRequest,"emailAddress"));
-    if (emailAdresses.length == 0) {
+    if (!SessionErrors.contains(actionRequest,"emailAddressRequired") && emailAdresses.length == 0) {
       SessionErrors.add(actionRequest,"emailAddressRequired");
     }
-    for (    String emailAdress : emailAdresses) {
-      emailAdress=emailAdress.trim();
-      if (!Validator.isEmailAddress(emailAdress)) {
-        SessionErrors.add(actionRequest,"emailAddressInvalid");
+    if (!SessionErrors.contains(actionRequest,"emailAddressInvalid")) {
+      for (      String emailAdress : emailAdresses) {
+        emailAdress=emailAdress.trim();
+        if (!Validator.isEmailAddress(emailAdress)) {
+          SessionErrors.add(actionRequest,"emailAddressInvalid");
+          break;
+        }
       }
     }
   }
