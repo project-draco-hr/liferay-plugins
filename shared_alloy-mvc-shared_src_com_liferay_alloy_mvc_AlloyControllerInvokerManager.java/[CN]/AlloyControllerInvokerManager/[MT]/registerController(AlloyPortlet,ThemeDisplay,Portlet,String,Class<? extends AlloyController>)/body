@@ -1,0 +1,26 @@
+{
+synchronized (_alloyControllerInvokers) {
+    if (_alloyControllerInvokers.containsKey(controller)) {
+      AlloyControllerInvoker alloyControllerInvoker=_alloyControllerInvokers.get(controller);
+      JSONWebServiceActionsManagerUtil.unregisterJSONWebServiceActions(alloyControllerInvoker);
+    }
+    Class<? extends AlloyControllerInvoker> alloyControllerInvokerClass=null;
+    AlloyControllerInvoker alloyControllerInvoker=null;
+    try {
+      alloyControllerInvokerClass=createAlloyControllerInvokerClass(alloyControllerClass);
+      Constructor<? extends AlloyControllerInvoker> constructor=alloyControllerInvokerClass.getConstructor();
+      alloyControllerInvoker=constructor.newInstance();
+      alloyControllerInvoker.setProperties(alloyPortlet,themeDisplay,portlet,alloyControllerClass,controller);
+      _alloyControllerInvokers.put(controller,alloyControllerInvoker);
+    }
+ catch (    NoClassNecessaryException ncne) {
+      return;
+    }
+catch (    Exception e) {
+      throw new RuntimeException(e);
+    }
+    for (    Method method : alloyControllerInvokerClass.getDeclaredMethods()) {
+      JSONWebServiceActionsManagerUtil.registerJSONWebServiceAction(_contextPath,alloyControllerInvoker,alloyControllerInvokerClass,method,getAPIPath(controller,method),"GET");
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  boolean jsonWebServiceMethodsPresent=false;
+  ClassWriter classWriter=new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+  String alloyControllerInvokerClassBinaryName=getClassBinaryName(alloyControllerInvokerClassName);
+  String baseAlloyControllerInvokerClassBinaryName=getClassBinaryName(BaseAlloyControllerInvokerImpl.class.getName());
+  classWriter.visit(Opcodes.V1_5,Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER,alloyControllerInvokerClassBinaryName,null,baseAlloyControllerInvokerClassBinaryName,null);
+  MethodVisitor methodVisitor=classWriter.visitMethod(Opcodes.ACC_PUBLIC,"<init>","()V",null,null);
+  methodVisitor.visitCode();
+  methodVisitor.visitVarInsn(Opcodes.ALOAD,0);
+  methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL,baseAlloyControllerInvokerClassBinaryName,"<init>","()V");
+  methodVisitor.visitInsn(Opcodes.RETURN);
+  methodVisitor.visitMaxs(1,1);
+  methodVisitor.visitEnd();
+  Method[] methods=alloyControllerClass.getDeclaredMethods();
+  for (  Method method : methods) {
+    if (!Modifier.isPublic(method.getModifiers())) {
+      continue;
+    }
+    JSONWebServiceMethod jsonWebServiceMethod=method.getAnnotation(JSONWebServiceMethod.class);
+    if (jsonWebServiceMethod == null) {
+      continue;
+    }
+    jsonWebServiceMethodsPresent=true;
+    JSONWebServiceParameter[] jsonWebServiceParameters=jsonWebServiceMethod.parameters();
+    StringBundler sb=new StringBundler(jsonWebServiceParameters.length + 3);
+    sb.append(StringPool.OPEN_PARENTHESIS);
+    for (    JSONWebServiceParameter jsonWebServiceParameter : jsonWebServiceParameters) {
+      sb.append(Type.getDescriptor(jsonWebServiceParameter.type()));
+    }
+    sb.append(StringPool.CLOSE_PARENTHESIS);
+    sb.append(Type.getDescriptor(String.class));
+    String methodDescriptor=sb.toString();
+    methodVisitor=classWriter.visitMethod(Opcodes.ACC_PUBLIC,method.getName(),methodDescriptor,null,new String[]{getClassBinaryName(Exception.class.getName())});
+    methodVisitor.visitCode();
+    for (int i=0; i < jsonWebServiceParameters.length; i++) {
+      JSONWebServiceParameter jsonWebServiceParameter=jsonWebServiceParameters[i];
+      methodVisitor.visitLocalVariable(jsonWebServiceParameter.name(),Type.getDescriptor(jsonWebServiceParameter.type()),null,new Label(),new Label(),i + 1);
+    }
+    methodVisitor.visitVarInsn(Opcodes.ALOAD,0);
+    methodVisitor.visitLdcInsn(jsonWebServiceMethod.lifecycle());
+    methodVisitor.visitIntInsn(Opcodes.BIPUSH,jsonWebServiceParameters.length * 2 + 2);
+    methodVisitor.visitTypeInsn(Opcodes.ANEWARRAY,getClassBinaryName(Object.class.getName()));
+    methodVisitor.visitInsn(Opcodes.DUP);
+    methodVisitor.visitInsn(Opcodes.ICONST_0);
+    methodVisitor.visitLdcInsn("action");
+    methodVisitor.visitInsn(Opcodes.AASTORE);
+    methodVisitor.visitInsn(Opcodes.DUP);
+    methodVisitor.visitInsn(Opcodes.ICONST_1);
+    methodVisitor.visitLdcInsn(method.getName());
+    methodVisitor.visitInsn(Opcodes.AASTORE);
+    for (int i=0; i < jsonWebServiceParameters.length; i++) {
+      JSONWebServiceParameter jsonWebServiceParameter=jsonWebServiceParameters[i];
+      methodVisitor.visitInsn(Opcodes.DUP);
+      methodVisitor.visitIntInsn(Opcodes.BIPUSH,(i + 1) * 2);
+      methodVisitor.visitLdcInsn(jsonWebServiceParameter.name());
+      methodVisitor.visitInsn(Opcodes.AASTORE);
+      methodVisitor.visitInsn(Opcodes.DUP);
+      methodVisitor.visitIntInsn(Opcodes.BIPUSH,(i + 1) * 2 + 1);
+      methodVisitor.visitVarInsn(Opcodes.ALOAD,i + 1);
+      methodVisitor.visitInsn(Opcodes.AASTORE);
+    }
+    methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL,alloyControllerInvokerClassBinaryName,"invokeAlloyController","(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;");
+    methodVisitor.visitInsn(Opcodes.ARETURN);
+    methodVisitor.visitMaxs(-1,-1);
+    methodVisitor.visitEnd();
+  }
+  classWriter.visitEnd();
+  if (!jsonWebServiceMethodsPresent) {
+    throw new NoClassNecessaryException();
+  }
+  return classWriter.toByteArray();
+}

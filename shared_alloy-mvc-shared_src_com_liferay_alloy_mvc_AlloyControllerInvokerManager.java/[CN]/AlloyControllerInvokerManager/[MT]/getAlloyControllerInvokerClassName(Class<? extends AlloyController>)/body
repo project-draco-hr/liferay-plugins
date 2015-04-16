@@ -1,0 +1,18 @@
+{
+  Package classPackage=alloyControllerClass.getPackage();
+  String simpleName=StringPool.BLANK;
+  Class<?> enclosingClass=alloyControllerClass.getEnclosingClass();
+  if (enclosingClass != null) {
+    String name=StringUtil.replace(enclosingClass.getSimpleName(),"005f",StringPool.BLANK);
+    int trimIndex=name.indexOf("_controller");
+    String[] wordElements=StringUtil.split(name.substring(0,trimIndex),CharPool.UNDERLINE);
+    for (    String wordElement : wordElements) {
+      simpleName=simpleName.concat(StringUtil.upperCaseFirstLetter(wordElement));
+    }
+    simpleName=simpleName.concat(_BASE_CLASS_NAME);
+  }
+ else {
+    simpleName=_BASE_CLASS_NAME + _counter.getAndIncrement();
+  }
+  return classPackage.getName() + StringPool.PERIOD + simpleName;
+}

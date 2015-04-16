@@ -1,5 +1,8 @@
 {
   BaseAlloyControllerImpl baseAlloyControllerImpl=(BaseAlloyControllerImpl)alloyController;
   String controllerPath=baseAlloyControllerImpl.controllerPath;
-  _alloyControllers.put(controllerPath,baseAlloyControllerImpl);
+  if (!baseAlloyControllerImpl.equals(_alloyControllers.get(controllerPath))) {
+    _alloyControllers.put(controllerPath,baseAlloyControllerImpl);
+    _alloyControllerInvokerManager.registerController(this,baseAlloyControllerImpl.getThemeDisplay(),baseAlloyControllerImpl.portlet,controllerPath,baseAlloyControllerImpl.getClass());
+  }
 }

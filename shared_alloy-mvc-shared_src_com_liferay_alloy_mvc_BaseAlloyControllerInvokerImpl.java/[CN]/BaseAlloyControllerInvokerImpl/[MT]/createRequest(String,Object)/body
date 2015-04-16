@@ -1,0 +1,36 @@
+{
+  if ((parameters.length % 2) != 0) {
+    throw new IllegalArgumentException("Parameters length is not an even number");
+  }
+  HttpServletRequestWrapper requestWrapper=new HttpServletRequestWrapper(new AlloyMockUtil.MockHttpServletRequest());
+  DynamicServletRequest request=new DynamicServletRequest(requestWrapper,false);
+  for (int i=0; i < parameters.length; i+=2) {
+    request.appendParameter(String.valueOf(parameters[i]),String.valueOf(parameters[i + 1]));
+  }
+  request.appendParameter("controller",_controller);
+  request.appendParameter("format","json");
+  ThemeDisplay themeDisplay=(ThemeDisplay)_themeDisplay.clone();
+  PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
+  User user=UserLocalServiceUtil.getUser(permissionChecker.getUserId());
+  themeDisplay.setUser(user);
+  request.setAttribute(WebKeys.THEME_DISPLAY,themeDisplay);
+  request.setAttribute(WebKeys.LAYOUT,themeDisplay.getLayout());
+  LiferayPortletConfig liferayPortletConfig=(LiferayPortletConfig)PortletConfigFactoryUtil.create(_portlet,null);
+  request.setAttribute(JavaConstants.JAVAX_PORTLET_CONFIG,liferayPortletConfig);
+  request.setAttribute(JavaConstants.JAVAX_PORTLET_PORTLET,_alloyPortlet);
+  PortletRequest portletRequest=null;
+  PortletResponse portletResponse=null;
+  if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
+    portletRequest=createActionRequest();
+    portletResponse=createActionResponse();
+  }
+ else {
+    portletRequest=createRenderRequest();
+    portletResponse=createRenderResponse(request,_portlet.getRootPortletId(),themeDisplay.getPlid(),lifecycle);
+  }
+  request.setAttribute(JavaConstants.JAVAX_PORTLET_REQUEST,portletRequest);
+  request.setAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE,portletResponse);
+  request.setAttribute(PortletRequest.LIFECYCLE_PHASE,lifecycle);
+  request.setAttribute(BaseAlloyControllerImpl.VIEW_PATH,StringPool.BLANK);
+  return request;
+}

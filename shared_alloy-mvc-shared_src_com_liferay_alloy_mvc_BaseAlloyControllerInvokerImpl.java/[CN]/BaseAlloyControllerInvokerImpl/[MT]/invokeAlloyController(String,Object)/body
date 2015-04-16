@@ -1,0 +1,11 @@
+{
+  Constructor<? extends AlloyController> constructor=_controllerClass.getConstructor();
+  AlloyController alloyController=constructor.newInstance();
+  ServletRequest request=createRequest(lifecycle,parameters);
+  ServletResponse response=createResponse();
+  PageContext pageContext=createPageContext(request,response);
+  alloyController.setPageContext(pageContext);
+  alloyController.afterPropertiesSet();
+  alloyController.execute();
+  return alloyController.getResponseContent();
+}
