@@ -1,0 +1,19 @@
+{
+  Iterator<SyncDLObject> iterator=syncDLObjects.iterator();
+  while (iterator.hasNext()) {
+    SyncDLObject syncDLObject=iterator.next();
+    String type=syncDLObject.getType();
+    try {
+      if (type.equals(SyncConstants.TYPE_FILE)) {
+        dlAppService.getFileEntry(syncDLObject.getTypePK());
+      }
+ else {
+        dlAppService.getFolder(syncDLObject.getTypePK());
+      }
+    }
+ catch (    Exception e) {
+      iterator.remove();
+    }
+  }
+  return syncDLObjects;
+}
