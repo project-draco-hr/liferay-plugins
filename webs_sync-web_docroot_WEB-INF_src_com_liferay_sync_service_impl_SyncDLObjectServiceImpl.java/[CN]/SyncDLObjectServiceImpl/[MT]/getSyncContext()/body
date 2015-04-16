@@ -2,7 +2,7 @@
   try {
     User user=getGuestOrUser();
     SyncContext syncContext=new SyncContext();
-    String authType=PropsUtil.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE);
+    String authType=PrefsPropsUtil.getString(CompanyThreadLocal.getCompanyId(),PropsKeys.COMPANY_SECURITY_AUTH_TYPE,PropsUtil.get(PropsKeys.COMPANY_SECURITY_AUTH_TYPE));
     syncContext.setAuthType(authType);
     PluginPackage syncWebPluginPackage=DeployManagerUtil.getInstalledPluginPackage("sync-web");
     syncContext.setPluginVersion(syncWebPluginPackage.getVersion());
