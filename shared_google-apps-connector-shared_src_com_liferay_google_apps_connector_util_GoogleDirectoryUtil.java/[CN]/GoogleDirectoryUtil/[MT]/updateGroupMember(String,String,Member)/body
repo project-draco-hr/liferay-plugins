@@ -1,23 +1,9 @@
 {
   try {
-    Directory directory=getDirectory();
+    Directory directory=_getDirectory();
     Directory.Members members=directory.members();
     Directory.Members.Update update=members.update(groupEmailAddress,userEmailAddress,member);
-    update.setFields(StringPool.BLANK);
-    for (int i=1; i <= PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
-      try {
-        update.execute();
-        return;
-      }
- catch (      GoogleJsonResponseException gjre) {
-        if (i == PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS) {
-          throw new PortalException(gjre);
-        }
- else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
-        }
-      }
-    }
+    _executeAction(update);
   }
  catch (  Exception e) {
     throw new PortalException(e);

@@ -1,23 +1,9 @@
 {
   try {
-    Directory directory=getDirectory();
+    Directory directory=_getDirectory();
     Directory.Groups groups=directory.groups();
     Directory.Groups.Delete delete=groups.delete(groupEmailAddress);
-    delete.setFields(StringPool.BLANK);
-    for (int i=1; i <= PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
-      try {
-        delete.execute();
-        return;
-      }
- catch (      GoogleJsonResponseException gjre) {
-        if (i == PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS) {
-          throw new PortalException(gjre);
-        }
- else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
-        }
-      }
-    }
+    _executeAction(delete);
   }
  catch (  Exception e) {
     throw new PortalException(e);

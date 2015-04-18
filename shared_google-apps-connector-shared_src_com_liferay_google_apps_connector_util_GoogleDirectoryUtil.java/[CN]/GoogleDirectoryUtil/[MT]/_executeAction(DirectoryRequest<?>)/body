@@ -1,0 +1,20 @@
+{
+  directoryRequest.setFields(StringPool.BLANK);
+  for (int i=1; i <= PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
+    try {
+      directoryRequest.execute();
+      return;
+    }
+ catch (    GoogleJsonResponseException gjre) {
+      if (gjre.getStatusCode() == HttpServletResponse.SC_CONFLICT) {
+        return;
+      }
+      if (i == PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS) {
+        throw new PortalException(gjre);
+      }
+ else {
+        Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
+      }
+    }
+  }
+}

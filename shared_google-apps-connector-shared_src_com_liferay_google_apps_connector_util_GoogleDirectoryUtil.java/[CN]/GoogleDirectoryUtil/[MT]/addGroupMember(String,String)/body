@@ -1,28 +1,11 @@
 {
   try {
-    Directory directory=getDirectory();
+    Directory directory=_getDirectory();
     Directory.Members members=directory.members();
     Member member=new Member();
     member.setEmail(emailAddress);
     Directory.Members.Insert insert=members.insert(groupEmailAddress,member);
-    insert.setFields(StringPool.BLANK);
-    for (int i=1; i <= PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS; i++) {
-      try {
-        insert.execute();
-        return;
-      }
- catch (      GoogleJsonResponseException gjre) {
-        if (gjre.getStatusCode() == _ERROR_CONFLICT) {
-          return;
-        }
-        if (i == PortletPropsValues.GOOGLE_API_RETRY_ATTEMPTS) {
-          throw new PortalException(gjre);
-        }
- else {
-          Thread.sleep(PortletPropsValues.GOOGLE_API_RETRY_INTERVAL);
-        }
-      }
-    }
+    _executeAction(insert);
   }
  catch (  Exception e) {
     throw new PortalException(e);
