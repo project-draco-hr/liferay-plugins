@@ -1,0 +1,14 @@
+{
+  if (_gmailSettingsService != null) {
+    return _gmailSettingsService;
+  }
+  Company company=CompanyLocalServiceUtil.getCompany(companyId);
+  _gmailSettingsService=new GmailSettingsService(StringPool.BLANK,company.getMx(),StringPool.BLANK,StringPool.BLANK){
+    @Override public void setUserCredentials(    String username,    String password) throws AuthenticationException {
+    }
+  }
+;
+  GoogleCredential googleCredential=GoogleCredentialUtil.getGoogleCredential();
+  _gmailSettingsService.setOAuth2Credentials(googleCredential);
+  return _gmailSettingsService;
+}

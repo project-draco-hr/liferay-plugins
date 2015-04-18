@@ -1,0 +1,18 @@
+{
+  try {
+    Directory directory=_getDirectory();
+    Directory.Users users=directory.users();
+    User user=new User();
+    UserName userName=new UserName();
+    userName.setFamilyName(lastName);
+    userName.setGivenName(firstName);
+    user.setName(userName);
+    user.setPassword(password);
+    user.setPrimaryEmail(primaryEmailAddress);
+    Directory.Users.Insert insert=users.insert(user);
+    _executeAction(insert);
+  }
+ catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}

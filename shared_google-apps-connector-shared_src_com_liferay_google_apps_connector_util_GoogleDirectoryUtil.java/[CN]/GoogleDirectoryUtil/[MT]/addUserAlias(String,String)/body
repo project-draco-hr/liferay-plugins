@@ -1,0 +1,14 @@
+{
+  try {
+    Directory directory=_getDirectory();
+    Directory.Users users=directory.users();
+    Directory.Users.Aliases aliases=users.aliases();
+    Alias alias=new Alias();
+    alias.setAlias(aliasEmailAddress);
+    Directory.Users.Aliases.Insert insert=aliases.insert(primaryEmailAddress,alias);
+    _executeAction(insert);
+  }
+ catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}
