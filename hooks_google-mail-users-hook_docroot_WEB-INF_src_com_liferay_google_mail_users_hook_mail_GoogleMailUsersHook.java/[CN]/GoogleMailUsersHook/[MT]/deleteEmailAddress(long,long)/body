@@ -1,9 +1,8 @@
 {
   try {
+    String primaryEmailAddress=_getPrimaryEmailAddress(companyId,userId);
     User user=UserLocalServiceUtil.getUserById(userId);
-    String nickname=_getNickname(user.getEmailAddress());
-    GNicknameManager gNicknameManager=GoogleAppsConnectionFactoryUtil.getGNicknameManager(companyId);
-    gNicknameManager.deleteGNickname(nickname);
+    GoogleDirectoryUtil.deleteUserAlias(primaryEmailAddress,user.getEmailAddress());
   }
  catch (  Exception e) {
     _log.error(e,e);
