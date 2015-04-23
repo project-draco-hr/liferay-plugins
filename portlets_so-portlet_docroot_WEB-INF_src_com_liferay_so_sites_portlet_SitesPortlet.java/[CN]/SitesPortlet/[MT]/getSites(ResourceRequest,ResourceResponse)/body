@@ -46,9 +46,7 @@
     }
     boolean socialOfficeGroup=SocialOfficeServiceUtil.isSocialOfficeGroup(group.getGroupId());
     groupJSONObject.put("socialOfficeGroup",socialOfficeGroup);
-    PortletURL siteAssignmentsPortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITE_MEMBERSHIPS_ADMIN);
-    siteAssignmentsPortletURL.setParameter("struts_action","/sites_admin/edit_site_assignments");
-    siteAssignmentsPortletURL.setParameter(Constants.CMD,"group_users");
+    PortletURL siteAssignmentsPortletURL=PortletProviderUtil.getPortletURL(resourceRequest,MembershipRequest.class.getName(),PortletProvider.Action.EDIT);
     siteAssignmentsPortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
     siteAssignmentsPortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
     siteAssignmentsPortletURL.setWindowState(WindowState.NORMAL);
