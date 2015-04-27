@@ -1,11 +1,12 @@
 {
-  if (!PortalUtil.isRSSFeedsEnabled()) {
+  PortletPreferences portletPreferences=resourceRequest.getPreferences();
+  boolean enableRss=GetterUtil.getBoolean(portletPreferences.getValue("enableRss",null));
+  if (!PortalUtil.isRSSFeedsEnabled() || !enableRss) {
     PortalUtil.sendRSSFeedsDisabledError(resourceRequest,resourceResponse);
     return;
   }
   ThemeDisplay themeDisplay=(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
   long calendarId=ParamUtil.getLong(resourceRequest,"calendarId");
-  PortletPreferences portletPreferences=resourceRequest.getPreferences();
   long timeInterval=GetterUtil.getLong(portletPreferences.getValue("rssTimeInterval",StringPool.BLANK),RSSUtil.TIME_INTERVAL_DEFAULT);
   long startTime=System.currentTimeMillis();
   long endTime=startTime + timeInterval;
