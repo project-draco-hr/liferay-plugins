@@ -6,11 +6,11 @@ synchronized (classLoader) {
     try {
       Method defineClassMethod=ReflectionUtil.getDeclaredMethod(ClassLoader.class,"defineClass",String.class,byte[].class,int.class,int.class);
       final byte[] classData=generateAlloyControllerInvokerClassData(controllerClass,alloyControllerInvokerClassName);
-      final String filename=PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/data/alloy/" + getClassBinaryName(alloyControllerInvokerClassName)+ ".class";
+      final String fileName=PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/data/alloy/" + getClassBinaryName(alloyControllerInvokerClassName)+ ".class";
       ClassLoader customClassLoader=new ClassLoader(classLoader){
         @Override public URL getResource(        String name){
-          if (filename.contains(name)) {
-            File file=new File(filename);
+          if (fileName.contains(name)) {
+            File file=new File(fileName);
             try {
               FileUtil.write(file,classData);
               URI uri=file.toURI();
