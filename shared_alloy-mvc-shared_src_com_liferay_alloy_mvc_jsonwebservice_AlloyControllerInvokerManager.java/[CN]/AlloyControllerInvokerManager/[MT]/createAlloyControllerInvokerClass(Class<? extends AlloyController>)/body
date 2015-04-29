@@ -1,11 +1,11 @@
 {
-  ClassLoader classLoader=alloyControllerClass.getClassLoader();
-  String alloyControllerInvokerClassName=getAlloyControllerInvokerClassName(alloyControllerClass);
+  ClassLoader classLoader=controllerClass.getClassLoader();
+  String alloyControllerInvokerClassName=getAlloyControllerInvokerClassName(controllerClass);
   Class<? extends AlloyControllerInvoker> alloyControllerInvokerClass=null;
 synchronized (classLoader) {
     try {
       Method defineClassMethod=ReflectionUtil.getDeclaredMethod(ClassLoader.class,"defineClass",String.class,byte[].class,int.class,int.class);
-      final byte[] classData=generateAlloyControllerInvokerClassData(alloyControllerClass,alloyControllerInvokerClassName);
+      final byte[] classData=generateAlloyControllerInvokerClassData(controllerClass,alloyControllerInvokerClassName);
       final String filename=PropsUtil.get(PropsKeys.LIFERAY_HOME) + "/data/alloy/" + getClassBinaryName(alloyControllerInvokerClassName)+ ".class";
       ClassLoader customClassLoader=new ClassLoader(classLoader){
         @Override public URL getResource(        String name){
