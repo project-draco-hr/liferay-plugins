@@ -1,26 +1,27 @@
 {
-synchronized (_alloyControllerInvokers) {
-    if (_alloyControllerInvokers.containsKey(controller)) {
-      AlloyControllerInvoker alloyControllerInvoker=_alloyControllerInvokers.get(controller);
-      JSONWebServiceActionsManagerUtil.unregisterJSONWebServiceActions(alloyControllerInvoker);
-    }
-    Class<? extends AlloyControllerInvoker> alloyControllerInvokerClass=null;
-    AlloyControllerInvoker alloyControllerInvoker=null;
-    try {
-      alloyControllerInvokerClass=createAlloyControllerInvokerClass(controllerClass);
-      Constructor<? extends AlloyControllerInvoker> constructor=alloyControllerInvokerClass.getConstructor();
-      alloyControllerInvoker=constructor.newInstance();
-      alloyControllerInvoker.setProperties(themeDisplay,alloyPortlet,portlet,controller,controllerClass);
-      _alloyControllerInvokers.put(controller,alloyControllerInvoker);
-    }
- catch (    NoClassNecessaryException ncne) {
-      return;
-    }
-catch (    Exception e) {
-      throw new RuntimeException(e);
-    }
-    for (    Method method : alloyControllerInvokerClass.getDeclaredMethods()) {
-      JSONWebServiceActionsManagerUtil.registerJSONWebServiceAction(_contextPath,alloyControllerInvoker,alloyControllerInvokerClass,method,getAPIPath(controller,method),"GET");
-    }
+  if (_locked) {
+    return;
+  }
+  if (_alloyControllerInvokers.containsKey(controller)) {
+    AlloyControllerInvoker alloyControllerInvoker=_alloyControllerInvokers.get(controller);
+    JSONWebServiceActionsManagerUtil.unregisterJSONWebServiceActions(alloyControllerInvoker);
+  }
+  Class<? extends AlloyControllerInvoker> alloyControllerInvokerClass=null;
+  AlloyControllerInvoker alloyControllerInvoker=null;
+  try {
+    alloyControllerInvokerClass=createAlloyControllerInvokerClass(controllerClass);
+    Constructor<? extends AlloyControllerInvoker> constructor=alloyControllerInvokerClass.getConstructor();
+    alloyControllerInvoker=constructor.newInstance();
+    alloyControllerInvoker.setProperties(themeDisplay,alloyPortlet,portlet,controller,controllerClass);
+    _alloyControllerInvokers.put(controller,alloyControllerInvoker);
+  }
+ catch (  NoClassNecessaryException ncne) {
+    return;
+  }
+catch (  Exception e) {
+    throw new RuntimeException(e);
+  }
+  for (  Method method : alloyControllerInvokerClass.getDeclaredMethods()) {
+    JSONWebServiceActionsManagerUtil.registerJSONWebServiceAction(_contextPath,alloyControllerInvoker,alloyControllerInvokerClass,method,getAPIPath(controller,method),"GET");
   }
 }

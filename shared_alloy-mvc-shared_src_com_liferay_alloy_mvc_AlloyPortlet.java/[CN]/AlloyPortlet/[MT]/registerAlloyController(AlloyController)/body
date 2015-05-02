@@ -1,8 +1,14 @@
 {
   BaseAlloyControllerImpl baseAlloyControllerImpl=(BaseAlloyControllerImpl)alloyController;
-  String controllerPath=baseAlloyControllerImpl.controllerPath;
-  if (!baseAlloyControllerImpl.equals(_alloyControllers.get(controllerPath))) {
-    _alloyControllers.put(controllerPath,baseAlloyControllerImpl);
-    _alloyControllerInvokerManager.registerController(baseAlloyControllerImpl.getThemeDisplay(),this,baseAlloyControllerImpl.portlet,controllerPath,baseAlloyControllerImpl.getClass());
+  String controller=baseAlloyControllerImpl.controllerPath;
+  BaseAlloyControllerImpl otherBaseAlloyControllerImpl=_alloyControllers.get(controller);
+  if ((otherBaseAlloyControllerImpl == null) || (baseAlloyControllerImpl.getClass() != otherBaseAlloyControllerImpl.getClass())) {
+synchronized (controller.intern()) {
+      otherBaseAlloyControllerImpl=_alloyControllers.get(controller);
+      if ((otherBaseAlloyControllerImpl == null) || (baseAlloyControllerImpl.getClass() != otherBaseAlloyControllerImpl.getClass())) {
+        _alloyControllers.put(controller,baseAlloyControllerImpl);
+        _alloyControllerInvokerManager.registerController(baseAlloyControllerImpl.getThemeDisplay(),this,baseAlloyControllerImpl.portlet,controller,baseAlloyControllerImpl.getClass());
+      }
+    }
   }
 }

@@ -1,8 +1,11 @@
 {
-synchronized (_alloyControllerInvokers) {
-    for (    AlloyControllerInvoker alloyControllerInvoker : _alloyControllerInvokers.values()) {
+  _locked=true;
+  for (  Map.Entry<String,AlloyControllerInvoker> entry : _alloyControllerInvokers.entrySet()) {
+    String controller=entry.getKey();
+synchronized (controller.intern()) {
+      AlloyControllerInvoker alloyControllerInvoker=entry.getValue();
       JSONWebServiceActionsManagerUtil.unregisterJSONWebServiceActions(alloyControllerInvoker);
     }
-    _alloyControllerInvokers.clear();
   }
+  _alloyControllerInvokers.clear();
 }
