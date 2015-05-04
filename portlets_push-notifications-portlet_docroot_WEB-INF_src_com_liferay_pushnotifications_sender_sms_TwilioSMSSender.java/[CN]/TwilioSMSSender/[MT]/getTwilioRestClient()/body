@@ -1,5 +1,5 @@
 {
-  if (_client == null) {
+  if (_twilioRestClient == null) {
     String accountSID=PrefsPropsUtil.getString(PortletPropsKeys.SMS_TWILIO_ACCOUNT_SID,PortletPropsValues.SMS_TWILIO_ACCOUNT_SID);
     if (Validator.isNull(accountSID)) {
       throw new PushNotificationsException("The property \"sms.twilio.account.sid\" is not set in " + "portlet.properties");
@@ -8,7 +8,7 @@
     if (Validator.isNull(authToken)) {
       throw new PushNotificationsException("The property \"sms.twilio.auth.token\" is not set in " + "portlet.properties");
     }
-    _client=new TwilioRestClient(accountSID,authToken);
+    _twilioRestClient=new TwilioRestClient(accountSID,authToken);
   }
-  return _client;
+  return _twilioRestClient;
 }
