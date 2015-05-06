@@ -18,17 +18,22 @@
   SyncDLFileVersionDiff syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.fetchSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
   if (syncDLFileVersionDiff != null) {
     SyncDLFileVersionDiffLocalServiceUtil.refreshExpirationDate(syncDLFileVersionDiff.getSyncDLFileVersionDiffId());
+    FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
+    return new DownloadServletInputStream(dataFileEntry.getContentStream(),dataFileEntry.getSize());
   }
  else {
     File deltaFile=null;
     try {
       deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceDLFileVersion,targetDLFileVersion);
-      syncDLFileVersionDiff=SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId,deltaFile);
+      try {
+        SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId,deltaFile);
+      }
+ catch (      DuplicateFileException dfe) {
+      }
+      return new DownloadServletInputStream(new FileInputStream(deltaFile),deltaFile.length());
     }
   finally {
       FileUtil.delete(deltaFile);
     }
   }
-  FileEntry dataFileEntry=PortletFileRepositoryUtil.getPortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
-  return new DownloadServletInputStream(dataFileEntry.getContentStream(),dataFileEntry.getSize());
 }
