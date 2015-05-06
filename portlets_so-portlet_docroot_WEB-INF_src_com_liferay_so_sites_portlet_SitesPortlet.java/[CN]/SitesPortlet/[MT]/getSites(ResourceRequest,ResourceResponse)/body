@@ -58,7 +58,7 @@
  else     if (!member && (group.getType() == GroupConstants.TYPE_SITE_RESTRICTED)) {
       if (!MembershipRequestLocalServiceUtil.hasMembershipRequest(themeDisplay.getUserId(),group.getGroupId(),MembershipRequestConstants.STATUS_PENDING)) {
         PortletURL membershipRequestURL=liferayPortletResponse.createActionURL(PortletKeys.SITE_ADMIN);
-        membershipRequestURL.setParameter("struts_action","/sites_admin/post_membership_request");
+        membershipRequestURL.setParameter("javax.portlet.action","postMembershipRequest");
         membershipRequestURL.setParameter("redirect",themeDisplay.getURLCurrent());
         membershipRequestURL.setParameter("groupId",String.valueOf(group.getGroupId()));
         User user=UserLocalServiceUtil.getUser(themeDisplay.getUserId());
@@ -84,8 +84,7 @@
  else {
         PortletURL deletePortletURL=liferayPortletResponse.createActionURL(PortletKeys.SITE_ADMIN);
         deletePortletURL.setWindowState(WindowState.NORMAL);
-        deletePortletURL.setParameter("struts_action","/sites_admin/edit_site");
-        deletePortletURL.setParameter(Constants.CMD,Constants.DELETE);
+        deletePortletURL.setParameter("javax.portlet.action","deleteGroups");
         deletePortletURL.setParameter("redirect",themeDisplay.getURLCurrent());
         deletePortletURL.setParameter("groupId",String.valueOf(group.getGroupId()));
         groupJSONObject.put("deleteURL",deletePortletURL.toString());
