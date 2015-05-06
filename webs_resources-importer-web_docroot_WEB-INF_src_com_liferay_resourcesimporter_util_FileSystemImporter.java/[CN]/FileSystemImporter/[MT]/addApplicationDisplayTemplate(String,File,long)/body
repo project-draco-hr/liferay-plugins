@@ -1,6 +1,5 @@
 {
   String fileName=FileUtil.stripExtension(file.getName());
-  String language=getDDMTemplateLanguage(file.getName());
   String name=getName(fileName);
   DDMTemplate ddmTemplate=DDMTemplateLocalServiceUtil.fetchTemplate(groupId,classNameId,getKey(fileName));
   if (ddmTemplate != null) {
@@ -16,10 +15,10 @@
   }
   try {
     if (!updateModeEnabled || (ddmTemplate == null)) {
-      DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,language,script,false,false,StringPool.BLANK,null,serviceContext);
+      DDMTemplateLocalServiceUtil.addTemplate(userId,groupId,classNameId,0,PortalUtil.getClassNameId(JournalArticle.class),getKey(fileName),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(file.getName()),script,false,false,StringPool.BLANK,null,serviceContext);
     }
  else {
-      DDMTemplateLocalServiceUtil.updateTemplate(ddmTemplate.getTemplateId(),ddmTemplate.getClassPK(),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,language,script,false,serviceContext);
+      DDMTemplateLocalServiceUtil.updateTemplate(ddmTemplate.getTemplateId(),ddmTemplate.getClassPK(),getMap(name),null,DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY,StringPool.BLANK,getDDMTemplateLanguage(file.getName()),script,false,serviceContext);
     }
   }
  catch (  PortalException e) {
