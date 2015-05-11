@@ -2,7 +2,8 @@
   Map<String,String> routeParameters=new HashMap<>();
   buildRouteParameters(liferayPortletURL,routeParameters);
   String lifecycle=liferayPortletURL.getLifecycle();
-  if (lifecycle.equals(PortletRequest.ACTION_PHASE)) {
+  String delta=routeParameters.get("delta");
+  if (lifecycle.equals(PortletRequest.ACTION_PHASE) || (delta != null)) {
     routeParameters.put("method",HttpMethods.POST);
   }
  else {
