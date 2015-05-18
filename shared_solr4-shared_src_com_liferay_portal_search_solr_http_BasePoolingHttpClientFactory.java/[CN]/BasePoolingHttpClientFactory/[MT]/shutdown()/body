@@ -2,6 +2,9 @@
   if (_log.isDebugEnabled()) {
     _log.debug("Shut down");
   }
+  if (_poolingClientConnectionManager == null) {
+    return;
+  }
   int retry=0;
   while (retry < 10) {
     PoolStats poolStats=_poolingClientConnectionManager.getTotalStats();
@@ -21,6 +24,7 @@
     retry++;
   }
   _poolingClientConnectionManager.shutdown();
+  _poolingClientConnectionManager=null;
   if (_log.isDebugEnabled()) {
     _log.debug(toString() + " was shut down");
   }

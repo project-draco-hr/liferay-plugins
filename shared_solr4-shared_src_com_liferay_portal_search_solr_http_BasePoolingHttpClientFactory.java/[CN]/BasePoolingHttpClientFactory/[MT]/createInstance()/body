@@ -2,9 +2,10 @@
   if (_log.isDebugEnabled()) {
     _log.debug("Create instance");
   }
+  _poolingClientConnectionManager=createPoolingClientConnectionManager();
+  applyProperties(_poolingClientConnectionManager);
   DefaultHttpClient defaultHttpClient=new DefaultHttpClient(_poolingClientConnectionManager);
-  for (  HttpRequestInterceptor httpRequestInterceptor : _httpRequestInterceptors) {
-    defaultHttpClient.addRequestInterceptor(httpRequestInterceptor,0);
-  }
+  applyProperties(defaultHttpClient);
+  configure(defaultHttpClient);
   return defaultHttpClient;
 }
