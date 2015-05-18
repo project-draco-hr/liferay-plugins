@@ -1,14 +1,5 @@
 {
   DefaultHttpClient defaultHttpClient=_basePoolingHttpClientFactory.createInstance();
-  if (!Validator.isBlank(_username)) {
-    if (_authScope == null) {
-      _authScope=AuthScope.ANY;
-    }
-    CredentialsProvider credentialsProvider=defaultHttpClient.getCredentialsProvider();
-    if (Validator.isNull(_password)) {
-      _password=StringPool.BLANK;
-    }
-    credentialsProvider.setCredentials(_authScope,new UsernamePasswordCredentials(_username,_password));
-  }
+  configure(defaultHttpClient);
   return defaultHttpClient;
 }

@@ -2,11 +2,11 @@
   PoolingClientConnectionManager poolingClientConnectionManager=new PoolingClientConnectionManager();
   BasicAuthPoolingHttpClientFactory basicAuthPoolingHttpClientFactory=new BasicAuthPoolingHttpClientFactory(poolingClientConnectionManager);
   basicAuthPoolingHttpClientFactory.setAuthScope(_authScope);
-  basicAuthPoolingHttpClientFactory.setDefaultMaxConnectionsPerRoute(getDefaultMaxConnectionsPerRoute());
-  basicAuthPoolingHttpClientFactory.setHttpRequestInterceptors(getHttpRequestInterceptors());
-  basicAuthPoolingHttpClientFactory.setMaxTotalConnections(getMaxTotalConnections());
+  basicAuthPoolingHttpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
+  basicAuthPoolingHttpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
+  basicAuthPoolingHttpClientFactory.setMaxTotalConnections(_maxTotalConnections);
   basicAuthPoolingHttpClientFactory.setPassword(_password);
   basicAuthPoolingHttpClientFactory.setUsername(_username);
-  setHttpClientFactory(basicAuthPoolingHttpClientFactory);
-  return super.createInstance();
+  _httpClientFactory=basicAuthPoolingHttpClientFactory;
+  return _httpClientFactory.createInstance();
 }
