@@ -1,4 +1,9 @@
 {
+  PoolingClientConnectionManager poolingClientConnectionManager=createPoolingClientConnectionManager();
+  _basePoolingHttpClientFactory=new BasePoolingHttpClientFactory(poolingClientConnectionManager);
+  _basePoolingHttpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
+  _basePoolingHttpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
+  _basePoolingHttpClientFactory.setMaxTotalConnections(_maxTotalConnections);
   DefaultHttpClient defaultHttpClient=_basePoolingHttpClientFactory.createInstance();
   configure(defaultHttpClient);
   return defaultHttpClient;
