@@ -10,17 +10,17 @@
   String body=ParamUtil.getString(actionRequest,"body");
   Function<String,ServiceContext> serviceContextFunction=new ServiceContextFunction(actionRequest);
   DiscussionPermission discussionPermission=CommentManagerUtil.getDiscussionPermission(themeDisplay.getPermissionChecker());
-  User user=themeDisplay.getUser();
   if (cmd.equals(Constants.DELETE)) {
-    discussionPermission.checkDeletePermission(className,classPK,messageId,user.getUserId());
+    discussionPermission.checkDeletePermission(className,classPK,messageId,themeDisplay.getUserId());
     CommentManagerUtil.deleteComment(messageId);
   }
  else   if (messageId <= 0) {
-    discussionPermission.checkAddPermission(themeDisplay.getCompanyId(),groupId,className,classPK,user.getUserId());
-    CommentManagerUtil.addComment(user.getUserId(),className,classPK,user.getFullName(),parentMessageId,subject,body,serviceContextFunction);
+    discussionPermission.checkAddPermission(themeDisplay.getCompanyId(),groupId,className,classPK,themeDisplay.getUserId());
+    User user=themeDisplay.getUser();
+    CommentManagerUtil.addComment(themeDisplay.getUserId(),className,classPK,user.getFullName(),parentMessageId,subject,body,serviceContextFunction);
   }
  else {
-    discussionPermission.checkUpdatePermission(className,classPK,messageId,user.getUserId());
-    CommentManagerUtil.updateComment(user.getUserId(),className,classPK,messageId,subject,body,serviceContextFunction);
+    discussionPermission.checkUpdatePermission(className,classPK,messageId,themeDisplay.getUserId());
+    CommentManagerUtil.updateComment(themeDisplay.getUserId(),className,classPK,messageId,subject,body,serviceContextFunction);
   }
 }
