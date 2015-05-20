@@ -2,7 +2,7 @@
   try {
     Group group=groupLocalService.getGroup(repositoryId);
     SyncUtil.checkSyncEnabled(group.getGroupId());
-    if (serviceContext.getGroupPermissions() == null) {
+    if (!group.isUser() && (serviceContext.getGroupPermissions() == null)) {
       SyncUtil.setFilePermissions(group,false,serviceContext);
     }
     FileEntry fileEntry=dlAppService.addFileEntry(repositoryId,folderId,sourceFileName,mimeType,title,description,changeLog,file,serviceContext);
