@@ -11,16 +11,16 @@
   Function<String,ServiceContext> serviceContextFunction=new ServiceContextFunction(actionRequest);
   DiscussionPermission discussionPermission=CommentManagerUtil.getDiscussionPermission(themeDisplay.getPermissionChecker());
   if (cmd.equals(Constants.DELETE)) {
-    discussionPermission.checkDeletePermission(className,classPK,messageId,themeDisplay.getUserId());
+    discussionPermission.checkDeletePermission(messageId);
     CommentManagerUtil.deleteComment(messageId);
   }
  else   if (messageId <= 0) {
-    discussionPermission.checkAddPermission(themeDisplay.getCompanyId(),groupId,className,classPK,themeDisplay.getUserId());
+    discussionPermission.checkAddPermission(themeDisplay.getCompanyId(),groupId,className,classPK);
     User user=themeDisplay.getUser();
     CommentManagerUtil.addComment(themeDisplay.getUserId(),className,classPK,user.getFullName(),parentMessageId,subject,body,serviceContextFunction);
   }
  else {
-    discussionPermission.checkUpdatePermission(className,classPK,messageId,themeDisplay.getUserId());
+    discussionPermission.checkUpdatePermission(messageId);
     CommentManagerUtil.updateComment(themeDisplay.getUserId(),className,classPK,messageId,subject,body,serviceContextFunction);
   }
 }
