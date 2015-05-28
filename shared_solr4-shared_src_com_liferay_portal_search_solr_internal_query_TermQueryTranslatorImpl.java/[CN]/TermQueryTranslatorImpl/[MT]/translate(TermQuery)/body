@@ -2,8 +2,13 @@
   QueryTerm queryTerm=termQuery.getQueryTerm();
   String field=queryTerm.getField();
   String value=queryTerm.getValue();
+  org.apache.lucene.search.Query luceneQuery=null;
   if ((_queryPreProcessConfiguration != null) && _queryPreProcessConfiguration.isSubstringSearchAlways(field)) {
-    return _toCaseInsensitiveSubstringQuery(field,value);
+    luceneQuery=toCaseInsensitiveSubstringQuery(field,value);
   }
-  return new org.apache.lucene.search.TermQuery(new Term(field,value));
+  luceneQuery=new org.apache.lucene.search.TermQuery(new Term(field,value));
+  if (!termQuery.isDefaultBoost()) {
+    luceneQuery.setBoost(termQuery.getBoost());
+  }
+  return luceneQuery;
 }

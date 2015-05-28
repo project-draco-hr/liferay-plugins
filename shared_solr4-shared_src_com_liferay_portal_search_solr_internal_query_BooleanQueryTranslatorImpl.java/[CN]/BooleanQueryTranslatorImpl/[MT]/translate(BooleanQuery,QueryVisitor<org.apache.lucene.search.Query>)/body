@@ -3,5 +3,8 @@
   for (  BooleanClause booleanClause : booleanQuery.clauses()) {
     _addClause(booleanClause,luceneBooleanQuery,queryVisitor);
   }
+  if (!booleanQuery.isDefaultBoost()) {
+    luceneBooleanQuery.setBoost(booleanQuery.getBoost());
+  }
   return luceneBooleanQuery;
 }
