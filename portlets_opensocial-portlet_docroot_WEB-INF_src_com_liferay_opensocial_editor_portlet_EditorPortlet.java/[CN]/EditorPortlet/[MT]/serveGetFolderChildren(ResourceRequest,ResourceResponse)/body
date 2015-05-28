@@ -3,7 +3,7 @@
   long repositoryId=ParamUtil.getLong(resourceRequest,"repositoryId");
   long folderId=ParamUtil.getLong(resourceRequest,"folderId");
   List<Folder> folders=DLAppServiceUtil.getFolders(repositoryId,folderId);
-  folders=ListUtil.sort(folders,new RepositoryModelNameComparator(true));
+  folders=ListUtil.sort(folders,new FolderNameComparator(true));
   JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
   for (  Folder folder : folders) {
     JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
@@ -17,7 +17,7 @@
   if (getFileEntries) {
     PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
     List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(repositoryId,folderId);
-    fileEntries=ListUtil.sort(fileEntries,new RepositoryModelNameComparator(true));
+    fileEntries=ListUtil.sort(fileEntries,new RepositoryModelTitleComparator<FileEntry>(true));
     for (    FileEntry fileEntry : fileEntries) {
       JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
       jsonObject.put("entryId",fileEntry.getFileEntryId());
