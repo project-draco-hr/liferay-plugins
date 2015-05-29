@@ -1,8 +1,7 @@
 {
   List<FileEntry> fileEntries=DLAppServiceUtil.getFileEntries(repositoryId,folderId);
   for (  FileEntry fileEntry : fileEntries) {
-    FileVersion fileVersion=fileEntry.getLatestFileVersion();
-    InputStream inputStream=fileVersion.getContentStream(false);
+    InputStream inputStream=DLFileEntryLocalServiceUtil.getFileAsStream(fileEntry.getFileEntryId(),fileEntry.getVersion(),false);
     String filePath=folderPath + fileEntry.getTitle();
     zipWriter.addEntry(filePath,inputStream);
   }
