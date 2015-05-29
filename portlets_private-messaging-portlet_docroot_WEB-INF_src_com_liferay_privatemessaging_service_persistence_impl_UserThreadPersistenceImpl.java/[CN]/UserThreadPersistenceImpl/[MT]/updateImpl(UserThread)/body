@@ -2,6 +2,24 @@
   userThread=toUnwrappedModel(userThread);
   boolean isNew=userThread.isNew();
   UserThreadModelImpl userThreadModelImpl=(UserThreadModelImpl)userThread;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (userThread.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      userThread.setCreateDate(now);
+    }
+ else {
+      userThread.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!userThreadModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      userThread.setModifiedDate(now);
+    }
+ else {
+      userThread.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

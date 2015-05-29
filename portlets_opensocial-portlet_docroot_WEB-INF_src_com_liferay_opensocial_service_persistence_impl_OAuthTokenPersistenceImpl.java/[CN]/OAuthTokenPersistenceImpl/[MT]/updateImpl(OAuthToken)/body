@@ -2,6 +2,24 @@
   oAuthToken=toUnwrappedModel(oAuthToken);
   boolean isNew=oAuthToken.isNew();
   OAuthTokenModelImpl oAuthTokenModelImpl=(OAuthTokenModelImpl)oAuthToken;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (oAuthToken.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      oAuthToken.setCreateDate(now);
+    }
+ else {
+      oAuthToken.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!oAuthTokenModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      oAuthToken.setModifiedDate(now);
+    }
+ else {
+      oAuthToken.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -1,6 +1,25 @@
 {
   checkout=toUnwrappedModel(checkout);
   boolean isNew=checkout.isNew();
+  CheckoutModelImpl checkoutModelImpl=(CheckoutModelImpl)checkout;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (checkout.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      checkout.setCreateDate(now);
+    }
+ else {
+      checkout.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!checkoutModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      checkout.setModifiedDate(now);
+    }
+ else {
+      checkout.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

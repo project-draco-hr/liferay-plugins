@@ -1,6 +1,25 @@
 {
   asset=toUnwrappedModel(asset);
   boolean isNew=asset.isNew();
+  AssetModelImpl assetModelImpl=(AssetModelImpl)asset;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (asset.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      asset.setCreateDate(now);
+    }
+ else {
+      asset.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!assetModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      asset.setModifiedDate(now);
+    }
+ else {
+      asset.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

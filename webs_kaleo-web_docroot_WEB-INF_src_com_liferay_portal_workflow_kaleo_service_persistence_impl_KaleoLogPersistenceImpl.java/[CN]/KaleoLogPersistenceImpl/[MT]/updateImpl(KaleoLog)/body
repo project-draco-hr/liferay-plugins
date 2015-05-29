@@ -2,6 +2,24 @@
   kaleoLog=toUnwrappedModel(kaleoLog);
   boolean isNew=kaleoLog.isNew();
   KaleoLogModelImpl kaleoLogModelImpl=(KaleoLogModelImpl)kaleoLog;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoLog.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoLog.setCreateDate(now);
+    }
+ else {
+      kaleoLog.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoLogModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoLog.setModifiedDate(now);
+    }
+ else {
+      kaleoLog.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

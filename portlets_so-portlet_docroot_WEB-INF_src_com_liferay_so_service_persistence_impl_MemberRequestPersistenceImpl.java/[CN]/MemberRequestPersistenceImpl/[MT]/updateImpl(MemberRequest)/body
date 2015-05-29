@@ -2,6 +2,24 @@
   memberRequest=toUnwrappedModel(memberRequest);
   boolean isNew=memberRequest.isNew();
   MemberRequestModelImpl memberRequestModelImpl=(MemberRequestModelImpl)memberRequest;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (memberRequest.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      memberRequest.setCreateDate(now);
+    }
+ else {
+      memberRequest.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!memberRequestModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      memberRequest.setModifiedDate(now);
+    }
+ else {
+      memberRequest.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -2,6 +2,24 @@
   kaleoTaskInstanceToken=toUnwrappedModel(kaleoTaskInstanceToken);
   boolean isNew=kaleoTaskInstanceToken.isNew();
   KaleoTaskInstanceTokenModelImpl kaleoTaskInstanceTokenModelImpl=(KaleoTaskInstanceTokenModelImpl)kaleoTaskInstanceToken;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoTaskInstanceToken.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoTaskInstanceToken.setCreateDate(now);
+    }
+ else {
+      kaleoTaskInstanceToken.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoTaskInstanceTokenModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoTaskInstanceToken.setModifiedDate(now);
+    }
+ else {
+      kaleoTaskInstanceToken.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

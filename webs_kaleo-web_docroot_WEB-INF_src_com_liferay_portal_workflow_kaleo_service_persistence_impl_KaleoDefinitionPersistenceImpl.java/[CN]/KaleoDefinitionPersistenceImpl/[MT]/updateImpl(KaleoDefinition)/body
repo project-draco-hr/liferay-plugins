@@ -2,6 +2,24 @@
   kaleoDefinition=toUnwrappedModel(kaleoDefinition);
   boolean isNew=kaleoDefinition.isNew();
   KaleoDefinitionModelImpl kaleoDefinitionModelImpl=(KaleoDefinitionModelImpl)kaleoDefinition;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoDefinition.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoDefinition.setCreateDate(now);
+    }
+ else {
+      kaleoDefinition.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoDefinitionModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoDefinition.setModifiedDate(now);
+    }
+ else {
+      kaleoDefinition.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

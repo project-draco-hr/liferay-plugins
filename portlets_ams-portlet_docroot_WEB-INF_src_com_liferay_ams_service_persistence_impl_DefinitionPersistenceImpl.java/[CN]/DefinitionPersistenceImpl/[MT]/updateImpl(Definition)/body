@@ -1,6 +1,25 @@
 {
   definition=toUnwrappedModel(definition);
   boolean isNew=definition.isNew();
+  DefinitionModelImpl definitionModelImpl=(DefinitionModelImpl)definition;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (definition.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      definition.setCreateDate(now);
+    }
+ else {
+      definition.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!definitionModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      definition.setModifiedDate(now);
+    }
+ else {
+      definition.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

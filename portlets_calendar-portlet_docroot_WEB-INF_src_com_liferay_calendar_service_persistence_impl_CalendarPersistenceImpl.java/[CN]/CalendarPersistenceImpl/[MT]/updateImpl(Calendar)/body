@@ -6,6 +6,24 @@
     String uuid=PortalUUIDUtil.generate();
     calendar.setUuid(uuid);
   }
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (calendar.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      calendar.setCreateDate(now);
+    }
+ else {
+      calendar.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!calendarModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      calendar.setModifiedDate(now);
+    }
+ else {
+      calendar.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

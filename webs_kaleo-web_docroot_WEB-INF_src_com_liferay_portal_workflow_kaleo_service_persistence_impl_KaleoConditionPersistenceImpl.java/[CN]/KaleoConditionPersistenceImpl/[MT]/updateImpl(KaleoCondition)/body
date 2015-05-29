@@ -2,6 +2,24 @@
   kaleoCondition=toUnwrappedModel(kaleoCondition);
   boolean isNew=kaleoCondition.isNew();
   KaleoConditionModelImpl kaleoConditionModelImpl=(KaleoConditionModelImpl)kaleoCondition;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoCondition.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoCondition.setCreateDate(now);
+    }
+ else {
+      kaleoCondition.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoConditionModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoCondition.setModifiedDate(now);
+    }
+ else {
+      kaleoCondition.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

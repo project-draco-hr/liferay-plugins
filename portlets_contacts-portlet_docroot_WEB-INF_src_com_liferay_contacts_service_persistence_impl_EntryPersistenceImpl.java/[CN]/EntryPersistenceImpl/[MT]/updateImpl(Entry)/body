@@ -2,6 +2,24 @@
   entry=toUnwrappedModel(entry);
   boolean isNew=entry.isNew();
   EntryModelImpl entryModelImpl=(EntryModelImpl)entry;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (entry.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      entry.setCreateDate(now);
+    }
+ else {
+      entry.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!entryModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      entry.setModifiedDate(now);
+    }
+ else {
+      entry.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -6,6 +6,24 @@
     String uuid=PortalUUIDUtil.generate();
     calendarBooking.setUuid(uuid);
   }
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (calendarBooking.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      calendarBooking.setCreateDate(now);
+    }
+ else {
+      calendarBooking.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!calendarBookingModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      calendarBooking.setModifiedDate(now);
+    }
+ else {
+      calendarBooking.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -2,6 +2,24 @@
   kaleoNotification=toUnwrappedModel(kaleoNotification);
   boolean isNew=kaleoNotification.isNew();
   KaleoNotificationModelImpl kaleoNotificationModelImpl=(KaleoNotificationModelImpl)kaleoNotification;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoNotification.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoNotification.setCreateDate(now);
+    }
+ else {
+      kaleoNotification.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoNotificationModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoNotification.setModifiedDate(now);
+    }
+ else {
+      kaleoNotification.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

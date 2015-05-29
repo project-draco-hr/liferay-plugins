@@ -6,6 +6,24 @@
     String uuid=PortalUUIDUtil.generate();
     wsrpProducer.setUuid(uuid);
   }
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (wsrpProducer.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      wsrpProducer.setCreateDate(now);
+    }
+ else {
+      wsrpProducer.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!wsrpProducerModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      wsrpProducer.setModifiedDate(now);
+    }
+ else {
+      wsrpProducer.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

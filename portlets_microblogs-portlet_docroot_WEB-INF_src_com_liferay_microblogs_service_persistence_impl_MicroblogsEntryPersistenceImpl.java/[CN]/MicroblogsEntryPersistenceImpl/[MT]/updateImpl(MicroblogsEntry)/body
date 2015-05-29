@@ -2,6 +2,24 @@
   microblogsEntry=toUnwrappedModel(microblogsEntry);
   boolean isNew=microblogsEntry.isNew();
   MicroblogsEntryModelImpl microblogsEntryModelImpl=(MicroblogsEntryModelImpl)microblogsEntry;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (microblogsEntry.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      microblogsEntry.setCreateDate(now);
+    }
+ else {
+      microblogsEntry.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!microblogsEntryModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      microblogsEntry.setModifiedDate(now);
+    }
+ else {
+      microblogsEntry.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

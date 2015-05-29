@@ -2,6 +2,24 @@
   kaleoTaskAssignment=toUnwrappedModel(kaleoTaskAssignment);
   boolean isNew=kaleoTaskAssignment.isNew();
   KaleoTaskAssignmentModelImpl kaleoTaskAssignmentModelImpl=(KaleoTaskAssignmentModelImpl)kaleoTaskAssignment;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoTaskAssignment.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoTaskAssignment.setCreateDate(now);
+    }
+ else {
+      kaleoTaskAssignment.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoTaskAssignmentModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoTaskAssignment.setModifiedDate(now);
+    }
+ else {
+      kaleoTaskAssignment.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

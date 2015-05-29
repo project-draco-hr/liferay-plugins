@@ -2,6 +2,24 @@
   message=toUnwrappedModel(message);
   boolean isNew=message.isNew();
   MessageModelImpl messageModelImpl=(MessageModelImpl)message;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (message.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      message.setCreateDate(now);
+    }
+ else {
+      message.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!messageModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      message.setModifiedDate(now);
+    }
+ else {
+      message.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -2,6 +2,24 @@
   jiraAction=toUnwrappedModel(jiraAction);
   boolean isNew=jiraAction.isNew();
   JIRAActionModelImpl jiraActionModelImpl=(JIRAActionModelImpl)jiraAction;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (jiraAction.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      jiraAction.setCreateDate(now);
+    }
+ else {
+      jiraAction.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!jiraActionModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      jiraAction.setModifiedDate(now);
+    }
+ else {
+      jiraAction.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

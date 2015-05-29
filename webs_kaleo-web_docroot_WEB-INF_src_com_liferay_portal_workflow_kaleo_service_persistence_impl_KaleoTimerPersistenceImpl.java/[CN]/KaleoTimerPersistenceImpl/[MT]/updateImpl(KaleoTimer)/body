@@ -2,6 +2,24 @@
   kaleoTimer=toUnwrappedModel(kaleoTimer);
   boolean isNew=kaleoTimer.isNew();
   KaleoTimerModelImpl kaleoTimerModelImpl=(KaleoTimerModelImpl)kaleoTimer;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kaleoTimer.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kaleoTimer.setCreateDate(now);
+    }
+ else {
+      kaleoTimer.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kaleoTimerModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kaleoTimer.setModifiedDate(now);
+    }
+ else {
+      kaleoTimer.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

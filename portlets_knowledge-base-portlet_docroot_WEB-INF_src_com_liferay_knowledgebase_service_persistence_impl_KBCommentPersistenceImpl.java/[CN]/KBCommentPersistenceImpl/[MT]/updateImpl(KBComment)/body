@@ -6,6 +6,24 @@
     String uuid=PortalUUIDUtil.generate();
     kbComment.setUuid(uuid);
   }
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (kbComment.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      kbComment.setCreateDate(now);
+    }
+ else {
+      kbComment.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!kbCommentModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      kbComment.setModifiedDate(now);
+    }
+ else {
+      kbComment.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

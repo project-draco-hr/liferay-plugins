@@ -2,6 +2,24 @@
   projectsEntry=toUnwrappedModel(projectsEntry);
   boolean isNew=projectsEntry.isNew();
   ProjectsEntryModelImpl projectsEntryModelImpl=(ProjectsEntryModelImpl)projectsEntry;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (projectsEntry.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      projectsEntry.setCreateDate(now);
+    }
+ else {
+      projectsEntry.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!projectsEntryModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      projectsEntry.setModifiedDate(now);
+    }
+ else {
+      projectsEntry.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -6,6 +6,24 @@
     String uuid=PortalUUIDUtil.generate();
     gadget.setUuid(uuid);
   }
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (gadget.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      gadget.setCreateDate(now);
+    }
+ else {
+      gadget.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!gadgetModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      gadget.setModifiedDate(now);
+    }
+ else {
+      gadget.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();

@@ -1,6 +1,25 @@
 {
   feed=toUnwrappedModel(feed);
   boolean isNew=feed.isNew();
+  FeedModelImpl feedModelImpl=(FeedModelImpl)feed;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (feed.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      feed.setCreateDate(now);
+    }
+ else {
+      feed.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!feedModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      feed.setModifiedDate(now);
+    }
+ else {
+      feed.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
   Session session=null;
   try {
     session=openSession();
