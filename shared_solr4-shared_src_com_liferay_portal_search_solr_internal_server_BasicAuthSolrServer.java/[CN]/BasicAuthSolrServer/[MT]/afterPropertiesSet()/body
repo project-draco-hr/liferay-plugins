@@ -1,0 +1,14 @@
+{
+  if (_log.isWarnEnabled()) {
+    _log.warn(ClassUtil.getClassName(this) + " is deprecated in favor of " + com.liferay.portal.search.solr.internal.server.HttpSolrServer.class.getName());
+  }
+  BasicAuthPoolingHttpClientFactory basicAuthPoolingHttpClientFactory=new BasicAuthPoolingHttpClientFactory();
+  basicAuthPoolingHttpClientFactory.setAuthScope(_authScope);
+  basicAuthPoolingHttpClientFactory.setDefaultMaxConnectionsPerRoute(_defaultMaxConnectionsPerRoute);
+  basicAuthPoolingHttpClientFactory.setHttpRequestInterceptors(_httpRequestInterceptors);
+  basicAuthPoolingHttpClientFactory.setMaxTotalConnections(_maxTotalConnections);
+  basicAuthPoolingHttpClientFactory.setPassword(_password);
+  basicAuthPoolingHttpClientFactory.setUsername(_username);
+  _httpClientFactory=basicAuthPoolingHttpClientFactory;
+  initHttpSolrServer(basicAuthPoolingHttpClientFactory.createInstance());
+}
