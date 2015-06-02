@@ -4,12 +4,11 @@
   }
   String checkedOutBy=_extRepositoryFileEntry.getCheckedOutBy();
   User user=getUser(checkedOutBy);
-  Lock lock=LockUtil.create(0);
-  lock.setCompanyId(getCompanyId());
+  long userId=0;
+  String userName=null;
   if (user != null) {
-    lock.setUserId(user.getUserId());
-    lock.setUserName(user.getFullName());
+    userId=user.getUserId();
+    userName=user.getFullName();
   }
-  lock.setCreateDate(new Date());
-  return lock;
+  return LockHelperUtil.createLock(0,getCompanyId(),userId,userName);
 }

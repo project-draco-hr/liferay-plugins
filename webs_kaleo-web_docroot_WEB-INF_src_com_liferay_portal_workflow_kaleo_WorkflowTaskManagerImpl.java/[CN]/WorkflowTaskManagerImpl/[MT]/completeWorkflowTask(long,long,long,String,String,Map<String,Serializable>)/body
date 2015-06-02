@@ -1,7 +1,7 @@
 {
   Lock lock=null;
   try {
-    lock=LockLocalServiceUtil.lock(userId,WorkflowTask.class.getName(),workflowTaskInstanceId,String.valueOf(userId),false,1000);
+    lock=LockHelperUtil.lock(userId,WorkflowTask.class.getName(),workflowTaskInstanceId,String.valueOf(userId),false,1000);
   }
  catch (  PortalException pe) {
     if (pe instanceof DuplicateLockException) {
@@ -29,6 +29,6 @@
     throw new WorkflowException("Unable to complete task",e);
   }
  finally {
-    LockLocalServiceUtil.unlock(lock.getClassName(),lock.getKey());
+    LockHelperUtil.unlock(lock.getClassName(),lock.getKey());
   }
 }
