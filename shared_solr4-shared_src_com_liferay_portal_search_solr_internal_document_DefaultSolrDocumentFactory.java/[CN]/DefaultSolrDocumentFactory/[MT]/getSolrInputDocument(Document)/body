@@ -3,17 +3,13 @@
   Map<String,Field> fields=document.getFields();
   for (  Field field : fields.values()) {
     String name=field.getName();
-    float boost=field.getBoost();
-    if (ArrayUtil.contains(Field.UNSCORED_FIELD_NAMES,name)) {
-      boost=_UNSCORED_FIELDS_BOOST;
-    }
     if (!field.isLocalized()) {
       for (      String value : field.getValues()) {
         if (Validator.isNull(value)) {
           continue;
         }
         value=value.trim();
-        addField(solrInputDocument,field,boost,value,name);
+        addField(solrInputDocument,field,value,name);
       }
     }
  else {
@@ -28,10 +24,10 @@
         String languageId=LocaleUtil.toLanguageId(locale);
         String defaultLanguageId=LocaleUtil.toLanguageId(LocaleUtil.getDefault());
         if (languageId.equals(defaultLanguageId)) {
-          solrInputDocument.addField(name,value,boost);
+          solrInputDocument.addField(name,value);
         }
         String localizedName=DocumentImpl.getLocalizedName(locale,name);
-        addField(solrInputDocument,field,boost,value,localizedName);
+        addField(solrInputDocument,field,value,localizedName);
       }
     }
   }
