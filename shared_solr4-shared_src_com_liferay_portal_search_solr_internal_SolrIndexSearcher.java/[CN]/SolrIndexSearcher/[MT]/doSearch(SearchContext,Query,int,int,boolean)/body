@@ -14,6 +14,12 @@
   }
   String queryString=translateQuery(query,searchContext);
   solrQuery.setQuery(queryString);
+  if (query.getPreBooleanFilter() != null) {
+    String filterQuery=_filterTranslator.translate(query.getPreBooleanFilter());
+    if (Validator.isNotNull(filterQuery)) {
+      solrQuery.setFilterQueries(filterQuery);
+    }
+  }
   QueryResponse queryResponse=executeSearchRequest(solrQuery);
   if (_log.isInfoEnabled()) {
     _log.info("The search engine processed " + solrQuery.getQuery() + " in "+ queryResponse.getElapsedTime()+ " ms");
