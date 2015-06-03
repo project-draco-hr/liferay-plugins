@@ -1,13 +1,3 @@
 {
-  try {
-    SolrInputDocument solrInputDocument=_solrDocumentFactory.getSolrInputDocument(document);
-    _solrServer.add(solrInputDocument);
-    if (_commit || searchContext.isCommitImmediately()) {
-      _solrServer.commit();
-    }
-  }
- catch (  Exception e) {
-    _log.error(e,e);
-    throw new SearchException(e.getMessage());
-  }
+  _solrUpdateDocumentCommand.updateDocument(searchContext,document,false);
 }

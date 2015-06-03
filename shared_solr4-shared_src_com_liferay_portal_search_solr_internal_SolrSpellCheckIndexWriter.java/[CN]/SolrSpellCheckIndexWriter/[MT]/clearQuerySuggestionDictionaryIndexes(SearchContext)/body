@@ -1,15 +1,4 @@
 {
   String deleteQuery=buildDeleteQuery(searchContext,SuggestionConstants.TYPE_QUERY_SUGGESTION);
-  try {
-    _solrServer.deleteByQuery(deleteQuery);
-    if (_commit) {
-      _solrServer.commit();
-    }
-  }
- catch (  Exception e) {
-    if (_log.isDebugEnabled()) {
-      _log.debug(e,e);
-    }
-    throw new SearchException(e.getMessage(),e);
-  }
+  deleteByQuery(searchContext,deleteQuery);
 }
