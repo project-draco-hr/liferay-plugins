@@ -15,11 +15,11 @@
       if (zipObjectJSONObject.getBoolean("patch")) {
         long sourceVersionId=zipObjectJSONObject.getLong("sourceVersionId",0);
         long targetVersionId=zipObjectJSONObject.getLong("targetVersionId",0);
-        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(user,groupId,uuid,sourceVersionId,targetVersionId);
+        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(userId,groupId,uuid,sourceVersionId,targetVersionId);
         zipWriter.addEntry(zipFileId,downloadServletInputStream.getInputStream());
       }
  else {
-        DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(groupId,uuid,zipObjectJSONObject.getString("version"));
+        DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(userId,groupId,uuid,zipObjectJSONObject.getString("version"));
         zipWriter.addEntry(zipFileId,downloadServletInputStream.getInputStream());
       }
     }

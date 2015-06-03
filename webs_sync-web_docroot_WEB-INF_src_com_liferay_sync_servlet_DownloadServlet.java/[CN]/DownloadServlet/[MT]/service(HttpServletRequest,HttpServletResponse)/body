@@ -19,7 +19,7 @@
         throw new IllegalArgumentException("Missing parameter zipFileIds");
       }
       JSONArray zipFileIdsJSONArray=JSONFactoryUtil.createJSONArray(zipFileIds);
-      sendZipFile(response,user,zipFileIdsJSONArray);
+      sendZipFile(response,user.getUserId(),zipFileIdsJSONArray);
     }
  else     if (pathArray[0].equals("zipfolder")) {
       long repositoryId=ParamUtil.getLong(request,"repositoryId");
@@ -30,7 +30,7 @@
  else       if (folderId == 0) {
         throw new IllegalArgumentException("Missing parameter folderId");
       }
-      sendZipFolder(response,repositoryId,folderId);
+      sendZipFolder(response,user.getUserId(),repositoryId,folderId);
     }
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
@@ -43,10 +43,10 @@
       }
       boolean patch=ParamUtil.getBoolean(request,"patch");
       if (patch) {
-        sendPatch(request,response,user,groupId,uuid);
+        sendPatch(request,response,user.getUserId(),groupId,uuid);
       }
  else {
-        sendFile(request,response,groupId,uuid);
+        sendFile(request,response,user.getUserId(),groupId,uuid);
       }
     }
   }

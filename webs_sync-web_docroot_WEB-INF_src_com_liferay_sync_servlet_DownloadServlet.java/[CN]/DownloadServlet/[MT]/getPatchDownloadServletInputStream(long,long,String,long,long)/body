@@ -6,7 +6,7 @@
   if (!PortletPropsValues.SYNC_FILE_DIFF_CACHE_ENABLED) {
     File deltaFile=null;
     try {
-      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
+      deltaFile=getDeltaFile(userId,fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
       return new DownloadServletInputStream(new FileInputStream(deltaFile),deltaFile.length());
     }
   finally {
@@ -22,7 +22,7 @@
  else {
     File deltaFile=null;
     try {
-      deltaFile=getDeltaFile(user.getUserId(),fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
+      deltaFile=getDeltaFile(userId,fileEntry.getFileEntryId(),sourceVersionId,targetVersionId);
       try {
         SyncDLFileVersionDiffLocalServiceUtil.addSyncDLFileVersionDiff(fileEntry.getFileEntryId(),sourceVersionId,targetVersionId,deltaFile);
       }
