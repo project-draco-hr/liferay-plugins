@@ -1,13 +1,13 @@
 {
-  String filterQuery=StringPool.BLANK;
+  String filterString=StringPool.BLANK;
   if (filter != null) {
-    org.apache.lucene.search.Query luceneFilter=filter.accept(this);
-    if (luceneFilter != null) {
-      filterQuery=luceneFilter.toString();
+    org.apache.lucene.search.Query luceneQuery=filter.accept(this);
+    if (luceneQuery != null) {
+      filterString=luceneQuery.toString();
     }
   }
   if (searchContext != null) {
-    filterQuery=_includeCompanyId(filterQuery,searchContext);
+    filterString=includeCompanyId(filterString,searchContext);
   }
-  return filterQuery;
+  return filterString;
 }
