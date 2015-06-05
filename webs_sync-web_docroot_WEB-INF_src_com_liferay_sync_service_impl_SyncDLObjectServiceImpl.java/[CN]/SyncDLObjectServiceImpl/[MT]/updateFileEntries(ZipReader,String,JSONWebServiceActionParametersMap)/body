@@ -40,6 +40,14 @@
     String description=MapUtil.getString(jsonWebServiceActionParametersMap,"description");
     return addFolder(repositoryId,parentFolderId,name,description,serviceContext);
   }
+ else   if (urlPath.endsWith("/copy-file-entry")) {
+    long sourceFileEntryId=MapUtil.getLong(jsonWebServiceActionParametersMap,"sourceFileEntryId");
+    long repositoryId=MapUtil.getLong(jsonWebServiceActionParametersMap,"repositoryId");
+    long folderId=MapUtil.getLong(jsonWebServiceActionParametersMap,"folderId");
+    String sourceFileName=MapUtil.getString(jsonWebServiceActionParametersMap,"sourceFileName");
+    String title=MapUtil.getString(jsonWebServiceActionParametersMap,"title");
+    return copyFileEntry(sourceFileEntryId,repositoryId,folderId,sourceFileName,title,serviceContext);
+  }
  else   if (urlPath.endsWith("/move-file-entry")) {
     long fileEntryId=MapUtil.getLong(jsonWebServiceActionParametersMap,"fileEntryId");
     long newFolderId=MapUtil.getLong(jsonWebServiceActionParametersMap,"newFolderId");

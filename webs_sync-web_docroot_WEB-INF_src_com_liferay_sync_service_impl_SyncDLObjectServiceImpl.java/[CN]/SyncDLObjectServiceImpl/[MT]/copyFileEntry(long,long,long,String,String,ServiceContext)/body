@@ -1,0 +1,15 @@
+{
+  try {
+    Group group=groupLocalService.getGroup(repositoryId);
+    SyncUtil.checkSyncEnabled(group.getGroupId());
+    FileEntry sourceFileEntry=dlAppLocalService.getFileEntry(sourceFileEntryId);
+    if (!group.isUser() && (serviceContext.getGroupPermissions() == null)) {
+      SyncUtil.setFilePermissions(group,false,serviceContext);
+    }
+    FileEntry fileEntry=dlAppService.addFileEntry(repositoryId,folderId,sourceFileName,sourceFileEntry.getMimeType(),title,null,null,sourceFileEntry.getContentStream(),sourceFileEntry.getSize(),serviceContext);
+    return toSyncDLObject(fileEntry,SyncConstants.EVENT_ADD);
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
+  }
+}
