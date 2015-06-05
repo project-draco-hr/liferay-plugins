@@ -1,0 +1,11 @@
+{
+  String queryString=_queryTranslator.translate(queryFilter.getQuery(),null);
+  QueryParser queryParser=new QueryParser(Version.LUCENE_43,"uuid",new KeywordAnalyzer());
+  try {
+    Query query=queryParser.parse(queryString);
+    return query;
+  }
+ catch (  Exception e) {
+    throw new IllegalStateException("Unable to parse query: " + queryString,e);
+  }
+}
