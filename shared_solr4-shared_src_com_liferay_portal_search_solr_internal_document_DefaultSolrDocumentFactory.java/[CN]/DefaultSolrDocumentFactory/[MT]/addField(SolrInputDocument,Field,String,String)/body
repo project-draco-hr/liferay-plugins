@@ -1,11 +1,8 @@
 {
-  if (field.getName().equals(Field.GEO_LOCATION)) {
+  String name=field.getName();
+  if (name.equals(Field.GEO_LOCATION)) {
     GeoLocationPoint geoLocationPoint=field.getGeoLocationPoint();
-    StringBundler sb=new StringBundler(3);
-    sb.append(geoLocationPoint.getLatitude());
-    sb.append(StringPool.COMMA);
-    sb.append(geoLocationPoint.getLongitude());
-    value=sb.toString();
+    value=geoLocationPoint.getLatitude() + StringPool.COMMA + geoLocationPoint.getLongitude();
   }
   solrInputDocument.addField(localizedName,value);
   if (field.isSortable()) {
