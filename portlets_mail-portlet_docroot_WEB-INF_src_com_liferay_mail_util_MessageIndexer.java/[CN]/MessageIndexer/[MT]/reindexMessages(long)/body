@@ -1,14 +1,14 @@
 {
   ActionableDynamicQuery actionableDynamicQuery=new MessageActionableDynamicQuery(){
-    @Override protected void performAction(    Object object) throws PortalException {
+    @Override protected void performAction(    Object object){
       Message message=(Message)object;
       try {
         Document document=getDocument(message);
         addDocument(document);
       }
- catch (      PortalException e) {
+ catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
-          _log.warn("Unable to index message " + message.getMessageId(),e);
+          _log.warn("Unable to index message " + message.getMessageId(),pe);
         }
       }
     }
