@@ -11,8 +11,15 @@
   actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
     @Override public void performAction(    Object object) throws PortalException {
       KBArticle kbArticle=(KBArticle)object;
-      Document document=getDocument(kbArticle);
-      actionableDynamicQuery.addDocument(document);
+      try {
+        Document document=getDocument(kbArticle);
+        actionableDynamicQuery.addDocument(document);
+      }
+ catch (      PortalException e) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to index article: " + kbArticle.getKbArticleId(),e);
+        }
+      }
     }
   }
 );

@@ -2,8 +2,15 @@
   ActionableDynamicQuery actionableDynamicQuery=new MessageActionableDynamicQuery(){
     @Override protected void performAction(    Object object) throws PortalException {
       Message message=(Message)object;
-      Document document=getDocument(message);
-      addDocument(document);
+      try {
+        Document document=getDocument(message);
+        addDocument(document);
+      }
+ catch (      PortalException e) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to message: " + message.getMessageId(),e);
+        }
+      }
     }
   }
 ;
