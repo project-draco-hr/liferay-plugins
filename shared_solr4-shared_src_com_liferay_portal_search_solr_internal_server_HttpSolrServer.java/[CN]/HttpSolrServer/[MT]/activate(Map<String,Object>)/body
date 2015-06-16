@@ -1,7 +1,11 @@
 {
-  String url=MapUtil.getString(properties,"url","http://localhost:8080/solr");
+  _solrConfiguration=Configurable.createConfigurable(SolrConfiguration.class,properties);
+  if (getHttpSolrServer() != null) {
+    shutdown();
+  }
+  String url=_solrConfiguration.url();
   setUrl(url);
-  String authMode=MapUtil.getString(properties,"auth.mode","BASIC");
+  String authMode=_solrConfiguration.authenticationMode();
   HttpClientFactory httpClientFactory=_httpClientFactories.get(authMode);
   if (httpClientFactory == null) {
     throw new IllegalStateException("No HTTP client factory for " + authMode);

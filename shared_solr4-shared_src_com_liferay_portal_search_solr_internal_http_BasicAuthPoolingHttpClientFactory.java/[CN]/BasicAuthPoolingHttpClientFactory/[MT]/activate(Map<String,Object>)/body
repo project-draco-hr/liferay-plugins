@@ -1,10 +1,11 @@
 {
-  int defaultMaxConnectionsPerRoute=MapUtil.getInteger(properties,"default.max.connections.per.route",20);
+  _solrConfiguration=Configurable.createConfigurable(SolrConfiguration.class,properties);
+  int defaultMaxConnectionsPerRoute=_solrConfiguration.defaultMaxConnectionsPerRoute();
   setDefaultMaxConnectionsPerRoute(defaultMaxConnectionsPerRoute);
-  int maxTotalConnections=MapUtil.getInteger(properties,"max.total.connections",20);
+  int maxTotalConnections=_solrConfiguration.maxTotalConnections();
   setMaxTotalConnections(maxTotalConnections);
-  String password=MapUtil.getString(properties,"password",StringPool.BLANK);
-  setPassword(password);
-  String username=MapUtil.getString(properties,"username",StringPool.BLANK);
-  setUsername(username);
+  String basicAuthPassword=_solrConfiguration.basicAuthPassword();
+  setPassword(basicAuthPassword);
+  String basicAuthUserName=_solrConfiguration.basicAuthUserName();
+  setUsername(basicAuthUserName);
 }
