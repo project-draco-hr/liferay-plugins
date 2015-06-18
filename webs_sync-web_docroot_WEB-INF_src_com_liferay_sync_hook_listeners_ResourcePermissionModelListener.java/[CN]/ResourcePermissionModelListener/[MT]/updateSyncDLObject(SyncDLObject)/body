@@ -1,0 +1,12 @@
+{
+  syncDLObject.setModifiedTime(System.currentTimeMillis());
+  SyncDLObjectLocalServiceUtil.updateSyncDLObject(syncDLObject);
+  String type=syncDLObject.getType();
+  if (!type.equals(SyncConstants.TYPE_FOLDER)) {
+    return;
+  }
+  List<SyncDLObject> curSyncDLObjects=SyncDLObjectLocalServiceUtil.getSyncDLObjects(syncDLObject.getTypePK());
+  for (  SyncDLObject curSyncDLObject : curSyncDLObjects) {
+    updateSyncDLObject(curSyncDLObject);
+  }
+}
