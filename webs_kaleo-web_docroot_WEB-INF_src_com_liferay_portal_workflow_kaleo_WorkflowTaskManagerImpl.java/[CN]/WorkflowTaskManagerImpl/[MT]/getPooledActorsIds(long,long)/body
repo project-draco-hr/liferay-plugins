@@ -1,25 +1,26 @@
 {
   try {
     KaleoTaskInstanceToken kaleoTaskInstanceToken=KaleoTaskInstanceTokenLocalServiceUtil.getKaleoTaskInstanceToken(workflowTaskInstanceId);
-    Set<KaleoTaskAssignment> kaleoTaskAssignments=new HashSet<>();
-    List<KaleoTaskAssignment> roleKaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTaskInstanceToken.getKaleoTaskId(),Role.class.getName());
-    kaleoTaskAssignments.addAll(roleKaleoTaskAssignments);
-    List<KaleoTaskAssignment> calculatedKaleoTaskAssignments=getCalculatedKaleoTaskAssignments(companyId,kaleoTaskInstanceToken);
-    kaleoTaskAssignments.addAll(calculatedKaleoTaskAssignments);
+    List<KaleoTaskAssignment> calculatedKaleoTaskAssignments=getCalculatedKaleoTaskAssignments(kaleoTaskInstanceToken);
     Map<String,Long> pooledActors=new TreeMap<>(new NaturalOrderStringComparator());
-    for (    KaleoTaskAssignment kaleoTaskAssignment : kaleoTaskAssignments) {
-      String assigneeClassName=kaleoTaskAssignment.getAssigneeClassName();
-      if (!assigneeClassName.equals(Role.class.getName())) {
+    for (    KaleoTaskAssignment calculatedKaleoTaskAssignment : calculatedKaleoTaskAssignments) {
+      String assigneeClassName=calculatedKaleoTaskAssignment.getAssigneeClassName();
+      long assigneeClassPK=calculatedKaleoTaskAssignment.getAssigneeClassPK();
+      if (assigneeClassName.equals(User.class.getName())) {
+        User user=UserLocalServiceUtil.fetchUser(assigneeClassPK);
+        if (user != null) {
+          pooledActors.put(user.getFullName(),user.getUserId());
+        }
         continue;
       }
-      Role role=RoleLocalServiceUtil.getRole(kaleoTaskAssignment.getAssigneeClassPK());
+      Role role=RoleLocalServiceUtil.getRole(calculatedKaleoTaskAssignment.getAssigneeClassPK());
       if ((role.getType() == RoleConstants.TYPE_SITE) || (role.getType() == RoleConstants.TYPE_ORGANIZATION)) {
-        List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
+        List<UserGroupRole> userGroupRoles=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),assigneeClassPK);
         for (        UserGroupRole userGroupRole : userGroupRoles) {
           User user=userGroupRole.getUser();
           pooledActors.put(user.getFullName(),user.getUserId());
         }
-        List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),kaleoTaskAssignment.getAssigneeClassPK());
+        List<UserGroupGroupRole> userGroupGroupRoles=UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRolesByGroupAndRole(kaleoTaskInstanceToken.getGroupId(),assigneeClassPK);
         for (        UserGroupGroupRole userGroupGroupRole : userGroupGroupRoles) {
           List<User> userGroupUsers=UserLocalServiceUtil.getUserGroupUsers(userGroupGroupRole.getUserGroupId());
           for (          User user : userGroupUsers) {
@@ -28,7 +29,7 @@
         }
       }
  else {
-        List<User> inheritedRoleUsers=UserLocalServiceUtil.getInheritedRoleUsers(kaleoTaskAssignment.getAssigneeClassPK(),QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
+        List<User> inheritedRoleUsers=UserLocalServiceUtil.getInheritedRoleUsers(assigneeClassPK,QueryUtil.ALL_POS,QueryUtil.ALL_POS,null);
         for (        User user : inheritedRoleUsers) {
           pooledActors.put(user.getFullName(),user.getUserId());
         }
