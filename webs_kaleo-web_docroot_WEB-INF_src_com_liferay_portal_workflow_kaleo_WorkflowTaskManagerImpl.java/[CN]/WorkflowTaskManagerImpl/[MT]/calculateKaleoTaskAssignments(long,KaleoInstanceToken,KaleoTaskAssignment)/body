@@ -1,0 +1,10 @@
+{
+  KaleoInstance kaleoInstance=kaleoInstanceToken.getKaleoInstance();
+  Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoInstance.getWorkflowContext());
+  ServiceContext serviceContext=new ServiceContext();
+  serviceContext.setCompanyId(companyId);
+  String[] assigneeScriptRequiredContexts=StringUtil.split(kaleoTaskAssignment.getAssigneeScriptRequiredContexts());
+  ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(assigneeScriptRequiredContexts);
+  ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,serviceContext);
+  return _taskAssignmentSelector.calculateTaskAssignments(kaleoTaskAssignment,executionContext,classLoaders);
+}

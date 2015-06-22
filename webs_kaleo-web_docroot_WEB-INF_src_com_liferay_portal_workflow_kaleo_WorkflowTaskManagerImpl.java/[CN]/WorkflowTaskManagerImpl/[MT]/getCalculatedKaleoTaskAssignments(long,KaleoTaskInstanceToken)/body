@@ -1,0 +1,9 @@
+{
+  List<KaleoTaskAssignment> calculatedKaleoTaskAssignments=new ArrayList<>();
+  List<KaleoTaskAssignment> scriptKaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTaskInstanceToken.getKaleoTaskId(),"SCRIPT");
+  for (  KaleoTaskAssignment scriptKaleoTaskAssignment : scriptKaleoTaskAssignments) {
+    Collection<KaleoTaskAssignment> kaleoTaskAssignments=calculateKaleoTaskAssignments(companyId,kaleoTaskInstanceToken.getKaleoInstanceToken(),scriptKaleoTaskAssignment);
+    calculatedKaleoTaskAssignments.addAll(kaleoTaskAssignments);
+  }
+  return calculatedKaleoTaskAssignments;
+}
