@@ -6,7 +6,16 @@
     if (userIdJsonPrimitive == null) {
       return null;
     }
-    return userIdJsonPrimitive.getAsString();
+    long userId=userIdJsonPrimitive.getAsLong();
+    User user=UserLocalServiceUtil.fetchUser(userId);
+    Date passwordModifiedDate=user.getPasswordModifiedDate();
+    if (passwordModifiedDate != null) {
+      Instant instant=jsonToken.getIssuedAt();
+      if (instant.isBefore(passwordModifiedDate.getTime())) {
+        return null;
+      }
+    }
+    return String.valueOf(userId);
   }
  catch (  Exception e) {
     return null;
