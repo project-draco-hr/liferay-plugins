@@ -1,0 +1,20 @@
+{
+  ActionableDynamicQuery actionableDynamicQuery=new AccountActionableDynamicQuery(){
+    @Override protected void performAction(    Object object){
+      Account account=(Account)object;
+      try {
+        Document document=getDocument(account);
+        addDocument(document);
+      }
+ catch (      PortalException pe) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to index account " + account.getAccountId(),pe);
+        }
+      }
+    }
+  }
+;
+  actionableDynamicQuery.setCompanyId(companyId);
+  actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+  actionableDynamicQuery.performActions();
+}

@@ -1,0 +1,20 @@
+{
+  ActionableDynamicQuery actionableDynamicQuery=new FolderActionableDynamicQuery(){
+    @Override protected void performAction(    Object object){
+      Folder folder=(Folder)object;
+      try {
+        Document document=getDocument(folder);
+        addDocument(document);
+      }
+ catch (      PortalException pe) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("Unable to index folder " + folder.getFolderId(),pe);
+        }
+      }
+    }
+  }
+;
+  actionableDynamicQuery.setCompanyId(companyId);
+  actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+  actionableDynamicQuery.performActions();
+}
