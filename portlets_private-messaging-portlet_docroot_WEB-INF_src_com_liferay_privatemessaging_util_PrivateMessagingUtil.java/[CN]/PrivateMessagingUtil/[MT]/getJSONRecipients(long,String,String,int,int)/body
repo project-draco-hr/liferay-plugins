@@ -12,13 +12,13 @@
     params.put("usersGroups",SitesUtil.filterGroups(groups,PortletPropsValues.AUTOCOMPLETE_RECIPIENT_SITE_EXCLUDES));
   }
  else   if (!type.equals("all")) {
-    params.put("socialRelationType",new Long[]{userId,new Long(SocialRelationConstants.TYPE_BI_CONNECTION)});
+    params.put("socialRelationType",new Long[]{userId,Long.valueOf(SocialRelationConstants.TYPE_BI_CONNECTION)});
   }
   try {
     Role role=RoleLocalServiceUtil.getRole(user.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
     if (role != null) {
       params.put("inherit",Boolean.TRUE);
-      params.put("usersRoles",new Long(role.getRoleId()));
+      params.put("usersRoles",Long.valueOf(role.getRoleId()));
     }
   }
  catch (  NoSuchRoleException nsre) {
