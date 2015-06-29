@@ -1,11 +1,11 @@
 {
-  List<Object> models=alloyServiceInvoker.executeDynamicQuery(new Object[]{"companyId",companyId},start,end);
-  if (models.isEmpty()) {
+  List<BaseModel<?>> baseModels=alloyServiceInvoker.executeDynamicQuery(new Object[]{"companyId",companyId},start,end);
+  if (baseModels.isEmpty()) {
     return;
   }
-  Collection<Document> documents=new ArrayList<>(models.size());
-  for (  Object model : models) {
-    Document document=getDocument(model);
+  Collection<Document> documents=new ArrayList<>(baseModels.size());
+  for (  BaseModel<?> baseModel : baseModels) {
+    Document document=getDocument(baseModel);
     documents.add(document);
   }
   SearchEngineUtil.updateDocuments(getSearchEngineId(),companyId,documents);
