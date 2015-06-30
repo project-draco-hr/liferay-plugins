@@ -1,10 +1,10 @@
 {
   List<KaleoTaskAssignment> calculatedKaleoTaskAssignments=new ArrayList<>();
-  List<KaleoTaskAssignment> configuredKaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTaskInstanceToken.getKaleoTaskId());
   KaleoInstanceToken kaleoInstanceToken=kaleoTaskInstanceToken.getKaleoInstanceToken();
   Map<String,Serializable> workflowContext=WorkflowContextUtil.convert(kaleoTaskInstanceToken.getWorkflowContext());
   ServiceContext workflowContextServiceContext=(ServiceContext)workflowContext.get(WorkflowConstants.CONTEXT_SERVICE_CONTEXT);
   ExecutionContext executionContext=new ExecutionContext(kaleoInstanceToken,workflowContext,workflowContextServiceContext);
+  List<KaleoTaskAssignment> configuredKaleoTaskAssignments=KaleoTaskAssignmentLocalServiceUtil.getKaleoTaskAssignments(kaleoTaskInstanceToken.getKaleoTaskId());
   for (  KaleoTaskAssignment configuredKaleoTaskAssignment : configuredKaleoTaskAssignments) {
     String[] assigneeScriptRequiredContexts=StringUtil.split(configuredKaleoTaskAssignment.getAssigneeScriptRequiredContexts());
     ClassLoader[] classLoaders=ClassLoaderUtil.getClassLoaders(assigneeScriptRequiredContexts);
