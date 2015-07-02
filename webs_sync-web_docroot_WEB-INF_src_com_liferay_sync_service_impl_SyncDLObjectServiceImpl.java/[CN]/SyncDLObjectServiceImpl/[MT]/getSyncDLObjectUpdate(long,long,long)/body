@@ -2,10 +2,12 @@
   try {
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
-    List<SyncDLObject> syncDLObjects=syncDLObjectFinder.filterFindByC_M_R_P(companyId,lastAccessTime,repositoryId,-1);
-    if (!InlineSQLHelperUtil.isEnabled(repositoryId)) {
-      syncDLObjects=checkSyncDLObjects(syncDLObjects);
+    String event=null;
+    if (lastAccessTime == -1) {
+      event=SyncConstants.EVENT_DELETE;
     }
+    List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByC_M_R_NotE(companyId,lastAccessTime,repositoryId,event,0,PortletPropsValues.SYNC_PAGINATION_DELTA,new SyncDLObjectTypeComparator());
+    syncDLObjects=checkSyncDLObjects(syncDLObjects);
     for (    SyncDLObject syncDLObject : syncDLObjects) {
       if (syncDLObject.getModifiedTime() > lastAccessTime) {
         lastAccessTime=syncDLObject.getModifiedTime();

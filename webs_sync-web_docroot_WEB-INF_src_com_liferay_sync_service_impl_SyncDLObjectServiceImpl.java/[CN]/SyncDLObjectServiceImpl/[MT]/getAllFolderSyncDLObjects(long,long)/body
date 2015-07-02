@@ -2,11 +2,8 @@
   try {
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
-    List<SyncDLObject> syncDLObjects=syncDLObjectFinder.filterFindByC_R(companyId,repositoryId);
-    if (!InlineSQLHelperUtil.isEnabled(repositoryId)) {
-      return checkSyncDLObjects(syncDLObjects);
-    }
-    return syncDLObjects;
+    List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByC_R_T(companyId,repositoryId,SyncConstants.TYPE_FOLDER);
+    return checkSyncDLObjects(syncDLObjects);
   }
  catch (  PortalException pe) {
     throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);

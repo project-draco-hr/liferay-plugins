@@ -1,19 +1,28 @@
 {
-  Iterator<SyncDLObject> iterator=syncDLObjects.iterator();
-  while (iterator.hasNext()) {
-    SyncDLObject syncDLObject=iterator.next();
+  PermissionChecker permissionChecker=getPermissionChecker();
+  List<SyncDLObject> checkedSyncDLObjects=new ArrayList<>();
+  for (  SyncDLObject syncDLObject : syncDLObjects) {
+    String event=syncDLObject.getEvent();
+    if (event.equals(SyncConstants.EVENT_DELETE)) {
+      continue;
+    }
     String type=syncDLObject.getType();
-    try {
-      if (type.equals(SyncConstants.TYPE_FILE) || type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
-        dlAppService.getFileEntry(syncDLObject.getTypePK());
-      }
- else {
-        dlAppService.getFolder(syncDLObject.getTypePK());
+    if (type.equals(SyncConstants.TYPE_FILE)) {
+      if (!permissionChecker.hasPermission(syncDLObject.getRepositoryId(),DLFileEntryConstants.getClassName(),syncDLObject.getTypePK(),ActionKeys.VIEW)) {
+        continue;
       }
     }
- catch (    Exception e) {
-      iterator.remove();
+ else     if (type.equals(SyncConstants.TYPE_FOLDER)) {
+      if (!permissionChecker.hasPermission(syncDLObject.getRepositoryId(),DLFolderConstants.getClassName(),syncDLObject.getTypePK(),ActionKeys.VIEW)) {
+        continue;
+      }
     }
+ else     if (type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
+      if ((syncDLObject.getLockUserId() != permissionChecker.getUserId()) || !permissionChecker.hasPermission(syncDLObject.getRepositoryId(),DLFileEntryConstants.getClassName(),syncDLObject.getTypePK(),ActionKeys.VIEW)) {
+        continue;
+      }
+    }
+    checkedSyncDLObjects.add(syncDLObject);
   }
-  return syncDLObjects;
+  return checkedSyncDLObjects;
 }

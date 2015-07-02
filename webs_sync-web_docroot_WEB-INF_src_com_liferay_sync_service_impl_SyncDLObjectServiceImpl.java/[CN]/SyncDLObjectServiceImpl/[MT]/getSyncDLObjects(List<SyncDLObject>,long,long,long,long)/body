@@ -1,8 +1,6 @@
 {
-  List<SyncDLObject> curSyncDLObjects=syncDLObjectFinder.filterFindByC_M_R_P(companyId,lastAccessTime,repositoryId,parentFolderId);
-  if (!InlineSQLHelperUtil.isEnabled(repositoryId)) {
-    curSyncDLObjects=checkSyncDLObjects(curSyncDLObjects);
-  }
+  List<SyncDLObject> curSyncDLObjects=syncDLObjectPersistence.findByC_M_R_P(companyId,lastAccessTime,repositoryId,parentFolderId);
+  curSyncDLObjects=checkSyncDLObjects(curSyncDLObjects);
   syncDLObjects.addAll(curSyncDLObjects);
   for (  SyncDLObject curSyncDLObject : curSyncDLObjects) {
     String type=curSyncDLObject.getType();
