@@ -2,7 +2,8 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   Layout layout=themeDisplay.getLayout();
   JSONObject userPrefsJSONObject=JSONFactoryUtil.createJSONObject();
-  Map<String,UserPref> userPrefs=getUserPrefs(portletConfig,actionRequest);
+  HttpServletRequest request=PortalUtil.getHttpServletRequest(actionRequest);
+  Map<String,UserPref> userPrefs=getUserPrefs(portletConfig,request);
   for (  UserPref userPref : userPrefs.values()) {
     String name=userPref.getName();
     String value=ParamUtil.getString(actionRequest,name);
