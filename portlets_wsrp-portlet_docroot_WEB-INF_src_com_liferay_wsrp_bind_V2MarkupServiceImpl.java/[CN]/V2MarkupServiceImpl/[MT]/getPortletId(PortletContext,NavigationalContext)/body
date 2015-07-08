@@ -6,8 +6,10 @@
       opaqueValue=new String(Base64.decode(Base64.fromURLSafe(opaqueValue)),StringPool.UTF8);
     }
     Map<String,String[]> parameterMap=HttpUtil.parameterMapFromString(opaqueValue);
-    if (parameterMap.containsKey(_STRUTS_ACTION_PORTLET_CONFIGURATION)) {
-      portletId=PortletKeys.PORTLET_CONFIGURATION;
+    String portletConfigurationPortletId=PortletProviderUtil.getPortletId(request,PortletConfigurationApplicationType.PortletConfiguration.CLASS_NAME,PortletProvider.Action.VIEW);
+    String actionPortletConfiguration=PortalUtil.getPortletNamespace(portletConfigurationPortletId) + "portletConfiguration";
+    if (parameterMap.containsKey(actionPortletConfiguration)) {
+      portletId=portletConfigurationPortletId;
     }
   }
   return portletId;
