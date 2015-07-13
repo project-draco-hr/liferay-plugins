@@ -3,7 +3,8 @@
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
     List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByC_R_T(companyId,repositoryId,SyncConstants.TYPE_FOLDER);
-    return checkSyncDLObjects(syncDLObjects);
+    SyncDLObjectUpdate syncDLObjectUpdate=checkSyncDLObjects(syncDLObjects);
+    return syncDLObjectUpdate.getSyncDLObjects();
   }
  catch (  PortalException pe) {
     throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
