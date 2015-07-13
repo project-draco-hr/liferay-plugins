@@ -1,0 +1,60 @@
+{
+  if (_log.isDebugEnabled()) {
+    _log.debug("Processing group " + groupId);
+  }
+  _counter=0;
+  ActionableDynamicQuery dlFolderActionableDynamicQuery=DLFolderLocalServiceUtil.getActionableDynamicQuery();
+  dlFolderActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
+      Property mountPointProperty=PropertyFactoryUtil.forName("mountPoint");
+      dynamicQuery.add(mountPointProperty.eq(false));
+      Property statusProperty=PropertyFactoryUtil.forName("status");
+      dynamicQuery.add(statusProperty.eq(WorkflowConstants.STATUS_APPROVED));
+    }
+  }
+);
+  dlFolderActionableDynamicQuery.setGroupId(groupId);
+  dlFolderActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
+    @Override public void performAction(    Object object) throws PortalException {
+      incrementCounter();
+      DLFolder dlFolder=(DLFolder)object;
+      if (!SyncUtil.isSupportedFolder(dlFolder)) {
+        return;
+      }
+      addSyncDLObject(SyncUtil.toSyncDLObject(dlFolder,SyncConstants.EVENT_ADD));
+    }
+  }
+);
+  ActionableDynamicQuery dlFileEntryActionableDynamicQuery=DLFileEntryLocalServiceUtil.getActionableDynamicQuery();
+  dlFileEntryActionableDynamicQuery.setGroupId(groupId);
+  dlFileEntryActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
+    @Override public void performAction(    Object object) throws PortalException {
+      incrementCounter();
+      DLFileEntry dlFileEntry=(DLFileEntry)object;
+      if (dlFileEntry.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+        return;
+      }
+      try {
+        SyncDLObject fileEntrySyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,SyncConstants.EVENT_ADD,true);
+        String type=fileEntrySyncDLObject.getType();
+        if (type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
+          SyncDLObject approvedSyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,SyncConstants.EVENT_ADD,true,true);
+          addSyncDLObject(approvedSyncDLObject);
+        }
+        addSyncDLObject(fileEntrySyncDLObject);
+      }
+ catch (      NoSuchFileException nsfe) {
+        if (_log.isWarnEnabled()) {
+          _log.warn("File missing for file entry " + dlFileEntry.getFileEntryId());
+        }
+      }
+    }
+  }
+);
+  _totalCount=dlFolderActionableDynamicQuery.performCount() + dlFileEntryActionableDynamicQuery.performCount();
+  dlFolderActionableDynamicQuery.performActions();
+  dlFileEntryActionableDynamicQuery.performActions();
+  if (_log.isDebugEnabled()) {
+    _log.debug("Processed " + _counter + " files and folders for group "+ groupId);
+  }
+}
