@@ -6,9 +6,17 @@
     UserNotificationEventLocalServiceUtil.deleteUserNotificationEvent(userNotificationEvent.getUserNotificationEventId());
     return null;
   }
-  ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
-  User user=themeDisplay.getUser();
-  Group group=user.getGroup();
+  String entryClassName=announcementEntry.getClassName();
+  long entryClassPK=announcementEntry.getClassPK();
+  Group group=null;
+  if (entryClassName.equals(Group.class.getName())) {
+    group=GroupLocalServiceUtil.getGroup(entryClassPK);
+  }
+ else {
+    ThemeDisplay themeDisplay=serviceContext.getThemeDisplay();
+    User user=themeDisplay.getUser();
+    group=user.getGroup();
+  }
   long portletPlid=PortalUtil.getPlidFromPortletId(group.getGroupId(),true,PortletKeys.SO_ANNOUNCEMENTS);
   PortletURL portletURL=null;
   if (portletPlid != 0) {
