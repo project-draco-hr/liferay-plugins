@@ -1,7 +1,15 @@
 {
   super(propertiesFileName);
-  System.out.println("Deleting available Volumes");
-  deleteAvailableVolumes();
-  System.out.println("Deleting old Launch Configurations");
-  deleteOldLaunchConfigurations();
+  if (isAcknowledged("Do you want to delete available Volumes?")) {
+    System.out.println("Deleting available Volumes");
+    deleteAvailableVolumes();
+  }
+  if (isAcknowledged("Do you want to delete old Launch Configurations?")) {
+    System.out.println("Deleting old Launch Configurations");
+    deleteOldLaunchConfigurations();
+  }
+  if (isAcknowledged("Do you want to delete unused AMIs?")) {
+    System.out.println("Deleting unused AMIs");
+    deleteOldAMIs();
+  }
 }

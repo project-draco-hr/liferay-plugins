@@ -1,0 +1,17 @@
+{
+  String userId=null;
+  try {
+    GetUserResult getUserResult=amazonIdentityManagementClient.getUser();
+    User user=getUserResult.getUser();
+    userId=user.getUserId();
+  }
+ catch (  AmazonServiceException e) {
+    if (e.getErrorCode().compareTo("AccessDenied") == 0) {
+      String msg=e.getMessage();
+      int startIndex=msg.indexOf("::");
+      int endIndex=msg.indexOf(":",startIndex + 2);
+      userId=msg.substring(startIndex + 2,endIndex);
+    }
+  }
+  return userId;
+}

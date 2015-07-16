@@ -1,0 +1,10 @@
+{
+  DescribeInstancesResult describeInstancesResult=amazonEC2Client.describeInstances();
+  Set<String> amis=new HashSet<String>();
+  for (  Reservation reservation : describeInstancesResult.getReservations()) {
+    for (    Instance instance : reservation.getInstances()) {
+      amis.add(instance.getImageId());
+    }
+  }
+  return amis;
+}
