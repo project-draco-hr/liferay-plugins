@@ -1,0 +1,16 @@
+{
+  System.out.println("Finding Metric Alarms for deleting...");
+  Map<String,String> allMetricAlarms=getAllMetricAlarms();
+  List<String> activeAutoScalingGroups=getActiveAutoScalingGroups();
+  List<String> allMetricAlarmsForDeleting=getAllMetricAlarmsForDeleting(allMetricAlarms,activeAutoScalingGroups);
+  for (  String metricAlarmName : allMetricAlarmsForDeleting) {
+    if (isAcknowledged("Delete Metric Alarm " + metricAlarmName + "?")) {
+      System.out.println("Deleting Metric Alarm " + metricAlarmName);
+      DeleteAlarmsRequest deleteAlarmsRequest=new DeleteAlarmsRequest();
+      List<String> alarmNames=new ArrayList<String>();
+      alarmNames.add(metricAlarmName);
+      deleteAlarmsRequest.setAlarmNames(alarmNames);
+      amazonCloudWatchClient.deleteAlarms(deleteAlarmsRequest);
+    }
+  }
+}

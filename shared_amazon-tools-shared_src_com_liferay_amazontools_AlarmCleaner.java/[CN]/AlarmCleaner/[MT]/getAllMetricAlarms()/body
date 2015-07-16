@@ -1,0 +1,22 @@
+{
+  Map<String,String> metricAlarmsMap=new HashMap<String,String>();
+  DescribeAlarmsResult describeAlarmsResult=amazonCloudWatchClient.describeAlarms();
+  String nextToken=null;
+  do {
+    if (nextToken != null) {
+      DescribeAlarmsRequest describeAlarmsRequest=new DescribeAlarmsRequest();
+      describeAlarmsRequest.setNextToken(nextToken);
+      describeAlarmsResult=amazonCloudWatchClient.describeAlarms(describeAlarmsRequest);
+    }
+    List<MetricAlarm> metricAlarms=describeAlarmsResult.getMetricAlarms();
+    for (    MetricAlarm metricAlarm : metricAlarms) {
+      String autoScalingGroup=getAutoScalingGroup(metricAlarm.getDimensions());
+      if (autoScalingGroup != null) {
+        metricAlarmsMap.put(autoScalingGroup,metricAlarm.getAlarmName());
+      }
+    }
+    nextToken=describeAlarmsResult.getNextToken();
+  }
+ while (nextToken != null);
+  return metricAlarmsMap;
+}
