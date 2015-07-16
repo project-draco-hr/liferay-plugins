@@ -1,0 +1,29 @@
+{
+  PermissionChecker permissionChecker=getPermissionChecker();
+  long lastAccessTime=0;
+  List<Long> typePKs=new ArrayList<>();
+  for (  SyncDLObject syncDLObject : syncDLObjects) {
+    if (syncDLObject.getModifiedTime() > lastAccessTime) {
+      lastAccessTime=syncDLObject.getModifiedTime();
+    }
+    if (!permissionChecker.isGroupAdmin(repositoryId)) {
+      typePKs.add(syncDLObject.getTypePK());
+    }
+  }
+  if (permissionChecker.isGroupAdmin(repositoryId)) {
+    return new SyncDLObjectUpdate(syncDLObjects,lastAccessTime);
+  }
+  List<Long> checkedTypePKs=checkSyncDLObjects(companyId,repositoryId,permissionChecker.getUserId(),typePKs);
+  List<SyncDLObject> checkedSyncDLObjects=new ArrayList<>();
+  for (  SyncDLObject syncDLObject : syncDLObjects) {
+    String event=syncDLObject.getEvent();
+    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH)) {
+      checkedSyncDLObjects.add(syncDLObject);
+      continue;
+    }
+    if (checkedTypePKs.contains(syncDLObject.getTypePK())) {
+      checkedSyncDLObjects.add(syncDLObject);
+    }
+  }
+  return new SyncDLObjectUpdate(checkedSyncDLObjects,lastAccessTime);
+}
