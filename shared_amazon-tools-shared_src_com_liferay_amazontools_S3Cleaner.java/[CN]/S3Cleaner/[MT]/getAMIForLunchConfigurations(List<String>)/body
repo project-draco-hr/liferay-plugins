@@ -1,0 +1,10 @@
+{
+  DescribeLaunchConfigurationsRequest describeLaunchConfigurationsRequest=new DescribeLaunchConfigurationsRequest();
+  describeLaunchConfigurationsRequest.setLaunchConfigurationNames(activeLaunchConfigurationNames);
+  DescribeLaunchConfigurationsResult describeLaunchConfigurationsResult=amazonAutoScalingClient.describeLaunchConfigurations(describeLaunchConfigurationsRequest);
+  List<String> amis=new ArrayList<String>();
+  for (  LaunchConfiguration launchConfiguration : describeLaunchConfigurationsResult.getLaunchConfigurations()) {
+    amis.add(launchConfiguration.getImageId());
+  }
+  return amis;
+}

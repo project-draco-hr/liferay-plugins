@@ -1,0 +1,13 @@
+{
+  List<String> bucketsForDeleting=new ArrayList<String>();
+  List<Bucket> buckets=amazonS3Client.listBuckets();
+  for (  Bucket bucket : buckets) {
+    if (bucket.getName().startsWith("frw-cluster") || bucket.getName().startsWith("lcs-cluster")) {
+      String timestamp=getTimestamp(bucket.getName());
+      if (!timestamps.contains(timestamp)) {
+        bucketsForDeleting.add(bucket.getName());
+      }
+    }
+  }
+  return bucketsForDeleting;
+}

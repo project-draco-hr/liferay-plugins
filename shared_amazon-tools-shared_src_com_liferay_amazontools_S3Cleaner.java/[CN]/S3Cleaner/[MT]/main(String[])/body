@@ -1,0 +1,14 @@
+{
+  CmdLineParser cmdLineParser=new CmdLineParser();
+  CmdLineParser.Option propertiesFileNameOption=cmdLineParser.addStringOption("properties.file.name");
+  cmdLineParser.parse(args);
+  try {
+    new S3Cleaner((String)cmdLineParser.getOptionValue(propertiesFileNameOption));
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    System.exit(-1);
+    return;
+  }
+  System.exit(0);
+}

@@ -1,0 +1,14 @@
+{
+  ObjectListing objectListing=amazonS3Client.listObjects(bucketName);
+  List<S3ObjectSummary> objectSummaries=objectListing.getObjectSummaries();
+  if (objectSummaries.size() != 0) {
+    DeleteObjectsRequest multiObjectDeleteRequest=new DeleteObjectsRequest(bucketName);
+    List<DeleteObjectsRequest.KeyVersion> keys=new ArrayList<DeleteObjectsRequest.KeyVersion>();
+    for (    S3ObjectSummary objectSummary : objectSummaries) {
+      keys.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey()));
+    }
+    multiObjectDeleteRequest.setKeys(keys);
+    amazonS3Client.deleteObjects(multiObjectDeleteRequest);
+  }
+  amazonS3Client.deleteBucket(bucketName);
+}

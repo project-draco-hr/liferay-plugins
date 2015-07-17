@@ -1,0 +1,10 @@
+{
+  DescribeImagesRequest describeImagesRequest=new DescribeImagesRequest();
+  describeImagesRequest.setImageIds(activeAMIs);
+  DescribeImagesResult describeImagesResult=amazonEC2Client.describeImages(describeImagesRequest);
+  List<String> amiNames=new ArrayList<String>();
+  for (  Image image : describeImagesResult.getImages()) {
+    amiNames.add(image.getName());
+  }
+  return amiNames;
+}
