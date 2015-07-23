@@ -5,19 +5,36 @@
     return;
   }
   HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
+  if (ParamUtil.get(httpServletRequest,"debug",false)) {
+    filterChain.doFilter(servletRequest,servletResponse);
+    return;
+  }
   Throwable throwable=null;
   if (PrefsPropsUtil.getBoolean(PortalUtil.getCompanyId(httpServletRequest),PortletPropsKeys.SYNC_SERVICES_ENABLED,PortletPropsValues.SYNC_SERVICES_ENABLED)) {
-    int build=httpServletRequest.getIntHeader("Sync-Build");
-    int syncClientMinBuild=PrefsPropsUtil.getInteger(PortalUtil.getCompanyId(httpServletRequest),PortletPropsKeys.SYNC_CLIENT_MIN_BUILD,PortletPropsValues.SYNC_CLIENT_MIN_BUILD);
-    if (syncClientMinBuild < _ABSOLUTE_MINIMUM_BUILD) {
-      syncClientMinBuild=_ABSOLUTE_MINIMUM_BUILD;
+    String device=httpServletRequest.getHeader("Sync-Device");
+    if (device == null) {
+      throwable=new SyncServicesUnavailableException();
     }
-    if (build >= syncClientMinBuild) {
+ else     if (device.startsWith("desktop")) {
+      int build=httpServletRequest.getIntHeader("Sync-Build");
+      int syncClientMinBuild=PrefsPropsUtil.getInteger(PortalUtil.getCompanyId(httpServletRequest),PortletPropsKeys.SYNC_CLIENT_DESKTOP_MIN_BUILD,PortletPropsValues.SYNC_CLIENT_DESKTOP_MIN_BUILD);
+      if (syncClientMinBuild < _ABSOLUTE_DESKTOP_MINIMUM_BUILD) {
+        syncClientMinBuild=_ABSOLUTE_DESKTOP_MINIMUM_BUILD;
+      }
+      if (build >= syncClientMinBuild) {
+        filterChain.doFilter(servletRequest,servletResponse);
+        return;
+      }
+ else {
+        throwable=new SyncClientMinBuildException("Sync client does not meet minimum build " + syncClientMinBuild);
+      }
+    }
+ else     if (device.startsWith("mobile")) {
       filterChain.doFilter(servletRequest,servletResponse);
       return;
     }
  else {
-      throwable=new SyncClientMinBuildException("Sync client does not meet minimum build " + syncClientMinBuild);
+      throwable=new SyncServicesUnavailableException();
     }
   }
  else {
