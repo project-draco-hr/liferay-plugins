@@ -1,0 +1,13 @@
+{
+  List<SyncDLObject> curSyncDLObjects=syncDLObjectPersistence.findByM_R_P(lastAccessTime,repositoryId,parentFolderId);
+  curSyncDLObjects=checkSyncDLObjects(curSyncDLObjects,repositoryId);
+  syncDLObjects.addAll(curSyncDLObjects);
+  for (  SyncDLObject curSyncDLObject : curSyncDLObjects) {
+    String type=curSyncDLObject.getType();
+    if (!type.equals(SyncConstants.TYPE_FOLDER)) {
+      continue;
+    }
+    getSyncDLObjects(syncDLObjects,repositoryId,curSyncDLObject.getTypePK(),lastAccessTime);
+  }
+  return syncDLObjects;
+}

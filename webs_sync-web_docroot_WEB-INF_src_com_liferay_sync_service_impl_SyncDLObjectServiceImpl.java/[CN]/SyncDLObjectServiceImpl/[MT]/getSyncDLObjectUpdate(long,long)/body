@@ -1,0 +1,23 @@
+{
+  try {
+    SyncUtil.checkSyncEnabled(repositoryId);
+    repositoryService.checkRepository(repositoryId);
+    String[] events=null;
+    if (lastAccessTime == -1) {
+      events=new String[]{SyncConstants.EVENT_DELETE,SyncConstants.EVENT_TRASH};
+    }
+ else {
+      events=new String[0];
+    }
+    List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByM_R_NotE(lastAccessTime,repositoryId,events,0,PortletPropsValues.SYNC_PAGINATION_DELTA,new SyncDLObjectModifiedTimeComparator());
+    if (syncDLObjects.isEmpty()) {
+      return new SyncDLObjectUpdate(syncDLObjects,0,lastAccessTime);
+    }
+    int count=syncDLObjectPersistence.countByM_R_NotE(lastAccessTime,repositoryId,events);
+    SyncDLObject syncDLObject=syncDLObjects.get(syncDLObjects.size() - 1);
+    return new SyncDLObjectUpdate(checkSyncDLObjects(syncDLObjects,repositoryId),count,syncDLObject.getModifiedTime());
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
+  }
+}
