@@ -13,7 +13,7 @@
   if (PrefsPropsUtil.getBoolean(PortalUtil.getCompanyId(httpServletRequest),PortletPropsKeys.SYNC_SERVICES_ENABLED,PortletPropsValues.SYNC_SERVICES_ENABLED)) {
     String syncDevice=httpServletRequest.getHeader("Sync-Device");
     if (syncDevice == null) {
-      throwable=new SyncServicesUnavailableException();
+      throwable=new SyncDeviceHeaderException();
     }
  else     if (syncDevice.startsWith("desktop")) {
       int syncBuild=httpServletRequest.getIntHeader("Sync-Build");
@@ -34,7 +34,7 @@
       return;
     }
  else {
-      throwable=new SyncServicesUnavailableException();
+      throwable=new SyncDeviceHeaderException();
     }
   }
  else {
