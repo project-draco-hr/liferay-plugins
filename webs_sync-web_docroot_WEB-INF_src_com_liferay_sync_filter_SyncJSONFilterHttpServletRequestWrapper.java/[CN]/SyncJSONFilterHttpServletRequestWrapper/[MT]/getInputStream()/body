@@ -1,0 +1,13 @@
+{
+  if (_byteArrayOutputStream == null) {
+    _byteArrayOutputStream=new ByteArrayOutputStream();
+    StreamUtil.transfer(super.getInputStream(),_byteArrayOutputStream);
+  }
+  final ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(_byteArrayOutputStream.toByteArray());
+  return new ServletInputStream(){
+    @Override public int read() throws IOException {
+      return byteArrayInputStream.read();
+    }
+  }
+;
+}
