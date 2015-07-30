@@ -4,11 +4,11 @@
   ResultSet rs=null;
   try {
     con=DataAccess.getUpgradeOptimizedConnection();
-    StringBuilder sb=new StringBuilder(7);
+    StringBuilder sb=new StringBuilder(11);
     sb.append("select Layout.plid from Layout ");
     sb.append(getJoinSQL());
     sb.append("where ((Layout.typeSettings like '%");
-    sb.append(_ANNOUNCEMENTS);
+    sb.append(_PORTLET_ID_ANNOUNCEMENTS);
     sb.append("%')");
     sb.append("or (Layout.typeSettings like '%");
     sb.append(AnnouncementsPortletKeys.ANNOUNCEMENTS);
@@ -26,7 +26,7 @@
       UnicodeProperties typeSettingsProperties=layout.getTypeSettingsProperties();
       for (      String columnName : layoutTemplate.getColumns()) {
         String columnValue=typeSettingsProperties.getProperty(columnName);
-        columnValue=StringUtil.replace(columnValue,_ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
+        columnValue=StringUtil.replace(columnValue,_PORTLET_ID_ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
         columnValue=StringUtil.replace(columnValue,AnnouncementsPortletKeys.ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
         typeSettingsProperties.setProperty(columnName,columnValue);
       }
