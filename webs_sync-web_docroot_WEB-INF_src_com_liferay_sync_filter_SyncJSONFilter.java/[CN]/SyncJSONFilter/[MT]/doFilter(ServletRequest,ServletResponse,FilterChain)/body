@@ -2,9 +2,9 @@
   String uri=(String)servletRequest.getAttribute(WebKeys.INVOKER_FILTER_URI);
   HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
   if (uri.equals("/api/jsonws/invoke")) {
-    SyncJSONFilterHttpServletRequestWrapper httpServletRequestWrapper=new SyncJSONFilterHttpServletRequestWrapper(httpServletRequest);
-    servletRequest=httpServletRequestWrapper;
-    if (!httpServletRequestWrapper.isSyncJSONRequest()) {
+    SyncJSONHttpServletRequestWrapper syncJSONhttpServletRequestWrapper=new SyncJSONHttpServletRequestWrapper(httpServletRequest);
+    servletRequest=syncJSONhttpServletRequestWrapper;
+    if (!syncJSONhttpServletRequestWrapper.isSyncJSONRequest()) {
       filterChain.doFilter(servletRequest,servletResponse);
       return;
     }
