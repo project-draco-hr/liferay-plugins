@@ -7,9 +7,13 @@
     StringBuilder sb=new StringBuilder(7);
     sb.append("select Layout.plid from Layout ");
     sb.append(getJoinSQL());
-    sb.append("where (Layout.typeSettings like '%");
+    sb.append("where ((Layout.typeSettings like '%");
     sb.append(_ANNOUNCEMENTS);
-    sb.append("%') and (Layout.typeSettings not like '%");
+    sb.append("%')");
+    sb.append("or (Layout.typeSettings like '%");
+    sb.append(AnnouncementsPortletKeys.ANNOUNCEMENTS);
+    sb.append("%'))");
+    sb.append("and (Layout.typeSettings not like '%");
     sb.append(PortletKeys.SO_ANNOUNCEMENTS);
     sb.append("%')");
     ps=con.prepareStatement(sb.toString());
@@ -23,6 +27,7 @@
       for (      String columnName : layoutTemplate.getColumns()) {
         String columnValue=typeSettingsProperties.getProperty(columnName);
         columnValue=StringUtil.replace(columnValue,_ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
+        columnValue=StringUtil.replace(columnValue,AnnouncementsPortletKeys.ANNOUNCEMENTS,PortletKeys.SO_ANNOUNCEMENTS);
         typeSettingsProperties.setProperty(columnName,columnValue);
       }
       layout.setTypeSettingsProperties(typeSettingsProperties);
