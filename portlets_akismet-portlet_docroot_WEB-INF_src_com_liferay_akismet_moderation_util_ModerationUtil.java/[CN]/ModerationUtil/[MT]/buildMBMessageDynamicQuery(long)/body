@@ -1,0 +1,11 @@
+{
+  DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(MBMessage.class);
+  Property groupIdProperty=PropertyFactoryUtil.forName("groupId");
+  Long[] scopeGroupIds=getChildScopeGroupIds(scopeGroupId);
+  dynamicQuery.add(groupIdProperty.in(scopeGroupIds));
+  Property categoryIdProperty=PropertyFactoryUtil.forName("categoryId");
+  dynamicQuery.add(categoryIdProperty.ne(-1L));
+  Property statusProperty=PropertyFactoryUtil.forName("status");
+  dynamicQuery.add(statusProperty.eq(WorkflowConstants.STATUS_DENIED));
+  return dynamicQuery;
+}
