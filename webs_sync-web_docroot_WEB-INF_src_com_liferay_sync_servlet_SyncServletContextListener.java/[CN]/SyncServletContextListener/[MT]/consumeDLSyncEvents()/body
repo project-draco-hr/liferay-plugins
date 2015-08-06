@@ -13,12 +13,12 @@
       Map<String,Object> values=new HashMap<>(4);
       values.put("event",dlSyncEvent.getEvent());
       values.put("modifiedTime",dlSyncEvent.getModifiedTime());
+      values.put("syncEventId",dlSyncEvent.getSyncEventId());
       values.put("type",dlSyncEvent.getType());
       values.put("typePK",dlSyncEvent.getTypePK());
       message.setValues(values);
       MessageBusUtil.sendMessage(DestinationNames.DOCUMENT_LIBRARY_SYNC_EVENT_PROCESSOR,message);
     }
-    DLSyncEventLocalServiceUtil.deleteDLSyncEvents();
   }
  catch (  Exception e) {
     _log.error(e,e);
