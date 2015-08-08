@@ -5,12 +5,12 @@
   describeImagesRequest.setOwners(owners);
   DescribeImagesResult describeImagesResult=amazonEC2Client.describeImages(describeImagesRequest);
   List<Image> images=describeImagesResult.getImages();
-  List<String> unusedAMIs=new ArrayList<String>();
+  List<String> unusedImageIds=new ArrayList<String>();
   for (  Image image : images) {
     String imageName=image.getName();
-    if ((imageName != null) && imageName.startsWith("osb-lcs-") && !amisInUse.contains(image.getImageId())) {
-      unusedAMIs.add(image.getImageId());
+    if ((imageName != null) && imageName.startsWith("osb-lcs-") && !imageIds.contains(image.getImageId())) {
+      unusedImageIds.add(image.getImageId());
     }
   }
-  return unusedAMIs;
+  return unusedImageIds;
 }
