@@ -45,24 +45,28 @@
   sb.append("}");
   System.out.println("Starting instance " + sb.toString());
   boolean running=false;
-  for (int i=0; i < 6; i++) {
+  int i=0;
+  do {
+    System.out.println("Waiting for running instance... (" + i + ")");
+    i=i + 1;
     sleep(30);
-    instance=getRunningInstance(_instanceId);
-    if (instance != null) {
-      _publicIpAddress=instance.getPublicIpAddress();
-      running=true;
-      sb=new StringBuilder(7);
-      sb.append("{instanceId=");
-      sb.append(_instanceId);
-      sb.append(", publicIpAddress=");
-      sb.append(_publicIpAddress);
-      sb.append(", stat=");
-      instanceState=instance.getState();
-      sb.append(instanceState.getName());
-      sb.append("}");
-      System.out.println("Started instance " + sb.toString());
-      break;
-    }
+    instance=getInstance(_instanceId,"pending");
+  }
+ while (instance != null);
+  instance=getInstance(_instanceId,"running");
+  if (instance != null) {
+    _publicIpAddress=instance.getPublicIpAddress();
+    running=true;
+    sb=new StringBuilder(7);
+    sb.append("{instanceId=");
+    sb.append(_instanceId);
+    sb.append(", publicIpAddress=");
+    sb.append(_publicIpAddress);
+    sb.append(", stat=");
+    instanceState=instance.getState();
+    sb.append(instanceState.getName());
+    sb.append("}");
+    System.out.println("Started instance " + sb.toString());
   }
   if (!running) {
     throw new RuntimeException("Unable to start instance " + _instanceId);
