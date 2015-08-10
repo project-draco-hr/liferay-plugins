@@ -1,0 +1,14 @@
+{
+  List<String> bucketNames=new ArrayList<String>();
+  List<Bucket> buckets=amazonS3Client.listBuckets();
+  for (  Bucket bucket : buckets) {
+    String name=bucket.getName();
+    if (name.startsWith("frw-cluster") || name.startsWith("lcs-cluster")) {
+      String timestamp=getTimestamp(name);
+      if (!timestamps.contains(timestamp)) {
+        bucketNames.add(bucket.getName());
+      }
+    }
+  }
+  return bucketNames;
+}

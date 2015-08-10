@@ -1,0 +1,15 @@
+{
+  System.out.println("Finding S3 buckets for deleting...");
+  List<String> launchConfigurationNames=getLaunchConfigurationNames();
+  List<String> imageIds=getImageIds(launchConfigurationNames);
+  List<String> imageNames=getImageNames(imageIds);
+  List<String> timestamps=new ArrayList<String>();
+  for (  String imageName : imageNames) {
+    timestamps.add(getTimestamp(imageName));
+  }
+  List<String> bucketNames=getBucketNames(timestamps);
+  for (  String bucketName : bucketNames) {
+    System.out.println("Deleting Bucket " + bucketName);
+    deleteBucketName(bucketName);
+  }
+}
