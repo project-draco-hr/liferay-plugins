@@ -1,8 +1,6 @@
 {
   System.out.println("Deleting metric alarms");
-  Map<String,String> autoScalingGroupsMetricAlarmNames=getAutoScalingGroupsMetricAlarmNames();
-  List<String> activeAutoScalingGroupNames=getActiveAutoScalingGroupNames();
-  List<String> inactiveMetricAlarmNames=getInactiveMetricAlarmNames(autoScalingGroupsMetricAlarmNames,activeAutoScalingGroupNames);
+  List<String> inactiveMetricAlarmNames=getInactiveMetricAlarmNames(getAutoScalingGroupsMetricAlarmNames(),getActiveAutoScalingGroupNames());
   for (  String metricAlarmName : inactiveMetricAlarmNames) {
     System.out.println("Deleting metric alarm " + metricAlarmName);
     DeleteAlarmsRequest deleteAlarmsRequest=new DeleteAlarmsRequest();
