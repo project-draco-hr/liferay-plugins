@@ -11,9 +11,10 @@
     List<MetricAlarm> metricAlarms=describeAlarmsResult.getMetricAlarms();
     for (    MetricAlarm metricAlarm : metricAlarms) {
       String autoScalingGroupName=getAutoScalingGroupName(metricAlarm.getDimensions());
-      if (autoScalingGroupName != null) {
-        autoScalingGroupsMetricAlarmNames.put(autoScalingGroupName,metricAlarm.getAlarmName());
+      if (autoScalingGroupName == null) {
+        continue;
       }
+      autoScalingGroupsMetricAlarmNames.put(autoScalingGroupName,metricAlarm.getAlarmName());
     }
     nextToken=describeAlarmsResult.getNextToken();
   }
