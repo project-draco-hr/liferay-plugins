@@ -1,5 +1,5 @@
 {
-  Map<String,String> autoScalingGroupsMetricAlarms=new HashMap<String,String>();
+  Map<String,String> autoScalingGroupsMetricAlarmNames=new HashMap<String,String>();
   DescribeAlarmsResult describeAlarmsResult=amazonCloudWatchClient.describeAlarms();
   String nextToken=null;
   do {
@@ -12,11 +12,11 @@
     for (    MetricAlarm metricAlarm : metricAlarms) {
       String autoScalingGroupName=getAutoScalingGroupName(metricAlarm.getDimensions());
       if (autoScalingGroupName != null) {
-        autoScalingGroupsMetricAlarms.put(autoScalingGroupName,metricAlarm.getAlarmName());
+        autoScalingGroupsMetricAlarmNames.put(autoScalingGroupName,metricAlarm.getAlarmName());
       }
     }
     nextToken=describeAlarmsResult.getNextToken();
   }
  while (nextToken != null);
-  return autoScalingGroupsMetricAlarms;
+  return autoScalingGroupsMetricAlarmNames;
 }
