@@ -1,4 +1,11 @@
 {
-  PortletFileRepositoryUtil.deletePortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
+  try {
+    PortletFileRepositoryUtil.deletePortletFileEntry(syncDLFileVersionDiff.getDataFileEntryId());
+  }
+ catch (  Exception e) {
+    if (_log.isWarnEnabled()) {
+      _log.warn("Failed to delete data fileEntryId " + syncDLFileVersionDiff.getDataFileEntryId());
+    }
+  }
   return super.deleteSyncDLFileVersionDiff(syncDLFileVersionDiff);
 }

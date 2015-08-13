@@ -1,0 +1,47 @@
+{
+  _syncDLObjectCount=0;
+  ActionableDynamicQuery syncDLObjectActionableDynamicQuery=SyncDLObjectLocalServiceUtil.getActionableDynamicQuery();
+  syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
+      Property eventProperty=PropertyFactoryUtil.forName("event");
+      dynamicQuery.add(eventProperty.ne(SyncConstants.EVENT_DELETE));
+      Property repositoryIdProperty=PropertyFactoryUtil.forName("repositoryId");
+      dynamicQuery.add(repositoryIdProperty.eq(groupId));
+    }
+  }
+);
+  syncDLObjectActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
+    @Override public void performAction(    Object object) throws PortalException {
+      _syncDLObjectCount++;
+      logCount(_syncDLObjectCount,_syncDLObjectTotalCount,"syncDLObjects");
+      SyncDLObject syncDLObject=(SyncDLObject)object;
+      String type=syncDLObject.getType();
+      if (type.equals(SyncConstants.TYPE_FILE)) {
+        DLFileEntry dlFileEntry=DLFileEntryLocalServiceUtil.fetchDLFileEntry(syncDLObject.getTypePK());
+        if (dlFileEntry == null) {
+          syncDLObject.setEvent(SyncConstants.EVENT_DELETE);
+          syncDLObject.setModifiedTime(System.currentTimeMillis());
+          addSyncDLObject(syncDLObject);
+        }
+      }
+ else       if (type.equals(SyncConstants.TYPE_FOLDER)) {
+        DLFolder dlFolder=DLFolderLocalServiceUtil.fetchDLFolder(syncDLObject.getTypePK());
+        if (dlFolder == null) {
+          syncDLObject.setEvent(SyncConstants.EVENT_DELETE);
+          syncDLObject.setModifiedTime(System.currentTimeMillis());
+          addSyncDLObject(syncDLObject);
+        }
+      }
+ else       if (type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
+        DLFileEntry dlFileEntry=DLFileEntryLocalServiceUtil.fetchDLFileEntry(syncDLObject.getTypePK());
+        if ((dlFileEntry == null) || !DLFileEntryLocalServiceUtil.isFileEntryCheckedOut(syncDLObject.getTypePK())) {
+          SyncDLObjectLocalServiceUtil.deleteSyncDLObject(syncDLObject);
+        }
+      }
+    }
+  }
+);
+  _syncDLObjectTotalCount=syncDLObjectActionableDynamicQuery.performCount();
+  syncDLObjectActionableDynamicQuery.performActions();
+  logCount(_syncDLObjectTotalCount,_syncDLObjectTotalCount,"syncDLObjects");
+}
