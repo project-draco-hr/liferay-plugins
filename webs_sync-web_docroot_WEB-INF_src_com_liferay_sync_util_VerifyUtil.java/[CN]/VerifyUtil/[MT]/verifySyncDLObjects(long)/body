@@ -1,5 +1,5 @@
 {
-  _syncDLObjectCount=0;
+  _syncDLObjectsCount=0;
   ActionableDynamicQuery syncDLObjectActionableDynamicQuery=SyncDLObjectLocalServiceUtil.getActionableDynamicQuery();
   syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
@@ -12,8 +12,8 @@
 );
   syncDLObjectActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
     @Override public void performAction(    Object object) throws PortalException {
-      _syncDLObjectCount++;
-      logCount(_syncDLObjectCount,_syncDLObjectTotalCount,"syncDLObjects");
+      _syncDLObjectsCount++;
+      logCount(_syncDLObjectsCount,_syncDLObjectsTotalCount,"Sync DL objects");
       SyncDLObject syncDLObject=(SyncDLObject)object;
       String type=syncDLObject.getType();
       if (type.equals(SyncConstants.TYPE_FILE)) {
@@ -41,7 +41,7 @@
     }
   }
 );
-  _syncDLObjectTotalCount=syncDLObjectActionableDynamicQuery.performCount();
+  _syncDLObjectsTotalCount=syncDLObjectActionableDynamicQuery.performCount();
   syncDLObjectActionableDynamicQuery.performActions();
-  logCount(_syncDLObjectTotalCount,_syncDLObjectTotalCount,"syncDLObjects");
+  logCount(_syncDLObjectsTotalCount,_syncDLObjectsTotalCount,"Sync DL objects");
 }
