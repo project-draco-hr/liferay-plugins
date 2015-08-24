@@ -5,11 +5,22 @@
     if (Validator.isNull(path)) {
       throw new PushNotificationsException("The property \"apple.certificate.path\" is not set in " + "portlet.properties");
     }
+    InputStream is=null;
+    try {
+      is=new FileInputStream(path);
+    }
+ catch (    FileNotFoundException fnfe) {
+      ClassLoader classLoader=getClass().getClassLoader();
+      is=classLoader.getResourceAsStream(path);
+    }
+    if (is == null) {
+      throw new PushNotificationsException("Apple certificate could not be found at " + path);
+    }
     String password=PrefsPropsUtil.getString(PortletPropsKeys.APPLE_CERTIFICATE_PASSWORD,PortletPropsValues.APPLE_CERTIFICATE_PASSWORD);
     if (Validator.isNull(password)) {
       throw new PushNotificationsException("The property \"apple.certificate.password\" is not set " + "in portlet.properties");
     }
-    appleServiceBuilder.withCert(path,password);
+    appleServiceBuilder.withCert(is,password);
     boolean sandbox=PrefsPropsUtil.getBoolean(PortletPropsKeys.APPLE_SANDBOX,PortletPropsValues.APPLE_SANDBOX);
     if (sandbox) {
       appleServiceBuilder.withSandboxDestination();
