@@ -53,7 +53,8 @@
     person.setPhoneNumbers(phoneNumbers);
   }
   if (fields.contains(Person.Field.UTC_OFFSET.toString())) {
-    person.setUtcOffset(Long.valueOf(user.getTimeZone().getOffset(System.currentTimeMillis())));
+    TimeZone timeZone=user.getTimeZone();
+    person.setUtcOffset(Long.valueOf(timeZone.getOffset(System.currentTimeMillis())));
   }
   if (securityToken.getOwnerId().equals(person.getId())) {
     person.setIsOwner(true);
