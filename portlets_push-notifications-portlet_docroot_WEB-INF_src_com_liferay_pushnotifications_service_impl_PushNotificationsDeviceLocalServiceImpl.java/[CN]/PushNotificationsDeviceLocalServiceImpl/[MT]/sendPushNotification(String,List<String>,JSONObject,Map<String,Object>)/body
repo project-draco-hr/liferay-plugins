@@ -1,0 +1,23 @@
+{
+  PushNotificationsSender pushNotificationsSender=_pushNotificationsSenders.get(platform);
+  if (pushNotificationsSender == null) {
+    return;
+  }
+  if (configuration != null) {
+    pushNotificationsSender=pushNotificationsSender.create(configuration);
+  }
+  try {
+    pushNotificationsSender.send(platform,tokens,payloadJSONObject);
+  }
+ catch (  PushNotificationsException pne) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(pne.getMessage());
+    }
+  }
+catch (  PortalException pe) {
+    throw pe;
+  }
+catch (  Exception e) {
+    throw new PortalException(e);
+  }
+}
