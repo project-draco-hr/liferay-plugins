@@ -1,29 +1,28 @@
 {
   if (_apnsService == null) {
     ApnsServiceBuilder appleServiceBuilder=APNS.newService();
-    String path=PrefsPropsUtil.getString(PortletPropsKeys.APPLE_CERTIFICATE_PATH,PortletPropsValues.APPLE_CERTIFICATE_PATH);
-    if (Validator.isNull(path)) {
+    String certificatePath=getCertificatePath();
+    if (Validator.isNull(certificatePath)) {
       throw new PushNotificationsException("The property \"apple.certificate.path\" is not set in " + "portlet.properties");
     }
     InputStream is=null;
     try {
-      is=new FileInputStream(path);
+      is=new FileInputStream(certificatePath);
     }
  catch (    FileNotFoundException fnfe) {
       Class<?> clazz=getClass();
       ClassLoader classLoader=clazz.getClassLoader();
-      is=classLoader.getResourceAsStream(path);
+      is=classLoader.getResourceAsStream(certificatePath);
     }
     if (is == null) {
-      throw new PushNotificationsException("Apple certificate does not exist at " + path);
+      throw new PushNotificationsException("Apple certificate does not exist at " + certificatePath);
     }
-    String password=PrefsPropsUtil.getString(PortletPropsKeys.APPLE_CERTIFICATE_PASSWORD,PortletPropsValues.APPLE_CERTIFICATE_PASSWORD);
-    if (Validator.isNull(password)) {
+    String certificatePassword=getCertificatePassword();
+    if (Validator.isNull(certificatePassword)) {
       throw new PushNotificationsException("The property \"apple.certificate.password\" is not set " + "in portlet.properties");
     }
-    appleServiceBuilder.withCert(is,password);
-    boolean sandbox=PrefsPropsUtil.getBoolean(PortletPropsKeys.APPLE_SANDBOX,PortletPropsValues.APPLE_SANDBOX);
-    if (sandbox) {
+    appleServiceBuilder.withCert(is,certificatePassword);
+    if (isSandbox()) {
       appleServiceBuilder.withSandboxDestination();
     }
  else {

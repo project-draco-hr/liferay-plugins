@@ -1,15 +1,15 @@
 {
-  HttpRequest httpRequest=HttpRequest.post(PortletPropsValues.LIFERAY_SERVER);
-  httpRequest.basicAuthentication(PortletPropsValues.LIFERAY_USERNAME,PortletPropsValues.LIFERAY_PASSWORD);
+  HttpRequest httpRequest=HttpRequest.post(getServer());
+  httpRequest.basicAuthentication(getUsername(),getPassword());
   httpRequest.path("/api/jsonws/push-notifications-portlet.pushnotificationsdevice" + "/send-push-notification");
-  httpRequest.timeout(PortletPropsValues.LIFERAY_TIMEOUT);
+  httpRequest.timeout(getTimeout());
   httpRequest.form("platform",platform);
   JSONArray tokensJSONArray=JSONFactoryUtil.createJSONArray();
   for (  String token : tokens) {
     tokensJSONArray.put(token);
   }
   httpRequest.form("tokens",tokensJSONArray.toString());
-  httpRequest.form("payload",payloadJSONObject.toString());
+  httpRequest.form(PushNotificationsConstants.KEY_PAYLOAD,payloadJSONObject.toString());
   HttpResponse httpResponse=httpRequest.send();
   if (httpResponse.statusCode() != 200) {
     throw new PushNotificationsException("Unable to send push notification to Liferay Push " + httpResponse.bodyText());
