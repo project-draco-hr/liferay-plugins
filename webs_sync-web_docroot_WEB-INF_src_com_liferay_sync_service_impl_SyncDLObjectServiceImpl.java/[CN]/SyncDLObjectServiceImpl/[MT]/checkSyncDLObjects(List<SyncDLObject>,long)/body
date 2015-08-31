@@ -16,8 +16,7 @@
   List<SyncDLObject> checkedSyncDLObjects=new ArrayList<>();
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     String event=syncDLObject.getEvent();
-    String type=syncDLObject.getType();
-    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH) || (type.equals(SyncConstants.TYPE_FILE) && hasFileModelPermission)|| (type.equals(SyncConstants.TYPE_FOLDER) && hasFolderModelPermission)|| checkedTypePKs.contains(syncDLObject.getTypePK())) {
+    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH) || hasPermission(checkedTypePKs,syncDLObject,hasFileModelPermission,hasFolderModelPermission)) {
       checkedSyncDLObjects.add(syncDLObject);
     }
   }
