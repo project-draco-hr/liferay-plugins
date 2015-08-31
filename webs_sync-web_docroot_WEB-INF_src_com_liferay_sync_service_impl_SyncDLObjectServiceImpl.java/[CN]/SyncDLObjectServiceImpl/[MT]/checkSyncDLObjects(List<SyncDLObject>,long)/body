@@ -3,6 +3,11 @@
   if (permissionChecker.isGroupAdmin(repositoryId)) {
     return syncDLObjects;
   }
+  boolean hasFileModelPermission=hasModelPermission(repositoryId,DLFileEntryConstants.getClassName());
+  boolean hasFolderModelPermission=hasModelPermission(repositoryId,DLFolderConstants.getClassName());
+  if (hasFileModelPermission && hasFolderModelPermission) {
+    return syncDLObjects;
+  }
   List<Long> typePKs=new ArrayList<>();
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     typePKs.add(syncDLObject.getTypePK());
@@ -11,11 +16,8 @@
   List<SyncDLObject> checkedSyncDLObjects=new ArrayList<>();
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     String event=syncDLObject.getEvent();
-    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH)) {
-      checkedSyncDLObjects.add(syncDLObject);
-      continue;
-    }
-    if (checkedTypePKs.contains(syncDLObject.getTypePK())) {
+    String type=syncDLObject.getType();
+    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH) || (type.equals(SyncConstants.TYPE_FILE) && hasFileModelPermission)|| (type.equals(SyncConstants.TYPE_FOLDER) && hasFolderModelPermission)|| checkedTypePKs.contains(syncDLObject.getTypePK())) {
       checkedSyncDLObjects.add(syncDLObject);
     }
   }
