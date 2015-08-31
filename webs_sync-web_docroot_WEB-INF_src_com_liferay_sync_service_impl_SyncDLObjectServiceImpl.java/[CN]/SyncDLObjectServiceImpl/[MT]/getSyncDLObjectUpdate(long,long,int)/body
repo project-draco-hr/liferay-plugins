@@ -26,9 +26,13 @@
       SyncDLObjectUpdate syncDLObjectUpdate=new SyncDLObjectUpdate(syncDLObjects,0,lastAccessTime);
       return syncDLObjectUpdate.toString();
     }
+    boolean initialSync=false;
+    if (lastAccessTime == -1) {
+      initialSync=true;
+    }
     int count=syncDLObjectPersistence.countByM_R_NotE(lastAccessTime,repositoryId,events);
     SyncDLObject syncDLObject=syncDLObjects.get(syncDLObjects.size() - 1);
-    SyncDLObjectUpdate syncDLObjectUpdate=new SyncDLObjectUpdate(checkSyncDLObjects(syncDLObjects,repositoryId),count,syncDLObject.getModifiedTime());
+    SyncDLObjectUpdate syncDLObjectUpdate=new SyncDLObjectUpdate(checkSyncDLObjects(syncDLObjects,repositoryId,initialSync),count,syncDLObject.getModifiedTime());
     return syncDLObjectUpdate.toString();
   }
  catch (  PortalException pe) {

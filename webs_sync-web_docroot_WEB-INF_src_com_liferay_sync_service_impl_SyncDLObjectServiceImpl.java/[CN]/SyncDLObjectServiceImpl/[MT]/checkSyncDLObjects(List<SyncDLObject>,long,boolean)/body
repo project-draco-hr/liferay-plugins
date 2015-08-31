@@ -8,11 +8,19 @@
   if (hasFileModelPermission && hasFolderModelPermission) {
     return syncDLObjects;
   }
-  List<Long> typePKs=new ArrayList<>();
+  Set<Long> typePKs=new HashSet<>();
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     typePKs.add(syncDLObject.getTypePK());
+    if (!initialSync && !hasFolderModelPermission && _PERMISSIONS_VIEW_DYNAMIC_INHERITANCE) {
+      long[] parentFolderIds=StringUtil.split(syncDLObject.getTreePath(),StringPool.SLASH,0L);
+      for (      long parentFolderId : parentFolderIds) {
+        if (parentFolderId > 0) {
+          typePKs.add(parentFolderId);
+        }
+      }
+    }
   }
-  Set<Long> checkedTypePKs=SetUtil.fromList(checkTypePKs(repositoryId,permissionChecker.getUserId(),typePKs));
+  Set<Long> checkedTypePKs=SetUtil.fromList(checkTypePKs(repositoryId,permissionChecker.getUserId(),new ArrayList(typePKs)));
   List<SyncDLObject> checkedSyncDLObjects=new ArrayList<>();
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     String event=syncDLObject.getEvent();
