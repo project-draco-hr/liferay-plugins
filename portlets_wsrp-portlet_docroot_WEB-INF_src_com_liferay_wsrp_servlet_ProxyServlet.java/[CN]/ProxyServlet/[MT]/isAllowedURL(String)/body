@@ -10,8 +10,8 @@
   }
   InetAddress inetAddress=InetAddress.getByName(domain);
   String hostAddress=inetAddress.getHostAddress();
-  String serverIp=PortalUtil.getComputerAddress();
-  boolean serverIpIsHostAddress=serverIp.equals(hostAddress);
+  Set<String> serverIps=PortalUtil.getComputerAddresses();
+  boolean serverIpIsHostAddress=serverIps.contains(hostAddress);
   for (  String ip : allowedIps) {
     if ((serverIpIsHostAddress && ip.equals("SERVER_IP")) || ip.equals(hostAddress)) {
       return true;
