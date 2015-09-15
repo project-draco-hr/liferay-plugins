@@ -3,9 +3,9 @@
   while (candidateKBArticle != null) {
     KBArticle matchingKBArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,ancestorKBArticle.getKbFolderId(),candidateKBArticle.getUrlTitle());
     if (matchingKBArticle != null) {
-      return matchingKBArticle;
+      return new KBArticleSelection(matchingKBArticle,false);
     }
     candidateKBArticle=candidateKBArticle.getParentKBArticle();
   }
-  return ancestorKBArticle;
+  return new KBArticleSelection(ancestorKBArticle,false);
 }

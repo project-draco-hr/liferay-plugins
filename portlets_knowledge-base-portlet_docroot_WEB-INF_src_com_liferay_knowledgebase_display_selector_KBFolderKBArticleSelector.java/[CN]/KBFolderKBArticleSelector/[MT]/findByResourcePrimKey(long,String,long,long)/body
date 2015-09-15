@@ -3,12 +3,14 @@
   if (ancestorResourcePrimKey != KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
     ancestorKBFolder=KBFolderLocalServiceUtil.fetchKBFolder(ancestorResourcePrimKey);
     if (ancestorKBFolder == null) {
-      return null;
+      return new KBArticleSelection(null,false);
     }
   }
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
   if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBFolder)) {
-    return findClosestMatchingKBArticle(groupId,ancestorKBFolder,preferredKBFolderUrlTitle);
+    KBArticleSelection closestMatchingKBArticle=findClosestMatchingKBArticle(groupId,ancestorKBFolder,preferredKBFolderUrlTitle);
+    closestMatchingKBArticle.setExactMatch(true);
+    return closestMatchingKBArticle;
   }
-  return kbArticle;
+  return new KBArticleSelection(kbArticle,true);
 }

@@ -3,9 +3,10 @@
   if (mvcPath.endsWith("/edit_article.jsp") || mvcPath.endsWith("/history.jsp") || mvcPath.endsWith("/print_article.jsp")) {
     long resourcePrimKey=ParamUtil.getLong(renderRequest,"resourcePrimKey");
     if (resourcePrimKey == 0) {
-      return null;
+      return new KBArticleSelection(null,false);
     }
-    return KBArticleLocalServiceUtil.getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+    KBArticle latestKBArticle=KBArticleLocalServiceUtil.getLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_ANY);
+    return new KBArticleSelection(latestKBArticle,true);
   }
   PortletPreferences portletPreferences=renderRequest.getPreferences();
   long kbFolderClassNameId=ClassNameLocalServiceUtil.getClassNameId(KBFolderConstants.getClassName());

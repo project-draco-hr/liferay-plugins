@@ -2,7 +2,9 @@
   KBFolder kbFolder=getCandidateKBFolder(groupId,preferredKBFolderUrlTitle,ancestorKBFolder,kbFolderUrlTitle);
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchKBArticleByUrlTitle(groupId,kbFolder.getKbFolderId(),urlTitle);
   if (kbArticle != null) {
-    return kbArticle;
+    return new KBArticleSelection(kbArticle,false);
   }
-  return KBArticleLocalServiceUtil.fetchFirstChildKBArticle(groupId,kbFolder.getKbFolderId());
+  kbArticle=KBArticleLocalServiceUtil.fetchFirstChildKBArticle(groupId,kbFolder.getKbFolderId());
+  String[] keywords=StringUtil.split(urlTitle,'-');
+  return new KBArticleSelection(kbArticle,keywords);
 }
