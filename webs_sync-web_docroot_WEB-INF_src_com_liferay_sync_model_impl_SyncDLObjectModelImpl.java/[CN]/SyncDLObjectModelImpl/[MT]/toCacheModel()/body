@@ -64,6 +64,13 @@
   if ((event != null) && (event.length() == 0)) {
     syncDLObjectCacheModel.event=null;
   }
+  Date lastPermissionChangeDate=getLastPermissionChangeDate();
+  if (lastPermissionChangeDate != null) {
+    syncDLObjectCacheModel.lastPermissionChangeDate=lastPermissionChangeDate.getTime();
+  }
+ else {
+    syncDLObjectCacheModel.lastPermissionChangeDate=Long.MIN_VALUE;
+  }
   Date lockExpirationDate=getLockExpirationDate();
   if (lockExpirationDate != null) {
     syncDLObjectCacheModel.lockExpirationDate=lockExpirationDate.getTime();
