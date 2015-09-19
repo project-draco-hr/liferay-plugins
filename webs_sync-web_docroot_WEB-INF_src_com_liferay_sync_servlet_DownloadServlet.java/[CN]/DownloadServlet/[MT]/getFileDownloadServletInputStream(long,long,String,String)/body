@@ -5,10 +5,10 @@
   }
   if (Validator.isNull(version)) {
     InputStream inputStream=DLFileEntryLocalServiceUtil.getFileAsStream(userId,fileEntry.getFileEntryId(),fileEntry.getVersion(),false);
-    return new DownloadServletInputStream(inputStream,fileEntry.getMimeType(),fileEntry.getSize());
+    return new DownloadServletInputStream(inputStream,fileEntry.getFileName(),fileEntry.getMimeType(),fileEntry.getSize());
   }
  else {
     FileVersion fileVersion=fileEntry.getFileVersion(version);
-    return new DownloadServletInputStream(fileVersion.getContentStream(false),fileVersion.getMimeType(),fileVersion.getSize());
+    return new DownloadServletInputStream(fileVersion.getContentStream(false),fileVersion.getFileName(),fileVersion.getMimeType(),fileVersion.getSize());
   }
 }

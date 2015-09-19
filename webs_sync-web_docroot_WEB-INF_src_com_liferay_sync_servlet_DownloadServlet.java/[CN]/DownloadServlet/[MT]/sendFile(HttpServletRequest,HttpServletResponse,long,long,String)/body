@@ -1,5 +1,10 @@
 {
   String version=ParamUtil.getString(request,"version");
   DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(userId,groupId,uuid,version);
-  ServletResponseUtil.write(response,downloadServletInputStream.getInputStream(),downloadServletInputStream.getSize());
+  if (request.getHeader(HttpHeaders.RANGE) != null) {
+    ServletResponseUtil.sendFileWithRangeHeader(request,response,downloadServletInputStream.getFileName(),downloadServletInputStream.getInputStream(),downloadServletInputStream.getSize(),downloadServletInputStream.getMimeType());
+  }
+ else {
+    ServletResponseUtil.write(response,downloadServletInputStream.getInputStream(),downloadServletInputStream.getSize());
+  }
 }
