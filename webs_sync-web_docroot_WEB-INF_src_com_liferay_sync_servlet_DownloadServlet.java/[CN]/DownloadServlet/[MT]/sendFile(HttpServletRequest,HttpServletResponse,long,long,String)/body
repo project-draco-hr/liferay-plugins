@@ -1,6 +1,7 @@
 {
   String version=ParamUtil.getString(request,"version");
-  DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(userId,groupId,uuid,version);
+  long versionId=ParamUtil.getLong(request,"versionId");
+  DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(userId,groupId,uuid,version,versionId);
   if (request.getHeader(HttpHeaders.RANGE) != null) {
     ServletResponseUtil.sendFileWithRangeHeader(request,response,downloadServletInputStream.getFileName(),downloadServletInputStream.getInputStream(),downloadServletInputStream.getSize(),downloadServletInputStream.getMimeType());
   }
