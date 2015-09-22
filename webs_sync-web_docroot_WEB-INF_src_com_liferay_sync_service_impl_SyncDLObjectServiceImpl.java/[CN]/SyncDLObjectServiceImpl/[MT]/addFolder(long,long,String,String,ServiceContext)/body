@@ -2,7 +2,7 @@
   try {
     Group group=groupLocalService.getGroup(repositoryId);
     SyncUtil.checkSyncEnabled(group.getGroupId());
-    if (!group.isUser() && (serviceContext.getGroupPermissions() == null)) {
+    if (!group.isUser() && ArrayUtil.isEmpty(serviceContext.getGroupPermissions())) {
       SyncUtil.setFilePermissions(group,true,serviceContext);
     }
     Folder folder=dlAppService.addFolder(repositoryId,parentFolderId,name,description,serviceContext);
