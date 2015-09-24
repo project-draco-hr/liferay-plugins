@@ -28,7 +28,7 @@
       folder.setNew(false);
     }
  else {
-      session.merge(folder);
+      folder=(Folder)session.merge(folder);
     }
   }
  catch (  Exception e) {
@@ -52,8 +52,8 @@
     }
   }
   EntityCacheUtil.putResult(FolderModelImpl.ENTITY_CACHE_ENABLED,FolderImpl.class,folder.getPrimaryKey(),folder,false);
-  clearUniqueFindersCache(folder);
-  cacheUniqueFindersCache(folder);
+  clearUniqueFindersCache(folderModelImpl);
+  cacheUniqueFindersCache(folderModelImpl,isNew);
   folder.resetOriginalValues();
   return folder;
 }

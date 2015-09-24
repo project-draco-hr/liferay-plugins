@@ -1,6 +1,7 @@
 {
   svnRepository=toUnwrappedModel(svnRepository);
   boolean isNew=svnRepository.isNew();
+  SVNRepositoryModelImpl svnRepositoryModelImpl=(SVNRepositoryModelImpl)svnRepository;
   Session session=null;
   try {
     session=openSession();
@@ -9,7 +10,7 @@
       svnRepository.setNew(false);
     }
  else {
-      session.merge(svnRepository);
+      svnRepository=(SVNRepository)session.merge(svnRepository);
     }
   }
  catch (  Exception e) {
@@ -23,8 +24,8 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
   EntityCacheUtil.putResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,svnRepository.getPrimaryKey(),svnRepository,false);
-  clearUniqueFindersCache(svnRepository);
-  cacheUniqueFindersCache(svnRepository);
+  clearUniqueFindersCache(svnRepositoryModelImpl);
+  cacheUniqueFindersCache(svnRepositoryModelImpl,isNew);
   svnRepository.resetOriginalValues();
   return svnRepository;
 }

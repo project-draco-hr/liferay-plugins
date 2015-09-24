@@ -28,7 +28,7 @@
       userThread.setNew(false);
     }
  else {
-      session.merge(userThread);
+      userThread=(UserThread)session.merge(userThread);
     }
   }
  catch (  Exception e) {
@@ -76,8 +76,8 @@
     }
   }
   EntityCacheUtil.putResult(UserThreadModelImpl.ENTITY_CACHE_ENABLED,UserThreadImpl.class,userThread.getPrimaryKey(),userThread,false);
-  clearUniqueFindersCache(userThread);
-  cacheUniqueFindersCache(userThread);
+  clearUniqueFindersCache(userThreadModelImpl);
+  cacheUniqueFindersCache(userThreadModelImpl,isNew);
   userThread.resetOriginalValues();
   return userThread;
 }

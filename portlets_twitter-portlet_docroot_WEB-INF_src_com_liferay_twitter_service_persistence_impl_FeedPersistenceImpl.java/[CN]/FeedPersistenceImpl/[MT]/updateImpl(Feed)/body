@@ -28,7 +28,7 @@
       feed.setNew(false);
     }
  else {
-      session.merge(feed);
+      feed=(Feed)session.merge(feed);
     }
   }
  catch (  Exception e) {
@@ -42,8 +42,8 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
   EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey(),feed,false);
-  clearUniqueFindersCache(feed);
-  cacheUniqueFindersCache(feed);
+  clearUniqueFindersCache(feedModelImpl);
+  cacheUniqueFindersCache(feedModelImpl,isNew);
   feed.resetOriginalValues();
   return feed;
 }

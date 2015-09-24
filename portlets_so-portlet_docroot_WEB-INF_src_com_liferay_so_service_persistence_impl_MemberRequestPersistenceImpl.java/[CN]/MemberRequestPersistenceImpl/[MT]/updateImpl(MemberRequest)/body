@@ -28,7 +28,7 @@
       memberRequest.setNew(false);
     }
  else {
-      session.merge(memberRequest);
+      memberRequest=(MemberRequest)session.merge(memberRequest);
     }
   }
  catch (  Exception e) {
@@ -60,8 +60,8 @@
     }
   }
   EntityCacheUtil.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequest.getPrimaryKey(),memberRequest,false);
-  clearUniqueFindersCache(memberRequest);
-  cacheUniqueFindersCache(memberRequest);
+  clearUniqueFindersCache(memberRequestModelImpl);
+  cacheUniqueFindersCache(memberRequestModelImpl,isNew);
   memberRequest.resetOriginalValues();
   return memberRequest;
 }

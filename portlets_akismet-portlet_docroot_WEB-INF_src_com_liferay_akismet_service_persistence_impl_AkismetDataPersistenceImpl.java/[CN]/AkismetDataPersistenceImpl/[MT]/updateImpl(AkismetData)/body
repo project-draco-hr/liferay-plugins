@@ -1,6 +1,7 @@
 {
   akismetData=toUnwrappedModel(akismetData);
   boolean isNew=akismetData.isNew();
+  AkismetDataModelImpl akismetDataModelImpl=(AkismetDataModelImpl)akismetData;
   Session session=null;
   try {
     session=openSession();
@@ -9,7 +10,7 @@
       akismetData.setNew(false);
     }
  else {
-      session.merge(akismetData);
+      akismetData=(AkismetData)session.merge(akismetData);
     }
   }
  catch (  Exception e) {
@@ -23,8 +24,8 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
   EntityCacheUtil.putResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,akismetData.getPrimaryKey(),akismetData,false);
-  clearUniqueFindersCache(akismetData);
-  cacheUniqueFindersCache(akismetData);
+  clearUniqueFindersCache(akismetDataModelImpl);
+  cacheUniqueFindersCache(akismetDataModelImpl,isNew);
   akismetData.resetOriginalValues();
   return akismetData;
 }

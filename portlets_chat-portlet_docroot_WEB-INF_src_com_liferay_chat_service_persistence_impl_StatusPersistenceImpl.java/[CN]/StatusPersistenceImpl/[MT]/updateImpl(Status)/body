@@ -10,7 +10,7 @@
       status.setNew(false);
     }
  else {
-      session.merge(status);
+      status=(Status)session.merge(status);
     }
   }
  catch (  Exception e) {
@@ -50,8 +50,8 @@
     }
   }
   EntityCacheUtil.putResult(StatusModelImpl.ENTITY_CACHE_ENABLED,StatusImpl.class,status.getPrimaryKey(),status,false);
-  clearUniqueFindersCache(status);
-  cacheUniqueFindersCache(status);
+  clearUniqueFindersCache(statusModelImpl);
+  cacheUniqueFindersCache(statusModelImpl,isNew);
   status.resetOriginalValues();
   return status;
 }

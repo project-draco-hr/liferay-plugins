@@ -28,7 +28,7 @@
       oAuthConsumer.setNew(false);
     }
  else {
-      session.merge(oAuthConsumer);
+      oAuthConsumer=(OAuthConsumer)session.merge(oAuthConsumer);
     }
   }
  catch (  Exception e) {
@@ -52,8 +52,8 @@
     }
   }
   EntityCacheUtil.putResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,oAuthConsumer.getPrimaryKey(),oAuthConsumer,false);
-  clearUniqueFindersCache(oAuthConsumer);
-  cacheUniqueFindersCache(oAuthConsumer,isNew);
+  clearUniqueFindersCache(oAuthConsumerModelImpl);
+  cacheUniqueFindersCache(oAuthConsumerModelImpl,isNew);
   oAuthConsumer.resetOriginalValues();
   return oAuthConsumer;
 }

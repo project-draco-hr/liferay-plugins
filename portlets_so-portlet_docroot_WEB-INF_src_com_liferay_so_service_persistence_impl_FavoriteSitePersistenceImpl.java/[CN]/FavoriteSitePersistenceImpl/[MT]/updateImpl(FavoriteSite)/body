@@ -10,7 +10,7 @@
       favoriteSite.setNew(false);
     }
  else {
-      session.merge(favoriteSite);
+      favoriteSite=(FavoriteSite)session.merge(favoriteSite);
     }
   }
  catch (  Exception e) {
@@ -34,8 +34,8 @@
     }
   }
   EntityCacheUtil.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,favoriteSite.getPrimaryKey(),favoriteSite,false);
-  clearUniqueFindersCache(favoriteSite);
-  cacheUniqueFindersCache(favoriteSite);
+  clearUniqueFindersCache(favoriteSiteModelImpl);
+  cacheUniqueFindersCache(favoriteSiteModelImpl,isNew);
   favoriteSite.resetOriginalValues();
   return favoriteSite;
 }

@@ -28,7 +28,7 @@
       message.setNew(false);
     }
  else {
-      session.merge(message);
+      message=(Message)session.merge(message);
     }
   }
  catch (  Exception e) {
@@ -60,8 +60,8 @@
     }
   }
   EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,message.getPrimaryKey(),message,false);
-  clearUniqueFindersCache(message);
-  cacheUniqueFindersCache(message);
+  clearUniqueFindersCache(messageModelImpl);
+  cacheUniqueFindersCache(messageModelImpl,isNew);
   message.resetOriginalValues();
   return message;
 }

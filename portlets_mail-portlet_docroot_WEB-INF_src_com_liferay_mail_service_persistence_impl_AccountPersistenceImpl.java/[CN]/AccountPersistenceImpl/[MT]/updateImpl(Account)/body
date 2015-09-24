@@ -28,7 +28,7 @@
       account.setNew(false);
     }
  else {
-      session.merge(account);
+      account=(Account)session.merge(account);
     }
   }
  catch (  Exception e) {
@@ -52,8 +52,8 @@
     }
   }
   EntityCacheUtil.putResult(AccountModelImpl.ENTITY_CACHE_ENABLED,AccountImpl.class,account.getPrimaryKey(),account,false);
-  clearUniqueFindersCache(account);
-  cacheUniqueFindersCache(account);
+  clearUniqueFindersCache(accountModelImpl);
+  cacheUniqueFindersCache(accountModelImpl,isNew);
   account.resetOriginalValues();
   return account;
 }

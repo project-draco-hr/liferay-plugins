@@ -32,7 +32,7 @@
       gadget.setNew(false);
     }
  else {
-      session.merge(gadget);
+      gadget=(Gadget)session.merge(gadget);
     }
   }
  catch (  Exception e) {
@@ -72,8 +72,8 @@
     }
   }
   EntityCacheUtil.putResult(GadgetModelImpl.ENTITY_CACHE_ENABLED,GadgetImpl.class,gadget.getPrimaryKey(),gadget,false);
-  clearUniqueFindersCache(gadget);
-  cacheUniqueFindersCache(gadget,isNew);
+  clearUniqueFindersCache(gadgetModelImpl);
+  cacheUniqueFindersCache(gadgetModelImpl,isNew);
   gadget.resetOriginalValues();
   return gadget;
 }

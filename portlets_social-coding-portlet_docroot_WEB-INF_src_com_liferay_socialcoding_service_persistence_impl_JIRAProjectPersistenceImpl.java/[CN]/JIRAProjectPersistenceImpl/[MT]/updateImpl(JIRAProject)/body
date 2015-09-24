@@ -1,6 +1,7 @@
 {
   jiraProject=toUnwrappedModel(jiraProject);
   boolean isNew=jiraProject.isNew();
+  JIRAProjectModelImpl jiraProjectModelImpl=(JIRAProjectModelImpl)jiraProject;
   Session session=null;
   try {
     session=openSession();
@@ -9,7 +10,7 @@
       jiraProject.setNew(false);
     }
  else {
-      session.merge(jiraProject);
+      jiraProject=(JIRAProject)session.merge(jiraProject);
     }
   }
  catch (  Exception e) {
@@ -23,8 +24,8 @@
     FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
   EntityCacheUtil.putResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,jiraProject.getPrimaryKey(),jiraProject,false);
-  clearUniqueFindersCache(jiraProject);
-  cacheUniqueFindersCache(jiraProject);
+  clearUniqueFindersCache(jiraProjectModelImpl);
+  cacheUniqueFindersCache(jiraProjectModelImpl,isNew);
   jiraProject.resetOriginalValues();
   return jiraProject;
 }
