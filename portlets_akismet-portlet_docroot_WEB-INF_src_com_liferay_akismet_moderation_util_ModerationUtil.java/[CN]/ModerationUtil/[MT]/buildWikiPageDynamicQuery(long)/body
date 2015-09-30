@@ -1,8 +1,11 @@
 {
   DynamicQuery dynamicQuery=DynamicQueryFactoryUtil.forClass(WikiPage.class);
-  Property groupIdProperty=PropertyFactoryUtil.forName("groupId");
-  Long[] scopeGroupIds=getChildScopeGroupIds(scopeGroupId);
-  dynamicQuery.add(groupIdProperty.in(scopeGroupIds));
+  Group group=GroupLocalServiceUtil.getGroup(scopeGroupId);
+  if (!group.isCompany()) {
+    Property groupIdProperty=PropertyFactoryUtil.forName("groupId");
+    Long[] scopeGroupIds=getChildScopeGroupIds(scopeGroupId);
+    dynamicQuery.add(groupIdProperty.in(scopeGroupIds));
+  }
   Property summaryProperty=PropertyFactoryUtil.forName("summary");
   dynamicQuery.add(summaryProperty.eq(AkismetConstants.WIKI_PAGE_PENDING_APPROVAL));
   return dynamicQuery;
