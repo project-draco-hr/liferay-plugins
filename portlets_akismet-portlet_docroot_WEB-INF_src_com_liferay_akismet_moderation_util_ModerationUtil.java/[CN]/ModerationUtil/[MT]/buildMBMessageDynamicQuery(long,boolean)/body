@@ -7,7 +7,12 @@
     dynamicQuery.add(groupIdProperty.in(scopeGroupIds));
   }
   Property categoryIdProperty=PropertyFactoryUtil.forName("categoryId");
-  dynamicQuery.add(categoryIdProperty.ne(-1L));
+  if (discussion) {
+    dynamicQuery.add(categoryIdProperty.eq(MBCategoryConstants.DISCUSSION_CATEGORY_ID));
+  }
+ else {
+    dynamicQuery.add(categoryIdProperty.ne(MBCategoryConstants.DISCUSSION_CATEGORY_ID));
+  }
   Property statusProperty=PropertyFactoryUtil.forName("status");
   dynamicQuery.add(statusProperty.eq(WorkflowConstants.STATUS_DENIED));
   return dynamicQuery;
