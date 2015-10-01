@@ -4,6 +4,11 @@
     serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
   }
   MBMessage message=super.addDiscussionMessage(userId,userName,groupId,className,classPK,threadId,parentMessageId,subject,body,serviceContext);
+  String contentURL=(String)serviceContext.getAttribute("contentURL");
+  if (Validator.isNotNull(contentURL)) {
+    ExpandoBridge expandoBridge=message.getExpandoBridge();
+    expandoBridge.setAttribute("contentURL",contentURL,false);
+  }
   AkismetData akismetData=updateAkismetData(message,serviceContext);
   if (!enabled) {
     return message;
