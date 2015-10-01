@@ -1,0 +1,11 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+  if (permissionChecker.isCompanyAdmin()) {
+    return;
+  }
+  if (permissionChecker.isGroupAdmin(themeDisplay.getScopeGroupId())) {
+    return;
+  }
+  throw new PrincipalException();
+}

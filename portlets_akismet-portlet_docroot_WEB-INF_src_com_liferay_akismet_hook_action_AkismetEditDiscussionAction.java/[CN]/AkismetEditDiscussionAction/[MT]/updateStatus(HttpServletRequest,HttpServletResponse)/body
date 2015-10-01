@@ -1,0 +1,18 @@
+{
+  ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+  long messageId=ParamUtil.getLong(request,"messageId");
+  boolean spam=ParamUtil.getBoolean(request,"spam");
+  ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+  if (spam) {
+    MBMessage message=MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_DENIED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(message.getCompanyId())) {
+      AkismetUtil.submitSpam(message);
+    }
+  }
+ else {
+    MBMessage message=MBMessageLocalServiceUtil.updateStatus(themeDisplay.getUserId(),messageId,WorkflowConstants.STATUS_APPROVED,serviceContext);
+    if (AkismetUtil.isMessageBoardsEnabled(message.getCompanyId())) {
+      AkismetUtil.submitHam(message);
+    }
+  }
+}
