@@ -1,11 +1,13 @@
 {
-  if ((multicastResult.getCanonicalIds() == 0) && (multicastResult.getFailure() == 0)) {
-    return;
-  }
   List<Result> results=multicastResult.getResults();
   for (int i=0; i < results.size(); i++) {
     Result result=results.get(i);
     String token=tokens.get(i);
+    Response response=new AndroidResponse(result,token);
+    MessageBusUtil.sendMessage("liferay/push_notification_response",response);
+    if ((multicastResult.getCanonicalIds() == 0) && (multicastResult.getFailure() == 0)) {
+      continue;
+    }
     String canonicalRegistrationId=result.getCanonicalRegistrationId();
     String messageId=result.getMessageId();
     if (Validator.isNotNull(canonicalRegistrationId) && Validator.isNotNull(messageId)) {
