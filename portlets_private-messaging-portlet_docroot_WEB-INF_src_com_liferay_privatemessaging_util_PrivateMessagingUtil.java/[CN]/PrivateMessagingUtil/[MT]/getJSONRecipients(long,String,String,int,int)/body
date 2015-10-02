@@ -24,7 +24,8 @@
  catch (  NoSuchRoleException nsre) {
   }
   List<User> users=new ArrayList<>();
-  if (_USERS_INDEXER_ENABLED && _USERS_SEARCH_WITH_INDEX) {
+  Indexer<?> indexer=IndexerRegistryUtil.nullSafeGetIndexer(User.class);
+  if (indexer.isIndexerEnabled() && _USERS_SEARCH_WITH_INDEX) {
     Sort sort=SortFactoryUtil.getSort(User.class,"firstName","asc");
     BaseModelSearchResult<User> baseModelSearchResult=UserLocalServiceUtil.searchUsers(user.getCompanyId(),keywords,keywords,keywords,keywords,keywords,WorkflowConstants.STATUS_APPROVED,params,false,start,end,sort);
     jsonObject.put("total",baseModelSearchResult.getLength());
