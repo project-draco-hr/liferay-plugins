@@ -2,18 +2,9 @@
   try {
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
-    List<SyncDLObject> syncDLObjects=new ArrayList<>();
-    if (parentFolderId > 0) {
-      PermissionChecker permissionChecker=getPermissionChecker();
-      if (permissionChecker.hasPermission(repositoryId,DLFolderConstants.getClassName(),parentFolderId,ActionKeys.VIEW)) {
-        SyncDLObject syncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_FOLDER,parentFolderId);
-        if (syncDLObject != null) {
-          syncDLObjects.add(syncDLObject);
-        }
-      }
-    }
-    syncDLObjects=getSyncDLObjects(syncDLObjects,repositoryId,parentFolderId,lastAccessTime);
-    return new SyncDLObjectUpdate(syncDLObjects,syncDLObjects.size(),lastAccessTime);
+    List<SyncDLObject> syncDLObjects=syncDLObjectFinder.findByModifiedTime(lastAccessTime,repositoryId,parentFolderId,null,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+    SyncDLObject syncDLObject=syncDLObjects.get(syncDLObjects.size() - 1);
+    return new SyncDLObjectUpdate(checkSyncDLObjects(syncDLObjects,repositoryId,lastAccessTime),syncDLObjects.size(),syncDLObject.getModifiedTime());
   }
  catch (  PortalException pe) {
     throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);

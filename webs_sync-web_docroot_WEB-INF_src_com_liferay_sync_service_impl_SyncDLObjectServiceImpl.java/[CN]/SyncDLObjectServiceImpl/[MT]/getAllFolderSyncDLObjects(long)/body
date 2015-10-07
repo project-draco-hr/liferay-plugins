@@ -2,7 +2,7 @@
   try {
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
-    List<SyncDLObject> syncDLObjects=syncDLObjectPersistence.findByR_T(repositoryId,SyncConstants.TYPE_FOLDER);
+    List<SyncDLObject> syncDLObjects=syncDLObjectFinder.findByModifiedTime(-1,repositoryId,0,SyncConstants.TYPE_FOLDER,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
     return checkSyncDLObjects(syncDLObjects,repositoryId,0);
   }
  catch (  PortalException pe) {
