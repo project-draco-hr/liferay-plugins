@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{type,typePK};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,this);
   }
   if (result instanceof SyncDLObject) {
     SyncDLObject syncDLObject=(SyncDLObject)result;
@@ -37,19 +37,19 @@
       qPos.add(typePK);
       List<SyncDLObject> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,list);
       }
  else {
         SyncDLObject syncDLObject=list.get(0);
         result=syncDLObject;
         cacheResult(syncDLObject);
         if ((syncDLObject.getType() == null) || !syncDLObject.getType().equals(type) || (syncDLObject.getTypePK() != typePK)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,syncDLObject);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_T_T,finderArgs,syncDLObject);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_T_T,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_T_T,finderArgs);
       throw processException(e);
     }
  finally {

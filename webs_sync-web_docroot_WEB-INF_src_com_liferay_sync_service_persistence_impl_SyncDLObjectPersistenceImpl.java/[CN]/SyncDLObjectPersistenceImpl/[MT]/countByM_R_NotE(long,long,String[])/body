@@ -2,11 +2,12 @@
   if (events == null) {
     events=new String[0];
   }
- else {
+ else   if (events.length > 1) {
     events=ArrayUtil.distinct(events,NULL_SAFE_STRING_COMPARATOR);
+    Arrays.sort(events,NULL_SAFE_STRING_COMPARATOR);
   }
   Object[] finderArgs=new Object[]{modifiedTime,repositoryId,StringUtil.merge(events)};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs,this);
+  Long count=(Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_COUNT_SYNCDLOBJECT_WHERE);
@@ -46,10 +47,10 @@
         }
       }
       count=(Long)q.uniqueResult();
-      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs,count);
+      finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs,count);
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs);
+      finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_M_R_NOTE,finderArgs);
       throw processException(e);
     }
  finally {

@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{fileEntryId,sourceFileVersionId,targetFileVersionId};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,this);
   }
   if (result instanceof SyncDLFileVersionDiff) {
     SyncDLFileVersionDiff syncDLFileVersionDiff=(SyncDLFileVersionDiff)result;
@@ -27,19 +27,19 @@
       qPos.add(targetFileVersionId);
       List<SyncDLFileVersionDiff> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,list);
       }
  else {
         SyncDLFileVersionDiff syncDLFileVersionDiff=list.get(0);
         result=syncDLFileVersionDiff;
         cacheResult(syncDLFileVersionDiff);
         if ((syncDLFileVersionDiff.getFileEntryId() != fileEntryId) || (syncDLFileVersionDiff.getSourceFileVersionId() != sourceFileVersionId) || (syncDLFileVersionDiff.getTargetFileVersionId() != targetFileVersionId)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,syncDLFileVersionDiff);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs,syncDLFileVersionDiff);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_F_S_T,finderArgs);
       throw processException(e);
     }
  finally {

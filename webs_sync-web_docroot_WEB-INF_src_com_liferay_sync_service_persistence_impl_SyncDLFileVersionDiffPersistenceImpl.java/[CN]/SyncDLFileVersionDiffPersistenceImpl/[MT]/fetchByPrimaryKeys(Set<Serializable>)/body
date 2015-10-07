@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    SyncDLFileVersionDiff syncDLFileVersionDiff=(SyncDLFileVersionDiff)EntityCacheUtil.getResult(SyncDLFileVersionDiffModelImpl.ENTITY_CACHE_ENABLED,SyncDLFileVersionDiffImpl.class,primaryKey);
+    SyncDLFileVersionDiff syncDLFileVersionDiff=(SyncDLFileVersionDiff)entityCache.getResult(SyncDLFileVersionDiffModelImpl.ENTITY_CACHE_ENABLED,SyncDLFileVersionDiffImpl.class,primaryKey);
     if (syncDLFileVersionDiff == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(syncDLFileVersionDiff.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(SyncDLFileVersionDiffModelImpl.ENTITY_CACHE_ENABLED,SyncDLFileVersionDiffImpl.class,primaryKey,_nullSyncDLFileVersionDiff);
+      entityCache.putResult(SyncDLFileVersionDiffModelImpl.ENTITY_CACHE_ENABLED,SyncDLFileVersionDiffImpl.class,primaryKey,_nullSyncDLFileVersionDiff);
     }
   }
  catch (  Exception e) {

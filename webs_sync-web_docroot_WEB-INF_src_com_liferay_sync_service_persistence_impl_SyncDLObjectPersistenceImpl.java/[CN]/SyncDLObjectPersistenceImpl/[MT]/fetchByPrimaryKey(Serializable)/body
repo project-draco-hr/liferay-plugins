@@ -1,5 +1,5 @@
 {
-  SyncDLObject syncDLObject=(SyncDLObject)EntityCacheUtil.getResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey);
+  SyncDLObject syncDLObject=(SyncDLObject)entityCache.getResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey);
   if (syncDLObject == _nullSyncDLObject) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(syncDLObject);
       }
  else {
-        EntityCacheUtil.putResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey,_nullSyncDLObject);
+        entityCache.putResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey,_nullSyncDLObject);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey);
+      entityCache.removeResult(SyncDLObjectModelImpl.ENTITY_CACHE_ENABLED,SyncDLObjectImpl.class,primaryKey);
       throw processException(e);
     }
  finally {
