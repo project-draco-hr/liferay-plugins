@@ -16,6 +16,7 @@
     params.put("From",from);
     params.put("Body",body);
     Sms sms=smsFactory.create(params);
-    MessageBusUtil.sendMessage("liferay/push_notification_response",new TwilioResponse(sms));
+    Response response=new TwilioResponse(sms);
+    MessageBusUtil.sendMessage(DestinationNames.PUSH_NOTIFICATION_RESPONSE,response);
   }
 }
