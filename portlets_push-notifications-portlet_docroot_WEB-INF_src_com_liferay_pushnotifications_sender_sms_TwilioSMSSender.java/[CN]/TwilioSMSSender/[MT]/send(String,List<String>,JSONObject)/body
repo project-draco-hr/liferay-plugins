@@ -15,6 +15,7 @@
     params.put("To",phoneNumber);
     params.put("From",from);
     params.put("Body",body);
-    smsFactory.create(params);
+    Sms sms=smsFactory.create(params);
+    MessageBusUtil.sendMessage("liferay/push_notification_response",new TwilioResponse(sms));
   }
 }
