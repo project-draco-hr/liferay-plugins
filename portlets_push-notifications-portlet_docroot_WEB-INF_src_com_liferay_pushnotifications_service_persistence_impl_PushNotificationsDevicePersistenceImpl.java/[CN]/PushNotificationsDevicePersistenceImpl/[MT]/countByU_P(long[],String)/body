@@ -2,11 +2,12 @@
   if (userIds == null) {
     userIds=new long[0];
   }
- else {
+ else   if (userIds.length > 1) {
     userIds=ArrayUtil.unique(userIds);
+    Arrays.sort(userIds);
   }
   Object[] finderArgs=new Object[]{StringUtil.merge(userIds),platform};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs,this);
+  Long count=(Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_COUNT_PUSHNOTIFICATIONSDEVICE_WHERE);
@@ -40,10 +41,10 @@
         qPos.add(platform);
       }
       count=(Long)q.uniqueResult();
-      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs,count);
+      finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs,count);
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs);
+      finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_P,finderArgs);
       throw processException(e);
     }
  finally {

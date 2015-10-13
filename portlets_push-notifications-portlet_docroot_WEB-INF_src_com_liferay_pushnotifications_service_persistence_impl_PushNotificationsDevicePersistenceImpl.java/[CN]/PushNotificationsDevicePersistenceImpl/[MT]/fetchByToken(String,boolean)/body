@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{token};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,this);
   }
   if (result instanceof PushNotificationsDevice) {
     PushNotificationsDevice pushNotificationsDevice=(PushNotificationsDevice)result;
@@ -35,19 +35,19 @@
       }
       List<PushNotificationsDevice> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,list);
       }
  else {
         PushNotificationsDevice pushNotificationsDevice=list.get(0);
         result=pushNotificationsDevice;
         cacheResult(pushNotificationsDevice);
         if ((pushNotificationsDevice.getToken() == null) || !pushNotificationsDevice.getToken().equals(token)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,pushNotificationsDevice);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs,pushNotificationsDevice);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_TOKEN,finderArgs);
       throw processException(e);
     }
  finally {

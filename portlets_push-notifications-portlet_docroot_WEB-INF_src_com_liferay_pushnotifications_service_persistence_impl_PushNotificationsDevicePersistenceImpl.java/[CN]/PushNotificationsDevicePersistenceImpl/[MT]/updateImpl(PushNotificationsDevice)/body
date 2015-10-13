@@ -19,21 +19,21 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
   if (isNew || !PushNotificationsDeviceModelImpl.COLUMN_BITMASK_ENABLED) {
-    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
     if ((pushNotificationsDeviceModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{pushNotificationsDeviceModelImpl.getOriginalUserId(),pushNotificationsDeviceModelImpl.getOriginalPlatform()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_P,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_U_P,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P,args);
       args=new Object[]{pushNotificationsDeviceModelImpl.getUserId(),pushNotificationsDeviceModelImpl.getPlatform()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_P,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_U_P,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_P,args);
     }
   }
-  EntityCacheUtil.putResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,PushNotificationsDeviceImpl.class,pushNotificationsDevice.getPrimaryKey(),pushNotificationsDevice,false);
+  entityCache.putResult(PushNotificationsDeviceModelImpl.ENTITY_CACHE_ENABLED,PushNotificationsDeviceImpl.class,pushNotificationsDevice.getPrimaryKey(),pushNotificationsDevice,false);
   clearUniqueFindersCache(pushNotificationsDeviceModelImpl);
   cacheUniqueFindersCache(pushNotificationsDeviceModelImpl,isNew);
   pushNotificationsDevice.resetOriginalValues();
