@@ -30,6 +30,10 @@
     if (PrefsPropsUtil.getBoolean(user.getCompanyId(),PortletPropsKeys.SYNC_ALLOW_USER_PERSONAL_SITES,PortletPropsValues.SYNC_ALLOW_USER_PERSONAL_SITES)) {
       groups.add(user.getGroup());
     }
+    Group companyGroup=groupLocalService.getCompanyGroup(user.getCompanyId());
+    if (SyncUtil.isSyncEnabled(companyGroup)) {
+      groups.add(companyGroup);
+    }
     Collections.sort(groups,new GroupNameComparator());
     return ListUtil.unique(groups);
   }
