@@ -8,7 +8,11 @@
   }
   KBArticle kbArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimKey,WorkflowConstants.STATUS_APPROVED);
   if ((kbArticle == null) || !isDescendant(kbArticle,ancestorKBFolder)) {
-    return findFirstKBArticle(groupId,ancestorKBFolder,preferredKBFolderUrlTitle);
+    KBArticleSelection kbArticleSelection=findFirstKBArticle(groupId,ancestorKBFolder,preferredKBFolderUrlTitle);
+    if (resourcePrimKey == 0) {
+      kbArticleSelection.setExactMatch(true);
+    }
+    return kbArticleSelection;
   }
   return new KBArticleSelection(kbArticle,true);
 }
