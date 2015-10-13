@@ -15,8 +15,11 @@
     params.put("To",phoneNumber);
     params.put("From",from);
     params.put("Body",body);
-    Sms sms=smsFactory.create(params);
-    Response response=new TwilioResponse(sms);
+    String statusCallback=getStatusCallback();
+    if (Validator.isNotNull(statusCallback)) {
+      params.put("StatusCallback",statusCallback);
+    }
+    Response response=new TwilioResponse(smsFactory.create(params));
     MessageBusUtil.sendMessage(DestinationNames.PUSH_NOTIFICATION_RESPONSE,response);
   }
 }
