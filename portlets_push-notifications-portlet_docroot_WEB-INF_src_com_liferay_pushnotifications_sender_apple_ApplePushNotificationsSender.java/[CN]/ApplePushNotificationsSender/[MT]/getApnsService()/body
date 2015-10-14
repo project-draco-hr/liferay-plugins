@@ -22,13 +22,13 @@
       throw new PushNotificationsException("The property \"apple.certificate.password\" is not set " + "in portlet.properties");
     }
     appleServiceBuilder.withCert(is,certificatePassword);
+    appleServiceBuilder.withDelegate(new AppleDelegate());
     if (isSandbox()) {
       appleServiceBuilder.withSandboxDestination();
     }
  else {
       appleServiceBuilder.withProductionDestination();
     }
-    appleServiceBuilder.withDelegate(new AppleDelegate());
     _apnsService=appleServiceBuilder.build();
   }
   return _apnsService;
