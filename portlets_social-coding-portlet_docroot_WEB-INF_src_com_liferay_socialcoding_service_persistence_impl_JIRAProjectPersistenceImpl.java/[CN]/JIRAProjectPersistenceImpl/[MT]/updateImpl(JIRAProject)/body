@@ -19,11 +19,11 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
   if (isNew || !JIRAProjectModelImpl.COLUMN_BITMASK_ENABLED) {
-    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  EntityCacheUtil.putResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,jiraProject.getPrimaryKey(),jiraProject,false);
+  entityCache.putResult(JIRAProjectModelImpl.ENTITY_CACHE_ENABLED,JIRAProjectImpl.class,jiraProject.getPrimaryKey(),jiraProject,false);
   clearUniqueFindersCache(jiraProjectModelImpl);
   cacheUniqueFindersCache(jiraProjectModelImpl,isNew);
   jiraProject.resetOriginalValues();

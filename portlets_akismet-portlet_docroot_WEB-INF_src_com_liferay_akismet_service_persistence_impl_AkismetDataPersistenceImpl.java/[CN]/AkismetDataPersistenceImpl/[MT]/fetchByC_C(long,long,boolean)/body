@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{classNameId,classPK};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,this);
   }
   if (result instanceof AkismetData) {
     AkismetData akismetData=(AkismetData)result;
@@ -25,7 +25,7 @@
       qPos.add(classPK);
       List<AkismetData> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -35,12 +35,12 @@
         result=akismetData;
         cacheResult(akismetData);
         if ((akismetData.getClassNameId() != classNameId) || (akismetData.getClassPK() != classPK)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,akismetData);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_C_C,finderArgs,akismetData);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_C,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_C_C,finderArgs);
       throw processException(e);
     }
  finally {

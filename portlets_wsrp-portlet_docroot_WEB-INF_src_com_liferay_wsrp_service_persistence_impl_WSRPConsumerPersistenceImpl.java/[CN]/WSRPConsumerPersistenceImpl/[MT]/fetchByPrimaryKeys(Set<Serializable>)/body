@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    WSRPConsumer wsrpConsumer=(WSRPConsumer)EntityCacheUtil.getResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,primaryKey);
+    WSRPConsumer wsrpConsumer=(WSRPConsumer)entityCache.getResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,primaryKey);
     if (wsrpConsumer == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(wsrpConsumer.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,primaryKey,_nullWSRPConsumer);
+      entityCache.putResult(WSRPConsumerModelImpl.ENTITY_CACHE_ENABLED,WSRPConsumerImpl.class,primaryKey,_nullWSRPConsumer);
     }
   }
  catch (  Exception e) {

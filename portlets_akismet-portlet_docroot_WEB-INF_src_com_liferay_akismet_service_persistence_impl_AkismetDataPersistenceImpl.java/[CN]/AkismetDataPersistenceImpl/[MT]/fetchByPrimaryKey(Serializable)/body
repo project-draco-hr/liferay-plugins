@@ -1,5 +1,5 @@
 {
-  AkismetData akismetData=(AkismetData)EntityCacheUtil.getResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey);
+  AkismetData akismetData=(AkismetData)entityCache.getResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey);
   if (akismetData == _nullAkismetData) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(akismetData);
       }
  else {
-        EntityCacheUtil.putResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey,_nullAkismetData);
+        entityCache.putResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey,_nullAkismetData);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey);
+      entityCache.removeResult(AkismetDataModelImpl.ENTITY_CACHE_ENABLED,AkismetDataImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

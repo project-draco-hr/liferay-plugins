@@ -1,5 +1,5 @@
 {
-  FavoriteSite favoriteSite=(FavoriteSite)EntityCacheUtil.getResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
+  FavoriteSite favoriteSite=(FavoriteSite)entityCache.getResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
   if (favoriteSite == _nullFavoriteSite) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(favoriteSite);
       }
  else {
-        EntityCacheUtil.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey,_nullFavoriteSite);
+        entityCache.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey,_nullFavoriteSite);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
+      entityCache.removeResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

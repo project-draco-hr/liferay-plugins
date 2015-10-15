@@ -1,5 +1,5 @@
 {
-  Entry entry=(Entry)EntityCacheUtil.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
+  Entry entry=(Entry)entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
   if (entry == _nullEntry) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(entry);
       }
  else {
-        EntityCacheUtil.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey,_nullEntry);
+        entityCache.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey,_nullEntry);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
+      entityCache.removeResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

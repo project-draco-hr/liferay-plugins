@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    Foo foo=(Foo)EntityCacheUtil.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
+    Foo foo=(Foo)entityCache.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
     if (foo == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(foo.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey,_nullFoo);
+      entityCache.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey,_nullFoo);
     }
   }
  catch (  Exception e) {

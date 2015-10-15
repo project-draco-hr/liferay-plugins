@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    SVNRepository svnRepository=(SVNRepository)EntityCacheUtil.getResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,primaryKey);
+    SVNRepository svnRepository=(SVNRepository)entityCache.getResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,primaryKey);
     if (svnRepository == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(svnRepository.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,primaryKey,_nullSVNRepository);
+      entityCache.putResult(SVNRepositoryModelImpl.ENTITY_CACHE_ENABLED,SVNRepositoryImpl.class,primaryKey,_nullSVNRepository);
     }
   }
  catch (  Exception e) {

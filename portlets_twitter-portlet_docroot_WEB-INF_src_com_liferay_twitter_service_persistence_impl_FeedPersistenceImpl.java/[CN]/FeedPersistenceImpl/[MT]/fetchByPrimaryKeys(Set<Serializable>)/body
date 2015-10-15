@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    Feed feed=(Feed)EntityCacheUtil.getResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,primaryKey);
+    Feed feed=(Feed)entityCache.getResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,primaryKey);
     if (feed == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(feed.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,primaryKey,_nullFeed);
+      entityCache.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,primaryKey,_nullFeed);
     }
   }
  catch (  Exception e) {

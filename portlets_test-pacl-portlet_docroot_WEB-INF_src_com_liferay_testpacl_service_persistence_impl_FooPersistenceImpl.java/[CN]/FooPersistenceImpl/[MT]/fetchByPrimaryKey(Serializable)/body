@@ -1,5 +1,5 @@
 {
-  Foo foo=(Foo)EntityCacheUtil.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
+  Foo foo=(Foo)entityCache.getResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
   if (foo == _nullFoo) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(foo);
       }
  else {
-        EntityCacheUtil.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey,_nullFoo);
+        entityCache.putResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey,_nullFoo);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
+      entityCache.removeResult(FooModelImpl.ENTITY_CACHE_ENABLED,FooImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

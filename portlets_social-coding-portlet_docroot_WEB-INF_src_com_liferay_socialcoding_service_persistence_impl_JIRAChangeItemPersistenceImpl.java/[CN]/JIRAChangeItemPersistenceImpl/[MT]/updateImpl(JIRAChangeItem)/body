@@ -19,21 +19,21 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
   if (isNew || !JIRAChangeItemModelImpl.COLUMN_BITMASK_ENABLED) {
-    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
     if ((jiraChangeItemModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRACHANGEGROUPID.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{jiraChangeItemModelImpl.getOriginalJiraChangeGroupId()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_JIRACHANGEGROUPID,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRACHANGEGROUPID,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_JIRACHANGEGROUPID,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRACHANGEGROUPID,args);
       args=new Object[]{jiraChangeItemModelImpl.getJiraChangeGroupId()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_JIRACHANGEGROUPID,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRACHANGEGROUPID,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_JIRACHANGEGROUPID,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_JIRACHANGEGROUPID,args);
     }
   }
-  EntityCacheUtil.putResult(JIRAChangeItemModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKey(),jiraChangeItem,false);
+  entityCache.putResult(JIRAChangeItemModelImpl.ENTITY_CACHE_ENABLED,JIRAChangeItemImpl.class,jiraChangeItem.getPrimaryKey(),jiraChangeItem,false);
   jiraChangeItem.resetOriginalValues();
   return jiraChangeItem;
 }

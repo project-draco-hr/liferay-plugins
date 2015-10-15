@@ -1,5 +1,5 @@
 {
-  Message message=(Message)EntityCacheUtil.getResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey);
+  Message message=(Message)entityCache.getResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey);
   if (message == _nullMessage) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(message);
       }
  else {
-        EntityCacheUtil.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey,_nullMessage);
+        entityCache.putResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey,_nullMessage);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey);
+      entityCache.removeResult(MessageModelImpl.ENTITY_CACHE_ENABLED,MessageImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

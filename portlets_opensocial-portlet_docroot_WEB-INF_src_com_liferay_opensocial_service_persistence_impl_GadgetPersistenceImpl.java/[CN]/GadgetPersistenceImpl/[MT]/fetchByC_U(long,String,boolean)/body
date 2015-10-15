@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{companyId,url};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,this);
   }
   if (result instanceof Gadget) {
     Gadget gadget=(Gadget)result;
@@ -37,19 +37,19 @@
       }
       List<Gadget> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,list);
       }
  else {
         Gadget gadget=list.get(0);
         result=gadget;
         cacheResult(gadget);
         if ((gadget.getCompanyId() != companyId) || (gadget.getUrl() == null) || !gadget.getUrl().equals(url)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,gadget);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_C_U,finderArgs,gadget);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_C_U,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_C_U,finderArgs);
       throw processException(e);
     }
  finally {

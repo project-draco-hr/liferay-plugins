@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    FavoriteSite favoriteSite=(FavoriteSite)EntityCacheUtil.getResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
+    FavoriteSite favoriteSite=(FavoriteSite)entityCache.getResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey);
     if (favoriteSite == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(favoriteSite.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey,_nullFavoriteSite);
+      entityCache.putResult(FavoriteSiteModelImpl.ENTITY_CACHE_ENABLED,FavoriteSiteImpl.class,primaryKey,_nullFavoriteSite);
     }
   }
  catch (  Exception e) {

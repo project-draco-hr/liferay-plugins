@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{userId,twitterScreenName};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,this);
   }
   if (result instanceof Feed) {
     Feed feed=(Feed)result;
@@ -37,7 +37,7 @@
       }
       List<Feed> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -47,12 +47,12 @@
         result=feed;
         cacheResult(feed);
         if ((feed.getUserId() != userId) || (feed.getTwitterScreenName() == null) || !feed.getTwitterScreenName().equals(twitterScreenName)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,feed);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs,feed);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_U_TSN,finderArgs);
       throw processException(e);
     }
  finally {

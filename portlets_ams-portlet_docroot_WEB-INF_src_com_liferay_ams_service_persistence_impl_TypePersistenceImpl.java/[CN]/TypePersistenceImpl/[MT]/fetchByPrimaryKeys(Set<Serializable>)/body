@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    Type type=(Type)EntityCacheUtil.getResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,primaryKey);
+    Type type=(Type)entityCache.getResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,primaryKey);
     if (type == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(type.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,primaryKey,_nullType);
+      entityCache.putResult(TypeModelImpl.ENTITY_CACHE_ENABLED,TypeImpl.class,primaryKey,_nullType);
     }
   }
  catch (  Exception e) {

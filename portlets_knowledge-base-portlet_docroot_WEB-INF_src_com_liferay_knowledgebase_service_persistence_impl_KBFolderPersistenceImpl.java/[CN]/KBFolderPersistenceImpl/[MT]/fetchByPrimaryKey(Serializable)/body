@@ -1,5 +1,5 @@
 {
-  KBFolder kbFolder=(KBFolder)EntityCacheUtil.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
+  KBFolder kbFolder=(KBFolder)entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
   if (kbFolder == _nullKBFolder) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(kbFolder);
       }
  else {
-        EntityCacheUtil.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey,_nullKBFolder);
+        entityCache.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey,_nullKBFolder);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
+      entityCache.removeResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

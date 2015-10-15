@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{groupId,receiverUserId,status};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,this);
   }
   if (result instanceof MemberRequest) {
     MemberRequest memberRequest=(MemberRequest)result;
@@ -27,7 +27,7 @@
       qPos.add(status);
       List<MemberRequest> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -37,12 +37,12 @@
         result=memberRequest;
         cacheResult(memberRequest);
         if ((memberRequest.getGroupId() != groupId) || (memberRequest.getReceiverUserId() != receiverUserId) || (memberRequest.getStatus() != status)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,memberRequest);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs,memberRequest);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_G_R_S,finderArgs);
       throw processException(e);
     }
  finally {

@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{userId,gadgetKey,serviceName,moduleId,tokenName};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,this);
   }
   if (result instanceof OAuthToken) {
     OAuthToken oAuthToken=(OAuthToken)result;
@@ -67,7 +67,7 @@
       }
       List<OAuthToken> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -77,12 +77,12 @@
         result=oAuthToken;
         cacheResult(oAuthToken);
         if ((oAuthToken.getUserId() != userId) || (oAuthToken.getGadgetKey() == null) || !oAuthToken.getGadgetKey().equals(gadgetKey)|| (oAuthToken.getServiceName() == null)|| !oAuthToken.getServiceName().equals(serviceName)|| (oAuthToken.getModuleId() != moduleId)|| (oAuthToken.getTokenName() == null)|| !oAuthToken.getTokenName().equals(tokenName)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,oAuthToken);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs,oAuthToken);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_U_G_S_M_T,finderArgs);
       throw processException(e);
     }
  finally {

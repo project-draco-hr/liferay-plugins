@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{wsrpConsumerId,portletHandle};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,this);
   }
   if (result instanceof WSRPConsumerPortlet) {
     WSRPConsumerPortlet wsrpConsumerPortlet=(WSRPConsumerPortlet)result;
@@ -37,7 +37,7 @@
       }
       List<WSRPConsumerPortlet> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -47,12 +47,12 @@
         result=wsrpConsumerPortlet;
         cacheResult(wsrpConsumerPortlet);
         if ((wsrpConsumerPortlet.getWsrpConsumerId() != wsrpConsumerId) || (wsrpConsumerPortlet.getPortletHandle() == null) || !wsrpConsumerPortlet.getPortletHandle().equals(portletHandle)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,wsrpConsumerPortlet);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_W_P,finderArgs,wsrpConsumerPortlet);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_W_P,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_W_P,finderArgs);
       throw processException(e);
     }
  finally {

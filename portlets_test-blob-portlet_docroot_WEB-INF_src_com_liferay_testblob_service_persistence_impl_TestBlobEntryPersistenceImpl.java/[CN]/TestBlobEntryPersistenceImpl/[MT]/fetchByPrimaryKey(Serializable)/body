@@ -1,5 +1,5 @@
 {
-  TestBlobEntry testBlobEntry=(TestBlobEntry)EntityCacheUtil.getResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
+  TestBlobEntry testBlobEntry=(TestBlobEntry)entityCache.getResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
   if (testBlobEntry == _nullTestBlobEntry) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(testBlobEntry);
       }
  else {
-        EntityCacheUtil.putResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey,_nullTestBlobEntry);
+        entityCache.putResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey,_nullTestBlobEntry);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
+      entityCache.removeResult(TestBlobEntryModelImpl.ENTITY_CACHE_ENABLED,TestBlobEntryImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

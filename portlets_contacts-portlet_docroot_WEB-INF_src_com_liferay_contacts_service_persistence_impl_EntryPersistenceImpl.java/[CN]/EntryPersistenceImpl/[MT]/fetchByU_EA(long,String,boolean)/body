@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{userId,emailAddress};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,this);
   }
   if (result instanceof Entry) {
     Entry entry=(Entry)result;
@@ -37,7 +37,7 @@
       }
       List<Entry> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -47,12 +47,12 @@
         result=entry;
         cacheResult(entry);
         if ((entry.getUserId() != userId) || (entry.getEmailAddress() == null) || !entry.getEmailAddress().equals(emailAddress)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,entry);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs,entry);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_U_EA,finderArgs);
       throw processException(e);
     }
  finally {

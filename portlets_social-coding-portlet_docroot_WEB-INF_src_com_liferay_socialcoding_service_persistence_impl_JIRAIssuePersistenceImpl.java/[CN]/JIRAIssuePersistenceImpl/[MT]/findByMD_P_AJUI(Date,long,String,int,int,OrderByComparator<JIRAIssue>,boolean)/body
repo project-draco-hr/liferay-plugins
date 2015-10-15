@@ -1,0 +1,87 @@
+{
+  boolean pagination=true;
+  FinderPath finderPath=null;
+  Object[] finderArgs=null;
+  finderPath=FINDER_PATH_WITH_PAGINATION_FIND_BY_MD_P_AJUI;
+  finderArgs=new Object[]{modifiedDate,projectId,assigneeJiraUserId,start,end,orderByComparator};
+  List<JIRAIssue> list=null;
+  if (retrieveFromCache) {
+    list=(List<JIRAIssue>)finderCache.getResult(finderPath,finderArgs,this);
+    if ((list != null) && !list.isEmpty()) {
+      for (      JIRAIssue jiraIssue : list) {
+        if ((modifiedDate.getTime() >= jiraIssue.getModifiedDate().getTime()) || (projectId != jiraIssue.getProjectId()) || !Validator.equals(assigneeJiraUserId,jiraIssue.getAssigneeJiraUserId())) {
+          list=null;
+          break;
+        }
+      }
+    }
+  }
+  if (list == null) {
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(5);
+    }
+    query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+    boolean bindModifiedDate=false;
+    if (modifiedDate == null) {
+      query.append(_FINDER_COLUMN_MD_P_AJUI_MODIFIEDDATE_1);
+    }
+ else {
+      bindModifiedDate=true;
+      query.append(_FINDER_COLUMN_MD_P_AJUI_MODIFIEDDATE_2);
+    }
+    query.append(_FINDER_COLUMN_MD_P_AJUI_PROJECTID_2);
+    boolean bindAssigneeJiraUserId=false;
+    if (assigneeJiraUserId == null) {
+      query.append(_FINDER_COLUMN_MD_P_AJUI_ASSIGNEEJIRAUSERID_1);
+    }
+ else     if (assigneeJiraUserId.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_MD_P_AJUI_ASSIGNEEJIRAUSERID_3);
+    }
+ else {
+      bindAssigneeJiraUserId=true;
+      query.append(_FINDER_COLUMN_MD_P_AJUI_ASSIGNEEJIRAUSERID_2);
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else     if (pagination) {
+      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      if (bindModifiedDate) {
+        qPos.add(new Timestamp(modifiedDate.getTime()));
+      }
+      qPos.add(projectId);
+      if (bindAssigneeJiraUserId) {
+        qPos.add(assigneeJiraUserId);
+      }
+      if (!pagination) {
+        list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end,false);
+        Collections.sort(list);
+        list=Collections.unmodifiableList(list);
+      }
+ else {
+        list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
+      }
+      cacheResult(list);
+      finderCache.putResult(finderPath,finderArgs,list);
+    }
+ catch (    Exception e) {
+      finderCache.removeResult(finderPath,finderArgs);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return list;
+}

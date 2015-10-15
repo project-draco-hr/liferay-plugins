@@ -37,11 +37,11 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
   if (isNew || !FeedModelImpl.COLUMN_BITMASK_ENABLED) {
-    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
-  EntityCacheUtil.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey(),feed,false);
+  entityCache.putResult(FeedModelImpl.ENTITY_CACHE_ENABLED,FeedImpl.class,feed.getPrimaryKey(),feed,false);
   clearUniqueFindersCache(feedModelImpl);
   cacheUniqueFindersCache(feedModelImpl,isNew);
   feed.resetOriginalValues();

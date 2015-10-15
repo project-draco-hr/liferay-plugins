@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{gadgetKey,serviceName};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,this);
   }
   if (result instanceof OAuthConsumer) {
     OAuthConsumer oAuthConsumer=(OAuthConsumer)result;
@@ -49,7 +49,7 @@
       }
       List<OAuthConsumer> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -59,12 +59,12 @@
         result=oAuthConsumer;
         cacheResult(oAuthConsumer);
         if ((oAuthConsumer.getGadgetKey() == null) || !oAuthConsumer.getGadgetKey().equals(gadgetKey) || (oAuthConsumer.getServiceName() == null)|| !oAuthConsumer.getServiceName().equals(serviceName)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,oAuthConsumer);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_G_S,finderArgs,oAuthConsumer);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_S,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_G_S,finderArgs);
       throw processException(e);
     }
  finally {

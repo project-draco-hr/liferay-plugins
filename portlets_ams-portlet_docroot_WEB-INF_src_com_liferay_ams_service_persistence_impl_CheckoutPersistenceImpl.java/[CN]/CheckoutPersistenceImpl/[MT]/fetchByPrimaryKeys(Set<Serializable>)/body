@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    Checkout checkout=(Checkout)EntityCacheUtil.getResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey);
+    Checkout checkout=(Checkout)entityCache.getResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey);
     if (checkout == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(checkout.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey,_nullCheckout);
+      entityCache.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,primaryKey,_nullCheckout);
     }
   }
  catch (  Exception e) {

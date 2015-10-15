@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{url};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_URL,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_URL,finderArgs,this);
   }
   if (result instanceof SVNRepository) {
     SVNRepository svnRepository=(SVNRepository)result;
@@ -35,7 +35,7 @@
       }
       List<SVNRepository> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -45,12 +45,12 @@
         result=svnRepository;
         cacheResult(svnRepository);
         if ((svnRepository.getUrl() == null) || !svnRepository.getUrl().equals(url)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,svnRepository);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_URL,finderArgs,svnRepository);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_URL,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_URL,finderArgs);
       throw processException(e);
     }
  finally {

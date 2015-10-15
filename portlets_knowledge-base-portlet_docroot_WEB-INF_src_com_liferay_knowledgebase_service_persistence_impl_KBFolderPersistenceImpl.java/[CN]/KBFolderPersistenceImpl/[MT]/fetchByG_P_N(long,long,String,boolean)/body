@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{groupId,parentKBFolderId,name};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,this);
   }
   if (result instanceof KBFolder) {
     KBFolder kbFolder=(KBFolder)result;
@@ -39,7 +39,7 @@
       }
       List<KBFolder> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -49,12 +49,12 @@
         result=kbFolder;
         cacheResult(kbFolder);
         if ((kbFolder.getGroupId() != groupId) || (kbFolder.getParentKBFolderId() != parentKBFolderId) || (kbFolder.getName() == null)|| !kbFolder.getName().equals(name)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,kbFolder);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs,kbFolder);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_G_P_N,finderArgs);
       throw processException(e);
     }
  finally {

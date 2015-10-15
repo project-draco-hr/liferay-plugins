@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{resourcePrimKey,version};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,this);
   }
   if (result instanceof KBArticle) {
     KBArticle kbArticle=(KBArticle)result;
@@ -25,19 +25,19 @@
       qPos.add(version);
       List<KBArticle> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,list);
       }
  else {
         KBArticle kbArticle=list.get(0);
         result=kbArticle;
         cacheResult(kbArticle);
         if ((kbArticle.getResourcePrimKey() != resourcePrimKey) || (kbArticle.getVersion() != version)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,kbArticle);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_R_V,finderArgs,kbArticle);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_R_V,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_R_V,finderArgs);
       throw processException(e);
     }
  finally {

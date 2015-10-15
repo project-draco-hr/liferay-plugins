@@ -1,5 +1,5 @@
 {
-  SVNRevision svnRevision=(SVNRevision)EntityCacheUtil.getResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
+  SVNRevision svnRevision=(SVNRevision)entityCache.getResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
   if (svnRevision == _nullSVNRevision) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(svnRevision);
       }
  else {
-        EntityCacheUtil.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey,_nullSVNRevision);
+        entityCache.putResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey,_nullSVNRevision);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
+      entityCache.removeResult(SVNRevisionModelImpl.ENTITY_CACHE_ENABLED,SVNRevisionImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

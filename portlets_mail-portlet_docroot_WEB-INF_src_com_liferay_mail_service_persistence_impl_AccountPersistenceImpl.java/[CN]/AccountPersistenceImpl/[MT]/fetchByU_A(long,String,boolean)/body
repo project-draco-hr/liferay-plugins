@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{userId,address};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,this);
   }
   if (result instanceof Account) {
     Account account=(Account)result;
@@ -37,7 +37,7 @@
       }
       List<Account> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,list);
       }
  else {
         if ((list.size() > 1) && _log.isWarnEnabled()) {
@@ -47,12 +47,12 @@
         result=account;
         cacheResult(account);
         if ((account.getUserId() != userId) || (account.getAddress() == null) || !account.getAddress().equals(address)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,account);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_U_A,finderArgs,account);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_U_A,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_U_A,finderArgs);
       throw processException(e);
     }
  finally {

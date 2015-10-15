@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    OAuthToken oAuthToken=(OAuthToken)EntityCacheUtil.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
+    OAuthToken oAuthToken=(OAuthToken)entityCache.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
     if (oAuthToken == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(oAuthToken.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey,_nullOAuthToken);
+      entityCache.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey,_nullOAuthToken);
     }
   }
  catch (  Exception e) {

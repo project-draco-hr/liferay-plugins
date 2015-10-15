@@ -1,5 +1,5 @@
 {
-  MemberRequest memberRequest=(MemberRequest)EntityCacheUtil.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey);
+  MemberRequest memberRequest=(MemberRequest)entityCache.getResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey);
   if (memberRequest == _nullMemberRequest) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(memberRequest);
       }
  else {
-        EntityCacheUtil.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey,_nullMemberRequest);
+        entityCache.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey,_nullMemberRequest);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey);
+      entityCache.removeResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

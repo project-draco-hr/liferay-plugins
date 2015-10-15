@@ -2,11 +2,12 @@
   if (statuses == null) {
     statuses=new int[0];
   }
- else {
+ else   if (statuses.length > 1) {
     statuses=ArrayUtil.unique(statuses);
+    Arrays.sort(statuses);
   }
   Object[] finderArgs=new Object[]{userId,StringUtil.merge(statuses)};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs,this);
+  Long count=(Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_COUNT_TASKSENTRY_WHERE);
@@ -27,10 +28,10 @@
       QueryPos qPos=QueryPos.getInstance(q);
       qPos.add(userId);
       count=(Long)q.uniqueResult();
-      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs,count);
+      finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs,count);
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs);
+      finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_U_S,finderArgs);
       throw processException(e);
     }
  finally {

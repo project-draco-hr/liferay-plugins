@@ -1,5 +1,5 @@
 {
-  Asset asset=(Asset)EntityCacheUtil.getResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
+  Asset asset=(Asset)entityCache.getResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
   if (asset == _nullAsset) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(asset);
       }
  else {
-        EntityCacheUtil.putResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey,_nullAsset);
+        entityCache.putResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey,_nullAsset);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
+      entityCache.removeResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

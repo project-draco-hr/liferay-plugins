@@ -1,5 +1,5 @@
 {
-  JIRAAction jiraAction=(JIRAAction)EntityCacheUtil.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
+  JIRAAction jiraAction=(JIRAAction)entityCache.getResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
   if (jiraAction == _nullJIRAAction) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(jiraAction);
       }
  else {
-        EntityCacheUtil.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey,_nullJIRAAction);
+        entityCache.putResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey,_nullJIRAAction);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
+      entityCache.removeResult(JIRAActionModelImpl.ENTITY_CACHE_ENABLED,JIRAActionImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

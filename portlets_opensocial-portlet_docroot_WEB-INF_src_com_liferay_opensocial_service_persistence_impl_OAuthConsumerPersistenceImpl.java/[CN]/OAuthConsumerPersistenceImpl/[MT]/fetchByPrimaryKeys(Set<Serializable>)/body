@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    OAuthConsumer oAuthConsumer=(OAuthConsumer)EntityCacheUtil.getResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey);
+    OAuthConsumer oAuthConsumer=(OAuthConsumer)entityCache.getResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey);
     if (oAuthConsumer == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(oAuthConsumer.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey,_nullOAuthConsumer);
+      entityCache.putResult(OAuthConsumerModelImpl.ENTITY_CACHE_ENABLED,OAuthConsumerImpl.class,primaryKey,_nullOAuthConsumer);
     }
   }
  catch (  Exception e) {

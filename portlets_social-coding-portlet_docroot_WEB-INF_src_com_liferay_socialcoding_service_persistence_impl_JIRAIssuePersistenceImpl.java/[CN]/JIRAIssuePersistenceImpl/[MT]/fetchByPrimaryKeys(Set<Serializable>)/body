@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    JIRAIssue jiraIssue=(JIRAIssue)EntityCacheUtil.getResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
+    JIRAIssue jiraIssue=(JIRAIssue)entityCache.getResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
     if (jiraIssue == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(jiraIssue.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey,_nullJIRAIssue);
+      entityCache.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey,_nullJIRAIssue);
     }
   }
  catch (  Exception e) {

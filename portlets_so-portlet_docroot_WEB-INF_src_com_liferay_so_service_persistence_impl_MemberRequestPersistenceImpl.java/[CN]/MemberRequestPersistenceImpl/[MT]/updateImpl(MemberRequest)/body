@@ -37,29 +37,29 @@
  finally {
     closeSession(session);
   }
-  FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
   if (isNew || !MemberRequestModelImpl.COLUMN_BITMASK_ENABLED) {
-    FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
   }
  else {
     if ((memberRequestModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{memberRequestModelImpl.getOriginalReceiverUserId()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID,args);
       args=new Object[]{memberRequestModelImpl.getReceiverUserId()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_RECEIVERUSERID,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_RECEIVERUSERID,args);
     }
     if ((memberRequestModelImpl.getColumnBitmask() & FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S.getColumnBitmask()) != 0) {
       Object[] args=new Object[]{memberRequestModelImpl.getOriginalReceiverUserId(),memberRequestModelImpl.getOriginalStatus()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_S,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_R_S,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S,args);
       args=new Object[]{memberRequestModelImpl.getReceiverUserId(),memberRequestModelImpl.getStatus()};
-      FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_R_S,args);
-      FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S,args);
+      finderCache.removeResult(FINDER_PATH_COUNT_BY_R_S,args);
+      finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_R_S,args);
     }
   }
-  EntityCacheUtil.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequest.getPrimaryKey(),memberRequest,false);
+  entityCache.putResult(MemberRequestModelImpl.ENTITY_CACHE_ENABLED,MemberRequestImpl.class,memberRequest.getPrimaryKey(),memberRequest,false);
   clearUniqueFindersCache(memberRequestModelImpl);
   cacheUniqueFindersCache(memberRequestModelImpl,isNew);
   memberRequest.resetOriginalValues();

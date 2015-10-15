@@ -2,7 +2,7 @@
   Object[] finderArgs=new Object[]{uuid,groupId};
   Object result=null;
   if (retrieveFromCache) {
-    result=FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,this);
+    result=finderCache.getResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,this);
   }
   if (result instanceof KBArticle) {
     KBArticle kbArticle=(KBArticle)result;
@@ -37,19 +37,19 @@
       qPos.add(groupId);
       List<KBArticle> list=q.list();
       if (list.isEmpty()) {
-        FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,list);
+        finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,list);
       }
  else {
         KBArticle kbArticle=list.get(0);
         result=kbArticle;
         cacheResult(kbArticle);
         if ((kbArticle.getUuid() == null) || !kbArticle.getUuid().equals(uuid) || (kbArticle.getGroupId() != groupId)) {
-          FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,kbArticle);
+          finderCache.putResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs,kbArticle);
         }
       }
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs);
+      finderCache.removeResult(FINDER_PATH_FETCH_BY_UUID_G,finderArgs);
       throw processException(e);
     }
  finally {

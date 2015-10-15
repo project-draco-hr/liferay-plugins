@@ -20,10 +20,9 @@
 );
   exportActionableDynamicQuery.setCompanyId(portletDataContext.getCompanyId());
   exportActionableDynamicQuery.setGroupId(portletDataContext.getScopeGroupId());
-  exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
-    @Override public void performAction(    Object object) throws PortalException {
-      KBFolder stagedModel=(KBFolder)object;
-      StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,stagedModel);
+  exportActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<KBFolder>(){
+    @Override public void performAction(    KBFolder kbFolder) throws PortalException {
+      StagedModelDataHandlerUtil.exportStagedModel(portletDataContext,kbFolder);
     }
   }
 );

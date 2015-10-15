@@ -1,5 +1,5 @@
 {
-  OAuthToken oAuthToken=(OAuthToken)EntityCacheUtil.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
+  OAuthToken oAuthToken=(OAuthToken)entityCache.getResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
   if (oAuthToken == _nullOAuthToken) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(oAuthToken);
       }
  else {
-        EntityCacheUtil.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey,_nullOAuthToken);
+        entityCache.putResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey,_nullOAuthToken);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
+      entityCache.removeResult(OAuthTokenModelImpl.ENTITY_CACHE_ENABLED,OAuthTokenImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

@@ -1,0 +1,97 @@
+{
+  boolean pagination=true;
+  FinderPath finderPath=null;
+  Object[] finderArgs=null;
+  if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) && (orderByComparator == null)) {
+    pagination=false;
+    finderPath=FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_P_RJUI_S;
+    finderArgs=new Object[]{projectId,reporterJiraUserId,status};
+  }
+ else {
+    finderPath=FINDER_PATH_WITH_PAGINATION_FIND_BY_P_RJUI_S;
+    finderArgs=new Object[]{projectId,reporterJiraUserId,status,start,end,orderByComparator};
+  }
+  List<JIRAIssue> list=null;
+  if (retrieveFromCache) {
+    list=(List<JIRAIssue>)finderCache.getResult(finderPath,finderArgs,this);
+    if ((list != null) && !list.isEmpty()) {
+      for (      JIRAIssue jiraIssue : list) {
+        if ((projectId != jiraIssue.getProjectId()) || !Validator.equals(reporterJiraUserId,jiraIssue.getReporterJiraUserId()) || !Validator.equals(status,jiraIssue.getStatus())) {
+          list=null;
+          break;
+        }
+      }
+    }
+  }
+  if (list == null) {
+    StringBundler query=null;
+    if (orderByComparator != null) {
+      query=new StringBundler(5 + (orderByComparator.getOrderByFields().length * 3));
+    }
+ else {
+      query=new StringBundler(5);
+    }
+    query.append(_SQL_SELECT_JIRAISSUE_WHERE);
+    query.append(_FINDER_COLUMN_P_RJUI_S_PROJECTID_2);
+    boolean bindReporterJiraUserId=false;
+    if (reporterJiraUserId == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_1);
+    }
+ else     if (reporterJiraUserId.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_3);
+    }
+ else {
+      bindReporterJiraUserId=true;
+      query.append(_FINDER_COLUMN_P_RJUI_S_REPORTERJIRAUSERID_2);
+    }
+    boolean bindStatus=false;
+    if (status == null) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_1);
+    }
+ else     if (status.equals(StringPool.BLANK)) {
+      query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_3);
+    }
+ else {
+      bindStatus=true;
+      query.append(_FINDER_COLUMN_P_RJUI_S_STATUS_2);
+    }
+    if (orderByComparator != null) {
+      appendOrderByComparator(query,_ORDER_BY_ENTITY_ALIAS,orderByComparator);
+    }
+ else     if (pagination) {
+      query.append(JIRAIssueModelImpl.ORDER_BY_JPQL);
+    }
+    String sql=query.toString();
+    Session session=null;
+    try {
+      session=openSession();
+      Query q=session.createQuery(sql);
+      QueryPos qPos=QueryPos.getInstance(q);
+      qPos.add(projectId);
+      if (bindReporterJiraUserId) {
+        qPos.add(reporterJiraUserId);
+      }
+      if (bindStatus) {
+        qPos.add(status);
+      }
+      if (!pagination) {
+        list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end,false);
+        Collections.sort(list);
+        list=Collections.unmodifiableList(list);
+      }
+ else {
+        list=(List<JIRAIssue>)QueryUtil.list(q,getDialect(),start,end);
+      }
+      cacheResult(list);
+      finderCache.putResult(finderPath,finderArgs,list);
+    }
+ catch (    Exception e) {
+      finderCache.removeResult(finderPath,finderArgs);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return list;
+}

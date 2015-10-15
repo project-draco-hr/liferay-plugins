@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    KBComment kbComment=(KBComment)EntityCacheUtil.getResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,primaryKey);
+    KBComment kbComment=(KBComment)entityCache.getResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,primaryKey);
     if (kbComment == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(kbComment.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,primaryKey,_nullKBComment);
+      entityCache.putResult(KBCommentModelImpl.ENTITY_CACHE_ENABLED,KBCommentImpl.class,primaryKey,_nullKBComment);
     }
   }
  catch (  Exception e) {

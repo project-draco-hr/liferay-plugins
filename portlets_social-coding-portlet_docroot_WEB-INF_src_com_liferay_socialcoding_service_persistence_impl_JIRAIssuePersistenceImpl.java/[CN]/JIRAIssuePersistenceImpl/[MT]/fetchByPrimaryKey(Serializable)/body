@@ -1,5 +1,5 @@
 {
-  JIRAIssue jiraIssue=(JIRAIssue)EntityCacheUtil.getResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
+  JIRAIssue jiraIssue=(JIRAIssue)entityCache.getResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
   if (jiraIssue == _nullJIRAIssue) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(jiraIssue);
       }
  else {
-        EntityCacheUtil.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey,_nullJIRAIssue);
+        entityCache.putResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey,_nullJIRAIssue);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
+      entityCache.removeResult(JIRAIssueModelImpl.ENTITY_CACHE_ENABLED,JIRAIssueImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

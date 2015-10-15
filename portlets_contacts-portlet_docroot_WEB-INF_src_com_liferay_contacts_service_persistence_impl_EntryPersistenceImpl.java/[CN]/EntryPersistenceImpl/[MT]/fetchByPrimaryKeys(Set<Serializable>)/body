@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    Entry entry=(Entry)EntityCacheUtil.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
+    Entry entry=(Entry)entityCache.getResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey);
     if (entry == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(entry.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey,_nullEntry);
+      entityCache.putResult(EntryModelImpl.ENTITY_CACHE_ENABLED,EntryImpl.class,primaryKey,_nullEntry);
     }
   }
  catch (  Exception e) {

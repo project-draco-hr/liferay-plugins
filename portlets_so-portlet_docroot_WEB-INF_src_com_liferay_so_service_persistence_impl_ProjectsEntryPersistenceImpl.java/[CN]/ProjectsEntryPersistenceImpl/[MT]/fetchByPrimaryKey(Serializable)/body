@@ -1,5 +1,5 @@
 {
-  ProjectsEntry projectsEntry=(ProjectsEntry)EntityCacheUtil.getResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey);
+  ProjectsEntry projectsEntry=(ProjectsEntry)entityCache.getResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey);
   if (projectsEntry == _nullProjectsEntry) {
     return null;
   }
@@ -12,11 +12,11 @@
         cacheResult(projectsEntry);
       }
  else {
-        EntityCacheUtil.putResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey,_nullProjectsEntry);
+        entityCache.putResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey,_nullProjectsEntry);
       }
     }
  catch (    Exception e) {
-      EntityCacheUtil.removeResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey);
+      entityCache.removeResult(ProjectsEntryModelImpl.ENTITY_CACHE_ENABLED,ProjectsEntryImpl.class,primaryKey);
       throw processException(e);
     }
  finally {

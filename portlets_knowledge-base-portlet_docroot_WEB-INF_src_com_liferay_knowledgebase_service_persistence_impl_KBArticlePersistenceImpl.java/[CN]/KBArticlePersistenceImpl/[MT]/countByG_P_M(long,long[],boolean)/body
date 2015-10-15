@@ -2,11 +2,12 @@
   if (parentResourcePrimKeies == null) {
     parentResourcePrimKeies=new long[0];
   }
- else {
+ else   if (parentResourcePrimKeies.length > 1) {
     parentResourcePrimKeies=ArrayUtil.unique(parentResourcePrimKeies);
+    Arrays.sort(parentResourcePrimKeies);
   }
   Object[] finderArgs=new Object[]{groupId,StringUtil.merge(parentResourcePrimKeies),main};
-  Long count=(Long)FinderCacheUtil.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs,this);
+  Long count=(Long)finderCache.getResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs,this);
   if (count == null) {
     StringBundler query=new StringBundler();
     query.append(_SQL_COUNT_KBARTICLE_WHERE);
@@ -30,10 +31,10 @@
       qPos.add(groupId);
       qPos.add(main);
       count=(Long)q.uniqueResult();
-      FinderCacheUtil.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs,count);
+      finderCache.putResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs,count);
     }
  catch (    Exception e) {
-      FinderCacheUtil.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs);
+      finderCache.removeResult(FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_P_M,finderArgs);
       throw processException(e);
     }
  finally {

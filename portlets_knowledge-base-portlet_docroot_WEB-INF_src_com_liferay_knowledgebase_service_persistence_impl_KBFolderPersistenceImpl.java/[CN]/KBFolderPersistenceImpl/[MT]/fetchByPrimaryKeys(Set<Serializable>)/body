@@ -14,7 +14,7 @@
   }
   Set<Serializable> uncachedPrimaryKeys=null;
   for (  Serializable primaryKey : primaryKeys) {
-    KBFolder kbFolder=(KBFolder)EntityCacheUtil.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
+    KBFolder kbFolder=(KBFolder)entityCache.getResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey);
     if (kbFolder == null) {
       if (uncachedPrimaryKeys == null) {
         uncachedPrimaryKeys=new HashSet<Serializable>();
@@ -47,7 +47,7 @@
       uncachedPrimaryKeys.remove(kbFolder.getPrimaryKeyObj());
     }
     for (    Serializable primaryKey : uncachedPrimaryKeys) {
-      EntityCacheUtil.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey,_nullKBFolder);
+      entityCache.putResult(KBFolderModelImpl.ENTITY_CACHE_ENABLED,KBFolderImpl.class,primaryKey,_nullKBFolder);
     }
   }
  catch (  Exception e) {
