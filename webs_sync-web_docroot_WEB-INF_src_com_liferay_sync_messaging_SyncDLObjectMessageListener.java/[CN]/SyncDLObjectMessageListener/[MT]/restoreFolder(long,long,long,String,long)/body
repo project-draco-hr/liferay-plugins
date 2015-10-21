@@ -1,0 +1,25 @@
+{
+  List<Object> foldersAndFileEntriesAndFileShortcuts=DLAppServiceUtil.getFoldersAndFileEntriesAndFileShortcuts(repositoryId,folderId,WorkflowConstants.STATUS_ANY,false,QueryUtil.ALL_POS,QueryUtil.ALL_POS);
+  for (  Object folderAndFileEntryAndFileShortcut : foldersAndFileEntriesAndFileShortcuts) {
+    SyncDLObject syncDLObject=null;
+    Folder folder=null;
+    if (folderAndFileEntryAndFileShortcut instanceof FileEntry) {
+      FileEntry fileEntry=(FileEntry)folderAndFileEntryAndFileShortcut;
+      syncDLObject=SyncUtil.toSyncDLObject(fileEntry,SyncConstants.EVENT_RESTORE,true);
+    }
+ else     if (folderAndFileEntryAndFileShortcut instanceof Folder) {
+      folder=(Folder)folderAndFileEntryAndFileShortcut;
+      if (!SyncUtil.isSupportedFolder(folder)) {
+        continue;
+      }
+      syncDLObject=SyncUtil.toSyncDLObject(folder,SyncConstants.EVENT_RESTORE);
+    }
+    syncDLObject.setUserId(userId);
+    syncDLObject.setUserName(userName);
+    syncDLObject.setModifiedTime(modifiedTime);
+    addSyncDLObject(syncDLObject);
+    if (folderAndFileEntryAndFileShortcut instanceof Folder) {
+      restoreFolder(repositoryId,folder.getFolderId(),userId,userName,modifiedTime);
+    }
+  }
+}
