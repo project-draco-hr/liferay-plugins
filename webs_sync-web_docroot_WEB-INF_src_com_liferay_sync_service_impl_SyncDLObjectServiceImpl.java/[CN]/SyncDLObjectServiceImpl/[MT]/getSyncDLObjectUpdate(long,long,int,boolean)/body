@@ -3,11 +3,11 @@
     SyncUtil.checkSyncEnabled(repositoryId);
     repositoryService.checkRepository(repositoryId);
     String[] events=null;
-    if (lastAccessTime == -1) {
-      events=new String[]{SyncConstants.EVENT_DELETE,SyncConstants.EVENT_TRASH};
+    if (retrieveFromCache) {
+      events=new String[0];
     }
  else {
-      events=new String[0];
+      events=new String[]{SyncConstants.EVENT_DELETE,SyncConstants.EVENT_TRASH};
     }
     int count=syncDLObjectPersistence.countByM_R_NotE(lastAccessTime,repositoryId,events);
     if (count == 0) {
