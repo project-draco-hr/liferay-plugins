@@ -1,15 +1,15 @@
 {
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   final Role role=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
-  ActionableDynamicQuery actionableDynamicQuery=new UserActionableDynamicQuery(){
-    @Override protected void performAction(    Object object) throws PortalException {
-      User user=(User)object;
+  ActionableDynamicQuery actionableDynamicQuery=UserLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<User>(){
+    @Override public void performAction(    User user) throws PortalException {
       if (!user.isDefaultUser()) {
         UserLocalServiceUtil.addRoleUsers(role.getRoleId(),new long[]{user.getUserId()});
       }
     }
   }
-;
+);
   actionableDynamicQuery.setCompanyId(themeDisplay.getCompanyId());
   actionableDynamicQuery.performActions();
 }

@@ -13,20 +13,23 @@
   }
   expandoBridge.setAttribute(attributeName,Boolean.TRUE,false);
   CompanyLocalServiceUtil.updateCompany(company);
-  ActionableDynamicQuery actionableDynamicQuery=new UserActionableDynamicQuery(){
-    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+  ActionableDynamicQuery actionableDynamicQuery=UserLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property property=PropertyFactoryUtil.forName("createDate");
       dynamicQuery.add(property.eqProperty("modifiedDate"));
     }
-    @Override protected void performAction(    Object object) throws PortalException {
-      User user=(User)object;
+  }
+);
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<User>(){
+    @Override public void performAction(    User user) throws PortalException {
       user.setModifiedDate(new Date());
       user.setLanguageId(PortletPropsValues.COMPANY_DEFAULT_LOCALE);
       user.setTimeZoneId(PortletPropsValues.COMPANY_DEFAULT_TIME_ZONE);
       UserLocalServiceUtil.updateUser(user);
     }
   }
-;
+);
   actionableDynamicQuery.setCompanyId(companyId);
   actionableDynamicQuery.performActions();
 }

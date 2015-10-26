@@ -1,12 +1,15 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new GroupActionableDynamicQuery(){
-    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+  ActionableDynamicQuery actionableDynamicQuery=GroupLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property classNameIdProperty=PropertyFactoryUtil.forName("classNameId");
       long classNameId=PortalUtil.getClassNameId(Group.class);
       dynamicQuery.add(classNameIdProperty.eq(classNameId));
     }
-    @Override protected void performAction(    Object object) throws PortalException {
-      Group group=(Group)object;
+  }
+);
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Group>(){
+    @Override public void performAction(    Group group) throws PortalException {
       if (group.isGuest()) {
         return;
       }
@@ -29,6 +32,6 @@
       }
     }
   }
-;
+);
   actionableDynamicQuery.performActions();
 }

@@ -3,15 +3,18 @@
   if (expandoColumn == null) {
     return;
   }
-  ActionableDynamicQuery actionableDynamicQuery=new ExpandoValueActionableDynamicQuery(){
-    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+  ActionableDynamicQuery actionableDynamicQuery=ExpandoValueLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property columnIdProperty=PropertyFactoryUtil.forName("columnId");
       dynamicQuery.add(columnIdProperty.eq(expandoColumn.getColumnId()));
       Property dataProperty=PropertyFactoryUtil.forName("data");
       dynamicQuery.add(dataProperty.eq(StringPool.TRUE));
     }
-    @Override protected void performAction(    Object object) throws PortalException {
-      ExpandoValue expandoValue=(ExpandoValue)object;
+  }
+);
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<ExpandoValue>(){
+    @Override public void performAction(    ExpandoValue expandoValue) throws PortalException {
       DLFileVersion dlFileVersion=DLFileVersionLocalServiceUtil.fetchDLFileVersion(expandoValue.getClassPK());
       if ((dlFileVersion == null) || dlFileVersion.isDraft()) {
         return;
@@ -21,7 +24,7 @@
       DLFileEntryLocalServiceUtil.updateDLFileEntry(dlFileEntry);
     }
   }
-;
+);
   actionableDynamicQuery.performActions();
   ExpandoColumnLocalServiceUtil.deleteColumn(expandoColumn);
 }

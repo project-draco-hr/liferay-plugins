@@ -1,7 +1,7 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new GroupActionableDynamicQuery(){
-    @Override protected void performAction(    Object object) throws PortalException {
-      Group group=(Group)object;
+  ActionableDynamicQuery actionableDynamicQuery=GroupLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Group>(){
+    @Override public void performAction(    Group group) throws PortalException {
       if (!isSync(group)) {
         return;
       }
@@ -68,6 +68,6 @@
       checkLargeGroup(group);
     }
   }
-;
+);
   actionableDynamicQuery.performActions();
 }

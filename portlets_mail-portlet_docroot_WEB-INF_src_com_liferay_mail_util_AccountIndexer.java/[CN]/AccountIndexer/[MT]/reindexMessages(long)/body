@@ -1,10 +1,10 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new AccountActionableDynamicQuery(){
-    @Override protected void performAction(    Object object){
-      Account account=(Account)object;
+  final ActionableDynamicQuery actionableDynamicQuery=AccountLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Account>(){
+    @Override public void performAction(    Account account) throws PortalException {
       try {
         Document document=getDocument(account);
-        addDocument(document);
+        actionableDynamicQuery.addDocument(document);
       }
  catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
@@ -13,7 +13,7 @@
       }
     }
   }
-;
+);
   actionableDynamicQuery.setCompanyId(companyId);
   actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
   actionableDynamicQuery.performActions();

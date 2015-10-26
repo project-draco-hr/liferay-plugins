@@ -1,11 +1,14 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new BookmarksFolderActionableDynamicQuery(){
-    @Override protected void addCriteria(    DynamicQuery dynamicQuery){
+  ActionableDynamicQuery actionableDynamicQuery=BookmarksFolderLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+    @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property property=PropertyFactoryUtil.forName("name");
       dynamicQuery.add(property.eq("Bookmarks"));
     }
-    @Override protected void performAction(    Object object) throws PortalException {
-      BookmarksFolder bookmarksFolder=(BookmarksFolder)object;
+  }
+);
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<BookmarksFolder>(){
+    @Override public void performAction(    BookmarksFolder bookmarksFolder) throws PortalException {
       Group group=GroupLocalServiceUtil.fetchGroup(bookmarksFolder.getGroupId());
       if (group == null) {
         return;
@@ -18,6 +21,6 @@
       BookmarksFolderLocalServiceUtil.updateFolder(bookmarksFolder.getUserId(),bookmarksFolder.getFolderId(),bookmarksFolder.getParentFolderId(),bookmarksFolder.getName(),bookmarksFolder.getDescription(),true,new ServiceContext());
     }
   }
-;
+);
   actionableDynamicQuery.performActions();
 }

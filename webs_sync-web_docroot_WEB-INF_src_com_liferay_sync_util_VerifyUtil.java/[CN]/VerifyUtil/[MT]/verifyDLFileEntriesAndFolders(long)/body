@@ -12,11 +12,10 @@
   }
 );
   dlFolderActionableDynamicQuery.setGroupId(groupId);
-  dlFolderActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
-    @Override public void performAction(    Object object) throws PortalException {
+  dlFolderActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<DLFolder>(){
+    @Override public void performAction(    DLFolder dlFolder) throws PortalException {
       _dlFoldersAndFileEntriesCount++;
       logCount(_dlFoldersAndFileEntriesCount,_dlFoldersAndFileEntriesTotalCount,"DL folders and DL file entries");
-      DLFolder dlFolder=(DLFolder)object;
       if (!SyncUtil.isSupportedFolder(dlFolder)) {
         return;
       }
@@ -36,11 +35,10 @@
 );
   ActionableDynamicQuery dlFileEntryActionableDynamicQuery=DLFileEntryLocalServiceUtil.getActionableDynamicQuery();
   dlFileEntryActionableDynamicQuery.setGroupId(groupId);
-  dlFileEntryActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod(){
-    @Override public void performAction(    Object object) throws PortalException {
+  dlFileEntryActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<DLFileEntry>(){
+    @Override public void performAction(    DLFileEntry dlFileEntry) throws PortalException {
       _dlFoldersAndFileEntriesCount++;
       logCount(_dlFoldersAndFileEntriesCount,_dlFoldersAndFileEntriesTotalCount,"DL folders and DL file entries");
-      DLFileEntry dlFileEntry=(DLFileEntry)object;
       if ((dlFileEntry.getStatus() != WorkflowConstants.STATUS_APPROVED) && (dlFileEntry.getStatus() != WorkflowConstants.STATUS_IN_TRASH)) {
         return;
       }

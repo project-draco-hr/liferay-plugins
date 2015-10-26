@@ -1,7 +1,7 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new UserActionableDynamicQuery(){
-    @Override protected void performAction(    Object object) throws PortalException {
-      User user=(User)object;
+  ActionableDynamicQuery actionableDynamicQuery=UserLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<User>(){
+    @Override public void performAction(    User user) throws PortalException {
       try {
         if (user.isDefaultUser()) {
           return;
@@ -21,5 +21,5 @@
       }
     }
   }
-;
+);
 }

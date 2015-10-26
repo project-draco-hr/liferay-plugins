@@ -1,10 +1,10 @@
 {
-  ActionableDynamicQuery actionableDynamicQuery=new FolderActionableDynamicQuery(){
-    @Override protected void performAction(    Object object){
-      Folder folder=(Folder)object;
+  final ActionableDynamicQuery actionableDynamicQuery=FolderLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Folder>(){
+    @Override public void performAction(    Folder folder) throws PortalException {
       try {
         Document document=getDocument(folder);
-        addDocument(document);
+        actionableDynamicQuery.addDocument(document);
       }
  catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
@@ -13,7 +13,7 @@
       }
     }
   }
-;
+);
   actionableDynamicQuery.setCompanyId(companyId);
   actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
   actionableDynamicQuery.performActions();
