@@ -2,6 +2,7 @@
   ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
   final Role role=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SOCIAL_OFFICE_USER);
   ActionableDynamicQuery actionableDynamicQuery=UserLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setCompanyId(themeDisplay.getCompanyId());
   actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<User>(){
     @Override public void performAction(    User user) throws PortalException {
       if (!user.isDefaultUser()) {
@@ -10,6 +11,5 @@
     }
   }
 );
-  actionableDynamicQuery.setCompanyId(themeDisplay.getCompanyId());
   actionableDynamicQuery.performActions();
 }
