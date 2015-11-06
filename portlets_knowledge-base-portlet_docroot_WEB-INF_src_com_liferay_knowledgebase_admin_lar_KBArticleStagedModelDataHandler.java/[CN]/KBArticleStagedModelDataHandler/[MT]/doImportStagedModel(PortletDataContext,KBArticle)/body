@@ -27,12 +27,12 @@
     Map<Long,Long> kbFolderResourcePrimKeys=(Map<Long,Long>)portletDataContext.getNewPrimaryKeysMap(KBFolder.class);
     parentResourcePrimKey=MapUtil.getLong(kbFolderResourcePrimKeys,kbArticle.getParentResourcePrimKey(),KBFolderConstants.DEFAULT_PARENT_FOLDER_ID);
   }
-  String[] sections=AdminUtil.unescapeSections(kbArticle.getSections());
-  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticle);
   String urlTitle=kbArticle.getUrlTitle();
   if (Validator.isNotNull(urlTitle) && !urlTitle.startsWith(StringPool.SLASH)) {
     kbArticle.setUrlTitle(StringPool.SLASH + urlTitle);
   }
+  String[] sections=AdminUtil.unescapeSections(kbArticle.getSections());
+  ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticle);
   KBArticle importedKBArticle=null;
   if (portletDataContext.isDataStrategyMirror()) {
     KBArticle existingKBArticle=KBArticleUtil.fetchByR_V(resourcePrimaryKey,kbArticle.getVersion());
