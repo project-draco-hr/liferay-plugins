@@ -35,13 +35,13 @@
   ServiceContext serviceContext=portletDataContext.createServiceContext(kbArticle);
   KBArticle importedKBArticle=null;
   if (portletDataContext.isDataStrategyMirror()) {
-    KBArticle existingKBArticle=KBArticleUtil.fetchByR_V(resourcePrimaryKey,kbArticle.getVersion());
+    KBArticle existingKBArticle=KBArticleUtil.fetchByR_G_V(resourcePrimaryKey,portletDataContext.getScopeGroupId(),kbArticle.getVersion());
     if (existingKBArticle == null) {
       existingKBArticle=fetchStagedModelByUuidAndGroupId(kbArticle.getUuid(),portletDataContext.getScopeGroupId());
     }
     if (existingKBArticle == null) {
       serviceContext.setUuid(kbArticle.getUuid());
-      existingKBArticle=KBArticleLocalServiceUtil.fetchLatestKBArticle(resourcePrimaryKey,WorkflowConstants.STATUS_ANY);
+      existingKBArticle=KBArticleUtil.fetchByR_G_L_First(resourcePrimaryKey,portletDataContext.getScopeGroupId(),true,new KBArticleVersionComparator());
       if (existingKBArticle == null) {
         importedKBArticle=KBArticleLocalServiceUtil.addKBArticle(userId,kbArticle.getParentResourceClassNameId(),parentResourcePrimKey,kbArticle.getTitle(),kbArticle.getUrlTitle(),kbArticle.getContent(),kbArticle.getDescription(),kbArticle.getSourceURL(),sections,null,serviceContext);
         KBArticleLocalServiceUtil.updatePriority(importedKBArticle.getResourcePrimKey(),kbArticle.getPriority());
