@@ -1,0 +1,12 @@
+{
+  Locale defaultLocale=LocaleUtil.getSiteDefault();
+  int[] formFieldsIndexes=StringUtil.split(ParamUtil.getString(actionRequest,"formFieldsIndexes"),0);
+  String languageId=LocaleUtil.toLanguageId(actionRequest.getLocale());
+  for (  int formFieldsIndex : formFieldsIndexes) {
+    String fieldLabel=ParamUtil.getString(actionRequest,"fieldLabel" + formFieldsIndex + "_"+ languageId);
+    if (Validator.isNull(fieldLabel)) {
+      return false;
+    }
+  }
+  return true;
+}

@@ -42,6 +42,9 @@
       fieldLabel=ParamUtil.getString(actionRequest,"fieldLabel" + i + "_"+ languageId);
     }
   }
+  if (!validateFieldNames(actionRequest)) {
+    SessionErrors.add(actionRequest,ColumnNameException.class.getName());
+  }
   if (!validateUniqueFieldNames(actionRequest)) {
     SessionErrors.add(actionRequest,DuplicateColumnNameException.class.getName());
   }
