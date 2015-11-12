@@ -5,10 +5,7 @@
   if (kbFolderId == KBFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
     int kbArticlesCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
     for (int i=1; kbArticlesCount > 0; i++) {
-      uniqueUrlTitle=urlTitle + StringPool.DASH + i;
-      if (uniqueUrlTitle.length() > urlTitleMaxLength) {
-        uniqueUrlTitle=StringUtil.shorten(uniqueUrlTitle,urlTitleMaxLength,StringPool.DASH + i);
-      }
+      uniqueUrlTitle=getUniqueUrlTitle(urlTitle,urlTitleMaxLength,i);
       kbArticlesCount=kbArticlePersistence.countByG_KBFI_UT_ST(groupId,kbFolderId,uniqueUrlTitle,_STATUSES);
     }
     return uniqueUrlTitle;
@@ -16,10 +13,7 @@
   KBFolder kbFolder=kbFolderPersistence.findByPrimaryKey(kbFolderId);
   int kbArticlesCount=kbArticleFinder.countByUrlTitle(groupId,kbFolder.getUrlTitle(),uniqueUrlTitle,_STATUSES);
   for (int i=1; kbArticlesCount > 0; i++) {
-    uniqueUrlTitle=urlTitle + StringPool.DASH + i;
-    if (uniqueUrlTitle.length() > urlTitleMaxLength) {
-      uniqueUrlTitle=StringUtil.shorten(uniqueUrlTitle,urlTitleMaxLength,StringPool.DASH + i);
-    }
+    uniqueUrlTitle=getUniqueUrlTitle(urlTitle,urlTitleMaxLength,i);
     kbArticlesCount=kbArticleFinder.countByUrlTitle(groupId,kbFolder.getUrlTitle(),uniqueUrlTitle,_STATUSES);
   }
   return uniqueUrlTitle;
