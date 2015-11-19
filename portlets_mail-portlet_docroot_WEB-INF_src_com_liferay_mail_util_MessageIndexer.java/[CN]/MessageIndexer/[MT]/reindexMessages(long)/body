@@ -1,11 +1,11 @@
 {
-  final IndexableActionableDynamicQuery actionableDynamicQuery=MessageLocalServiceUtil.getIndexableActionableDynamicQuery();
-  actionableDynamicQuery.setCompanyId(companyId);
-  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Message>(){
+  final IndexableActionableDynamicQuery indexableActionableDynamicQuery=MessageLocalServiceUtil.getIndexableActionableDynamicQuery();
+  indexableActionableDynamicQuery.setCompanyId(companyId);
+  indexableActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Message>(){
     @Override public void performAction(    Message message) throws PortalException {
       try {
         Document document=getDocument(message);
-        actionableDynamicQuery.addDocument(document);
+        indexableActionableDynamicQuery.addDocument(document);
       }
  catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
@@ -15,6 +15,6 @@
     }
   }
 );
-  actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
-  actionableDynamicQuery.performActions();
+  indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+  indexableActionableDynamicQuery.performActions();
 }

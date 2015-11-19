@@ -1,11 +1,11 @@
 {
-  final IndexableActionableDynamicQuery actionableDynamicQuery=FolderLocalServiceUtil.getIndexableActionableDynamicQuery();
-  actionableDynamicQuery.setCompanyId(companyId);
-  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Folder>(){
+  final IndexableActionableDynamicQuery indexableActionableDynamicQuery=FolderLocalServiceUtil.getIndexableActionableDynamicQuery();
+  indexableActionableDynamicQuery.setCompanyId(companyId);
+  indexableActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<Folder>(){
     @Override public void performAction(    Folder folder) throws PortalException {
       try {
         Document document=getDocument(folder);
-        actionableDynamicQuery.addDocument(document);
+        indexableActionableDynamicQuery.addDocument(document);
       }
  catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
@@ -15,6 +15,6 @@
     }
   }
 );
-  actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
-  actionableDynamicQuery.performActions();
+  indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+  indexableActionableDynamicQuery.performActions();
 }

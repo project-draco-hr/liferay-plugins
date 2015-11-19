@@ -1,18 +1,18 @@
 {
-  final IndexableActionableDynamicQuery actionableDynamicQuery=KBArticleLocalServiceUtil.getIndexableActionableDynamicQuery();
-  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+  final IndexableActionableDynamicQuery indexableActionableDynamicQuery=KBArticleLocalServiceUtil.getIndexableActionableDynamicQuery();
+  indexableActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property property=PropertyFactoryUtil.forName("status");
       dynamicQuery.add(property.eq(WorkflowConstants.STATUS_APPROVED));
     }
   }
 );
-  actionableDynamicQuery.setCompanyId(companyId);
-  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<KBArticle>(){
+  indexableActionableDynamicQuery.setCompanyId(companyId);
+  indexableActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<KBArticle>(){
     @Override public void performAction(    KBArticle kbArticle){
       try {
         Document document=getDocument(kbArticle);
-        actionableDynamicQuery.addDocument(document);
+        indexableActionableDynamicQuery.addDocument(document);
       }
  catch (      PortalException pe) {
         if (_log.isWarnEnabled()) {
@@ -22,6 +22,6 @@
     }
   }
 );
-  actionableDynamicQuery.setSearchEngineId(getSearchEngineId());
-  actionableDynamicQuery.performActions();
+  indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
+  indexableActionableDynamicQuery.performActions();
 }
