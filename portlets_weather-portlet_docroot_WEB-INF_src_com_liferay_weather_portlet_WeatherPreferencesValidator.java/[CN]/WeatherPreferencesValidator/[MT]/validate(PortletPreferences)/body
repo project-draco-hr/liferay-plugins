@@ -1,8 +1,12 @@
 {
   List<String> badZips=new ArrayList<>();
+  String apiKey=preferences.getValue("apiKey",StringPool.BLANK);
   String[] zips=preferences.getValues("zips",new String[0]);
+  if (Validator.isBlank(apiKey)) {
+    return;
+  }
   for (  String zip : zips) {
-    Weather weather=WeatherUtil.getWeather(zip);
+    Weather weather=WeatherUtil.getWeather(zip,apiKey);
     if (weather == null) {
       badZips.add(zip);
     }
