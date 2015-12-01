@@ -1,9 +1,16 @@
 {
   UploadException uploadException=(UploadException)request.getAttribute(WebKeys.UPLOAD_EXCEPTION);
   if (uploadException != null) {
-    if (uploadException.isExceededSizeLimit()) {
-      throw new FileSizeException(uploadException.getCause());
+    Throwable cause=uploadException.getCause();
+    if (uploadException.isExceededFileSizeLimit()) {
+      throw new FileSizeException(cause);
     }
-    throw new PortalException(uploadException.getCause());
+    if (uploadException.isExceededLiferayFileItemSizeLimit()) {
+      throw new LiferayFileItemException(cause);
+    }
+    if (uploadException.isExceededUploadRequestSizeLimit()) {
+      throw new UploadRequestSizeException(cause);
+    }
+    throw new PortalException(cause);
   }
 }
