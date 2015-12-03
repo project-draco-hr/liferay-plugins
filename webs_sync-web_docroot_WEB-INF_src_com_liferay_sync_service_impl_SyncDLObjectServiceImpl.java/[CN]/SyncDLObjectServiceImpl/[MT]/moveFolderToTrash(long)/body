@@ -2,16 +2,12 @@
   try {
     Folder folder=dlAppLocalService.getFolder(folderId);
     SyncUtil.checkSyncEnabled(folder.getGroupId());
-    if (TrashUtil.isInTrash(DLFolderConstants.getClassName(),folderId)) {
-      return null;
+    if (!TrashUtil.isInTrash(DLFolderConstants.getClassName(),folderId)) {
+      folder=dlAppService.moveFolderToTrash(folderId);
     }
-    folder=dlAppService.moveFolderToTrash(folderId);
     return toSyncDLObject(folder,SyncConstants.EVENT_TRASH);
   }
- catch (  NoSuchFolderException nsfe) {
-    return null;
-  }
-catch (  PortalException pe) {
+ catch (  PortalException pe) {
     throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
   }
 }
