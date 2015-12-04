@@ -1,0 +1,15 @@
+{
+  System.out.println("Associating Elastic IP Addresses");
+  if (!properties.containsKey("elastic.ip.addresses")) {
+    return;
+  }
+  String elasticIpAddressesString=properties.getProperty("elastic.ip.addresses");
+  String[] elasticIpAddresses=elasticIpAddressesString.split(",");
+  for (int i=0; (i < elasticIpAddresses.length) && (i < instanceIds.size()); i++) {
+    System.out.println("Associating IP address " + elasticIpAddresses[i] + " with instance "+ instanceIds.get(i));
+    AssociateAddressRequest associateAddressRequest=new AssociateAddressRequest();
+    associateAddressRequest.setInstanceId(instanceIds.get(i));
+    associateAddressRequest.setPublicIp(elasticIpAddresses[i]);
+    amazonEC2Client.associateAddress(associateAddressRequest);
+  }
+}
