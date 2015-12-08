@@ -4,6 +4,9 @@
     return;
   }
   String elasticIpAddressesString=properties.getProperty("elastic.ip.addresses");
+  if ((elasticIpAddressesString == null) || (elasticIpAddressesString.length() == 0)) {
+    return;
+  }
   String[] elasticIpAddresses=elasticIpAddressesString.split(",");
   for (int i=0; (i < elasticIpAddresses.length) && (i < instanceIds.size()); i++) {
     System.out.println("Associating IP address " + elasticIpAddresses[i] + " with instance "+ instanceIds.get(i));
