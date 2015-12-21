@@ -3,7 +3,8 @@
   String availabilityZone=properties.getProperty("availability.zone");
   boolean deployed=false;
   JSONObject loadBalancerJSONObject=null;
-  for (int i=1; i < 50; i++) {
+  int i=1;
+  while (true) {
     String json=_jsonWebServiceClient.doGet("/" + availabilityZone + "/loadBalancer/show/"+ asgardClusterName+ ".json",Collections.<String,String>emptyMap());
     loadBalancerJSONObject=new JSONObject(json);
     List<JSONObject> instanceStateJSONObjects=getInstanceStateJSONObjects(loadBalancerJSONObject,autoScalingGroupName);
@@ -22,6 +23,7 @@
       deployed=true;
       break;
     }
+    i++;
   }
   if (!deployed) {
     Map<String,String> parameters=new HashMap<>();
@@ -31,7 +33,7 @@
   }
   List<String> instanceIds=new ArrayList<>();
   List<JSONObject> instanceStateJSONObjects=getInstanceStateJSONObjects(loadBalancerJSONObject,autoScalingGroupName);
-  for (int i=0; i < instanceStateJSONObjects.size(); i++) {
+  for (i=0; i < instanceStateJSONObjects.size(); i++) {
     JSONObject instanceStateJSONObject=instanceStateJSONObjects.get(i);
     String instanceId=instanceStateJSONObject.getString("instanceId");
     instanceIds.add(instanceId);
