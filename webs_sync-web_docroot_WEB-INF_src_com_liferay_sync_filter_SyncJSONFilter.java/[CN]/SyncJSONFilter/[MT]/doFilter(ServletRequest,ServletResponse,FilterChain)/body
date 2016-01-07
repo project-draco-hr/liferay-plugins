@@ -2,9 +2,15 @@
   String uri=(String)servletRequest.getAttribute(WebKeys.INVOKER_FILTER_URI);
   HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
   if (uri.equals("/api/jsonws/invoke")) {
-    SyncJSONHttpServletRequestWrapper syncJSONHttpServletRequestWrapper=new SyncJSONHttpServletRequestWrapper(httpServletRequest);
-    servletRequest=syncJSONHttpServletRequestWrapper;
-    if (!syncJSONHttpServletRequestWrapper.isSyncJSONRequest()) {
+    String contentType=httpServletRequest.getHeader(HttpHeaders.CONTENT_TYPE);
+    if ((contentType == null) || !contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA)) {
+      filterChain.doFilter(servletRequest,servletResponse);
+      return;
+    }
+    if (!(httpServletRequest instanceof UploadServletRequest)) {
+      servletRequest=PortalUtil.getUploadServletRequest(httpServletRequest);
+    }
+    if (!isSyncJSONRequest(servletRequest)) {
       filterChain.doFilter(servletRequest,servletResponse);
       return;
     }
