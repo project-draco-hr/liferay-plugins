@@ -12,8 +12,7 @@
     if (pe instanceof DuplicateFolderNameException) {
       if (GetterUtil.getBoolean(serviceContext.getAttribute("overwrite"))) {
         Folder folder=dlAppService.getFolder(repositoryId,parentFolderId,name);
-        folder=dlAppService.updateFolder(folder.getFolderId(),name,description,serviceContext);
-        return toSyncDLObject(folder,SyncConstants.EVENT_UPDATE);
+        return updateFolder(folder.getFolderId(),name,description,serviceContext);
       }
     }
     throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
