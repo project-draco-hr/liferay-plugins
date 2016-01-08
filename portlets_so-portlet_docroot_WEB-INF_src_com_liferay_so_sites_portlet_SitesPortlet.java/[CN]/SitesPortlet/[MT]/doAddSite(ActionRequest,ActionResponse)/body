@@ -15,7 +15,11 @@
     privateLayout=true;
   }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Group.class.getName(),actionRequest);
-  Group group=GroupServiceUtil.addGroup(name,description,type,StringPool.BLANK,true,true,serviceContext);
+  Map<Locale,String> nameMap=new HashMap<>();
+  nameMap.put(serviceContext.getLocale(),name);
+  Map<Locale,String> descriptionMap=new HashMap<>();
+  descriptionMap.put(serviceContext.getLocale(),description);
+  Group group=GroupServiceUtil.addGroup(GroupConstants.DEFAULT_PARENT_GROUP_ID,GroupConstants.DEFAULT_LIVE_GROUP_ID,nameMap,descriptionMap,type,true,GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,StringPool.BLANK,true,true,serviceContext);
   long publicLayoutSetPrototypeId=0;
   long privateLayoutSetPrototypeId=0;
   if (privateLayout) {
