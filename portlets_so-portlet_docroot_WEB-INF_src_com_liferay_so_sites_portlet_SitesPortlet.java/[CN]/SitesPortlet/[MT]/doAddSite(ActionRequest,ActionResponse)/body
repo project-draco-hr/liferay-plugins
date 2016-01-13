@@ -1,6 +1,11 @@
 {
+  ThemeDisplay themeDisplay=(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+  Map<Locale,String> nameMap=new HashMap<>();
   String name=ParamUtil.getString(actionRequest,"name");
+  nameMap.put(themeDisplay.getLocale(),name);
+  Map<Locale,String> descriptionMap=new HashMap<>();
   String description=ParamUtil.getString(actionRequest,"description");
+  descriptionMap.put(themeDisplay.getLocale(),description);
   long layoutSetPrototypeId=ParamUtil.getLong(actionRequest,"layoutSetPrototypeId");
   int type=ParamUtil.getInteger(actionRequest,"type");
   boolean privateLayout=false;
@@ -15,10 +20,6 @@
     privateLayout=true;
   }
   ServiceContext serviceContext=ServiceContextFactory.getInstance(Group.class.getName(),actionRequest);
-  Map<Locale,String> nameMap=new HashMap<>();
-  nameMap.put(serviceContext.getLocale(),name);
-  Map<Locale,String> descriptionMap=new HashMap<>();
-  descriptionMap.put(serviceContext.getLocale(),description);
   Group group=GroupServiceUtil.addGroup(GroupConstants.DEFAULT_PARENT_GROUP_ID,GroupConstants.DEFAULT_LIVE_GROUP_ID,nameMap,descriptionMap,type,true,GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,StringPool.BLANK,true,true,serviceContext);
   long publicLayoutSetPrototypeId=0;
   long privateLayoutSetPrototypeId=0;
