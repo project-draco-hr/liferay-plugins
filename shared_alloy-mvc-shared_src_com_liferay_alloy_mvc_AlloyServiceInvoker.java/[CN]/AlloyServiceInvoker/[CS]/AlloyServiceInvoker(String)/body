@@ -6,6 +6,9 @@
   String serviceClassName=className.substring(0,pos) + ".service." + simpleClassName+ "LocalServiceUtil";
   try {
     Class<?> serviceClass=classLoader.loadClass(serviceClassName);
+    Class<?> modelClass=classLoader.loadClass(className);
+    addModelMethod=serviceClass.getMethod("add" + simpleClassName,new Class[]{modelClass});
+    createModelMethod=serviceClass.getMethod("create" + simpleClassName,new Class[]{long.class});
     deleteModelMethod=serviceClass.getMethod("delete" + simpleClassName,new Class[]{long.class});
     dynamicQueryCountMethod1=serviceClass.getMethod("dynamicQueryCount",new Class[]{DynamicQuery.class});
     dynamicQueryCountMethod2=serviceClass.getMethod("dynamicQueryCount",new Class[]{DynamicQuery.class,Projection.class});
@@ -16,6 +19,7 @@
     fetchModelMethod=serviceClass.getMethod("fetch" + simpleClassName,new Class[]{long.class});
     getModelsCountMethod=serviceClass.getMethod("get" + TextFormatter.formatPlural(simpleClassName) + "Count",new Class[0]);
     getModelsMethod=serviceClass.getMethod("get" + TextFormatter.formatPlural(simpleClassName),new Class[]{int.class,int.class});
+    updateModelMethod=serviceClass.getMethod("update" + simpleClassName,new Class[]{modelClass});
   }
  catch (  Exception e) {
     throw new RuntimeException(e);
