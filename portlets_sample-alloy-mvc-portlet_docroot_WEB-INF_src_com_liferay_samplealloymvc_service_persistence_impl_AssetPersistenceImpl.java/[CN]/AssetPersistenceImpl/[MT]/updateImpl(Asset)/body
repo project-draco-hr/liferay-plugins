@@ -1,0 +1,47 @@
+{
+  asset=toUnwrappedModel(asset);
+  boolean isNew=asset.isNew();
+  AssetModelImpl assetModelImpl=(AssetModelImpl)asset;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (asset.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      asset.setCreateDate(now);
+    }
+ else {
+      asset.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!assetModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      asset.setModifiedDate(now);
+    }
+ else {
+      asset.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (asset.isNew()) {
+      session.save(asset);
+      asset.setNew(false);
+    }
+ else {
+      asset=(Asset)session.merge(asset);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  entityCache.putResult(AssetModelImpl.ENTITY_CACHE_ENABLED,AssetImpl.class,asset.getPrimaryKey(),asset,false);
+  asset.resetOriginalValues();
+  return asset;
+}

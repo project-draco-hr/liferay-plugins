@@ -1,0 +1,47 @@
+{
+  definition=toUnwrappedModel(definition);
+  boolean isNew=definition.isNew();
+  DefinitionModelImpl definitionModelImpl=(DefinitionModelImpl)definition;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (definition.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      definition.setCreateDate(now);
+    }
+ else {
+      definition.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!definitionModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      definition.setModifiedDate(now);
+    }
+ else {
+      definition.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (definition.isNew()) {
+      session.save(definition);
+      definition.setNew(false);
+    }
+ else {
+      definition=(Definition)session.merge(definition);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  entityCache.putResult(DefinitionModelImpl.ENTITY_CACHE_ENABLED,DefinitionImpl.class,definition.getPrimaryKey(),definition,false);
+  definition.resetOriginalValues();
+  return definition;
+}

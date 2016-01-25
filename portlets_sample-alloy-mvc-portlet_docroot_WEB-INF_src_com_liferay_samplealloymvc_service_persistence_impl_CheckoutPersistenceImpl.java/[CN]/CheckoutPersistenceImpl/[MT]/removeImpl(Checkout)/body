@@ -1,0 +1,23 @@
+{
+  checkout=toUnwrappedModel(checkout);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(checkout)) {
+      checkout=(Checkout)session.get(CheckoutImpl.class,checkout.getPrimaryKeyObj());
+    }
+    if (checkout != null) {
+      session.delete(checkout);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (checkout != null) {
+    clearCache(checkout);
+  }
+  return checkout;
+}

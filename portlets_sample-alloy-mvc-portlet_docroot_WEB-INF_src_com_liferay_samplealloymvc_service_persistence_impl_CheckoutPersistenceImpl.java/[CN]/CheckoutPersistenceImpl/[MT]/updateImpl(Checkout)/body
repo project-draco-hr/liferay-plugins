@@ -1,0 +1,47 @@
+{
+  checkout=toUnwrappedModel(checkout);
+  boolean isNew=checkout.isNew();
+  CheckoutModelImpl checkoutModelImpl=(CheckoutModelImpl)checkout;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (checkout.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      checkout.setCreateDate(now);
+    }
+ else {
+      checkout.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!checkoutModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      checkout.setModifiedDate(now);
+    }
+ else {
+      checkout.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (checkout.isNew()) {
+      session.save(checkout);
+      checkout.setNew(false);
+    }
+ else {
+      checkout=(Checkout)session.merge(checkout);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  entityCache.putResult(CheckoutModelImpl.ENTITY_CACHE_ENABLED,CheckoutImpl.class,checkout.getPrimaryKey(),checkout,false);
+  checkout.resetOriginalValues();
+  return checkout;
+}
