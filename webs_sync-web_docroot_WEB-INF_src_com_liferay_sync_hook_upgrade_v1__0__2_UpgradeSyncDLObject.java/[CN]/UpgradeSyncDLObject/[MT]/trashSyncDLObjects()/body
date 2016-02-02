@@ -1,0 +1,9 @@
+{
+  DynamicQuery dynamicQuery=SyncDLObjectLocalServiceUtil.dynamicQuery();
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("event",SyncConstants.EVENT_TRASH));
+  dynamicQuery.add(RestrictionsFactoryUtil.eq("type",SyncConstants.TYPE_FOLDER));
+  List<SyncDLObject> syncDLObjects=SyncDLObjectLocalServiceUtil.dynamicQuery(dynamicQuery);
+  for (  SyncDLObject syncDLObject : syncDLObjects) {
+    SyncDLObjectLocalServiceUtil.trashDependentSyncDLObjects(syncDLObject);
+  }
+}
