@@ -1,5 +1,5 @@
 {
-  if (event.equals(SyncConstants.EVENT_DELETE)) {
+  if (event.equals(SyncDLObjectConstants.EVENT_DELETE)) {
     long userId=0;
     String userName=StringPool.BLANK;
     PermissionChecker permissionChecker=PermissionThreadLocal.getPermissionChecker();
@@ -12,7 +12,7 @@
     return;
   }
   SyncDLObject syncDLObject=null;
-  if (type.equals(SyncConstants.TYPE_FILE)) {
+  if (type.equals(SyncDLObjectConstants.TYPE_FILE)) {
     FileEntry fileEntry=null;
     try {
       fileEntry=DLAppLocalServiceUtil.getFileEntry(typePK);
@@ -37,14 +37,14 @@
   }
   syncDLObject.setModifiedTime(modifiedTime);
   addSyncDLObject(syncDLObject);
-  if (type.equals(SyncConstants.TYPE_FOLDER)) {
-    if (event.equals(SyncConstants.EVENT_MOVE)) {
+  if (type.equals(SyncDLObjectConstants.TYPE_FOLDER)) {
+    if (event.equals(SyncDLObjectConstants.EVENT_MOVE)) {
       SyncDLObjectLocalServiceUtil.moveDependentSyncDLObjects(syncDLObject);
     }
- else     if (event.equals(SyncConstants.EVENT_RESTORE)) {
+ else     if (event.equals(SyncDLObjectConstants.EVENT_RESTORE)) {
       SyncDLObjectLocalServiceUtil.restoreDependentSyncDLObjects(syncDLObject);
     }
- else     if (event.equals(SyncConstants.EVENT_TRASH)) {
+ else     if (event.equals(SyncDLObjectConstants.EVENT_TRASH)) {
       SyncDLObjectLocalServiceUtil.trashDependentSyncDLObjects(syncDLObject);
     }
   }

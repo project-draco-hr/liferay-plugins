@@ -7,7 +7,7 @@
   Lock lock=dlFileEntry.getLock();
   if ((lock == null) || excludeWorkingCopy) {
     dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(dlFileEntry.getFileEntryId(),dlFileEntry.getVersion());
-    type=SyncConstants.TYPE_FILE;
+    type=SyncDLObjectConstants.TYPE_FILE;
   }
  else {
     try {
@@ -15,11 +15,11 @@
       lockExpirationDate=lock.getExpirationDate();
       lockUserId=lock.getUserId();
       lockUserName=lock.getUserName();
-      type=SyncConstants.TYPE_PRIVATE_WORKING_COPY;
+      type=SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY;
     }
  catch (    NoSuchFileVersionException nsfve) {
       dlFileVersion=DLFileVersionLocalServiceUtil.getFileVersion(dlFileEntry.getFileEntryId(),dlFileEntry.getVersion());
-      type=SyncConstants.TYPE_FILE;
+      type=SyncDLObjectConstants.TYPE_FILE;
     }
   }
   SyncDLObject syncDLObject=new SyncDLObjectImpl();

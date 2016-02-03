@@ -12,8 +12,8 @@
     syncDLObject.setType(type);
     syncDLObject.setTypePK(typePK);
     syncDLObject.setTypeUuid(typeUuid);
-    if (type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
-      SyncDLObject approvedSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_FILE,typePK);
+    if (type.equals(SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY)) {
+      SyncDLObject approvedSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncDLObjectConstants.TYPE_FILE,typePK);
       approvedSyncDLObject.setModifiedTime(modifiedTime);
       approvedSyncDLObject.setLockExpirationDate(lockExpirationDate);
       approvedSyncDLObject.setLockUserId(lockUserId);
@@ -24,8 +24,8 @@
  else   if (syncDLObject.getModifiedTime() >= modifiedTime) {
     return null;
   }
- else   if (type.equals(SyncConstants.TYPE_FILE)) {
-    SyncDLObject pwcSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_PRIVATE_WORKING_COPY,typePK);
+ else   if (type.equals(SyncDLObjectConstants.TYPE_FILE)) {
+    SyncDLObject pwcSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY,typePK);
     if (pwcSyncDLObject != null) {
       DLFileEntry dlFileEntry=dlFileEntryLocalService.fetchDLFileEntry(typePK);
       if ((dlFileEntry == null) || !dlFileEntry.isCheckedOut()) {
@@ -33,9 +33,9 @@
       }
     }
   }
- else   if (type.equals(SyncConstants.TYPE_PRIVATE_WORKING_COPY)) {
-    if (event.equals(SyncConstants.EVENT_RESTORE) || event.equals(SyncConstants.EVENT_TRASH)) {
-      SyncDLObject approvedSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_FILE,typePK);
+ else   if (type.equals(SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY)) {
+    if (event.equals(SyncDLObjectConstants.EVENT_RESTORE) || event.equals(SyncDLObjectConstants.EVENT_TRASH)) {
+      SyncDLObject approvedSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncDLObjectConstants.TYPE_FILE,typePK);
       approvedSyncDLObject.setEvent(event);
       syncDLObjectPersistence.update(approvedSyncDLObject);
     }
@@ -59,8 +59,8 @@
   syncDLObject.setLockUserId(lockUserId);
   syncDLObject.setLockUserName(lockUserName);
   syncDLObject=syncDLObjectPersistence.update(syncDLObject);
-  if (type.equals(SyncConstants.TYPE_FILE) && ArrayUtil.contains(PortletPropsValues.SYNC_MAC_PACKAGE_METADATA_FILE_NAMES,syncDLObject.getName())) {
-    SyncDLObject parentFolderSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncConstants.TYPE_FOLDER,syncDLObject.getParentFolderId());
+  if (type.equals(SyncDLObjectConstants.TYPE_FILE) && ArrayUtil.contains(PortletPropsValues.SYNC_MAC_PACKAGE_METADATA_FILE_NAMES,syncDLObject.getName())) {
+    SyncDLObject parentFolderSyncDLObject=syncDLObjectPersistence.fetchByT_T(SyncDLObjectConstants.TYPE_FOLDER,syncDLObject.getParentFolderId());
     String parentFolderExtension=FileUtil.getExtension(parentFolderSyncDLObject.getName());
     if (ArrayUtil.contains(PortletPropsValues.SYNC_MAC_PACKAGE_FOLDER_EXTENSIONS,parentFolderExtension)) {
       JSONObject extraSettingsJSONObject=JSONFactoryUtil.createJSONObject(parentFolderSyncDLObject.getExtraSettings());
@@ -69,7 +69,7 @@
       syncDLObjectPersistence.update(parentFolderSyncDLObject);
     }
   }
-  if (event.equals(SyncConstants.EVENT_DELETE) && !type.equals(SyncConstants.TYPE_FOLDER)) {
+  if (event.equals(SyncDLObjectConstants.EVENT_DELETE) && !type.equals(SyncDLObjectConstants.TYPE_FOLDER)) {
     try {
       syncDLFileVersionDiffLocalService.deleteSyncDLFileVersionDiffs(typePK);
     }

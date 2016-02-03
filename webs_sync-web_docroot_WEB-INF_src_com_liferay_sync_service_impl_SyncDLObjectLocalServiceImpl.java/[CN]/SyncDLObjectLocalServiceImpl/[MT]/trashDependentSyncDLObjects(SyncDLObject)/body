@@ -2,7 +2,7 @@
   ActionableDynamicQuery syncDLObjectActionableDynamicQuery=getActionableDynamicQuery();
   syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
-      dynamicQuery.add(RestrictionsFactoryUtil.ne("event",SyncConstants.EVENT_TRASH));
+      dynamicQuery.add(RestrictionsFactoryUtil.ne("event",SyncDLObjectConstants.EVENT_TRASH));
       String treePath=parentSyncDLObject.getTreePath();
       dynamicQuery.add(RestrictionsFactoryUtil.like("treePath",treePath + StringPool.PERCENT));
     }
@@ -12,7 +12,7 @@
     @Override public void performAction(    SyncDLObject dependentSyncDLObject) throws PortalException {
       dependentSyncDLObject.setUserId(parentSyncDLObject.getUserId());
       dependentSyncDLObject.setUserName(parentSyncDLObject.getUserName());
-      dependentSyncDLObject.setEvent(SyncConstants.EVENT_TRASH);
+      dependentSyncDLObject.setEvent(SyncDLObjectConstants.EVENT_TRASH);
       syncDLObjectPersistence.update(dependentSyncDLObject);
     }
   }

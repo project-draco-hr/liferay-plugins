@@ -25,13 +25,13 @@
   Date lastAccessDate=new Date(lastAccessTime);
   for (  SyncDLObject syncDLObject : syncDLObjects) {
     String event=syncDLObject.getEvent();
-    if (event.equals(SyncConstants.EVENT_DELETE) || event.equals(SyncConstants.EVENT_TRASH) || hasPermission(checkedTypePKs,syncDLObject,hasFileModelPermission,hasFolderModelPermission)) {
+    if (event.equals(SyncDLObjectConstants.EVENT_DELETE) || event.equals(SyncDLObjectConstants.EVENT_TRASH) || hasPermission(checkedTypePKs,syncDLObject,hasFileModelPermission,hasFolderModelPermission)) {
       checkedSyncDLObjects.add(syncDLObject);
       continue;
     }
     Date lastPermissionChangeDate=syncDLObject.getLastPermissionChangeDate();
     if ((lastPermissionChangeDate != null) && lastPermissionChangeDate.after(lastAccessDate)) {
-      syncDLObject.setEvent(SyncConstants.EVENT_DELETE);
+      syncDLObject.setEvent(SyncDLObjectConstants.EVENT_DELETE);
       checkedSyncDLObjects.add(syncDLObject);
     }
   }
