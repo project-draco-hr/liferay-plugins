@@ -1,17 +1,9 @@
 {
-  StringBundler sb=new StringBundler(3);
-  sb.append(StringPool.SLASH);
-  sb.append(parentSyncDLObject.getTypePK());
-  sb.append(StringPool.SLASH);
-  final String searchTreePath=sb.toString();
+  final String searchTreePath=StringUtil.quote(String.valueOf(parentSyncDLObject.getTypePK()),StringPool.SLASH);
   ActionableDynamicQuery syncDLObjectActionableDynamicQuery=getActionableDynamicQuery();
   syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
-      StringBundler sb=new StringBundler(3);
-      sb.append(StringPool.PERCENT);
-      sb.append(searchTreePath);
-      sb.append(StringPool.PERCENT);
-      dynamicQuery.add(RestrictionsFactoryUtil.like("treePath",sb.toString()));
+      dynamicQuery.add(RestrictionsFactoryUtil.like("treePath",StringUtil.quote(searchTreePath,StringPool.PERCENT)));
     }
   }
 );
