@@ -1,6 +1,13 @@
 {
   String uri=(String)servletRequest.getAttribute(WebKeys.INVOKER_FILTER_URI);
   HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
+  String uuid=httpServletRequest.getHeader("Sync-UUID");
+  if (uuid != null) {
+    SyncDevice syncDevice=SyncDeviceLocalServiceUtil.fetchSyncDeviceByUuidAndCompanyId(uuid,PortalUtil.getCompanyId(httpServletRequest));
+    SyncDeviceThreadLocal.setSyncDevice(syncDevice);
+    filterChain.doFilter(servletRequest,servletResponse);
+    return;
+  }
   if (uri.equals("/api/jsonws/invoke")) {
     String contentType=httpServletRequest.getHeader(HttpHeaders.CONTENT_TYPE);
     if ((contentType == null) || !contentType.startsWith(ContentTypes.MULTIPART_FORM_DATA)) {

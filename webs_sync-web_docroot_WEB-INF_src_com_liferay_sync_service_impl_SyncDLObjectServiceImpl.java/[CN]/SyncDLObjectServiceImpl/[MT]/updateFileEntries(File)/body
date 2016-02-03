@@ -2,6 +2,7 @@
   Map<String,Object> responseMap=new HashMap<>();
   ZipReader zipReader=null;
   try {
+    SyncUtil.checkSyncEnabled(0);
     zipReader=ZipReaderFactoryUtil.getZipReader(zipFile);
     String manifest=zipReader.getEntryAsString("/manifest.json");
     JSONArray jsonArray=JSONFactoryUtil.createJSONArray(manifest);
@@ -26,7 +27,10 @@
       }
     }
   }
-  finally {
+ catch (  PortalException pe) {
+    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
+  }
+ finally {
     if (zipReader != null) {
       zipReader.close();
     }

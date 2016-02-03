@@ -1,3 +1,9 @@
 {
-  return syncDLObjectLocalService.getLatestModifiedTime();
+  try {
+    SyncUtil.checkSyncEnabled(0);
+    return syncDLObjectLocalService.getLatestModifiedTime();
+  }
+ catch (  PortalException pe) {
+    throw new PortalException(SyncUtil.buildExceptionMessage(pe),pe);
+  }
 }

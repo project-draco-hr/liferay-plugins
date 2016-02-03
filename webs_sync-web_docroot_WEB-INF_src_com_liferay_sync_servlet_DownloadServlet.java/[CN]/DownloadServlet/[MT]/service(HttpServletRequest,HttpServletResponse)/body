@@ -5,6 +5,13 @@
       PortalSessionThreadLocal.setHttpSession(session);
     }
     User user=PortalUtil.getUser(request);
+    String syncUuid=request.getHeader("Sync-UUID");
+    if (syncUuid != null) {
+      SyncDevice syncDevice=SyncDeviceLocalServiceUtil.fetchSyncDeviceByUuidAndCompanyId(syncUuid,user.getCompanyId());
+      if (syncDevice != null) {
+        syncDevice.checkStatus();
+      }
+    }
     PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user);
     PermissionThreadLocal.setPermissionChecker(permissionChecker);
     String path=HttpUtil.fixPath(request.getPathInfo());
@@ -34,7 +41,7 @@
     }
  else {
       long groupId=GetterUtil.getLong(pathArray[0]);
-      String uuid=pathArray[1];
+      String fileUuid=pathArray[1];
       Group group=GroupLocalServiceUtil.fetchGroup(groupId);
       if ((group == null) || !SyncUtil.isSyncEnabled(group)) {
         response.setHeader(_ERROR_HEADER,SyncSiteUnavailableException.class.getName());
@@ -43,10 +50,10 @@
       }
       boolean patch=ParamUtil.getBoolean(request,"patch");
       if (patch) {
-        sendPatch(request,response,user.getUserId(),groupId,uuid);
+        sendPatch(request,response,user.getUserId(),groupId,fileUuid);
       }
  else {
-        sendFile(request,response,user.getUserId(),groupId,uuid);
+        sendFile(request,response,user.getUserId(),groupId,fileUuid);
       }
     }
   }
