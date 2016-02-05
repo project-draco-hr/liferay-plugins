@@ -6,11 +6,9 @@
     Map<Locale,String> fieldLabelMap=LocalizationUtil.getLocalizationMap(actionRequest,"fieldLabel" + formFieldsIndex);
     for (    Locale locale : fieldLabelMap.keySet()) {
       String fieldLabelValue=fieldLabelMap.get(locale);
-      if (locale.equals(defaultLocale)) {
-        if (Validator.isNull(fieldLabelValue)) {
-          SessionErrors.add(actionRequest,ColumnNameException.class.getName());
-          return;
-        }
+      if (locale.equals(defaultLocale) && Validator.isNull(fieldLabelValue)) {
+        SessionErrors.add(actionRequest,ColumnNameException.class.getName());
+        return;
       }
       if (Validator.isNotNull(fieldLabelValue) && saveToDatabase && (fieldLabelValue.length() > 75)) {
         SessionErrors.add(actionRequest,"fieldSizeInvalid" + formFieldsIndex);
