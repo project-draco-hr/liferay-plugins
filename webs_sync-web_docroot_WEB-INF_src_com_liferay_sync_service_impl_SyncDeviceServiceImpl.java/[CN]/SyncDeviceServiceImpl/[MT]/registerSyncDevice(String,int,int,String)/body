@@ -2,12 +2,10 @@
   User user=getUser();
   SyncDevice syncDevice=syncDeviceLocalService.fetchSyncDeviceByUuidAndCompanyId(uuid,user.getCompanyId());
   if (syncDevice == null) {
-    syncDevice=syncDeviceLocalService.addSyncDevice(user.getUserId(),type,buildNumber,featureSet);
-    return syncDevice.getUuid();
+    return syncDeviceLocalService.addSyncDevice(user.getUserId(),type,buildNumber,featureSet);
   }
   if (syncDevice.getUserId() != user.getUserId()) {
     throw new PrincipalException();
   }
-  syncDeviceLocalService.updateSyncDevice(syncDevice.getSyncDeviceId(),type,buildNumber,featureSet,syncDevice.getStatus());
-  return syncDevice.getUuid();
+  return syncDeviceLocalService.updateSyncDevice(syncDevice.getSyncDeviceId(),type,buildNumber,featureSet,syncDevice.getStatus());
 }
