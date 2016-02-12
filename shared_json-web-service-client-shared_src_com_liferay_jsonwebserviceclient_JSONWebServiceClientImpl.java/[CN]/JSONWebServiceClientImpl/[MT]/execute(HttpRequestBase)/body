@@ -30,11 +30,11 @@
       String message=null;
       if (httpResponse.getEntity() != null) {
         HttpEntity httpEntity=httpResponse.getEntity();
-        message=EntityUtils.toString(httpEntity,"utf8");
+        message=EntityUtils.toString(httpEntity,StandardCharsets.UTF_8);
       }
       throw new JSONWebServiceTransportException.CommunicationFailure(message,statusLine.getStatusCode());
     }
-    return EntityUtils.toString(httpResponse.getEntity(),"utf8");
+    return EntityUtils.toString(httpResponse.getEntity(),StandardCharsets.UTF_8);
   }
  catch (  IOException ioe) {
     throw new JSONWebServiceTransportException.CommunicationFailure("Unable to transmit request",ioe);

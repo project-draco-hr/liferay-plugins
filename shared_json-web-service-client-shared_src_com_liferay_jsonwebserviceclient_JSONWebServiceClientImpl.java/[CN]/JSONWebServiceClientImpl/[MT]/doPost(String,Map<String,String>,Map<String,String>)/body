@@ -2,20 +2,15 @@
   if (_logger.isDebugEnabled()) {
     _logger.debug("Sending POST request to " + _login + "@"+ _hostName+ url);
   }
-  try {
-    HttpPost httpPost=new HttpPost(url);
-    List<NameValuePair> nameValuePairs=toNameValuePairs(parameters);
-    HttpEntity httpEntity=new UrlEncodedFormEntity(nameValuePairs,"utf8");
-    for (    String key : headers.keySet()) {
-      httpPost.addHeader(key,headers.get(key));
-    }
-    for (    String key : _headers.keySet()) {
-      httpPost.addHeader(key,_headers.get(key));
-    }
-    httpPost.setEntity(httpEntity);
-    return execute(httpPost);
+  HttpPost httpPost=new HttpPost(url);
+  List<NameValuePair> nameValuePairs=toNameValuePairs(parameters);
+  HttpEntity httpEntity=new UrlEncodedFormEntity(nameValuePairs,StandardCharsets.UTF_8);
+  for (  String key : headers.keySet()) {
+    httpPost.addHeader(key,headers.get(key));
   }
- catch (  UnsupportedEncodingException uee) {
-    throw new JSONWebServiceTransportException.CommunicationFailure(uee);
+  for (  String key : _headers.keySet()) {
+    httpPost.addHeader(key,_headers.get(key));
   }
+  httpPost.setEntity(httpEntity);
+  return execute(httpPost);
 }
