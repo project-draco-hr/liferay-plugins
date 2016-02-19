@@ -1,9 +1,5 @@
 {
-  DynamicQuery dynamicQuery=SyncDLObjectLocalServiceUtil.dynamicQuery();
-  dynamicQuery.add(RestrictionsFactoryUtil.eq("event",SyncDLObjectConstants.EVENT_TRASH));
-  dynamicQuery.add(RestrictionsFactoryUtil.eq("type",SyncDLObjectConstants.TYPE_FOLDER));
-  List<SyncDLObject> syncDLObjects=SyncDLObjectLocalServiceUtil.dynamicQuery(dynamicQuery);
-  for (  SyncDLObject syncDLObject : syncDLObjects) {
-    SyncDLObjectLocalServiceUtil.trashDependentSyncDLObjects(syncDLObject);
-  }
+  updateColumn("DLFileEntry","fileEntryId",new String[]{SyncDLObjectConstants.TYPE_FILE,SyncDLObjectConstants.TYPE_PRIVATE_WORKING_COPY});
+  updateColumn("DLFolder","folderId",new String[]{SyncDLObjectConstants.TYPE_FOLDER});
+  upgradeTrashEvents();
 }
