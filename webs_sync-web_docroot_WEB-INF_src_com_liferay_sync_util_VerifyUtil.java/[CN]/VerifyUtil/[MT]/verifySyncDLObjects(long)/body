@@ -1,7 +1,7 @@
 {
   _syncDLObjectsCount=0;
-  ActionableDynamicQuery syncDLObjectActionableDynamicQuery=SyncDLObjectLocalServiceUtil.getActionableDynamicQuery();
-  syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+  ActionableDynamicQuery actionableDynamicQuery=SyncDLObjectLocalServiceUtil.getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
       Property eventProperty=PropertyFactoryUtil.forName("event");
       dynamicQuery.add(eventProperty.ne(SyncDLObjectConstants.EVENT_DELETE));
@@ -10,7 +10,7 @@
     }
   }
 );
-  syncDLObjectActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<SyncDLObject>(){
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<SyncDLObject>(){
     @Override public void performAction(    SyncDLObject syncDLObject) throws PortalException {
       _syncDLObjectsCount++;
       logCount(_syncDLObjectsCount,_syncDLObjectsTotalCount,"Sync DL objects");
@@ -40,7 +40,7 @@
     }
   }
 );
-  _syncDLObjectsTotalCount=syncDLObjectActionableDynamicQuery.performCount();
-  syncDLObjectActionableDynamicQuery.performActions();
+  _syncDLObjectsTotalCount=actionableDynamicQuery.performCount();
+  actionableDynamicQuery.performActions();
   logCount(_syncDLObjectsTotalCount,_syncDLObjectsTotalCount,"Sync DL objects");
 }

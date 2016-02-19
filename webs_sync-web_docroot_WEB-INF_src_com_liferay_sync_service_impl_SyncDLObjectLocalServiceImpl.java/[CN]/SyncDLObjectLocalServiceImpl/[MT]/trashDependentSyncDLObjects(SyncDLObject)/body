@@ -1,6 +1,6 @@
 {
-  ActionableDynamicQuery syncDLObjectActionableDynamicQuery=getActionableDynamicQuery();
-  syncDLObjectActionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
+  ActionableDynamicQuery actionableDynamicQuery=getActionableDynamicQuery();
+  actionableDynamicQuery.setAddCriteriaMethod(new ActionableDynamicQuery.AddCriteriaMethod(){
     @Override public void addCriteria(    DynamicQuery dynamicQuery){
       dynamicQuery.add(RestrictionsFactoryUtil.ne("event",SyncDLObjectConstants.EVENT_TRASH));
       String treePath=parentSyncDLObject.getTreePath();
@@ -8,7 +8,7 @@
     }
   }
 );
-  syncDLObjectActionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<SyncDLObject>(){
+  actionableDynamicQuery.setPerformActionMethod(new ActionableDynamicQuery.PerformActionMethod<SyncDLObject>(){
     @Override public void performAction(    SyncDLObject dependentSyncDLObject) throws PortalException {
       dependentSyncDLObject.setUserId(parentSyncDLObject.getUserId());
       dependentSyncDLObject.setUserName(parentSyncDLObject.getUserName());
@@ -17,5 +17,5 @@
     }
   }
 );
-  syncDLObjectActionableDynamicQuery.performActions();
+  actionableDynamicQuery.performActions();
 }
