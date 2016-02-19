@@ -17,27 +17,18 @@
     syncDLObject.setTypePK(typePK);
   }
  else   if (type.equals(SyncDLObjectConstants.TYPE_FILE)) {
-    FileEntry fileEntry=null;
-    try {
-      fileEntry=DLAppLocalServiceUtil.getFileEntry(typePK);
-    }
- catch (    NoSuchFileEntryException nsfee) {
+    DLFileEntry dlFileEntry=DLFileEntryLocalServiceUtil.fetchDLFileEntry(typePK);
+    if (dlFileEntry == null) {
       return;
     }
-    syncDLObject=SyncUtil.toSyncDLObject(fileEntry,event,true);
+    syncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,event,true);
   }
  else {
-    Folder folder=null;
-    try {
-      folder=DLAppLocalServiceUtil.getFolder(typePK);
-    }
- catch (    NoSuchFolderException nsfe) {
+    DLFolder dlFolder=DLFolderLocalServiceUtil.fetchDLFolder(typePK);
+    if ((dlFolder == null) || !SyncUtil.isSupportedFolder(dlFolder)) {
       return;
     }
-    if (!SyncUtil.isSupportedFolder(folder)) {
-      return;
-    }
-    syncDLObject=SyncUtil.toSyncDLObject(folder,event);
+    syncDLObject=SyncUtil.toSyncDLObject(dlFolder,event);
   }
   syncDLObject.setModifiedTime(modifiedTime);
   SyncUtil.addSyncDLObject(syncDLObject);
