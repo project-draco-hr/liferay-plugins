@@ -38,7 +38,7 @@
     @Override public void performAction(    DLFileEntry dlFileEntry) throws PortalException {
       _dlFoldersAndFileEntriesCount++;
       logCount(_dlFoldersAndFileEntriesCount,_dlFoldersAndFileEntriesTotalCount,"DL folders and DL file entries");
-      if ((dlFileEntry.getStatus() != WorkflowConstants.STATUS_APPROVED) && (dlFileEntry.getStatus() != WorkflowConstants.STATUS_IN_TRASH)) {
+      if ((dlFileEntry.getStatus() != WorkflowConstants.STATUS_APPROVED) && !dlFileEntry.isInTrash()) {
         return;
       }
       try {
@@ -57,10 +57,10 @@
           event=SyncDLObjectConstants.EVENT_TRASH;
         }
         if (dlFileEntry.isCheckedOut()) {
-          SyncDLObject approvedFileEntrySyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,event,true,true);
+          SyncDLObject approvedFileEntrySyncDLObject=SyncUtil.toSyncDLObject(dlFileEntry,event,!dlFileEntry.isInTrash(),true);
           SyncUtil.addSyncDLObject(approvedFileEntrySyncDLObject);
         }
-        SyncUtil.addSyncDLObject(SyncUtil.toSyncDLObject(dlFileEntry,event,true));
+        SyncUtil.addSyncDLObject(SyncUtil.toSyncDLObject(dlFileEntry,event,!dlFileEntry.isInTrash()));
       }
  catch (      Exception e) {
         _log.error(e,e);
