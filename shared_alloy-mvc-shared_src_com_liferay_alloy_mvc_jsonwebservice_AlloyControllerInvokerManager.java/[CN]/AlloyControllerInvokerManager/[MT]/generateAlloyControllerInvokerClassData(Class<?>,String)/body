@@ -21,6 +21,10 @@
       continue;
     }
     jsonWebServiceMethodsPresent=true;
+    String methodName=jsonWebServiceMethod.methodName();
+    if (Validator.isNull(methodName)) {
+      methodName=method.getName();
+    }
     Class<?>[] parameterTypes=jsonWebServiceMethod.parameterTypes();
     StringBundler sb=new StringBundler(parameterTypes.length + 3);
     sb.append(StringPool.OPEN_PARENTHESIS);
@@ -30,7 +34,7 @@
     sb.append(StringPool.CLOSE_PARENTHESIS);
     sb.append(Type.getDescriptor(JSONSerializable.class));
     String methodDescriptor=sb.toString();
-    methodVisitor=classWriter.visitMethod(Opcodes.ACC_PUBLIC,method.getName(),methodDescriptor,null,new String[]{getClassBinaryName(Exception.class.getName())});
+    methodVisitor=classWriter.visitMethod(Opcodes.ACC_PUBLIC,methodName,methodDescriptor,null,new String[]{getClassBinaryName(Exception.class.getName())});
     methodVisitor.visitCode();
     for (int i=0; i < parameterTypes.length; i++) {
       String parameterName=jsonWebServiceMethod.parameterNames()[i];
