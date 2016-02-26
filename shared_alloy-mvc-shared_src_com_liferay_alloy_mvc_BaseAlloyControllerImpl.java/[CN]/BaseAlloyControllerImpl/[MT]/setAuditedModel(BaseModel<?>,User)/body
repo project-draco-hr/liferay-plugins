@@ -1,11 +1,7 @@
 {
-  if (!(baseModel instanceof AuditedModel)) {
-    return;
-  }
-  if (user == null) {
+  if (!(baseModel instanceof AuditedModel) || (user == null)) {
     return;
   }
   long companyId=CompanyLocalServiceUtil.getCompanyIdByUserId(user.getUserId());
-  Company company=CompanyLocalServiceUtil.getCompany(companyId);
-  setAuditedModel(baseModel,company,user);
+  setAuditedModel(baseModel,CompanyLocalServiceUtil.getCompany(companyId),user);
 }

@@ -1,12 +1,7 @@
 {
-  if (!(baseModel instanceof AuditedModel)) {
-    return;
-  }
-  if (request == null) {
+  if (!(baseModel instanceof AuditedModel) || (request == null)) {
     return;
   }
   ThemeDisplay themeDisplay=(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
-  Company company=themeDisplay.getCompany();
-  User user=themeDisplay.getUser();
-  setAuditedModel(baseModel,company,user);
+  setAuditedModel(baseModel,themeDisplay.getCompany(),themeDisplay.getUser());
 }
