@@ -10,22 +10,26 @@
       processException(zipFileId,SyncSiteUnavailableException.class.getName(),errorsJSONObject);
       continue;
     }
+    InputStream inputStream=null;
     try {
       String uuid=zipObjectJSONObject.getString("uuid");
       if (zipObjectJSONObject.getBoolean("patch")) {
         long sourceVersionId=zipObjectJSONObject.getLong("sourceVersionId",0);
         long targetVersionId=zipObjectJSONObject.getLong("targetVersionId",0);
-        DownloadServletInputStream downloadServletInputStream=getPatchDownloadServletInputStream(userId,groupId,uuid,sourceVersionId,targetVersionId);
-        zipWriter.addEntry(zipFileId,downloadServletInputStream);
+        inputStream=getPatchDownloadServletInputStream(userId,groupId,uuid,sourceVersionId,targetVersionId);
+        zipWriter.addEntry(zipFileId,inputStream);
       }
  else {
-        DownloadServletInputStream downloadServletInputStream=getFileDownloadServletInputStream(userId,groupId,uuid,zipObjectJSONObject.getString("version"),zipObjectJSONObject.getLong("versionId"));
-        zipWriter.addEntry(zipFileId,downloadServletInputStream);
+        inputStream=getFileDownloadServletInputStream(userId,groupId,uuid,zipObjectJSONObject.getString("version"),zipObjectJSONObject.getLong("versionId"));
+        zipWriter.addEntry(zipFileId,inputStream);
       }
     }
  catch (    Exception e) {
       Class clazz=e.getClass();
       processException(zipFileId,clazz.getName(),errorsJSONObject);
+    }
+ finally {
+      StreamUtil.cleanUp(inputStream);
     }
   }
   zipWriter.addEntry("errors.json",errorsJSONObject.toString());
