@@ -16,10 +16,6 @@
     Status buddyStatus=StatusLocalServiceUtil.getUserStatus(userId);
     awake=buddyStatus.getAwake();
     curUserJSONObject.put("awake",awake);
-    String fullName=ContactConstants.getFullName(firstName,middleName,lastName);
-    curUserJSONObject.put("fullName",fullName);
-    curUserJSONObject.put("groupId",groupId);
-    curUserJSONObject.put("portraitId",portraitId);
     String displayURL=StringPool.BLANK;
     try {
       LayoutSet layoutSet=LayoutSetLocalServiceUtil.getLayoutSet(groupId,false);
@@ -31,6 +27,10 @@
  catch (    NoSuchLayoutSetException nslse) {
     }
     curUserJSONObject.put("displayURL",displayURL);
+    String fullName=ContactConstants.getFullName(firstName,middleName,lastName);
+    curUserJSONObject.put("fullName",fullName);
+    curUserJSONObject.put("groupId",groupId);
+    curUserJSONObject.put("portraitId",portraitId);
     String portraitURL=UserConstants.getPortraitURL(StringPool.BLANK,male,portraitId,userUuid);
     curUserJSONObject.put("portraitURL",portraitURL);
     curUserJSONObject.put("screenName",screenName);
