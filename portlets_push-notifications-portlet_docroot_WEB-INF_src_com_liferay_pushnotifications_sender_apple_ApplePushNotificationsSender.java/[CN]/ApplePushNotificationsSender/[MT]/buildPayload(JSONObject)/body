@@ -1,5 +1,8 @@
 {
   PayloadBuilder builder=PayloadBuilder.newPayload();
+  if (payloadJSONObject.has(PushNotificationsConstants.KEY_BADGE)) {
+    builder.badge(payloadJSONObject.getInt(PushNotificationsConstants.KEY_BADGE));
+  }
   String body=payloadJSONObject.getString(PushNotificationsConstants.KEY_BODY);
   if (Validator.isNotNull(body)) {
     builder.alertBody(body);
@@ -20,6 +23,7 @@
   if (Validator.isNotNull(sound)) {
     builder.sound(sound);
   }
+  payloadJSONObject.remove(PushNotificationsConstants.KEY_BADGE);
   payloadJSONObject.remove(PushNotificationsConstants.KEY_BODY);
   payloadJSONObject.remove(PushNotificationsConstants.KEY_BODY_LOCALIZED);
   payloadJSONObject.remove(PushNotificationsConstants.KEY_BODY_LOCALIZED_ARGUMENTS);
