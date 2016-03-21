@@ -14,10 +14,7 @@
       return;
     }
     ServiceContext serviceContext=ServiceContextFactory.getInstance(actionRequest);
-    OAuthApplication oAuthApplication=SyncPreferencesLocalServiceUtil.enableOAuth(CompanyThreadLocal.getCompanyId(),serviceContext);
-    portletPreferences.setValue(PortletPropsKeys.SYNC_OAUTH_APPLICATION_ID,String.valueOf(oAuthApplication.getOAuthApplicationId()));
-    portletPreferences.setValue(PortletPropsKeys.SYNC_OAUTH_CONSUMER_KEY,oAuthApplication.getConsumerKey());
-    portletPreferences.setValue(PortletPropsKeys.SYNC_OAUTH_CONSUMER_SECRET,oAuthApplication.getConsumerSecret());
+    SyncPreferencesLocalServiceUtil.enableOAuth(CompanyThreadLocal.getCompanyId(),serviceContext);
   }
   portletPreferences.setValue(PortletPropsKeys.SYNC_OAUTH_ENABLED,String.valueOf(oAuthEnabled));
   int pollInterval=ParamUtil.getInteger(actionRequest,"pollInterval");
