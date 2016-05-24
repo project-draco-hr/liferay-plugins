@@ -1,0 +1,27 @@
+{
+  SAMTodoList samTodoList=(SAMTodoList)entityCache.getResult(SAMTodoListModelImpl.ENTITY_CACHE_ENABLED,SAMTodoListImpl.class,primaryKey);
+  if (samTodoList == _nullSAMTodoList) {
+    return null;
+  }
+  if (samTodoList == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      samTodoList=(SAMTodoList)session.get(SAMTodoListImpl.class,primaryKey);
+      if (samTodoList != null) {
+        cacheResult(samTodoList);
+      }
+ else {
+        entityCache.putResult(SAMTodoListModelImpl.ENTITY_CACHE_ENABLED,SAMTodoListImpl.class,primaryKey,_nullSAMTodoList);
+      }
+    }
+ catch (    Exception e) {
+      entityCache.removeResult(SAMTodoListModelImpl.ENTITY_CACHE_ENABLED,SAMTodoListImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return samTodoList;
+}

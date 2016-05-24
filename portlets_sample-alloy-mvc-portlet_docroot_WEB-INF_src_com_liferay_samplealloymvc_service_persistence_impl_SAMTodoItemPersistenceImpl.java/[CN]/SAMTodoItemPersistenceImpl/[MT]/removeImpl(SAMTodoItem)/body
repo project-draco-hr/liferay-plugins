@@ -1,0 +1,23 @@
+{
+  samTodoItem=toUnwrappedModel(samTodoItem);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(samTodoItem)) {
+      samTodoItem=(SAMTodoItem)session.get(SAMTodoItemImpl.class,samTodoItem.getPrimaryKeyObj());
+    }
+    if (samTodoItem != null) {
+      session.delete(samTodoItem);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (samTodoItem != null) {
+    clearCache(samTodoItem);
+  }
+  return samTodoItem;
+}

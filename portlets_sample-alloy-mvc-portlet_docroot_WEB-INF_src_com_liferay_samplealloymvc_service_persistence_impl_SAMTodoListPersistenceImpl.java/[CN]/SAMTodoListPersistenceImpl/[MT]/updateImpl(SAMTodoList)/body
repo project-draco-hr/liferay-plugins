@@ -1,0 +1,47 @@
+{
+  samTodoList=toUnwrappedModel(samTodoList);
+  boolean isNew=samTodoList.isNew();
+  SAMTodoListModelImpl samTodoListModelImpl=(SAMTodoListModelImpl)samTodoList;
+  ServiceContext serviceContext=ServiceContextThreadLocal.getServiceContext();
+  Date now=new Date();
+  if (isNew && (samTodoList.getCreateDate() == null)) {
+    if (serviceContext == null) {
+      samTodoList.setCreateDate(now);
+    }
+ else {
+      samTodoList.setCreateDate(serviceContext.getCreateDate(now));
+    }
+  }
+  if (!samTodoListModelImpl.hasSetModifiedDate()) {
+    if (serviceContext == null) {
+      samTodoList.setModifiedDate(now);
+    }
+ else {
+      samTodoList.setModifiedDate(serviceContext.getModifiedDate(now));
+    }
+  }
+  Session session=null;
+  try {
+    session=openSession();
+    if (samTodoList.isNew()) {
+      session.save(samTodoList);
+      samTodoList.setNew(false);
+    }
+ else {
+      samTodoList=(SAMTodoList)session.merge(samTodoList);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
+  if (isNew) {
+    finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+  }
+  entityCache.putResult(SAMTodoListModelImpl.ENTITY_CACHE_ENABLED,SAMTodoListImpl.class,samTodoList.getPrimaryKey(),samTodoList,false);
+  samTodoList.resetOriginalValues();
+  return samTodoList;
+}

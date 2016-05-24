@@ -1,0 +1,23 @@
+{
+  samTodoList=toUnwrappedModel(samTodoList);
+  Session session=null;
+  try {
+    session=openSession();
+    if (!session.contains(samTodoList)) {
+      samTodoList=(SAMTodoList)session.get(SAMTodoListImpl.class,samTodoList.getPrimaryKeyObj());
+    }
+    if (samTodoList != null) {
+      session.delete(samTodoList);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  if (samTodoList != null) {
+    clearCache(samTodoList);
+  }
+  return samTodoList;
+}

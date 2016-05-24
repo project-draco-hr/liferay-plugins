@@ -1,0 +1,60 @@
+{
+  if (primaryKeys.isEmpty()) {
+    return Collections.emptyMap();
+  }
+  Map<Serializable,SAMTodoItem> map=new HashMap<Serializable,SAMTodoItem>();
+  if (primaryKeys.size() == 1) {
+    Iterator<Serializable> iterator=primaryKeys.iterator();
+    Serializable primaryKey=iterator.next();
+    SAMTodoItem samTodoItem=fetchByPrimaryKey(primaryKey);
+    if (samTodoItem != null) {
+      map.put(primaryKey,samTodoItem);
+    }
+    return map;
+  }
+  Set<Serializable> uncachedPrimaryKeys=null;
+  for (  Serializable primaryKey : primaryKeys) {
+    SAMTodoItem samTodoItem=(SAMTodoItem)entityCache.getResult(SAMTodoItemModelImpl.ENTITY_CACHE_ENABLED,SAMTodoItemImpl.class,primaryKey);
+    if (samTodoItem == null) {
+      if (uncachedPrimaryKeys == null) {
+        uncachedPrimaryKeys=new HashSet<Serializable>();
+      }
+      uncachedPrimaryKeys.add(primaryKey);
+    }
+ else {
+      map.put(primaryKey,samTodoItem);
+    }
+  }
+  if (uncachedPrimaryKeys == null) {
+    return map;
+  }
+  StringBundler query=new StringBundler((uncachedPrimaryKeys.size() * 2) + 1);
+  query.append(_SQL_SELECT_SAMTODOITEM_WHERE_PKS_IN);
+  for (  Serializable primaryKey : uncachedPrimaryKeys) {
+    query.append(String.valueOf(primaryKey));
+    query.append(StringPool.COMMA);
+  }
+  query.setIndex(query.index() - 1);
+  query.append(StringPool.CLOSE_PARENTHESIS);
+  String sql=query.toString();
+  Session session=null;
+  try {
+    session=openSession();
+    Query q=session.createQuery(sql);
+    for (    SAMTodoItem samTodoItem : (List<SAMTodoItem>)q.list()) {
+      map.put(samTodoItem.getPrimaryKeyObj(),samTodoItem);
+      cacheResult(samTodoItem);
+      uncachedPrimaryKeys.remove(samTodoItem.getPrimaryKeyObj());
+    }
+    for (    Serializable primaryKey : uncachedPrimaryKeys) {
+      entityCache.putResult(SAMTodoItemModelImpl.ENTITY_CACHE_ENABLED,SAMTodoItemImpl.class,primaryKey,_nullSAMTodoItem);
+    }
+  }
+ catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+  return map;
+}

@@ -1,0 +1,23 @@
+{
+  Session session=null;
+  try {
+    session=openSession();
+    SAMTodoList samTodoList=(SAMTodoList)session.get(SAMTodoListImpl.class,primaryKey);
+    if (samTodoList == null) {
+      if (_log.isDebugEnabled()) {
+        _log.debug(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+      }
+      throw new NoSuchTodoListException(_NO_SUCH_ENTITY_WITH_PRIMARY_KEY + primaryKey);
+    }
+    return remove(samTodoList);
+  }
+ catch (  NoSuchTodoListException nsee) {
+    throw nsee;
+  }
+catch (  Exception e) {
+    throw processException(e);
+  }
+ finally {
+    closeSession(session);
+  }
+}

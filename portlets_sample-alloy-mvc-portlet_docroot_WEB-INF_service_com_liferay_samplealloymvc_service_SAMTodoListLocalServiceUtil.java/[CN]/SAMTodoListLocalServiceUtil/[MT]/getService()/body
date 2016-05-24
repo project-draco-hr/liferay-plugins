@@ -1,0 +1,13 @@
+{
+  if (_service == null) {
+    InvokableLocalService invokableLocalService=(InvokableLocalService)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),SAMTodoListLocalService.class.getName());
+    if (invokableLocalService instanceof SAMTodoListLocalService) {
+      _service=(SAMTodoListLocalService)invokableLocalService;
+    }
+ else {
+      _service=new SAMTodoListLocalServiceClp(invokableLocalService);
+    }
+    ReferenceRegistry.registerReference(SAMTodoListLocalServiceUtil.class,"_service");
+  }
+  return _service;
+}

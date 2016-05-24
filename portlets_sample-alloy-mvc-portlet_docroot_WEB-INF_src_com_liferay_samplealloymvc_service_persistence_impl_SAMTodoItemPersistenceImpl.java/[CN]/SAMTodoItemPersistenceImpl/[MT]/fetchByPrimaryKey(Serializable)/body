@@ -1,0 +1,27 @@
+{
+  SAMTodoItem samTodoItem=(SAMTodoItem)entityCache.getResult(SAMTodoItemModelImpl.ENTITY_CACHE_ENABLED,SAMTodoItemImpl.class,primaryKey);
+  if (samTodoItem == _nullSAMTodoItem) {
+    return null;
+  }
+  if (samTodoItem == null) {
+    Session session=null;
+    try {
+      session=openSession();
+      samTodoItem=(SAMTodoItem)session.get(SAMTodoItemImpl.class,primaryKey);
+      if (samTodoItem != null) {
+        cacheResult(samTodoItem);
+      }
+ else {
+        entityCache.putResult(SAMTodoItemModelImpl.ENTITY_CACHE_ENABLED,SAMTodoItemImpl.class,primaryKey,_nullSAMTodoItem);
+      }
+    }
+ catch (    Exception e) {
+      entityCache.removeResult(SAMTodoItemModelImpl.ENTITY_CACHE_ENABLED,SAMTodoItemImpl.class,primaryKey);
+      throw processException(e);
+    }
+ finally {
+      closeSession(session);
+    }
+  }
+  return samTodoItem;
+}
