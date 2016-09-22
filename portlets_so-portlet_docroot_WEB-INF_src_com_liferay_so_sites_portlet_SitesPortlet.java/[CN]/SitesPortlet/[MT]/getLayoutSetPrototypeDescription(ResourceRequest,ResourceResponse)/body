@@ -3,17 +3,17 @@
   int layoutSetPrototypeId=ParamUtil.getInteger(resourceRequest,"layoutSetPrototypeId");
   JSONObject jsonObject=JSONFactoryUtil.createJSONObject();
   if (layoutSetPrototypeId <= 0) {
+    jsonObject.put("description",StringPool.BLANK);
     jsonObject.put("layoutSetPrototypeId",layoutSetPrototypeId);
     jsonObject.put("name",themeDisplay.translate("none"));
-    jsonObject.put("description",StringPool.BLANK);
     JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
     jsonObject.put("layouts",jsonArray);
   }
  else {
     LayoutSetPrototype layoutSetPrototype=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
+    jsonObject.put("description",layoutSetPrototype.getDescription());
     jsonObject.put("layoutSetPrototypeId",layoutSetPrototypeId);
     jsonObject.put("name",layoutSetPrototype.getName(themeDisplay.getLocale()));
-    jsonObject.put("description",layoutSetPrototype.getDescription());
     JSONArray jsonArray=JSONFactoryUtil.createJSONArray();
     Group layoutSetPrototypeGroup=layoutSetPrototype.getGroup();
     List<Layout> layouts=LayoutLocalServiceUtil.getLayouts(layoutSetPrototypeGroup.getGroupId(),true,0);

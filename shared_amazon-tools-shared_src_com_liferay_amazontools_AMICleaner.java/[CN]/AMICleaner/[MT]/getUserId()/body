@@ -5,10 +5,10 @@
     User user=getUserResult.getUser();
     userId=user.getUserId();
   }
- catch (  AmazonServiceException e) {
-    String errorCode=e.getErrorCode();
+ catch (  AmazonServiceException ase) {
+    String errorCode=ase.getErrorCode();
     if (errorCode.compareTo("AccessDenied") == 0) {
-      String message=e.getMessage();
+      String message=ase.getMessage();
       int x=message.indexOf("::");
       int y=message.indexOf(":",x + 2);
       userId=message.substring(x + 2,y);
