@@ -1,0 +1,20 @@
+{
+  try {
+    FooLocalServiceUtil.deleteFoos();
+    Company company=CompanyLocalServiceUtil.getCompany(companyId);
+    User defaultUser=company.getDefaultUser();
+    ServiceContext serviceContext=new ServiceContext();
+    serviceContext.setUserId(defaultUser.getUserId());
+    serviceContext.setScopeGroupId(company.getGroupId());
+    serviceContext.setCreateDate(DateUtil.newDate());
+    serviceContext.setModifiedDate(DateUtil.newDate());
+    for (int i=0; i < 100; i++) {
+      FooLocalServiceUtil.addFoo(StringUtil.randomString(),true,i,DateUtil.newDate(),StringUtil.randomString(),serviceContext);
+    }
+  }
+ catch (  PortalException pe) {
+    if (_log.isWarnEnabled()) {
+      _log.warn(pe);
+    }
+  }
+}
